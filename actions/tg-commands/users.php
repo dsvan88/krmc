@@ -16,12 +16,11 @@ if (!isset($userData['id'])) {
     $output['message'] = "Команда не знайдена";
 } else {
     $usersList = $users->usersGetData(['name', 'telegram'], '', 0);
-    $output['message'] = json_encode($usersList);
-    // for ($i = 0; $i < count($usersList); $i++) {
-    //     $output['message'] .= ($i + 1) . " <b>{$usersList[$i]['name']}</b>!";
-    //     if ($usersList[$i]['telegram'] !== '')
-    //         $output['message'] .= "(@{$usersList[$i]['telegram']})";
-    //     $output['message'] .= "\n";
-    // }
-
+    for ($i = 0; $i < count($usersList); $i++) {
+        if ($usersList[$i]['telegram'] === '') continue;
+        $output['message'] .= ($i + 1) . " <b>{$usersList[$i]['name']}</b>!";
+        if ($usersList[$i]['telegram'] !== '')
+            $output['message'] .= "(@{$usersList[$i]['telegram']})";
+        $output['message'] .= "\n";
+    }
 }
