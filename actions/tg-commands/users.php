@@ -17,10 +17,10 @@ if (!isset($userData['id'])) {
 } else {
     $usersList = $users->usersGetData(['name', 'telegram'], '', 0);
     for ($i = 0; $i < count($usersList); $i++) {
-        if ($usersList[$i]['telegram'] === '') continue;
-        $output['message'] .= ($i + 1) . " <b>{$usersList[$i]['name']}</b>!";
+        if ($usersList[$i]['name'] === '') continue;
+        $output['message'] .= ($i + 1) . ". <b>{$usersList[$i]['name']}</b>";
         if ($usersList[$i]['telegram'] !== '')
-            $output['message'] .= "(@{$usersList[$i]['telegram']})";
+            $output['message'] .= " (@{$usersList[$i]['telegram']})";
         $output['message'] .= "\n";
     }
 }
