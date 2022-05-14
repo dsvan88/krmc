@@ -1,0 +1,44 @@
+<details class="game__caption">
+	<summary>Поточна стадія</summary>
+	<div class="game__stage-text"></div>
+</details>
+
+<table data-game-id="{GAME_INDEX}" class="game__table">
+	<caption class="game__table-header">
+		<div class="game__number">Игра № <span class="text-accent">{GAME_NUMBER}</span>.</div>
+		<div class="game__manager">Ведущий: <span class="text-accent">{GAME_MANAGER}</span> (<a data-action="stop-game">Стоп игра!</a>)</div>
+	</caption>
+	<thead>
+		<tr>
+			<th rowspan="2">№</th>
+			<th rowspan="2">Игроки:</th>
+			<th colspan="4">Фолы:</th>
+			<th rowspan="2"></th>
+			<th>Выст.</th>
+			<th rowspan="2">Прим.</th>
+		</tr>
+		<tr>
+			<th>1</th>
+			<th>2</th>
+			<th>3</th>
+			<th>4</th>
+			<th>1</th>
+		</tr>
+	</thead>
+	<tbody>
+		{GAME_PLAYERS_TABLE}
+	</tbody>
+</table>
+<div class="game__tech-messages">
+	<div class="game__players-on-vote"></div>
+	<div class="game__best-move">
+		<caption class="best-move__caption">
+			Лучший ход
+		</caption>
+		<span class="best-move__text"></span>
+	</div>
+</div>
+<details class="game__log">
+	<summary>Ігрова історія</summary>
+	<div class="game__log-text">
+</details>

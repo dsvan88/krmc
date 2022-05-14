@@ -1,0 +1,9 @@
+/rudiments/*
+git-get.bat
+git-push.bat
+git-stash.bat
+.prettierrc.json
+composer.phar
+tg-message.txt
+/vendor/*
+/gallery/*

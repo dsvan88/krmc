@@ -1,0 +1,116 @@
+$font-size-main: 0.6em;
+$font-size-main-sm: 0.8em;
+$font-size-main-md: 0.9em;
+$font-size-main-lg: 1em;
+$font-size-main-xl: 1.3em;
+
+$color-text-dark: #30324d;
+$color-text-blur: #5e4343;
+$color-text-main: #b3a2a2;
+$color-text-menu: #dfa261;
+$color-text-section-title: #f2ce91;
+
+$button-remove-color: #c45050;
+$button-remove-color-hover: #aa1414;
+
+$color-item-border-hover: #803827;
+
+$bg-color-light: #38244f;
+$bg-color-light-odd: #4f2058;
+$bg-color-dark: #221740;
+$bg-color-input: #0000004a;
+
+$animation-fast: 0.3s;
+$animation-normal: 0.8s;
+$animation-slow: 1.5s;
+$animation-very-slow: 3s;
+
+%nonDeleteTextForInput {
+	position: relative;
+	display: flex;
+	.non-delete-text {
+		pointer-events: none;
+		position: absolute;
+		right: 2%;
+		top: 2px;
+		color: #455ace8a;
+		&.left {
+			left: 2px;
+		}
+	}
+}
+
+%buttonStyle {
+	background: #00abff;
+	font-weight: bold;
+	font-size: 1em;
+	line-height: 1.2em;
+	letter-spacing: 0.05em;
+	text-transform: uppercase;
+	color: #04316a;
+	padding: 0.8em 1.3em;
+	outline: none;
+	border: 1px solid $color-text-main;
+	cursor: pointer;
+	text-decoration: none;
+	transition: all $animation-fast ease-in;
+	&:hover {
+		background-color: $color-text-main;
+		color: $color-text-dark;
+	}
+	&.negative {
+		i.fa {
+			pointer-events: none;
+		}
+		&:hover {
+			color: #c41919;
+			background-color: #ffcfdc;
+		}
+	}
+	&.positive {
+		i.fa {
+			pointer-events: none;
+		}
+		&:hover {
+			color: #018ba1;
+			background-color: #99f976;
+		}
+	}
+	&.neutral {
+		i.fa {
+			pointer-events: none;
+		}
+		&:hover {
+			background-color: #7e80ff;
+			border-color: #583966;
+			color: #202e79;
+		}
+	}
+}
+.setting-text-dashboard {
+	font-size: 2rem;
+	text-align: right;
+	&__button {
+		cursor: pointer;
+		transition: all $animation-fast ease-in-out;
+		&:hover {
+			color: $color-text-menu;
+		}
+	}
+}
+
+.checkbox-styled {
+	text-align: center;
+	color: $color-text-blur;
+	&__label {
+		text-transform: uppercase;
+		cursor: pointer;
+	}
+	&-checkbox {
+		display: none;
+	}
+	&-checkbox:checked + &__label {
+		color: $color-text-menu;
+		filter: drop-shadow(0px 0px 0.5rem #ecccb0) drop-shadow(0px 0px 0.5rem #ecccb0);
+	}
+}
