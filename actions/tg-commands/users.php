@@ -8,11 +8,20 @@ $telegram = isset($_POST['message']['from']['username']) ? $_POST['message']['fr
 
 $telegramId = $_POST['message']['from']['id'];
 
-$userData = $users->usersGetData(['name', 'telegram']);
-$output['message'] = '';
-for ($i = 0; $i < count($userData); $i++) {
-    $output['message'] .= ($i + 1) . " <b>{$userData[$i]['name']}</b>!";
-    if ($userData[$i]['telegram'] !== '')
-        $output['message'] .= "(@{$userData[$i]['telegram']})";
-    $output['message'] .= "\n";
+$userData = $users->usersGetData(['id', 'name', 'telegram', 'status'], ['telegramid' => $telegramId]);
+
+if (!isset($userData['id'])) {
+    $output['message'] = "Извините! Не узнаю вас в гриме:(\r\nСкажите Ваш псевдоним в игре, что бы я вас запомнил! Напишите: /nick Ваш псевдоним (кириллицей)";
+} elseif (!in_array($userData['status'], ['manager', 'admin'], true)) {
+    $output['message'] = "Команда не знайдена";
+} else {
+    $usersList = $users->usersGetData(['name', 'telegram']);
+    $output['message'] = json_encode($usersList);
+    // for ($i = 0; $i < count($usersList); $i++) {
+    //     $output['message'] .= ($i + 1) . " <b>{$usersList[$i]['name']}</b>!";
+    //     if ($usersList[$i]['telegram'] !== '')
+    //         $output['message'] .= "(@{$usersList[$i]['telegram']})";
+    //     $output['message'] .= "\n";
+    // }
+
 }
