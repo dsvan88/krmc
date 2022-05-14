@@ -15,7 +15,7 @@ if (!isset($userData['id'])) {
 } elseif (!in_array($userData['status'], ['manager', 'admin'], true)) {
     $output['message'] = "Команда не знайдена";
 } else {
-    $usersList = $users->usersGetData(['name', 'telegram']);
+    $usersList = $users->usersGetData(['name', 'telegram'], '', 0);
     $output['message'] = json_encode($usersList);
     // for ($i = 0; $i < count($usersList); $i++) {
     //     $output['message'] .= ($i + 1) . " <b>{$usersList[$i]['name']}</b>!";
