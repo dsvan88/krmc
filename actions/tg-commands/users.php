@@ -16,9 +16,10 @@ if (!isset($userData['id'])) {
     $output['message'] = "Команда не знайдена";
 } else {
     $usersList = $users->usersGetData(['name', 'telegram'], '', 0);
+    $x = 0;
     for ($i = 0; $i < count($usersList); $i++) {
         if ($usersList[$i]['name'] === '') continue;
-        $output['message'] .= ($i + 1) . ". <b>{$usersList[$i]['name']}</b>";
+        $output['message'] .= (++$x) . ". <b>{$usersList[$i]['name']}</b>";
         if ($usersList[$i]['telegram'] !== '')
             $output['message'] .= " (@{$usersList[$i]['telegram']})";
         $output['message'] .= "\n";
