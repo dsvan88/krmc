@@ -56,6 +56,10 @@ if (preg_match('/^(\+|-)\s{0,3}(пн|пон|вт|ср|чт|чет|пт|пят|с
 }
 
 if ($output['message'] !== '') {
+    if (isset($output['pre-message'])) {
+        $bot->prepMessage($output['pre-message']);
+        $bot->sendToTelegramBot($_POST['message']['chat']['id']);
+    }
     $bot->prepMessage($output['message']);
     try {
         $result = $bot->sendToTelegramBot($_POST['message']['chat']['id']);
