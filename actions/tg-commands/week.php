@@ -19,8 +19,10 @@ foreach ($weeksData as $weekData) {
         if (!isset($weekData['data'][$i])) {
             continue;
         }
-        $output['message'] .= $weeks->getDayFullDescription($weekData, $i) .
-            "___________________________\r\n";
+        $dayDescription = $weeks->getDayFullDescription($weekData, $i);
+        if ($dayDescription !== '')
+            $output['message'] .=  $dayDescription .
+                "___________________________\r\n";
     }
 }
 
