@@ -215,14 +215,15 @@ class Weeks
 		if (!$result) {
 			return ['result' => false, 'message' => json_encode($newData, JSON_UNESCAPED_UNICODE)];
 		}
-
+		/* 
 		$dayNames = ['в <b>Понедельник</b>', 'во <b>Вторник</b>', 'в <b>Среду</b>', 'в <b>Четверг</b>', 'в <b>Пятницу</b>', 'в <b>Субботу</b>', 'в <b>Воскресенье</b>'];
 		$gameNames = [
 			'mafia' => 'Мафия 🎭',
 			'poker' => 'Покер ♦️',
 			'board' => 'Настолки 🎲',
 			'cash' => 'Кеш-покер 🃏'
-		];
+		]; */
+		$weekData['data'][$data['dayNum']] = $newData;
 		return ['result' => true, 'message' => $this->getDayFullDescription($weekData, $data['dayNum'])];
 	}
 	public function getDayFullDescription($weekData, $day)
