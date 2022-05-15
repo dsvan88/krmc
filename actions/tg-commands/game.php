@@ -10,79 +10,84 @@ $userData = $users->usersGetData(['id', 'name', 'telegram', 'status'], ['telegra
 if (!isset($userData['id'])) {
     $output['message'] = "Извините! Не узнаю вас в гриме:(\r\nСкажите Ваш псевдоним в игре, что бы я вас запомнил! Напишите: /nick Ваш псевдоним (кириллицей)";
 } else {
-    require_once $_SERVER['DOCUMENT_ROOT'] . '/engine/class.weeks.php';
+    try {
 
-    $weeks = new Weeks;
+        require_once $_SERVER['DOCUMENT_ROOT'] . '/engine/class.weeks.php';
 
-    $requestData = [
-        'method' => '+',
-        'arrive' => '',
-        'date' => '',
-        'duration' => '',
-        'dayNum' => -1,
-        'userId' => $userData['id'],
-        'userName' => $userData['name'],
-        'userStatus' => $userData['status']
-    ];
-    foreach ($matches[0] as $value) {
+        $weeks = new Weeks;
 
-        $requestData['currentDay'] = getdate()['wday'] - 1;
+        $requestData = [
+            'method' => '+',
+            'arrive' => '',
+            'date' => '',
+            'duration' => '',
+            'dayNum' => -1,
+            'userId' => $userData['id'],
+            'userName' => $userData['name'],
+            'userStatus' => $userData['status']
+        ];
+        foreach ($matches[0] as $value) {
 
-        if ($requestData['currentDay'] === -1)
-            $requestData['currentDay'] = 6;
+            $requestData['currentDay'] = getdate()['wday'] - 1;
 
-        if (preg_match('/^(\+|-)/', $value)) {
+            if ($requestData['currentDay'] === -1)
+                $requestData['currentDay'] = 6;
 
-            $requestData['method'] = $value[0];
-            $withoutMethod = trim(mb_substr($value, 1, 6, 'UTF-8'));
-            $dayName = mb_strtolower(mb_substr($withoutMethod, 0, 3, 'UTF-8'));
+            if (preg_match('/^(\+|-)/', $value)) {
 
-            if (in_array($dayName, ['сг', 'сег'], true)) {
-                $requestData['dayNum'] = $requestData['currentDay'];
-            } elseif ($dayName === 'зав') {
-                $requestData['dayNum'] = $requestData['currentDay'] + 1;
-                if ($requestData['dayNum'] === 7)
-                    $requestData['dayNum'] = 0;
-            } else {
-                $daysArray = [
-                    ['пн', 'пон'],
-                    ['вт', 'вто'],
-                    ['ср', 'сре'],
-                    ['чт', 'чет'],
-                    ['пт', 'пят'],
-                    ['сб', 'суб'],
-                    ['вс', 'вос']
-                ];
+                $requestData['method'] = $value[0];
+                $withoutMethod = trim(mb_substr($value, 1, 6, 'UTF-8'));
+                $dayName = mb_strtolower(mb_substr($withoutMethod, 0, 3, 'UTF-8'));
 
-                foreach ($daysArray as $num => $daysNames) {
-                    if (in_array($dayName, $daysNames, true)) {
-                        $requestData['dayNum'] = $num;
-                        break;
+                if (in_array($dayName, ['сг', 'сег'], true)) {
+                    $requestData['dayNum'] = $requestData['currentDay'];
+                } elseif ($dayName === 'зав') {
+                    $requestData['dayNum'] = $requestData['currentDay'] + 1;
+                    if ($requestData['dayNum'] === 7)
+                        $requestData['dayNum'] = 0;
+                } else {
+                    $daysArray = [
+                        ['пн', 'пон'],
+                        ['вт', 'вто'],
+                        ['ср', 'сре'],
+                        ['чт', 'чет'],
+                        ['пт', 'пят'],
+                        ['сб', 'суб'],
+                        ['вс', 'вос']
+                    ];
+
+                    foreach ($daysArray as $num => $daysNames) {
+                        if (in_array($dayName, $daysNames, true)) {
+                            $requestData['dayNum'] = $num;
+                            break;
+                        }
                     }
                 }
+            } elseif (strpos($value, ':') !== false) {
+                $requestData['arrive'] = $value;
+            } elseif (strpos($value, '.') !== false) {
+                $requestData['date'] = $value;
+            } elseif (strpos($value, '-') !== false) {
+                $requestData['duration'] = substr($value, 0, 1);
             }
-        } elseif (strpos($value, ':') !== false) {
-            $requestData['arrive'] = $value;
-        } elseif (strpos($value, '.') !== false) {
-            $requestData['date'] = $value;
-        } elseif (strpos($value, '-') !== false) {
-            $requestData['duration'] = substr($value, 0, 1);
         }
-    }
 
-    if ($requestData['method'] === '-') {
-        $result = $weeks->dayUserUnregistrationByTelegram($requestData);
-        if ($result['result']) {
-            $output['message'] = $result['message'];
+        if ($requestData['method'] === '-') {
+            $result = $weeks->dayUserUnregistrationByTelegram($requestData);
+            if ($result['result']) {
+                $output['message'] = $result['message'];
+            } else {
+                $output['message'] = $result['message'];
+            }
         } else {
-            $output['message'] = $result['message'];
+            $result = $weeks->dayUserRegistrationByTelegram($requestData);
+            if ($result['result']) {
+                $output['message'] = $result['message'];
+            } else {
+                $output['message'] = $result['message'];
+            }
         }
-    } else {
-        $result = $weeks->dayUserRegistrationByTelegram($requestData);
-        if ($result['result']) {
-            $output['message'] = $result['message'];
-        } else {
-            $output['message'] = $result['message'];
-        }
+    } catch (\Throwable $th) {
+        $output['message'] = $th->__toString();
     }
 }
