@@ -223,7 +223,7 @@ class Weeks
 			'board' => 'Настолки 🎲',
 			'cash' => 'Кеш-покер 🃏'
 		];
-		return ['result' => true, 'message' => $this->getDayFullDescription($weekData['data'], $data['dayNum'])];
+		return ['result' => true, 'message' => $this->getDayFullDescription($weekData, $data['dayNum'])];
 	}
 	public function getDayFullDescription($weekData, $day)
 	{
