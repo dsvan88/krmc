@@ -159,13 +159,13 @@ class Weeks
 		if ($weekData['id'] === -1) {
 			$checkId = $this->getCurrentId();
 			if (!$checkId)
-				return 'Прежде, чем планировать новую неделю - оформите что-то на этой!';
+				return ['result' => false, 'message' => 'Прежде, чем планировать новую неделю - оформите что-то на этой!'];
 		}
 
 		$id = -1;
 		if (!isset($weekData['data'][$data['dayNum']])) {
 			if (!in_array($data['userStatus'], ['admin', 'manager']))
-				return 'Игр на указанный день, пока не запланировано!';
+				return ['result' => false, 'message' => 'Игр на указанный день, пока не запланировано!'];
 			else {
 				$defaultData = $this->getDataDefault();
 				$weekData['data'][$data['dayNum']] = $defaultData['data'][$data['dayNum']];
@@ -180,7 +180,7 @@ class Weeks
 		} else {
 			if ($weekData['data'][$data['dayNum']]['status'] === 'recalled') {
 				if (!in_array($data['userStatus'], ['admin', 'manager']))
-					return 'Игр на указанный день, пока не запланировано!';
+					return ['result' => false, 'message' => 'Игр на указанный день, пока не запланировано!'];
 				else
 					$weekData['data'][$data['dayNum']]['status'] = '';
 			}
@@ -193,7 +193,7 @@ class Weeks
 		}
 
 		if ($id !== -1)
-			return 'Вы уже зарегистрированны на этот день!';
+			return ['result' => false, 'message' => 'Вы уже зарегистрированны на этот день!'];
 
 		$newData = $weekData['data'][$data['dayNum']];
 		$newData['weekId'] = $weekData['id'];
@@ -213,17 +213,81 @@ class Weeks
 		$result = $this->daySetApproved($newData);
 
 		if (!$result) {
-			return json_encode($newData, JSON_UNESCAPED_UNICODE);
+			return ['result' => false, 'message' => json_encode($newData, JSON_UNESCAPED_UNICODE)];
 		}
 
 		$dayNames = ['в <b>Понедельник</b>', 'во <b>Вторник</b>', 'в <b>Среду</b>', 'в <b>Четверг</b>', 'в <b>Пятницу</b>', 'в <b>Субботу</b>', 'в <b>Воскресенье</b>'];
 		$gameNames = [
-			'mafia' => 'Мафия',
-			'poker' => 'Покер',
-			'board' => 'Настолки',
-			'cash' => 'Кеш-покер'
+			'mafia' => 'Мафия 🎭',
+			'poker' => 'Покер ♦️',
+			'board' => 'Настолки 🎲',
+			'cash' => 'Кеш-покер 🃏'
 		];
-		return "Вы успешно зарегистрированны на игру <b>'{$gameNames[$weekData['data'][$data['dayNum']]['game']]}'</b> {$dayNames[$data['dayNum']]}.";
+		return ['result' => true, 'message' => $this->getDayFullDescription($weekData['data'], $data['dayNum'])];
+	}
+	public function getDayFullDescription($weekData, $day)
+	{
+		$format = "d.m.Y {$weekData['data'][$day]['time']}";
+		$dayDate = strtotime(date($format, $weekData['start'] + TIMESTAMP_DAY * $day));
+
+		if ($_SERVER['REQUEST_TIME'] > $dayDate + DATE_MARGE || $weekData['data'][$day]['status'] === 'recalled') {
+			return '';
+		}
+
+		$date = str_replace(
+			['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+			['<b>Понедельник</b>', '<b>Вторник</b>', '<b>Среда</b>', '<b>Четверг</b>', '<b>Пятница</b>', '<b>Суббота</b>', '<b>Воскресенье</b>'],
+			date('d.m.Y (l) H:i', $dayDate)
+		);
+		$gameNames = [
+			'mafia' => 'Мафия 🎭',
+			'poker' => 'Покер ♦️',
+			'board' => 'Настолки 🎲',
+			'cash' => 'Кеш-покер 🃏'
+		];
+
+		$durations = [
+			'',
+			'1-2',
+			'2-3',
+			'3-4'
+		];
+
+		$costs = [
+			'mafia' => 90,
+			'poker' => 70,
+			'board' => 50,
+			'cash' => 400
+		];
+		$result = '';
+
+		$result .= "$date - {$gameNames[$weekData['data'][$day]['game']]}\r\n";
+
+		if (in_array('fans', $weekData['data'][$day]['mods'], true))
+			$result .= "*<b>ФАНОВАЯ</b>! Хорошо проведите время и повеселитесь!\r\n";
+		if (in_array('tournament', $weekData['data'][$day]['mods'], true))
+			$result .= "<b>ТУРНИР</b>! Станьте чемпионом в равной борьбе!\r\n";
+		if (isset($weekData['data'][$day]['prim']) && $weekData['data'][$day]['prim'] !== '')
+			$result .= "<u>{$weekData['data'][$day]['prim']}</u>\r\n";
+
+		$result .= "\r\n";
+
+		for ($x = 0; $x < count($weekData['data'][$day]['participants']); $x++) {
+			$modsData = '';
+			if ($weekData['data'][$day]['participants'][$x]['arrive'] !== '' && $weekData['data'][$day]['participants'][$x]['arrive'] !== $weekData['data'][$day]['time']) {
+				$modsData .= $weekData['data'][$day]['participants'][$x]['arrive'];
+				if ($weekData['data'][$day]['participants'][$x]['duration'] != 0) {
+					$modsData .= ', ';
+				}
+			}
+			if ($weekData['data'][$day]['participants'][$x]['duration'] != 0) {
+				$modsData .= "на {$durations[$weekData['data'][$day]['participants'][$x]['duration']]} игры";
+			}
+			if ($modsData !== '')
+				$modsData = " (<i>$modsData</i>)";
+			$result .= ($x + 1) . ". <b>{$weekData['data'][$day]['participants'][$x]['name']}</b>{$modsData}\r\n";
+		}
+		return $result;
 	}
 	public function dayUserUnregistrationByTelegram($data)
 	{
@@ -244,7 +308,7 @@ class Weeks
 			$weekData = $this->getDataByTime();
 
 		if (!isset($weekData['data'][$data['dayNum']])) {
-			return 'Игр на указанный день, пока не запланировано!';
+			return ['result' => false, 'message' => 'Игр на указанный день, пока не запланировано!'];
 		}
 
 		$id = -1;
@@ -256,7 +320,7 @@ class Weeks
 			}
 		}
 		if ($id === -1)
-			return 'Вы не были записаны на этот день!';
+			return ['result' => false, 'message' => 'Вы не были записаны на этот день!'];
 
 		$newData = $weekData['data'][$data['dayNum']];
 		$newData['weekId'] = $weekData['id'];
@@ -265,16 +329,16 @@ class Weeks
 		$result = $this->daySetApproved($newData);
 
 		if (!$result) {
-			return json_encode($newData, JSON_UNESCAPED_UNICODE);
+			return ['result' => false, 'message' => json_encode($newData, JSON_UNESCAPED_UNICODE)];
 		}
 		$dayNames = ['в <b>Понедельник</b>', 'во <b>Вторник</b>', 'в <b>Среду</b>', 'в <b>Четверг</b>', 'в <b>Пятницу</b>', 'в <b>Субботу</b>', 'в <b>Воскресенье</b>'];
 		$gameNames = [
-			'mafia' => 'Мафия',
-			'poker' => 'Покер',
-			'board' => 'Настолки',
-			'cash' => 'Кеш-покер'
+			'mafia' => 'Мафия 🎭',
+			'poker' => 'Покер ♦️',
+			'board' => 'Настолки 🎲',
+			'cash' => 'Кеш-покер 🃏'
 		];
-		return "Вы успешно отписались от игры <b>'{$gameNames[$weekData['data'][$data['dayNum']]['game']]}'</b> {$dayNames[$data['dayNum']]}.";
+		return ['result' => true, 'message' => "Вы успешно отписались от игры <b>'{$gameNames[$weekData['data'][$data['dayNum']]['game']]}'</b> {$dayNames[$data['dayNum']]}."];
 	}
 	public function getCount()
 	{
