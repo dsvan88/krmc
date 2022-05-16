@@ -82,10 +82,8 @@ if (!isset($userData['id'])) {
                     '😿',
                 ];
                 $output['pre-message'] = $reactions[mt_rand(0, count($reactions) - 1)];
-                $output['message'] = $result['message'];
-            } else {
-                $output['message'] = $result['message'];
             }
+            $output['message'] = $result['message'];
         } else {
             $result = $weeks->dayUserRegistrationByTelegram($requestData);
             if ($result['result']) {
@@ -96,10 +94,8 @@ if (!isset($userData['id'])) {
                     '😻',
                 ];
                 $output['pre-message'] = $reactions[mt_rand(0, count($reactions) - 1)];
-                $output['message'] = $result['message'];
-            } else {
-                $output['message'] = $result['message'];
             }
+            $output['message'] = $result['message'];
         }
     } catch (\Throwable $th) {
         $output['message'] = $th->__toString();
