@@ -320,6 +320,8 @@ class Weeks
 				break;
 			}
 		}
+		$weekData['data'][$data['dayNum']]['participants'] = array_values($weekData['data'][$data['dayNum']]['participants']);
+
 		if ($id === -1)
 			return ['result' => false, 'message' => 'Вы не были записаны на этот день!'];
 
