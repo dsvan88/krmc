@@ -81,7 +81,7 @@ if (!isset($userData['id'])) {
                     '😱',
                     '😿',
                 ];
-                $output['pre-message'] = $reactions[mt_rand(0, count($reactions))];
+                $output['pre-message'] = $reactions[mt_rand(0, count($reactions) - 1)];
                 $output['message'] = $result['message'];
             } else {
                 $output['message'] = $result['message'];
@@ -95,7 +95,7 @@ if (!isset($userData['id'])) {
                     '🥳',
                     '😻',
                 ];
-                $output['pre-message'] = $reactions[mt_rand(0, count($reactions))];
+                $output['pre-message'] = $reactions[mt_rand(0, count($reactions) - 1)];
                 $output['message'] = $result['message'];
             } else {
                 $output['message'] = $result['message'];
