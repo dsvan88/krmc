@@ -11,10 +11,13 @@ if (isset($_POST['uid']) && $_SESSION['id'] != $_POST['uid']) {
     $userId = $_POST['uid'];
 }
 
-$birthday = strtotime(trim($_POST['birthday']));
+$birthday = 0;
+if ($_POST['birthday'] !== '') {
+    $birthday = strtotime(trim($_POST['birthday']));
 
-if ($birthday > $_SERVER['REQUEST_TIME'] - 60 * 60 * 24 * 365)
-    $birthday = 0;
+    if ($birthday > $_SERVER['REQUEST_TIME'] - 60 * 60 * 24 * 365)
+        $birthday = 0;
+}
 
 $array = [
     'fio' => trim($_POST['fio']),
