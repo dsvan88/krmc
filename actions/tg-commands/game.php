@@ -75,7 +75,13 @@ if (!isset($userData['id'])) {
         if ($requestData['method'] === '-') {
             $result = $weeks->dayUserUnregistrationByTelegram($requestData);
             if ($result['result']) {
-                $output['pre-message'] = '😥';
+                $reactions = [
+                    '😥',
+                    '😭',
+                    '😱',
+                    '😿',
+                ];
+                $output['pre-message'] = $reactions[mt_rand(0, count($reactions))];
                 $output['message'] = $result['message'];
             } else {
                 $output['message'] = $result['message'];
@@ -83,7 +89,13 @@ if (!isset($userData['id'])) {
         } else {
             $result = $weeks->dayUserRegistrationByTelegram($requestData);
             if ($result['result']) {
-                $output['pre-message'] = '🤩';
+                $reactions = [
+                    '🤩',
+                    '🥰',
+                    '🥳',
+                    '😻',
+                ];
+                $output['pre-message'] = $reactions[mt_rand(0, count($reactions))];
                 $output['message'] = $result['message'];
             } else {
                 $output['message'] = $result['message'];

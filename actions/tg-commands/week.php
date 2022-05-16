@@ -39,7 +39,3 @@ if ($promoData) {
         $output['message'] .= "\r\n$message";
     }
 }
-
-if (!isset($_POST['message'])) {
-    print_r($output);
-}
