@@ -70,12 +70,18 @@ if ($output['message'] !== '') {
 
         if ($command === 'week') {
             $bot->pinTelegramBotMessageAndSaveItsData($chatId, $messageId);
-            $bot->pinTelegramBotMessageAndSaveItsData($chatId, $messageId);
         } else if (in_array($command, ['booking', 'reg', 'recall'])) {
             require_once "$_SERVER[DOCUMENT_ROOT]/actions/tg-commands/week.php";
-            $result = $bot->editPinnedMessage($chatId, $output['message']);
+
+            $chatData = $settings->settingsGet(['id', 'value'], 'tg-pinned');
+
+            $i = -1;
+            while (isset($chatData[++$i])) {
+                [$savedChatId, $savedMessageId] =  explode(':', $chatData[$i]['value']);
+                $result = $bot->editPinnedMessage($savedChatId, $output['message']);
+                sleep(1);
+            }
         }
-        // }
     } catch (Exception $e) {
         file_put_contents($_SERVER['DOCUMENT_ROOT'] . '/tg-error.txt', print_r($_POST, true));
     }
