@@ -187,6 +187,7 @@ class Weeks
 			foreach ($weekData['data'][$data['dayNum']]['participants'] as $index => $userData) {
 				if ($userData['id'] === $data['userId']) {
 					if ($data['arrive'] !== '' && $data['arrive'] !== $userData['arrive']) {
+						$updateArrive = $index;
 						break;
 					}
 					$id = $index;
@@ -202,11 +203,15 @@ class Weeks
 		$newData['weekId'] = $weekData['id'];
 		$newData['dayId'] = $data['dayNum'];
 
-		$freeSlot = -1;
-		while (isset($newData['participants'][++$freeSlot])) {
+		if (!isset($updateArrive)) {
+			$slot = -1;
+			while (isset($newData['participants'][++$slot])) {
+			}
+		} else {
+			$slot = $updateArrive;
 		}
 
-		$newData['participants'][$freeSlot] = [
+		$newData['participants'][$slot] = [
 			'id'	=>	$data['userId'],
 			'name'	=>	$data['userName'],
 			'arrive'	=>	$data['arrive'],
