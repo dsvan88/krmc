@@ -26,16 +26,16 @@ if (isset($userData['name']) && $userData['name'] !== 'tmp_telegram_user') {
     $username = mb_substr($username, 0, -1, 'UTF-8');
 
     if (preg_match('/([^а-яА-ЯрРсСтТуУфФчЧхХШшЩщЪъЫыЬьЭэЮюЄєІіЇїҐґ .])/', $username) === 1) {
-        $output['message'] = "Не верный формат псевдонима!\r\nПожалуйста, используйте только <b>кириллицу</b> и <b>пробелы</b> в Вашем псевдониме!";
+        $output['message'] = "Не верный формат псевдонима!\nПожалуйста, используйте только <b>кириллицу</b> и <b>пробелы</b> в Вашем псевдониме!";
     } elseif (mb_strlen(trim($username), 'UTF-8') < 2) {
-        $output['message'] = "Слишком короткий псевдоним!\r\nПожалуйста, используйте, минимум <b>2</b> символа, что бы люди смогли Вас узнать!";
+        $output['message'] = "Слишком короткий псевдоним!\nПожалуйста, используйте, минимум <b>2</b> символа, что бы люди смогли Вас узнать!";
     } else {
         $userId = $users->userGetId($username);
         $userExistsData = $users->usersGetData(['id', 'name', 'telegramid'], ['id' => $userId]);
         if (isset($userExistsData['id'])) {
             if ($userExistsData['telegramid'] !== '') {
                 if ($userExistsData['telegramid'] !== $telegramId) {
-                    $output['message'] = "Игрок с этим псевдонимом - уже <b>зарегистрировал</b> себе телеграм!\r\nЕсли это Ваш псевдоним - обратитесь к администраторам!";
+                    $output['message'] = "Извините, но псевдонимом <b>$username</b> - уже <b>зарезервирован</b> другим участником группы.\nЕсли это Ваш псевдоним - обратитесь к администраторам!";
                 } else {
                     $output['message'] = 'Ваша информация - уже успешно сохранена!';
                 }
