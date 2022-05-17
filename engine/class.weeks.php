@@ -186,6 +186,9 @@ class Weeks
 			}
 			foreach ($weekData['data'][$data['dayNum']]['participants'] as $index => $userData) {
 				if ($userData['id'] === $data['userId']) {
+					if ($data['arrive'] !== '' && $data['arrive'] !== $userData['arrive']) {
+						break;
+					}
 					$id = $index;
 					break;
 				}
