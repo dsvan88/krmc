@@ -89,9 +89,12 @@ if (!isset($userData['id'])) {
             $output['message'] = 'Не могу записать Вас на уже прошедший день! Sowwy:(';
         } else {
             if ($requestData['method'] === '-') {
-                $output['message'] = $weeks->dayUserUnregistrationByTelegram($requestData);
+                $result = $weeks->dayUserUnregistrationByTelegram($requestData);
             } else {
-                $output['message'] = $weeks->dayUserRegistrationByTelegram($requestData);
+                $result = $weeks->dayUserRegistrationByTelegram($requestData);
+            }
+            if (isset($result)) {
+                $output['message'] = $result['message'];
             }
         }
     }
