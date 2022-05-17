@@ -79,7 +79,6 @@ if ($output['message'] !== '') {
             while (isset($chatData[++$i])) {
                 [$savedChatId, $savedMessageId] =  explode(':', $chatData[$i]['value']);
                 $result = $bot->editPinnedMessage($savedChatId, $output['message']);
-                sleep(1);
             }
         }
     } catch (Exception $e) {

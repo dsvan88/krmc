@@ -399,7 +399,7 @@ class Weeks
 			return false;
 		}
 		$weekData['data'][$data['dayNum']]['status'] = 'recalled';
-		return $this->action->rowUpdate(['data' => json_encode($weekData['data'])], ['id' => $data['weekId']], SQL_TBLWEEKS);
+		return $this->action->rowUpdate(['data' => json_encode($weekData['data'], JSON_UNESCAPED_UNICODE)], ['id' => $data['weekId']], SQL_TBLWEEKS);
 	}
 	public function dayRecallByTelegram($data)
 	{

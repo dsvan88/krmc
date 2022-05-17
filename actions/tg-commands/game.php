@@ -93,7 +93,7 @@ if (!isset($userData['id'])) {
                 ];
             }
         }
-        if (isset($reactions)) {
+        if (isset($result)) {
             $output['pre-message'] = $reactions[mt_rand(0, count($reactions) - 1)];
             $output['message'] = $result['message'];
         }
