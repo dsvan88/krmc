@@ -24,7 +24,6 @@ if (!isset($userData['id'])) {
         $requestData['currentDay'] = 6;
 
     if (count($args) > 0) {
-
         for ($i = 0; $i < count($args); $i++) {
             if (preg_match_all('/^(пн|пон|вт|ср|чт|чет|пт|пят|сб|суб|вс|вос|сг|сег|зав)/', trim(mb_strtolower(str_replace(' на ', '', $args[$i])), 'UTF-8'), $daysPattern) !== 0) {
                 $dayName = $daysPattern[1][0];

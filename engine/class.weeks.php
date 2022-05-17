@@ -403,6 +403,7 @@ class Weeks
 	}
 	public function dayRecallByTelegram($data)
 	{
+		return json_encode($data, JSON_UNESCAPED_UNICODE);
 		$currentWeekId = $this->getCurrentId();
 		if ($data['dayNum'] >= $data['currentDay']) {
 			$result = $this->dayRecall(['weekId' => $currentWeekId, 'dayNum' => $data['dayNum']]);
