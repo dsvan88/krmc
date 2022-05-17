@@ -422,7 +422,7 @@ class Weeks
 			}
 
 			if ($weekId === -1) {
-				return json_encode($weeksData, JSON_UNESCAPED_UNICODE) . 'Не знайдено відповідного дня, серед запланованих.' . $data['dayNum'];
+				return 'Не знайдено відповідного дня, серед запланованих.';
 			}
 
 			$result = $this->dayRecall(['weekId' => $weekId, 'dayNum' => $data['dayNum']]);
