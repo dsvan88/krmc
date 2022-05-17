@@ -411,7 +411,7 @@ class Weeks
 			return 'Успішно відмінено';
 		} else {
 			$weeksData = $this->getNearWeeksDataByTime();
-			return json_encode($weeksData, JSON_UNESCAPED_UNICODE);
+
 			$weekId = -1;
 			if (count($weeksData) < 2)
 				return 'Не знайдено відповідного дня, серед запланованих.';
