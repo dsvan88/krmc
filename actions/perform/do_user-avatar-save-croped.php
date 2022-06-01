@@ -32,7 +32,9 @@ if ($func === 'jpeg') {
 	// Повернуть изображение в соответствии с его ориентацией
 	$exifOriginal = exif_read_data($originalFile);
 
-	$src = imagerotate($src, - ($exifOriginal['Orientation'] * 90.0 - 90.0), 0);
+	if (isset($exifOriginal['Orientation'])) {
+		$src = imagerotate($src, - ($exifOriginal['Orientation'] * 90.0 - 90.0), 0);
+	}
 }
 
 $src = imagecrop($src, ['x' => $gd_data->x, 'y' => $gd_data->y, 'width' => $gd_data->width, 'height' => $gd_data->height]);
