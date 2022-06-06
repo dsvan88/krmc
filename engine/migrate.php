@@ -48,10 +48,9 @@ $action->rowDelete(5, SQL_TBLWEEKS);
 
 $weeksData = $action->getAssocArray($action->query("SELECT data,start,finish FROM $table ORDER BY id"));
 
-$newWeekData = $weeksData;
-unset($newWeekData[5]);
-unset($newWeekData[7]);
-unset($newWeekData[9]);
+for ($x = 0; $x < count($weeksData); $x++) {
+    unset($weeksData[$x]['id']);
+}
 
 $action->query("TRUNCATE $table RESTART IDENTITY");
 
