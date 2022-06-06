@@ -45,8 +45,9 @@ if (isset($_SESSION['id'])) {
 	<a class='header__profile-button' data-action='user-profile-form'>
 		$profileImage
 	</a>
-	";
-	print_r($_SESSION);
+	<div class='header__profile-options'>
+		{PROFILE_MENU}
+	</div>";
 	$output['{PROFILE_MENU}'] = file_get_contents("$_SERVER[DOCUMENT_ROOT]/templates/layouts/header-profile-menu-$_SESSION[status].html");
 	/* <li class='header__profile-menu-item'>
 			<a href='/?page=near-evening'>Налаштувати вечір</a>
