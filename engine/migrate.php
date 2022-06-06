@@ -42,9 +42,21 @@ foreach ($weeksData as $weekData) {
 
 
 // Удалить неделю и сбросить идентификаторы недель
+$table = SQL_TBLWEEKS;
 $action->rowDelete(4, SQL_TBLWEEKS);
 $action->rowDelete(5, SQL_TBLWEEKS);
 
+$weeksData = $action->getAssocArray($action->query("SELECT data,start,finish FROM $table ORDER BY id"));
+
+$newWeekData = $weeksData;
+$newWeekData[8] = $weeksData[9];
+$newWeekData[9] = $weeksData[8];
+unset($newWeekData[10]);
+
+$action->query("TRUNCATE $table RESTART IDENTITY");
+
+$action->rowInsert(array_values($newWeekData), $table);
+/* 
 $weeksData = $action->getAssocArray(
     $action->query(
         str_replace(
@@ -54,22 +66,4 @@ $weeksData = $action->getAssocArray(
         )
     )
 );
-
-$action->query(
-    str_replace(
-        '{SQL_TBLWEEKS}',
-        SQL_TBLWEEKS,
-        "TRUNCATE {SQL_TBLWEEKS} RESTART IDENTITY"
-    )
-);
-$action->rowInsert($weeksData, SQL_TBLWEEKS);
-
-$weeksData = $action->getAssocArray(
-    $action->query(
-        str_replace(
-            '{SQL_TBLWEEKS}',
-            SQL_TBLWEEKS,
-            "SELECT data,start,finish FROM {SQL_TBLWEEKS} ORDER BY id"
-        )
-    )
-);
+ */
