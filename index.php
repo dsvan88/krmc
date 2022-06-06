@@ -46,6 +46,7 @@ if (isset($_SESSION['id'])) {
 		$profileImage
 	</a>
 	";
+	print_r($_SESSION);
 	$output['{PROFILE_MENU}'] = file_get_contents("$_SERVER[DOCUMENT_ROOT]/templates/layouts/header-profile-menu-$_SESSION[status].html");
 	/* <li class='header__profile-menu-item'>
 			<a href='/?page=near-evening'>Налаштувати вечір</a>
