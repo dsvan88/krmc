@@ -4,55 +4,50 @@ require $_SERVER['DOCUMENT_ROOT'] . '/engine/class.action.php';
 $action = new Action;
 
 /* backup the db OR just a table */
-function backup_tables($action, $tables = '*')
+function backup_tables($action, $tables = [])
 {
-
-    //get all of the tables
-    if ($tables == '*') {
-        $tables = [];
-        $result = $action->query('SELECT * FROM pg_catalog.pg_tables;');
-        while ($tbl = $action->getRow($result)) {
-            $tables[] = $tbl[0];
-        }
-    } else {
-        $tables = is_array($tables) ? $tables : explode(',', $tables);
-    }
-
     $return = '';
     //cycle through
     foreach ($tables as $table) {
-        $result = $action->query("SELECT * FROM $table");
-        $numFields = $result->columnCount();
-
-        for ($i = 0; $i < $numFields; $i++) {
-            while ($row = $action->getRow($result)) {
-                $return .= "INSERT INTO $table VALUES(";
-                for ($j = 0; $j < $numFields; $j++) {
-                    $row[$j] = addslashes($row[$j]);
-                    $row[$j] = preg_replace("/\n/", "\\n", $row[$j]);
-                    if (isset($row[$j])) {
-                        $return .= '"' . $row[$j] . '"';
-                    } else {
-                        $return .= '""';
-                    }
-                    if ($j < ($numFields - 1)) {
-                        $return .= ',';
-                    }
-                }
-                $return .= ");\n";
-            }
+        $result = $action->query("SELECT * FROM $table ORDER BY id");
+        while ($row = $action->getAssoc($result)) {
+            $newRow = [
+                $row['id'],
+                $row['name'],
+                $row['login'],
+                $row['password'],
+                json_encode([
+                    'status' => $row['status'],
+                    'admin' => $row['admin'],
+                    'rank' => $row['rank'],
+                ], JSON_UNESCAPED_UNICODE),
+                json_encode([
+                    'fio' => $row['fio'],
+                    'birthday' => $row['birthday'],
+                    'gender' => $row['gender'],
+                    'avatar' => '',
+                ], JSON_UNESCAPED_UNICODE),
+                json_encode([
+                    'email' => $row['email'],
+                    'telegram' => $row['telegram'],
+                    'telegramid' => $row['telegramid'],
+                ], JSON_UNESCAPED_UNICODE),
+                json_encode([
+                    'in_game' => $row['game_credo'],
+                    'in_live' => $row['live_credo'],
+                ], JSON_UNESCAPED_UNICODE),
+            ];
+            $return .= "('" . implode("','", $newRow) . "'),\r\n";
         }
-        $return .= "\n\n\n";
     }
-
     return $return;
 }
 
 header('Content-Type: application/octet-stream');
 header("Content-Transfer-Encoding: Binary");
-header('Content-disposition: attachment; filename="dump.sql"');
+header('Content-disposition: attachment; filename="dump.txt"');
 
-echo backup_tables($action, [SQL_TBLWEEKS, SQL_TBLNEWS, SQL_TBLUSERS]);
+echo backup_tables($action, [SQL_TBLUSERS]);
 
 /* 
 $tables = [SQL_TBLWEEKS, SQL_TBLNEWS, SQL_TBLUSERS];
@@ -75,4 +70,50 @@ function extract($action, $table)
         echo '</br>';
     }
 }
+
+
+
+            $newRow = [
+                $row['id'],
+                $row['name'],
+                $row['login'],
+                $row['password'],
+                str_replace(
+                    '"',
+                    '\\"',
+                    json_encode([
+                        'status' => $row['status'],
+                        'admin' => $row['admin'],
+                        'rank' => $row['rank'],
+                    ], JSON_UNESCAPED_UNICODE)
+                ),
+                str_replace(
+                    '"',
+                    '\\"',
+                    json_encode([
+                        'fio' => $row['fio'],
+                        'birthday' => $row['birthday'],
+                        'gender' => $row['gender'],
+                        'avatar' => '',
+                    ], JSON_UNESCAPED_UNICODE)
+                ),
+                str_replace(
+                    '"',
+                    '\\"',
+                    json_encode([
+                        'email' => $row['email'],
+                        'telegram' => $row['telegram'],
+                        'telegramid' => $row['telegramid'],
+                    ], JSON_UNESCAPED_UNICODE)
+                ),
+                str_replace(
+                    '"',
+                    '\\"',
+                    json_encode([
+                        'in_game' => $row['game_credo'],
+                        'in_live' => $row['live_credo'],
+                    ], JSON_UNESCAPED_UNICODE)
+                ),
+            ];
+
  */
