@@ -70,8 +70,6 @@ if (!isset($userData['id'])) {
             }
         } elseif (strpos($value, ':') !== false) {
             $requestData['arrive'] = $value;
-        } elseif (strpos($value, '.') !== false) {
-            $requestData['date'] = $value;
         } elseif (strpos($value, '-') !== false) {
             $requestData['duration'] = substr($value, 0, 1);
         } elseif ($requestData['userId'] < 2) {
