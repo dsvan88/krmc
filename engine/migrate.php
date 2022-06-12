@@ -54,7 +54,7 @@ for ($x = 0; $x < count($weeksData); $x++) {
 
 $action->query("TRUNCATE $table RESTART IDENTITY");
 
-$action->rowInsert(array_values($newWeekData), $table);
+$action->rowInsert(array_values($weeksData), $table);
 /* 
 $weeksData = $action->getAssocArray(
     $action->query(
