@@ -43,14 +43,15 @@ foreach ($weeksData as $weekData) {
 
 // Удалить неделю и сбросить идентификаторы недель
 $table = SQL_TBLWEEKS;
-$action->rowDelete(4, SQL_TBLWEEKS);
-$action->rowDelete(5, SQL_TBLWEEKS);
 
 $weeksData = $action->getAssocArray($action->query("SELECT data,start,finish FROM $table ORDER BY id"));
 
 for ($x = 0; $x < count($weeksData); $x++) {
     unset($weeksData[$x]['id']);
 }
+$weeksData[] = $weeksData[1];
+unset($weeksData[1]);
+$weeksData = array_values($weeksData);
 
 $action->query("TRUNCATE $table RESTART IDENTITY");
 

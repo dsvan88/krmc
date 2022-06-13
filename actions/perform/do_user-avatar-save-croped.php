@@ -43,7 +43,7 @@ if ($src !== FALSE) {
 	$max_height = 400;
 	if ($gd_data->height > $max_height) {
 		$ratio = $gd_data->width / $gd_data->height;
-		$src = imagescale($src, $max_height * $ratio, $max_height);
+		$src = imagescale($src, (int) $max_height * $ratio, $max_height);
 	}
 	$pathCropped = FILE_USRGALL . $userId . '/' . substr($new_name, 0, strrpos($new_name, '.') + 1);
 	$fullPath = $_SERVER['DOCUMENT_ROOT'] . $pathCropped;
@@ -51,10 +51,6 @@ if ($src !== FALSE) {
 	imagewebp($src, $fullPath . 'webp');
 
 	imagedestroy($src);
-	/* 
-	print_r(exif_read_data($originalFile));
-	echo "\r\n";
-	print_r(exif_read_data($_SERVER['DOCUMENT_ROOT'].$pathCropped.$func)); */
 
 	$CommonActionObject->rowUpdate(array('avatar' => $new_name), array('id' => $userId), SQL_TBLUSERS);
 	$output['error'] = 0;
