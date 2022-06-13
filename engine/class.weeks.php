@@ -275,7 +275,7 @@ class Weeks
 		if (in_array('tournament', $weekData['data'][$day]['mods'], true))
 			$result .= "<b>ТУРНИР</b>! Станьте чемпионом в равной борьбе!\r\n";
 		if (isset($weekData['data'][$day]['prim']) && $weekData['data'][$day]['prim'] !== '')
-			$result .= "<u>{$weekData['data'][$day]['prim']}</u>\r\n";
+			$result .= '<u>' . addslashes($weekData['data'][$day]['prim']) . "</u>\r\n";
 
 		$result .= "\r\n";
 
