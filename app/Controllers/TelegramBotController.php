@@ -76,7 +76,7 @@ class TelegramBotController extends Controller
                     $bot->pinMessage($messageArray['message']['chat']['id'], $botResult[0]['result']['message_id']);
                     TelegramChats::savePinned($messageArray, $botResult[0]['result']['message_id']);
                 }
-                if (in_array($command['command'], ['reg', 'set', 'week', 'recall', 'today', 'day', 'promo'], true)) {
+                if (in_array($command['command'], ['reg', 'set', 'week', 'recall', 'today', 'day', 'promo'], true) && $messageArray['message']['chat']['id'] !== $techTelegramId) {
                     $bot->deleteMessage($messageArray['message']['chat']['id'], $messageArray['message']['message_id']);
                 }
                 if (in_array($command['command'], ['booking', 'reg', 'set', 'recall', 'promo'], true)) {
