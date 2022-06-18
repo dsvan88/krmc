@@ -197,7 +197,6 @@ class Days extends Model
                 $newParticipants[] = $dayData['participants'][$x];
                 continue;
             }
-            unset($dayData['participants'][$x]);
             --$count;
         }
         $dayData['participants'] = $newParticipants;
