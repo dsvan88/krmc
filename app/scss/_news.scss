@@ -1,0 +1,134 @@
+.news {
+	&__item{
+		&-logo {
+			float: left;
+			width: 20vw;
+			padding: 0 10px 0 5px;
+			text-indent: 0;
+			&_image {
+				width: 100%;
+				height: auto;
+			}
+		}
+		&-title{
+			font-size: 2.5em;
+			margin: 0.2em 0 0.4em 0;
+			text-align: center;
+		}
+		&-subtitle{
+			font-size: 2em;
+			margin: 0.1em 0 0.2em 0;
+		}
+	}
+	&__title{
+		margin-bottom: 15px;
+		color: $color-text-section-title;
+		font-size: 2.5em;
+		text-align: center;
+	}
+	&-preview {
+		margin-bottom: 50px;
+		&__title {
+			margin-top: 20px;
+			margin-bottom: 10px;
+			font-size: 3em;
+			text-align: center;
+		}
+		&__list {
+			display: grid;
+			grid-auto-rows: 250px;
+			grid-gap: 0.5em;
+			@include sm {
+				grid-template-columns: 1fr;
+			}
+			@include md {
+				grid-template-columns: repeat(2, 1fr);
+			}
+			@include lg {
+				grid-template-columns: repeat(3, 1fr);
+			}
+		}
+		&__item {
+			background-color: $bg-color-light;
+			border-radius: 5px;
+			padding: 15px 20px;
+			border: 1px solid $color-text-menu;
+			font-size: 1.3em;
+			text-indent: 0;
+			position: relative;
+			&-title {
+				font-size: 1.4em;
+				margin-bottom: 10px;
+			}
+			&-subtitle {
+				font-size: 0.7em;
+				margin-bottom: 20px;
+			}
+			&-logo {
+				width: 50px;
+				height: 60px;
+				padding: 5px 10px 5px 0;
+				float: left;
+				display: flex;
+				flex-direction: column;
+				justify-content: center;
+				img {
+					width: 100%;
+				}
+			}
+			&-content {
+				font-size: 0.7em;
+			}
+		}
+		&__read-more {
+			position: absolute;
+			bottom: 20px;
+			font-size: 0.7em;
+			width: 90%;
+			&-link {
+				float: right;
+				color: $color-text-main;
+				cursor: pointer;
+			}
+		}
+		&__dashboard {
+			font-size: 1.1rem;
+			.fa {
+				margin-right: 5px;
+				cursor: pointer;
+				&:hover {
+					color: $color-text-menu;
+				}
+			}
+		}
+		&__links {
+			display: flex;
+			justify-content: center;
+			padding: 10px 0;
+			> a {
+				margin: 0px 3px;
+				padding: 3px 5px;
+				border: 1px solid $color-text-main;
+				text-decoration: none;
+				text-indent: 0px;
+				color: $color-text-main;
+				transition: all $animation-fast ease-in;
+				&:hover {
+					background-color: $color-text-main;
+					color: $bg-color-dark;
+				}
+				&.active {
+					margin: 0px 10px;
+					border: 1px solid $bg-color-dark;
+				}
+				&:not([href]) {
+					cursor: not-allowed;
+					&:hover {
+						background-color: $color-text-menu;
+						color: $color-text-blur;
+					}
+				}
+			}
+		}
+	}
+}
