@@ -417,7 +417,6 @@ class TelegramBotController extends Controller
                 }
             }
         }
-        return ['result' => true, 'message' => json_encode($weekData, JSON_UNESCAPED_UNICODE) . ' ' . $slot];
         $newDayData = $weekData['data'][$requestData['dayNum']];
         if ($requestData['method'] === '+') {
             if ($participantId !== -1) {
