@@ -6,6 +6,7 @@
                     <th>#</th>
                     <th>Чат з</th>
                     <th>Псевдонім</th>
+                    <th>TelegramID</th>
                     <th>Остання активність</th>
                 </tr>
             </thead>
