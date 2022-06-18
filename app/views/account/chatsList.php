@@ -36,6 +36,7 @@
                         <td><?= ($x + 1) ?>.</td>
                         <td title="Чат з"><?= $chatTitle ?></td>
                         <td title="Псевдонім" data-action-dblclick="account/set/nickname/form" data-cid="<?= $chatsData[$x]['uid'] ?>"><?= $nickname ?></td>
+                        <td title="TelegramID"><?= $chatsData[$x]['uid'] ?></td>
                         <td title="Остання активність"><?= date('d.m.Y H:i:s', $chatsData[$x]['data']['last_seems']) ?></td>
                     </tr>
                 <? endfor; ?>
