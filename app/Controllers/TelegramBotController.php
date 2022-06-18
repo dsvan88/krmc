@@ -44,7 +44,7 @@ class TelegramBotController extends Controller
             $text = trim($messageArray['message']['text']);
 
             $command = self::parseCommand($text);
-            $bot->sendMessage($techTelegramId, json_encode($command, JSON_UNESCAPED_UNICODE));
+
             if (!$command) return false;
 
             $telegramId = $messageArray['message']['from']['id'];
