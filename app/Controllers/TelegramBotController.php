@@ -44,9 +44,9 @@ class TelegramBotController extends Controller
             $text = trim($messageArray['message']['text']);
 
             $command = self::parseCommand($text);
-
+            $bot->sendMessage($techTelegramId, json_encode($command, JSON_UNESCAPED_UNICODE));
             if (!$command) return false;
-            $messageArray['message']['chat']['id'] = $techTelegramId;
+
             $telegramId = $messageArray['message']['from']['id'];
 
             $userData = Users::getDataByTelegramId($telegramId);
@@ -68,8 +68,7 @@ class TelegramBotController extends Controller
             $result = self::$commandMethod($command);
 
             if (isset($result['pre-message'])) {
-                // $bot->sendMessage($messageArray['message']['chat']['id'], $result['pre-message'], $messageArray['message']['message_id']);
-                $bot->sendMessage($messageArray['message']['chat']['id'], $result['pre-message']);
+                $bot->sendMessage($messageArray['message']['chat']['id'], $result['pre-message'], $messageArray['message']['message_id']);
             }
             $botResult = $bot->sendMessage($messageArray['message']['chat']['id'], Locale::applySingle($result['message']));
             if ($botResult[0]['ok']) {
@@ -77,7 +76,7 @@ class TelegramBotController extends Controller
                     $bot->pinMessage($messageArray['message']['chat']['id'], $botResult[0]['result']['message_id']);
                     TelegramChats::savePinned($messageArray, $botResult[0]['result']['message_id']);
                 }
-                /* if (in_array($command['command'], ['reg', 'set', 'week', 'recall', 'today', 'day', 'promo'], true)) {
+                if (in_array($command['command'], ['reg', 'set', 'week', 'recall', 'today', 'day', 'promo'], true)) {
                     $bot->deleteMessage($messageArray['message']['chat']['id'], $messageArray['message']['message_id']);
                 }
                 if (in_array($command['command'], ['booking', 'reg', 'set', 'recall', 'promo'], true)) {
@@ -86,7 +85,7 @@ class TelegramBotController extends Controller
                     foreach ($chatData as $chatId => $pinned) {
                         $bot->editMessage($chatId, $pinned, $weekData['message']);
                     }
-                } */
+                }
             }
         } catch (\Throwable $th) {
             $debugMessage = [
