@@ -191,16 +191,16 @@ class Days extends Model
     public static function removeNonamesFromDayData($dayData, $count)
     {
         $count = (int) $count;
+        $newParticipants = [];
         for ($x = 0; $x < count($dayData['participants']); $x++) {
-            if (strpos($dayData['participants'][$x]['name'], 'tmp_user') === false)
+            if (strpos($dayData['participants'][$x]['name'], 'tmp_user') === false || $count === 0) {
+                $newParticipants[] = $dayData['participants'][$x];
                 continue;
+            }
             unset($dayData['participants'][$x]);
             --$count;
-            --$x;
-            if ($count === 0)
-                break;
         }
-        $dayData['participants'] = array_values($dayData['participants']);
+        $dayData['participants'] = $newParticipants;
 
         return $dayData;
     }
