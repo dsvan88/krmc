@@ -382,8 +382,12 @@ class TelegramBotController extends Controller
         }
 
         $weekId = Weeks::currentId();
-        if ($requestData['currentDay'] > $requestData['dayNum']) {
-            ++$weekId;
+        if ($requestData['dayNum'] === -1) {
+            $requestData['dayNum'] = $requestData['currentDay'];
+        } else {
+            if ($requestData['currentDay'] > $requestData['dayNum']) {
+                ++$weekId;
+            }
         }
         $weekData = Weeks::weekDataById($weekId);
 
