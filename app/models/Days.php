@@ -193,7 +193,7 @@ class Days extends Model
         $count = (int) $count;
         $newParticipants = [];
         for ($x = 0; $x < count($dayData['participants']); $x++) {
-            if (strpos($dayData['participants'][$x]['name'], 'tmp_user') === false || $count === 0) {
+            if (strpos($dayData['participants'][$x]['name'], 'tmp_user') === false || $count <= 0) {
                 $newParticipants[] = $dayData['participants'][$x];
                 continue;
             }
