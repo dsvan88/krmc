@@ -196,6 +196,7 @@ class Days extends Model
                 continue;
             unset($dayData['participants'][$x]);
             --$count;
+            --$x;
             if ($count === 0)
                 break;
         }
