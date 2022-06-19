@@ -28,7 +28,7 @@ class AccountController extends Controller
             if (Users::login($_POST)) {
                 View::location('/');
             } else {
-                View::message(['error' => 1, 'message' => Locale::applySingle('{{ Account_Login_User_Not_Found }}')]);
+                View::message(['error' => 1, 'message' => '{{ Account_Login_User_Not_Found }}']);
             }
             exit();
         }
@@ -108,7 +108,7 @@ class AccountController extends Controller
             }
             Users::edit($userData, ['id' => $userId]);
         }
-        View::message(['message' => Locale::applySingle('{{ Action_Success }}')]);
+        View::message(['error' => 0, 'message' => '{{ Action_Success }}']);
     }
     public function profileFormAction()
     {
@@ -200,7 +200,7 @@ class AccountController extends Controller
             Users::edit($userData, ['id' => $userId]);
             TelegramChats::edit($chatData, $chatId);
         }
-        View::message(['message' => Locale::applySingle('{{ Action_Success }}')]);
+        View::message(['message' => '{{ Action_Success }}']);
     }
     public function setNicknameFormAction()
     {
@@ -277,7 +277,7 @@ class AccountController extends Controller
     }
     public function forgetFormAction()
     {
-        View::message(['message' => Locale::applySingle('{{ Not_Implemented_Yet }}')]);
+        View::message(['message' => '{{ Not_Implemented_Yet }}']);
     }
     public function registerFormAction()
     {
@@ -300,7 +300,7 @@ class AccountController extends Controller
         if ($result !== true) {
             View::message($result);
         }
-        View::message(['message' => Locale::applySingle('{{ Action_Success }}')]);
+        View::message(['message' => '{{ Action_Success }}']);
     }
     public function deleteAction()
     {

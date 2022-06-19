@@ -67,7 +67,7 @@ class NewsController extends Controller
                 }
             }
             News::edit($array, $newsId);
-            View::message(['error' => 0, 'message' => Locale::applySingle('{{ Changes_Save_Success }}')]);
+            View::message(['error' => 0, 'message' => '{{ Changes_Save_Success }}']);
         }
 
         $newsData = News::getDataById($newsId);
@@ -93,7 +93,7 @@ class NewsController extends Controller
     {
         if (!empty($_POST)) {
             News::edit($_POST, 'promo');
-            View::message(['error' => 0, 'message' => Locale::applySingle('{{ Changes_Save_Success }}')]);
+            View::message(['error' => 0, 'message' => '{{ Changes_Save_Success }}']);
         }
         $newsData = News::getPromoData();
         $vars = [
@@ -123,7 +123,7 @@ class NewsController extends Controller
                 }
             }
             News::create($array);
-            View::message(['error' => 0, 'message' => Locale::applySingle('{{ Changes_Save_Success }}')]);
+            View::message(['error' => 0, 'message' => '{{ Changes_Save_Success }}']);
         }
         $vars = [
             'texts' => [

@@ -727,7 +727,8 @@ class TelegramBotController extends Controller
                         break;
                 }
             }
-            $bot->sendMessage($targets, $message);
+            $result = $bot->sendMessage($targets, $message);
+
             View::message(['error' => 0, 'message' => '{{ Action_Success }}']);
         }
         $groupChats = TelegramChats::getGroupChatsList();

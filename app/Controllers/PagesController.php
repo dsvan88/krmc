@@ -63,7 +63,7 @@ class PagesController extends Controller
                 $name = 'index';
             }
             Pages::save($name, $array);
-            View::message(['error' => 0, 'message' => Locale::applySingle('{{ Changes_Save_Success }}')]);
+            View::message(['error' => 0, 'message' => '{{ Changes_Save_Success }}']);
         }
 
         $settings = Settings::getPageById($pageId);
@@ -102,7 +102,7 @@ class PagesController extends Controller
 
             $name = Locale::translitization($array['title']);
             Pages::save($name, $array);
-            View::message(['error' => 0, 'message' => Locale::applySingle('{{ Changes_Save_Success }}')]);
+            View::message(['error' => 0, 'message' => '{{ Changes_Save_Success }}']);
         }
         $vars = [
             'texts' => [

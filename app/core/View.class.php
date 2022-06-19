@@ -99,6 +99,9 @@ class View
     }
     public static function message($data)
     {
+        if (isset($data['message'])) {
+            $data['message'] = Locale::applySingle($data['message']);
+        }
         exit(json_encode($data));
     }
     public static function defaultVars()

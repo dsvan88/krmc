@@ -18,7 +18,7 @@ class DaysController extends Controller
         if (isset($_SESSION['privilege']['status']) && in_array($_SESSION['privilege']['status'], ['manager', 'admin'])) {
             if (!empty($_POST)) {
                 $weekId = self::edit($_POST);
-                View::message(['error' => 0, 'message' => Locale::applySingle('{{ Day_Set_Success }}'), 'url' => "/days$dayId/w$weekId"]);
+                View::message(['error' => 0, 'message' => '{{ Day_Set_Success }}', 'url' => "/days$dayId/w$weekId"]);
             }
             self::$route['action'] = 'edit';
             View::set(self::$route);

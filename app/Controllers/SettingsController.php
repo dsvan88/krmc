@@ -26,7 +26,7 @@ class SettingsController extends Controller
             $array['short_name'] = Locale::translitization($array['name']);
             $array['by_default'] = $array['value'];
             Settings::save($array);
-            View::message(['error' => 0, 'message' => Locale::applySingle('{{ Changes_Save_Success }}'), 'location' => '/settings/list']);
+            View::message(['error' => 0, 'message' => '{{ Changes_Save_Success }}', 'location' => '/settings/list']);
         }
         $vars = [
             'texts' => [
