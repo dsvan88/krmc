@@ -65,11 +65,6 @@ return  [
         'action' => 'delete',
         'access' => ['category' => 'admin']
     ],
-    'users/chats' => [
-        'controller' => 'account',
-        'action' => 'chatsList',
-        'access' => ['category' => 'admin']
-    ],
 
     'news' => [
         'controller' => 'news',
@@ -147,7 +142,11 @@ return  [
         'action' => 'send',
         'access' => ['category' => 'admin']
     ],
-
+    'chat/list' => [
+        'controller' => 'telegramBot',
+        'action' => 'chatsList',
+        'access' => ['category' => 'admin']
+    ],
 
     'api/account/login' =>
     [

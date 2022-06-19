@@ -121,20 +121,14 @@ class TelegramBotController extends Controller
 
             if (in_array($command, ['?', 'help'])) {
                 return ['command' => 'help'];
-            } elseif ($command === 'reg') {
+            }
+            if (in_array($command, ['reg', 'set'], true)) {
                 $text = mb_substr($text, $commandLen + 1, NULL, 'UTF-8');
                 $arguments = explode(',', mb_strtolower(str_replace('на ', '', $text)));
                 if (preg_match('/\([^)]+\)/', $text, $prim) === 1) {
                     $arguments['prim'] = mb_substr($prim[0], 1, -1, 'UTF-8');
                 }
                 return ['command' => 'reg', 'arguments' => $arguments];
-            } elseif ($command === 'set') {
-                $text = mb_substr($text, $commandLen + 1, NULL, 'UTF-8');
-                $arguments = explode(',', mb_strtolower(str_replace('на ', '', $text)));
-                if (preg_match('/\([^)]+\)/', $text, $prim) === 1) {
-                    $arguments['prim'] = mb_substr($prim[0], 1, -1, 'UTF-8');
-                }
-                return ['command' => 'set', 'arguments' => $arguments];
             }
             if (method_exists(__CLASS__, $command . 'Command')) {
                 preg_match_all('/([a-zA-Zа-яА-ЯрРсСтТуУфФчЧхХШшЩщЪъЫыЬьЭэЮюЄєІіЇїҐґ.]+)/', trim(mb_substr($text, $commandLen + 1, NULL, 'UTF-8')), $matches);
@@ -698,6 +692,14 @@ class TelegramBotController extends Controller
 ";
         }
         return ['result' => true, 'message' => $message];
+    }
+    public static function chatsListAction()
+    {
+        $vars = [
+            'formTitle' => '{{ Chats_List_Title }}',
+            'chatsData' => TelegramChats::getChatsList()
+        ];
+        View::render('{{ Chats_List_Title }}', $vars);
     }
     public static function sendAction()
     {

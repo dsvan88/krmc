@@ -45,14 +45,6 @@ class AccountController extends Controller
         ];
         View::render('{{ Users_List_Page_Title }}', $vars);
     }
-    public function chatsListAction()
-    {
-        $vars = [
-            'formTitle' => '{{ Chats_List_Title }}',
-            'chatsData' => TelegramChats::getChatsList()
-        ];
-        View::render('{{ Chats_List_Title }}', $vars);
-    }
     public function loginFormAction()
     {
         $vars = [

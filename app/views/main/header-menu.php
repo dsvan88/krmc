@@ -29,7 +29,7 @@
                 <div class='header__profile-menu-bar'></div>
             </li>
             <li class='header__profile-menu-item'>
-                <a href='/users/chats'><?= $texts['headerMenuUsersChatsLink'] ?></a>
+                <a href='/chat/list'><?= $texts['headerMenuUsersChatsLink'] ?></a>
                 <div class='header__profile-menu-bar'></div>
             </li>
             <li class='header__profile-menu-item'>
