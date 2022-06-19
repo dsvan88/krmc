@@ -10,14 +10,9 @@ actionHandler.commonFormSubmit = function (event) {
         url: url,
         data: formData,
 		successFunc: function (result) {
-			console.log(result);
-           /*  if (result['error'] != 0) {
-                alert(result['message']);
-                return false;
-            }
 			alert(result['message']);
 			if (result['url'])
-            	window.location = result['url']; */
+            	window.location = result['url'];
         },
     });
 }
