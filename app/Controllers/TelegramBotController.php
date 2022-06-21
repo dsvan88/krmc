@@ -128,7 +128,7 @@ class TelegramBotController extends Controller
                 if (preg_match('/\([^)]+\)/', $text, $prim) === 1) {
                     $arguments['prim'] = mb_substr($prim[0], 1, -1, 'UTF-8');
                 }
-                return ['command' => 'reg', 'arguments' => $arguments];
+                return ['command' => $command, 'arguments' => $arguments];
             }
             if (method_exists(__CLASS__, $command . 'Command')) {
                 preg_match_all('/([a-zA-Zа-яА-ЯрРсСтТуУфФчЧхХШшЩщЪъЫыЬьЭэЮюЄєІіЇїҐґ.]+)/', trim(mb_substr($text, $commandLen + 1, NULL, 'UTF-8')), $matches);
