@@ -145,7 +145,7 @@ return [
 <u>/day (week day)</u> <i>// Booking information for a specific day. Without specifying the day - for today</i>
 <u>/nick Your nickname</u> (Cyrillic) <i>// Register your nickname</i>
 <u>/?</u> или <u>/help</u> <i>// This message</i>",
-    '{{ Tg_Command_Admin }}' => "\n\n<b><u>Admin's commands</u></b>:
+    '{{ Tg_Command_Help_Admin }}' => "\n\n<b><u>Admin's commands</u></b>:
 <u>/reg</u> <i>// Booking/unbooking players for a specific day. Examples:</i>
     /reg +вс, nickname, 18:00, (with ?)
     /reg -вс, nickname

@@ -662,7 +662,7 @@ class TelegramBotController extends Controller
         $message = Locale::applySingle('{{ Tg_Command_Help }}');
 
         if (self::$messageData['message']['chat']['type'] === 'private' && in_array(self::$requesterData['privilege']['status'], ['manager', 'admin'])) {
-            $message .= "";
+            $message .= Locale::applySingle('{{ Tg_Command_Help_Admin }}');
         }
         return ['result' => true, 'message' => $message];
     }
