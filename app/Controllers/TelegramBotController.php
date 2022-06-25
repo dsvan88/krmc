@@ -36,6 +36,7 @@ class TelegramBotController extends Controller
             }
 
             $langCode = 'uk';
+            $bot->sendMessage($messageArray['message']['chat']['id'], $messageArray['message']['from']['language_code']);
             if (isset($messageArray['message']['from']['language_code']) && in_array($messageArray['message']['from']['language_code'], ['uk', 'en', 'ru'])) {
                 $langCode = $messageArray['message']['from']['language_code'];
             }
