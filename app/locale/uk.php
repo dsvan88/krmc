@@ -125,6 +125,7 @@ return [
     '{{ Tg_Command_User_Not_Found }}' => "Такого користувача не знайдено!",
     '{{ Tg_Gameday_Not_Set }}' => "На цей день не заплановано ігор, поки що.",
 
+    '{{ Tg_User_With_Telegramid }}' => "Користувач із зареєстрованим Телеграмом.",
     '{{ Tg_Command_Requester_Already_Booked }}' => "Вы вже записані на ігри цього дня!",
     '{{ Tg_Command_Requester_Not_Booked }}' => "Вы не були записані на ігри цього дня!",
 

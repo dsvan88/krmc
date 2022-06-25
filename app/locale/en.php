@@ -126,6 +126,7 @@ return [
     '{{ Tg_Command_Requester_Already_Booked }}' => "You are already signed up for this day's games!",
     '{{ Tg_Command_Requester_Not_Booked }}' => "You weren't signed up for this day's games!",
 
+    '{{ Tg_User_With_Telegramid }}' => "User with registered Telegram.",
     '{{ Tg_Command_User_Already_Booked }}' => "This user is already signed up for today's games!",
     '{{ Tg_Command_User_Not_Booked }}' => "This user has not been signed up for this day's games!",
     '{{ Tg_Command_Name_Already_Set_By_Other }}' => "The nickname <b>%s</b> is already registered by another member of the group!\n\nIf this is you, then contact the Administrators to make changes!",
