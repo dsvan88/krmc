@@ -35,7 +35,7 @@ class TelegramBotController extends Controller
                 TelegramChats::save($messageArray);
             }
 
-            $bot->sendMessage($messageArray['message']['chat']['id'], '<spoiler>' . json_encode($messageArray, JSON_UNESCAPED_UNICODE) . '</spoiler>');
+            $bot->sendMessage($messageArray['message']['chat']['id'], '<spoiler>' . $messageArray['message']['from']['id'] . '</spoiler>');
             $langCode = 'uk';
             if (isset($messageArray['message']['from']['language_code']) && in_array($messageArray['message']['from']['language_code'], ['uk', 'en', 'ru'])) {
                 $langCode = $messageArray['message']['from']['language_code'];
