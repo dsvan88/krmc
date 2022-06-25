@@ -36,7 +36,6 @@ class TelegramBotController extends Controller
             }
 
             $langCode = 'uk';
-            $bot->sendMessage($messageArray['message']['chat']['id'], $messageArray['message']['from']['language_code']);
             if (isset($messageArray['message']['from']['language_code']) && in_array($messageArray['message']['from']['language_code'], ['uk', 'en', 'ru'])) {
                 $langCode = $messageArray['message']['from']['language_code'];
             }
@@ -610,8 +609,11 @@ class TelegramBotController extends Controller
         for ($i = 0; $i < count($usersList); $i++) {
             if ($usersList[$i]['name'] === '') continue;
             $message .= (++$x) . ". <b>{$usersList[$i]['name']}</b>";
-            if ($usersList[$i]['contacts']['telegram'] !== '')
+            if ($usersList[$i]['contacts']['telegram'] !== '') {
                 $message .= " (@{$usersList[$i]['contacts']['telegram']})";
+            }
+            if ($usersList[$i]['contacts']['telegramid'] !== '')
+                $message .= ' ✅';
             $message .= "\n";
         }
         return ['result' => true, 'message' => $message];
