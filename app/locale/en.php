@@ -130,5 +130,33 @@ return [
     '{{ Tg_Command_User_Not_Booked }}' => "This user has not been signed up for this day's games!",
     '{{ Tg_Command_Name_Already_Set_By_Other }}' => "The nickname <b>%s</b> is already registered by another member of the group!\n\nIf this is you, then contact the Administrators to make changes!",
     '{{ Tg_Command_Name_Save_Success }}' => "So... we remember you under the nickname <b>%s</b>. Right?\nNice to meet you!\n\nIf you make a mistake, don't worry, tell the administrator about it and he will quickly fix it😏",
-    '{{ Tg_Command_Promo_Saved }}' => "Promo successfully saved!",
+    '{{ Tg_Command_Promo_Saved }}' => 'Promo successfully saved!',
+    '{{ Tg_Command_Help }}' => "<i>My Instruction:</i>.\n
+<b>Commands</b>:\n
++ (week day) <i>// Booking for the scheduled games of the current week, examples:</i>
+    +вс
+    + на сегодня, на 19:30 (отсижу 1-2 игры, под ?)
+- (week day) <i>// Unsubscribe from games on a specific day that you previously signed up for, examples:</i>
+    -вс
+    - завтра
+
+<u>/week</u> <i>// Schedule of upcoming games</i>
+<u>/today</u> <i>// Booking information for today</i>
+<u>/day (week day)</u> <i>// Booking information for a specific day. Without specifying the day - for today</i>
+<u>/nick Your nickname</u> (Cyrillic) <i>// Register your nickname</i>
+<u>/?</u> или <u>/help</u> <i>// This message</i>",
+    '{{ Tg_Command_Admin }}' => "\n\n<b><u>Admin's commands</u></b>:
+<u>/reg</u> <i>// Booking/unbooking players for a specific day. Examples:</i>
+    /reg +вс, nickname, 18:00, (with ?)
+    /reg -вс, nickname
+
+<u>/set</u> <i>// Set data for a specific day. Example:</i>
+    /set вс, mafia, 18:00, (Good luck, have fun!)
+    
+<u>/recall (week day)</u> <i>// Recall day settings for a specific day. Restored by a new registration from the admin. Without specifying the day - for today</i>
+<u>/users</u> <i>// Users list, registered in system.</i>
+<u>/promo</u> <i>// Fix some kind of notification that is added at the bottom of the /week command.</i> The text before the first line break is the title, before the second one is the subtitle, everything below is the text of the alert. Example:
+    /promo Title
+Subtitle
+Text, or: here could be your <b>Advertising</b><i>:)</i>",
 ];

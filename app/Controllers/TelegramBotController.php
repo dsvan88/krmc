@@ -659,37 +659,10 @@ class TelegramBotController extends Controller
     }
     public static function helpCommand()
     {
-        $message = "<i>Инструкция к боту</i>.\n
-<b>Команды</b>:\n
-+ (день недели) <i>//зарегистрироваться на запланированные игры текущей недели, примеры:</i>
-    +вс
-    + на сегодня, на 19:30 (отсижу 1-2 игры, под ?)
-- (день недели) <i>//отписаться от игр в определённый день, на который ранее записались, примеры:</i>
-    -вс
-    - завтра
-
-<u>/week</u> <i>// Расписание ближайших сборов</i>
-<u>/today</u> <i>// Информация по записи на сегодня</i>
-<u>/day (день недели)</u> <i>// Информация по записи на конкретный день. Без указания дня - на сегодня</i>
-<u>/nick Ваш псевдоним</u> (кириллицей) <i>// Зарегистрировать свой псевдоним</i>
-<u>/?</u> или <u>/help</u> <i>// Это меню</i>";
+        $message = Locale::applySingle('{{ Tg_Command_Help }}');
 
         if (self::$messageData['message']['chat']['type'] === 'private' && in_array(self::$requesterData['privilege']['status'], ['manager', 'admin'])) {
-            $message .= "\n\n<b><u>Команды админа</u></b>:
-<u>/reg</u> <i>// зарегистрировать/отписать игрока на указанный день, пример:</i>
-    /reg +вс, Псевдоним, 18:00, 1-2 игры
-    /reg -вс, Псевдоним
-
-<u>/set</u> <i>// Указать данные дня, пример:</i>
-    /set вс, mafia, 18:00
-    
-<u>/recall</u> <i>// отменить сбор. Восстанавливается новой регистрацией от админа. Можно указать день недели.</i>
-<u>/users</u> <i>// Список пользователей, зарегистрированных в системе.</i>
-<u>/promo</u> <i>// Зафиксировать какое-то оповещение, что добавляется внизу команды /week.</i> Текст до первого переноса строки - заголовок, до второго - подзаголовок, всё что ниже - текст оповещения. Пример:
-    /promo Заголовок
-Подзголовок
-Или - тут могла быть, Ваша <b>Реклама</b><i>:)</i>
-";
+            $message .= "";
         }
         return ['result' => true, 'message' => $message];
     }
@@ -728,8 +701,12 @@ class TelegramBotController extends Controller
                 }
             }
             $result = $bot->sendMessage($targets, $message);
+            $message = '{{ Action_Success }}';
+            if (!$result[0]['ok']) {
+                $message = '{{ Action_Failure }}';
+            }
 
-            View::message(['error' => 0, 'message' => '{{ Action_Success }}']);
+            View::message(['error' => 0, 'message' => $message]);
         }
         $groupChats = TelegramChats::getGroupChatsList();
         $directChats = TelegramChats::getDirectChats();
