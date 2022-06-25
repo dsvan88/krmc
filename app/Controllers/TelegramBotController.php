@@ -35,10 +35,6 @@ class TelegramBotController extends Controller
                 TelegramChats::save($messageArray);
             }
 
-            $result = $bot->sendMessage($messageArray['message']['chat']['id'], '<tg-spoiler>' . $messageArray['message']['from']['id'] . '</tg-spoiler>');
-            if (!$result[0]['ok']) {
-                $bot->sendMessage($messageArray['message']['chat']['id'], json_encode($result[0], JSON_UNESCAPED_UNICODE));
-            }
             $langCode = 'uk';
             if (isset($messageArray['message']['from']['language_code']) && in_array($messageArray['message']['from']['language_code'], ['uk', 'en', 'ru'])) {
                 $langCode = $messageArray['message']['from']['language_code'];
@@ -637,6 +633,7 @@ class TelegramBotController extends Controller
                 'bold' => 'b',
                 'italic' => 'i',
                 'strikethrough' => 's',
+                'spoiler' => 'tg-spoiler',
             ];
             for ($i = 0; $i < count(self::$messageData['message']['entities']); $i++) {
                 if (self::$messageData['message']['entities'][$i]['type'] === 'bot_command') {
