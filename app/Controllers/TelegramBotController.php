@@ -98,7 +98,7 @@ class TelegramBotController extends Controller
     public static function parseCommand($text)
     {
         if (preg_match('/^[+-]\s{0,3}(пн|пон|вт|ср|чт|чет|пт|пят|сб|суб|вс|вос|сг|сег|зав)/', mb_strtolower(str_replace('на ', '', $text), 'UTF-8')) === 1) {
-            preg_match_all('/[+-]\s{0,3}(пн|пон|вт|ср|чт|чет|пт|пят|сб|суб|вс|вос|сг|сег|зав)|(\d{2}\:\d{2})/i', mb_strtolower(str_replace('на ', '', $text), 'UTF-8'), $matches);
+            preg_match_all('/[+-]\s{0,3}(пн|пон|вт|ср|чт|чет|пт|пят|сб|суб|вс|вос|сг|сег|зав)|([0-2][0-9]\:[0-5][0-9])/i', mb_strtolower(str_replace('на ', '', $text), 'UTF-8'), $matches);
             $arguments = $matches[0];
             if (preg_match('/\([^)]+\)/', $text, $prim) === 1) {
                 $arguments['prim'] = mb_substr($prim[0], 1, -1, 'UTF-8');
