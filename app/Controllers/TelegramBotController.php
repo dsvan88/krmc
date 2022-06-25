@@ -98,7 +98,7 @@ class TelegramBotController extends Controller
     public static function parseCommand($text)
     {
         if (preg_match('/^[+-]\s{0,3}(пн|пон|вт|ср|чт|чет|пт|пят|сб|суб|вс|вос|сг|сег|зав)/', mb_strtolower(str_replace('на ', '', $text), 'UTF-8')) === 1) {
-            preg_match_all('/[+-]\s{0,3}(пн|пон|вт|ср|чт|чет|пт|пят|сб|суб|вс|вос|сг|сег|зав)|(\d{2}\:\d{2})/i', mb_strtolower(str_replace('на ', '', $text), 'UTF-8'), $matches);
+            preg_match_all('/[+-]\s{0,3}(пн|пон|вт|ср|чт|чет|пт|пят|сб|суб|вс|вос|сг|сег|зав)|([0-2]{0,1}[0-9]\:[0-5][0-9])/i', mb_strtolower(str_replace('на ', '', $text), 'UTF-8'), $matches);
             $arguments = $matches[0];
             if (preg_match('/\([^)]+\)/', $text, $prim) === 1) {
                 $arguments['prim'] = mb_substr($prim[0], 1, -1, 'UTF-8');
@@ -128,7 +128,7 @@ class TelegramBotController extends Controller
                 if (preg_match('/\([^)]+\)/', $text, $prim) === 1) {
                     $arguments['prim'] = mb_substr($prim[0], 1, -1, 'UTF-8');
                 }
-                return ['command' => 'reg', 'arguments' => $arguments];
+                return ['command' => $command, 'arguments' => $arguments];
             }
             if (method_exists(__CLASS__, $command . 'Command')) {
                 preg_match_all('/([a-zA-Zа-яА-ЯрРсСтТуУфФчЧхХШшЩщЪъЫыЬьЭэЮюЄєІіЇїҐґ.]+)/', trim(mb_substr($text, $commandLen + 1, NULL, 'UTF-8')), $matches);
@@ -171,6 +171,7 @@ class TelegramBotController extends Controller
             } elseif (preg_match('/^(\+|-)\d{1,2}/', $value, $match) === 1) {
                 $requestData['nonames'] = substr($match[0], 1);
             } elseif ($requestData['userId'] < 2) {
+                $value = str_ireplace(['m', 'c', 'o', 'p', 'x', 'a'], ['м', 'с', 'о', 'р', 'х', 'а',], $value);
                 $userRegData = Users::getDataByName($value);
                 if ($userRegData) {
                     $requestData['userId'] = $userRegData['id'];
@@ -364,7 +365,6 @@ class TelegramBotController extends Controller
     public static function regCommand($data)
     {
         extract($data);
-
         if (empty($arguments)) {
             return ['result' => false, 'message' => '{{ Tg_Command_Without_Arguments}}'];
         }
