@@ -118,7 +118,7 @@ class Days extends Model
                 $noNames[] = $weekData['data'][$day]['participants'][$x];
                 continue;
             }
-            if ($weekData['data'][$day]['participants'][$x]['prim'] != '' || $weekData['data'][$day]['participants'][$x]['arrive'] != '') {
+            if (!empty($weekData['data'][$day]['participants'][$x]['prim']) || !empty($weekData['data'][$day]['participants'][$x]['arrive'])) {
                 $participantsToEnd[] = $weekData['data'][$day]['participants'][$x];
                 continue;
             }
