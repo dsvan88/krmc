@@ -171,7 +171,7 @@ class TelegramBotController extends Controller
             } elseif (preg_match('/^(\+|-)\d{1,2}/', $value, $match) === 1) {
                 $requestData['nonames'] = substr($match[0], 1);
             } elseif ($requestData['userId'] < 2) {
-                $value = str_ireplace(['m'], ['м'], $value);
+                $value = str_ireplace(['m', 'c', 'o', 'p', 'x', 'a'], ['м', 'с', 'о', 'р', 'х', 'а',], $value);
                 $userRegData = Users::getDataByName($value);
                 if ($userRegData) {
                     $requestData['userId'] = $userRegData['id'];
