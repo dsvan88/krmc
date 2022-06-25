@@ -617,7 +617,7 @@ class TelegramBotController extends Controller
             }
             $message .= "\n";
         }
-        $message = "______________________________\n✅ - " . Locale::applySingle('{{ Tg_User_With_Telegramid }}');
+        $message .= "______________________________\n✅ - " . Locale::applySingle('{{ Tg_User_With_Telegramid }}');
         return ['result' => true, 'message' => $message];
     }
     public static function promoCommand()
