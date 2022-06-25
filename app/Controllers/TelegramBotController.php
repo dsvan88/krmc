@@ -364,12 +364,12 @@ class TelegramBotController extends Controller
     public static function regCommand($data)
     {
         extract($data);
-
         if (empty($arguments)) {
             return ['result' => false, 'message' => '{{ Tg_Command_Without_Arguments}}'];
         }
 
         $requestData = self::parseArguments($arguments);
+        return ['result' => false, 'message' => json_encode($requestData)];
 
         if (!isset($requestData['nonames']) && $requestData['userId'] < 2) {
             return ['result' => false, 'message' => '{{ Tg_Command_User_Not_Found }}'];
