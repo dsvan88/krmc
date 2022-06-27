@@ -85,7 +85,6 @@ class TelegramBotController extends Controller
                     foreach ($chatData as $chatId => $pinned) {
                         $result[] = $bot->editMessage($chatId, $pinned, $weekData['message']);
                     }
-                    $bot->sendMessage($techTelegramId, json_encode($result, JSON_UNESCAPED_UNICODE));
                 }
             }
         } catch (\Throwable $th) {
