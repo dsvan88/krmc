@@ -136,8 +136,8 @@ class TelegramChats extends Model
         $chats = self::getChatsList();
         $result = [];
         for ($i = 0; $i < count($chats); $i++) {
-            if (isset($chats['data']['pinned'])) {
-                $result[$chats['uid']] = $chats['data']['pinned'];
+            if (isset($chats[$i]['data']['pinned'])) {
+                $result[$chats[$i]['uid']] = $chats[$i]['data']['pinned'];
             }
         }
         return $result;

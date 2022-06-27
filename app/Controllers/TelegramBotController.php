@@ -83,8 +83,9 @@ class TelegramBotController extends Controller
                     $chatData = TelegramChats::getChatsWithPinned();
                     $weekData = self::weekCommand();
                     foreach ($chatData as $chatId => $pinned) {
-                        $bot->editMessage($chatId, $pinned, $weekData['message']);
+                        $result[] = $bot->editMessage($chatId, $pinned, $weekData['message']);
                     }
+                    $bot->sendMessage($techTelegramId, json_encode($result, JSON_UNESCAPED_UNICODE));
                 }
             }
         } catch (\Throwable $th) {
