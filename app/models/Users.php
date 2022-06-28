@@ -129,6 +129,42 @@ class Users extends Model
         ];
         return true;
     }
+    public static function checkForget($login)
+    {
+        $table = SQL_TBL_USERS;
+        $authData = self::query("SELECT id, name, login, password, privilege, personal, contacts FROM $table WHERE login = :login OR name = :login OR contacts->>'email' = :login LIMIT 1", ['login' => $login], 'Assoc');
+        return self::decodeJson($authData[0]);
+    }
+    public static function saveForget($userData, $hash)
+    {
+        $uid = $userData['id'];
+        $personal = $userData['personal'];
+        $personal['forget'] = $hash;
+        self::edit(['personal' => $personal], ['id' => $uid]);
+        return true;
+    }
+    public static function getForget($hash)
+    {
+        $table = SQL_TBL_USERS;
+        $userData = self::query("SELECT id,personal FROM $table WHERE personal->>'forget' = :hash LIMIT 1", ['hash' => $hash], 'Assoc');
+        if (!empty($userData)) {
+            $userData[0]['personal'] = json_decode($userData[0]['personal'], true);
+            return $userData[0];
+        }
+        return false;
+    }
+    public static function passwordReset($userData, $password)
+    {
+        $table = SQL_TBL_USERS;
+        $userId = $userData['id'];
+        unset($userData['id']);
+        unset($userData['personal']['forget']);
+
+        $userData['password'] = password_hash(sha1($password), PASSWORD_DEFAULT);
+
+        self::edit($userData, ['id' => $userId]);
+        return true;
+    }
     public static function getList()
     {
         $table = SQL_TBL_USERS;
