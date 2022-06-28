@@ -300,7 +300,7 @@ class AccountController extends Controller
                 '/public/scripts/forms-admin-funcs.js?v=' . $_SERVER['REQUEST_TIME'],
             ],
         ];
-        View::render('{{ Account_Passwrod_Reset_Title }}', $vars);
+        View::render('{{ Account_Password_Reset_Title }}', $vars);
     }
     public function forgetAction()
     {
@@ -325,11 +325,13 @@ class AccountController extends Controller
     }
     public function forgetFormAction()
     {
-        // View::message(['message' => '{{ Not_Implemented_Yet }}']);
+        $bot = new TelegramBot();
+        $botData = $bot->getMe();
         $vars = [
             'texts' => [
                 'formTitle' => '{{ Account_Forget_Form_Title }}',
                 'authPlaceholder' => '{{ Account_Login_Form_Login_Input_Placeholder }}',
+                'tgBotLink' => 'https://t.me/' . $botData['result']['username'],
                 'formSubmitLabel' => '{{ Submit_Label }}',
                 'formCancelLabel' => '{{ Cancel_Label }}',
             ]
