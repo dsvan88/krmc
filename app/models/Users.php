@@ -17,7 +17,7 @@ class Users extends Model
 
         $table = SQL_TBL_USERS;
         $authData = self::query("SELECT id, name, login, password, privilege, personal FROM $table WHERE login = :login OR contacts->>'email' = :login LIMIT 1", ['login' => $login], 'Assoc');
-        if (is_bool($authData)) return false;
+        if (empty($authData)) return false;
         $authData =  $authData[0];
         if (password_verify($password, $authData['password'])) {
             $_SESSION['id'] = $authData['id'];
@@ -32,6 +32,11 @@ class Users extends Model
             if ($_SESSION['privilege']['status'] === '')
                 $_SESSION['privilege']['status'] = 'user';
             self::prolongSession();
+
+            if (isset($_SESSION['personal']['forget'])) {
+                self::deleteForget($_SESSION['id'], $_SESSION['personal']);
+                unset($_SESSION['personal']['forget']);
+            }
             return true;
         }
         return false;
@@ -140,6 +145,12 @@ class Users extends Model
         $uid = $userData['id'];
         $personal = $userData['personal'];
         $personal['forget'] = $hash;
+        self::edit(['personal' => $personal], ['id' => $uid]);
+        return true;
+    }
+    public static function deleteForget($uid, $personal)
+    {
+        unset($personal['forget']);
         self::edit(['personal' => $personal], ['id' => $uid]);
         return true;
     }
