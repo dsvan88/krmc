@@ -99,8 +99,14 @@ class View
     }
     public static function message($data)
     {
+        if (!is_array($data)) {
+            $data = ['message' => $data];
+        }
         if (isset($data['message'])) {
             $data['message'] = Locale::applySingle($data['message']);
+        }
+        if (!isset($data['error'])) {
+            $daya['error'] = 0;
         }
         exit(json_encode($data));
     }

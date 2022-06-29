@@ -4,11 +4,11 @@ namespace app\Controllers;
 
 use app\core\Controller;
 use app\core\ImageProcessing;
-use app\core\Locale as CoreLocale;
 use app\core\View;
 use app\models\Settings;
 use app\models\Users;
 use app\core\Locale;
+use app\core\TelegramBot;
 use app\models\TelegramChats;
 
 class AccountController extends Controller
@@ -272,12 +272,71 @@ class AccountController extends Controller
     }
     public function profileAvatarRecropFormAction()
     {
-        $vars = ['error' => 0, 'modal' => true, 'jsFile' => '/public/scripts/avatar-get-recrop.js?v=' . $_SERVER['REQUEST_TIME']];
+        $vars = ['modal' => true, 'jsFile' => '/public/scripts/avatar-get-recrop.js?v=' . $_SERVER['REQUEST_TIME']];
+        View::message($vars);
+    }
+    public function passwordResetAction()
+    {
+        extract(self::$route['vars']);
+        $userData = Users::getForget($hash);
+        if (!$userData) {
+            View::errorCode(404, ['message' => 'Page not found!']);
+        }
+        if (!empty($_POST)) {
+            if ($_POST['password'] != $_POST['check']) {
+                View::message('Passwords Not Match!');
+            }
+            Users::passwordReset($userData, $_POST['password']);
+            View::message(['message' => '{{ Action_Success }}', 'url' => '/']);
+        }
+        $vars = [
+            'hash' => $hash,
+            'texts' => [
+                'formTitle' => '{{ Account_Forget_Form_Title }}',
+                'authPlaceholder' => '{{ Account_Login_Form_Login_Input_Placeholder }}',
+                'formSubmitLabel' => '{{ Submit_Label }}'
+            ],
+            'scripts' => [
+                '/public/scripts/forms-admin-funcs.js?v=' . $_SERVER['REQUEST_TIME'],
+            ],
+        ];
+        View::render('{{ Account_Password_Reset_Title }}', $vars);
+    }
+    public function forgetAction()
+    {
+        if (!empty($_POST)) {
+            $userData = Users::checkForget(trim($_POST['auth']));
+            if (!empty($userData)) {
+                if (isset($userData['personal']['forget'])) {
+                    $hash = $userData['personal']['forget'];
+                } else {
+                    $hash = md5(json_encode([$userData['personal'], $userData['privilege'], $userData['contacts']]) . $_SERVER['REQUEST_TIME']);
+                }
+                Users::saveForget($userData, $hash);
+                $link = "<a>{$_SERVER['HTTP_X_FORWARDED_PROTO']}://{$_SERVER['SERVER_NAME']}/account/password-reset/$hash</a>";
+                $bot = new TelegramBot();
+                $bot->sendMessage($userData['contacts']['telegramid'], Locale::applySingle(['string' => '{{ Account_Forget_Check_Succes }}', 'vars' => [$link]]));
+            }
+            $vars = ['message' => 'Перевірте бота!'];
+            View::message($vars);
+        }
+        $vars = ['error' => 0, 'message' => 'Щось пішло не так. Перевірте введену інформацію!'];
         View::message($vars);
     }
     public function forgetFormAction()
     {
-        View::message(['message' => '{{ Not_Implemented_Yet }}']);
+        $bot = new TelegramBot();
+        $botData = $bot->getMe();
+        $vars = [
+            'texts' => [
+                'formTitle' => '{{ Account_Forget_Form_Title }}',
+                'authPlaceholder' => '{{ Account_Login_Form_Login_Input_Placeholder }}',
+                'tgBotLink' => 'https://t.me/' . $botData['result']['username'],
+                'formSubmitLabel' => '{{ Submit_Label }}',
+                'formCancelLabel' => '{{ Cancel_Label }}',
+            ]
+        ];
+        View::modal($vars);
     }
     public function registerFormAction()
     {

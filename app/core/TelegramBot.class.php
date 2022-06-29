@@ -76,6 +76,16 @@ class TelegramBot
         curl_setopt_array($curl, $options);
         return [json_decode(curl_exec($curl), true)];
     }
+    public static function getMe()
+    {
+        $botToken = self::$botToken;
+
+        $options = self::$options;
+        $options[CURLOPT_URL] = "https://api.telegram.org/bot$botToken/getMe"; // адрес api телеграмм-бота
+        $curl = curl_init();
+        curl_setopt_array($curl, $options);
+        return json_decode(curl_exec($curl), true);
+    }
     private static function getAuthData()
     {
         if (!empty(self::$botToken))

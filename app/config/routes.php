@@ -55,6 +55,11 @@ return  [
         'action' => 'register',
         'access' => ['category' => 'all']
     ],
+    'account/password-reset/{hash}' => [
+        'controller' => 'account',
+        'action' => 'passwordReset',
+        'access' => ['category' => 'all']
+    ],
     'users/list' => [
         'controller' => 'account',
         'action' => 'usersList',
@@ -182,6 +187,12 @@ return  [
     [
         'controller' => 'account',
         'action' => 'profileAvatarRecropForm',
+        'access' => ['category' => 'all']
+    ],
+    'api/account/forget' =>
+    [
+        'controller' => 'account',
+        'action' => 'forget',
         'access' => ['category' => 'all']
     ],
     'api/account/forget/form' =>

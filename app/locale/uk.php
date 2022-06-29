@@ -60,6 +60,8 @@ return [
 
     '{{ Account_Register_Form_Title }}' => 'Форма реєстрації',
 
+    '{{ Account_Forget_Check_Succes }}' => "Запит на відновлення паролю оброблено.\nВаше посилання на відновлення паролю:\n%s",
+
     '{{ Weeks_Block_Title }}' => 'Тижневий розклад',
     '{{ Week_Set_Block_Title }}' => 'Планування тиждня',
 
