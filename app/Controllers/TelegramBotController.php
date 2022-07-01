@@ -680,6 +680,11 @@ class TelegramBotController extends Controller
         ];
         View::render('{{ Chats_List_Title }}', $vars);
     }
+    public static function testCommand()
+    {
+        $weeksData = Weeks::nearWeeksDataByTime();
+        return ['result' => true, 'message' => json_encode($weeksData, JSON_UNESCAPED_UNICODE)];
+    }
     public static function sendAction()
     {
         if (!empty($_POST)) {
@@ -732,10 +737,5 @@ class TelegramBotController extends Controller
             ],
         ];
         View::render('{{ HEADER_ASIDE_MENU_CHAT_SEND }}', $vars);
-    }
-    public static function testAction()
-    {
-        $weeksData = Weeks::nearWeeksDataByTime();
-        return ['result' => true, 'message' => json_encode($weeksData, JSON_UNESCAPED_UNICODE)];
     }
 }
