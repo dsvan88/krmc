@@ -145,7 +145,7 @@ class Days extends Model
                 $modsData = " (<i>$modsData</i>)";
             $result .= ($x + 1) . ". <b>$userName</b>{$modsData}\r\n";
         }
-        return $result;
+        return $result . $day;
     }
     public static function addParticipantToDayData($dayData, $slot, &$data)
     {
