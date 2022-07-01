@@ -733,4 +733,9 @@ class TelegramBotController extends Controller
         ];
         View::render('{{ HEADER_ASIDE_MENU_CHAT_SEND }}', $vars);
     }
+    public static function testAction()
+    {
+        $weeksData = Weeks::nearWeeksDataByTime();
+        return ['result' => true, 'message' => json_encode($weeksData, JSON_UNESCAPED_UNICODE)];
+    }
 }
