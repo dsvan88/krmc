@@ -683,7 +683,7 @@ class TelegramBotController extends Controller
     public static function testCommand()
     {
         $weeksData = Weeks::nearWeeksDataByTime();
-        return ['result' => true, 'message' => json_encode($weeksData, JSON_UNESCAPED_UNICODE)];
+        return ['result' => true, 'message' => 'test'];
     }
     public static function sendAction()
     {
