@@ -292,6 +292,9 @@ class TelegramBotController extends Controller
         $requestData['userStatus'] = self::$requesterData['privilege']['status'];
 
         $weekId = Weeks::currentId();
+        if ($requestData['dayNum'] < 0) {
+            $requestData['dayNum'] = $requestData['currentDay'];
+        }
         if ($requestData['currentDay'] > $requestData['dayNum']) {
             ++$weekId;
         }
@@ -376,7 +379,7 @@ class TelegramBotController extends Controller
         }
 
         $weekId = Weeks::currentId();
-        if ($requestData['dayNum'] === -1) {
+        if ($requestData['dayNum'] < 0) {
             $requestData['dayNum'] = $requestData['currentDay'];
         } else {
             if ($requestData['currentDay'] > $requestData['dayNum']) {
@@ -683,8 +686,6 @@ class TelegramBotController extends Controller
     public static function testCommand()
     {
         $weekData = Weeks::weekDataByTime();
-        $weekData['start'] = date('d.m.Y', $weekData['start']);
-        $weekData['finish'] = date('d.m.Y', $weekData['finish']);
         return ['result' => true, 'message' => json_encode($weekData, JSON_UNESCAPED_UNICODE)];
     }
     public static function sendAction()
