@@ -77,11 +77,7 @@ class Days extends Model
             return '';
         }
 
-        $date = str_replace(
-            ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
-            ['<b>Понеділок</b>', '<b>Вівторок</b>', '<b>Середа</b>', '<b>Четвер</b>', '<b>П’ятница</b>', '<b>Субота</b>', '<b>Неділя</b>'],
-            date('d.m.Y (l) H:i', $dayDate)
-        );
+        $date = date('d.m.Y (<b>' . Locale::applySingle(self::$days[$day]) . '</b>) H:i', $dayDate);
 
         $gameNames = [
             'mafia' => '{{ Tg_Mafia }}',

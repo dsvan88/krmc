@@ -1,4 +1,4 @@
-<form class="modal-form" method="POST" action="account/register">
+<form class="modal-form" method="POST" action="/account/register">
     <!-- <picture>
 			<source srcset="../images/logo.webp" type="image/webp" />
 			<img class="modal-form__logo" title="My logo" alt="My logo" src="./images/logo.png" />

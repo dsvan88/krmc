@@ -156,7 +156,7 @@ return [
     
 <u>/recall (week day)</u> <i>// Recall day settings for a specific day. Restored by a new registration from the admin. Without specifying the day - for today</i>
 <u>/users</u> <i>// Users list, registered in system.</i>
-<u>/promo</u> <i>// Fix some kind of notification that is added at the bottom of the /week command.</i> The text before the first line break is the title, before the second one is the subtitle, everything below is the text of the alert. Example:
+<u>/promo</u> <i>// Fix notification that is added at the bottom of the /week command.</i> The text before the first line break is the title, before the second one is the subtitle, everything below is the text of the alert. Example:
     /promo Title
 Subtitle
 Text, or: here could be your <b>Advertising</b><i>:)</i>",
