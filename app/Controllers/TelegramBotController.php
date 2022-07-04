@@ -441,7 +441,7 @@ class TelegramBotController extends Controller
         }
 
         $weekData['data'][$requestData['dayNum']] = $newDayData;
-        return ['result' => true, 'message' => $requestData['dayNum'] . Days::getFullDescription($weekData, $requestData['dayNum'])];
+        return ['result' => true, 'message' => $weekId . Days::getFullDescription($weekData, $requestData['dayNum'])];
     }
     public static function setCommand($data)
     {

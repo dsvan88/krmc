@@ -5,7 +5,7 @@ use app\models\Days;
 
 ?>
 <section id="week-list" class="section week-list">
-    <h2 class="week-preview__title section__title"><?= $texts['weeksBlockTitle'] ?></h2>
+    <h2 class="week-preview__title section__title"><?= $texts['weeksBlockTitle'] . ' ' . $monday ?></h2>
     <div class="week-preview__list">
         <?
         for ($i = 0; $i < 7; $i++) :
