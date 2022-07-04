@@ -133,7 +133,7 @@ class Weeks extends Model
         }
         $weekData['data'] = json_encode($weekData['data'], JSON_UNESCAPED_UNICODE);
         $weekData['start'] += TIMESTAMP_WEEK;
-        $weekData['finish'] = $weekData['start'] + TIMESTAMP_WEEK + TIMESTAMP_DAY - DATE_MARGE / 4;
+        $weekData['finish'] = $weekData['start'] + TIMESTAMP_WEEK - DATE_MARGE / 4;
         self::insert($weekData, SQL_TBL_WEEKS);
         return true;
     }
