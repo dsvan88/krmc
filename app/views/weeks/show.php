@@ -7,7 +7,7 @@ use app\models\Weeks;
 ?>
 <section id="week-list" class="section week-list">
     <h2 class="week-preview__title section__title"><?= $texts['weeksBlockTitle'] ?></h2>
-    <h2 class="week-preview__title section__subtitle"><?= date('d.m.Y H:i:s', $weekData['start']) . ' - ' . date('d.m.Y H:i:s', $weekData['finish']) ?></h2>
+    <h2 class="week-preview__title section__subtitle"><?= date('d.m.Y', $weekData['start']) . ' - ' . date('d.m.Y', $weekData['finish']) ?></h2>
     <div class="week-preview__list">
         <?
         for ($i = 0; $i < 7; $i++) :

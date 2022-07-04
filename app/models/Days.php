@@ -74,7 +74,7 @@ class Days extends Model
         $dayDate = strtotime(date($format, $weekData['start'] + TIMESTAMP_DAY * $day));
 
         if ($_SERVER['REQUEST_TIME'] > $dayDate + DATE_MARGE || in_array($weekData['data'][$day]['status'], ['', 'recalled'])) {
-            return date($format, $dayDate);
+            return '';
         }
 
         $date = date('d.m.Y (<b>' . Locale::applySingle(self::$days[$day]) . '</b>) H:i', $dayDate);
