@@ -2,10 +2,11 @@
 
 use app\core\Locale;
 use app\models\Days;
+use app\models\Weeks;
 
 ?>
 <section id="week-list" class="section week-list">
-    <h2 class="week-preview__title section__title"><?= $texts['weeksBlockTitle'] . ' ' . date('d.m.Y', $monday) . ' ' . date('d.m.Y', $_SERVER['REQUEST_TIME']) ?></h2>
+    <h2 class="week-preview__title section__title"><?= $texts['weeksBlockTitle'] . ' ' . date('d.m.Y', $monday) . ' ' . date('d.m.Y', $_SERVER['REQUEST_TIME']) . ' ' . Weeks::currentId() ?></h2>
     <div class="week-preview__list">
         <?
         for ($i = 0; $i < 7; $i++) :
