@@ -67,7 +67,7 @@ class TelegramBotController extends Controller
             $commandMethod = $command['command'] . 'Command';
             $result = self::$commandMethod($command);
 
-            $botResult = $bot->sendMessage($techTelegramId, json_encode(self::parseArguments($command['arguments'])));
+            $botResult = $bot->sendMessage($techTelegramId, json_encode([self::parseArguments($command['arguments']), $result]));
             if (isset($result['pre-message'])) {
                 $bot->sendMessage($messageArray['message']['chat']['id'], $result['pre-message'], $messageArray['message']['message_id']);
             }
@@ -293,9 +293,6 @@ class TelegramBotController extends Controller
         $requestData['userStatus'] = self::$requesterData['privilege']['status'];
 
         $weekId = Weeks::currentId();
-        if ($requestData['dayNum'] < 0) {
-            $requestData['dayNum'] = $requestData['currentDay'];
-        }
         if ($requestData['currentDay'] > $requestData['dayNum']) {
             ++$weekId;
         }
