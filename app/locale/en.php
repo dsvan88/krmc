@@ -122,6 +122,7 @@ return [
     '{{ Tg_Command_User_Not_Found }}' => "No users found with this nickname!",
     '{{ Tg_Command_Successfully_Canceled }}' => "Day settings successfully recalled!\n\n*You can cancel ''recall'' by admin's registering for that day;)",
     '{{ Tg_Gameday_Not_Set }}' => "There are no games scheduled for this day!",
+    '{{ Tg_Command_Set_Day_Not_Found }}' => "There are no games scheduled for this day.",
 
     '{{ Tg_Command_Requester_Already_Booked }}' => "You are already signed up for this day's games!",
     '{{ Tg_Command_Requester_Not_Booked }}' => "You weren't signed up for this day's games!",
