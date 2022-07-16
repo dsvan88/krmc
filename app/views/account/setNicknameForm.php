@@ -1,4 +1,4 @@
-<form class="modal-form" method="POST" action="account/set/nickname">
+<form class="modal-form" method="POST" action="/account/set/nickname">
     <h1 class="modal-form__title"><?= $texts['formTitle'] ?></h1>
     <div class="modal-form__row">
         <input class="modal-form__input" required type="text" name="name" placeholder="Псевдонім" autofocus data-action-input="autocomplete-users-names" list="users-names-list" autocomplete="off" />
