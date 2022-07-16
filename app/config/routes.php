@@ -213,7 +213,7 @@ return  [
         'action' => 'register',
         'access' => ['category' => 'all']
     ],
-    'api/users/account/set/nickname' =>
+    'api/account/set/nickname' =>
     [
         'controller' => 'account',
         'action' => 'setNickname',
