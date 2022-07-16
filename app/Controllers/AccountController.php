@@ -171,13 +171,18 @@ class AccountController extends Controller
                 die();
             }
             $chatId = (int) $_POST['cid'];
-            $name = trim($_POST['name']);
+            $name = Locale::mb_ucfirst(trim($_POST['name']));
             $chatData =  TelegramChats::getChat($chatId);
             $chatId = $chatData['id'];
             unset($chatData['id']);
 
             $userData = Users::getDataByName($name);
-            $userId = $userData['id'];
+            if (!$userData) {
+                $userId = Users::add($name);
+                $userData = Users::getDataById($userId);
+            } else {
+                $userId = $userData['id'];
+            }
             unset($userData['id']);
 
             $fio = '';

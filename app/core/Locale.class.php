@@ -49,6 +49,14 @@ class Locale
     }
     public static function mb_ucfirst($string, $encoding = 'UTF8')
     {
+        if (strpos($string, ' ') !== false) {
+            $words = explode(' ', $string);
+            $newString = '';
+            foreach ($words as $word) {
+                $newString .= self::mb_ucfirst($word, $encoding) . ' ';
+            }
+            return mb_substr($newString, 0, -1, $encoding);
+        }
         return mb_strtoupper(mb_substr($string, 0, 1, $encoding), $encoding) . mb_substr($string, 1, mb_strlen($string, $encoding), $encoding);
     }
     public static function translitization($string)
