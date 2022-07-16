@@ -1,0 +1,9 @@
+.users-list{
+    tr {
+        transition: color $animation-slow ease-in;
+        &:hover {
+            transform: translateY(2px);
+            color: $color-text-menu;
+        }
+    }
+}
