@@ -119,6 +119,7 @@ class TelegramBotController extends Controller
                 $command = mb_substr($command, 0, $atPos, 'UTF-8');
                 $commandLen = $atPos;
             }
+            $command = strtolower($command);
 
             if (in_array($command, ['?', 'help'])) {
                 return ['command' => 'help'];
