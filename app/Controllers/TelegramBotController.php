@@ -533,6 +533,18 @@ class TelegramBotController extends Controller
             $weekData['data'][$dayNum]['day_prim'] = $arguments['prim'];
         }
 
+        if ($tournament) {
+            if (empty($weekData['data'][$dayNum]['mods']) || !in_array('tournament', $weekData['data'][$dayNum]['mods'])) {
+                $weekData['data'][$dayNum]['mods'][] = 'tournament';
+            }
+        } else {
+            $index = array_search('tournament', $weekData['data'][$dayNum]['mods']);
+            if ($index) {
+                unset($weekData['data'][$dayNum]['mods'][$index]);
+                $weekData['data'][$dayNum]['mods'][$index] = array_values($weekData['data'][$dayNum]['mods'][$index]);
+            }
+        }
+
         $result = Days::setDayData($weekId, $dayNum, $weekData['data'][$dayNum]);
 
         if (!$result) {
