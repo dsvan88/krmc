@@ -621,7 +621,7 @@ class TelegramBotController extends Controller
             return ['result' => false, 'message' => '{{ Tg_Command_Name_Wrong_Format }}'];
         }
 
-        if (!Users::isNameFree($username)) {
+        if (Users::isNameFree($username)) {
             return ['result' => false, 'message' => ['string' => '{{ Tg_Command_Name_Already_Set_By_Other }}', 'vars' => [$username]]];
         }
 
