@@ -626,7 +626,7 @@ class TelegramBotController extends Controller
             return ['result' => false, 'message' => ['string' => '{{ Tg_Command_New_User_Already_Set }}', 'vars' => [$username]]];
         }
 
-        // Users::add($username);
+        Users::add($username);
         return ['result' => true, 'message' => ['string' => '{{ Tg_Command_New_User_Save_Success }}', 'vars' => [$username]]];
     }
     public static function usersCommand()
