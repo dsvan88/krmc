@@ -622,7 +622,7 @@ class TelegramBotController extends Controller
         }
 
         if (Users::isNameFree($username)) {
-            return ['result' => false, 'message' => ['string' => '{{ Tg_Command_Name_Already_Set_By_Other }}', 'vars' => [$username]]];
+            return ['result' => false, 'message' => ['string' => '{{ Tg_Command_New_User_Already_Set }}', 'vars' => [$username]]];
         }
 
         // Users::add($username);
