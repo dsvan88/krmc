@@ -51,7 +51,7 @@ class TelegramBotController extends Controller
 
             $userData = Users::getDataByTelegramId($telegramId);
 
-            if (in_array($command['command'], ['reg', 'recall', 'set', 'users', 'promo'], true)) {
+            if (in_array($command['command'], ['reg', 'recall', 'set', 'users', 'promo', 'newuser'], true)) {
                 if (empty($userData) || !in_array($userData['privilege']['status'], ['manager', 'admin'], true))
                     return false;
             }
@@ -609,21 +609,24 @@ class TelegramBotController extends Controller
     public static function newuserCommand($data)
     {
         extract($data);
-        $userName = '';
+        $username = '';
         foreach ($arguments as $string) {
-            $userName .= Locale::mb_ucfirst($string) . ' ';
+            $username .= Locale::mb_ucfirst($string) . ' ';
         }
 
-        return ['result' => false, 'message' => $userName];
-
-        if (mb_strlen(trim($userName), 'UTF-8') < 2) {
+        if (mb_strlen(trim($username), 'UTF-8') < 2) {
             return ['result' => false, 'message' => '{{ Tg_Command_Name_Too_Short }}'];
         }
-        if (preg_match('/([^а-яА-ЯрРсСтТуУфФчЧхХШшЩщЪъЫыЬьЭэЮюЄєІіЇїҐґ .])/', $userName) === 1) {
+        if (preg_match('/([^а-яА-ЯрРсСтТуУфФчЧхХШшЩщЪъЫыЬьЭэЮюЄєІіЇїҐґ .])/', $username) === 1) {
             return ['result' => false, 'message' => '{{ Tg_Command_Name_Wrong_Format }}'];
         }
-        $message .= "______________________________\n✅ - " . Locale::applySingle('{{ Tg_User_With_Telegramid }}');
-        return ['result' => true, 'message' => $message];
+
+        if (!Users::isNameFree($username)) {
+            return ['result' => false, 'message' => ['string' => '{{ Tg_Command_Name_Already_Set_By_Other }}', 'vars' => [$username]]];
+        }
+
+        // Users::add($username);
+        return ['result' => true, 'message' => ['string' => '{{ Tg_Command_New_User_Save_Success }}', 'vars' => [$username]]];
     }
     public static function usersCommand()
     {

@@ -2,6 +2,7 @@
 return [
     '{{ Submit_Label }}' => 'Execute',
     '{{ Save_Label }}' => 'Save',
+    '{{ Send_Label }}' => 'Send',
     '{{ Cancel_Label }}' => 'Cancel',
     '{{ Action_Success }}' => 'Success!',
     '{{ Action_Failure }}' => 'Fail!',
@@ -54,7 +55,11 @@ return [
     '{{ Account_Profile_Form_Telegram_Label }}' => 'Telegram',
     '{{ Account_Profile_Form_User_Avatar }}' => 'Users avatar of %s',
 
+    '{{ Account_Avatar_Form_Newcrop_Link }}' => 'Replace',
+
     '{{ Account_Register_Form_Title }}' => 'Registration form',
+
+    '{{ Account_Forget_Check_Succes }}' => "Your password reset request has been processed.\nYour password reset link:\n%s",
 
     '{{ Weeks_Block_Title }}' => 'Weekly schedule',
     '{{ Week_Set_Block_Title }}' => 'Set week schelude',
