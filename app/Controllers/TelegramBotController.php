@@ -462,7 +462,7 @@ class TelegramBotController extends Controller
         }
 
         $gameName = $dayName = $time = '';
-        $tournament === false;
+        $tournament = false;
 
         foreach ($arguments as $value) {
             $value = trim($value);
