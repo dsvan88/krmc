@@ -539,8 +539,8 @@ class TelegramBotController extends Controller
                 $weekData['data'][$dayNum]['mods'][] = 'tournament';
             }
         } else {
-            $index = array_search('tournament', $weekData['data'][$dayNum]['mods']);
-            if ($index) {
+            $index = array_search('tournament', $weekData['data'][$dayNum]['mods'], true);
+            if ($index !== false) {
                 unset($weekData['data'][$dayNum]['mods'][$index]);
                 $weekData['data'][$dayNum]['mods'][$index] = array_values($weekData['data'][$dayNum]['mods'][$index]);
             }
