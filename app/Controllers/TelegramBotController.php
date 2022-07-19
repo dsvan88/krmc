@@ -613,6 +613,7 @@ class TelegramBotController extends Controller
         foreach ($arguments as $string) {
             $username .= Locale::mb_ucfirst($string) . ' ';
         }
+        $username = mb_substr($username, 0, -1, 'UTF-8');
 
         if (mb_strlen(trim($username), 'UTF-8') < 2) {
             return ['result' => false, 'message' => '{{ Tg_Command_Name_Too_Short }}'];
