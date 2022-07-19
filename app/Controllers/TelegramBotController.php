@@ -533,8 +533,6 @@ class TelegramBotController extends Controller
             $weekData['data'][$dayNum]['day_prim'] = $arguments['prim'];
         }
 
-        return ['result' => false, 'message' => json_encode($weekData['data'][$dayNum], JSON_UNESCAPED_UNICODE) . ' ' . $method . ' ' . $tournament];
-
         $result = Days::setDayData($weekId, $dayNum, $weekData['data'][$dayNum]);
 
         if (!$result) {
