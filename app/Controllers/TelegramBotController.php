@@ -186,6 +186,9 @@ class TelegramBotController extends Controller
     public static function parseDayNum($dayName, $today)
     {
         $dayName = mb_strtolower($dayName, 'UTF-8');
+        if (mb_strlen($dayName, 'UTF-8') > 3) {
+            $dayName = mb_substr($dayName, 0, 3);
+        }
         if (in_array($dayName, ['сг', 'сег'], true)) {
             return $today;
         } elseif ($dayName === 'зав') {
