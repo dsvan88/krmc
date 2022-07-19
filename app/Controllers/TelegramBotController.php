@@ -609,7 +609,10 @@ class TelegramBotController extends Controller
     public static function newuserCommand($data)
     {
         extract($data);
-        $userName = implode($arguments);
+        $userName = '';
+        foreach ($arguments as $string) {
+            $userName .= Locale::mb_ucfirst($string) . ' ';
+        }
 
         return ['result' => false, 'message' => $userName];
 
