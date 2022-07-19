@@ -551,7 +551,7 @@ class TelegramBotController extends Controller
         if (!$result) {
             return ['result' => false, 'message' => json_encode($weekData['data'][$dayNum], JSON_UNESCAPED_UNICODE)];
         }
-        return ['result' => true, 'message' => $method === '-' ? '{{ Tg_Command_Successfully_Canceled }}' : Days::getFullDescription($weekData, $dayNum) . ($tournament ? ' Турнир ' : ' Не турнир ' . $index . ' ' . json_encode($weekData['data'][$dayNum]['mods']))];
+        return ['result' => true, 'message' => $method === '-' ? '{{ Tg_Command_Successfully_Canceled }}' : Days::getFullDescription($weekData, $dayNum)];
     }
     public static function recallCommand($data)
     {
