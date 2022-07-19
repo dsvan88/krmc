@@ -606,6 +606,22 @@ class TelegramBotController extends Controller
             return ['result' => true, 'message' => ['string' => '{{ Tg_Command_Name_Save_Success }}', 'vars' => [$username]]];
         }
     }
+    public static function newuserCommand($data)
+    {
+        extract($data);
+        $userName = implode($arguments);
+
+        return ['result' => false, 'message' => $userName];
+
+        if (mb_strlen(trim($userName), 'UTF-8') < 2) {
+            return ['result' => false, 'message' => '{{ Tg_Command_Name_Too_Short }}'];
+        }
+        if (preg_match('/([^а-яА-ЯрРсСтТуУфФчЧхХШшЩщЪъЫыЬьЭэЮюЄєІіЇїҐґ .])/', $userName) === 1) {
+            return ['result' => false, 'message' => '{{ Tg_Command_Name_Wrong_Format }}'];
+        }
+        $message .= "______________________________\n✅ - " . Locale::applySingle('{{ Tg_User_With_Telegramid }}');
+        return ['result' => true, 'message' => $message];
+    }
     public static function usersCommand()
     {
         $usersList = Users::getList();
