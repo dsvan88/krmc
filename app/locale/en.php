@@ -161,7 +161,7 @@ return [
 <u>/set</u> <i>// Set data for a specific day. Example:</i>
     /set вс, mafia, 18:00, (Good luck, have fun!)
 
-<u>/newuser Player’s nickname (in Cyrillic)</u> <i>// Register a new nickname Gravtsya with the system.</i>
+<u>/newuser Player’s nickname</u> (in Cyrillic) <i>// Register a new nickname in the system.</i>
 <u>/recall (week day)</u> <i>// Recall day settings for a specific day. Restored by a new registration from the admin. Without specifying the day - for today</i>
 <u>/users</u> <i>// Users list, registered in system.</i>
 <u>/promo</u> <i>// Fix notification that is added at the bottom of the /week command.</i> The text before the first line break is the title, before the second one is the subtitle, everything below is the text of the alert. Example:
