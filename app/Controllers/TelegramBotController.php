@@ -286,7 +286,7 @@ class TelegramBotController extends Controller
         if ($dayDescription === '') {
             $dayDescription = Locale::applySingle('{{ Tg_Command_Games_Not_Set }}'); //В ближайшее время, игры не запланированны!\nОбратитесь к нам позднее.\n
         }
-        return ['result' => true, 'message' => $dayDescription];
+        return ['result' => true, 'message' => $dayDescription . $arguments[0]];
     }
     public static function bookingCommand($data)
     {
