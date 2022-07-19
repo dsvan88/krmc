@@ -465,15 +465,18 @@ class TelegramBotController extends Controller
 
         foreach ($arguments as $value) {
             $value = trim($value);
-            if ($gameName === '' && preg_match('/^(maf|маф|пок|pok|наст|board|table|кеш|кєш|кэш|cash|інш|другое|etc)/', mb_strtolower($value, 'UTF-8'), $gamesPattern) === 1) {
+            if ($gameName === '' && preg_match('/^(maf|маф|пок|pok|наст|board|table|кеш|кєш|кэш|cash|інш|другое|etc)/', mb_strtolower($value, 'UTF-8'), $gamesPattern) > 0) {
                 $gameName = $gamesPattern[0];
+                if ($tournament === false && preg_match('/(тур|tour)/', mb_strtolower($value, 'UTF-8')) > 0) {
+                    $tournament = true;
+                }
                 continue;
             }
-            if ($time === '' && preg_match('/^([0-2]{0,1}[0-9]\:[0-5][0-9])/', mb_strtolower($value, 'UTF-8'), $timesPattern) === 1) {
+            if ($time === '' && preg_match('/^([0-2]{0,1}[0-9]\:[0-5][0-9])/', mb_strtolower($value, 'UTF-8'), $timesPattern) > 0) {
                 $time = $timesPattern[0];
                 continue;
             }
-            if ($dayName === '' && preg_match('/^[+-]{0,1}(пн|пон|вт|ср|чт|чет|пт|пят|сб|суб|вс|вос|сг|сег|зав)/', mb_strtolower($value, 'UTF-8'), $daysPattern) === 1) {
+            if ($dayName === '' && preg_match('/^[+-]{0,1}(пн|пон|вт|ср|чт|чет|пт|пят|сб|суб|вс|вос|сг|сег|зав)/', mb_strtolower($value, 'UTF-8'), $daysPattern) > 0) {
                 $dayName = $daysPattern[0];
                 continue;
             }
@@ -513,8 +516,10 @@ class TelegramBotController extends Controller
         $weekData = Weeks::weekDataById($weekId);
 
         $weekData['data'][$dayNum]['status'] = 'set';
-        if ($method === '-')
+
+        if ($method === '-') {
             $weekData['data'][$dayNum]['status'] = 'recalled';
+        }
 
         if ($gameName !== '') {
             $weekData['data'][$dayNum]['game'] = $gameName;
@@ -527,6 +532,8 @@ class TelegramBotController extends Controller
         if (isset($arguments['prim'])) {
             $weekData['data'][$dayNum]['day_prim'] = $arguments['prim'];
         }
+
+        return ['result' => false, 'message' => json_encode($weekData['data'][$dayNum], JSON_UNESCAPED_UNICODE) . ' ' . $method . ' ' . $tournament];
 
         $result = Days::setDayData($weekId, $dayNum, $weekData['data'][$dayNum]);
 
