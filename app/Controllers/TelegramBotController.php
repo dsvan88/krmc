@@ -473,7 +473,7 @@ class TelegramBotController extends Controller
                 $time = $timesPattern[0];
                 continue;
             }
-            if ($dayName === '' && preg_match('/^(пн|пон|вт|ср|чт|чет|пт|пят|сб|суб|вс|вос|сг|сег|зав)/', mb_strtolower($value, 'UTF-8'), $daysPattern) === 1) {
+            if ($dayName === '' && preg_match('/^[+-]{0,1}(пн|пон|вт|ср|чт|чет|пт|пят|сб|суб|вс|вос|сг|сег|зав)/', mb_strtolower($value, 'UTF-8'), $daysPattern) === 1) {
                 $dayName = $daysPattern[0];
                 continue;
             }
@@ -481,6 +481,11 @@ class TelegramBotController extends Controller
         if ($dayName === '')
             $dayName = 'сг';
 
+        $method = '+';
+        if ($dayName[0] === '+' || $dayName[0] === '-') {
+            $method = $dayName[0];
+            $dayName = mb_substr($dayName, 1, null, 'UTF-8');
+        }
         $dayNum = self::parseDayNum($dayName, $currentDayNum);
 
         if ($gameName !== '') {
@@ -508,6 +513,8 @@ class TelegramBotController extends Controller
         $weekData = Weeks::weekDataById($weekId);
 
         $weekData['data'][$dayNum]['status'] = 'set';
+        if ($method === '-')
+            $weekData['data'][$dayNum]['status'] = 'recalled';
 
         if ($gameName !== '') {
             $weekData['data'][$dayNum]['game'] = $gameName;
