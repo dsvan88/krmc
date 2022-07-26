@@ -2,8 +2,9 @@
 
 require_once $_SERVER['DOCUMENT_ROOT'] . '/app/config/config.php';
 
-use app\core\Locale;
+// use app\core\Locale;
 use app\core\Router;
+// use app\models\Users;
 
 spl_autoload_register(function ($class) {
     $class = str_replace('\\', '/', $class);
@@ -16,6 +17,9 @@ spl_autoload_register(function ($class) {
     }
 });
 
+/* if (isset($_COOKIE[CFG_TOKEN_NAME])) {
+    Users::sessionReturn($_COOKIE[CFG_TOKEN_NAME]);
+} */
 // Locale::$langCode = 'ru';
 // Locale::$langCode = 'en';
 Router::run();

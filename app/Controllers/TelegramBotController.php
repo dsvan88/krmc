@@ -133,7 +133,7 @@ class TelegramBotController extends Controller
                 return ['command' => $command, 'arguments' => $arguments];
             }
             if (method_exists(__CLASS__, $command . 'Command')) {
-                preg_match_all('/([a-zA-Zа-яА-ЯрРсСтТуУфФчЧхХШшЩщЪъЫыЬьЭэЮюЄєІіЇїҐґ.]+)/', trim(mb_substr($text, $commandLen + 1, NULL, 'UTF-8')), $matches);
+                preg_match_all('/([a-zA-Zа-яА-ЯрРсСтТуУфФчЧхХШшЩщЪъЫыЬьЭэЮюЄєІіЇїҐґ.0-9]+)/', trim(mb_substr($text, $commandLen + 1, NULL, 'UTF-8')), $matches);
                 $arguments = $matches[0];
                 return ['command' => $command, 'arguments' => $arguments];
             }
@@ -603,7 +603,7 @@ class TelegramBotController extends Controller
         if (mb_strlen(trim($username), 'UTF-8') < 2) {
             return ['result' => false, 'message' => '{{ Tg_Command_Name_Too_Short }}'];
         }
-        if (preg_match('/([^а-яА-ЯрРсСтТуУфФчЧхХШшЩщЪъЫыЬьЭэЮюЄєІіЇїҐґ .])/', $username) === 1) {
+        if (preg_match('/([^а-яА-ЯрРсСтТуУфФчЧхХШшЩщЪъЫыЬьЭэЮюЄєІіЇїҐґ .0-9])/', $username) === 1) {
             return ['result' => false, 'message' => '{{ Tg_Command_Name_Wrong_Format }}'];
         }
 
@@ -643,7 +643,7 @@ class TelegramBotController extends Controller
         if (mb_strlen(trim($username), 'UTF-8') < 2) {
             return ['result' => false, 'message' => '{{ Tg_Command_Name_Too_Short }}'];
         }
-        if (preg_match('/([^а-яА-ЯрРсСтТуУфФчЧхХШшЩщЪъЫыЬьЭэЮюЄєІіЇїҐґ .])/', $username) === 1) {
+        if (preg_match('/([^а-яА-ЯрРсСтТуУфФчЧхХШшЩщЪъЫыЬьЭэЮюЄєІіЇїҐґ .0-9])/', $username) === 1) {
             return ['result' => false, 'message' => '{{ Tg_Command_Name_Wrong_Format }}'];
         }
 

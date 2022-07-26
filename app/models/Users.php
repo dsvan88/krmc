@@ -68,6 +68,20 @@ class Users extends Model
         session_destroy();
         return true;
     }
+    /*     public static function sessionReturn()
+    {
+        if (!isset($_SESSION['expire'])) {
+            self::logout();
+            return false;
+        }
+        if (isset($_COOKIE[CFG_TOKEN_NAME]) && $_COOKIE[CFG_TOKEN_NAME] === sha1(sha1($_SESSION['expire'] . $_SESSION['login']))) {
+            if ($_SESSION['expire'] - $_SERVER['REQUEST_TIME'] < CFG_MAX_SESSION_AGE / 3) {
+                self::prolongSession();
+            }
+            return true;
+        }
+        return false;
+    } */
     public static function checkToken()
     {
         if (!isset($_SESSION['expire'])) {
