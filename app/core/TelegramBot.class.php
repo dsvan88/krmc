@@ -114,7 +114,6 @@ class TelegramBot
         if ($image !== '') {
             $params['photo'] = curl_file_create($image, $type, 'image');
         }
-        var_dump($params);
         $options = self::$options;
         $options[CURLOPT_URL] = "https://api.telegram.org/bot$botToken/sendPhoto"; // адрес api телеграмм-бота
         $options[CURLOPT_POSTFIELDS] = $params; // адрес api телеграмм-бота
