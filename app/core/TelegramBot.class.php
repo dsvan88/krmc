@@ -116,7 +116,7 @@ class TelegramBot
         }
         var_dump($params);
         $options = self::$options;
-        $options[CURLOPT_URL] = "https://api.telegram.org/bot$botToken/sendMessage"; // адрес api телеграмм-бота
+        $options[CURLOPT_URL] = "https://api.telegram.org/bot$botToken/sendPhoto"; // адрес api телеграмм-бота
         $options[CURLOPT_POSTFIELDS] = $params; // адрес api телеграмм-бота
 
         $result = [];
