@@ -99,7 +99,7 @@ class TelegramBot
         } else
             return [json_decode(curl_exec($curl), true)];
     }
-    public static function sendPhoto($userId, $caption = '', $image = '', $messageId = -1)
+    public static function sendPhoto($userId, $caption = '', $image = '', $type = 'image/jpeg', $messageId = -1)
     {
         $botToken = self::$botToken;
         $params = self::$params;
@@ -112,7 +112,7 @@ class TelegramBot
             $params['reply_to_message_id'] = $messageId;
         }
         if ($image !== '') {
-            $params['photo'] = "@$image";
+            $params['photo'] = curl_file_create($image, $type, 'image');
         }
         var_dump($params);
         $options = self::$options;
