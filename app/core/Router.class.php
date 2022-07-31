@@ -73,8 +73,8 @@ class Router
         if (!isset($_SESSION['privilege'])) return false;
 
         if (self::$accessLevels[$params['access']['category']] > self::$accessLevels[$_SESSION['privilege']['status']]) {
-            echo self::$accessLevels[$params['access']['category']];
-            echo self::$accessLevels[$_SESSION['privilege']['status']];
+            /*             echo self::$accessLevels[$params['access']['category']];
+            echo self::$accessLevels[$_SESSION['privilege']['status']]; */
             return false;
         }
         return true;

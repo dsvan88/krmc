@@ -29,6 +29,12 @@
                 <? endfor ?>
             </select>
         </div>
+        <div>
+            <label for="news-logo-input-file">
+                Зображення
+                <input type="file" name="logo" value="<?= $newsData['logo'] ?>" placeholder="Logo" class="common-form__input logo" id="news-logo-input-file">
+            </label>
+        </div>
         <div class="editor-block">
             <div class="toolbar-container"></div>
             <div class="content-container">

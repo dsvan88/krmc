@@ -318,7 +318,8 @@ class AccountController extends Controller
                     $hash = md5(json_encode([$userData['personal'], $userData['privilege'], $userData['contacts']]) . $_SERVER['REQUEST_TIME']);
                 }
                 Users::saveForget($userData, $hash);
-                $link = "<a>{$_SERVER['HTTP_X_FORWARDED_PROTO']}://{$_SERVER['SERVER_NAME']}/account/password-reset/$hash</a>";
+                $link = "{$_SERVER['HTTP_X_FORWARDED_PROTO']}://{$_SERVER['SERVER_NAME']}/account/password-reset/$hash";
+                $link = "<a href='$link'>$link</a>";
                 $bot = new TelegramBot();
                 $bot->sendMessage($userData['contacts']['telegramid'], Locale::applySingle(['string' => '{{ Account_Forget_Check_Succes }}', 'vars' => [$link]]));
             }

@@ -60,6 +60,45 @@ class TelegramBot
         } else
             return [json_decode(curl_exec($curl), true)];
     }
+    public static function sendMessageWithImage($userId, $message = '', $image = '', $messageId = -1)
+    {
+        $botToken = self::$botToken;
+        $params = self::$params;
+        $params['chat_id'] = is_array($userId) ? $userId[0] : $userId; // id получателя сообщения
+        if ($message !== '') {
+            $params['text'] = $message;
+            $params['parse_mode'] = 'HTML';
+        }
+        if ($messageId !== -1) {
+            $params['reply_to_message_id'] = $messageId;
+        }
+        if ($image !== '') {
+            $image = "{$_SERVER['HTTP_X_FORWARDED_PROTO']}://{$_SERVER['SERVER_NAME']}$image";
+            $params['text'] .= "<a href='$image'>&#8205;</a>";
+            $params['disable_web_page_preview'] = true;
+        }
+        var_dump($params);
+        echo PHP_EOL;
+        $options = self::$options;
+        $options[CURLOPT_URL] = "https://api.telegram.org/bot$botToken/sendMessage"; // адрес api телеграмм-бота
+        $options[CURLOPT_POSTFIELDS] = $params; // адрес api телеграмм-бота
+
+        $result = [];
+        $curl = curl_init();
+
+        curl_setopt_array($curl, $options);
+
+        if (is_array($userId) && isset($userId[1])) {
+            for ($x = 1; $x < count($userId); $x++) {
+                usleep(750000);
+                $params['chat_id'] = $userId[$x];
+                curl_setopt($curl, CURLOPT_POSTFIELDS, $params);
+                $result[] = json_decode(curl_exec($curl), true);
+            }
+            return $result;
+        } else
+            return [json_decode(curl_exec($curl), true)];
+    }
     public static function deleteMessage($chatId, $messageId)
     {
         $botToken = self::$botToken;

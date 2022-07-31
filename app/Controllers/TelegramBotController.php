@@ -752,19 +752,28 @@ class TelegramBotController extends Controller
                         break;
                     case 'groups':
                         $chats = TelegramChats::getGroupChatsList();
-                        for ($i = 0; $i < count($chats); $i++) {
+                        $count = count($chats);
+                        for ($i = 0; $i < $count; $i++) {
                             $targets[] = $chats[$i]['uid'];
                         }
                         break;
                     default:
                         $chats = TelegramChats::getChatsList();
-                        for ($i = 0; $i < count($chats); $i++) {
+                        $count = count($chats);
+                        for ($i = 0; $i < $count; $i++) {
                             $targets[] = $chats[$i]['uid'];
                         }
                         break;
                 }
             }
-            $result = $bot->sendMessage($targets, $message);
+            if ($_FILES['logo']['size'] > 0) {
+                $image = FILE_MAINGALL . sha1_file($_FILES['logo']['tmp_name']) . mb_substr($_FILES['logo']['name'], mb_strripos($_FILES['logo']['name'], '.', 0, 'UTF-8'), NULL, 'UTF-8');
+                copy($_FILES['logo']['tmp_name'], $_SERVER['DOCUMENT_ROOT'] . $image);
+                $result = $bot->sendMessageWithImage($targets, $message, $image);
+            } else {
+                $result = $bot->sendMessage($targets, $message);
+            }
+            var_dump($result);
             $message = '{{ Action_Success }}';
             if (!$result[0]['ok']) {
                 $message = '{{ Action_Failure }}';
