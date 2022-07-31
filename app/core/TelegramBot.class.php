@@ -75,7 +75,7 @@ class TelegramBot
         if ($image !== '') {
             $image = "{$_SERVER['HTTP_X_FORWARDED_PROTO']}://{$_SERVER['SERVER_NAME']}$image";
             $params['text'] .= "<a href='$image'>&#8205;</a>";
-            $params['disable_web_page_preview'] = true;
+            $params['disable_web_page_preview'] = false;
         }
         var_dump($params);
         echo PHP_EOL;

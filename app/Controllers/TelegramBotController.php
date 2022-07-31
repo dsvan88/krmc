@@ -767,9 +767,6 @@ class TelegramBotController extends Controller
                 }
             }
             if ($_FILES['logo']['size'] > 0) {
-                if (!file_exists(FILE_MAINGALL)) {
-                    mkdir(FILE_MAINGALL, '0777', true);
-                }
                 $image = FILE_MAINGALL . sha1_file($_FILES['logo']['tmp_name']) . mb_substr($_FILES['logo']['name'], mb_strripos($_FILES['logo']['name'], '.', 0, 'UTF-8'), NULL, 'UTF-8');
                 copy($_FILES['logo']['tmp_name'], $_SERVER['DOCUMENT_ROOT'] . $image);
                 $result = $bot->sendMessageWithImage($targets, $message, $image);
