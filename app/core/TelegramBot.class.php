@@ -112,7 +112,7 @@ class TelegramBot
             $params['reply_to_message_id'] = $messageId;
         }
         if ($image !== '') {
-            $params['photo'] = "{$_SERVER['HTTP_X_FORWARDED_PROTO']}://{$_SERVER['SERVER_NAME']}$image";
+            $params['photo'] = "@$image";
         }
         var_dump($params);
         $options = self::$options;
