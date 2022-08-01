@@ -20,15 +20,15 @@ class TechController extends Controller
             }
         }
         $vars = [
+            'title' => '{{ SQL_Action_Title }}',
             'texts' => [
-                'blockTitle' => '{{ SQL_Action_Title }}',
-                'buttonSubmitTitle' => '{{ Submit_Label }}',
+                'SubmitLabel' => '{{ Submit_Label }}',
             ],
             'scripts' => [
                 '/public/scripts/plugins/ckeditor.js?v=' . $_SERVER['REQUEST_TIME'],
                 '/public/scripts/forms-admin-funcs.js?v=' . $_SERVER['REQUEST_TIME'],
             ],
         ];
-        View::render('{{ SQL_Action_Title }}', $vars);
+        View::render($vars);
     }
 }

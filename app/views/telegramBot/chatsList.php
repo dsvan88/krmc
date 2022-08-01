@@ -1,5 +1,7 @@
 <section class="section section-users-list">
-    <? if (!empty($chatsData)) : ?>
+    <? if (empty($chatsData)) : ?>
+        There is no dat yet:)
+    <? else : ?>
         <table class="users-list" style="width:100%">
             <thead>
                 <tr>
@@ -43,7 +45,5 @@
                 <? endfor; ?>
             </tbody>
         </table>
-    <? else : ?>
-        There is no data:)
     <? endif ?>
 </section>

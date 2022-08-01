@@ -162,19 +162,19 @@ return  [
     'api/account/login/form' =>
     [
         'controller' => 'account',
-        'action' => 'loginForm',
-        'access' => ['category' => 'all']
-    ],
-    'api/account/profile' =>
-    [
-        'controller' => 'account',
-        'action' => 'profileEdit',
+        'action' => 'login',
         'access' => ['category' => 'all']
     ],
     'api/account/profile/form' =>
     [
         'controller' => 'account',
         'action' => 'profileForm',
+        'access' => ['category' => 'all']
+    ],
+    'api/account/profile/{userId}' =>
+    [
+        'controller' => 'account',
+        'action' => 'profileEdit',
         'access' => ['category' => 'all']
     ],
     'api/account/profile/avatar/form' =>
@@ -189,22 +189,22 @@ return  [
         'action' => 'profileAvatarRecropForm',
         'access' => ['category' => 'all']
     ],
+    'api/account/forget/form' =>
+    [
+        'controller' => 'account',
+        'action' => 'forget',
+        'access' => ['category' => 'all']
+    ],
     'api/account/forget' =>
     [
         'controller' => 'account',
         'action' => 'forget',
         'access' => ['category' => 'all']
     ],
-    'api/account/forget/form' =>
-    [
-        'controller' => 'account',
-        'action' => 'forgetForm',
-        'access' => ['category' => 'all']
-    ],
     'api/account/register/form' =>
     [
         'controller' => 'account',
-        'action' => 'registerForm',
+        'action' => 'register',
         'access' => ['category' => 'all']
     ],
     'api/account/register' =>
@@ -213,16 +213,16 @@ return  [
         'action' => 'register',
         'access' => ['category' => 'all']
     ],
-    'api/account/set/nickname' =>
-    [
-        'controller' => 'account',
-        'action' => 'setNickname',
-        'access' => ['category' => 'manager']
-    ],
     'api/account/set/nickname/form' =>
     [
         'controller' => 'account',
         'action' => 'setNicknameForm',
+        'access' => ['category' => 'manager']
+    ],
+    'api/account/set/nickname/{chatId}' =>
+    [
+        'controller' => 'account',
+        'action' => 'setNickname',
         'access' => ['category' => 'manager']
     ],
     'api/autocomplete/users-names' =>

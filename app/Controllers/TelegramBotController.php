@@ -728,10 +728,10 @@ class TelegramBotController extends Controller
     public static function chatsListAction()
     {
         $vars = [
-            'formTitle' => '{{ Chats_List_Title }}',
+            'title' => '{{ Chats_List_Title }}',
             'chatsData' => TelegramChats::getChatsList()
         ];
-        View::render('{{ Chats_List_Title }}', $vars);
+        View::render($vars);
     }
     public static function testCommand()
     {
@@ -782,6 +782,7 @@ class TelegramBotController extends Controller
         $directChats = TelegramChats::getDirectChats();
         $chats = array_merge($groupChats, $directChats);
         $vars = [
+            'title' => '{{ HEADER_ASIDE_MENU_CHAT_SEND }}',
             'texts' => [
                 'blockTitle' => '{{ HEADER_ASIDE_MENU_CHAT_SEND }}',
                 'submitTitle' => '{{ Send_Label }}',
@@ -795,6 +796,6 @@ class TelegramBotController extends Controller
                 '/public/scripts/forms-admin-funcs.js?v=' . $_SERVER['REQUEST_TIME'],
             ],
         ];
-        View::render('{{ HEADER_ASIDE_MENU_CHAT_SEND }}', $vars);
+        View::render($vars);
     }
 }

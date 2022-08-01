@@ -1,6 +1,6 @@
 <section class='section common-form'>
     <form action="/news/edit/<?= $newsData['id'] ?>" method="post" enctype="multipart/form-data" class="common-form__form">
-        <h2 class="common-form__title"><?= $texts['newsEditBlockTitle'] ?></h2>
+        <h2 class="common-form__title"><?= $title ?></h2>
         <div><input type="hidden" name="type" value="<?= $newsData['type'] ?>"></div>
         <div class="common-form__item-logo">
             <label for="news-logo-input-file" id="main-image-place">
@@ -17,6 +17,6 @@
                 <div class="editor"><?= $newsData['html'] ?></div>
             </div>
         </div>
-        <div class="common-form__button-place"><button type="submit" class="common-form__button"><?= $texts['newsEditSubmitTitle'] ?></button></div>
+        <div class="common-form__button-place"><button type="submit" class="common-form__button"><?= $texts['SubmitLabel'] ?></button></div>
     </form>
 </section>

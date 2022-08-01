@@ -25,6 +25,9 @@ return [
     '{{ Users_List_Page_Title }}' => 'Users List',
     '{{ Settings_List_Page_Title }}' => 'System’s settings',
     '{{ SQL_Action_Title }}' => 'Execute SQL-query',
+    '{{ Users_List_Title }}' => 'Users list',
+    '{{ Settings_List_Title }}' => 'System’s settings',
+    '{{ Chats_List_Title }}' => 'Chats with our Bot',
 
     '{{ HEADER_MENU_START_PAGE }}' => 'About Club',
     '{{ HEADER_MENU_NEWS }}' => 'News',
@@ -47,6 +50,7 @@ return [
     '{{ Account_Login_Form_Register_Link }}' => 'Register',
     '{{ Account_Login_User_Not_Found }}' => "User isn’t found!\nCheck your login and password!",
 
+
     '{{ Account_Profile_Form_Title }}' => 'Users’s profile <b>%s</b>',
     '{{ Account_Profile_Form_Fio_Label }}' => 'Name, secondary name, middle name',
     '{{ Account_Profile_Form_Birthday_Label }}' => 'Birthday',
@@ -55,11 +59,17 @@ return [
     '{{ Account_Profile_Form_Telegram_Label }}' => 'Telegram',
     '{{ Account_Profile_Form_User_Avatar }}' => 'Users avatar of %s',
 
+    '{{ Account_Avatar_Form_Title }}' => 'Avatar of %s',
     '{{ Account_Avatar_Form_Newcrop_Link }}' => 'Replace',
 
     '{{ Account_Register_Form_Title }}' => 'Registration form',
 
+    '{{ Account_Password_Reset_Title }}' => 'Reset password',
+    '{{ Account_Forget_Form_Title }}' => 'Recovery password',
     '{{ Account_Forget_Check_Succes }}' => "Your password reset request has been processed.\nYour password reset link:\n%s",
+
+    '{{ Settings_Add_Title }}' => 'Add setting',
+    '{{ Settings_Edit_Title }}' => 'Edit setting',
 
     '{{ Weeks_Block_Title }}' => 'Weekly schedule',
     '{{ Week_Set_Block_Title }}' => 'Set week schelude',
@@ -83,7 +93,6 @@ return [
     '{{ Saturday }}' => 'Saturday',
     '{{ Sunday }}' => 'Sunday',
 
-
     '{{ Mafia }}' => 'Mafia',
     '{{ Poker }}' => 'Poker',
     '{{ Board }}' => 'Board Games',
@@ -95,6 +104,12 @@ return [
     '{{ Tg_Board }}' => 'Board Games 🎲',
     '{{ Tg_Cash }}' => 'Cash Poker 🃏',
     '{{ Tg_Etc }}' => 'Etc ✨',
+
+    '{{ Send_To_All }}' => 'All chats',
+    '{{ Send_To_Groups }}' => 'Groups',
+    '{{ Send_To_Personal }}' => 'Personal chats',
+    '{{ Send_To_Main }}' => 'Main chat',
+    '{{ Send_To_Tech }}' => 'Technical chat',
 
     '{{ Day_Date_Not_Set }}' => '&lt;No data&gt; New week',
 
@@ -123,7 +138,8 @@ return [
     '{{ Tg_Command_Name_Too_Short }}' => "Your nickname is too short!\nPlease use at least <b>2</b> symbols, so people can recognize you!",
     '{{ Tg_Command_Name_Wrong_Format }}' => "Invalid nickname format!\nPlease use only <b>Cyrillic</b> and <b>spaces</b> in your nickname!",
     '{{ Tg_Command_Games_Not_Set }}' => "There are no games scheduled for the near future!\nPlease contact us later.\n",
-    '{{ Tg_Command_User_Not_Found }}' => "No users found with this nickname!",
+    '{{ Tg_Command_Name_You_Have_One }}' => 'This nickname is already yours! Nice to meet you!😊',
+    '{{ Tg_Command_User_Not_Found }}' => 'No users found with this nickname!',
     '{{ Tg_Command_Successfully_Canceled }}' => "Day settings successfully recalled!\n\n*You can cancel ''recall'' by admin's registering for that day;)",
     '{{ Tg_Gameday_Not_Set }}' => "There are no games scheduled for this day!",
     '{{ Tg_Command_Set_Day_Not_Found }}' => "There are no games scheduled for this day.",

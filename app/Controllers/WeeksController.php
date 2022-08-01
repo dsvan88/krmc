@@ -66,13 +66,17 @@ class WeeksController extends Controller
         ];
         $paginator = Paginator::weekly(['weeksIds' => $weeksIds, 'currentIndex' => $weekCurrentIndexInList, 'selectedIndex' => $selectedWeekIndex]);
 
-        View::render('{{ Weeks_Show_Page_Title }}', compact('texts', 'weekId', 'weeksCount', 'selectedWeekIndex', 'weekCurrentId', 'weeksIds', 'weekCurrentIndexInList', 'weekData', 'monday', 'dayId', 'dayCurrentId', 'defaultDayData', 'paginator'));
+        $title = '{{ Weeks_Show_Page_Title }}';
+        View::render(compact('title', 'texts', 'weekId', 'weeksCount', 'selectedWeekIndex', 'weekCurrentId', 'weeksIds', 'weekCurrentIndexInList', 'weekData', 'monday', 'dayId', 'dayCurrentId', 'defaultDayData', 'paginator'));
     }
     public function addAction()
     {
-        $texts = [
-            'weeksBlockTitle' => '{{ Week_Set_Block_Title }}'
+        $vars = [
+            'title' => '{{ Week_Set_Page_Title }}',
+            'texts' => [
+                'weeksBlockTitle' => '{{ Week_Set_Block_Title }}'
+            ]
         ];
-        View::render('{{ Week_Set_Page_Title }}', compact('texts'));
+        View::render($vars);
     }
 }

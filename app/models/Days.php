@@ -26,6 +26,40 @@ class Days extends Model
         'participants' => [],
         'day_prim' => ''
     ];
+    public static function edit($weekId, $dayId, $data)
+    {
+        $newData = [
+            'time' => trim($data['day_time']),
+            'game' => trim($data['game']),
+            'day_prim' => trim($data['day_prim']),
+            'status' => 'set'
+        ];
+        if (isset($data['mods'])) {
+            $newData['mods'] = $data['mods'];
+        }
+        $newData['participants'] = [];
+        for ($i = 0; $i < count($data['participant']); $i++) {
+            $name = trim($data['participant'][$i]);
+            if ($name === '') continue;
+
+            if ($name !== '+1') {
+                $id = Users::getId(trim($data['participant'][$i]));
+                if ($id < 2) {
+                    $id = Users::add($name);
+                }
+            } else {
+                $name = 'tmp_user_' . $i;
+                $id = -1;
+            }
+            $newData['participants'][] = [
+                'id' => $id,
+                'name' => $name,
+                'arrive' => trim($data['arrive'][$i]),
+                'prim' => trim($data['prim'][$i]),
+            ];
+        }
+        return Days::setDayData($weekId, $dayId, $newData);
+    }
     public static function setDayData($weekId, $dayId, $data)
     {
         try {

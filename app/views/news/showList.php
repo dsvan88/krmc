@@ -4,7 +4,7 @@ use app\core\ImageProcessing;
 
 ?>
 <section class="section news-list">
-    <h2 class="news-preview__title section__title"><?= $texts['newsBlockTitle'] ?>
+    <h2 class="news-preview__title section__title"><?= $title ?>
         <? if ($setDashBoard) : ?>
             <a href="/news/add"><i class="fa fa-plus-square"></i></a>
         <? endif ?>
@@ -41,7 +41,7 @@ use app\core\ImageProcessing;
                             </a>
                         </span>
                     <? endif ?>
-                    <a class="news-preview__read-more-link" href="/news/show/<?= $newsAll[$i]['id'] ?>"><?= $texts['newsBlockReadMore'] ?></a>
+                    <a class="news-preview__read-more-link" href="/news/show/<?= $newsAll[$i]['id'] ?>"><?= $texts['ReadMore'] ?></a>
                 </div>
             </div>
         <? endfor; ?>

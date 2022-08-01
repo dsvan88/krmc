@@ -17,14 +17,14 @@ class DaysController extends Controller
         extract(self::$route['vars']);
         if (isset($_SESSION['privilege']['status']) && in_array($_SESSION['privilege']['status'], ['manager', 'admin'])) {
             if (!empty($_POST)) {
-                $weekId = self::edit($_POST);
-                View::message(['error' => 0, 'message' => '{{ Day_Set_Success }}', 'url' => "/days$dayId/w$weekId"]);
+                $weekId = Days::edit($weekId, $dayId, $_POST);
+                View::message(['message' => '{{ Day_Set_Success }}', 'url' => "/days$dayId/w$weekId"]);
             }
             self::$route['action'] = 'edit';
             View::set(self::$route);
         }
         $vars = [
-            'daysBlockContent' => '',
+            'title' => '{{ Day_Set_Page_Title }}',
             'texts' => [
                 'daysBlockTitle' => '{{ Day_Block_Title }}',
                 'dayStartTime' => '{{ Day_Block_Start_Time }}',
@@ -74,58 +74,17 @@ class DaysController extends Controller
         $playersCount = max(count($day['participants']), 11);
         $scripts = '/public/scripts/day-edit-funcs.js?v=' . $_SERVER['REQUEST_TIME'];
         $vars = array_merge($vars, compact('day', 'playersCount', 'scripts'));
-        View::render('{{ Day_Set_Page_Title }}', $vars);
+        View::render($vars);
     }
     public function addAction()
     {
         $vars = [
-            'daysBlockContent' => print_r(Days::$dayDataDefault, true),
+            'title' => '{{ Day_Block_Title }}',
             'texts' => [
-                'daysBlockTitle' => '{{ Day_Block_Title }}',
                 'dayStartTime' => '{{ Day_Block_Start_Time }}',
                 'daysBlockParticipantsTitle' => '{{ Day_Block_Participants_Title }}',
             ]
         ];
-        View::render('{{ Week_Set_Page_Title }}', $vars);
-    }
-    public function edit($data)
-    {
-        try {
-            extract(self::$route['vars']);
-            $newData = [
-                'time' => trim($data['day_time']),
-                'game' => trim($data['game']),
-                'day_prim' => trim($data['day_prim']),
-                'status' => 'set'
-            ];
-            if (isset($data['mods'])) {
-                $newData['mods'] = $data['mods'];
-            }
-            $newData['participants'] = [];
-            for ($i = 0; $i < count($data['participant']); $i++) {
-                $name = trim($data['participant'][$i]);
-                if ($name === '') continue;
-
-                if ($name !== '+1') {
-                    $id = Users::getId(trim($data['participant'][$i]));
-                    if ($id < 2) {
-                        $id = Users::add($name);
-                    }
-                } else {
-                    $name = 'tmp_user_' . $i;
-                    $id = -1;
-                }
-                $newData['participants'][] = [
-                    'id' => $id,
-                    'name' => $name,
-                    'arrive' => trim($data['arrive'][$i]),
-                    'prim' => trim($data['prim'][$i]),
-                ];
-            }
-            return Days::setDayData($weekId, $dayId, $newData);
-        } catch (\Throwable $th) {
-            error_log(__METHOD__ . $th->__toString());
-            return false;
-        }
+        View::render($vars);
     }
 }

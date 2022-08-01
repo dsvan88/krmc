@@ -45,10 +45,11 @@ class PagesController extends Controller
             $dashboard .= "</span>";
         }
         $vars = [
+            'title' => $settings['name'],
             'html' => $settings['value'],
             'dashboard' => $dashboard,
         ];
-        View::renderPage($settings['name'], $vars);
+        View::renderPage($vars);
         exit();
     }
     public function editAction()
@@ -77,9 +78,10 @@ class PagesController extends Controller
         $htmlEndPos = mb_strrpos($settings['value'], '</div>', 0, 'UTF-8') - mb_strlen($settings['value'], 'UTF-8');
         $pageData['html'] = trim(mb_substr($settings['value'], $htmlStartPos, $htmlEndPos, 'UTF-8'));
         $vars = [
+            'title' => '{{ Page_Add_Page_Title }}',
             'texts' => [
-                'pageAddBlockTitle' => '{{ Page_Add_Block_Title }}',
-                'pageAddSubmitTitle' => '{{ Page_Add_Block_Submit_Title }}'
+                'BlockTitle' => '{{ Page_Add_Block_Title }}',
+                'SubmitLabel' => '{{ Page_Add_Block_Submit_Title }}'
             ],
             'scripts' => [
                 '/public/scripts/plugins/ckeditor.js?v=' . $_SERVER['REQUEST_TIME'],
@@ -87,7 +89,7 @@ class PagesController extends Controller
             ],
             'pageData' => $pageData,
         ];
-        View::render('{{ Page_Add_Page_Title }}', $vars);
+        View::render($vars);
     }
     public function deleteAction()
     {
@@ -105,16 +107,16 @@ class PagesController extends Controller
             View::message(['error' => 0, 'message' => '{{ Changes_Save_Success }}']);
         }
         $vars = [
+            'title' => '{{ Page_Add_Page_Title }}',
             'texts' => [
-                'pageAddBlockTitle' => '{{ Page_Add_Block_Title }}',
-                'pageAddSubmitTitle' => '{{ Page_Add_Block_Submit_Title }}'
+                'BlockTitle' => '{{ Page_Add_Block_Title }}',
+                'SubmitLabel' => '{{ Page_Add_Block_Submit_Title }}'
             ],
             'scripts' => [
                 '/public/scripts/plugins/ckeditor.js?v=' . $_SERVER['REQUEST_TIME'],
                 '/public/scripts/forms-admin-funcs.js?v=' . $_SERVER['REQUEST_TIME'],
             ],
         ];
-
-        View::render('{{ Page_Add_Page_Title }}', $vars);
+        View::render($vars);
     }
 }

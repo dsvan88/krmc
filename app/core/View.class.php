@@ -20,10 +20,9 @@ class View
         self::$route = $route;
         self::$path = $route['controller'] . '/' . $route['action'];
     }
-    public static function render($title, $vars = [])
+    public static function render($vars = [])
     {
         $styles = $scripts = '';
-        $title = Locale::applySingle($title);
         $vars = Locale::apply($vars);
         extract($vars);
         extract(self::defaultVars());
@@ -38,10 +37,9 @@ class View
             self::errorCode('404', ['message' => 'View ' . self::$path . ' isn’t found!']);
         }
     }
-    public static function renderPage($title, $vars = [])
+    public static function renderPage($vars = [])
     {
         $styles = $scripts = '';
-        $title = Locale::apply([$title])[0];
         $vars = Locale::apply($vars);
         extract($vars);
         extract(self::defaultVars());

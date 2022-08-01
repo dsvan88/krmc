@@ -14,10 +14,10 @@ class SettingsController extends Controller
     public function listAction()
     {
         $vars = [
-            'formTitle' => '{{ Settings_List_Title }}',
+            'title' => '{{ Settings_List_Page_Title }}',
             'settingsData' => Settings::getList(['tg-bot', 'point', 'tg-tech', 'tg-main']),
         ];
-        View::render('{{ Settings_List_Page_Title }}', $vars);
+        View::render($vars);
     }
     public function addAction()
     {
@@ -29,13 +29,13 @@ class SettingsController extends Controller
             View::message(['error' => 0, 'message' => '{{ Changes_Save_Success }}', 'location' => '/settings/list']);
         }
         $vars = [
+            'title' => '{{ Settings_Add_Title }}',
             'texts' => [
-                'formTitle' => '{{ Settings_Add_Title }}',
                 'BlockTitle' => '{{ Settings_Add_Title }}',
-                'SubmitButtonTitle' => '{{ Save_Label }}',
+                'SubmitLabel' => '{{ Save_Label }}',
             ]
         ];
-        View::render('{{ Settings_Add_Title }}', $vars);
+        View::render($vars);
     }
     public function editAction()
     {
@@ -49,19 +49,17 @@ class SettingsController extends Controller
             }
             $array['short_name'] = Locale::translitization($array['name']);
             Settings::save($array);
-            // View::message(['error' => 0, 'message' => Locale::applySingle('{{ Changes_Save_Success }}'), 'location' => '/settings/list']);
         }
 
         $settingsData = Settings::getById($settingId);
         $vars = [
+            'title' => '{{ Settings_Edit_Title }}',
             'texts' => [
-                'formTitle' => '{{ Settings_Add_Title }}',
-                'BlockTitle' => '{{ Settings_Add_Title }}',
-                'SubmitButtonTitle' => '{{ Save_Label }}',
+                'SubmitLabel' => '{{ Save_Label }}',
             ],
             'settingsData' => $settingsData,
         ];
-        View::render('{{ Settings_Add_Title }}', $vars);
+        View::render($vars);
     }
     public function deleteAction()
     {

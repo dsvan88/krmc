@@ -29,12 +29,12 @@ class NewsController extends Controller
             $setDashBoard = true;
         }
 
+        $title = '{{ News_Show_List_Page_Title }}';
         $texts = [
-            'newsBlockTitle' => '{{ News_Show_List_Page_Title }}',
-            'newsBlockReadMore' => '{{ News_Block_Read_More }}'
+            'ReadMore' => '{{ News_Block_Read_More }}'
         ];
         $paginator = Paginator::news(['page' => $page, 'count' => $newsCount]);
-        View::render('{{ News_Show_List_Page_Title }}', compact('texts', 'newsAll', 'newsCount', 'page', 'setDashBoard', 'paginator', 'defaultImage'));
+        View::render(compact('title', 'texts', 'newsAll', 'newsCount', 'page', 'setDashBoard', 'paginator', 'defaultImage'));
     }
     public function showItemAction()
     {
@@ -46,12 +46,10 @@ class NewsController extends Controller
             $newsData['logo'] = ImageProcessing::inputImage(Settings::getImage('news_default')['value'], ['title' => Locale::applySingle('{{ News_Change_Logo }}'), 'class' => 'news__item-logo_image']);
 
         $vars = [
-            'texts' => [
-                'newsBlockTitle' => '{{ News_Show_Item_Page_Title }}'
-            ],
+            'title' => '{{ News_Show_Item_Page_Title }}',
             'newsData' => $newsData
         ];
-        View::render('{{ News_Show_Item_Page_Title }}', $vars);
+        View::render($vars);
     }
     public function editItemAction()
     {
@@ -67,7 +65,7 @@ class NewsController extends Controller
                 }
             }
             News::edit($array, $newsId);
-            View::message(['error' => 0, 'message' => '{{ Changes_Save_Success }}']);
+            View::message('{{ Changes_Save_Success }}');
         }
 
         $newsData = News::getDataById($newsId);
@@ -77,9 +75,10 @@ class NewsController extends Controller
             $newsData['logo'] = ImageProcessing::inputImage(Settings::getImage('news_default')['value'], ['title' => Locale::applySingle('{{ News_Change_Logo }}'), 'class' => 'news__item-logo_image']);
 
         $vars = [
+            'title' => '{{ News_Edit_Page_Title }}',
             'texts' => [
-                'newsEditBlockTitle' => '{{ News_Edit_Block_Title }}',
-                'newsEditSubmitTitle' => '{{ News_Edit_Block_Submit_Title }}'
+                'BlockTitle' => '{{ News_Edit_Block_Title }}',
+                'SubmitLabel' => '{{ News_Edit_Block_Submit_Title }}'
             ],
             'newsData' => $newsData,
             'scripts' => [
@@ -87,7 +86,7 @@ class NewsController extends Controller
                 '/public/scripts/forms-admin-funcs.js?v=' . $_SERVER['REQUEST_TIME'],
             ],
         ];
-        View::render('{{ News_Edit_Page_Title }}', $vars);
+        View::render($vars);
     }
     public function editPromoItemAction()
     {
@@ -97,9 +96,10 @@ class NewsController extends Controller
         }
         $newsData = News::getPromoData();
         $vars = [
+            'title' => '{{ News_Edit_Page_Title }}',
             'texts' => [
-                'newsEditBlockTitle' => '{{ News_Edit_Block_Title }}',
-                'newsEditSubmitTitle' => '{{ News_Edit_Block_Submit_Title }}'
+                'BlockTitle' => '{{ News_Edit_Block_Title }}',
+                'SubmitLabel' => '{{ News_Edit_Block_Submit_Title }}'
             ],
             'newsData' => $newsData,
             'scripts' => [
@@ -108,7 +108,7 @@ class NewsController extends Controller
             ],
         ];
 
-        View::render('{{ News_Edit_Page_Title }}', $vars);
+        View::render($vars);
     }
     public function addItemAction()
     {
@@ -126,9 +126,10 @@ class NewsController extends Controller
             View::message(['error' => 0, 'message' => '{{ Changes_Save_Success }}']);
         }
         $vars = [
+            'title' => '{{ News_Add_Page_Title }}',
             'texts' => [
-                'newsAddBlockTitle' => '{{ News_Add_Block_Title }}',
-                'newsAddSubmitTitle' => '{{ News_Add_Block_Submit_Title }}'
+                'BlockTitle' => '{{ News_Add_Block_Title }}',
+                'SubmitLabel' => '{{ News_Add_Block_Submit_Title }}'
             ],
             'scripts' => [
                 '/public/scripts/plugins/ckeditor.js?v=' . $_SERVER['REQUEST_TIME'],
@@ -136,7 +137,7 @@ class NewsController extends Controller
             ],
         ];
 
-        View::render('{{ News_Add_Page_Title }}', $vars);
+        View::render($vars);
     }
     public function deleteItemAction()
     {
