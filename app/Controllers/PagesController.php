@@ -16,7 +16,7 @@ class PagesController extends Controller
     {
         $index = Settings::getPage('index');
         if (!$index) {
-            View::render('{{ Main_Home_Page_Title }}', []);
+            View::render(['title' => '{{ Main_Home_Page_Title }}']);
             exit();
         }
         self::$route['vars'] = ['shortName' => 'index'];
@@ -32,7 +32,7 @@ class PagesController extends Controller
         if (PAGES_AS_LOCAL_FILE) {
             self::$route['action'] = $shortName;
             View::set(self::$route);
-            View::render('{{ Main_Home_Page_Title }}', []);
+            View::render(['title' => '{{ Main_Home_Page_Title }}']);
             exit();
         }
         $dashboard = '';
