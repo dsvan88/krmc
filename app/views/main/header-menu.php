@@ -8,7 +8,7 @@
     <input type='checkbox' id='profile-menu-checkbox' class='header__profile-checkbox' autocomplete='off' />
     <menu class='header__profile-menu'>
         <li class='header__profile-menu-item'>
-            <span data-action-click='account/profile/form' data-uid='1'><?= $texts['headerMenuProfileLink'] ?></span>
+            <span data-action-click='account/profile/form' data-uid='<?= $_SESSION['id'] ?>'><?= $texts['headerMenuProfileLink'] ?></span>
             <div class='header__profile-menu-bar'></div>
         </li>
         <? if (in_array($_SESSION['privilege']['status'], ['manager', 'admin'])) : ?>

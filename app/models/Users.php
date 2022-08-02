@@ -74,7 +74,7 @@ class Users extends Model
         if (!$userData) return false;
 
         if ($_COOKIE[CFG_TOKEN_NAME] !== self::prepeareToken($userData['login'])) {
-            // self::logout();
+            self::logout();
             return false;
         }
         return self::setSessionData($userData);
