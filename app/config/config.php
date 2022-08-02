@@ -47,7 +47,7 @@ if (!defined('SQL_HOST')) {
     define('FILE_USRGALL', '/public/gallery/users/');
     define('FILE_MAINGALL', '/public/gallery/site/');
     define('CFG_AUTHOR', 'DSVan');
-    define('CFG_TOKEN_NAME', '_token');
+    define('CFG_TOKEN_NAME', 'KRMCtoken');
 }
 
 if (CFG_DEBUG) {

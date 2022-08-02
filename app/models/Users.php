@@ -3,12 +3,14 @@
 namespace app\models;
 
 use app\core\Model;
+use app\core\Tech;
 
 class Users extends Model
 {
     public static $genders = ['', 'господин', 'госпожа', 'некто'];
     public static $statuses = ['Гость', 'Резидент', 'Мастер'];
     public static $usersAccessLevels = ['', 'guest', 'user', 'manager', 'admin'];
+    public static $userToken = '';
 
     public static function login($data)
     {
@@ -16,22 +18,13 @@ class Users extends Model
         $password = sha1(trim($data['password']));
 
         $table = SQL_TBL_USERS;
-        $authData = self::query("SELECT id, name, login, password, privilege, personal FROM $table WHERE login = :login OR contacts->>'email' = :login LIMIT 1", ['login' => $login], 'Assoc');
+        $authData = self::query("SELECT * FROM $table WHERE login = :login OR contacts->>'email' = :login LIMIT 1", ['login' => $login], 'Assoc');
         if (empty($authData)) return false;
         $authData =  $authData[0];
         if (password_verify($password, $authData['password'])) {
-            $_SESSION['id'] = $authData['id'];
-            $_SESSION['name'] = $authData['name'];
-            $_SESSION['login'] = $authData['login'];
-            $_SESSION['privilege'] = json_decode($authData['privilege'], true);
-            $_SESSION['personal'] = json_decode($authData['personal'], true);
-            $_SESSION['fio'] = $_SESSION['personal']['fio'];
-            $_SESSION['gender'] = $_SESSION['personal']['gender'];
-            $_SESSION['avatar'] = $_SESSION['personal']['avatar'];
-
-            if ($_SESSION['privilege']['status'] === '')
-                $_SESSION['privilege']['status'] = 'user';
-            self::prolongSession();
+            $authData = self::decodeJson($authData);
+            self::setSessionData($authData);
+            self::setToken($authData);
 
             if (isset($_SESSION['personal']['forget'])) {
                 self::deleteForget($_SESSION['id'], $_SESSION['personal']);
@@ -43,6 +36,7 @@ class Users extends Model
     }
     public static function logout()
     {
+        $userId = $_SESSION['id'];
         $_SESSION = [];
         if (ini_get("session.use_cookies")) {
             $params = session_get_cookie_params();
@@ -55,51 +49,68 @@ class Users extends Model
                 $params["secure"],
                 $params["httponly"]
             );
-            setcookie(
-                CFG_TOKEN_NAME,
-                '',
-                $_SERVER['REQUEST_TIME'] - 42000,
-                $params["path"],
-                $params["domain"],
-                $params["secure"],
-                $params["httponly"]
-            );
         }
+        setcookie(
+            CFG_TOKEN_NAME,
+            '',
+            $_SERVER['REQUEST_TIME'] - 42000,
+            $params["path"],
+            $params["domain"],
+            $params["secure"],
+            $params["httponly"]
+        );
         session_destroy();
+        $userData = self::getDataById($userId);
+        unset($userData['id']);
+        $userData['personal']['token'] = '';
+        self::edit($userData, ['id' => $userId]);
+
         return true;
     }
-    public static function sessionReturn()
+    public static function sessionReturn($token)
     {
-        if (!isset($_SESSION['expire'])) {
-            self::logout();
+        $userData = self::getDataByToken($token);
+
+        if (!$userData) return false;
+
+        if ($_COOKIE[CFG_TOKEN_NAME] !== self::prepeareToken($userData['login'])) {
+            // self::logout();
             return false;
         }
-        if (isset($_COOKIE[CFG_TOKEN_NAME]) && $_COOKIE[CFG_TOKEN_NAME] === sha1(sha1($_SESSION['expire'] . $_SESSION['login']))) {
-            if ($_SESSION['expire'] - $_SERVER['REQUEST_TIME'] < CFG_MAX_SESSION_AGE / 3) {
-                self::prolongSession();
-            }
-            return true;
-        }
-        return false;
+        return self::setSessionData($userData);
     }
-    public static function checkToken()
+    public static function prepeareToken(string $login): string
     {
-        if (!isset($_SESSION['expire'])) {
-            self::logout();
-            return false;
-        }
-        if (isset($_COOKIE[CFG_TOKEN_NAME]) && $_COOKIE[CFG_TOKEN_NAME] === sha1(sha1($_SESSION['expire'] . $_SESSION['login']))) {
-            if ($_SESSION['expire'] - $_SERVER['REQUEST_TIME'] < CFG_MAX_SESSION_AGE / 3) {
-                self::prolongSession();
-            }
-            return true;
-        }
-        return false;
+        self::$userToken = sha1($login . $_SERVER['HTTP_USER_AGENT'] . Tech::getClientIP() . date('W.F.Y'));
+        return self::$userToken;
     }
-    public static function prolongSession()
+    public static function setSessionData($userData)
     {
-        $_SESSION['expire'] = $_SERVER['REQUEST_TIME'] + CFG_MAX_SESSION_AGE + (mt_rand(0, 3600) - 1800);
-        setcookie(CFG_TOKEN_NAME, sha1(sha1($_SESSION['expire'] . $_SESSION['login'])));
+        $_SESSION['id'] = $userData['id'];
+        $_SESSION['name'] = $userData['name'];
+        $_SESSION['login'] = $userData['login'];
+        $_SESSION['privilege'] = $userData['privilege'];
+        $_SESSION['personal'] = $userData['personal'];
+        $_SESSION['fio'] = $_SESSION['personal']['fio'];
+        $_SESSION['gender'] = $_SESSION['personal']['gender'];
+        $_SESSION['avatar'] = $_SESSION['personal']['avatar'];
+
+        if ($_SESSION['privilege']['status'] === '')
+            $_SESSION['privilege']['status'] = 'user';
+
+        return true;
+    }
+    public static function setToken($userData)
+    {
+        if (empty(self::$userToken)) {
+            self::$userToken = self::prepeareToken($userData['login']);
+        }
+        setcookie(CFG_TOKEN_NAME, self::$userToken, $_SERVER['REQUEST_TIME'] + CFG_MAX_SESSION_AGE, '/');
+
+        $userId = $userData['id'];
+        unset($userData['id']);
+        $userData['personal']['token'] = self::$userToken;
+        self::edit($userData, ['id' => $userId]);
         return true;
     }
     public static function register($data)
@@ -276,6 +287,15 @@ class Users extends Model
         unset($userData['password']);
 
         return self::decodeJson($userData);
+    }
+    public static function getDataByToken($token)
+    {
+        $table = SQL_TBL_USERS;
+        $userData = self::query("SELECT * FROM $table WHERE personal->>'token' = ? LIMIT 1", [$token], 'Assoc');
+        if (!empty($userData)) {
+            return self::decodeJson($userData[0]);
+        }
+        return false;
     }
     public static function isUserExists($login)
     {
