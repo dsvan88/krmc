@@ -22,9 +22,9 @@ spl_autoload_register(function ($class) {
 } */
 // Locale::$langCode = 'ru';
 // Locale::$langCode = 'en';
-/* ?>
+?>
 <pre>
-<? var_dump(Locale::findUnsetText()); ?>
+<? var_dump($_SERVER); ?>
 </pre>
-<? */
+<?
 Router::run();

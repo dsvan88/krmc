@@ -68,7 +68,7 @@ class Users extends Model
         session_destroy();
         return true;
     }
-    /*     public static function sessionReturn()
+    public static function sessionReturn()
     {
         if (!isset($_SESSION['expire'])) {
             self::logout();
@@ -81,7 +81,7 @@ class Users extends Model
             return true;
         }
         return false;
-    } */
+    }
     public static function checkToken()
     {
         if (!isset($_SESSION['expire'])) {
