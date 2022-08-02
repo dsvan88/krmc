@@ -46,5 +46,4 @@
             <div class='header__profile-menu-bar'></div>
         </li>
     </menu>
-
 </div>
