@@ -21,5 +21,5 @@ if (!isset($_SESSION['id']) && isset($_COOKIE[CFG_TOKEN_NAME])) {
     Users::sessionReturn($_COOKIE[CFG_TOKEN_NAME]);
 }
 // Locale::$langCode = 'ru';
-Locale::$langCode = 'en';
+// Locale::$langCode = 'en';
 Router::run();
