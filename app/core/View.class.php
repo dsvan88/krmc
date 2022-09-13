@@ -129,12 +129,12 @@ class View
                     'drop-down-menu' => Pages::getList(),
                     'type' => 'page'
                 ],
-                [
+                /*                 [
                     'path' => '',
                     'label' => Locale::applySingle('{{ Header_Menu_Games_Label }}'),
                     'drop-down-menu' => Games::menu(),
                     'type' => 'game',
-                ],
+                ], */
             ]
         ];
 
