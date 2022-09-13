@@ -36,7 +36,10 @@ class Router
                 }
                 if ($params['access']['category'] !== 'all') {
                     if (!self::checkAccessLevel($params)) {
-                        View::errorCode(403, ['message' => 'You don’t have enough privilege!']);
+                        if (isset($params['access']['redirect'])) {
+                            View::redirect('/' . $params['access']['redirect']);
+                        }
+                        View::redirect('/');
                     }
                 }
                 for ($i = 1; $i < count($match); $i++) {
@@ -73,8 +76,6 @@ class Router
         if (!isset($_SESSION['privilege'])) return false;
 
         if (self::$accessLevels[$params['access']['category']] > self::$accessLevels[$_SESSION['privilege']['status']]) {
-            /*             echo self::$accessLevels[$params['access']['category']];
-            echo self::$accessLevels[$_SESSION['privilege']['status']]; */
             return false;
         }
         return true;

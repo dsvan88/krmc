@@ -2,6 +2,7 @@
 
 namespace app\core;
 
+use app\models\Games;
 use app\models\Settings;
 
 class View
@@ -125,7 +126,14 @@ class View
                 [
                     'path' => '',
                     'label' => Locale::applySingle('{{ HEADER_MENU_INFORMATION }}'),
-                    'drop-down-menu' => Pages::getList()
+                    'drop-down-menu' => Pages::getList(),
+                    'type' => 'page'
+                ],
+                [
+                    'path' => '',
+                    'label' => Locale::applySingle('{{ Header_Menu_Games_Label }}'),
+                    'drop-down-menu' => Games::menu(),
+                    'type' => 'game',
                 ],
             ]
         ];

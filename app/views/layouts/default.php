@@ -52,7 +52,7 @@
                                     <? for ($i = 0; $i < count($headerMenu[$x]['drop-down-menu']); $i++) :
                                         $path = '';
                                         if ($headerMenu[$x]['drop-down-menu'][$i]['short_name'] !== 'index') {
-                                            $path = 'page/' . $headerMenu[$x]['drop-down-menu'][$i]['short_name'];
+                                            $path = $headerMenu[$x]['type'] . '/' . $headerMenu[$x]['drop-down-menu'][$i]['short_name'];
                                         }
                                     ?>
                                         <div class="header__dropdown-menu-list-item">
