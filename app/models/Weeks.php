@@ -131,11 +131,30 @@ class Weeks extends Model
         unset($weekData['id']);
         for ($x = 0; $x < count($weekData['data']); $x++) {
             $weekData['data'][$x]['participants'] = [];
+            $weekData['data'][$x]['status'] = '';
         }
         $weekData['data'] = json_encode($weekData['data'], JSON_UNESCAPED_UNICODE);
         $weekData['start'] += TIMESTAMP_WEEK;
         $weekData['finish'] = $weekData['start'] + TIMESTAMP_WEEK - 2;
         self::insert($weekData, SQL_TBL_WEEKS);
         return true;
+    }
+    public static function setWeekData($weekId, $weekData)
+    {
+        try {
+            if (is_array($weekData['data'])) {
+                $weekData['data'] = json_encode($weekData['data'], JSON_UNESCAPED_UNICODE);
+            }
+
+            if ($weekId > 0) {
+                self::update($weekData, ['id' => $weekId], SQL_TBL_WEEKS);
+                return $weekId;
+            } else {
+                return self::insert($weekData, SQL_TBL_WEEKS);
+            }
+        } catch (\Throwable $th) {
+            error_log(__METHOD__ . $th->__toString());
+            return false;
+        }
     }
 }

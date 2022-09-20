@@ -8,6 +8,7 @@ use app\core\View;
 use app\libs\Db;
 use app\models\Settings;
 use app\models\Users;
+use app\models\Weeks;
 
 class TechController extends Controller
 {
@@ -30,5 +31,21 @@ class TechController extends Controller
             ],
         ];
         View::render($vars);
+    }
+    public static function migrationAction()
+    {
+        for ($id = 17; $id < 20; $id++) {
+            $week = Weeks::weekDataById($id);
+
+            if (!$week) return false;
+
+            $count = count($week['data']);
+            for ($x = 0; $x < $count; $x++) {
+                $week['data'][$x]['status'] = '';
+            }
+            $weekId = $week['id'];
+            unset($week['id']);
+            Weeks::setWeekData($weekId, $week);
+        }
     }
 }
