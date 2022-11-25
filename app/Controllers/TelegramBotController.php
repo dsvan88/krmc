@@ -573,13 +573,13 @@ class TelegramBotController extends Controller
 
         $dayNum = self::parseDayNum($dayName, $currentDayNum);
 
-        $currentWeekId = Weeks::currentId();
+        $weekId = Weeks::currentId();
 
         if ($dayNum < $currentDayNum) {
-            ++$currentWeekId;
+            ++$weekId;
         }
 
-        $result = Days::recall($currentWeekId, $dayNum);
+        $result = Days::recall($weekId, $dayNum);
 
         if (!$result)
             return ['result' => false, 'message' => '{{ Tg_Command_Set_Day_Not_Found }}'];
@@ -606,18 +606,18 @@ class TelegramBotController extends Controller
 
         $dayNum = self::parseDayNum($dayName, $currentDayNum);
 
-        $currentWeekId = Weeks::currentId();
+        $weekId = Weeks::currentId();
 
         if ($dayNum < $currentDayNum) {
-            ++$currentWeekId;
+            ++$weekId;
         }
 
-        $result = Days::clear($currentWeekId, $dayNum);
+        $result = Days::clear($weekId, $dayNum);
 
         if (!$result)
-            return ['result' => false, 'message' => '{{ Tg_Command_Set_Day_Not_Found }}'];
+            return ['result' => false, 'message' => "Не можу очистити цей день.😥\nВін й досі запланований! Я можу очистити лише дні, по яким стався \"відбій\""];
 
-        return ['result' => true, 'message' => '{{ Tg_Command_Successfully_Canceled }}'];
+        return ['result' => true, 'message' => 'Налаштування обраного дня очищені'];
     }
     public static function nickCommand($data)
     {
