@@ -56,18 +56,33 @@ class TechController extends Controller
     }
     public static function migrationAction()
     {
-        for ($id = 17; $id < 20; $id++) {
-            $week = Weeks::weekDataById($id);
+        if (!empty($_POST)) {
+            $table = substr($_FILES['data']['name'], strpos($_FILES['data']['name'], '-') + 1);
+            $table = substr($table, 0, strrpos($table, '.'));
 
-            if (!$week) return false;
+            if (!in_array($table, ['news', 'settings', 'tgchats', 'users', 'weeks']))
+                View::message(['error' => true, 'message' => 'Something wrong with your datafile!']);
 
-            $count = count($week['data']);
-            for ($x = 0; $x < $count; $x++) {
-                $week['data'][$x]['status'] = '';
-            }
-            $weekId = $week['id'];
-            unset($week['id']);
-            Weeks::setWeekData($weekId, $week);
+            $data = json_decode(trim(file_get_contents($_FILES['data']['tmp_name'])), true);
+
+            if (!is_array($data))
+                View::message(['error' => true, 'message' => 'Something wrong with your datafile!']);
+
+            DB::tableTruncate($table);
+            DB::insert($data, $table);
+
+            View::message('Done!');
         }
+        $vars = [
+            'title' => '{{ SQL_Action_Title }}',
+            'texts' => [
+                'SubmitLabel' => '{{ Submit_Label }}',
+            ],
+            'scripts' => [
+                '/public/scripts/plugins/ckeditor.js?v=' . $_SERVER['REQUEST_TIME'],
+                '/public/scripts/forms-admin-funcs.js?v=' . $_SERVER['REQUEST_TIME'],
+            ],
+        ];
+        View::render($vars);
     }
 }

@@ -261,6 +261,6 @@ return  [
     [
         'controller' => 'tech',
         'action' => 'migration',
-        'access' => ['category' => 'all']
+        'access' => ['category' => 'admin']
     ],
 ];
