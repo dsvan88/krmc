@@ -248,6 +248,7 @@ class Days extends Model
         if (!isset($weekData['data'][$dayNum]) || $weekData['data'][$dayNum]['status'] !== 'recalled') {
             return false;
         }
+        $weekData['data'][$dayNum]['day_prim'] = '';
         $weekData['data'][$dayNum]['participants'] = [];
 
         return self::setDayData($weekId, $dayNum, $weekData['data'][$dayNum]);
