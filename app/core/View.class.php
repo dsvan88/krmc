@@ -178,7 +178,7 @@ class View
         header('Expires: 0');
         header('Cache-Control: must-revalidate');
         header('Pragma: public');
-        header('Content-Length: ' . mb_strlen($file, 'UTF-8'));
+        header('Content-Length: ' . strlen($file));
         echo $file;
         exit;
     }
