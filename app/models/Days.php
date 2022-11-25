@@ -242,4 +242,14 @@ class Days extends Model
         $weekData['data'][$dayNum]['status'] = 'recalled';
         return self::setDayData($weekId, $dayNum, $weekData['data'][$dayNum]);
     }
+    public static function clear($weekId, $dayNum)
+    {
+        $weekData = Weeks::weekDataById($weekId);
+        if (!isset($weekData['data'][$dayNum]) || $weekData['data'][$dayNum]['status'] !== 'recalled') {
+            return false;
+        }
+        $weekData['data'][$dayNum]['participants'] = [];
+
+        return self::setDayData($weekId, $dayNum, $weekData['data'][$dayNum]);
+    }
 }

@@ -586,6 +586,39 @@ class TelegramBotController extends Controller
 
         return ['result' => true, 'message' => '{{ Tg_Command_Successfully_Canceled }}'];
     }
+    public static function clearCommand()
+    {
+        extract($data);
+        $dayName = '';
+        $dayNum = -1;
+        $currentDayNum = getdate()['wday'] - 1;
+
+        if ($currentDayNum === -1)
+            $currentDayNum = 6;
+
+        if (!empty($arguments)) {
+            if (preg_match('/^(пн|пон|вт|ср|чт|чет|пт|пят|сб|суб|вс|вос|сг|сег|зав)/', mb_strtolower($arguments[0], 'UTF-8'), $daysPattern) === 1) {
+                $dayName = $daysPattern[0];
+            }
+        }
+        if ($dayName === '')
+            $dayName = 'сг';
+
+        $dayNum = self::parseDayNum($dayName, $currentDayNum);
+
+        $currentWeekId = Weeks::currentId();
+
+        if ($dayNum < $currentDayNum) {
+            ++$currentWeekId;
+        }
+
+        $result = Days::clear($currentWeekId, $dayNum);
+
+        if (!$result)
+            return ['result' => false, 'message' => '{{ Tg_Command_Set_Day_Not_Found }}'];
+
+        return ['result' => true, 'message' => '{{ Tg_Command_Successfully_Canceled }}'];
+    }
     public static function nickCommand($data)
     {
         extract($data);
