@@ -290,7 +290,8 @@ async function postAjax({ url, data,formData, successFunc, errorFunc, method = '
 		// 	}
 		// });
 		if (response.ok) {
-			if (response.headers.get['content-description'] === "File Transfer"); {
+			let description = response.headers.get['content-description'];
+			if (description && description  === "File Transfer"); {
 				let filename = response.headers.get("content-disposition").replace(/^.*?=/, '').slice(1,-1);
 				let blob = await response.blob();
 				let dataUrl = URL.createObjectURL(blob)
