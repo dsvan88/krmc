@@ -51,7 +51,7 @@ class TelegramBotController extends Controller
 
             $userData = Users::getDataByTelegramId($telegramId);
 
-            if (in_array($command['command'], ['reg', 'recall', 'set', 'users', 'promo', 'newuser'], true)) {
+            if (in_array($command['command'], ['reg', 'recall', 'set', 'users', 'promo', 'newuser', 'clear'], true)) {
                 if (empty($userData) || !in_array($userData['privilege']['status'], ['manager', 'admin'], true))
                     return false;
             }
@@ -586,7 +586,7 @@ class TelegramBotController extends Controller
 
         return ['result' => true, 'message' => '{{ Tg_Command_Successfully_Canceled }}'];
     }
-    public static function clearCommand()
+    public static function clearCommand($data)
     {
         extract($data);
         $dayName = '';
