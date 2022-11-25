@@ -168,4 +168,18 @@ class View
 
         return $defaultVars;
     }
+
+    public static function file($file, $name = 'backup.txt')
+    {
+        header('Content-Description: File Transfer');
+        header('Content-Type: application/octet-stream');
+        header("Content-Disposition: attachment; filename='$name'");
+        header('Content-Transfer-Encoding: binary');
+        header('Expires: 0');
+        header('Cache-Control: must-revalidate');
+        header('Pragma: public');
+        header('Content-Length: ' . mb_strlen($file, 'UTF-8'));
+        echo $file;
+        exit;
+    }
 }

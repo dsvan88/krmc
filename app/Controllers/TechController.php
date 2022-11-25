@@ -32,6 +32,28 @@ class TechController extends Controller
         ];
         View::render($vars);
     }
+    public static function backupAction()
+    {
+        if (!empty($_POST)) {
+            $query = !empty($_POST['table']) ? "SELECT * FROM {$_POST['table']} ORDER BY id" : $_POST['sql_query'];
+            if (!empty($query)) {
+                $result = Db::query($query, [], 'Assoc');
+                View::file(json_encode($result, JSON_UNESCAPED_UNICODE), empty($_POST['table']) ? 'backup-query.txt' : "backup-{$_POST['table']}.txt");
+            }
+            View::message(['error' => true, 'message' => 'Something wrong with sql-query!' . PHP_EOL . $query]);
+        }
+        $vars = [
+            'title' => '{{ SQL_Action_Title }}',
+            'texts' => [
+                'SubmitLabel' => '{{ Submit_Label }}',
+            ],
+            'scripts' => [
+                '/public/scripts/plugins/ckeditor.js?v=' . $_SERVER['REQUEST_TIME'],
+                '/public/scripts/forms-admin-funcs.js?v=' . $_SERVER['REQUEST_TIME'],
+            ],
+        ];
+        View::render($vars);
+    }
     public static function migrationAction()
     {
         for ($id = 17; $id < 20; $id++) {

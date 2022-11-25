@@ -251,6 +251,12 @@ return  [
         'action' => 'sql',
         'access' => ['category' => 'admin']
     ],
+    'tech/backup' =>
+    [
+        'controller' => 'tech',
+        'action' => 'backup',
+        'access' => ['category' => 'admin']
+    ],
     'tech/migration' =>
     [
         'controller' => 'tech',

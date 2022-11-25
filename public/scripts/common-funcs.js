@@ -290,6 +290,13 @@ async function postAjax({ url, data,formData, successFunc, errorFunc, method = '
 		// 	}
 		// });
 		if (response.ok) {
+			if (response.headers.get['content-description'] === "File Transfer"); {
+				let filename = response.headers.get("content-disposition").replace(/^.*?=/, '').slice(1,-1);
+				let blob = await response.blob();
+				let dataUrl = URL.createObjectURL(blob)
+				download(dataUrl, filename);
+				return true;
+			}
 			successFunc(await response[method]());
 		}
 		else {
@@ -416,6 +423,7 @@ function catchResult(func) {
 		return func.call(this, args);
 	};
 }
+
 function clearBlock(block) {
 	while (block.firstChild && block.removeChild(block.firstChild));
 }
@@ -465,3 +473,12 @@ Array.prototype.shuffle = function () {
 	}
 	return this;
 };
+
+
+function download(dataurl, filename='backup.txt') {
+	let a = document.createElement("a");
+	a.href = dataurl;
+	a.setAttribute("download", filename);
+	a.click();
+	return true;
+}
