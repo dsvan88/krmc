@@ -70,6 +70,7 @@ class TechController extends Controller
 
             DB::tableTruncate($table);
             DB::insert($data, $table);
+            DB::query("SELECT setval(pg_get_serial_sequence('$table', 'id'), coalesce(max(id)+1, 1), false) FROM $table;");
 
             View::message('Done!');
         }
