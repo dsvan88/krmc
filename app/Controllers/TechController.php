@@ -56,7 +56,7 @@ class TechController extends Controller
     }
     public static function migrationAction()
     {
-        // View::redirect('/');
+        View::redirect('/');
         if (!empty($_POST)) {
             $table = substr($_FILES['data']['name'], strpos($_FILES['data']['name'], '-') + 1);
             $table = substr($table, 0, strrpos($table, '.'));
