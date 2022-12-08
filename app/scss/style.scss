@@ -6,6 +6,10 @@
 
 @import url("https://fonts.googleapis.com/css2?family=Underdog&display=swap");
 
+:root{
+	font-size: 16px;
+}
+
 body {
 	min-height: 100vh;
 	margin: 0;
@@ -16,18 +20,17 @@ body {
 	font-size: $font-size-main;
 	color: $color-text-main;
 	overflow-x: hidden;
-	@include sm {
-		font-size: $font-size-main-sm;
-	}
-	@include md {
-		font-size: $font-size-main-md;
-	}
-	@include lg {
-		font-size: $font-size-main-lg;
-	}
-	@include xl {
-		font-size: $font-size-main-xl;
-	}
+	font-size: clamp($font-size-main-sm, 2vw, $font-size-main-xl);
+	// font-size: $font-size-main-sm;
+	// @include md {
+	// 	font-size: $font-size-main-md;
+	// }
+	// @include lg {
+	// 	font-size: $font-size-main-lg;
+	// }
+	// @include xl {
+	// 	font-size: $font-size-main-xl;
+	// }
 }
 .header-for-auto-scroll {
 	position: absolute;

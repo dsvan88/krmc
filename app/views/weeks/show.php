@@ -1,18 +1,29 @@
-<?php
-
-use app\core\Locale;
-use app\models\Days;
-use app\models\Weeks;
-
-?>
 <section id="week-list" class="section week-list">
-    <h2 class="week-preview__title section__title"><?= $texts['weeksBlockTitle'] ?></h2>
-    <h2 class="week-preview__title section__subtitle"><?= date('d.m.Y', $weekData['start']) . ' - ' . date('d.m.Y', $weekData['finish']) ?></h2>
-    <div class="week-preview__list">
+    <h2 class="week__title section__title">
+        <span class="week__title-dummy"></span>
+        <?= $texts['weeksBlockTitle'] ?>
+        <span class="week__title-dummy"></span>
+    </h2>
+    <h2 class="week__title section__subtitle">
+        <? if ($prevWeek) : ?>
+            <a class="week__title-link" href="/weeks/<?= $prevWeek['id'] ?>"><?= date('d.m', $prevWeek['start']) . ' - ' . date('d.m', $prevWeek['finish'] - 3600 * 5) ?></a>
+        <? else : ?>
+            <span class="week__title-dummy"></span>
+        <? endif; ?>
+        <span><?= date('d.m', $weekData['start']) . ' - ' . date('d.m', $weekData['finish'] - 3600 * 5) ?></span>
+        <? if ($nextWeek) : ?>
+            <a class="week__title-link" href="/weeks/<?= $nextWeek['id'] ?>"><?= date('d.m', $nextWeek['start']) . ' - ' . date('d.m', $nextWeek['finish'] - 3600 * 5) ?></a>
+        <? else : ?>
+            <span class="week__title-dummy">
+                &lt;&nbsp;No Data&nbsp;&gt;
+            </span>
+        <? endif; ?>
+    </h2>
+    <div class="week__list">
         <?
         for ($i = 0; $i < 7; $i++) :
             if (!isset($weekData['data'][$i])) {
-                $weekData['data'][$i] = Days::$dayDataDefault;
+                $weekData['data'][$i] = $defaultDayData;
             } else {
                 foreach ($defaultDayData as $key => $value) {
                     if (!isset($weekData['data'][$i][$key])) {
@@ -35,10 +46,10 @@ use app\models\Weeks;
             }
 
         ?>
-            <div class="week-preview__item <?= $dayPlateClass ?>" data-action-click="/days<?= $i ?>/w<?= $weekId ?>" data-week="<?= $weekId ?>" data-day="<?= $dayId ?>" data-mode="location">
-                <h4 class="week-preview__item-date"><?= $dayDate ?></h4>
-                <h3 class="week-preview__item-game"><?= $texts['games'][$weekData['data'][$i]['game']] ?></h3>
-                <div class="week-preview__item-praticipants">
+            <div class="week__item <?= $dayPlateClass ?>" data-action-click="/days<?= $i ?>/w<?= $weekId ?>" data-week="<?= $weekId ?>" data-day="<?= $dayId ?>" data-mode="location">
+                <h4 class="week__item-date"><?= $dayDate ?></h4>
+                <h3 class="week__item-game"><?= $texts['games'][$weekData['data'][$i]['game']] ?></h3>
+                <div class="week__item-praticipants">
                     <ol class="day-participants__list">
                         <div class="day-participants__list-column">
                             <?
@@ -65,6 +76,6 @@ use app\models\Weeks;
         <? endfor; ?>
     </div>
     <? if ($weeksCount > 1) : ?>
-        <div class="week-preview__links"><?= $paginator ?></div>
+        <div class="week__links"><?= $paginator ?></div>
     <? endif; ?>
 </section>

@@ -1,19 +1,24 @@
 .week {
-	&-preview {
 		margin-bottom: 50px;
 		&__title {
 			margin-top: 20px;
 			margin-bottom: 15px;
 			font-size: 3em;
-			text-align: center;
+			display: flex;
+			justify-content: space-between;
+			text-align: justify;
+			text-indent: 0;
+			&-link, &-dummy{
+				color: $color-text-main;
+				font-size: 0.7em;
+				align-self: flex-end;
+			}
 		}
 		&__list {
 			display: grid;
 			grid-gap: 0.5em;
 			grid-auto-rows: 15em;
-			@include sm {
-				grid-template-columns: 1fr;
-			}
+			grid-template-columns: 1fr;
 			@include md {
 				grid-template-columns: repeat(2, 1fr);
 			}
@@ -143,6 +148,12 @@
 			display: flex;
 			justify-content: center;
 			padding: 10px 0;
+			> span {
+				text-indent: 0;
+				margin: 0 1em;
+				align-self: flex-end;
+				cursor: default;
+			}
 			> a {
 				margin: 0px 3px;
 				padding: 3px 5px;
@@ -168,7 +179,6 @@
 				}
 			}
 		}
-	}
 }
 
 @keyframes currentDayAnimation {

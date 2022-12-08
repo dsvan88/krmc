@@ -45,6 +45,13 @@ class WeeksController extends Controller
             $monday = strtotime('last monday', strtotime('next sunday'));
         }
 
+        $prevWeek = $nextWeek = false;
+
+        if (isset($weeksIds[$selectedWeekIndex - 1]))
+            $prevWeek = Weeks::weekDataById($weeksIds[$selectedWeekIndex - 1]);
+        if (isset($weeksIds[$selectedWeekIndex + 1]))
+            $nextWeek = Weeks::weekDataById($weeksIds[$selectedWeekIndex + 1]);
+
         $texts = [
             'weeksBlockTitle' => '{{ Weeks_Block_Title }}',
             'games' => [
@@ -67,7 +74,24 @@ class WeeksController extends Controller
         $paginator = Paginator::weekly(['weeksIds' => $weeksIds, 'currentIndex' => $weekCurrentIndexInList, 'selectedIndex' => $selectedWeekIndex]);
 
         $title = '{{ Weeks_Show_Page_Title }}';
-        View::render(compact('title', 'texts', 'weekId', 'weeksCount', 'selectedWeekIndex', 'weekCurrentId', 'weeksIds', 'weekCurrentIndexInList', 'weekData', 'monday', 'dayId', 'dayCurrentId', 'defaultDayData', 'paginator'));
+        View::render(compact(
+            'title',
+            'texts',
+            'weekId',
+            'weeksCount',
+            'selectedWeekIndex',
+            'weekCurrentId',
+            'weeksIds',
+            'weekCurrentIndexInList',
+            'weekData',
+            'monday',
+            'dayId',
+            'dayCurrentId',
+            'defaultDayData',
+            'prevWeek',
+            'nextWeek',
+            'paginator'
+        ));
     }
     public function addAction()
     {
