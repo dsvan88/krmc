@@ -12,6 +12,8 @@ class GameTimer {
 	buttons = {};
 	audioContext = null;
 
+	#MainTimer = null;
+	
     constructor({ maxTime = 2000, timerBlock = ".timer", gameEngine = null} ={})
 	{
 		this.timerBlock = timerBlock;
@@ -47,13 +49,13 @@ class GameTimer {
 			this.audioContext = new AudioContext();
 		}
 
-		if (this.MainTimer) return false;
-		
-		this.MainTimer = setInterval(() => this.countdown(), this.timerStep);
+		if (this.#MainTimer) return false;
+
+		this.#MainTimer = setInterval(() => this.countdown(), this.timerStep);
 	}
 	pause() {
-		clearInterval(this.MainTimer);
-		this.MainTimer = null;
+		clearInterval(this.#MainTimer);
+		this.#MainTimer = null;
 	}
 	reset() {
 		this.pause();
