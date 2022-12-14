@@ -1,0 +1,212 @@
+[33md485699[m[33m ([m[1;36mHEAD -> [m[1;32mmain[m[33m, [m[1;31mgigalixir/main[m[33m)[m v0.1 Add game Engine for Mafia games
+[33m8909b61[m Minor fixes in design
+[33m0d5deb6[m Turn-off backup migration
+[33m9539575[m Turn-on backup migration
+[33m2561f9f[m Fix small bug
+[33m416dafc[m Fix small bug
+[33md14c8ff[m Fix small bug
+[33m5bdb2aa[m Add mirgation from files
+[33m4c3070c[m Add mirgation from files
+[33m1244064[m Add mirgation from files
+[33md90cf93[m Add mirgation from files
+[33m44ffd92[m Fix small bugs
+[33ma99be00[m Fix small bug
+[33m2b6616e[m Fix small bug
+[33m6be1899[m[33m ([m[1;31mheroku/main[m[33m)[m add json-backup functionality
+[33mf9e37b9[m add json-backup functionality
+[33m8480270[m[33m ([m[1;31mkrmc/main[m[33m)[m Little bugfix fr autoinit next weeks and migrate for fix db
+[33mfdaa467[m v0.03 Little bugfix with unset status for new weeks
+[33m68aad47[m Merge pull request #1 from dsvan88/with-game
+[33m237eb5b[m[33m ([m[1;31mheroku/with-game[m[33m)[m v0.03 Little bugfix with unset status for new weeks
+[33m9bdf0be[m v0.03 Little bugfix with unset status for new weeks
+[33m349bc89[m v0.03 Nothing to change
+[33m9f38717[m v0.03 Minor fix for header menu
+[33m05752b3[m v0.03 Test token for auto-login
+[33m75942fb[m v0.03 Test token for auto-login
+[33m4fae591[m v0.03 Add token for auto-login
+[33m1edbaa6[m Temporary test for SERVER array
+[33m037b17a[m Temporary test for SERVER array
+[33ma90f770[m[33m ([m[1;31mheroku/master[m[33m)[m v0.02 Change version number
+[33m3e7ee3b[m v0.02 Small rework View class
+[33m263653c[m v0.02 Small rework View class
+[33m0854354[m v0.02 Add simple method for send images in Telegram messages
+[33meb9430b[m v0.02 Add simple method for send images in Telegram messages
+[33mdfaa4aa[m v0.02 Add simple method for send images in Telegram messages
+[33mc343393[m v0.02 Add simple method for send images in Telegram messages
+[33m5a88b04[m v0.02 Add simple method for send images in Telegram messages
+[33mdbfcef7[m v0.02 Add simple method for send images in Telegram messages
+[33m5962ebe[m v0.02 Add simple method for send images in Telegram messages
+[33m11e3a9d[m v0.02 Add simple method for send images in Telegram messages
+[33m1c46897[m v0.02 Add simple method for send images in Telegram messages
+[33m74a2459[m v0.02 Add simple method for send images in Telegram messages
+[33m0a0049f[m v0.02 Add simple method for send images in Telegram messages
+[33mf32049e[m v0.02 Add simple method for send images in Telegram messages
+[33mb5d3312[m v0.02 Add simple method for send images in Telegram messages
+[33m8debb5f[m v0.01b Add digits to nicknames
+[33me899c62[m v0.01 Fix set command
+[33md499dd3[m v0.01 Fix set command
+[33m7698921[m v0.01b Update and test set command
+[33ma1e8d20[m v0.01b Update and test set command
+[33m4238597[m v0.01b Update and test set command
+[33mba6dfbe[m v0.01b Update and test set command
+[33m5888bb5[m v0.01b Update and test set command
+[33m7139fd5[m v0.01b Update and test set command
+[33mf6c8581[m v0.01b Update and test set command
+[33m5624baf[m v0.01b Update and test set command
+[33m39f38db[m v0.01b Update and test set command
+[33ma96399a[m v0.01b Update and test set command
+[33m465e4be[m v0.01b Fix bug with newuser command
+[33ma8b286a[m v0.01b Fix bug with newuser command
+[33mb34d7dc[m v0.01b Fix bug with newuser command
+[33m78b8074[m v0.01b Fix bug with newuser command
+[33m46ffa40[m v0.01b Fix minor bug with day command
+[33m86d0534[m v0.01b Fix minor bug with day command
+[33m2b8af54[m v0.01b Fix minor bug with day command
+[33m20203a1[m v0.01b Fix minor bug with day command
+[33ma708c21[m v0.01b Fix minor bug with day command
+[33m89114fd[m v0.01b Fix minor bug with day command
+[33mb7febcd[m v0.01b Fix minor bug with day command
+[33mc084caf[m v0.01b Fix minor bug with day command
+[33m0fae99e[m v0.01b Fix minor bug with day command
+[33mbcdc1ca[m v0.01b Fix minor bug with day command
+[33m8c5a481[m v0.01b Fix minor bug with day command
+[33m6558067[m v0.01b Fix minor bug with day command
+[33m88175b5[m v0.01b Fix minor bugs
+[33m0baaf12[m v0.01b Fix minor bugs
+[33me587a38[m v0.01b Fix minor bugs
+[33m429a6ff[m v0.01b Fix minor bugs
+[33mc8bf40a[m v0.01b Fix minor bugs
+[33m9118620[m v0.01b Fix minor bugs
+[33m86b5a5a[m v0.01b Fix booking bug and week time
+[33m18d7ab0[m v0.01b Rework done. Minot upgrade forget form.
+[33md614425[m v0.01b Test booking bug.
+[33m1fb3a97[m v0.01b Test booking bug.
+[33m115581a[m v0.01b Test booking bug.
+[33m08bc94a[m v0.01b Test booking bug.
+[33mba70d0e[m v0.01b Test booking bug.
+[33m9bc7d6f[m v0.01b Test booking bug.
+[33mc315357[m v0.01b Test booking bug.
+[33m700cecc[m v0.01b Test booking bug.
+[33meffe605[m v0.01b Test booking bug.
+[33m2188a8d[m v0.01b Test booking bug.
+[33m03ef27c[m v0.01b Test booking bug.
+[33m3226341[m v0.01b Test booking bug.
+[33me0fde23[m v0.01b Test booking bug.
+[33m551d20f[m v0.01b Test booking bug.
+[33m8824a49[m v0.01b Test booking bug.
+[33md7767b6[m Merge branch 'master' of https://git.heroku.com/krmc
+[33ma80f03e[m v0.01b Test booking bug.
+[33m79d4fc3[m v0.01 Add test command
+[33m601fccb[m v0.01 Add test command
+[33md09f1cc[m v0.01 Add test command
+[33m89fd82f[m v0.01 Add test command
+[33ma0cc17c[m v0.01 Add test command
+[33m87383ec[m v0.01 Add test command
+[33m8ff14f0[m v0.01 Test reg command with wrong day
+[33m95ebc1c[m v0.01 Minor fix registration form
+[33m3d2ec23[m v0.01 Minor fix registration form
+[33m42c7127[m v0.01 Update some locales
+[33m5579ab9[m Merge branch 'master' of https://git.heroku.com/krmc
+[33m683f353[m v0.01 Update some locales
+[33m3e119ff[m v0.01b Rework done. Minot upgrade forget form.
+[33mc81bcac[m v0.01b Rework done. Add new features: Test forget form syste.
+[33m337f81c[m v0.01b Rework in progress. Change main version to MVC.
+[33m4eed11f[m v0.01b Rework in progress. Change main version to MVC.
+[33m64e877a[m v0.01b Rework in progress. Change main version to MVC.
+[33m28a1ff6[m v0.01b Rework in progress. Change main version to MVC.
+[33m7443b6d[m v0.01b Rework in progress. Change main version to MVC.
+[33mc0f2379[m v0.01b Rework in progress. Change main version to MVC.
+[33ma927f28[m v0.01b Rework in progress. Change main version to MVC.
+[33m2589d24[m v0.01b Rework in progress. Change main version to MVC.
+[33ma177dd4[m v0.01b Rework in progress. Change main version to MVC.
+[33m1a8ccd7[m v0.01b Rework in progress. Change main version to MVC.
+[33m2c58e11[m v0.01b Rework in progress. Change main version to MVC.
+[33mde6e107[m v0.01b Rework in progress. Change main version to MVC.
+[33ma91565d[m v0.01b Rework in progress. Change main version to MVC.
+[33m8279f5e[m v0.01b Rework in progress. Change main version to MVC.
+[33mb727e33[m v0.01b Rework in progress. Change main version to MVC.
+[33m3837c80[m Merge branch 'master' of https://git.heroku.com/krmc
+[33mcd1d310[m v0.01b Rework in progress. Change main version to MVC.
+[33m78b4be1[m v0.01 Rework in progress. test reg command. Save current changes
+[33m9865eff[m v0.01 Rework in progress. test reg command. Save current changes
+[33m9950590[m v0.01 Rework in progress. test reg command. Save current changes
+[33m5603080[m v0.01 Rework in progress. test reg command. Save current changes
+[33mc098283[m v0.01 Rework in progress. test reg command. Save current changes
+[33m34fb4fe[m v0.01 Rework in progress. test reg command. Save current changes
+[33mdb1a7ab[m v0.01 Rework in progress. test reg command. Save current changes
+[33m969bf6c[m v0.01 Rework in progress. test reg command. Save current changes
+[33m5555439[m v0.01 Rework in progress. Fix reg/set command. Save current changes
+[33m03e926c[m v0.01b Rework in progress. Change main version to MVC.
+[33m5774580[m v0.01b Rework in progress. Change main version to MVC.
+[33ma01c465[m v0.01b Rework in progress. Change main version to MVC.
+[33m5608237[m v0.01b Rework in progress. Change main version to MVC.
+[33m95de957[m v0.01b Rework in progress. Change main version to MVC.
+[33m153a49e[m v0.01b Rework in progress. Change main version to MVC.
+[33m81d260d[m v0.01b Rework in progress. Change main version to MVC.
+[33m66aef90[m v0.01b Rework in progress. Change main version to MVC.
+[33m600c243[m v0.01b Rework in progress. Change main version to MVC.
+[33mcfa4c7c[m v0.01b Rework in progress. Change main version to MVC.
+[33m334fd1a[m v0.01b Rework in progress. Change main version to MVC.
+[33m572978a[m v0.01b Rework in progress. Change main version to MVC.
+[33m7128f1d[m v0.01b Rework in progress. Change main version to MVC.
+[33mcd351a7[m v0.01b Rework in progress. Change main version to MVC.
+[33mc64018a[m v0.01b Rework in progress. Change main version to MVC.
+[33mf261a72[m v0.01b Rework in progress. Change main version to MVC.
+[33m8b8a7fc[m v0.01b Rework in progress. Change main version to MVC.
+[33m68ce9dd[m v0.01b Rework in progress. Change main version to MVC.
+[33m18f13c5[m v0.01b Rework in progress. Change main version to MVC.
+[33mfd12a52[m v0.01b Rework in progress. Change main version to MVC.
+[33m36e33a0[m v0.19 est day prim with slashes
+[33mfb97a08[m v0.19 est day prim with slashes
+[33m76bc829[m Merge branch 'master' of https://git.heroku.com/krmc
+[33m3fba75c[m v0.19 est day prim with slashes
+[33m409c837[m v0.19 Manual fix weeksIds wrong order
+[33mdb50e8c[m v0.19 add temporary getAllData for extract and migrate SQL to other host
+[33m38ac7e3[m v0.19 add temporary getAllData for extract and migrate SQL to other host
+[33m47f5325[m v0.19 Fix minor bug with reg command with Mr. Gray nickname
+[33mddbce28[m Check some bugs
+[33ma0d50fc[m Check some bugs
+[33m80ed865[m Migrate for fix weeksIds
+[33ma3115a7[m Migrate for fix weeksIds
+[33mf1895db[m Migrate for fix weeksIds
+[33m289605e[m Migrate for fix weeksIds
+[33mcf59228[m Migrate for fix weeksIds
+[33m0c03b32[m v0.01 Rework in progress. Save current changes
+[33m1d0015b[m v0.01 Rework in progress. Save current changes
+[33m388a111[m v0.01 Rework in progress. Save current changes
+[33m7034802[m v0.01 Rework in progress. Save current changes
+[33mb9f3641[m Minor update Weeks class
+[33m39e178c[m Upgrade game tg-command for updating arrive time
+[33m62387b2[m Upgrade game tg-command for updating arrive time
+[33mdb33516[m Upgrade game tg-command for updating arrive time
+[33m11998d0[m Test recall tg-command
+[33m48eaa17[m Test recall tg-command
+[33m7b73562[m Test recall tg-command
+[33m3c0774b[m Test recall tg-command
+[33meb2f12f[m Minor fixes
+[33m6b8c285[m Minor fixes
+[33mdf628db[m Minor fixes
+[33m3661877[m update reply for nick registration
+[33m3cce291[m update reply for nick registration
+[33m885f0e3[m update  random reactions for nick registration
+[33mfae2a4c[m Test mass update pinned message
+[33m5177202[m Unknown changes
+[33m060eab0[m update  random reactions for user registration
+[33m0d25f0f[m fix different random reactions for user registration
+[33m990868b[m add different random reactions for user registration
+[33m9ea273b[m Minor fixes with recall
+[33m5dff3f9[m Bugfix with user tg-unregistration
+[33m59667ec[m Add prep-message bot-reaction
+[33me153186[m Test new registration system
+[33m0d55a90[m Test new registration system
+[33mcccd670[m Test new registration system
+[33m929b794[m Update registration system
+[33m5713335[m Update registration system
+[33m0878c65[m Done users tg-command
+[33m2551aab[m Done users tg-command
+[33m9a8abb2[m Test users tg-command
+[33md40549e[m Test users tg-command
+[33m07e8577[m Test users tg-command
+[33me832285[m Test users tg-command
+[33mbf303e0[m Add users tg-command
+[33md7149d1[m Minor fixes in tg-nick command

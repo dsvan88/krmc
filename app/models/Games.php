@@ -23,9 +23,13 @@ class Games extends Model
             return self::$gameNames;
 
         $games = Pages::findBy('type', 'game');
-        
+
+        if (!$games)
+            return self::$defaultGames;
+            
         $count = count($games);
         $names = [];
+
         for ($i=0; $i < $count; $i++) {
             $names[$games[$i]['slug']] = $games[$i]['title'];
         }
