@@ -16,7 +16,7 @@ class MafiaEngine extends GameEngine {
     courtRoom = [];
     leaveThisRound = [];
 
-    reasons = ['', 'Вбит', 'Засуджений', '4 Фола', 'Дісквал.'];
+    reasons = ['', 'Вбитий', 'Засуджений', '4 Фола', 'Дісквал.'];
 
     prevSpeaker = null;
     activeSpeaker = null;
@@ -292,14 +292,13 @@ class MafiaEngine extends GameEngine {
 
         this.next();
     }
-    getActivePlayersCount(role) {
-        let count = this.players.reduce((playersCount, player) => {
+    getActivePlayersCount(role = 0) {
+        return this.players.reduce((playersCount, player) => {
             if (player.out > 0) return playersCount;
             if (role === 2 && (player.role == 0 || player.role == 4)) return playersCount; // Если ищем мафов - отсекаем миров
             if (role === 1 && (player.role == 1 || player.role == 2)) return playersCount; // Если ищем миров - отсекаем мафов
             return ++playersCount;
-        }, 0)
-        return count;
+        }, 0);
     }
     getSpeakers() {
         let speakers = [];
@@ -499,7 +498,7 @@ class MafiaEngine extends GameEngine {
         return courtList;
     }
     shootingNight(){
-        const message = 'Мафія підіймає свою зброю та стреляє по гравцям.\nЗробіть Ваш вибір!'
+        const message = 'Мафія підіймає свою зброю та стріляє по гравцям.\nЗробіть Ваш вибір!'
         this.stageDescr = `Ніч №${this.daysCount}.\n${message}`;
         this.addLog(message);
     }

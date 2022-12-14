@@ -9,6 +9,7 @@ class GameEngine {
 
     prevStates = [];
     maxStatesSave = 10;
+    #checkStates = [];
 
     _log = {};
 
@@ -80,6 +81,8 @@ class GameEngine {
         for (let property in this) {
             if (['prevStates', 'timer'].includes(property)) continue;
             state[property] = this[property];
+            console.log(property, this[property]);
+            this.#checkStates.push(JSON.stringify(state));
         }
         state = JSON.stringify(state);
         this.send(state);
