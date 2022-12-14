@@ -46,7 +46,9 @@ class GameTimer {
 		if (!this.audioContext) {
 			this.audioContext = new AudioContext();
 		}
-		this.MainTimer = setInterval(() => this.countdown(), this.timerStep);
+		if (!this.MainTimer){
+			this.MainTimer = setInterval(() => this.countdown(), this.timerStep);
+		}
 	}
 	pause() {
 		clearInterval(this.MainTimer);
