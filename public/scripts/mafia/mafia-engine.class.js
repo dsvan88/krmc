@@ -351,7 +351,7 @@ class MafiaEngine extends GameEngine {
             this.courtRoom.length = 0;
             return this.dispatchNext();
         }
-        this.stageDescr = 'Зал суда.\nПрохання до гравців:\nприпинити будь-яку комунікацію та прибрати руки від стола';
+        this.stageDescr = 'Зал суда.\nПрохання до гравців припинити будь-яку комунікацію та прибрати руки від стола';
        
         let votesAll = 0,
         playersCount = 0,
