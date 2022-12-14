@@ -1,20 +1,5 @@
 <?php
 return [
-    '{{ Submit_Label }}' => 'Execute',
-    '{{ Save_Label }}' => 'Save',
-    '{{ Send_Label }}' => 'Send',
-    '{{ Cancel_Label }}' => 'Cancel',
-    '{{ Action_Success }}' => 'Success!',
-    '{{ Action_Failure }}' => 'Fail!',
-    '{{ Not_Implemented_Yet }}' => "Not ready yet!\nPlease, inform admins!",
-    '{{ Clear_Label }}' => "Clear",
-    '{{ Changes_Save_Success }}' => 'Changes saved successfully!',
-
-    '{{ Account_Login_Label }}' => 'Login',
-    '{{ Account_Name_Label }}' => 'Nickname (in game)',
-    '{{ Account_Password_Label }}' => 'Password',
-    '{{ Account_Password_Again_Label }}' => 'Password again',
-
     '{{ Account_Login_Page_Title }}' => 'Log In',
     '{{ Account_Register_Page_Title }}' => 'Register',
     '{{ Main_Home_Page_Title }}' => 'Home page',
@@ -93,11 +78,11 @@ return [
     '{{ Saturday }}' => 'Saturday',
     '{{ Sunday }}' => 'Sunday',
 
-    '{{ Mafia }}' => 'Mafia',
-    '{{ Poker }}' => 'Poker',
-    '{{ Board }}' => 'Board Games',
-    '{{ Cash }}' => 'Cash Poker',
-    '{{ Etc }}' => 'Etc',
+    'Mafia' => 'Mafia',
+    'Poker' => 'Poker',
+    'Board' => 'Board Games',
+    'Cash' => 'Cash Poker',
+    'Etc' => 'Etc',
 
     '{{ Tg_Mafia }}' => 'Mafia 🎭',
     '{{ Tg_Poker }}' => 'Poker ♦️',

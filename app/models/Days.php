@@ -7,7 +7,7 @@ use app\core\Locale;
 
 class Days extends Model
 {
-    public static $currentDay = [];
+    public static $currentDay;
 
     public static $days = [
         '{{ Monday }}',
@@ -26,6 +26,18 @@ class Days extends Model
         'participants' => [],
         'day_prim' => ''
     ];
+    public static function current(){
+        if (!empty(self::$currentDay)){
+            return self::$currentDay;
+        }
+        
+        self::$currentDay = getdate()['wday'] - 1;
+
+        if (self::$currentDay === -1)
+            self::$currentDay = 6;
+
+        return self::$currentDay;
+    }
     public static function edit($weekId, $dayId, $data)
     {
         $newData = [
@@ -111,7 +123,7 @@ class Days extends Model
             return '';
         }
 
-        $date = date('d.m.Y (<b>' . Locale::applySingle(self::$days[$day]) . '</b>) H:i', $dayDate);
+        $date = date('d.m.Y (<b>' . Locale::phrase(self::$days[$day]) . '</b>) H:i', $dayDate);
 
         $gameNames = [
             'mafia' => '{{ Tg_Mafia }}',
@@ -128,9 +140,9 @@ class Days extends Model
 
         if (isset($weekData['data'][$day]['mods'])) {
             if (in_array('fans', $weekData['data'][$day]['mods'], true))
-                $result .= Locale::applySingle('{{ Tg_Game_Mod_Fan }}');
+                $result .= Locale::phrase('{{ Tg_Game_Mod_Fan }}');
             if (in_array('tournament', $weekData['data'][$day]['mods'], true))
-                $result .= Locale::applySingle('{{ Tg_Game_Mod_Tournament }}');
+                $result .= Locale::phrase('{{ Tg_Game_Mod_Tournament }}');
         }
         if (isset($weekData['data'][$day]['day_prim']) && $weekData['data'][$day]['day_prim'] !== '')
             $result .= "<u>{$weekData['data'][$day]['day_prim']}</u>\n";

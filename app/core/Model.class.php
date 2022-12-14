@@ -6,6 +6,14 @@ use app\libs\Db;
 
 class Model extends Db
 {
+    public static $mainTable;
+
+    public static function find($id){
+        $table = static::$mainTable;
+        $result = self::query("SELECT * FROM $table WHERE id = ? LIMIT 1", [$id], 'Assoc');
+        if (empty($result)) return false;
+        return $result[0];
+    }
     public static function getSimpleArray($query, $params = [])
     {
         $result = [];

@@ -9,7 +9,6 @@ class News extends Model
     public static function getPerPage($page = 0)
     {
         $searchQuery = 'SELECT * FROM ' . SQL_TBL_NEWS . ' WHERE type = ? ';
-        // $values = ['promo'];
         $values = ['news'];
         $searchQuery .= ' ORDER BY id DESC';
 
@@ -39,11 +38,17 @@ class News extends Model
     }
     public static function getDataById($id)
     {
-        return self::query('SELECT * FROM ' . SQL_TBL_NEWS . ' WHERE id = ?', [$id], 'Assoc')[0];
+        return self::query('SELECT * FROM ' . SQL_TBL_NEWS . ' WHERE id = ? LIMIT 1', [$id], 'Assoc')[0];
     }
     public static function getPromoData()
     {
-        $result = self::query('SELECT * FROM ' . SQL_TBL_NEWS . ' WHERE type = ?', ['promo'], 'Assoc');
+        $result = self::query('SELECT * FROM ' . SQL_TBL_NEWS . ' WHERE type = ? LIMIT 1', ['promo'], 'Assoc');
+        if (empty($result)) return false;
+        return $result[0];
+    }
+    public static function getGameData($game)
+    {
+        $result = self::query('SELECT * FROM ' . SQL_TBL_NEWS . ' WHERE type = ? LIMIT 1', [$game], 'Assoc');
         if (empty($result)) return false;
         return $result[0];
     }

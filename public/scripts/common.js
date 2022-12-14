@@ -23,7 +23,7 @@ if (menuCheckbox) {
 
 pageCheckbox = document.body.querySelector('#header__dropdown-menu-checkbox');
 if (pageCheckbox) {
-	let menu = document.body.querySelector('li.header__navigation-item.drop-down');
+	let menu = document.body.querySelector('li.header__navigation-item.dropdown');
 	document.body.addEventListener('click', (event) => {
 		if (!pageCheckbox.checked) {
 			return false;

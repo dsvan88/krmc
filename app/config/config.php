@@ -31,6 +31,7 @@ if (!defined('SQL_HOST')) {
     define('SQL_TBL_VOTES', 'votes');
     define('SQL_TBL_COMM', 'comments');
     define('SQL_TBL_NEWS', 'news');
+    define('SQL_TBL_PAGES', 'pages');
     define('SQL_TBL_TG_CHATS', 'tgchats');
 
     define('DATE_MARGE', 36000); //36000 = +10 часов к длительности вечера

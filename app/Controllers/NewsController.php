@@ -43,7 +43,7 @@ class NewsController extends Controller
         if (!empty($newsData['logo']))
             $newsData['logo'] = ImageProcessing::inputImage(FILE_MAINGALL . 'news/' . $newsData['logo'], ['title' => $newsData['title'], 'class' => 'news__item-logo_image']);
         else
-            $newsData['logo'] = ImageProcessing::inputImage(Settings::getImage('news_default')['value'], ['title' => Locale::applySingle('{{ News_Change_Logo }}'), 'class' => 'news__item-logo_image']);
+            $newsData['logo'] = ImageProcessing::inputImage(Settings::getImage('news_default')['value'], ['title' => Locale::phrase('{{ News_Change_Logo }}'), 'class' => 'news__item-logo_image']);
 
         $vars = [
             'title' => '{{ News_Show_Item_Page_Title }}',
@@ -65,14 +65,14 @@ class NewsController extends Controller
                 }
             }
             News::edit($array, $newsId);
-            View::message('{{ Changes_Save_Success }}');
+            View::message('Changes saved successfully!');
         }
 
         $newsData = News::getDataById($newsId);
         if (!empty($newsData['logo']))
             $newsData['logo'] = ImageProcessing::inputImage(FILE_MAINGALL . 'news/' . $newsData['logo'], ['title' => $newsData['title'], 'class' => 'news__item-logo_image']);
         else
-            $newsData['logo'] = ImageProcessing::inputImage(Settings::getImage('news_default')['value'], ['title' => Locale::applySingle('{{ News_Change_Logo }}'), 'class' => 'news__item-logo_image']);
+            $newsData['logo'] = ImageProcessing::inputImage(Settings::getImage('news_default')['value'], ['title' => Locale::phrase('{{ News_Change_Logo }}'), 'class' => 'news__item-logo_image']);
 
         $vars = [
             'title' => '{{ News_Edit_Page_Title }}',
@@ -92,7 +92,7 @@ class NewsController extends Controller
     {
         if (!empty($_POST)) {
             News::edit($_POST, 'promo');
-            View::message(['error' => 0, 'message' => '{{ Changes_Save_Success }}']);
+            View::message(['error' => 0, 'message' => 'Changes saved successfully!']);
         }
         $newsData = News::getPromoData();
         $vars = [
@@ -123,7 +123,7 @@ class NewsController extends Controller
                 }
             }
             News::create($array);
-            View::message(['error' => 0, 'message' => '{{ Changes_Save_Success }}']);
+            View::message(['error' => 0, 'message' => 'Changes saved successfully!']);
         }
         $vars = [
             'title' => '{{ News_Add_Page_Title }}',
