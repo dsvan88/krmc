@@ -31,16 +31,16 @@ class DaysController extends Controller
                 'daysBlockParticipantsTitle' => '{{ Day_Block_Participants_Title }}',
                 'dayTournamentCheckboxLabel' => '{{ Day_Block_Tournament_Checkbox_Label }}',
                 'dayGameStart' => '{{ Day_Block_Games_Start }}',
-                'dayGameMafia' => '{{ Mafia }}',
-                'dayGamePoker' => '{{ Poker }}',
-                'dayGameBoard' => '{{ Board }}',
-                'dayGameCash' => '{{ Cash }}',
-                'dayGameEtc' => '{{ Etc }}',
+                'dayGameMafia' => 'Mafia',
+                'dayGamePoker' => 'Poker',
+                'dayGameBoard' => 'Board',
+                'dayGameCash' => 'Cash',
+                'dayGameEtc' => 'Etc',
                 'dayEvent' => '{{ Day_Block_Game_Name }}',
                 'dayRemarkPlaceHolder' => '{{ Day_Block_Prim_PLaceholder }}',
-                'clearLabel' => '{{ Clear_Label }}',
+                'clearLabel' => 'Clear',
                 'addFieldLabel' => '{{ Add_Field_Label }}',
-                'setDayApprovedLabel' => '{{ Save_Label }}',
+                'setDayApprovedLabel' => 'Save',
             ]
         ];
 
@@ -57,7 +57,7 @@ class DaysController extends Controller
 
         if (isset($day['weekStart'])) {
             $dayTimestamp = $day['weekStart'] + TIMESTAMP_DAY * $dayId;
-            $day['date'] = date('d.m.Y', $dayTimestamp) . ' (<strong>' . Locale::applySingle('{{ ' . date('l', $dayTimestamp) . ' }}') . '</strong>) ' . $day['time'];
+            $day['date'] = date('d.m.Y', $dayTimestamp) . ' (<strong>' . Locale::phrase('{{ ' . date('l', $dayTimestamp) . ' }}') . '</strong>) ' . $day['time'];
         } else {
             $day['date'] = '{{ Day_Date_Not_Set }}';
         }

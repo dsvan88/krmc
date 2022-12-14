@@ -7,6 +7,7 @@ use app\core\Tech;
 
 class Users extends Model
 {
+    public static $mainTable = SQL_TBL_USERS;
     public static $genders = ['', 'господин', 'госпожа', 'некто'];
     public static $statuses = ['Гость', 'Резидент', 'Мастер'];
     public static $usersAccessLevels = ['', 'guest', 'user', 'manager', 'admin'];
@@ -17,7 +18,7 @@ class Users extends Model
         $login = strtolower(trim($data['login']));
         $password = sha1(trim($data['password']));
 
-        $table = SQL_TBL_USERS;
+        $table = self::$mainTable;
         $authData = self::query("SELECT * FROM $table WHERE login = :login OR contacts->>'email' = :login LIMIT 1", ['login' => $login], 'Assoc');
         if (empty($authData)) return false;
         $authData =  $authData[0];
@@ -36,6 +37,8 @@ class Users extends Model
     }
     public static function logout()
     {
+        if (empty($_SESSION)) return true;
+        
         $userId = $_SESSION['id'];
         $_SESSION = [];
         if (ini_get("session.use_cookies")) {
@@ -161,7 +164,7 @@ class Users extends Model
     }
     public static function checkForget($login)
     {
-        $table = SQL_TBL_USERS;
+        $table = self::$mainTable;
         $authData = self::query("SELECT id, name, login, password, privilege, personal, contacts FROM $table WHERE login = :login OR name = :login OR contacts->>'email' = :login LIMIT 1", ['login' => $login], 'Assoc');
         return self::decodeJson($authData[0]);
     }
@@ -181,7 +184,7 @@ class Users extends Model
     }
     public static function getForget($hash)
     {
-        $table = SQL_TBL_USERS;
+        $table = self::$mainTable;
         $userData = self::query("SELECT id,personal FROM $table WHERE personal->>'forget' = :hash LIMIT 1", ['hash' => $hash], 'Assoc');
         if (!empty($userData)) {
             $userData[0]['personal'] = json_decode($userData[0]['personal'], true);
@@ -191,7 +194,6 @@ class Users extends Model
     }
     public static function passwordReset($userData, $password)
     {
-        $table = SQL_TBL_USERS;
         $userId = $userData['id'];
         unset($userData['id']);
         unset($userData['personal']['forget']);
@@ -203,7 +205,7 @@ class Users extends Model
     }
     public static function getList()
     {
-        $table = SQL_TBL_USERS;
+        $table = self::$mainTable;
         $result = self::query("SELECT * FROM $table ORDER BY id", [], 'Assoc');
 
         if (!$result) return $result;
@@ -217,7 +219,7 @@ class Users extends Model
     }
     public static function getListNames($name)
     {
-        $table = SQL_TBL_USERS;
+        $table = self::$mainTable;
         $result = self::query("SELECT name FROM $table WHERE name ILIKE ? ORDER BY id", ["%$name%"], 'Num');
 
         if (!$result) return $result;
@@ -227,7 +229,7 @@ class Users extends Model
     // Получение ID в системе по никнейму в игре
     public static function getId($name, $free = false)
     {
-        $table = SQL_TBL_USERS;
+        $table = self::$mainTable;
         $condArray = [$name];
         $addCondition = '';
         if ($free) {
@@ -244,7 +246,7 @@ class Users extends Model
     // Поверка, зарегистрирован ли логин у конкретного игрока
     public static function isNameFree($name)
     {
-        $table = SQL_TBL_USERS;
+        $table = self::$mainTable;
         $result = self::query("SELECT id FROM $table WHERE name ILIKE ? AND login != ? LIMIT 1", [$name, ''], 'Column');
 
         if ($result)
@@ -255,7 +257,7 @@ class Users extends Model
     // Получить всю информацию об игроке по его ID
     public static function getDataById($id)
     {
-        $table = SQL_TBL_USERS;
+        $table = self::$mainTable;
         $userData = self::query("SELECT * FROM $table WHERE id = ? LIMIT 1", [$id], 'Assoc');
         if (!$userData || empty($userData)) return false;
 
@@ -264,10 +266,10 @@ class Users extends Model
 
         return self::decodeJson($userData);
     }
-    // Получить всю информацию об игроке по его ID
+    // Получить всю информацию об игроке по его никнейму
     public static function getDataByName($name)
     {
-        $table = SQL_TBL_USERS;
+        $table = self::$mainTable;
         $userData = self::query("SELECT * FROM $table WHERE name ILIKE ? LIMIT 1", [$name], 'Assoc');
         if (!$userData || empty($userData)) return false;
 
@@ -276,10 +278,49 @@ class Users extends Model
 
         return self::decodeJson($userData);
     }
+    /** Получить данные пользователей в случайном количестве
+     * @param int $count - количество
+     * 
+     * @return array $users
+     * */ 
+    public static function random($count = 1)
+    {
+        $table = self::$mainTable;
+        $userData = self::query("SELECT * FROM $table WHERE name != ? ORDER BY random() LIMIT $count", [''], 'Assoc');
+        if (!$userData || empty($userData)) return false;
+
+        for ($i = 0; $i < count($userData); $i++) {
+            $userData[$i]['password'] = '***';
+            $userData[$i] = self::decodeJson($userData[$i]);
+        }
+
+        return $userData;
+    }
+    /** Получить данные пользователей в случайном количестве
+     * @param array $players - массив игроков
+     * 
+     * @return array $users
+     * */ 
+    public static function getByList($players, $column='name')
+    {
+        $count = count($players);
+        $places = implode(',', array_fill(0, $count, '?'));
+
+        $table = self::$mainTable;
+        $usersData = self::query("SELECT * FROM $table WHERE $column IN ($places) LIMIT $count", $players, 'Assoc');
+        if (!$usersData || empty($usersData)) return false;
+
+        for ($i = 0; $i < count($usersData); $i++) {
+            $usersData[$i]['password'] = '***';
+            $usersData[$i] = self::decodeJson($usersData[$i]);
+        }
+
+        return $usersData;
+    }
     // Получить всю информацию об игроке по его TelegramID
     public static function getDataByTelegramId($tgId)
     {
-        $table = SQL_TBL_USERS;
+        $table = self::$mainTable;
         $userData = self::query("SELECT * FROM $table WHERE contacts->>'telegramid' = ? LIMIT 1", [$tgId], 'Assoc');
         if (!$userData || empty($userData)) return false;
 
@@ -290,16 +331,35 @@ class Users extends Model
     }
     public static function getDataByToken($token)
     {
-        $table = SQL_TBL_USERS;
+        $table = self::$mainTable;
         $userData = self::query("SELECT * FROM $table WHERE personal->>'token' = ? LIMIT 1", [$token], 'Assoc');
         if (!empty($userData)) {
             return self::decodeJson($userData[0]);
         }
         return false;
     }
+    public static function assingIds($players, $roles){
+        $users = self::getByList($players);
+        $playersCount = count($players);
+        
+        if (count($users) !== $playersCount){
+            die('something wrong wing players counts!');
+        }
+        $result = array_fill(0, $playersCount, []);
+
+        foreach($users as $user){
+            $index = array_search($user['name'], $players, true);
+            $result[$index] = [
+                'id' => $user['id'],
+                'name' => $user['name'],
+                'role' => $roles[$index],
+            ];
+        }
+        return $result;
+    }
     public static function isUserExists($login)
     {
-        return self::isExists(['login' => $login], SQL_TBL_USERS);
+        return self::isExists(['login' => $login], self::$mainTable);
     }
     public static function edit($data, $where)
     {
@@ -308,15 +368,15 @@ class Users extends Model
                 $data[$key] = json_encode($value, JSON_UNESCAPED_UNICODE);
             }
         }
-        return self::update($data, $where, SQL_TBL_USERS);
+        return self::update($data, $where, self::$mainTable);
     }
     public static function add($name)
     {
-        return self::insert(['name' => $name], SQL_TBL_USERS);
+        return self::insert(['name' => $name], self::$mainTable);
     }
     public static function remove($uid)
     {
-        return self::delete($uid, SQL_TBL_USERS);
+        return self::delete($uid, self::$mainTable);
     }
     public static function decodeJson($userData)
     {

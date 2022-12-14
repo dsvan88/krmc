@@ -58,7 +58,7 @@ class TelegramBotController extends Controller
 
             $bot = new TelegramBot();
             if (empty($userData) && !in_array($command['command'], ['help', 'nick', 'week'])) {
-                $bot->sendMessage($messageArray['message']['chat']['id'], Locale::applySingle('{{ Tg_Unknown_Requester }}'));
+                $bot->sendMessage($messageArray['message']['chat']['id'], Locale::phrase('{{ Tg_Unknown_Requester }}'));
                 exit();
             }
             self::$requesterData = $userData;
@@ -71,7 +71,7 @@ class TelegramBotController extends Controller
             if (isset($result['pre-message'])) {
                 $bot->sendMessage($messageArray['message']['chat']['id'], $result['pre-message'], $messageArray['message']['message_id']);
             }
-            $botResult = $bot->sendMessage($messageArray['message']['chat']['id'], Locale::applySingle($result['message']));
+            $botResult = $bot->sendMessage($messageArray['message']['chat']['id'], Locale::phrase($result['message']));
             if ($botResult[0]['ok']) {
                 if ($command['command'] === 'week') {
                     $bot->pinMessage($messageArray['message']['chat']['id'], $botResult[0]['result']['message_id']);
@@ -235,7 +235,7 @@ class TelegramBotController extends Controller
             }
         } else {
             if ($message === '') {
-                $message = Locale::applySingle('{{ Tg_Command_Games_Not_Set }}');
+                $message = Locale::phrase('{{ Tg_Command_Games_Not_Set }}');
             }
         }
 
@@ -259,7 +259,7 @@ class TelegramBotController extends Controller
 
         $dayDescription = Days::getFullDescription($weekData, $currentDayNum);
         if ($dayDescription === '') {
-            $dayDescription = Locale::applySingle('{{ Tg_Command_Games_Not_Set }}'); //В ближайшее время, игры не запланированны!\nОбратитесь к нам позднее.\n
+            $dayDescription = Locale::phrase('{{ Tg_Command_Games_Not_Set }}'); //В ближайшее время, игры не запланированны!\nОбратитесь к нам позднее.\n
         }
         return ['result' => true, 'message' => $dayDescription];
     }
@@ -284,7 +284,7 @@ class TelegramBotController extends Controller
         $weekData = Weeks::weekDataById($weekId);
         $dayDescription = Days::getFullDescription($weekData, $dayNum);
         if ($dayDescription === '') {
-            $dayDescription = Locale::applySingle('{{ Tg_Command_Games_Not_Set }}'); //В ближайшее время, игры не запланированны!\nОбратитесь к нам позднее.\n
+            $dayDescription = Locale::phrase('{{ Tg_Command_Games_Not_Set }}'); //В ближайшее время, игры не запланированны!\nОбратитесь к нам позднее.\n
         }
         return ['result' => true, 'message' => $dayDescription];
     }
@@ -703,7 +703,7 @@ class TelegramBotController extends Controller
             }
             $message .= "\n";
         }
-        $message .= "______________________________\n✅ - " . Locale::applySingle('{{ Tg_User_With_Telegramid }}');
+        $message .= "______________________________\n✅ - " . Locale::phrase('{{ Tg_User_With_Telegramid }}');
         return ['result' => true, 'message' => $message];
     }
     public static function promoCommand()
@@ -751,10 +751,10 @@ class TelegramBotController extends Controller
     }
     public static function helpCommand()
     {
-        $message = Locale::applySingle('{{ Tg_Command_Help }}');
+        $message = Locale::phrase('{{ Tg_Command_Help }}');
 
         if (self::$messageData['message']['chat']['type'] === 'private' && in_array(self::$requesterData['privilege']['status'], ['manager', 'admin'])) {
-            $message .= Locale::applySingle('{{ Tg_Command_Help_Admin }}');
+            $message .= Locale::phrase('{{ Tg_Command_Help_Admin }}');
         }
         return ['result' => true, 'message' => $message];
     }
@@ -804,9 +804,9 @@ class TelegramBotController extends Controller
             } else {
                 $result = $bot->sendMessage($targets, $message);
             }
-            $message = '{{ Action_Success }}';
+            $message = 'Success!';
             if (!$result[0]['ok']) {
-                $message = '{{ Action_Failure }}';
+                $message = 'Fail!';
             }
 
             View::message(['error' => 0, 'message' => $message]);
@@ -818,7 +818,7 @@ class TelegramBotController extends Controller
             'title' => '{{ HEADER_ASIDE_MENU_CHAT_SEND }}',
             'texts' => [
                 'blockTitle' => '{{ HEADER_ASIDE_MENU_CHAT_SEND }}',
-                'submitTitle' => '{{ Send_Label }}',
+                'submitTitle' => 'Send',
                 'sendAll' => '{{ Send_To_All }}',
                 'sendGroups' => '{{ Send_To_Groups }}',
                 'sendMain' => '{{ Send_To_Main }}',

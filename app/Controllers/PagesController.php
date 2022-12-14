@@ -5,48 +5,53 @@ namespace app\Controllers;
 
 use Transliterator;
 use app\core\Controller;
-use app\core\Pages;
 use app\core\View;
 use app\models\Settings;
 use app\core\Locale;
+use app\models\Pages;
 
 class PagesController extends Controller
 {
-    public function indexAction()
+    public function homeAction()
     {
-        $index = Settings::getPage('index');
-        if (!$index) {
-            View::render(['title' => '{{ Main_Home_Page_Title }}']);
-            exit();
-        }
-        self::$route['vars'] = ['shortName' => 'index'];
+        self::$route['vars'] = ['slug' => 'home'];
         $this->showAction();
     }
     public function showAction()
     {
         extract(self::$route['vars']);
-        $settings = Settings::getPage($shortName);
-        if (!$settings) {
-            View::errorCode(404, ['message' => "Page $shortName isn't found!"]);
+        $page = Pages::findBy('slug', $slug);
+        if ($page){
+            $page = $page[0];
+        } else {
+            if ( $slug === 'home' ){
+                $page = [
+                    'id' => 'home',
+                    'title' => '&ltNo Data&gt;',
+                    'subtitle' => '&ltNo Data&gt;',
+                    'html' => '&ltNo Data&gt;',
+                ];
+            }
+            else 
+                View::errorCode(404, ['message' => "Page $slug isn't found!"]);
         }
-        if (PAGES_AS_LOCAL_FILE) {
-            self::$route['action'] = $shortName;
-            View::set(self::$route);
-            View::render(['title' => '{{ Main_Home_Page_Title }}']);
-            exit();
-        }
+
         $dashboard = '';
         if (isset($_SESSION['privilege']) && in_array($_SESSION['privilege']['status'], ['manager', 'admin'])) {
             $dashboard = "<span class='page__dashboard' style='float:right'>
-                <a href='/page/edit/{$settings['id']}' title='Редагувати'><i class='fa fa-pencil-square-o'></i></a>";
-            if ($shortName !== 'index') {
-                $dashboard .= "<a href='/page/delete/{$settings['id']}' onclick='return confirm(\"Are you sure?\")' title='Видалити'><i class='fa fa-trash-o'></i></a>";
+                <a href='/page/edit/{$page['id']}' title='Редагувати' class='fa fa-pencil-square-o'></a>";
+            if ($slug !== 'home') {
+                $dashboard .= "<a href='/page/delete/{$page['id']}' onclick='return confirm(\"Are you sure?\")' title='Видалити' class='fa fa-trash-o'></a>";
             }
-            $dashboard .= "</span>";
+            $dashboard .= '</span>';
         }
         $vars = [
-            'title' => $settings['name'],
-            'html' => $settings['value'],
+            'title' => $page['title'],
+            'texts' => [
+                'title' => trim($page['title']),
+                'subtitle' => trim($page['subtitle']),
+                'html' => trim($page['html']),
+            ],
             'dashboard' => $dashboard,
         ];
         View::renderPage($vars);
@@ -57,37 +62,34 @@ class PagesController extends Controller
         extract(self::$route['vars']);
         if (!empty($_POST)) {
             $array = $_POST;
-
-            if ($array['short_name'] !== 'index') {
-                $name = Locale::translitization($array['title']);
-            } else {
-                $name = 'index';
-            }
-            Pages::save($name, $array);
-            View::message(['error' => 0, 'message' => '{{ Changes_Save_Success }}']);
+            Pages::edit($array, $pageId);
+            View::message('Changes saved successfully!');
         }
 
-        $settings = Settings::getPageById($pageId);
-        $pageData['id'] = $settings['id'];
-        $pageData['short_name'] = $settings['short_name'];
-        $pageData['title'] = $settings['name'];
-        preg_match("/<h3 class='index-subtitle'>([^<]*)<\/h3>/", $settings['value'], $match);
-        $pageData['subtitle'] = $match[1];
-        $preDiv = '<div class=\'index-text\'>';
-        $htmlStartPos = mb_strpos($settings['value'], $preDiv, 0, 'UTF-8') + mb_strlen($preDiv, 'UTF-8');
-        $htmlEndPos = mb_strrpos($settings['value'], '</div>', 0, 'UTF-8') - mb_strlen($settings['value'], 'UTF-8');
-        $pageData['html'] = trim(mb_substr($settings['value'], $htmlStartPos, $htmlEndPos, 'UTF-8'));
+        if (is_numeric($pageId)){
+            $page = Pages::find($pageId);
+        }
+        else {
+            $dummyPage = [
+                'title'=>$pageId,
+                'type'=>'game',
+                'subtitle'=>'',
+                'html'=>'',
+            ];
+            $pageId = Pages::create($dummyPage);
+            View::redirect("/page/edit/$pageId");
+        }
+
         $vars = [
-            'title' => '{{ Page_Add_Page_Title }}',
+            'title' => 'Page edit form',
             'texts' => [
-                'BlockTitle' => '{{ Page_Add_Block_Title }}',
-                'SubmitLabel' => '{{ Page_Add_Block_Submit_Title }}'
+                'SubmitLabel' => 'Save'
             ],
             'scripts' => [
                 '/public/scripts/plugins/ckeditor.js?v=' . $_SERVER['REQUEST_TIME'],
                 '/public/scripts/forms-admin-funcs.js?v=' . $_SERVER['REQUEST_TIME'],
             ],
-            'pageData' => $pageData,
+            'page' => $page,
         ];
         View::render($vars);
     }
@@ -101,16 +103,13 @@ class PagesController extends Controller
     {
         if (!empty($_POST)) {
             $array = $_POST;
-
-            $name = Locale::translitization($array['title']);
-            Pages::save($name, $array);
-            View::message(['error' => 0, 'message' => '{{ Changes_Save_Success }}']);
+            Pages::create($array);
+            View::message(['error' => 0, 'message' => 'Changes saved successfully!']);
         }
         $vars = [
-            'title' => '{{ Page_Add_Page_Title }}',
+            'title' => 'Add page form',
             'texts' => [
-                'BlockTitle' => '{{ Page_Add_Block_Title }}',
-                'SubmitLabel' => '{{ Page_Add_Block_Submit_Title }}'
+                'SubmitLabel' => 'Create'
             ],
             'scripts' => [
                 '/public/scripts/plugins/ckeditor.js?v=' . $_SERVER['REQUEST_TIME'],

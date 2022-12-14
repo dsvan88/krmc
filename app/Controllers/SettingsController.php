@@ -26,13 +26,13 @@ class SettingsController extends Controller
             $array['short_name'] = Locale::translitization($array['name']);
             $array['by_default'] = $array['value'];
             Settings::save($array);
-            View::message(['error' => 0, 'message' => '{{ Changes_Save_Success }}', 'location' => '/settings/list']);
+            View::message(['error' => 0, 'message' => 'Changes saved successfully!', 'location' => '/settings/list']);
         }
         $vars = [
             'title' => '{{ Settings_Add_Title }}',
             'texts' => [
                 'BlockTitle' => '{{ Settings_Add_Title }}',
-                'SubmitLabel' => '{{ Save_Label }}',
+                'SubmitLabel' => 'Save',
             ]
         ];
         View::render($vars);
@@ -55,7 +55,7 @@ class SettingsController extends Controller
         $vars = [
             'title' => '{{ Settings_Edit_Title }}',
             'texts' => [
-                'SubmitLabel' => '{{ Save_Label }}',
+                'SubmitLabel' => 'Save',
             ],
             'settingsData' => $settingsData,
         ];

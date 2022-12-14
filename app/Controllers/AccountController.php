@@ -98,7 +98,7 @@ class AccountController extends Controller
             }
         }
         Users::edit($userData, ['id' => $userId]);
-        View::message('{{ Action_Success }}');
+        View::message('Success!');
     }
     public function profileFormAction()
     {
@@ -113,7 +113,7 @@ class AccountController extends Controller
         } else {
             $avatar = Settings::getImage('empty_avatar')['value'];
         }
-        $userData['avatar'] = ImageProcessing::inputImage($avatar, ['title' => Locale::applySingle(['string' => '{{ Account_Profile_Form_User_Avatar }}', 'vars' => [$userData['name']]])]);
+        $userData['avatar'] = ImageProcessing::inputImage($avatar, ['title' => Locale::phrase(['string' => '{{ Account_Profile_Form_User_Avatar }}', 'vars' => [$userData['name']]])]);
 
         $vars = [
             'title' => [
@@ -125,8 +125,8 @@ class AccountController extends Controller
                 'BirthdayLabel' => '{{ Account_Profile_Form_Birthday_Label }}',
                 'GenderLabel' => '{{ Account_Profile_Form_Gender_Label }}',
                 'EmailLabel' => '{{ Account_Profile_Form_Email_Label }}',
-                'SaveLabel' => '{{ Save_Label }}',
-                'CancelLabel' => '{{ Cancel_Label }}'
+                'SaveLabel' => 'Save',
+                'CancelLabel' => 'Cancel'
             ],
             'userData' => $userData
         ];
@@ -175,7 +175,7 @@ class AccountController extends Controller
 
         Users::edit($userData, ['id' => $userId]);
         TelegramChats::edit($chatData, $chatId);
-        View::message('{{ Action_Success }}');
+        View::message('Success!');
     }
     public function setNicknameFormAction()
     {
@@ -208,8 +208,8 @@ class AccountController extends Controller
                 'vars' => [$chatTitle]
             ],
             'texts' => [
-                'SaveLabel' => '{{ Save_Label }}',
-                'CancelLabel' => '{{ Cancel_Label }}'
+                'SaveLabel' => 'Save',
+                'CancelLabel' => 'Cancel'
             ],
             'chatData' => $chatData,
             'scripts' => '/public/scripts/apply-input-listener.js?v=' . $_SERVER['REQUEST_TIME']
@@ -232,7 +232,7 @@ class AccountController extends Controller
             View::message($vars);
         }
 
-        $userData['avatar'] = ImageProcessing::inputImage(FILE_USRGALL . "{$userData['id']}/{$userData['personal']['avatar']}", ['title' => Locale::applySingle(['string' => '{{ Account_Profile_Form_User_Avatar }}', 'vars' => [$userData['name']]])]);
+        $userData['avatar'] = ImageProcessing::inputImage(FILE_USRGALL . "{$userData['id']}/{$userData['personal']['avatar']}", ['title' => Locale::phrase(['string' => '{{ Account_Profile_Form_User_Avatar }}', 'vars' => [$userData['name']]])]);
 
         $vars = [
             'title' => [
@@ -241,7 +241,7 @@ class AccountController extends Controller
             ],
             'texts' => [
                 'ReCropLabel' => '{{ Account_Avatar_Form_Newcrop_Link }}',
-                'CancelLabel' => '{{ Cancel_Label }}'
+                'CancelLabel' => 'Cancel'
             ],
             'userData' => $userData
         ];
@@ -264,7 +264,7 @@ class AccountController extends Controller
                 View::message('Passwords Not Match!');
             }
             Users::passwordReset($userData, $_POST['password']);
-            View::message(['message' => '{{ Action_Success }}', 'url' => '/']);
+            View::message(['message' => 'Success!', 'url' => '/']);
         }
 
         $vars = [
@@ -272,7 +272,7 @@ class AccountController extends Controller
             'hash' => $hash,
             'texts' => [
                 'authPlaceholder' => '{{ Account_Login_Form_Login_Input_Placeholder }}',
-                'SubmitLabel' => '{{ Submit_Label }}'
+                'SubmitLabel' => 'Execute'
             ],
             'scripts' => [
                 '/public/scripts/forms-admin-funcs.js?v=' . $_SERVER['REQUEST_TIME'],
@@ -297,7 +297,7 @@ class AccountController extends Controller
             $link = "{$_SERVER['HTTP_X_FORWARDED_PROTO']}://{$_SERVER['SERVER_NAME']}/account/password-reset/$hash";
             $link = "<a href='$link'>$link</a>";
             $bot = new TelegramBot();
-            $bot->sendMessage($userData['contacts']['telegramid'], Locale::applySingle(['string' => '{{ Account_Forget_Check_Succes }}', 'vars' => [$link]]));
+            $bot->sendMessage($userData['contacts']['telegramid'], Locale::phrase(['string' => '{{ Account_Forget_Check_Succes }}', 'vars' => [$link]]));
         }
         $botData = $bot->getMe();
         $vars = [
@@ -305,8 +305,8 @@ class AccountController extends Controller
             'texts' => [
                 'authPlaceholder' => '{{ Account_Login_Form_Login_Input_Placeholder }}',
                 'tgBotLink' => 'https://t.me/' . $botData['result']['username'],
-                'SubmitLabel' => '{{ Submit_Label }}',
-                'CancelLabel' => '{{ Cancel_Label }}',
+                'SubmitLabel' => 'Execute',
+                'CancelLabel' => 'Cancel',
             ]
         ];
         View::modal($vars);
@@ -318,17 +318,17 @@ class AccountController extends Controller
             if ($result !== true) {
                 View::message($result);
             }
-            View::message('{{ Action_Success }}');
+            View::message('Success!');
         }
         $vars = [
             'title' => '{{ Account_Register_Form_Title }}',
             'texts' => [
-                'LoginLabel' => '{{ Account_Login_Label }}',
-                'NameLabel' => '{{ Account_Name_Label }}',
-                'PasswordLabel' => '{{ Account_Password_Label }}',
-                'PasswordAgainLabel' => '{{ Account_Password_Again_Label }}',
+                'LoginLabel' => 'Login',
+                'NameLabel' => 'Nickname (in game)',
+                'PasswordLabel' => 'Password',
+                'PasswordAgainLabel' => 'Password again',
                 'RegisterSubmit' => '{{ Account_Login_Form_Register_Link }}',
-                'CancelLabel' => '{{ Cancel_Label }}',
+                'CancelLabel' => 'Cancel',
             ]
         ];
         View::modal($vars);

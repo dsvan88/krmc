@@ -2,9 +2,6 @@
 
 namespace app\core;
 
-use app\models\Games;
-use app\models\Settings;
-
 class View
 {
     public static $path;
@@ -45,9 +42,14 @@ class View
         extract($vars);
         extract(self::defaultVars());
         $content = "
-            <section class='section index'>
-                <h2 class='index-title'>$title $dashboard</h2>
-                $html
+            <section class='section'>
+                <header>
+                    <h2 class='title'>$title $dashboard</h2>
+                    <h3 class='subtitle'>{$texts['subtitle']}</h3>
+                </header>
+                <div class='content'>
+                    {$texts['html']}
+                </div>
             </section>";
         require $_SERVER['DOCUMENT_ROOT'] . '/app/views/layouts/' . self::$layout . '.php';
     }
@@ -78,14 +80,31 @@ class View
             self::errorCode('404', ['message' => 'View ' . self::$path . ' isn’t found!']);
         }
     }
-    public static function redirect($url)
+    /**
+     * Use for hard redirect from server
+     * 
+     * @param string $url - where to redirect;
+     * 
+     * @return void
+     */
+    public static function redirect(string $url = '/'): void
     {
         header('Location: ' . $url);
         exit;
     }
+    /**
+    * Use for soft redirect for js handler
+     * 
+     * @param string $url - where to redirect;
+     * 
+     * @return json string with
+     */
     public static function location($url, $error = 0)
     {
-        exit(json_encode(['error' => $error, 'location' => $url]));
+        $message = ['location' => $url];
+        if ($error > 0)
+            $message['error'] = $error;
+        exit(json_encode($message));
     }
     public static function errorCode($code, $data = [])
     {
@@ -102,71 +121,28 @@ class View
             $data = ['message' => $data];
         }
         if (isset($data['message'])) {
-            $data['message'] = Locale::applySingle($data['message']);
+            $data['message'] = Locale::phrase($data['message']);
         }
         if (!isset($data['error'])) {
             $daya['error'] = 0;
         }
         exit(json_encode($data));
     }
+    public static function response($data){
+        if (is_array($data)){
+            $data = json_encode($data, JSON_UNESCAPED_UNICODE);
+        }
+        exit($data);
+    }
     public static function defaultVars()
     {
-        $defaultVars = [
-            'headerLogo' => "<a href='/'>" . ImageProcessing::inputImage('/public/images/club_logo.png', ['title' => 'Main logo']) . '</a>',
-            'headerProfileButton' => '<a class="header__profile-button" data-action-click="account/login/form">Вхід</a>',
+        $header = ViewHeader::get();
+        $footer = ViewFooter::get();
+        [
             'footerContent' => '',
-            'headerMenu' => [
-                [
-                    'path' => 'news',
-                    'label' => Locale::applySingle('{{ HEADER_MENU_NEWS }}')
-                ], [
-                    'path' => 'weeks',
-                    'label' => Locale::applySingle('{{ HEADER_MENU_WEEKS }}')
-                ],
-                [
-                    'path' => '',
-                    'label' => Locale::applySingle('{{ HEADER_MENU_INFORMATION }}'),
-                    'drop-down-menu' => Pages::getList(),
-                    'type' => 'page'
-                ],
-                /*                 [
-                    'path' => '',
-                    'label' => Locale::applySingle('{{ Header_Menu_Games_Label }}'),
-                    'drop-down-menu' => Games::menu(),
-                    'type' => 'game',
-                ], */
-            ]
         ];
 
-        if (isset($_SESSION['id'])) {
-            if ($_SESSION['avatar'] == '') {
-                $profileImage = $_SESSION['gender'] === '' ? Settings::getImage('profile')['value'] : Settings::getImage($_SESSION['gender'])['value'];
-            } else {
-                $profileImage = FILE_USRGALL . "{$_SESSION['id']}/{$_SESSION['avatar']}";
-            }
-
-            $profileImage = ImageProcessing::inputImage($profileImage, ['title' => $_SESSION['name']]);
-
-            $texts = [
-                'headerMenuProfileLink' => '{{ HEADER_ASIDE_MENU_PROFILE }}',
-                'headerMenuAddNewsLink' => '{{ HEADER_ASIDE_MENU_ADD_NEWS }}',
-                'headerMenuChangePromoLink' => '{{ HEADER_ASIDE_MENU_CHANGE_PROMO }}',
-                'headerMenuAddPageLink' => '{{ HEADER_ASIDE_MENU_ADD_PAGE }}',
-                'headerMenuUsersListLink' => '{{ HEADER_ASIDE_MENU_USERS_LISTS }}',
-                'headerMenuUsersChatsLink' => '{{ HEADER_ASIDE_MENU_USERS_CHATS }}',
-                'headerMenuChatSendLink' => '{{ HEADER_ASIDE_MENU_CHAT_SEND }}',
-                'headerMenuSettingsListLink' => '{{ HEADER_ASIDE_MENU_SETTINGS_LIST }}',
-                'headerMenuLogoutLink' => '{{ HEADER_ASIDE_MENU_LOGOUT }}',
-            ];
-
-            $texts = Locale::apply($texts);
-
-            ob_start();
-            require $_SERVER['DOCUMENT_ROOT'] . '/app/views/main/header-menu.php';
-            $defaultVars['headerProfileButton'] = ob_get_clean();
-        }
-
-        return $defaultVars;
+        return array_merge($header, $footer);
     }
 
     public static function file($file, $name = 'backup.txt')
