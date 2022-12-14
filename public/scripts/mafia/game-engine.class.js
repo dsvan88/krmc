@@ -29,9 +29,11 @@ class GameEngine {
         for(let [key, value] of Object.entries(data)){
             if (!this._log[key])
                 this._log[key] = [];
-            this._log[key].push(value);
+            if (value instanceof Array)
+                this._log[key] = this._log[key].concat(value);
+            else
+                this._log[key].push(value);
         }
-
         this.logBlock.innerHTML = '';
 
         for(let [key, value] of Object.entries(this._log)){
