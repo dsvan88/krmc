@@ -402,8 +402,7 @@ class MafiaEngine extends GameEngine {
                 message += `Игрок  №${this.players[playerId].num} \tГолоса: 0\n`;
                 continue;
             }
-            console.log(this.courtRoom, this.courtRoom.length);
-            let vote = this.courtRoom.length !== 1 ? parseInt(prompt(`${this.players[playerId].num}! Кто за то, что бы наш город покинул игрок под № ${this.players[playerId].num}`, '0')) : votesAll;
+            let vote = this.courtRoom.length !== 0 ? parseInt(prompt(`${this.players[playerId].num}! Кто за то, что бы наш город покинул игрок под № ${this.players[playerId].num}`, '0')) : votesAll;
             message += `Игрок  № ${this.players[playerId].num} \tГолоса: ${vote}\n`;
             if (vote > 0) {
                 voted.set(playerId, vote);
