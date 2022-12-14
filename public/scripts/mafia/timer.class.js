@@ -76,7 +76,7 @@ class GameTimer {
 			return true;
 		}
 		
-		if ([1200, 1000,500,300,200,100].indexOf(this.left) !== -1){
+		if ([1000,500,300,200,100].indexOf(this.left) !== -1){
 			this.beep();
 		}
 
