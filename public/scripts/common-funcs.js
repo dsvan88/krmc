@@ -210,7 +210,7 @@ actionHandler = {
 			url: event.target.action.replace(window.location.origin+'/', ''),
 			data: formData,
 			successFunc: function (result) {
-				if (result["error"]) {
+				if (result["error"] != 0) {
 					alert(result["message"]);
 					return false;
 				}
@@ -250,7 +250,7 @@ function redirectPost(url, data) {
 	form.submit();
 }
 
-async function postAjax({ url, data, formData, successFunc, errorFunc, method = 'json', ...options }) {
+async function postAjax({ url, data,formData, successFunc, errorFunc, method = 'json', ...options }) {
 	if (successFunc == undefined) {
 		successFunc = function (result) {
 			console.log("Not set `successFunc`. Ajax result: " + result);

@@ -22,7 +22,7 @@ class AutocompleteController extends Controller
             'NamePlaceholder' => '',
             'TimeArrivePlaceholder' => '{{ Time_Arrive }}',
             'RemarkPlaceHolder' => '{{ Day_Block_Prim_PLaceholder }}',
-            'ClearLabel' => 'Clear',
+            'ClearLabel' => '{{ Clear_Label }}',
         ];
         $texts = Locale::apply($texts);
         ob_start();

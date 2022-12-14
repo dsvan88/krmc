@@ -55,11 +55,11 @@ class WeeksController extends Controller
         $texts = [
             'weeksBlockTitle' => '{{ Weeks_Block_Title }}',
             'games' => [
-                'mafia' => 'Mafia',
-                'poker' => 'Poker',
-                'board' => 'Board',
-                'cash' => 'Cash',
-                'etc' => 'Etc',
+                'mafia' => '{{ Mafia }}',
+                'poker' => '{{ Poker }}',
+                'board' => '{{ Board }}',
+                'cash' => '{{ Cash }}',
+                'etc' => '{{ Etc }}',
             ],
             'days' => [
                 '{{ Monday }}',

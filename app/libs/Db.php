@@ -266,19 +266,5 @@ class Db
             $promo = ['title' => 'Записываемся активнее!', 'subtitle' => 'Важен каждый игрок!', 'html' => 'Только Ваше участие позволяет клубу и другим игрокам становиться лучше!', 'type' => 'promo'];
             self::insert($promo, SQL_TBL_NEWS);
         }
-
-        $path = 'app/Models';
-        $modelsDir = "{$_SERVER['DOCUMENT_ROOT']}/{$path}";
-        $modelsFiles = scandir($modelsDir);
-
-        foreach ($modelsFiles as $model) {
-            if ($model === '.' || $model === '..' || is_dir($model))
-                continue;
-
-            $class = str_replace('/', '\\', $path . '/' . substr($model, 0, strpos($model, '.')));
-            if (method_exists($class, 'init')) {
-                $class::init();
-            }
-        }
     }
 }

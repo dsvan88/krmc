@@ -1,20 +1,20 @@
 @import "game-timer";
-.game-form {
+.game-prepeare {
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
-	&__row{
-		margin-bottom: 0.3em;
-		display: flex;
-		justify-content: space-between;
-	}
-	&__input{
-		flex-grow: 1;
-		margin: 0em 0.1em;
-	}
-	&__players-list{
-		width: clamp(50vw, 250px, 80vw);
+	@include sm {
+		font-size: 1.1em;
+		.player {
+			margin: 5px 0px;
+			&-name {
+				width: 45vw !important;
+			}
+			select {
+				width: 100px !important;
+			}
+		}
 	}
 	&__title {
 		margin: 10px 0 20px 0;
@@ -28,26 +28,63 @@
 		font-size: 1.6em;
 		text-transform: uppercase;
 	}
-	&__pool {
+	&__manager {
+		width: 45vw;
+		max-width: 1200px;
+		margin: 10px 0;
 		display: flex;
-		flex-wrap: wrap;
-		&-unit{
-			display: flex;
-			text-indent: 0;
-			margin: 0.1em 0.2em;
+		justify-content: space-between;
+		font-size: 1.4em;
+		&-label {
+			width: 15vw;
+			max-width: 300px;
 		}
-		&-name{
-			display: inline-block;
+		input {
+			width: 100%;
+			border-radius: 5px;
+		}
+	}
+	&__players-list {
+		display: flex;
+		flex-direction: column;
+		margin: 10px 0;
+		.player {
+			margin: 5px 0px;
+			&-name {
+				width: 30vw;
+			}
+			select {
+				width: 140px;
+			}
+		}
+	}
+	&__players-array {
+		padding: 20px;
+
+		text-indent: 0px;
+		.player__name {
+			margin: 5px 10px;
+			position: relative;
+			background-color: #0a494d91;
 			border: 1px solid #94d7cd;
-			border-radius: 5px 0 0 5px;
-			padding: 0.2em 0.3em;
+			border-radius: 5px;
+			display: inline-block;
+			padding: 3px 6px;
+			font-size: 1.2em;
+			line-height: 1em;
+			white-space: nowrap;
+			color: $color-text-menu;
 			cursor: pointer;
 			transition: all $animation-fast ease-in-out;
-			width: max-content;
-			flex-grow: 0;
-			color: $color-text-menu;
 			&:hover {
 				background-color: #0a494d;
+			}
+			&.temp_username {
+				background-color: #594e1391;
+				border: 1px solid #eeec54;
+				&:hover {
+					background-color: #594e13;
+				}
 			}
 			&.selected {
 				background-color: #7714149e;
@@ -57,22 +94,16 @@
 					background-color: #771414;
 				}
 			}
-		}
-		&-remove{
-			border: 1px solid #94d7cd;
-			border-radius: 0 5px 5px 0;
-			padding: 0.2em 0.3em;
-			flex-grow: 0;
-			cursor: pointer;
-			transition: all $animation-fast ease-in-out;
-			&:hover {
-				border-color: $button-remove-color-hover;
-				color: $button-remove-color-hover;
+			.player__remove {
+				position: absolute;
+				top: -0.5em;
+				color: $button-remove-color;
+				transition: all $animation-fast ease-in-out;
+				&:hover {
+					color: $button-remove-color-hover;
+				}
 			}
 		}
-	}
-	&__button{
-		@extend %buttonStyle;
 	}
 	input,
 	select {
@@ -88,49 +119,61 @@
 			color: $bg-color-input;
 		}
 	}
+	&__buttons {
+		margin: 20px 0;
+		button {
+			@extend %buttonStyle;
+		}
+	}
 }
-.game {
+.game-in-progress {
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
-	padding: 10px;
-	margin: 10px;
-	text-indent: 0;
-	white-space: nowrap;
-	&__stage {
-		text-align: center;
+	@include sm {
+		font-size: 1.1em;
 	}
-	&__log{
-		&-entity{
-			display: grid;
-			grid-template-columns: 1fr 5fr;
-			margin-bottom: 0.5em;
-			border-bottom: 3px double $color-text-main;
+}
+.game {
+	&__content {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		padding: 10px;
+		margin: 10px;
+		@include sm {
+			margin-bottom: 200px;
 		}
+	}
+	&__stage-text {
+		font-size: 1.2rem;
+		text-align: center;
 	}
 	&__table {
 		border-collapse: collapse;
-		width: 100vw;
-		font-size: 1.2em;
-		background-color: #062744bd;
-		@include md{
-			width: clamp(40vw, 250px, 80vw);
+		font-size: 1.2rem;
+
+		&-header {
+			padding: 10px 0;
+			font-size: 1.05rem;
+			white-space: nowrap;
+			.text-accent {
+				color: $color-text-menu;
+			}
 		}
-		text-indent: 0;
-		td,th{
-			border: 1px solid $color-text-menu;
-			padding: 0.3em 0.6em;
-			user-select: none;
+		@include sm {
+			font-size: 0.9rem;
+			&-header {
+				font-size: 0.8rem;
+			}
 		}
 		th {
-			// padding: 0.3em 0.6em;
-			text-align: center;
-		}
-		tr > td:first-of-type{
-			text-align: center;
+			padding: 5px 10px;
 		}
 		.player {
+			height: 5vh;
+			min-height: 50px;
 			&.out {
 				background-color: #d92020;
 				color: $bg-color-dark;
@@ -140,30 +183,31 @@
 				background-color: #06409d;
 				animation: rowVotedFor 4s ease-out infinite;
 			}
-			&.shooted {
+			&.for-kill {
 				background-color: #97003f;
 				animation: rowShootedPlayer 1s ease-out infinite;
 			}
-			&.best-moved {
+			&.for-best-move {
 				background-color: #6c4010;
 				animation: rowForBestMove 1s ease-out infinite;
 			}
-			&.speaker {
+			&.active {
 				background-color: #0d5023;
 				animation: activeSpeaker 1.5s ease-out infinite;
 			}
-			.fail{
-				&[data-foul="1"] {
+			&-data__fouls {
+				position: relative;
+				&[data-foul-id="0"].fail {
 					background-color: #6cbf6ccc;
 				}
-				&[data-foul="2"] {
+				&[data-foul-id="1"].fail {
 					background-color: #ececabe0;
 				}
-				&[data-foul="3"] {
+				&[data-foul-id="2"].fail {
 					background-color: #f97f7f;
 					text-align: center;
 				}
-				&[data-foul="4"] {
+				&[data-foul-id="3"].fail {
 					background-color: #393939;
 				}
 			}

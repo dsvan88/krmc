@@ -23,7 +23,7 @@ class TechController extends Controller
         $vars = [
             'title' => '{{ SQL_Action_Title }}',
             'texts' => [
-                'SubmitLabel' => 'Execute',
+                'SubmitLabel' => '{{ Submit_Label }}',
             ],
             'scripts' => [
                 '/public/scripts/plugins/ckeditor.js?v=' . $_SERVER['REQUEST_TIME'],
@@ -45,7 +45,7 @@ class TechController extends Controller
         $vars = [
             'title' => '{{ SQL_Action_Title }}',
             'texts' => [
-                'SubmitLabel' => 'Execute',
+                'SubmitLabel' => '{{ Submit_Label }}',
             ],
             'scripts' => [
                 '/public/scripts/plugins/ckeditor.js?v=' . $_SERVER['REQUEST_TIME'],
@@ -78,7 +78,7 @@ class TechController extends Controller
         $vars = [
             'title' => '{{ SQL_Action_Title }}',
             'texts' => [
-                'SubmitLabel' => 'Execute',
+                'SubmitLabel' => '{{ Submit_Label }}',
             ],
             'scripts' => [
                 '/public/scripts/plugins/ckeditor.js?v=' . $_SERVER['REQUEST_TIME'],

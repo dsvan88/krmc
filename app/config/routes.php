@@ -9,12 +9,12 @@ admin = root level admin  (admins only)
 return  [
     '' => [
         'controller' => 'pages',
-        'action' => 'home',
+        'action' => 'index',
         'access' => ['category' => 'all']
     ],
-    'home' => [
+    'index' => [
         'controller' => 'pages',
-        'action' => 'home',
+        'action' => 'index',
         'access' => ['category' => 'all']
     ],
     'page/add' => [
@@ -22,7 +22,7 @@ return  [
         'action' => 'add',
         'access' => ['category' => 'manager']
     ],
-    'page/{slug}' => [
+    'page/{shortName}' => [
         'controller' => 'pages',
         'action' => 'show',
         'access' => ['category' => 'all']
@@ -145,35 +145,13 @@ return  [
     'chat/send' => [
         'controller' => 'telegramBot',
         'action' => 'send',
-        'access' => ['category' => 'admin'],
+        'access' => ['category' => 'admin']
     ],
     'chat/list' => [
         'controller' => 'telegramBot',
         'action' => 'chatsList',
-        'access' => ['category' => 'admin'],
+        'access' => ['category' => 'admin']
     ],
-
-    'game' => [
-        'controller' => 'games',
-        'action' => 'index',
-        'access' => ['category' => 'all'],
-    ],
-    'game/{game}' => [
-        'controller' => 'games',
-        'action' => 'game',
-        'access' => ['category' => 'all'],
-    ],
-    'game/{game}/start' => [
-        'controller' => 'games',
-        'action' => 'prepeare',
-        'access' => ['category' => 'manager'],
-    ],
-    'game/{game}/{gameId}' => [
-        'controller' => 'games',
-        'action' => 'play',
-        'access' => ['category' => 'manager'],
-    ],
-
 
     'api/account/login' =>
     [
@@ -257,18 +235,6 @@ return  [
     [
         'controller' => 'autocomplete',
         'action' => 'participantField',
-        'access' => ['category' => 'manager']
-    ],
-    'api/game/{gameId}' =>
-    [
-        'controller' => 'games',
-        'action' => 'load',
-        'access' => ['category' => 'manager']
-    ],
-    'api/game/save/{gameId}' =>
-    [
-        'controller' => 'games',
-        'action' => 'save',
         'access' => ['category' => 'manager']
     ],
 

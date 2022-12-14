@@ -38,7 +38,32 @@
                 <input type="checkbox" name="toggle-navigation" id="header__navigation-checkbox" class="navigation-for-small-display" autocomplete="off" />
                 <nav class="header__navigation" id="header__navigation">
                     <label for="header__navigation-checkbox" class="navigation-for-small-display menu-hide"><i class="fa fa-times"></i></label>
-                    <?=$headerMenu?>
+                    <? for ($x = 0; $x < count($headerMenu); $x++) : ?>
+                        <? if (!isset($headerMenu[$x]['drop-down-menu'])) : ?>
+                            <li class="header__navigation-item">
+                                <a href="/<?= $headerMenu[$x]['path'] ?>"><?= $headerMenu[$x]['label'] ?></a>
+                                <div class="bar"></div>
+                            <? else : ?>
+                            <li class="header__navigation-item drop-down" style="position:relative">
+                                <label for="header__dropdown-menu-checkbox" class="header__dropdown-menu-label"><?= $headerMenu[$x]['label'] ?></label>
+                                <div class="bar"></div>
+                                <input type="checkbox" class='header__dropdown-menu-checkbox' id="header__dropdown-menu-checkbox">
+                                <menu class="header__dropdown-menu-list">
+                                    <? for ($i = 0; $i < count($headerMenu[$x]['drop-down-menu']); $i++) :
+                                        $path = '';
+                                        if ($headerMenu[$x]['drop-down-menu'][$i]['short_name'] !== 'index') {
+                                            $path = $headerMenu[$x]['type'] . '/' . $headerMenu[$x]['drop-down-menu'][$i]['short_name'];
+                                        }
+                                    ?>
+                                        <div class="header__dropdown-menu-list-item">
+                                            <a href="/<?= $path ?>"><?= $headerMenu[$x]['drop-down-menu'][$i]['name'] ?></a>
+                                            <div class="header__dropdown-menu-list-item-bar"></div>
+                                        </div>
+                                    <? endfor; ?>
+                                </menu>
+                            </li>
+                        <? endif; ?>
+                    <? endfor; ?>
                 </nav>
             </div>
             <div class="header__profile"><?= $headerProfileButton ?></div>
