@@ -205,8 +205,11 @@ class MafiaEngine extends GameEngine {
         this.resetView();
     };
     shootPlayer(playerId) {
-        if (this.shooting.includes(playerId))
+        if (this.shooting.includes(playerId)){
+            this.shooting.splice(this.shooting.indexOf(playerId),1);
             return false;
+        }
+    
         this.shooting.push(playerId);
 
         this.addLog(`Мафія стріляє у гравця №${this.players[playerId].num}!`);
