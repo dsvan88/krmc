@@ -82,7 +82,7 @@ class MafiaEngine extends GameEngine {
     load(state){
         super.load(state);
         this.stageDescr = this._stageDescr;
-        this.log = this._log;
+        this.resetLog()
         this.resetView();
     }
     undo() {
@@ -128,6 +128,11 @@ class MafiaEngine extends GameEngine {
     };
     dispatchNext(){
         this.gameTable.dispatchEvent(new Event("next"));
+    }
+    resetLog() {
+        let _log = this._log;
+        this._log = {};
+        this.log = _log;
     }
     resetView() {
         this.clearView();
