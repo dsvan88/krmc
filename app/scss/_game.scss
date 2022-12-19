@@ -138,9 +138,9 @@
 				color: $bg-color-dark;
 				text-decoration: line-through;
 			}
-			&.for-vote {
+			&.fixing {
 				background-color: #06409d;
-				animation: rowVotedFor 4s ease-out infinite;
+				animation: rowFixing 4s ease-out infinite;
 			}
 			&.shooted {
 				background-color: #97003f;
@@ -201,7 +201,7 @@
 		background-color: #0d5023;
 	}
 }
-@keyframes rowVotedFor {
+@keyframes rowFixing {
 	50% {
 		background-color: #06409d88;
 	}

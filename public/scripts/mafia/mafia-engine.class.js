@@ -145,7 +145,7 @@ class MafiaEngine extends GameEngine {
     }
     clearView() {
         this.players.forEach(player => {
-            player.row.classList.remove('speaker', 'shooted', 'out', 'best-moved');
+            player.row.classList.remove('speaker', 'shooted', 'out', 'best-moved', 'fixing');
 
             player.putedCell.innerText = '';
             player.putedCell.classList.remove('puted');
@@ -400,7 +400,8 @@ class MafiaEngine extends GameEngine {
             this.needFix = true;
             return this.dispatchNext();
         }
-
+        
+        this.needFix = false;
         this.stageDescr = 'Зал суда.\nПрохання до гравців припинити будь-яку комунікацію та прибрати руки від стола';
        
         let votesAll = 0,
