@@ -70,13 +70,13 @@ class Player {
         
         return this.row;
     }
-    addDops(id)
+    addDops()
     {
-        let points = prompt(`Дополнительные баллы!\nНа Ваше усмотрение, сколько можно добавить баллов игроку №${id+1} (${this.name})?`,'0.0')
+        let points = prompt(`Дополнительные баллы!\nНа Ваше усмотрение, сколько можно добавить баллов игроку №${this.num} (${this.name})?`,'0.0')
         if (points && points != 0.0)
         {
             points = parseFloat(points);
-            alert(`Игроку №${id + 1} ${(points > 0.0 ? ' добавлено ' : ' назначен штраф в ')} ${points} баллов рейтинга`);
+            alert(`Игроку №${this.num} ${(points > 0.0 ? ' добавлено ' : ' назначен штраф в ')} ${points} баллов рейтинга`);
 
             this.dops += points;
         }

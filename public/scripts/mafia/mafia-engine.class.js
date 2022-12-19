@@ -7,6 +7,7 @@ class MafiaEngine extends GameEngine {
     timer = null;
 
     debate = false;
+    needFix = false;
     speakers = [];
     shooting = [];
     killed = [];
@@ -30,6 +31,7 @@ class MafiaEngine extends GameEngine {
         debateTime: 3000,
         mutedSpeakTime: 3000,
         courtAfterFouls: true,
+        wakeUpRoles: 2000,
     };
 
     #courtRoomList = null;
@@ -93,18 +95,21 @@ class MafiaEngine extends GameEngine {
         }
     };
     getNextStage() {
-
         if (this.theEnd() && this.stage === 'finish')
             return 'finish';
         if (this.stage === 'shootingNight'){
             this.shootingCheck();
         }
-        if (this.stage === 'firstNight' || this.stage === 'shootingNight' && this.lastWill.length === 0 || this.stage === 'actionLastWill' && this.lastWillReason === 1)
+        if (this.stage === 'firstNight')
+            return 'wakeUpRoles';
+        else if ( this.stage === 'wakeUpRoles' || this.stage === 'shootingNight' && this.lastWill.length === 0 || this.stage === 'actionLastWill' && this.lastWillReason === 1)
             return 'morning';
         else if (this.stage === 'morning' || (this.stage === 'daySpeaker' && this.speakers.length > 0))
             return 'daySpeaker';
-        else if ((this.stage === 'daySpeaker' && this.speakers.length === 0) || this.stage === 'actionDebate' && this.debaters.length === 0 && this.courtRoom.length > 0) // Или - добавлено при рефакторинге
+        else if ((['daySpeaker', 'actionFixCourtroom'].includes(this.stage) && this.speakers.length === 0) || this.stage === 'actionDebate' && this.debaters.length === 0 && this.courtRoom.length > 0) // Или - добавлено при рефакторинге
             return 'actionCourt';
+        else if ( this.stage === 'actionCourt' && this.needFix)
+            return 'actionFixCourtroom';
         else if ( ['actionCourt', 'actionDebate' ].includes(this.stage) && this.debaters.length > 0)
             return 'actionDebate';
         else if ((['actionCourt', 'actionDebate' ].includes(this.stage) || this.stage === 'actionLastWill' && this.prevStage !== 'shootingNight') && this.courtRoom.length === 0 && this.lastWill.length === 0)
@@ -191,13 +196,16 @@ class MafiaEngine extends GameEngine {
     };
     putPlayer(playerId) {
         if (this.stage === 'finish') {
-            this.players[playerId].addDops(playerId);
+            this.players[playerId].addDops();
         }
         else if (this.stage === 'actionLastWill' && this.activeSpeaker.bestMove) {
             this.actionBestMove(playerId)
         }
         else if (this.stage === 'daySpeaker') {
             this.putPlayerOnVote(playerId);
+        }
+        else if (this.stage === 'actionFixCourtroom') {
+            this.fixPlayerVote(playerId);
         }
         else if (this.stage === 'shootingNight') {
             this.shootPlayer(playerId);
@@ -267,6 +275,34 @@ class MafiaEngine extends GameEngine {
                 return false;
             }
         }
+    };
+    fixPlayerVote(playerId) {
+        
+        let maker = this.players[playerId];
+
+        if (maker.out > 0) {
+            alert(`За столом нема гравця №${maker.num}!`);
+            return false;
+        }
+
+        const putedId = parseInt(prompt(`Гравець №${maker.num}, під час своєї промови ставив гравця №:`, '0'))-1;
+
+        if (!putedId || putedId < 0){
+            maker.puted[this.daysCount] = -1;
+            this.addLog(`Гравець №${maker.num} - не виставляв гравця №${this.players[putedId].num} (${this.players[putedId].name})!`);
+            return this.rebuildCourtroom();
+        }
+
+        let check = this.courtRoom.indexOf(putedId);
+        if (check === -1) {
+            maker.puted[this.daysCount] = putedId;
+            this.addLog(`Гравець №${maker.num} - виставляє гравця №${this.players[putedId].num} (${this.players[putedId].name})!`);
+        }
+        else {
+            this.addLog(`Гравець №${maker.num} - виставляє гравця № ${this.players[putedId].num}!\nНе прийнято! Вже висталений!`);
+            return false;
+        }
+        return this.rebuildCourtroom();
     };
     shootingCheck() {
         if (this.config.killsPerNight === 1) {
@@ -359,13 +395,19 @@ class MafiaEngine extends GameEngine {
             this.courtRoom.length = 0;
             return this.dispatchNext();
         }
+
+        if (!this.debate && !confirm((this.courtRoom.length > 0 ? `На голосування обрані гравці з номерами: ${this.courtList(this.courtRoom)}.` : 'Ніхто не був виставлений.') + `\nУсе вірно?`)){
+            this.needFix = true;
+            return this.dispatchNext();
+        }
+
         this.stageDescr = 'Зал суда.\nПрохання до гравців припинити будь-яку комунікацію та прибрати руки від стола';
        
         let votesAll = 0,
         playersCount = 0,
         voted = new Map(),
         maxVotes = 0,
-        message = `Уважаемые игроки, переходим в зал суда!\nНа ${(this.debate ? 'перестрелке' : 'голосовании')} находятся следующие игроки: ${this.courtList(this.courtRoom)}\n`,
+        message = `Шановні гравці, ми переходимо до зали суду!\nНа ${(this.debate ? 'перестрільці' : 'голосуванні')} знаходяться гравці з номерами: ${this.courtList(this.courtRoom)}\n`,
         defendantCount = this.courtRoom.length;
         
         if (defendantCount === 0)
@@ -396,7 +438,7 @@ class MafiaEngine extends GameEngine {
             return this.dispatchNext();
         }
         votesAll = playersCount = this.getActivePlayersCount();
-        console.log(votesAll, playersCount);
+
         message = '';
         while(this.courtRoom.length > 0){
             let playerId = this.courtRoom.shift();
@@ -445,6 +487,9 @@ class MafiaEngine extends GameEngine {
             if (playersCount > 4 || this.config.getOutHalfPlayers)
             {
                 let vote = parseInt(prompt(`Кто за то, что все игроки под номерами: ${_debaters} покинули стол?'`,'0'));
+
+                if (vote > playersCount) vote = playersCount;
+
                 if ( vote > playersCount/2 )
                 {
                     message=`Большинство (${vote} из ${playersCount}) - за!\nИгроки под номерами: ${_debaters} покидают стол.`;
@@ -468,6 +513,12 @@ class MafiaEngine extends GameEngine {
         this.addLog(message);
         return this.dispatchNext();
     }
+    wakeUpRoles() {
+        if (!this.config.wakeUpRoles) return this.dispatchNext();
+
+        this.timer.left = this.config.wakeUpRoles;
+        this.stageDescr = `Прокидається шеріф.\nУ вас є 20 секунд, аби подивитись на місто.`;
+    };
     daySpeaker() {
         this.prevSpeaker = this.activeSpeaker ? this.activeSpeaker.id : null;
         this.activeSpeaker = this.nextSpeaker();
@@ -502,6 +553,21 @@ class MafiaEngine extends GameEngine {
             }
         }
     }
+    actionFixCourtroom(){
+        const message = 'Ведучій помилився із виставленими гравцями...\nВиправляємо!';
+        this.stageDescr = `День №${this.daysCount}.\n${message}`;
+        this.addLog(message);
+    }
+    rebuildCourtroom(){
+        const speakers = this.getSpeakers();
+        const courtroom = [];
+        speakers.forEach( playerId => {
+            if (this.players[playerId].puted[this.daysCount] < 0) return false;
+            courtroom.push(this.players[playerId].puted[this.daysCount]);
+        })
+        this.courtRoom = courtroom;
+        this.openCourtroom();
+    }
     courtList(list){
         let courtList = '';
         list.forEach(defendant => courtList += `${defendant + 1}, `);
@@ -535,16 +601,15 @@ class MafiaEngine extends GameEngine {
         let message = '',
             red = this.getActivePlayersCount(1),
             mafs = this.getActivePlayersCount(2);
-        console.log(red,mafs);
         if (mafs===0 || winner === 1)
         {
             this.winners = 1;
-            message = 'Мирне місто!\nВід тепер, Ваші діти можуть спати спокійно!';
+            message = 'Мирне місто!\nВідтепер Ваші діти можуть спати спокійно!';
         }
         else if (mafs >= red || winner === 2)
         {
             this.winners = 2;
-            message = "Мафію!\nВід тепер, Ваші діти можуть спати сито й спокійно!";
+            message = "Мафію!\nВідтепер Ваші діти можуть спати сито й спокійно!";
         }
         if (this.winners)
         {
