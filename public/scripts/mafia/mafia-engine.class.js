@@ -400,7 +400,7 @@ class MafiaEngine extends GameEngine {
             this.needFix = true;
             return this.dispatchNext();
         }
-        
+
         this.needFix = false;
         this.stageDescr = 'Зал суда.\nПрохання до гравців припинити будь-яку комунікацію та прибрати руки від стола';
        
@@ -581,7 +581,14 @@ class MafiaEngine extends GameEngine {
         this.addLog(message);
     }
     openCourtroom(){
-        this.courtRoomList.innerText = "На голосование выставлены игроки под номерами: " + this.courtList(this.courtRoom);
+        let message = `На голосування обрані гравці під номерами: ${this.courtList(this.courtRoom)}.`;
+        if (this.leaveThisRound.length > 0){
+            message += '\nАле голосування, цього раунду - не проводитиметься, бо нас ' + 
+                (this.leaveThisRound.length > 1 ? 
+                    `покинули гравці: ${this.courtList(this.leaveThisRound)}` :
+                    `покинув гравець №${this.leaveThisRound[0] + 1}.`);
+        }
+        this.courtRoomList.innerText = message;
     }
     closeCourtroom(){
         this.courtRoomList.innerText = '';
