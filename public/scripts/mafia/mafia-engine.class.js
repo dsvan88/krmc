@@ -517,7 +517,7 @@ class MafiaEngine extends GameEngine {
         if (!this.config.wakeUpRoles) return this.dispatchNext();
 
         this.timer.left = this.config.wakeUpRoles;
-        this.stageDescr = `Прокидається шеріф.\nУ вас є 20 секунд, аби подивитись на місто.`;
+        this.stageDescr = `Прокидається шериф.\nВи маєте 20 секунд, аби подивитись на місто.`;
     };
     daySpeaker() {
         this.prevSpeaker = this.activeSpeaker ? this.activeSpeaker.id : null;
