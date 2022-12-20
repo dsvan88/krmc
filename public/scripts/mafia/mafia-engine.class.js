@@ -32,6 +32,14 @@ class MafiaEngine extends GameEngine {
         mutedSpeakTime: 3000,
         courtAfterFouls: true,
         wakeUpRoles: 2000,
+        points: {
+            winner : 1.0,
+            bestMove : [ 0.0, 0.0, 0.25, 0.4 ],
+            aliveMafs : [ 0.0, 0.3, 0.15, 0.3 ],
+            aliveReds : [ 0.0, 0.0, 0.15, 0.1 ],
+            dis : -0.3,
+            sherifFirstKill : -0.3,
+        }
     };
 
     #courtRoomList = null;
@@ -187,6 +195,11 @@ class MafiaEngine extends GameEngine {
                     }
                 }
             }
+            if (player.points > 0 || player.adds > 0){
+                const points = player.points + player.adds
+                player.putedCell.innerText = points > 0 ? `+${points}` : points;
+                player.putedCell.classList.add(points >= 0 ? 'positive': 'negative')
+            }
         })
         if (this.activeSpeaker) {
             this.activeSpeaker.row.classList.add('speaker');
@@ -196,7 +209,7 @@ class MafiaEngine extends GameEngine {
     };
     putPlayer(playerId) {
         if (this.stage === 'finish') {
-            this.players[playerId].addDops();
+            this.players[playerId].addPoints();
         }
         else if (this.stage === 'actionLastWill' && this.activeSpeaker.bestMove) {
             this.actionBestMove(playerId)
@@ -554,6 +567,14 @@ class MafiaEngine extends GameEngine {
             }
         }
     }
+    compareBestMove(){
+        let count = 0;
+        for(let playerId of this.bestMove){
+            if (this.players[playerId].role === 1 || this.players[playerId].role === 2)
+                count++;
+        }
+        return count;
+    }
     actionFixCourtroom(){
         const message = 'Ведучій помилився із виставленими гравцями...\nВиправляємо!';
         this.stageDescr = `День №${this.daysCount}.\n${message}`;
@@ -603,7 +624,35 @@ class MafiaEngine extends GameEngine {
         this.log = logEntity;
     };
     finish(){
+        this.assignPoints();
+        this.resetView();
         alert(this.stageDescr.replace(/BR/g,'\n'));
+    }
+    assignPoints(){
+        let red = this.getActivePlayersCount(1),
+            mafs = this.getActivePlayersCount(2),
+            bestMove = this.compareBestMove();
+        
+        if (red > 3) red = 3;
+        
+        this.players.forEach(player => {
+            if (player.out === 4){
+                player.points += this.config.points.dis;
+                return true;
+            }
+            if (this.winners == 1 && (player.role == 0 || player.role == 4)){
+                player.points += this.config.points.winner + this.config.points.aliveReds[red];
+                if (player.bestMoveAuthor && bestMove > 0){
+                    player.points += this.config.points.bestMove[bestMove];
+                }
+            }
+            else if (this.winners == 2 && (player.role == 1 || player.role == 2)){
+                player.points += this.config.points.winner + this.config.points.aliveMafs[mafs];
+                if (player.role === 2 && this.players[this.killed[0]].role === 4){
+                    player.points += this.config.points.sherifFirstKill;
+                }
+            }
+        })
     }
     theEnd(winner){
         let message = '',

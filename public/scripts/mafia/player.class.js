@@ -6,7 +6,8 @@ class Player {
     fouls = 0;
     prim = ''
 
-    dops = 0.0;
+    points = 0.0;
+    adds = 0.0;
 
     muted = false;
     out = false;
@@ -70,15 +71,15 @@ class Player {
         
         return this.row;
     }
-    addDops()
+    addPoints()
     {
-        let points = prompt(`Дополнительные баллы!\nНа Ваше усмотрение, сколько можно добавить баллов игроку №${this.num} (${this.name})?`,'0.0')
+        let points = prompt(`Додаткові бали!\nНа Ваш розсуд, скільки можна додати балів гравцю №${this.num} (${this.name})?`,'0.0')
         if (points && points != 0.0)
         {
-            points = parseFloat(points);
-            alert(`Игроку №${this.num} ${(points > 0.0 ? ' добавлено ' : ' назначен штраф в ')} ${points} баллов рейтинга`);
+            points = parseFloat(points.replace(',', '.'));
+            alert(`Гравцю №${this.num} ${(points > 0.0 ? ' додано ' : ' виписан штраф в ')} ${points} балів рейтинга!`);
 
-            this.dops += points;
+            this.adds += points;
         }
     }
     addFouls(foulNum) {

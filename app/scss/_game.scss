@@ -133,6 +133,7 @@
 			text-align: center;
 		}
 		.player {
+			border-bottom: 1px dashed $color-text-main;
 			&.out {
 				background-color: #d92020;
 				color: $bg-color-dark;
@@ -153,6 +154,12 @@
 			&.speaker {
 				background-color: #0d5023;
 				animation: activeSpeaker 1.5s ease-out infinite;
+			}
+			.positive{
+				color:#0d5023;
+			}
+			.negative{
+				color:#be0020;
 			}
 			.fail{
 				&[data-foul="1"] {
@@ -175,7 +182,6 @@
 			&__info {
 				cursor: pointer;
 			}
-			border-bottom: 1px dashed $color-text-main;
 			&__name {
 				padding: 5px 10px;
 				white-space: nowrap;
