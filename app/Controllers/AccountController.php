@@ -142,6 +142,10 @@ class AccountController extends Controller
         }
         extract(self::$route['vars']);
 
+        if (empty($_POST['name']) || $_POST['name'] === '-'){
+            View::message(['error' => 1, 'message' => 'Поки не готова можливысть видаляти прив’язку користувачів до телеграму']);
+            $chatData =  TelegramChats::getChat($chatId);
+        }
         $name = Locale::mb_ucfirst(trim($_POST['name']));
         $chatData =  TelegramChats::getChat($chatId);
         $chatId = $chatData['id'];
