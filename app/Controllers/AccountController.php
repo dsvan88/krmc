@@ -70,7 +70,7 @@ class AccountController extends Controller
         if ($_POST['birthday'] !== '') {
             $birthday = strtotime(trim($_POST['birthday']));
 
-            if ($birthday > $_SERVER['REQUEST_TIME'] - 60 * 60 * 24 * 365)
+            if ($birthday > $_SERVER['REQUEST_TIME'] - 31536000) // 31536000 = 60 * 60 * 24 * 365
                 $birthday = 0;
         }
 
@@ -143,10 +143,10 @@ class AccountController extends Controller
         extract(self::$route['vars']);
 
         if (empty($_POST['name']) || $_POST['name'] === '-'){
-            View::message(['error' => 1, 'message' => 'Поки не готова можливысть видаляти прив’язку користувачів до телеграму']);
             $chatData =  TelegramChats::getChat($chatId);
+            View::message(['error' => 1, 'message' => 'Поки не готова можливысть видаляти прив’язку користувачів до телеграму']);
         }
-        $name = Locale::mb_ucfirst(trim($_POST['name']));
+        $name = trim($_POST['name']);
         $chatData =  TelegramChats::getChat($chatId);
         $chatId = $chatData['id'];
         unset($chatData['id']);
