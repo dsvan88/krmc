@@ -47,6 +47,18 @@ class Locale
 
         return $key;
     }
+    public static function format(array $phrase){
+        if (!is_array($phrase)) return $phrase;
+
+        self::loadDictionary();
+
+        if (isset($phrase['string']) && isset($phrase['vars']) && isset(self::$dictionary[$phrase['string']])) {
+            return sprintf(self::$dictionary[$phrase['string']], ...$phrase['vars']);
+        } else return $phrase;
+
+        if (isset(self::$dictionary[$phrase]))
+            return self::$dictionary[$phrase];
+    }
     public static function mb_ucfirst($string, $encoding = 'UTF8')
     {
         if (strpos($string, ' ') !== false) {

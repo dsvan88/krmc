@@ -4,7 +4,7 @@ if (!session_id()) {
 }
 if (!defined('SQL_HOST')) {
     // Determine base for saving files (Heroku - as Blob in DB, on real filesystems - as files)
-    define('SAVE_AS_LOCAL_FILE', true);
+    define('SAVE_AS_LOCAL_FILE', false);
     define('PAGES_AS_LOCAL_FILE', false);
     if (isset($_ENV['DATABASE_URL'])) {
         preg_match('/\/\/(.*?)\:(.*?)\@(.*?)\:(\d{1,5})\/(.*)/', $_ENV['DATABASE_URL'], $match);
@@ -13,8 +13,6 @@ if (!defined('SQL_HOST')) {
         define('SQL_HOST', $match[3]);
         define('SQL_PORT', $match[4]);
         define('SQL_DB', $match[5]);
-        define('PAGES_AS_LOCAL_FILE', false);
-        define('SAVE_AS_LOCAL_FILE', false);
     } else {
         define('SQL_HOST', '127.0.0.1');
         define('SQL_PORT', '5432');

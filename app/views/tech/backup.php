@@ -4,10 +4,12 @@
         <select name="table" id="table">
             <option value=""></option>
             <option value="news">Новини</option>
+            <option value="pages">Сторінки</option>
             <option value="settings">Налаштування</option>
             <option value="tgchats">ТГ чати</option>
             <option value="users">Користувачі</option>
             <option value="weeks">Розклад</option>
+            <option value="games">Ігри</option>
         </select>
         <div>
             <textarea type="text" name="sql_query" value="" class="common-form__textarea" placeholder="SQL-query"></textarea>

@@ -2,19 +2,20 @@
 
 namespace app\libs;
 
+use app\models\Users;
 use PDO;
 
 class Db
 {
 
     protected static $db;
-    protected static $mainTable;
+    protected static $table;
 
     public static function connect()
     {
         if (!empty(self::$db))
             return self::$db;
-            
+
         try {
             $pdo = new PDO('pgsql:host=' . SQL_HOST . ';port=' . SQL_PORT . ';dbname=' . SQL_DB, SQL_USER, SQL_PASS);
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -23,11 +24,11 @@ class Db
         }
         self::$db = $pdo;
 
-        $table = static::$mainTable;
+        $table = static::$table;
         $result = $pdo->query("SELECT EXISTS ( SELECT FROM pg_tables WHERE schemaname = 'public' AND tablename  = '$table');");
         $tableName = $result->fetchColumn();
         if (!$tableName) {
-            static::init();
+            self::dbFillDefaults();
         }
 
         return $pdo;
@@ -132,7 +133,7 @@ class Db
     //Очищает таблицу
     public static function tableTruncate($table)
     {
-        return self::query("TRUNCATE ONLY $table");
+        return self::query("TRUNCATE ONLY $table CASCADE");
     }
 
     public static function init(){
@@ -152,8 +153,10 @@ class Db
         $modelsDir = "{$_SERVER['DOCUMENT_ROOT']}/{$path}";
         $modelsFiles = scandir($modelsDir);
 
+        Users::init();
+
         foreach ($modelsFiles as $model) {
-            if ($model === '.' || $model === '..' || is_dir($model))
+            if ($model === '.' || $model === '..' || is_dir($model) || $model === 'Users.php')
                 continue;
 
             $class = str_replace('/', '\\', $path . '/' . substr($model, 0, strpos($model, '.')));

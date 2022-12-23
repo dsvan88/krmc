@@ -51,7 +51,7 @@ class SettingsController extends Controller
             Settings::save($array);
         }
 
-        $settingsData = Settings::getById($settingId);
+        $settingsData = Settings::find($settingId);
         $vars = [
             'title' => '{{ Settings_Edit_Title }}',
             'texts' => [

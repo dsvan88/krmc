@@ -15,7 +15,8 @@ class AccountController extends Controller
 {
     public static function before()
     {
-        View::$layout = 'custom';
+        // View::$layout = 'custom';
+        return true;
     }
     public function logoutAction()
     {

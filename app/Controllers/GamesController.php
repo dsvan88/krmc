@@ -13,8 +13,6 @@ use app\models\Weeks;
 
 class GamesController extends Controller
 {
-    public static $mainTable = 'games';
-
     public function indexAction()
     {
         // Extract $weekId & $dayId from array self::$route['vars']

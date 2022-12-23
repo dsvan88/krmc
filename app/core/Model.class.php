@@ -7,7 +7,7 @@ use app\libs\Db;
 class Model extends Db
 {
     public static function find($id){
-        $table = static::$mainTable;
+        $table = static::$table;
         $result = self::query("SELECT * FROM $table WHERE id = ? LIMIT 1", [$id], 'Assoc');
         if (empty($result)) return false;
         return $result[0];

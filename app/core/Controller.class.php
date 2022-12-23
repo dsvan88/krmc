@@ -12,21 +12,21 @@ class Controller
     {
         self::$route = $route;
         View::set($route);
-        self::$model = self::loadModal($route['controller']);
-        self::before();
+        self::$model = self::loadModel($route['controller']);
+        static::before();
     }
     public static function set($route)
     {
         self::$route = $route;
         View::set($route);
-        self::$model = self::loadModal($route['controller']);
-        self::before();
+        self::$model = self::loadModel($route['controller']);
+        static::before();
     }
     public static function before()
     {
         return false;
     }
-    public static function loadModal($name)
+    public static function loadModel($name)
     {
         $path = 'app\models\\' . ucfirst($name);
         if (class_exists($path)) {
