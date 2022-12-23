@@ -151,7 +151,7 @@ class Db
     {
         $path = 'app/Models';
         $modelsDir = "{$_SERVER['DOCUMENT_ROOT']}/{$path}";
-        $modelsFiles = scandir($modelsDir);
+        $modelsFiles = scandir(realpath($modelsDir));
 
         Users::init();
 
