@@ -24,7 +24,7 @@ class Contacts extends Model
     }
     public static function add($data)
     {
-        $table = self::$table;
+        $table = self::$table; 
         foreach ($data as $key => $value) {
             if (is_array($value)) {
                 $data[$key] = json_encode($value, JSON_UNESCAPED_UNICODE);
