@@ -23,14 +23,14 @@ class TelegramBotController extends Controller
 
     public static function before(){
         $contentType = isset($_SERVER['CONTENT_TYPE']) ? trim($_SERVER['CONTENT_TYPE']) : '';
-        if (strpos($contentType, 'application/json') !==  false) {
-            $data = trim(file_get_contents('php://input'));
-            $message = json_decode($data, true);
+        if (strpos($contentType, 'application/json') ===  false) return true;
+        $data = trim(file_get_contents('php://input'));
+        $message = json_decode($data, true);
 
-            if (!is_array($message)) {
-                die('{"error":"1","title":"Error!","text":"Error: Nothing to get."}');
-            }
+        if (!is_array($message)) {
+            die('{"error":"1","title":"Error!","text":"Error: Nothing to get."}');
         }
+    
 
         if (isset($message['message']) && empty($message['message']['from']['is_bot'])) {
             TelegramChats::save($message);
@@ -43,7 +43,6 @@ class TelegramBotController extends Controller
         Locale::change($langCode);
 
         self::$message = $message;
-
     }
     public static function webhookAction()
     {
