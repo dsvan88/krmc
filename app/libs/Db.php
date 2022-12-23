@@ -149,7 +149,7 @@ class Db
     }
     public static function dbFillDefaults()
     {
-        $path = 'app/Models';
+        $path = 'app/models';
         $modelsDir = "{$_SERVER['DOCUMENT_ROOT']}/{$path}";
         $modelsFiles = scandir(realpath($modelsDir));
 
