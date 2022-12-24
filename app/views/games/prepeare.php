@@ -41,5 +41,9 @@
                 <span class="game-form__pool-remove fa fa-times" data-action-click="remove-player"></span>
             </span>
         <? endfor ?>
+        <span class="game-form__pool-unit add" data-action-click="add-player">
+            <span><?=$texts['addPlayer']?></span>
+            <span class="fa fa-plus" data-action-click="add-player"></span>
+        </span>
     </div>
 </section>

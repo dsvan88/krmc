@@ -85,11 +85,24 @@ class GamesController extends Controller
             'managerPlaceholder' => 'Managing',
             'playerPlaceholder' => 'Nickname',
             'Start' => 'Start',
+            'addPlayer' => 'Add Player',
         ];
 
 
-        // $day = Days::weekDayData($weekId, $dayId);
-        $day['participants'] = Users::random(15);
+        $day = Days::weekDayData($weekId, $dayId);
+
+        $needed = 16;
+        $count  = count($day['participants']);
+        if ( $count < $needed){
+            $participants = [];
+            $_participants = array_merge($day['participants'], Users::random($needed - $count));
+            $day['participants'] = [];
+            foreach($_participants as $participant){
+                if (in_array($participant['name'], $participants)) continue;
+                $participants[] = $participant['name'];
+                array_push($day['participants'], $participant);
+            }
+        }
 
         $vars = [
             'title' => 'Prepeare a game',
@@ -119,12 +132,8 @@ class GamesController extends Controller
             'Start' => 'Start',
         ];
 
-
-        // $day = Days::weekDayData($weekId, $dayId);
-        $day['participants'] = Users::random(15);
-
         $vars = [
-            'title' => 'Prepeare a game',
+            'title' => 'Play a game',
             'texts' => $texts,
             'game' => $game,
             'scripts' => [

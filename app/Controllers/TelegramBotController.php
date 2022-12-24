@@ -227,7 +227,7 @@ class TelegramBotController extends Controller
         $path = $_SERVER['DOCUMENT_ROOT']."\\app\\Controllers\\TelegramCommands\\$command.php";
         
         if (!file_exists($path)) 
-            return ['result' => false, 'message' => 'Telegram command isn`t found!'];
+            return ['result' => false, 'message' => 'Telegram command isn`t found!'.$path];
         
         extract(self::$command);
         
