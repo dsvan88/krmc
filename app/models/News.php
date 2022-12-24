@@ -49,8 +49,6 @@ class News extends Model
     {
         $table = self::$table;
         $result = self::query("SELECT * FROM $table WHERE type = ? LIMIT 1", ['promo'], 'Assoc');
-        var_dump($table);
-        var_dump($result);
         if (empty($result)) return false;
         return $result[0];
     }
