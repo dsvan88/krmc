@@ -3,7 +3,7 @@ actionHandler.gameFormSubmit = function (event) {
 	const manager = document.querySelector('input[name="manager"]');
 	if (!manager.value.trim())
 	{
-		alert('Спочатку оберіть гравця серед учасників!')
+		alert('Спочатку оберіть ведучого серед учасників!')
 		return false;
 	}
 	let role=0, roles=[0, 0, 0, 0, 0];
@@ -19,21 +19,10 @@ actionHandler.gameFormSubmit = function (event) {
 	if (roles[1]===2 && roles[2]===1 && roles[4]===1)
 	{
 		const formData = new FormData(event.target);
-		postAjax({
+		request({
 			url: event.target.action,
 			data: formData,
-			successFunc: (result) => {
-				if (result["error"]) {
-					alert(result["message"]);
-					return false;
-				}
-				if (result["message"]) {
-					alert(result["message"]);
-				}
-				if (result["location"]){
-					window.location =  result["location"];
-				}
-			}
+			success: actionHandler.commonResponse,
 		});
 	}
 	else

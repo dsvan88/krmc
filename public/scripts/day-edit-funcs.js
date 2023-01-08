@@ -4,10 +4,10 @@ actionHandler.participantFieldGet = function (target, event) {
     const participantsFields = form.querySelector(".booking__participants");
     let data = new FormData();
     data.append('id', newID);
-    postAjax({
+    request({
         url: 'participant-field-get',
         data: data,
-        successFunc: function (result) {
+        success: function (result) {
             participantsFields.insertAdjacentHTML("beforeend", result['html']);
             let fields = participantsFields.querySelectorAll('input[data-action-change]');
             fields[fields.length-1].addEventListener('change', (event) => actionHandler.changeCommonHandler.call(actionHandler, event));
@@ -48,18 +48,10 @@ actionHandler.bookingFormSubmit = function (event) {
     event.preventDefault();
     let url = event.target.action.slice(window.location.length);
     let formData = new FormData(event.target);
-    postAjax({
+    request({
         url: url,
         data: formData,
-        successFunc: function (result) {
-            if (result['error'] != 0) {
-                alert(result['message']);
-                return false;
-            }
-            alert(result['message']);
-            if (result['url'])
-            	window.location = result['url'];
-        },
+        success: actionHandler.commonResponse,
     });
 }
 

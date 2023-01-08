@@ -15,6 +15,8 @@
     <script defer="" type="text/javascript" src="/public/scripts/jquery-ui.min.js"></script>
     <script defer="" type="text/javascript" src="/public/scripts/jquery.datetimepicker.full.min.js"></script>
     <script defer="" type="text/javascript" src="/public/scripts/jquery-cropper.js"></script>
+    <script defer="" type="text/javascript" src="/public/scripts/request.js?v=<?= $_SERVER['REQUEST_TIME'] ?>"></script>
+    <script defer="" type="text/javascript" src="/public/scripts/action-handler.js?v=<?= $_SERVER['REQUEST_TIME'] ?>"></script>
     <script defer="" type="text/javascript" src="/public/scripts/common-funcs.js?v=<?= $_SERVER['REQUEST_TIME'] ?>"></script>
     <? if (is_string($scripts)) : ?>
         <script defer="" type="text/javascript" src="<?= $scripts ?>"></script>

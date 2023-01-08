@@ -55,9 +55,9 @@ class GameEngine {
     }
     init() {
         this.gameId = parseInt(window.location.pathname.replace(/[^0-9]+/g, ''));
-        postAjax({
+        request({
             url: 'game/'+this.gameId,
-            successFunc: (result) => {
+            success: (result) => {
                 let players = JSON.parse(result.players);
                 for (let index = 0; index < this.maxPlayers; index++) {
                     let player = new Player({
@@ -119,10 +119,10 @@ class GameEngine {
         const data = new FormData;
         data.append('state', state);
         data.append('prevstates', JSON.stringify(this.prevStates));
-        postAjax({
+        request({
             url: 'game/save/'+this.gameId,
             data: data,
-            successFunc: (result) => debug && console.log(result),
+            success: (result) => debug && console.log(result),
         })
     }
 }

@@ -6,14 +6,10 @@ actionHandler.commonFormSubmit = function (event) {
 		let newHTML = CKEDITOR.instances[event.target.querySelector("div.editor-block").id].getData();
 		formData.append('html', newHTML);
 	}
-    postAjax({
+    request({
         url: url,
         data: formData,
-		successFunc: function (result) {
-			alert(result['message']);
-			if (result['url'])
-            	window.location = result['url'];
-        },
+		success: actionHandler.commonResponse,
     });
 }
 
