@@ -60,6 +60,8 @@ actionHandler.togglePlayer = function (target) {
 		return true;
 	}
 
+	if (!firstEmpty) return false;
+
 	target.classList.add('selected');
 	firstEmpty.value = target.innerText;
 	return true;
