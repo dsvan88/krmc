@@ -55,7 +55,7 @@ actionHandler.togglePlayer = function (target) {
 	});
 
 	if (current.has(target.innerText)){
-		current[target.innerText].value = '';
+		current.get(target.innerText).value = '';
 		target.classList.remove('selected');
 		return true;
 	}
