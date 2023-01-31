@@ -81,13 +81,13 @@ return [
     'Mafia' => 'Mafia',
     'Poker' => 'Poker',
     'Board' => 'Board Games',
-    'Cash' => 'Cash Poker',
+    'Cash' => 'Poker (NLM)',
     'Etc' => 'Etc',
 
     '{{ Tg_Mafia }}' => 'Mafia 🎭',
     '{{ Tg_Poker }}' => 'Poker ♦️',
     '{{ Tg_Board }}' => 'Board Games 🎲',
-    '{{ Tg_Cash }}' => 'Cash Poker 🃏',
+    '{{ Tg_Cash }}' => 'Poker (NLM) 🃏',
     '{{ Tg_Etc }}' => 'Etc ✨',
 
     '{{ Send_To_All }}' => 'All chats',

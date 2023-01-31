@@ -43,23 +43,20 @@ actionHandler.togglePlayer = function (target) {
 		
 
 	// }
-	let fields = document.querySelectorAll('input[name^="player"],input[name^="manager"]');
-	if (!target.classList.contains('selected')){
-		for(let [index, element] of Object.entries(fields)){
-			if (element.value) continue;
-			element.value = target.innerText;
-			target.classList.add('selected');
-			break;
-		}
+	const fields = document.querySelectorAll('input[name^="player"],input[name^="manager"]');
+	const current = new Map();
+	const firstEmpty = null;
+	fields.forEach(field => field.value === '' ? firstEmpty = field : current.set(field.value, field));
+
+	if (current.has(target.innerText)){
+		current[target.innerText].value = '';
+		target.classList.remove('selected');
+		return true;
 	}
-	else {
-		for(let [index, element] of Object.entries(fields)){
-			if (element.value !== target.innerText) continue;
-			element.value = '';
-			target.classList.remove('selected');
-			break;
-		}
-	}
+	
+	target.classList.add('selected');
+	firstEmpty.value = target.innerText;
+	return true;
 }
 
 
