@@ -45,15 +45,21 @@ actionHandler.togglePlayer = function (target) {
 	// }
 	const fields = document.querySelectorAll('input[name^="player"],input[name^="manager"]');
 	const current = new Map();
-	const firstEmpty = null;
-	fields.forEach(field => field.value === '' ? firstEmpty = field : current.set(field.value, field));
+	let firstEmpty = null;
+	fields.forEach(field => {
+		if (field.value !== '')
+			return current.set(field.value, field);
+		if (firstEmpty)
+			return false;
+		firstEmpty = field;		
+	});
 
 	if (current.has(target.innerText)){
 		current[target.innerText].value = '';
 		target.classList.remove('selected');
 		return true;
 	}
-	
+
 	target.classList.add('selected');
 	firstEmpty.value = target.innerText;
 	return true;
