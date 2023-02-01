@@ -19,7 +19,7 @@ $tournament = false;
 
 foreach ($arguments as $value) {
     $value = trim($value);
-    if ($gameName === '' && preg_match('/^(maf|маф|пок|pok|наст|board|table|кеш|кєш|кэш|cash|nlm|інш|другое|etc)/', mb_strtolower($value, 'UTF-8'), $gamesPattern) > 0) {
+    if ($gameName === '' && preg_match('/^(maf|маф|пок|pok|наст|board|table|кеш|кєш|кэш|cash|nlh|інш|другое|etc)/', mb_strtolower($value, 'UTF-8'), $gamesPattern) > 0) {
         $gameName = $gamesPattern[0];
         if ($tournament === false && preg_match('/(тур|tour)/', mb_strtolower($value, 'UTF-8')) > 0) {
             $tournament = true;
@@ -51,7 +51,7 @@ if ($gameName !== '') {
         'mafia' => ['maf', 'маф'],
         'poker' => ['пок', 'pok'],
         'board' => ['наст', 'board', 'table'],
-        'cash' => ['кеш', 'кєш', 'кэш', 'cash', 'nlm'],
+        'cash' => ['кеш', 'кєш', 'кэш', 'cash', 'nlh'],
         'etc' => ['інш', 'другое', 'etc'],
     ];
 
