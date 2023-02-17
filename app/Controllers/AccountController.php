@@ -221,6 +221,22 @@ class AccountController extends Controller
         ];
         View::modal($vars);
     }
+    public function renameDummyPlayerFormAction()
+    {
+        if (!in_array($_SESSION['privilege']['status'], ['manager', 'admin'])) {
+            View::errorCode(403, ['message' => 'Something went wrong! How did you get here?']);
+        }
+
+        $vars = [
+            'title' => 'Rename Temporary Player',
+            'texts' => [
+                'SaveLabel' => 'Save',
+                'CancelLabel' => 'Cancel'
+            ],
+            'scripts' => '/public/scripts/apply-input-listener.js?v=' . $_SERVER['REQUEST_TIME']
+        ];
+        View::modal($vars);
+    }
     public function profileAvatarFormAction()
     {
         $uid = (int)$_POST['uid'];

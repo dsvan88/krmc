@@ -61,7 +61,7 @@ class TechController extends Controller
             $table = substr($_FILES['data']['name'], strpos($_FILES['data']['name'], '-') + 1);
             $table = substr($table, 0, strrpos($table, '.'));
 
-            if (!in_array($table, ['news', 'settings', 'tgchats', 'users', 'weeks']))
+            if (!in_array($table, ['news', 'settings', 'tgchats', 'users', 'weeks', 'pages', 'games']))
                 View::message(['error' => true, 'message' => 'Something wrong with your datafile!']);
 
             $data = json_decode(trim(file_get_contents($_FILES['data']['tmp_name'])), true);

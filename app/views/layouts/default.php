@@ -27,7 +27,7 @@
     endif; ?>
     <script defer="" type="text/javascript" src="/public/scripts/common.js?v=<?= $_SERVER['REQUEST_TIME'] ?>"></script>
     <script defer="" type="text/javascript" src="/public/scripts/modals.js?v=<?= $_SERVER['REQUEST_TIME'] ?>"></script>
-    <link rel="icon" type="image/x-icon" href="/public/images/club_favicon.png">
+    <link rel="icon" type="image/x-icon" href="/public/images/mafia-vintage-logo-short.svg">
     <title><?= $title . ' ' . MAFCLUB_SNAME . ' v' . SCRIPT_VERSION ?></title>
 </head>
 

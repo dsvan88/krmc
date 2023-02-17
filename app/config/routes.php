@@ -247,6 +247,12 @@ return  [
         'action' => 'setNickname',
         'access' => ['category' => 'manager']
     ],
+    'api/account/rename/form' =>
+    [
+        'controller' => 'account',
+        'action' => 'renameDummyPlayerForm',
+        'access' => ['category' => 'manager']
+    ],
     'api/autocomplete/users-names' =>
     [
         'controller' => 'autocomplete',

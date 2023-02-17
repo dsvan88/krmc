@@ -3,6 +3,7 @@
 @import "font-awesome";
 
 @import "vars";
+@import "components";
 
 @import url("https://fonts.googleapis.com/css2?family=Underdog&display=swap");
 
@@ -13,24 +14,14 @@
 body {
 	min-height: 100vh;
 	margin: 0;
-	background-color: #221740;
+	background-color: $bg-color-light;
 	padding: 0;
 	display: grid;
 	place-items: center;
-	font-size: $font-size-main;
 	color: $color-text-main;
 	overflow-x: hidden;
-	font-size: clamp($font-size-main-sm, 2vw, $font-size-main-xl);
-	// font-size: $font-size-main-sm;
-	// @include md {
-	// 	font-size: $font-size-main-md;
-	// }
-	// @include lg {
-	// 	font-size: $font-size-main-lg;
-	// }
-	// @include xl {
-	// 	font-size: $font-size-main-xl;
-	// }
+	font-family: "Roboto", sans-serif;
+	font-size: clamp($font-size-main-sm, 1.4vw, $font-size-main-xl);
 }
 .header-for-auto-scroll {
 	position: absolute;
@@ -51,7 +42,7 @@ body {
 	.header {
 		position: sticky;
 		top: 0px;
-		background: #151515;
+		background: $main-header-bg-dark;
 		height: 12vh;
 		min-height: 60px;
 		max-height: 80px;
@@ -62,11 +53,23 @@ body {
 		font-size: 1.3em;
 		z-index: 1;
 		&__logo {
-			margin-right: 5vw;
+			// margin-right: 5vw;
+			// filter: drop-shadow(10px -5px 5px #d90000);
 			height: 100%;
-			filter: drop-shadow(10px -5px 5px #d90000);
+			
+			border: 1px solid #f6f4f3;
+			border-radius: 7px;
+			padding: 0.1rem 0.3rem;
+			margin-top: 0.3rem;
+			margin-bottom: 0.3rem;
+			overflow: hidden;
+			-o-object-fit: cover;
+			object-fit: cover;
 			img {
 				height: 100%;
+			}
+			@include md {
+				margin-right: 5vw;
 			}
 		}
 		&__profile {
@@ -436,9 +439,6 @@ body {
 	}
 }
 @include lg {
-	body {
-		font-size: 1.05em;
-	}
 	.header {
 		padding: 15px 20vw 20px 20vw;
 	}
@@ -453,9 +453,6 @@ body {
 	}
 }
 @include xl {
-	body {
-		font-size: 1.1em;
-	}
 	.header {
 		padding: 15px 20vw 20px 20vw !important;
 	}

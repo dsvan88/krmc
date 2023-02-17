@@ -50,6 +50,7 @@ return [
     '{{ Account_Login_Form_Forget_link }}' => 'Забыли пароль?',
     '{{ Account_Login_Form_Register_Link }}' => 'Регистрация',
     '{{ Account_Login_User_Not_Found }}' => "Пользователь не найден!\nПроверьте логин и пароль!",
+    'Rename Temporary Player' => 'Смена имени временного игрока',
 
 
     '{{ Account_Profile_Form_Title }}' => 'Профиль пользователя <b>%s</b>',

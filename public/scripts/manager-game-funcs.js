@@ -39,10 +39,13 @@ if (gameForm) {
 
 
 actionHandler.togglePlayer = function (target) {
-	// if (target.classList.contains('dummy-player')){
-		
-
-	// }
+	if (target.classList.contains('dummy-player')){
+		const modal = new ModalWindow();
+		request({
+			url: 'account/rename/form',
+			success: response => modal.fillModalContent({html:response['html'], title: response['title']}),
+		});
+	}
 	const fields = document.querySelectorAll('input[name^="player"],input[name^="manager"]');
 	const current = new Map();
 	let firstEmpty = null;

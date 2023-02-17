@@ -2,7 +2,7 @@ $font-size-main: 0.6rem;
 $font-size-main-sm: 0.7rem;
 $font-size-main-md: 0.9rem;
 $font-size-main-lg: 1rem;
-$font-size-main-xl: 1.5rem;
+$font-size-main-xl: 1.3rem;
 
 $color-text-dark: #30324d;
 $color-text-blur: #5e4343;
@@ -19,6 +19,7 @@ $bg-color-light: #38244f;
 $bg-color-light-odd: #4f2058;
 $bg-color-dark: #221740;
 $bg-color-input: #0000004a;
+$main-header-bg-dark: #151515;
 
 $animation-fast: 0.3s;
 $animation-normal: 0.8s;
@@ -36,175 +37,6 @@ $animation-very-slow: 3s;
 		color: #455ace8a;
 		&.left {
 			left: 2px;
-		}
-	}
-}
-
-%buttonStyle {
-	background: #00abff;
-	font-weight: bold;
-	font-size: 1em;
-	line-height: 1.2em;
-	letter-spacing: 0.05em;
-	text-transform: uppercase;
-	color: #04316a;
-	padding: 0.8em 1.3em;
-	outline: none;
-	border: 1px solid $color-text-main;
-	cursor: pointer;
-	text-decoration: none;
-	transition: all $animation-fast ease-in;
-	&:hover {
-		background-color: $color-text-main;
-		color: $color-text-dark;
-	}
-	&.negative {
-		i.fa {
-			pointer-events: none;
-		}
-		&:hover {
-			color: #c41919;
-			background-color: #ffcfdc;
-		}
-	}
-	&.positive {
-		i.fa {
-			pointer-events: none;
-		}
-		&:hover {
-			color: #018ba1;
-			background-color: #99f976;
-		}
-	}
-	&.neutral {
-		i.fa {
-			pointer-events: none;
-		}
-		&:hover {
-			background-color: #7e80ff;
-			border-color: #583966;
-			color: #202e79;
-		}
-	}
-}
-.setting-text-dashboard {
-	font-size: 2rem;
-	text-align: right;
-	&__button {
-		cursor: pointer;
-		transition: all $animation-fast ease-in-out;
-		&:hover {
-			color: $color-text-menu;
-		}
-	}
-}
-
-.checkbox-styled {
-	text-align: center;
-	color: $color-text-blur;
-	&__label {
-		text-transform: uppercase;
-		cursor: pointer;
-	}
-	&-checkbox {
-		display: none;
-	}
-	&-checkbox:checked + &__label {
-		color: $color-text-menu;
-		filter: drop-shadow(0px 0px 0.5rem #ecccb0) drop-shadow(0px 0px 0.5rem #ecccb0);
-	}
-}
-blockquote {
-	margin: 0;
-	padding: 10px 10px 10px 30px;
-	position: relative;
-	font-family: 'Lato', sans-serif;
-	font-weight: 300;
-	&::before{
-		content: "\201c";
-		float: left;
-		text-indent: 0;
-	}
-}
-.common-form{
-	text-indent: 0 !important;
-
-	label {
-		cursor: pointer;
-		&:hover {
-			color: $color-text-section-title
-		}
-	}
-	input[type='file'] {
-		display: none;
-	}
-
-	&__input {
-		width: 100%;
-		margin: 5px 0px;
-		background-color: transparent;
-		color: $color-text-main;
-		border: none;
-		outline: none;
-		padding: 2px 5px 0px 5px;
-
-		&.logo {
-			color: transparent;
-		}
-
-		&.title {
-			color: $color-text-section-title;
-			font-size: 2em;
-			border-bottom: 1px solid $color-text-blur;
-			text-align: center;
-		}
-
-		&.subtitle {
-			font-size: 1.5em;
-			border-bottom: 1px solid $color-text-main;
-			text-align: left;
-		}
-
-		&:active,
-		&:focus {
-			border-color: $color-text-menu;
-		}
-
-	}
-	&__textarea{
-		width: 100%;
-		margin: 5px 0px;
-		background-color: #bc6cff4a;
-		color: $color-text-main;
-		border: none;
-		outline: none;
-		padding: 2px 5px 0px 5px;
-		resize: vertical;
-	}
-	&__button {
-			@extend %buttonStyle;
-		&-place {
-			margin-top: 10px;
-			display: flex;
-			justify-content: space-around;
-		}
-	}
-
-	.editor-block {
-		width: 100%;
-		margin-top: 5px;
-
-		.content-container {
-			height: 50vh;
-			border-left: 1px solid $color-text-blur;
-			border-right: 1px solid $color-text-blur;
-			border-bottom: 2px solid $color-text-blur;
-			font-size: 1.1em;
-			overflow-y: auto;
-
-			.editor {
-				min-height: 50vh;
-			}
 		}
 	}
 }

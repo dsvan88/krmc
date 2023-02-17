@@ -9,7 +9,7 @@ class ViewHeader {
     
     public static function get(){
         $vars = [
-            'headerLogo' => "<a href='/'>" . ImageProcessing::inputImage('/public/images/club_logo.png', ['title' => 'Main logo']) . '</a>',
+            'headerLogo' => "<a href='/'>" . ImageProcessing::inputImage('/public/images/club-logo-w-city.jpg', ['title' => 'Main logo']) . '</a>',
             'headerProfileButton' => '<a class="header__profile-button" data-action-click="account/login/form">Вхід</a>',
             'headerMenu' => self::menu(),
         ];
