@@ -25,8 +25,10 @@ class GameTimer {
 		let buttons = this.timerBlock.querySelectorAll('[data-timer]');
 		buttons.forEach(button => {
 			button.addEventListener('click', (event) => this[button.dataset.timer].call(this, event));
-			this.buttons[button.dataset.timer] = button;			
+			this.buttons[button.dataset.timer] = button;
 		});
+		this.buttons.pause.style.display = 'none';
+
 		if (gameEngine) {
 			this.game = gameEngine;
 			this.game.timer = this;
@@ -52,21 +54,36 @@ class GameTimer {
 		if (this.#MainTimer) return false;
 
 		this.#MainTimer = setInterval(() => this.countdown(), this.timerStep);
+		
+		this.buttons.start.style.display = 'none';
+		this.buttons.pause.style.display = 'block';
 	}
 	pause() {
 		clearInterval(this.#MainTimer);
 		this.#MainTimer = null;
+
+		this.buttons.pause.style.display = 'none';
+		this.buttons.start.style.display = 'block';
 	}
 	reset() {
 		this.pause();
 		this.left = this.maxTime;
+
+		this.buttons.pause.style.display = 'none';
+		this.buttons.start.style.display = 'block';
 	}
 	undo() {
 		this.game.undo();
+
+		this.buttons.pause.style.display = 'none';
+		this.buttons.start.style.display = 'block';
 	}
 	next() {
 		this.reset()
 		this.game.next();
+
+		this.buttons.pause.style.display = 'none';
+		this.buttons.start.style.display = 'block';
 	}
 	countdown() {
 
@@ -74,7 +91,7 @@ class GameTimer {
 
 		if (this.left < 0)
 		{
-			this.beep(300, 800);
+			// this.beep(300, 800);
 			this.reset();
 			this.next();
 			return true;
