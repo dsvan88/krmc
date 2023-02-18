@@ -55,13 +55,16 @@ class View
     }
     public static function modal($vars = [])
     {
+        $vars = Locale::apply($vars);
+        extract($vars);
+                
         $response = [
             'error' => 0,
             'modal' => true,
-            'html' => ''
+            'html' => '',
+            'title' => $title,
         ];
-        $vars = Locale::apply($vars);
-        extract($vars);
+
         // Extract vars from array self::$route['vars'] (Arrays of vars in URL)
         if (isset(self::$route['vars']))
             extract(self::$route['vars']);

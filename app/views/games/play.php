@@ -24,7 +24,7 @@
 						<th rowspan="2">Гравець</th>
 						<th rowspan="2">Вист.</th>
 						<th colspan="4">Фоли</th>
-						<th rowspan="2">Примітка</th>
+						<!-- <th rowspan="2">Примітка</th> -->
 					</tr>
 					<tr>
 						<th>1</th>

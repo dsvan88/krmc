@@ -17,7 +17,7 @@ class Player {
 
     #row = null;
     #putedCell = null
-    #primCell = null;
+    // #primCell = null;
 
     constructor(playerData = null) {
         if (playerData) {
@@ -35,9 +35,9 @@ class Player {
         return this.#putedCell;
     }
 
-    get primCell() {
-        return this.#primCell;
-    }
+    // get primCell() {
+    //     return this.#primCell;
+    // }
 
     getRow(index) {
         this.#row = document.createElement('tr');
@@ -65,9 +65,9 @@ class Player {
             this.row.append(cell);
         }
         
-        this.#primCell = document.createElement('td');
-        this.primCell.innerText = this.prim;
-        this.row.append(this.primCell);
+        // this.#primCell = document.createElement('td');
+        // this.primCell.innerText = this.prim;
+        // this.row.append(this.primCell);
         
         return this.row;
     }

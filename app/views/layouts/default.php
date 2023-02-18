@@ -4,7 +4,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <meta name="description" content="{WEBSITE_DESCRIPTION}" />
+    <meta name="description" content="" />
     <meta name="author" content="<?= CFG_AUTHOR ?>" />
     <link rel="stylesheet" href="/public/css/style.css?v=<?= $_SERVER['REQUEST_TIME'] ?>" />
     <link rel="stylesheet" href="/public/css/jquery-ui.min.css" />

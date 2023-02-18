@@ -141,11 +141,11 @@ let actionHandler = {
 	},
 	commonFormEventEnd: function ({ modal, data, formSubmitAction, ...args }) {
 		let modalWindow;
-		if (data['error'] === 0){
-			modalWindow = modal.fillModalContent(data);
-		}else{
-			modalWindow = modal.fillModalContent({ html: data['html'], title: 'Error!', buttons: [{ 'text': 'Okay', 'className': 'modal-close positive' }] });
-		};
+
+		if (data['error']){
+			return modalWindow = modal.fill({ html: data['html'], title: 'Error!', buttons: [{ 'text': 'Okay', 'className': 'modal__close positive' }] });
+		}
+		modalWindow = modal.fill(data);
 		
 		if (data["jsFile"]) {
 			addScriptFile(data["jsFile"]);
@@ -158,12 +158,13 @@ let actionHandler = {
 		if (data['html']) {
 			const form = modalWindow.querySelector('form');
 			if (form !== null){
-				if (actionHandler[formSubmitAction]) {
-					form.addEventListener('submit', (event) => actionHandler[formSubmitAction](event, modal, args))
-				}
-				else {
-					form.addEventListener('submit', (event) => this.commonSubmitFormHandler({ event, modal, args }))
-				}
+				form.addEventListener('submit', 
+					(event) => 
+						actionHandler[formSubmitAction] ? 
+							actionHandler[formSubmitAction](event, modal, args)
+							:
+							this.commonSubmitFormHandler({ event, modal, args })
+				);
 			}
 		}
 		return true;

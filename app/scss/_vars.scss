@@ -26,17 +26,16 @@ $animation-normal: 0.8s;
 $animation-slow: 1.5s;
 $animation-very-slow: 3s;
 
-%nonDeleteTextForInput {
-	position: relative;
-	display: flex;
-	.non-delete-text {
-		pointer-events: none;
-		position: absolute;
-		right: 2%;
-		top: 2px;
-		color: #455ace8a;
-		&.left {
-			left: 2px;
-		}
-	}
-}
+$devidedInputsWidth: 150px;
+
+$modal-hd-start: #0d0101;
+$modal-hd-end: #380707;
+$modal-bg-start: #ffdfb5;
+$modal-bg-end: #ced0f3;
+$modal-border: 1px solid #979df9;
+$modal-overlay-bg-color: #00000036;
+// $modal-color: $modal-hd-start;
+$modal-color: #4b9aff;
+
+$modal-title-color: $color-text-menu;
+

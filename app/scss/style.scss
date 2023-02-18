@@ -43,17 +43,16 @@ body {
 		position: sticky;
 		top: 0px;
 		background: $main-header-bg-dark;
-		height: 12vh;
-		min-height: 60px;
-		max-height: 80px;
-		padding: 15px 20vw 20px 20vw;
+		height: 10vh;
+		min-height: 3.5rem;
+		max-height: 4.5rem;
+		padding: 1rem 20vw 1.3rem 20vw;
 		display: flex;
 		align-items: center;
 		box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.5);
 		font-size: 1.3em;
 		z-index: 1;
 		&__logo {
-			// margin-right: 5vw;
 			// filter: drop-shadow(10px -5px 5px #d90000);
 			height: 100%;
 			

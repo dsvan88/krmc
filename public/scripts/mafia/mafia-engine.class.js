@@ -158,7 +158,7 @@ class MafiaEngine extends GameEngine {
             player.putedCell.innerText = '';
             player.putedCell.classList.remove('puted');
 
-            player.primCell.innerText = '';
+            // player.primCell.innerText = '';
             for (let foul = 1; foul <= 4; foul++) {
                 let foulCell = player.row.querySelector(`[data-foul="${foul}"]`);
                 if (foulCell)
@@ -177,7 +177,7 @@ class MafiaEngine extends GameEngine {
             }
             if (player.out) {
                 player.row.classList.add('out');
-                player.primCell.innerText = this.reasons[player.out];
+                // player.primCell.innerText = this.reasons[player.out];
             }
             if (this.shooting.includes(player.id)){
                 player.row.classList.add('shooted');

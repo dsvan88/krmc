@@ -43,7 +43,7 @@ actionHandler.togglePlayer = function (target) {
 		const modal = new ModalWindow();
 		request({
 			url: 'account/rename/form',
-			success: response => modal.fillModalContent({html:response['html'], title: response['title']}),
+			success: response => modal.fill({html:response['html'], title: response['title']}),
 		});
 	}
 	const fields = document.querySelectorAll('input[name^="player"],input[name^="manager"]');
