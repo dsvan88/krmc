@@ -298,8 +298,15 @@ class MafiaEngine extends GameEngine {
             return false;
         }
 
-        const putedId = parseInt(prompt(`Гравець №${maker.num}, під час своєї промови ставив гравця №:`, '0'))-1;
+        let putedNum = prompt(`Гравець №${maker.num}, під час своєї промови ставив гравця №:`, 0);
+        
+        if (!putedNum){
+            if (maker.puted[this.daysCount] === -1)
+                return false;
+            putedNum = 0;
+        }
 
+        const putedId = putedNum-1;
         if (!putedId || putedId < 0){
             maker.puted[this.daysCount] = -1;
             this.addLog(`Гравець №${maker.num} - не виставляв гравця №${this.players[putedId].num} (${this.players[putedId].name})!`);
