@@ -96,15 +96,15 @@ class GameTimer {
 			return true;
 		}
 		
-		if (this.left === 300){
-			return this.beep(300, 800)
+		if (this.left === 100){
+			return this.beep(900, 800)
 		}
 
-		if ([1000,500,300].indexOf(this.left) !== -1){
+		if ([1000,500,300, 200].indexOf(this.left) !== -1){
 			return this.beep();
 		}
 	}
-	beep(duration=75, frequency=500) {
+	beep(duration=100, frequency=500) {
 		let oscillator = this.audioContext.createOscillator();
 		oscillator.type = 'sine'; // форма сигнала
 		oscillator.frequency.value = frequency; // частота
