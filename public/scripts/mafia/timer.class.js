@@ -91,16 +91,18 @@ class GameTimer {
 
 		if (this.left < 0)
 		{
-			// this.beep(300, 800);
 			this.reset();
 			this.next();
 			return true;
 		}
 		
-		if ([1000,500,300,200,100].indexOf(this.left) !== -1){
-			this.beep();
+		if (this.left === 300){
+			return this.beep(300, 800)
 		}
 
+		if ([1000,500,300].indexOf(this.left) !== -1){
+			return this.beep();
+		}
 	}
 	beep(duration=75, frequency=500) {
 		let oscillator = this.audioContext.createOscillator();
