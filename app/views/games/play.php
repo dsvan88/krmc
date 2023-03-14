@@ -35,7 +35,7 @@
 				</thead>
 				<tbody class="game__table-body"></tbody>
 			</table>
-			<div class="courtroom"></div>
+			<div class="courtroom"></di
 			<details class="game__log">
 				<summary>Log</summary>
 			</details>

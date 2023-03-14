@@ -10,10 +10,11 @@ class Controller
     public static $model;
     public function __construct($route)
     {
-        self::$route = $route;
-        View::set($route);
-        self::$model = self::loadModel($route['controller']);
-        static::before();
+        self::set($route);
+        // self::$route = $route;
+        // View::set($route);
+        // self::$model = self::loadModel($route['controller']);
+        // static::before();
     }
     public static function set($route)
     {
