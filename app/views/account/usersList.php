@@ -19,8 +19,8 @@
                     <td title="Псевдонім"><?= $usersData[$x]['name'] ?></td>
                     <td title="Логін"><?= $usersData[$x]['login'] ?></td>
                     <td title="Статус"><?= $usersData[$x]['privilege']['status'] ?></td>
-                    <td title="Гендер"><?= $usersData[$x]['personal']['gender'] ?></td>
-                    <td title="E-mail"><?= $usersData[$x]['contacts']['email'] ?></td>
+                    <td title="Гендер"><?= isset($usersData[$x]['contacts']['gender']) ? $usersData[$x]['contacts']['gender'] : '' ?></td>
+                    <td title="E-mail"><?= isset($usersData[$x]['contacts']['email']) ? $usersData[$x]['contacts']['email'] : '' ?></td>
                     <td title="Telegram"><?= $usersData[$x]['contacts']['telegramid'] !== '' ? '<i class="fa fa-check-square-o"></i>' : '<i class="fa fa-square-o"></i>' ?></td>
                     <td title="Меню">
                         <i class='fa fa-pencil-square-o news-dashboard__button' data-action-click='account/profile/form' data-uid=' <?= $usersData[$x]['id'] ?>' title='Редагувати'></i>
