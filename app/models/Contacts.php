@@ -45,6 +45,7 @@ class Contacts extends Model
                 user_id INT NOT NULL,
                 type CHARACTER VARYING(25) NOT NULL DEFAULT '',
                 contact CHARACTER VARYING(250) NOT NULL DEFAULT '',
+                data JSON DEFAULT NULL,
                 created_at TIMESTAMP DEFAULT NOW(),
                 updated_at TIMESTAMP DEFAULT NOW(),
                 CONSTRAINT fk_user

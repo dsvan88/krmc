@@ -154,12 +154,12 @@ return  [
     ],
 
     'game' => [
-        'controller' => 'games',
+        'controller' => 'gameTypes',
         'action' => 'index',
         'access' => ['category' => 'all'],
     ],
     'game/{game}' => [
-        'controller' => 'games',
+        'controller' => 'gameTypes',
         'action' => 'game',
         'access' => ['category' => 'all'],
     ],
@@ -267,13 +267,13 @@ return  [
     ],
     'api/game/{gameId}' =>
     [
-        'controller' => 'games',
+        'controller' => 'gamePlays',
         'action' => 'load',
         'access' => ['category' => 'manager']
     ],
     'api/game/save/{gameId}' =>
     [
-        'controller' => 'games',
+        'controller' => 'gamePlays',
         'action' => 'save',
         'access' => ['category' => 'manager']
     ],
@@ -301,6 +301,12 @@ return  [
     [
         'controller' => 'tech',
         'action' => 'migration',
+        'access' => ['category' => 'admin']
+    ],
+    'tech/dbrebuild' =>
+    [
+        'controller' => 'tech',
+        'action' => 'dbrebuild',
         'access' => ['category' => 'admin']
     ],
 ];

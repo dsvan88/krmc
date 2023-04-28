@@ -6,11 +6,32 @@ use app\libs\Db;
 
 class Model extends Db
 {
+    public static function getAll($condition = [])
+    {
+        $table = static::$table;
+        $where = '';
+        $condArray = [];
+        if (!empty($condition)) {
+            $where = 'WHERE ';
+            foreach ($condition as $key => $value) {
+                $where .= "$key = :$key,";
+            }
+            $where = substr($where, 0, -1);
+        }
+        return self::query("SELECT * FROM $table $where", $condArray, 'Assoc');
+    }
     public static function find($id){
         $table = static::$table;
         $result = self::query("SELECT * FROM $table WHERE id = ? LIMIT 1", [$id], 'Assoc');
         if (empty($result)) return false;
         return $result[0];
+    }
+    public static function findBy($column, $data)
+    {
+        $table = static::$table;
+        $result = self::query("SELECT * FROM $table WHERE $column = ?", [$data], 'Assoc');
+        if (empty($result)) return false;
+        return $result;
     }
     public static function getSimpleArray($query, $params = [])
     {

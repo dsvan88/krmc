@@ -7,50 +7,8 @@ use app\core\Locale;
 
 class Games extends Model
 {
-    public static $gameNames = [];
-    public static $defaultGames = [
-        'mafia' => 'Mafia',
-        'poker' => 'Poker',
-        'board' => 'Board',
-        'cash' => 'Cash',
-        'etc' => 'Etc'
-    ];
+    
     public static $table = SQL_TBL_GAMES;
-
-    public static function names(){
-        
-        if (!empty(self::$gameNames))
-            return self::$gameNames;
-
-        $games = Pages::findBy('type', 'game');
-
-        if (!$games)
-            return self::$defaultGames;
-            
-        $count = count($games);
-        $names = [];
-
-        for ($i=0; $i < $count; $i++) {
-            $names[$games[$i]['slug']] = $games[$i]['title'];
-        }
-        self::$gameNames = array_merge(self::$defaultGames, $names);
-
-        return self::$gameNames;
-    }
-    public static function menu()
-    {
-        $games = Locale::apply(self::names());
-        $result = [];
-        foreach($games as $game=>$name){
-            $result[] =
-                [
-                    'name' => $name,
-                    'short_name' => $game,
-                    'fields' => '',
-                ];
-        }
-        return $result;
-    }
 
     public static function create($post){
         $table = self::$table;

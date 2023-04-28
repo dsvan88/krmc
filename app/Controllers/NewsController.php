@@ -39,7 +39,7 @@ class NewsController extends Controller
     public function showItemAction()
     {
         extract(self::$route['vars']);
-        $newsData = News::getDataById($newsId);
+        $newsData = News::findBy('id', $newsId);
         if (!empty($newsData['logo']))
             $newsData['logo'] = ImageProcessing::inputImage(FILE_MAINGALL . 'news/' . $newsData['logo'], ['title' => $newsData['title'], 'class' => 'news__item-logo_image']);
         else
@@ -68,7 +68,7 @@ class NewsController extends Controller
             View::message('Changes saved successfully!');
         }
 
-        $newsData = News::getDataById($newsId);
+        $newsData = News::findBy('id',$newsId);
         if (!empty($newsData['logo']))
             $newsData['logo'] = ImageProcessing::inputImage(FILE_MAINGALL . 'news/' . $newsData['logo'], ['title' => $newsData['title'], 'class' => 'news__item-logo_image']);
         else
@@ -94,7 +94,7 @@ class NewsController extends Controller
             News::edit($_POST, 'promo');
             View::message(['error' => 0, 'message' => 'Changes saved successfully!']);
         }
-        $newsData = News::getPromoData();
+        $newsData = News::getPromo();
         $vars = [
             'title' => '{{ News_Edit_Page_Title }}',
             'texts' => [

@@ -2,7 +2,7 @@
 
 namespace app\core;
 
-use app\models\Games;
+use app\models\GameTypes;
 use app\models\Settings;
 
 class ViewHeader {
@@ -61,7 +61,7 @@ class ViewHeader {
             [
                 'path' => 'game',
                 'label' => Locale::phrase('Games'),
-                'menu' => Games::menu(),
+                'menu' => GameTypes::menu(),
                 'type' => 'game',
             ],
         ];
@@ -90,8 +90,8 @@ class ViewHeader {
                     <menu class="dropdown__menu">';
                         for ($i = 0; $i < count($menu[$x]['menu']); $i++){
                             $path = '';
-                            if ($menu[$x]['menu'][$i]['short_name'] !== 'index') {
-                                $path = $menu[$x]['type'] . '/' . $menu[$x]['menu'][$i]['short_name'];
+                            if ($menu[$x]['menu'][$i]['slug'] !== 'index') {
+                                $path = $menu[$x]['type'] . '/' . $menu[$x]['menu'][$i]['slug'];
                             }
                             $headerMenu .= "
                             <div class='dropdown__item'>

@@ -44,7 +44,6 @@
                     $dayPlateClass = 'day-current';
                 }
             }
-
         ?>
             <div class="week__item <?= $dayPlateClass ?>" data-action-click="/days<?= $i ?>/w<?= $weekId ?>" data-week="<?= $weekId ?>" data-day="<?= $dayId ?>" data-mode="location">
                 <h4 class="week__item-date"><?= $dayDate ?></h4>

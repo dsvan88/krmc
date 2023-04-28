@@ -31,7 +31,7 @@ if (!empty($weeksData)) {
     }
 }
 
-$promoData = News::getPromoData();
+$promoData = News::getPromo();
 if ($promoData) {
     if ($promoData['title'] !== '') {
         $message .= "<u><b>$promoData[title]</b></u>\n<i>$promoData[subtitle]</i>\n\n";

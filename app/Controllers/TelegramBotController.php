@@ -30,7 +30,6 @@ class TelegramBotController extends Controller
         if (!is_array($message)) {
             die('{"error":"1","title":"Error!","text":"Error: Nothing to get."}');
         }
-    
 
         if (isset($message['message']) && empty($message['message']['from']['is_bot'])) {
             TelegramChats::save($message);
