@@ -1,6 +1,7 @@
 <?php
 
 use app\core\Locale;
+use app\models\Contacts;
 use app\models\Users;
 
 if (!empty(self::$requester)) {
@@ -30,7 +31,26 @@ $userExistsData = Users::getDataByName($username);
 
 if (empty($userExistsData['id'])) {
     $id = Users::add($username);
-    Users::edit(['contacts' => ['telegram' => $telegram, 'telegramid' => $telegramId]], ['id' => $id]);
+    Users::edit([
+        'contacts' => [
+            'telegram' => $telegram, 
+            'telegramid' => $telegramId
+        ]
+    ],
+    ['id' => $id]);
+
+    Contacts::add([
+        'user_id' => $id,
+        'type' => 'telegramid',
+        'contact' => $telegramId,
+    ]);
+    if (!empty($telegram)){
+        Contacts::add([
+            'user_id' => $id,
+            'type' => 'telegram',
+            'contact' => $telegram,
+        ]);
+    }
     
     $result = true;
     $message = ['string' => '{{ Tg_Command_Name_Save_Success }}', 'vars' => [$username]];
@@ -48,9 +68,23 @@ if ($userExistsData['contacts']['telegramid'] !== '') {
 
 $userExistsData['contacts']['telegramid'] = $telegramId;
 $userExistsData['contacts']['telegram'] = $telegram;
-$userExistsData['contacts']['email'] = '';
+$userExistsData['contacts']['email'] = isset($userExistsData['contacts']['email']) ? $userExistsData['contacts']['email'] : '';
 
 Users::edit(['contacts' => $userExistsData['contacts']], ['id' => $userExistsData['id']]);
+
+$oldTgContacts = Contacts::findBy('user_id', $userExistsData['id']);
+if (empty($oldTgContacts)){
+    Contacts::add([
+        'user_id' => $id,
+        'type' => 'telegramid',
+        'contact' => $telegramId,
+    ]);
+    Contacts::add([
+        'user_id' => $id,
+        'type' => 'telegram',
+        'contact' => $telegram,
+    ]);
+}
 
 $message = ['string' => '{{ Tg_Command_Name_Save_Success }}', 'vars' => [$username]];
 
