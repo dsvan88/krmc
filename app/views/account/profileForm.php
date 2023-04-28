@@ -31,7 +31,7 @@
                 <div class="modal-form__row">
                     <label class="modal-form__label" for="profile-status">Статус</label>
                     <select class="modal-form__select" id="profile-status" name="status">
-                        <option value="" <?= ($userData[' privilege']['status'] === '' ? ' selected' : '')  ?>>Гость</option>
+                        <option value="" <?= ($userData['privilege']['status'] === '' ? ' selected' : '')  ?>>Гость</option>
                         <option value="user" <?= ($userData['privilege']['status'] === 'user' ? ' selected' : '')  ?>>Користувач</option>
                         <option value="admin" <?= ($userData['privilege']['status'] === 'admin' ? ' selected' : '')  ?>>Админ</option>
                         <option value="manager" <?= ($userData['privilege']['status'] === 'manager' ? ' selected' : '')  ?>>Менеджер</option>
