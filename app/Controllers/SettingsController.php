@@ -11,11 +11,20 @@ use app\core\TelegramBot;
 
 class SettingsController extends Controller
 {
-    public function listAction()
+    public function indexAction()
     {
+        if (empty(self::$route['vars'])){
+            $section = 'email';
+        }
+        else{
+            extract(self::$route['vars']);
+        }
+        $settings = Settings::getGroup($section);
+        
         $vars = [
             'title' => '{{ Settings_List_Page_Title }}',
-            'settingsData' => Settings::getList(['tg-bot', 'point', 'tg-tech', 'tg-main']),
+            'section' => $section,
+            'settings' => $settings,
         ];
         View::render($vars);
     }
@@ -23,8 +32,7 @@ class SettingsController extends Controller
     {
         if (!empty($_POST)) {
             $array = $_POST;
-            $array['short_name'] = Locale::translitization($array['name']);
-            $array['by_default'] = $array['value'];
+            $array['slug'] = Locale::translitization($array['name']);
             Settings::save($array);
             View::message(['error' => 0, 'message' => 'Changes saved successfully!', 'location' => '/settings/list']);
         }
@@ -37,29 +45,29 @@ class SettingsController extends Controller
         ];
         View::render($vars);
     }
-    public function editAction()
-    {
-        extract(self::$route['vars']);
-        if (!empty($_POST)) {
-            $array = $_POST;
-            if ($array['type'] === 'tg-bot' && $array['value'] !== '' && strtolower($_SERVER['HTTP_X_FORWARDED_PROTO']) === 'https') {
-                $bot = new TelegramBot();
-                $bot->webhookDelete();
-                $bot->webhookSet($array['value']);
-            }
-            $array['short_name'] = Locale::translitization($array['name']);
-            Settings::save($array);
-        }
+    public function editAction(){
 
-        $settingsData = Settings::find($settingId);
+        extract(self::$route['vars']);
+        
+        $setting = Settings::find($settingId);
+
+        Settings::edit($settingId, ['value' => $_POST['value']]);
+
+        View::message(['message'=>'Success!', 'location' => '/settings/section/index/'.$setting['type']]);
+    }
+    public function editFormAction()
+    {
+        $settingId = (int) trim($_POST['settingId']);
+        $setting = Settings::find($settingId);
+
         $vars = [
             'title' => '{{ Settings_Edit_Title }}',
             'texts' => [
                 'SubmitLabel' => 'Save',
             ],
-            'settingsData' => $settingsData,
+            'setting' => $setting,
         ];
-        View::render($vars);
+        View::modal($vars);
     }
     public function deleteAction()
     {

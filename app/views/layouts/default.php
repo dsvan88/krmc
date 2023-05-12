@@ -2,33 +2,37 @@
 <html lang="uk">
 
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <meta name="description" content="" />
-    <meta name="author" content="<?= CFG_AUTHOR ?>" />
-    <link rel="stylesheet" href="/public/css/style.css?v=<?= $_SERVER['REQUEST_TIME'] ?>" />
-    <link rel="stylesheet" href="/public/css/jquery-ui.min.css" />
-    <link rel="stylesheet" href="/public/css/cropper.css" />
-    <link rel="stylesheet" href="/public/css/jquery.datetimepicker.min.css" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="<?= CFG_AUTHOR ?>">
+    <link rel="stylesheet" href="/public/css/style.css?v=<?= $_SERVER['REQUEST_TIME'] ?>">
+    <link rel="stylesheet" href="/public/css/jquery-ui.min.css">
+    <link rel="stylesheet" href="/public/css/cropper.css">
+    <link rel="stylesheet" href="/public/css/jquery.datetimepicker.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+Pro">
+
     <?/*= //$styles */ ?>
-    <script defer="" type="text/javascript" src="/public/scripts/jquery.min.js"></script>
-    <script defer="" type="text/javascript" src="/public/scripts/jquery-ui.min.js"></script>
-    <script defer="" type="text/javascript" src="/public/scripts/jquery.datetimepicker.full.min.js"></script>
-    <script defer="" type="text/javascript" src="/public/scripts/jquery-cropper.js"></script>
-    <script defer="" type="text/javascript" src="/public/scripts/request.js?v=<?= $_SERVER['REQUEST_TIME'] ?>"></script>
-    <script defer="" type="text/javascript" src="/public/scripts/action-handler.js?v=<?= $_SERVER['REQUEST_TIME'] ?>"></script>
-    <script defer="" type="text/javascript" src="/public/scripts/common-funcs.js?v=<?= $_SERVER['REQUEST_TIME'] ?>"></script>
-    <? if (is_string($scripts)) : ?>
-        <script defer="" type="text/javascript" src="<?= $scripts ?>"></script>
-        <? else :
-        for ($x = 0; $x < count($scripts); $x++) : ?>
-            <script defer="" type="text/javascript" src="<?= $scripts[$x] ?>"></script>
-    <? endfor;
+    <script defer="" src="/public/scripts/jquery.min.js"></script>
+    <script defer="" src="/public/scripts/jquery-ui.min.js"></script>
+    <script defer="" src="/public/scripts/jquery.datetimepicker.full.min.js"></script>
+    <script defer="" src="/public/scripts/jquery-cropper.js"></script>
+    <script defer="" src="/public/scripts/request.js?v=<?= $_SERVER['REQUEST_TIME'] ?>"></script>
+    <script defer="" src="/public/scripts/action-handler.js?v=<?= $_SERVER['REQUEST_TIME'] ?>"></script>
+    <script defer="" src="/public/scripts/common-funcs.js?v=<?= $_SERVER['REQUEST_TIME'] ?>"></script>
+    <? if (!empty($scripts)) : ?>
+        <? if (is_string($scripts)) : ?>
+            <script defer="" src="<?= $scripts ?>"></script>
+            <? else :
+            for ($x = 0; $x < count($scripts); $x++) : ?>
+                <script defer="" src="<?= $scripts[$x] ?>"></script>
+        <? endfor;
+        endif;
     endif; ?>
-    <script defer="" type="text/javascript" src="/public/scripts/common.js?v=<?= $_SERVER['REQUEST_TIME'] ?>"></script>
-    <script defer="" type="text/javascript" src="/public/scripts/modals.js?v=<?= $_SERVER['REQUEST_TIME'] ?>"></script>
+    <script defer="" src="/public/scripts/common.js?v=<?= $_SERVER['REQUEST_TIME'] ?>"></script>
+    <script defer="" src="/public/scripts/modals.js?v=<?= $_SERVER['REQUEST_TIME'] ?>"></script>
     <link rel="icon" type="image/x-icon" href="/public/images/mafia-vintage-logo-short.svg">
-    <title><?= $title . ' ' . MAFCLUB_SNAME . ' v' . SCRIPT_VERSION ?></title>
+    <title><?= (isset($pageTitle) ? $pageTitle  : $title). ' ' . MAFCLUB_SNAME . ' v' . SCRIPT_VERSION ?></title>
 </head>
 
 <body>
@@ -37,7 +41,7 @@
             <div class="header__logo"><?= $headerLogo ?></div>
             <div class="header__menu">
                 <label for="header__navigation-checkbox" class="navigation-for-small-display menu-show"><i class="fa fa-bars"></i></label>
-                <input type="checkbox" name="toggle-navigation" id="header__navigation-checkbox" class="navigation-for-small-display" autocomplete="off" />
+                <input type="checkbox" name="toggle-navigation" id="header__navigation-checkbox" class="navigation-for-small-display-chechbox" autocomplete="off" />
                 <nav class="header__navigation" id="header__navigation">
                     <label for="header__navigation-checkbox" class="navigation-for-small-display menu-hide"><i class="fa fa-times"></i></label>
                     <?=$headerMenu?>
@@ -50,14 +54,29 @@
             <?= $content ?>
         </main>
         <footer class="footer">
-            <div class="footer_content"><?= $footerContent ?></div>
-            <div class="footer__copyrights">Designed for <?= MAFCLUB_NAME ?>, by <?= CFG_AUTHOR ?></div>
-            <div class="footer__links">
-                <!-- <a href="https://ru-ru.facebook.com/demontechno" target="_blank" class="footer__link"><i class="fa fa-facebook-square"></i></a> -->
-                <!-- <a href="" class="footer__link"><i class="fa fa-linkedin-square"></i></a> -->
-                <!-- <a href="https://github.com/dsvan88" target="_blank" class="footer__link"><i class="fa fa-github-square"></i></a> -->
-                <a href="https://t.me/dsvan88" target="_blank" class="footer__link"><i class="fa fa-telegram"></i></a>
-                <!-- <a href="tel:+380964518770" target="_blank" class="footer__link"><i class="fa fa-phone-square"></i></a> -->
+            <div class="footer__content">
+                <div class="footer__block">
+                    <div class="footer__logo"><?= $headerLogo ?></div>
+                </div>
+                <div class="footer__block">
+                    <div class='footer__adress'>
+                        <a class='fa fa-map-marker footer__adress-link' href='<?=$footerGmapLink?>' target='_blank'> Адреса: </a>
+                        <?= $footerAdress ?>
+                    </div>
+                </div>
+                <div class="footer__block footer__gmap">
+                    <iframe src="<?=$footerGmapWidget?>" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                </div>
+                <div class="footer__block contacts">
+                    <div class="footer__contacts">
+                        <h4 class="footer__contacts-label">Контакти:</h4>
+                        <?=$footerContacts?>
+                        <div class="footer__socials">
+                            <?= $footerSocials ?>
+                        </div>
+                    </div>
+                    <div class="footer__copyrights">Designed for <?= MAFCLUB_NAME ?>, by <a class="fa fa-telegram" href="https://t.me/dsvan88" target="_blank"> <?= CFG_AUTHOR ?></a></div>
+                </div>
             </div>
         </footer>
     </div>

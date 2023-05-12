@@ -33,7 +33,6 @@
 		flex-wrap: wrap;
 		&-unit{
 			display: flex;
-			text-indent: 0;
 			margin: 0.1em 0.2em;
 			&.add{
 				display: inline-block;
@@ -110,7 +109,6 @@
 	align-items: center;
 	padding: 10px;
 	margin: 10px;
-	text-indent: 0;
 	white-space: nowrap;
 	&__stage {
 		text-align: center;
@@ -133,7 +131,6 @@
 		@include md{
 			width: clamp(40vw, 250px, 80vw);
 		}
-		text-indent: 0;
 		td,th{
 			border: 1px solid $color-text-menu;
 			padding: 0.3em 0.6em;

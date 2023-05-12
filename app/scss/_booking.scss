@@ -1,0 +1,126 @@
+.booking {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 20px 0px;
+    border: 1px solid $color-text-dark-blur;
+    border-radius: 2px;
+    background-color: $bg-color-light-odd;
+    &__day{
+        &-settings-row{
+            font-size: 1.2em;
+        }
+        &-event{
+            margin: 0px 0px 5px 0px;
+            font-size: 2em;
+            text-align: center;
+            color: $color-text-accent;
+        }
+        &-prim{
+            margin: 0px 0px 5px 0px;
+            font-size: 0.9em;
+            text-align: center;
+            color: $color-text-dark-blur;
+            border-bottom: 1px solid;
+        }
+    }
+    &__title {
+        margin: 10px 0 20px 0;
+        text-align: center;
+        font-size: 2em;
+        text-transform: uppercase;
+    }
+    &__subtitle {
+        margin: 5px 0 10px 0;
+        text-align: center;
+        font-size: 1.6em;
+        text-transform: uppercase;
+    }
+    &__settings {
+        &-row {
+            width: 55vw;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 10px;
+        }
+        &-wrapper{
+            &.single{
+                width: 100%;
+            }
+            *{
+                width: 100%;
+            }
+        }
+    }
+    &__participants{
+        margin: 20px 0 10px 0;
+    }
+    &__label-centered {
+        text-align: center;
+    }
+    &__participant {
+        display: flex;
+        align-items: center;
+        margin: 10px 0;
+        white-space: nowrap;
+        &-num {
+            width: 30px;
+        }
+        &-arrive {
+            width: 70px;
+        }
+        &-duration {
+            width: 120px;
+        }
+        &-info {
+            span {
+                font-size: 1.4em;
+            }
+        }
+        &-name {
+            display: inline-block;
+            width: 30vw
+        }
+        &-prim {
+            display: inline-block;
+            width: 25vw
+        }
+        &-remove {
+            font-size: 1.3em;
+            color: $button-remove-color;
+            cursor: pointer;
+            transition: all $animation-fast ease-in-out;
+            &:hover {
+                color: $button-remove-color-hover;
+            }
+        }
+    }
+    input,
+    select {
+        background-color: $bg-color-input;
+        text-align: center;
+        border: 0;
+        font-size: 1.4rem;
+        color: $color-text-dark;
+        &[placeholder] {
+            color: $color-text-dark;
+        }
+        option {
+            color: $bg-color-input;
+        }
+        &::-webkit-calendar-picker-indicator {
+            display: none !important;
+        }
+    }
+    &__buttons {
+        margin: 20px 0;
+    }
+    &__additional-evening {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+}

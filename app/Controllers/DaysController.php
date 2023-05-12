@@ -6,6 +6,7 @@ use app\core\Controller;
 use app\core\Locale;
 use app\core\View;
 use app\models\Days;
+use app\models\GameTypes;
 use app\models\Users;
 use app\models\Weeks;
 
@@ -23,6 +24,8 @@ class DaysController extends Controller
             self::$route['action'] = 'edit';
             View::set(self::$route);
         }
+        $gameTypes = GameTypes::menu();
+
         $vars = [
             'title' => '{{ Day_Set_Page_Title }}',
             'texts' => [
@@ -41,9 +44,10 @@ class DaysController extends Controller
                 'clearLabel' => 'Clear',
                 'addFieldLabel' => '{{ Add_Field_Label }}',
                 'setDayApprovedLabel' => 'Save',
-            ]
+            ],
+            'gameTypes' => $gameTypes,
         ];
-
+       
         $day = Days::weekDayData($weekId, $dayId);
 
         $day['weekId'] = $weekId;

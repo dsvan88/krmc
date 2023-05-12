@@ -241,29 +241,29 @@ class TelegramBot
     public static function pinMessageAndSaveItsData($chatId, $messageId)
     {
 
-        $chatData = Settings::getChat($chatId);
+        // $chatData = Settings::getChat($chatId);
 
         self::pinMessage($chatId, $messageId);
-        if (!isset($chatData['value']['pinned']) || $messageId !== $chatData['value']['pinned']) {
-            self::unpinMessage($chatId, $chatData['value']['pinned']);
-            $data = [
-                'type' => 'tg-chat',
-                'short_name' => $chatId,
-                'name' => 'Чат з користувачем',
-            ];
+        // if (!isset($chatData['value']['pinned']) || $messageId !== $chatData['value']['pinned']) {
+        //     self::unpinMessage($chatId, $chatData['value']['pinned']);
+        //     $data = [
+        //         'type' => 'tg-chat',
+        //         'short_name' => $chatId,
+        //         'name' => 'Чат з користувачем',
+        //     ];
 
-            if (isset($chatData['name'])) {
-                $data['name'] = $chatData['name'];
-            }
+        //     if (isset($chatData['name'])) {
+        //         $data['name'] = $chatData['name'];
+        //     }
 
-            if (isset($chatData['value'])) {
-                $data['value'] = $chatData['value'];
-            }
+        //     if (isset($chatData['value'])) {
+        //         $data['value'] = $chatData['value'];
+        //     }
 
-            $data['value']['pinned'] = $messageId;
-            $data['value'] = json_encode($data['value'], JSON_UNESCAPED_UNICODE);
-            Settings::save($data);
-        }
+        //     $data['value']['pinned'] = $messageId;
+        //     $data['value'] = json_encode($data['value'], JSON_UNESCAPED_UNICODE);
+        //     Settings::save($data);
+        // }
     }
     public static function editMessage($chatId, $messageId, $message)
     {

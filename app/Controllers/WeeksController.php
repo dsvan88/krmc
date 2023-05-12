@@ -6,6 +6,7 @@ use app\core\Controller;
 use app\core\Paginator;
 use app\core\View;
 use app\models\Days;
+use app\models\GameTypes;
 use app\models\Weeks;
 
 class WeeksController extends Controller
@@ -54,13 +55,7 @@ class WeeksController extends Controller
 
         $texts = [
             'weeksBlockTitle' => '{{ Weeks_Block_Title }}',
-            'games' => [
-                'mafia' => 'Mafia',
-                'poker' => 'Poker',
-                'board' => 'Board',
-                'cash' => 'Cash',
-                'etc' => 'Etc',
-            ],
+            'games' => GameTypes::names(),
             'days' => [
                 '{{ Monday }}',
                 '{{ Tuesday }}',

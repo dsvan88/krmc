@@ -26,10 +26,9 @@ if (!defined('SQL_HOST')) {
     define('SQL_TBL_WEEKS', 'weeks');
     define('SQL_TBL_PLACES', 'places');
     define('SQL_TBL_SETTINGS', 'settings');
-    define('SQL_TBL_VOTES', 'votes');
-    define('SQL_TBL_COMM', 'comments');
+    // define('SQL_TBL_VOTES', 'votes');
+    // define('SQL_TBL_COMM', 'comments');
     define('SQL_TBL_PAGES', 'pages');
-    define('SQL_TBL_GAMES', 'games');
     
     define('SQL_TBL_CONTACTS', 'contacts');
     define('SQL_TBL_TG_CHATS', 'tgchats');
@@ -39,11 +38,12 @@ if (!defined('SQL_HOST')) {
     define('TIMESTAMP_DAY', 86400);
     define('TIMESTAMP_WEEK', 604800);
     define('CFG_DEBUG', true);
+    define('CFG_SOFT_DELETE', true);
     define('CFG_NEWS_PER_PAGE', 6);
     define('CFG_MAX_SESSION_AGE', TIMESTAMP_WEEK); // 60*60*24*7 == 1 week
     define('LOG_PREFIX', 'LogFile_');
-    define('SCRIPT_VERSION', '0.03');
-    define('MAFCLUB_NAME', 'Kriviy Rih Mafia Club');
+    define('SCRIPT_VERSION', '0.1b');
+    define('MAFCLUB_NAME', 'Mafia Club Kryvyi Rih');
     define('MAFCLUB_SNAME', 'KRMC');
     define('FILE_USRGALL', '/public/gallery/users/');
     define('FILE_MAINGALL', '/public/gallery/site/');

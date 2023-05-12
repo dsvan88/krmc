@@ -3,13 +3,9 @@
 namespace app\Controllers;
 
 use app\core\Controller;
+use app\core\PHPMailer\PHPMailer;
 use app\core\View;
 use app\libs\Db;
-use app\models\Contacts;
-use app\models\Pages;
-use app\models\Settings;
-use app\models\Users;
-use app\models\Weeks;
 
 class TechController extends Controller
 {
@@ -59,12 +55,12 @@ class TechController extends Controller
     }
     public static function migrationAction()
     {
-        // View::redirect('/');
+        View::redirect('/');
         if (!empty($_POST)) {
             $table = substr($_FILES['data']['name'], strpos($_FILES['data']['name'], '-') + 1);
             $table = substr($table, 0, strrpos($table, '.'));
 
-            if (!in_array($table, ['news', 'settings', 'tgchats', 'users', 'weeks', 'pages', 'games', 'contacts']))
+            if (!in_array($table, ['settings', 'tgchats', 'users', 'weeks', 'pages', 'games', 'contacts']))
                 View::message(['error' => true, 'message' => 'Something wrong with your datafile!']);
 
             $data = json_decode(trim(file_get_contents($_FILES['data']['tmp_name'])), true);
@@ -90,29 +86,87 @@ class TechController extends Controller
         ];
         View::render($vars);
     }
-    public static function dbrebuildAction()
+    public static function dbrebuildAction(){
+        View::redirect('/');
+        // Settings::init();
+    }
+    public static function selfTestTelegramAction(){
+        // View::redirect('/');
+        $params = [
+            'message'=> [
+                'message_id' => 189,
+                'from' => [
+                        'id' => 900669168,
+                        'is_bot' => false,
+                        'first_name' => 'Dmytro',
+                        'last_name' => 'Vankevych',
+                        'username' => 'dsvan88',
+                        'language_code' => 'uk',
+                    ],
+                'chat' => [
+                        'id' => 900669168,
+                        'first_name' => 'Dmytro',
+                        'last_name' => 'Vankevych',
+                        'username' => 'dsvan88',
+                        'type' => 'private',
+                    ],
+                'date' => 1652025484,
+                // 'text' => '- на сегодня',
+                // 'text' => '/nick Думатель',
+                // 'text' => '/day',
+                'text' => '/week',
+                // 'text' => '/help',
+            ]
+        ];
+
+        $url = strtolower($_SERVER['HTTP_X_FORWARDED_PROTO']).'://'.$_SERVER['HTTP_HOST'].'/api/telegram/webhook';
+        $options = [
+            CURLOPT_RETURNTRANSFER => false,
+            // CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_FRESH_CONNECT => true,
+            CURLOPT_POST => true,       // отправка данных методом POST
+            CURLOPT_TIMEOUT => 10,      // максимальное время выполнения запроса
+            CURLOPT_FAILONERROR => true,
+            CURLOPT_HTTPHEADER => ['Content-Type:application/json'],
+            CURLOPT_URL => $url,
+            CURLOPT_POSTFIELDS => json_encode($params, JSON_UNESCAPED_UNICODE),
+        ];
+        $curl = curl_init();
+
+        curl_setopt_array($curl, $options);
+        $result = json_decode(curl_exec($curl), true);
+        var_dump($result);
+        return $result;
+    }
+    public static function sendMailAction()
     {
-        // $table = Pages::$table;
-        // DB::tableTruncate($table);
-        // Pages::init();
-        // DB::query("SELECT setval(pg_get_serial_sequence('$table', 'id'), 1, false) FROM $table;");
+            $mailer = new PHPMailer();
 
+            $mailer->isSMTP();
+            $mailer->CharSet = "UTF-8";
+            $mailer->SMTPAuth   = true;
+            $mailer->SMTPDebug = 4;
+            $mailer->Debugoutput = function ($str, $level) {
+                $GLOBALS['status'][] = $str;
+            };
+            
+            $mailer->Host       = 'smtp.gmail.com';
+            $mailer->Username   = 'dsv.tester33@gmail.com';
+            $mailer->Password   = 'cgzmcmkvjkaowrxs';
+            $mailer->SMTPSecure = 'ssl';
+            $mailer->Port       = 465;
 
-        
-        // Contacts::init();
-        // $users = Users::getAll();
-        // foreach($users as $user){
-        //     $contacts = json_decode($user['contacts'], true);
-        //     foreach($contacts as $type=>$contact){
-        //         if (empty($contact)) continue;
-        //         if (!is_numeric($contact) && $contact[0] === '@')
-        //             $contact = substr($contact, 1);
-        //         Contacts::add([
-        //             'user_id' => $user['id'],
-        //             'type' => $type,
-        //             'contact' => $contact,
-        //         ]);
-        //     }
-        // }
-     }
+            $mailer->Subject    = 'Test mail';
+            $mailer->Body       = "That's my second try to send simple email";
+
+            // if (isset($this->senderData['email']))
+            //     $mailer->setFrom($this->senderData['email'], $this->senderData['name']);
+            // else
+            //     $mailer->setFrom($authData['email'], $authData['name']);
+            // // $mailer->addAddress('yourMainEmail@gmail.com'); // If you need send message from your main tech email to your main email - you can change it here
+            $mailer->isHTML(true);
+
+            $mailer->addAddress('dsvan88@gmail.com');
+            $mailer->send();
+    }
 }

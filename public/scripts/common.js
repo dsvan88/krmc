@@ -6,6 +6,9 @@ document.body.querySelectorAll('input[data-action-input]').forEach(element =>
 document.body.querySelectorAll('input[data-action-change]').forEach(element =>
 	element.addEventListener('change', (event) => actionHandler.changeCommonHandler.call(actionHandler, event))
 );
+document.body.querySelectorAll('form[data-action-submit]').forEach(element =>
+	element.addEventListener('submit', (event) => actionHandler.commonSubmitFormHandler.call(actionHandler, event))
+);
 
 let menuCheckbox = document.body.querySelector('#profile-menu-checkbox');
 if (menuCheckbox) {

@@ -3,7 +3,6 @@
 
 namespace app\Controllers;
 
-use Transliterator;
 use app\core\Controller;
 use app\core\View;
 use app\models\Settings;
@@ -68,6 +67,13 @@ class PagesController extends Controller
 
         if (is_numeric($pageId)){
             $page = Pages::find($pageId);
+            $page['keywords'] = '';
+            if (!empty($page['data'])){
+                $page['data'] = json_decode($page['data'], true);
+                if (isset($page['data']['keywords'])){
+                    $page['keywords'] = implode(', ',$page['data']['keywords']);
+                }
+            }
         }
         else {
             $dummyPage = [

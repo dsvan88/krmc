@@ -118,6 +118,7 @@ class Days extends Model
     {
         $format = "d.m.Y {$weekData['data'][$day]['time']}";
         $dayDate = strtotime(date($format, $weekData['start'] + TIMESTAMP_DAY * $day));
+        $game = $weekData['data'][$day]['game'];
 
         if ($_SERVER['REQUEST_TIME'] > $dayDate + DATE_MARGE || in_array($weekData['data'][$day]['status'], ['', 'recalled'])) {
             return '';
@@ -133,10 +134,12 @@ class Days extends Model
             'etc' => '{{ Tg_Etc }}',
         ];
         $gameNames = Locale::apply($gameNames);
+        
+        if (!isset($gameNames[$game])){
+            $gameNames = GameTypes::names();
+        }
 
-        $result = '';
-
-        $result .= "$date - {$gameNames[$weekData['data'][$day]['game']]}\n";
+        $result = "$date - {$gameNames[$weekData['data'][$day]['game']]}\n";
 
         if (isset($weekData['data'][$day]['mods'])) {
             if (in_array('fans', $weekData['data'][$day]['mods'], true))

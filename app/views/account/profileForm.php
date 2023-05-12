@@ -24,14 +24,14 @@
                     <option value="" <?= ($userData['personal']['gender'] === '' ? 'selected' : '') ?>></option>
                     <option value="male" <?= ($userData['personal']['gender'] === 'male' ? 'selected' : '') ?>>Господин</option>
                     <option value="female" <?= ($userData['personal']['gender'] === 'female' ? 'selected' : '') ?>>Госпожа</option>
-                    <option value="unknow" <?= ($userData['personal']['gender'] === 'unknow' ? 'selected' : '') ?>>Інші</option>
+                    <option value="secret" <?= ($userData['personal']['gender'] === 'secret' ? 'selected' : '') ?>>Інші</option>
                 </select>
             </div>
             <? if ($_SESSION['privilege']['status'] === 'admin') : ?>
                 <div class="modal-form__row">
                     <label class="modal-form__label" for="profile-status">Статус</label>
                     <select class="modal-form__select" id="profile-status" name="status">
-                        <option value="" <?= ($userData['privilege']['status'] === '' ? ' selected' : '')  ?>>Гость</option>
+                        <option value="" <?= ($userData['privilege']['status'] === '' ? ' selected' : '')  ?>>Гість</option>
                         <option value="user" <?= ($userData['privilege']['status'] === 'user' ? ' selected' : '')  ?>>Користувач</option>
                         <option value="admin" <?= ($userData['privilege']['status'] === 'admin' ? ' selected' : '')  ?>>Админ</option>
                         <option value="manager" <?= ($userData['privilege']['status'] === 'manager' ? ' selected' : '')  ?>>Менеджер</option>

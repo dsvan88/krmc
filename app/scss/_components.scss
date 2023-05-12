@@ -16,30 +16,33 @@
 }
 
 %buttonStyle {
-	background: #00abff;
+	background: $bg-color-red-blur;
 	font-weight: bold;
 	font-size: 1em;
 	line-height: 1.2em;
 	letter-spacing: 0.05em;
 	text-transform: uppercase;
-	color: #04316a;
+	color: $color-text-light-blur;
 	padding: 0.8em 1.3em;
 	outline: none;
-	border: 1px solid $color-text-main;
+	border: 1px solid $color-text-light-blur;
+	border-radius: 2px;
 	cursor: pointer;
 	text-decoration: none;
 	transition: all $animation-fast ease-in;
 	&:hover {
-		background-color: $color-text-main;
-		color: $color-text-dark;
+		background-color: $bg-color-red;
+		color: $color-text-light;
 	}
 	&.negative {
 		.fa {
 			pointer-events: none;
 		}
 		&:hover {
-			color: #c41919;
-			background-color: #ffcfdc;
+			color: $button-color-negative;
+			background-color: $button-bg-color-negative-hover;
+			// color: #c41919;
+			// background-color: #ffcfdc;
 		}
 	}
 	&.positive {
@@ -47,8 +50,9 @@
 			pointer-events: none;
 		}
 		&:hover {
-			color: #018ba1;
-			background-color: #99f976;
+			color: $button-color-positive;
+			background-color: $button-bg-color-positive-hover;
+			border-color: $button-bg-color-positive-hover;
 		}
 	}
 	&.neutral {
@@ -61,6 +65,9 @@
 			color: #202e79;
 		}
 	}
+}
+button {
+	@extend %buttonStyle;
 }
 .setting-text-dashboard {
 	font-size: 2rem;
@@ -76,7 +83,7 @@
 
 .checkbox-styled {
 	text-align: center;
-	color: $color-text-blur;
+	color: $color-text-dark-blur;
 	&__label {
 		text-transform: uppercase;
 		cursor: pointer;
@@ -85,8 +92,8 @@
 		display: none;
 	}
 	&-checkbox:checked + &__label {
-		color: $color-text-menu;
-		filter: drop-shadow(0px 0px 0.5rem #ecccb0) drop-shadow(0px 0px 0.5rem #ecccb0);
+		color: $color-text-accent;
+		filter: drop-shadow(0px 0px 0.5rem $color-text-accent) drop-shadow(0px 0px 0.5rem $color-text-accent);
 	}
 }
 blockquote {
@@ -98,12 +105,9 @@ blockquote {
 	&::before{
 		content: "\201c";
 		float: left;
-		text-indent: 0;
 	}
 }
 .common-form{
-	text-indent: 0 !important;
-
 	label {
 		cursor: pointer;
 		&:hover {
@@ -113,13 +117,29 @@ blockquote {
 	input[type='file'] {
 		display: none;
 	}
-
+	&__columns{
+		display: flex;
+		gap:1em;
+	}
+	&__column{
+		flex-grow: 1;
+	}
+	&__row{
+		display: flex;
+		align-items: baseline;
+	}
+	&__label{
+		font-size: 0.8em;
+		white-space: nowrap;
+		flex: 0 0 10vw;
+	}
 	&__input {
-		width: 100%;
+		flex-grow: 1;
 		margin: 5px 0px;
-		background-color: transparent;
-		color: $color-text-main;
+		background-color: $bg-color-light-odd;
+		color: $color-text-dark;
 		border: none;
+		border-bottom: 1px solid $color-text-dark-blur;
 		outline: none;
 		padding: 2px 5px 0px 5px;
 
@@ -127,22 +147,9 @@ blockquote {
 			color: transparent;
 		}
 
-		&.title {
-			color: $color-text-section-title;
-			font-size: 2em;
-			border-bottom: 1px solid $color-text-blur;
-			text-align: center;
-		}
-
-		&.subtitle {
-			font-size: 1.5em;
-			border-bottom: 1px solid $color-text-main;
-			text-align: left;
-		}
-
 		&:active,
 		&:focus {
-			border-color: $color-text-menu;
+			border-color: $color-text-accent;
 		}
 
 	}
@@ -171,9 +178,9 @@ blockquote {
 
 		.content-container {
 			height: 50vh;
-			border-left: 1px solid $color-text-blur;
-			border-right: 1px solid $color-text-blur;
-			border-bottom: 2px solid $color-text-blur;
+			border-left: 1px solid $color-text-dark-blur;
+			border-right: 1px solid $color-text-dark-blur;
+			border-bottom: 2px solid $color-text-dark-blur;
 			font-size: 1.1em;
 			overflow-y: auto;
 
@@ -181,5 +188,41 @@ blockquote {
 				min-height: 50vh;
 			}
 		}
+	}
+}
+%asideMenu{
+	flex: 0 0 15vw;
+	border: 1px solid white;
+	padding: .5em .3em;
+	background-color: $bg-color-red;
+	color: $color-text-light;
+}
+%asideMenuItem{
+	list-style: none;
+	font-size: 1.3em;
+	line-height: 1.2em;
+	letter-spacing: .03em;
+	padding: .1em 0 .1em .5em;
+	margin-bottom: .25em;
+	border: 1px solid white;
+	border-radius: 2px;
+	transition: background-color $animation-fast linear;
+	display: flex;
+	justify-content: space-between;
+	.section-label{
+		display: none;
+		margin-left: 1em;
+		margin-right: auto;
+		@include md {
+			display: block;
+		}
+	}
+	&.active{
+		background-color: $bg-color-dark;
+		color: $color-text-light;
+	}
+	&:not(.active):hover{
+		background-color: $bg-color-red-blur;
+		cursor: pointer;
 	}
 }

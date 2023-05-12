@@ -23,8 +23,8 @@
                     <td title="E-mail"><?= isset($usersData[$x]['contacts']['email']) ? $usersData[$x]['contacts']['email'] : '' ?></td>
                     <td title="Telegram"><?= $usersData[$x]['contacts']['telegramid'] !== '' ? '<i class="fa fa-check-square-o"></i>' : '<i class="fa fa-square-o"></i>' ?></td>
                     <td title="Меню">
-                        <i class='fa fa-pencil-square-o news-dashboard__button' data-action-click='account/profile/form' data-uid=' <?= $usersData[$x]['id'] ?>' title='Редагувати'></i>
-                        <a href="/users/delete/<?= $usersData[$x]['id'] ?>" onclick="return confirm('Are you sure?')" title='Видалити'><i class='fa fa-trash-o news-dashboard__button'></i></a>
+                        <a class='fa fa-pencil-square-o' href='/account/profile/<?= $usersData[$x]['id'] ?>' title='Редагувати'></a>
+                        <a href="/users/delete/<?= $usersData[$x]['id'] ?>" onclick="return confirm('Are you sure?')" title='Видалити' class="fa fa-trash-o"></a>
                     </td>
                 </tr>
             <? endfor; ?>

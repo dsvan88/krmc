@@ -10,15 +10,14 @@ class Model extends Db
     {
         $table = static::$table;
         $where = '';
-        $condArray = [];
         if (!empty($condition)) {
             $where = 'WHERE ';
             foreach ($condition as $key => $value) {
-                $where .= "$key = :$key,";
+                $where .= "$key = :$key OR ";
             }
-            $where = substr($where, 0, -1);
+            $where = substr($where, 0, -4);
         }
-        return self::query("SELECT * FROM $table $where", $condArray, 'Assoc');
+        return self::query("SELECT * FROM $table $where", $condition, 'Assoc');
     }
     public static function find($id){
         $table = static::$table;

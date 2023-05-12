@@ -163,7 +163,7 @@ let actionHandler = {
 						actionHandler[formSubmitAction] ? 
 							actionHandler[formSubmitAction](event, modal, args)
 							:
-							this.commonSubmitFormHandler({ event, modal, args })
+							this.commonSubmitFormHandler(event, modal, args)
 				);
 			}
 		}
@@ -191,7 +191,7 @@ let actionHandler = {
 			window.eval(result["javascript"]);
 		}
 	},
-	commonSubmitFormHandler: function ({ event, modal, args }) {
+	commonSubmitFormHandler: function (event, modal=null, args=null) {
 		event.preventDefault();
 		let formData = new FormData(event.target);
 		request({

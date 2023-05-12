@@ -7,27 +7,13 @@
 			display: flex;
 			justify-content: space-between;
 			text-align: justify;
-			text-indent: 0;
 			&-link, &-dummy{
-				color: $color-text-main;
+				color: $color-text-dark-blur;
 				font-size: 0.7em;
 				align-self: flex-end;
 			}
 		}
 		&__list {
-			// display: grid;
-			// grid-gap: 0.5em;
-			// grid-auto-rows: 15em;
-			// grid-template-columns: 1fr;
-			// @include md {
-			// 	grid-template-columns: repeat(2, 1fr);
-			// }
-			// @include lg {
-			// 	grid-template-columns: repeat(3, 1fr);
-			// }
-			// @include xl {
-			// 	grid-template-columns: repeat(3, 1fr);
-			// }
 			display: flex;
 			justify-content: center;
 			flex-wrap: wrap;
@@ -35,10 +21,9 @@
 		}
 		&__item {
 			background-color: $bg-color-light-odd;
-			border-radius: 5px;
+			border-radius: 3px;
 			padding: 1em 1.2em;
 			border: 1px solid $color-text-menu;
-			text-indent: 0;
 			cursor: pointer;
 			transition-property: border-color, transform;
 			transition: $animation-fast ease-in-out;
@@ -152,7 +137,6 @@
 			justify-content: center;
 			padding: 10px 0;
 			> span {
-				text-indent: 0;
 				margin: 0 1em;
 				align-self: flex-end;
 				cursor: default;
@@ -162,7 +146,6 @@
 				padding: 3px 5px;
 				border: 1px solid $color-text-main;
 				text-decoration: none;
-				text-indent: 0px;
 				color: $color-text-main;
 				transition: all $animation-fast ease-in;
 				&:hover {
@@ -177,7 +160,7 @@
 					cursor: not-allowed;
 					&:hover {
 						background-color: $color-text-menu;
-						color: $color-text-blur;
+						color: $color-text-dark-blur;
 					}
 				}
 			}

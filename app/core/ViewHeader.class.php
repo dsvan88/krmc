@@ -3,19 +3,22 @@
 namespace app\core;
 
 use app\models\GameTypes;
+use app\models\News;
 use app\models\Settings;
 
 class ViewHeader {
     
     public static function get(){
+        $images = Settings::getGroup('img');
+        $images = Locale::apply($images);
         $vars = [
-            'headerLogo' => "<a href='/'>" . ImageProcessing::inputImage('/public/images/club-logo-w-city.jpg', ['title' => 'Main logo']) . '</a>',
+            'headerLogo' => "<a href='/'>" . ImageProcessing::inputImage($images['MainLogo']['value'], ['title' => $images['MainLogo']['name']]) . '</a>',
             'headerProfileButton' => '<a class="header__profile-button" data-action-click="account/login/form">Вхід</a>',
             'headerMenu' => self::menu(),
         ];
         if (isset($_SESSION['id'])) {
             if ($_SESSION['avatar'] == '') {
-                $profileImage = $_SESSION['gender'] === '' ? Settings::getImage('profile')['value'] : Settings::getImage($_SESSION['gender'])['value'];
+                $profileImage = $_SESSION['gender'] === '' ? $images['profile']['value'] : $images[$_SESSION['gender']]['value'];
             } else {
                 $profileImage = FILE_USRGALL . "{$_SESSION['id']}/{$_SESSION['avatar']}";
             }
@@ -45,6 +48,10 @@ class ViewHeader {
     public static function menu(){
         $menu = [
             [
+                'path' => '',
+                'label' => Locale::phrase('Home')
+            ],
+            [
                 'path' => 'news',
                 'label' => Locale::phrase('{{ HEADER_MENU_NEWS }}')
             ],
@@ -66,6 +73,11 @@ class ViewHeader {
             ],
         ];
 
+        if (News::getCount('news') < 1){
+            unset($menu[1]);
+            $menu = array_values($menu);
+        }
+
         if (isset($_SESSION['privilege']) && in_array($_SESSION['privilege']['status'], ['manager', 'admin'])) {
             $menu[] = [
                 'path' => 'game/mafia/start',
@@ -76,6 +88,9 @@ class ViewHeader {
         $headerMenu = '';
 
         for ($x = 0; $x < count($menu); $x++){
+            if (!empty($menu[$x]['path'])){
+                $menu[$x]['path'] .= '/';
+            }
             if (!isset($menu[$x]['menu'])) {
                 $headerMenu .= "
                 <div class='header__navigation-item'>
@@ -94,18 +109,16 @@ class ViewHeader {
                                 $path = $menu[$x]['type'] . '/' . $menu[$x]['menu'][$i]['slug'];
                             }
                             $headerMenu .= "
-                            <div class='dropdown__item'>
-                                <a href='/$path'>{$menu[$x]['menu'][$i]['name']}</a>
+                            <li class='dropdown__item'>
+                                <a href='/$path/'>{$menu[$x]['menu'][$i]['name']}</a>
                                 <div class='dropdown__bar'></div>
-                            </div>";
+                            </li>";
                         }
                 $headerMenu .= "
                     </menu>
                 </div>";
             }
         }
-        // <label for='header__dropdown-menu-checkbox-{$menu[$x]['type']}' class='header__dropdown-menu-label'>{$menu[$x]['label']}</label>
-        // <input type='checkbox' class='header__dropdown-menu-checkbox' id='header__dropdown-menu-checkbox-{$menu[$x]['type']}'>
         return $headerMenu;
     }
 }

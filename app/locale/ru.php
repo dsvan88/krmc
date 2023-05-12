@@ -30,6 +30,7 @@ return [
     '{{ Settings_List_Title }}' => 'Настройки системы',
     '{{ Chats_List_Title }}' => 'Чаты с нашим Ботом',
 
+    'Home' => 'Главная',
     '{{ HEADER_MENU_START_PAGE }}' => 'Про клуб',
     '{{ HEADER_MENU_NEWS }}' => 'Новости',
     '{{ HEADER_MENU_WEEKS }}' => 'Расписание игр',
@@ -52,20 +53,26 @@ return [
     '{{ Account_Login_User_Not_Found }}' => "Пользователь не найден!\nПроверьте логин и пароль!",
     'Rename Temporary Player' => 'Смена имени временного игрока',
 
-
-    '{{ Account_Profile_Form_Title }}' => 'Профиль пользователя <b>%s</b>',
-    '{{ Account_Profile_Form_Fio_Label }}' => 'Фамилия, имя, отчество',
-    '{{ Account_Profile_Form_Birthday_Label }}' => 'Дата рождения',
-    '{{ Account_Profile_Form_Gender_Label }}' => 'Пол',
-    '{{ Account_Profile_Form_Email_Label }}' => 'Электонная почта',
-    '{{ Account_Profile_Form_Telegram_Label }}' => 'Телеграм',
+    '{{ Account_Profile_Form_Title }}' => 'Личное дело агента «<b>%s</b>»',
+    'Name, secondary name, middle name' => 'Ф.И.О.',
+    'Birthday' => 'Дата рождения',
+    'Gender' => 'Пол',
+    'E-mail' => 'Электонная почта',
+    'Telegram' => 'Телеграм',
+    'Phone Number' => 'Номер телефона',
     '{{ Account_Profile_Form_User_Avatar }}' => 'Аватар пользователя %s',
+    'Male' => 'Господин',
+    'Female' => 'Госпожа',
+    'secret' => 'Некто',
 
     '{{ Account_Avatar_Form_Title }}' => 'Аватар пользователя %s',
     '{{ Account_Avatar_Form_Newcrop_Link }}' => 'Заменить',
 
     '{{ Account_Register_Form_Title }}' => 'Форма регистрации',
 
+    'Change Password' => 'Смена пароля',
+    'Old password is wrong!' => 'Не верный старый пароль!',
+    'Passwords isn’t match!' => 'Пароли не совпадают!',
     '{{ Account_Password_Reset_Title }}' => 'Сброс пароля',
     '{{ Account_Forget_Form_Title }}' => 'Восстановление пароля',
     '{{ Account_Forget_Check_Succes }}' => "Запрос на восстановление пароля обработан.\nВаша ссылка на восстановление пароля:\n%s",
@@ -86,6 +93,20 @@ return [
     '{{ Day_Block_Prim_PLaceholder }}' => 'Примечание',
     '{{ Add_Field_Label }}' => 'Добавить поле',
     '{{ Day_Set_Success }}' => 'Изменения успешно сохранены!',
+
+    'Email SMTP Server' => 'SMTP Сервер',
+    'Email Login' => 'Логин',
+    'Email Password' => 'Пароль приложения',
+    'Email Secure Type' => 'Тип безопасности',
+    'Email SMTP Port' => 'SMTP Порт',
+    'Contacts Email' => 'Контактная эл. почта',
+    'Contacts Phone' => 'Контактный телефон',
+    'Adress' => 'Адрес',
+    'Telegram Group' => 'Група в Telegram',
+    'Telegram Group Name' => 'Имя группы в Telegram',
+    'Google Map Link' => 'Ссылка на Google Maps',
+    'Google Map Widget Link' => 'Ссылка виджета на Google Maps',
+    'Youtube Channel' => 'Youtube канал',
 
     '{{ Monday }}' => 'Понедельник',
     '{{ Tuesday }}' => 'Вторник',
@@ -186,4 +207,21 @@ return [
     /promo Заголовок
 Подзголовок
 Текст сообщения, или: Тут могла быть, Ваша <b>Реклама</b><i>:)</i>",
+
+    '+ (week day) <i>// Booking for the scheduled games of the current week, examples:</i>
+    +вс
+    + на сегодня, на 19:30 (отсижу 1-2 игры, под ?)
+- (week day) <i>// Unsubscribe from games on a specific day that you previously signed up for, examples:</i>
+    -вс
+    - завтра' => '+ (день недели) <i>// Записаться на игры текущей недели. Пример:</i>
+    +вс
+    + на сегодня, на 19:30 (отсижу 1-2 игры, под ?)
+- (день недели) <i>// Отписаться от игр в определённый день, на который ранее записались. Примеры:</i>
+    -вс
+    - завтра',
+
+    '<u>/nick Your nickname</u> (Cyrillic) <i>// Register your nickname</i>' => '<u>/nick Ваш псевдоним</u> (кириллицей) <i>// Забронировать за собой псевдоним</i>',
+    '<u>/day (week day)</u> <i>// Booking information for a specific day. Without specifying the day - for today</i>' => '<u>/day (день недели)</u> <i>// Информация по записи на конкретный день. Без указания дня - на сегодня</i>',
+
+    
 ];

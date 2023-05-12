@@ -1,25 +1,49 @@
-$font-size-main: 0.6rem;
 $font-size-main-sm: 0.7rem;
-$font-size-main-md: 0.9rem;
-$font-size-main-lg: 1rem;
 $font-size-main-xl: 1.3rem;
 
 $color-text-dark: #30324d;
-$color-text-blur: #5e4343;
+$color-text-dark-blur: #5e4343;
+$color-text-light: #fbe6e6;
+$color-text-light-blur: #a48686;
 $color-text-main: #b3a2a2;
 $color-text-menu: #dfa261;
 $color-text-section-title: #f2ce91;
-
-$button-remove-color: #c45050;
-$button-remove-color-hover: #aa1414;
+$color-text-accent: #8b0404;
 
 $color-item-border-hover: #803827;
 
-$bg-color-light: #38244f;
-$bg-color-light-odd: #4f2058;
-$bg-color-dark: #221740;
-$bg-color-input: #0000004a;
-$main-header-bg-dark: #151515;
+$body-bg-color: #fffdf7;
+$bg-color-light: #f7f7f7;
+$bg-color-light-odd: #cfcfcf;
+$bg-color-dark: #151515;
+$bg-color-dark-blur: #646464;
+$bg-color-red: #380707;
+$bg-color-red-blur: #7d0000;
+$bg-color-input: rgba(0, 0, 0, 0.16);
+
+$bg-profile-button: #a486866c;
+$bg-profile-button-hover: $color-text-light;
+
+
+$button-bg-color: $bg-color-red-blur;
+$button-bg-color-hover: $bg-color-red;
+
+$button-bg-color-positive: $bg-color-red;
+$button-bg-color-positive-hover: #00ac43;
+$button-color-positive: $color-text-dark;
+
+
+$button-bg-color-negative: $bg-color-red;
+$button-bg-color-negative-hover: $bg-color-dark;
+$button-color-negative: $color-text-light-blur;
+
+// $button-remove-color: #c45050;
+// $button-remove-color-hover: #aa1414;
+$button-remove-color: $bg-color-red-blur;
+$button-remove-color-hover: $bg-color-red;
+
+$main-header-bg-dark: $bg-color-dark;
+$main-footer-bg-dark: $bg-color-dark;
 
 $animation-fast: 0.3s;
 $animation-normal: 0.8s;
@@ -28,14 +52,17 @@ $animation-very-slow: 3s;
 
 $devidedInputsWidth: 150px;
 
-$modal-hd-start: #0d0101;
-$modal-hd-end: #380707;
-$modal-bg-start: #ffdfb5;
-$modal-bg-end: #ced0f3;
+// $modal-hd-start: #0d0101;
+// $modal-hd-end: #380707;
+$modal-hd-start: $bg-color-dark;
+$modal-hd-end: $bg-color-red;
+$modal-bg-start: $bg-color-light;
+$modal-bg-end: $bg-color-dark-blur;
 $modal-border: 1px solid #979df9;
 $modal-overlay-bg-color: #00000036;
 // $modal-color: $modal-hd-start;
-$modal-color: #4b9aff;
+$modal-color: $color-text-dark-blur;
+// $modal-color: #4b9aff;
 
 $modal-title-color: $color-text-menu;
 

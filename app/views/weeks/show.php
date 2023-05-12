@@ -1,8 +1,6 @@
 <section id="week-list" class="section week-list">
     <h2 class="week__title section__title">
-        <span class="week__title-dummy"></span>
         <?= $texts['weeksBlockTitle'] ?>
-        <span class="week__title-dummy"></span>
     </h2>
     <h2 class="week__title section__subtitle">
         <? if ($prevWeek) : ?>

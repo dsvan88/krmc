@@ -4,6 +4,7 @@ namespace app\libs;
 
 use app\models\Users;
 use PDO;
+use Throwable;
 
 class Db
 {
@@ -24,22 +25,35 @@ class Db
         }
         self::$db = $pdo;
 
-        $table = static::$table;
-        $result = $pdo->query("SELECT EXISTS ( SELECT FROM pg_tables WHERE schemaname = 'public' AND tablename  = '$table');");
-        $tableName = $result->fetchColumn();
-        if (!$tableName) {
+        $check = self::isTableExists();
+        if (!$check) {
             self::dbFillDefaults();
         }
 
         return $pdo;
     }
-
+    public static function isTableExists() : bool{
+        $table = static::$table;
+        $result = self::$db->query("SELECT EXISTS ( SELECT FROM pg_tables WHERE schemaname = 'public' AND tablename  = '$table');");
+        $tableName = $result->fetchColumn();
+        return boolval($tableName);
+    }
     public static function query($query, $params = [], $fetchMode = 'All', $columns = 0)
     {
-        // error_log($query);
-        // error_log(json_encode($params, JSON_UNESCAPED_UNICODE));
+        error_log($query);
+        error_log(json_encode($params, JSON_UNESCAPED_UNICODE));
         $stmt = self::connect()->prepare($query);
-        $stmt->execute($params);
+        try{
+            $stmt->execute($params);
+        }
+        catch(Throwable $th){
+            $check = self::isTableExists();
+            if (!$check) {
+                static::init();
+            }
+            $stmt->execute($params);
+        }
+    
         if (strpos(trim($query), 'SELECT') === 0) {
             if ($fetchMode === 'All') {
                 return $stmt->fetchAll();

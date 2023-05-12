@@ -204,6 +204,13 @@ class Users extends Model
         self::edit($userData, ['id' => $userId]);
         return true;
     }
+    public static function passwordChange($userId, $password)
+    {
+        $newPassword = password_hash(sha1($password), PASSWORD_DEFAULT);
+
+        self::edit(['password' => $newPassword], ['id' => $userId]);
+        return true;
+    }
     public static function getList()
     {
         $table = self::$table;
@@ -395,6 +402,7 @@ class Users extends Model
         $userData['privilege'] = json_decode($userData['privilege'], true);
         $userData['personal'] = json_decode($userData['personal'], true);
         $userData['contacts'] = json_decode($userData['contacts'], true);
+        $userData['credo'] = json_decode($userData['credo'], true);
         return $userData;
     }
     public static function init(){
@@ -420,7 +428,9 @@ class Users extends Model
         $contactsDefault = json_encode($contactsDefault, JSON_UNESCAPED_UNICODE);
         $credoDefault = [
             'in_game' => '',
-            'in_live' => ''
+            'in_live' => '',
+            'favorite' => '',
+            'signature' => '',
         ];
         $credoDefault = json_encode($credoDefault, JSON_UNESCAPED_UNICODE);
         self::query(
@@ -435,16 +445,17 @@ class Users extends Model
                 credo JSON DEFAULT '$credoDefault',
                 created_at TIMESTAMP DEFAULT NOW(),
                 updated_at TIMESTAMP DEFAULT NOW(),
-                deleted_at INT NOT NULL DEFAULT '0'
+                date_delete TIMESTAMP DEFAULT NULL
             );"
         );
-        if (!self::isExists(['id' => 1], $table)) {
-            $privilege = ['status' => 'admin', 'admin' => 1, 'rank' => 0];
-            self::insert([
-                'login' => 'admin',
-                'password' => '$2y$10$QXBH7fo4T152f.Tfy6zBwOZF54VdfX6uGhK7DAgm/kFXLS/gtI5zK', //admin1234
-                'privilege' => json_encode($privilege, JSON_UNESCAPED_UNICODE)
-            ], $table);
-        }
+        if (self::isExists(['id' => 1], $table)) return true;
+
+        $privilege = ['status' => 'admin', 'admin' => 1, 'rank' => 0];
+        self::insert([
+            'login' => 'admin',
+            'password' => '$2y$10$QXBH7fo4T152f.Tfy6zBwOZF54VdfX6uGhK7DAgm/kFXLS/gtI5zK', //admin1234
+            'privilege' => json_encode($privilege, JSON_UNESCAPED_UNICODE)
+        ], $table);
+
     }
 }

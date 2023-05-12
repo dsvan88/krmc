@@ -25,6 +25,7 @@ class View
         extract($vars);
         extract(self::defaultVars());
         $content = '';
+        $pageTitle = preg_replace('/<.*?>/', '', $title);
         $path = $_SERVER['DOCUMENT_ROOT'] . '/app/views/' . self::$path . '.php';
         if (file_exists($path)) {
             ob_start();
@@ -92,6 +93,8 @@ class View
      */
     public static function redirect(string $url = '/'): void
     {
+        if ($url[strlen($url)-1] !== '/')
+            $url .= '/';
         header('Location: ' . $url);
         exit;
     }
@@ -102,8 +105,10 @@ class View
      * 
      * @return json string with
      */
-    public static function location($url, $error = 0)
+    public static function location(string $url, int $error = 0): void
     {
+        if ($url[strlen($url)-1] !== '/')
+            $url .= '/';
         $message = ['location' => $url];
         if ($error > 0)
             $message['error'] = $error;
@@ -127,7 +132,10 @@ class View
             $data['message'] = Locale::phrase($data['message']);
         }
         if (!isset($data['error'])) {
-            $daya['error'] = 0;
+            $data['error'] = 0;
+        }
+        if ($data['error'] > 1) {
+            http_response_code($data['error']);
         }
         exit(json_encode($data));
     }
@@ -141,10 +149,6 @@ class View
     {
         $header = ViewHeader::get();
         $footer = ViewFooter::get();
-        [
-            'footerContent' => '',
-        ];
-
         return array_merge($header, $footer);
     }
 

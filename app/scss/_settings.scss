@@ -1,0 +1,32 @@
+.settings{
+    display: flex;
+    &__categories{
+        @extend %asideMenu;
+    }
+    &__category{
+        @extend %asideMenuItem;
+    }
+    &__value{
+        max-width: 30vw;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    &__content{
+        width: 100%;
+        padding-left: 1em;
+    }
+    &__table{
+        width: 100%;
+        border-collapse: collapse;
+        tr{
+            line-height: 1.5em;
+            td{
+                padding: .3em 0 .05em .3em;
+                border-bottom: 1px solid $bg-color-dark-blur;
+            }
+        }
+    }
+    &__dasboard{
+        text-align: right;
+    }
+}

@@ -2,7 +2,7 @@
 /*
 categories:
 all = all (guests+unauthorized users); 
-users = authorized (authorized users + manager + admins)
+user = authorized (authorized users + manager + admins)
 manager = level 1 admin  (manager + admins)
 admin = root level admin  (admins only)
 */
@@ -60,9 +60,15 @@ return  [
         'action' => 'passwordReset',
         'access' => ['category' => 'all']
     ],
+    'account/profile/{userId}' =>
+    [
+        'controller' => 'account',
+        'action' => 'show',
+        'access' => ['category' => 'user']
+    ],
     'users/list' => [
         'controller' => 'account',
-        'action' => 'usersList',
+        'action' => 'list',
         'access' => ['category' => 'manager']
     ],
     'users/delete/{userId}' => [
@@ -73,37 +79,37 @@ return  [
 
     'news' => [
         'controller' => 'news',
-        'action' => 'showList',
+        'action' => 'index',
         'access' => ['category' => 'all']
     ],
     'news/add' => [
         'controller' => 'news',
-        'action' => 'addItem',
+        'action' => 'add',
         'access' => ['category' => 'manager']
     ],
     'news/{pageNum}' => [
         'controller' => 'news',
-        'action' => 'showList',
+        'action' => 'index',
         'access' => ['category' => 'all']
     ],
     'news/show/{newsId}' => [
         'controller' => 'news',
-        'action' => 'showItem',
+        'action' => 'show',
         'access' => ['category' => 'all']
     ],
     'news/edit/promo' => [
         'controller' => 'news',
-        'action' => 'editPromoItem',
+        'action' => 'editPromo',
         'access' => ['category' => 'manager']
     ],
     'news/edit/{newsId}' => [
         'controller' => 'news',
-        'action' => 'editItem',
+        'action' => 'edit',
         'access' => ['category' => 'manager']
     ],
     'news/delete/{newsId}' => [
         'controller' => 'news',
-        'action' => 'deleteItem',
+        'action' => 'delete',
         'access' => ['category' => 'manager']
     ],
 
@@ -122,19 +128,19 @@ return  [
         'action' => 'show',
         'access' => ['category' => 'all']
     ],
-    'settings/list' => [
+    'settings/index' => [
         'controller' => 'settings',
-        'action' => 'list',
+        'action' => 'index',
+        'access' => ['category' => 'admin']
+    ],
+    'settings/section/index/{section}' => [
+        'controller' => 'settings',
+        'action' => 'index',
         'access' => ['category' => 'admin']
     ],
     'settings/add' => [
         'controller' => 'settings',
         'action' => 'add',
-        'access' => ['category' => 'admin']
-    ],
-    'settings/edit/{settingId}' => [
-        'controller' => 'settings',
-        'action' => 'edit',
         'access' => ['category' => 'admin']
     ],
     'settings/delete/{settingId}' => [
@@ -187,17 +193,47 @@ return  [
         'action' => 'login',
         'access' => ['category' => 'all']
     ],
+    'api/account/password/change' =>
+    [
+        'controller' => 'account',
+        'action' => 'passwordChange',
+        'access' => ['category' => 'user']
+    ],
+    'api/account/password/change/form' =>
+    [
+        'controller' => 'account',
+        'action' => 'passwordChange',
+        'access' => ['category' => 'user']
+    ],
     'api/account/profile/form' =>
     [
         'controller' => 'account',
         'action' => 'profileForm',
         'access' => ['category' => 'all']
     ],
+    'api/account/profile/section' =>
+    [
+        'controller' => 'account',
+        'action' => 'profileSection',
+        'access' => ['category' => 'user']
+    ],
     'api/account/profile/{userId}' =>
     [
         'controller' => 'account',
         'action' => 'profileEdit',
-        'access' => ['category' => 'all']
+        'access' => ['category' => 'user']
+    ],
+    'api/account/profile/section/edit' =>
+    [
+        'controller' => 'account',
+        'action' => 'profileSectionEditForm',
+        'access' => ['category' => 'user']
+    ],
+    'api/account/profile/edit/{userId}/{section}' =>
+    [
+        'controller' => 'account',
+        'action' => 'profileSectionEdit',
+        'access' => ['category' => 'user']
     ],
     'api/account/profile/avatar/form' =>
     [
@@ -277,6 +313,16 @@ return  [
         'action' => 'save',
         'access' => ['category' => 'manager']
     ],
+    'api/settings/edit/form' => [
+        'controller' => 'settings',
+        'action' => 'editForm',
+        'access' => ['category' => 'admin']
+    ],
+    'api/settings/edit/{settingId}' => [
+        'controller' => 'settings',
+        'action' => 'edit',
+        'access' => ['category' => 'admin']
+    ],
 
     'api/telegram/webhook' =>
     [
@@ -309,4 +355,16 @@ return  [
         'action' => 'dbrebuild',
         'access' => ['category' => 'admin']
     ],
+    'tech/selftest/telegram' =>
+    [
+        'controller' => 'tech',
+        'action' => 'selfTestTelegram',
+        'access' => ['category' => 'admin']
+    ],
+    // 'tech/mail' =>
+    // [
+    //     'controller' => 'tech',
+    //     'action' => 'sendMail',
+    //     'access' => ['category' => 'admin']
+    // ],
 ];

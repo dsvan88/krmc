@@ -12,7 +12,7 @@ use app\models\Settings;
 
 class NewsController extends Controller
 {
-    public function showListAction()
+    public function indexAction()
     {
         if (isset(self::$route['vars']))
             extract(self::$route['vars']);
@@ -36,10 +36,10 @@ class NewsController extends Controller
         $paginator = Paginator::news(['page' => $page, 'count' => $newsCount]);
         View::render(compact('title', 'texts', 'newsAll', 'newsCount', 'page', 'setDashBoard', 'paginator', 'defaultImage'));
     }
-    public function showItemAction()
+    public function showAction()
     {
         extract(self::$route['vars']);
-        $newsData = News::findBy('id', $newsId);
+        $newsData = News::find($newsId);
         if (!empty($newsData['logo']))
             $newsData['logo'] = ImageProcessing::inputImage(FILE_MAINGALL . 'news/' . $newsData['logo'], ['title' => $newsData['title'], 'class' => 'news__item-logo_image']);
         else
@@ -51,7 +51,7 @@ class NewsController extends Controller
         ];
         View::render($vars);
     }
-    public function editItemAction()
+    public function editAction()
     {
         extract(self::$route['vars']);
         if (!empty($_POST)) {
@@ -68,7 +68,7 @@ class NewsController extends Controller
             View::message('Changes saved successfully!');
         }
 
-        $newsData = News::findBy('id',$newsId);
+        $newsData = News::find($newsId);
         if (!empty($newsData['logo']))
             $newsData['logo'] = ImageProcessing::inputImage(FILE_MAINGALL . 'news/' . $newsData['logo'], ['title' => $newsData['title'], 'class' => 'news__item-logo_image']);
         else
@@ -88,7 +88,7 @@ class NewsController extends Controller
         ];
         View::render($vars);
     }
-    public function editPromoItemAction()
+    public function editPromoAction()
     {
         if (!empty($_POST)) {
             News::edit($_POST, 'promo');
@@ -110,7 +110,7 @@ class NewsController extends Controller
 
         View::render($vars);
     }
-    public function addItemAction()
+    public function addAction()
     {
         if (!empty($_POST)) {
             $array = $_POST;
@@ -139,7 +139,7 @@ class NewsController extends Controller
 
         View::render($vars);
     }
-    public function deleteItemAction()
+    public function deleteAction()
     {
         extract(self::$route['vars']);
         News::remove($newsId);

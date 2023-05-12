@@ -9,7 +9,11 @@ use app\models\Settings;
 use app\models\Users;
 use app\core\Locale;
 use app\core\TelegramBot;
+use app\core\Validator;
+use app\models\Contacts;
 use app\models\TelegramChats;
+use app\Repositories\AccountRepository;
+use app\Repositories\ContactRepository;
 
 class AccountController extends Controller
 {
@@ -29,7 +33,7 @@ class AccountController extends Controller
             if (Users::login($_POST)) {
                 View::location('/');
             } else {
-                View::message(['error' => 1, 'message' => '{{ Account_Login_User_Not_Found }}']);
+                View::message(['error' => 403, 'message' => '{{ Account_Login_User_Not_Found }}']);
             }
         }
         $vars = [
@@ -44,7 +48,7 @@ class AccountController extends Controller
         ];
         View::modal($vars);
     }
-    public function usersListAction()
+    public function listAction()
     {
         $vars = [
             'title' => '{{ Users_List_Page_Title }}',
@@ -101,13 +105,14 @@ class AccountController extends Controller
         Users::edit($userData, ['id' => $userId]);
         View::message('Success!');
     }
-    public function profileFormAction()
+    public function showAction()
     {
-        $uid = (int)$_POST['uid'];
+        extract(self::$route['vars']);
         if (!in_array($_SESSION['privilege']['status'], ['manager', 'admin'])) {
-            $uid = (int) $_SESSION['id'];
+            $userId = (int) $_SESSION['id'];
         }
-        $userData = Users::getDataById($uid);
+        $userData = Users::getDataById($userId);
+        
 
         if ($userData['personal']['avatar'] !== '') {
             $avatar = FILE_USRGALL . "{$userData['id']}/{$userData['personal']['avatar']}";
@@ -115,24 +120,155 @@ class AccountController extends Controller
             $avatar = Settings::getImage('empty_avatar')['value'];
         }
         $userData['avatar'] = ImageProcessing::inputImage($avatar, ['title' => Locale::phrase(['string' => '{{ Account_Profile_Form_User_Avatar }}', 'vars' => [$userData['name']]])]);
-
+        $userData['personal']['gender'] = Locale::phrase(ucfirst($userData['personal']['gender']));
+        
         $vars = [
             'title' => [
                 'string' => '{{ Account_Profile_Form_Title }}',
                 'vars' => [$userData['name']]
             ],
             'texts' => [
-                'FioLabel' => '{{ Account_Profile_Form_Fio_Label }}',
-                'BirthdayLabel' => '{{ Account_Profile_Form_Birthday_Label }}',
-                'GenderLabel' => '{{ Account_Profile_Form_Gender_Label }}',
-                'EmailLabel' => '{{ Account_Profile_Form_Email_Label }}',
+                'FioLabel' => 'Name, secondary name, middle name',
+                'BirthdayLabel' => 'Birthday',
+                'GenderLabel' => 'Gender',
+                'EmailLabel' => 'Email',
                 'SaveLabel' => 'Save',
-                'CancelLabel' => 'Cancel'
+                'CancelLabel' => 'Cancel',
             ],
-            'userData' => $userData
+            'scripts' => [
+                '/public/scripts/profile.js?v=' . $_SERVER['REQUEST_TIME']
+            ],
+            'userId' => $userId,
+            'data' => $userData,
         ];
-        View::modal($vars);
+        View::render($vars);
     }
+    public function profileSectionAction()
+    {
+        $userId = (int) trim($_POST['uid']);
+        $section = trim($_POST['section']);
+
+        if ($_SESSION['id'] != $userId && !in_array($_SESSION['privilege']['status'], ['manager', 'admin'])) {
+            View::message(['error' => 1, 'text' => 'Ви не можете змінювати інформацію інших користувачів']);
+        }
+        if ($section === 'contacts'){
+            $data = ContactRepository::getFields($userId, 'No data');
+            $data = ContactRepository::wrapLinks($data);
+        }
+        else{
+            $data = AccountRepository::getFields($userId);
+        }
+        $texts = [
+                'FioLabel' => 'Name, secondary name, middle name',
+                'BirthdayLabel' => 'Birthday',
+                'GenderLabel' => 'Gender',
+                'EmailLabel' => 'E-mail',
+                'TelegramLabel' => 'Telegram',
+                'PhoneLabel' => 'Phone',
+                'CredoLiveLabel' => 'Life Creed',
+                'CredoGameLabel' => 'Gaming Creed',
+                'BestQuoteLabel' => 'Favorite Quote',
+                'SignatureLabel' => 'Signature',
+                'SaveLabel' => 'Save',
+                'CancelLabel' => 'Cancel',
+        ];
+        $texts = Locale::apply($texts);
+
+        ob_start();
+        require $_SERVER['DOCUMENT_ROOT'] . "/app/views/account/sections/$section.php";
+        $result = ob_get_clean();
+
+        View::message(['html' => $result]);
+    }
+    public function profileSectionEditAction(){
+        extract(self::$route['vars']);
+        if (!in_array($_SESSION['privilege']['status'], ['manager', 'admin'])) {
+            $userId = (int) $_SESSION['id'];
+        }
+        if ($section === 'contacts'){
+            $contacts = [
+                'email' => Validator::validate('email', $_POST['email']),
+                'telegram' => Validator::validate('telegram', $_POST['telegram']),
+                'phone' => Validator::validate('phone', $_POST['phone']),
+            ];
+            ContactRepository::edit($userId, $contacts);
+        }
+        else {
+            AccountRepository::edit($userId, $_POST);
+        }
+        View::message('Success!');
+    }
+    public function profileSectionEditFormAction()
+    {
+        $userId = (int) trim($_POST['uid']);
+        $section = trim($_POST['section']);
+
+        if (!in_array($_SESSION['privilege']['status'], ['manager', 'admin'])) {
+            $userId = (int) $_SESSION['id'];
+        }
+        if ($section === 'contacts'){
+            $data = ContactRepository::getFields($userId);
+        }
+        else{
+            $data = AccountRepository::getFields($userId);
+        }
+
+        $texts = [
+                'FioLabel' => 'Name, secondary name, middle name',
+                'BirthdayLabel' => 'Birthday',
+                'GenderLabel' => 'Gender',
+                'EmailLabel' => 'E-mail',
+                'TelegramLabel' => 'Telegram',
+                'PhoneLabel' => 'Phone',
+                'CredoLiveLabel' => 'Life Creed',
+                'CredoGameLabel' => 'Gaming Creed',
+                'BestQuoteLabel' => 'Favorite Quote',
+                'SignatureLabel' => 'Signature',
+                'SaveLabel' => 'Save',
+                'CancelLabel' => 'Cancel',
+        ];
+        $texts = Locale::apply($texts);
+
+        ob_start();
+        require $_SERVER['DOCUMENT_ROOT'] . "/app/views/account/sections/forms/$section.php";
+        $result = ob_get_clean();
+
+        View::message(['html' => $result]);
+    }
+
+    // public function profileFormAction()
+    // {
+    //     $uid = (int)$_POST['uid'];
+    //     if (!in_array($_SESSION['privilege']['status'], ['manager', 'admin'])) {
+    //         $uid = (int) $_SESSION['id'];
+    //     }
+    //     $userData = Users::getDataById($uid);
+
+    //     if ($userData['personal']['avatar'] !== '') {
+    //         $avatar = FILE_USRGALL . "{$userData['id']}/{$userData['personal']['avatar']}";
+    //     } else {
+    //         $avatar = Settings::getImage('empty_avatar')['value'];
+    //     }
+    //     $userData['avatar'] = ImageProcessing::inputImage($avatar, ['title' => Locale::phrase(['string' => '{{ Account_Profile_Form_User_Avatar }}', 'vars' => [$userData['name']]])]);
+
+    //     $vars = [
+    //         'title' => [
+    //             'string' => '{{ Account_Profile_Form_Title }}',
+    //             'vars' => [$userData['name']]
+    //         ],
+    //         'texts' => [
+    //             'FioLabel' => 'Name, secondary name, middle name',
+    //             'BirthdayLabel' => 'Birthday',
+    //             'GenderLabel' => 'Gender',
+    //             'EmailLabel' => 'Email',
+    //             'SaveLabel' => 'Save',
+    //             'CancelLabel' => 'Cancel'
+    //         ],
+    //         'userId' => $uid,
+    //         'data' => $userData
+    //     ];
+    //     View::modal($vars);
+    // }
     public function setNicknameAction()
     {
         if (empty($_POST)) {
@@ -272,6 +408,44 @@ class AccountController extends Controller
     {
         $vars = ['modal' => true, 'jsFile' => '/public/scripts/avatar-get-recrop.js?v=' . $_SERVER['REQUEST_TIME']];
         View::message($vars);
+    }
+    public function passwordChangeAction()
+    {
+        $userId = $_SESSION['id'];
+        $userData = Users::find($userId);
+        if (!$userData) {
+            View::errorCode(404, ['message' => 'Page not found!']);
+        }
+        if (!empty($_POST)) {
+            if ($_POST['new_password'] != $_POST['new_password_confirmation']) {
+                $message = [
+                    'error' => 1,
+                    'message' => Locale::phrase('Passwords Not Match!'),
+                    'wrong' => 'new_password',
+                ];
+                View::message($message);
+            }
+            if (!password_verify($_POST['new_password'], $userData['password'])) {
+                $message = [
+                    'error' => 1,
+                    'message' => Locale::phrase('Old password is wrong!'),
+                    'wrong' => 'password',
+                ];
+                View::message($message);
+            }
+            Users::passwordChange($userId, $_POST['password']);
+            View::message(['message' => 'Success!', 'url' => '/']);
+        }
+
+        $vars = [
+            'title' => 'Change Password',
+            'texts' => [
+                'SubmitLabel' => 'Execute',
+                'CancelLabel' => 'Cancel'
+            ],
+            'userId' => $userId,
+        ];
+        View::modal($vars);
     }
     public function passwordResetAction()
     {

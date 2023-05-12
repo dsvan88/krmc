@@ -5,7 +5,7 @@
 @import "vars";
 @import "components";
 
-@import url("https://fonts.googleapis.com/css2?family=Underdog&display=swap");
+// @import url("https://fonts.googleapis.com/css2?family=Underdog&display=swap");
 
 :root{
 	font-size: 16px;
@@ -14,13 +14,14 @@
 body {
 	min-height: 100vh;
 	margin: 0;
-	background-color: $bg-color-light;
+	background-color: $body-bg-color;
 	padding: 0;
 	display: grid;
 	place-items: center;
 	color: $color-text-main;
 	overflow-x: hidden;
-	font-family: "Roboto", sans-serif;
+	// font-family: "Roboto", sans-serif;
+	font-family: "Ubuntu", sans-serif;
 	font-size: clamp($font-size-main-sm, 1.4vw, $font-size-main-xl);
 }
 .header-for-auto-scroll {
@@ -29,33 +30,34 @@ body {
 }
 .wrapper {
 	width: 100vw;
-	display: flex;
-	flex-direction: column;
 	height: 100%;
+	display: grid;
+	grid-template-rows: auto 1fr auto;
+	grid-template-columns: auto;
 
-	@include sm {
-		grid-template-rows: auto 1fr auto;
-		grid-template-columns: auto;
-		border-radius: 0px;
-		box-shadow: none;
+	@include md {
+		display: flex;
+		flex-direction: column;
+		height: 100%;
 	} 
 	.header {
 		position: sticky;
 		top: 0px;
 		background: $main-header-bg-dark;
+		color: $color-text-light;
 		height: 10vh;
 		min-height: 3.5rem;
 		max-height: 4.5rem;
-		padding: 1rem 20vw 1.3rem 20vw;
 		display: flex;
 		align-items: center;
 		box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.5);
 		font-size: 1.3em;
 		z-index: 1;
+		padding: .4rem 3vw .4rem 0;
+		justify-content: space-between;
 		&__logo {
-			// filter: drop-shadow(10px -5px 5px #d90000);
-			height: 100%;
-			
+			order: 2;
+			height: 80%;
 			border: 1px solid #f6f4f3;
 			border-radius: 7px;
 			padding: 0.1rem 0.3rem;
@@ -67,17 +69,17 @@ body {
 			img {
 				height: 100%;
 			}
-			@include md {
-				margin-right: 5vw;
-			}
 		}
 		&__profile {
-			margin-left: auto;
+			order: 3;
+			// margin-left: auto;
+
 			display: flex;
 			position: relative;
 			align-items: center;
 			&-button {
-				background-color: #9fc0ff33;
+				// background-color: #9fc0ff33;
+				background-color: $bg-profile-button;
 				border: 1px solid $color-text-main;
 				border-radius: 5px;
 				padding: 5px 10px;
@@ -86,7 +88,7 @@ body {
 				transition: all $animation-fast ease-in;
 				&:hover {
 					background-color: $color-text-main;
-					color: $color-text-menu;
+					color: $color-text-accent;
 				}
 				img {
 					max-height: 40px;
@@ -107,11 +109,12 @@ body {
 				}
 			}
 			&-menu {
+				order: 1;
 				display: none;
 				position: absolute;
 				top: 30px;
 				right: 0;
-				background-color: #150551;
+				background-color: $bg-color-red-blur;
 				list-style: none;
 				border-radius: 5px;
 				&-item {
@@ -158,10 +161,11 @@ body {
 			justify-content: space-between;
 			color: $color-text-menu;
 			&-item {
-				margin-right: 20px;
+				margin-right: .4em;
 				cursor: pointer;
 				color: $color-text-menu;
-				font-family: "Underdog", cursive;
+				// font-family: "Underdog", cursive;
+				font-family: 'Crimson Pro', serif;
 				white-space: nowrap;
 				a {
 					color: $color-text-menu;
@@ -183,35 +187,24 @@ body {
 				}
 			}
 		}
-		.navigation-for-small-display {
-			display: none;
+		
+		.navigation-for-small-display{
 			cursor: pointer;
 			font-size: 2em;
+			&-chechbox{
+				display: none;
+			}
 			&.menu-hide {
 				position: absolute;
 				top: 1em;
 				left: 1em;
 			}
 			&.menu-show {
-				margin: 0px 15px;
+				margin: 0 1rem;
 			}
+			
 		}
 		@include sm {
-			padding-left: 0;
-			justify-content: space-between;
-			label.navigation-for-small-display {
-				display: block;
-			}
-			&__logo {
-				order: 2;
-			}
-			&__menu {
-				order: 1;
-			}
-			&__profile {
-				order: 3;
-				margin-left: 0;
-			}
 			&__navigation {
 				flex-direction: column;
 				justify-content: center;
@@ -237,223 +230,150 @@ body {
 	.main {
 		flex: 1 0 auto;
 		.section {
-			padding: 20px 5vw;
+			padding: 1.2em .7em;
 			text-align: justify;
-			text-indent: 25px;
+			color: $color-text-dark;
+			p{
+				text-indent: 1.5em;
+			}
 			&:nth-child(even) {
 				background-color: $bg-color-light;
 			}
-			&__title {
-				color: $color-text-section-title;
-			}
 			&.about-game {
 				padding: 30px 8vw 40px 5vw;
-			}
-			&.near-evening {
-				text-indent: 0;
-				.booking {
-					display: flex;
-					flex-direction: column;
-					justify-content: center;
-					align-items: center;
-					margin: 20px 0px;
-					border: 1px solid $color-text-blur;
-					border-radius: 5px;
-					&__day{
-						&-settings-row{
-							font-size: 1.2em;
-						}
-						&-event{
-							margin: 0px 0px 5px 0px;
-							font-size: 2em;
-							text-align: center;
-							color: $color-text-section-title
-						}
-						&-prim{
-							margin: 0px 0px 5px 0px;
-							font-size: 0.9em;
-							text-align: center;
-							color: $color-text-main;
-							border-bottom: 1px solid;
-						}
-					}
-					&__title {
-						margin: 10px 0 20px 0;
-						text-align: center;
-						font-size: 2em;
-						text-transform: uppercase;
-					}
-					&__subtitle {
-						margin: 5px 0 10px 0;
-						text-align: center;
-						font-size: 1.6em;
-						text-transform: uppercase;
-					}
-					&__settings {
-						&-row {
-							width: 55vw;
-							max-width: 1200px;
-							display: grid;
-							grid-gap: 2em;
-							margin-top: 10px;
-							&.multiple-elements {
-								grid-template-columns: 2fr repeat(2, 1fr);
-							}
-							&.two-elements {
-								grid-template-columns: repeat(2, 1fr);
-								font-size: 1.2em;
-								letter-spacing: 0.03em;
-							}
-						}
-					}
-					&__participants{
-						margin: 20px 0 10px 0;
-					}
-					&__label-centered {
-						text-align: center;
-					}
-					&__participant {
-						display: flex;
-						align-items: center;
-						margin: 10px 0;
-						white-space: nowrap;
-						&-num {
-							width: 30px;
-						}
-						&-arrive {
-							width: 75px;
-						}
-						&-duration {
-							width: 120px;
-						}
-						&-info {
-							span {
-								font-size: 1.4em;
-							}
-						}
-						&-name {
-							display: inline-block;
-							width: 20vw;
-						}
-						&-remove {
-							font-size: 1.3em;
-							color: $button-remove-color;
-							cursor: pointer;
-							transition: all $animation-fast ease-in-out;
-							&:hover {
-								color: $button-remove-color-hover;
-							}
-						}
-					}
-					input,
-					select {
-						background-color: $bg-color-input;
-						text-align: center;
-						border: 0;
-						font-size: 1.4rem;
-						color: $color-text-menu;
-						&[placeholder] {
-							color: $color-text-menu;
-						}
-						option {
-							color: $bg-color-input;
-						}
-						&::-webkit-calendar-picker-indicator {
-							display: none !important;
-						}
-					}
-					&__buttons {
-						margin: 20px 0;
-						button {
-							@extend %buttonStyle;
-						}
-					}
-					&__additional-evening {
-						display: flex;
-						flex-direction: column;
-						justify-content: center;
-						align-items: center;
-					}
-				}
 			}
 		}
 	}
 }
 .footer {
-	background: linear-gradient($bg-color-dark, $bg-color-light);
-	height: 12vh;
-	min-height: 20px;
-	max-height: 80px;
-	padding: 10px 10vw 5px 10vw !important;
+	background: $main-footer-bg-dark;
+	padding: .4rem 3vw !important;
 	flex: 0 0 auto;
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center;
 	box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.5);
-	font-size: 0.8em;
+	font-size: 0.7em;
+	color: $color-text-light-blur;
 	&__copyrights {
 		margin: 5px 0px 5px 0px;
 		font-size: 0.7em;
 	}
-	&__links {
-		margin-top: 5px;
-	}
-	&__link {
-		margin: 0px 3px;
-		font-size: 1.2rem;
-		color: $color-text-blur;
-	}
 	.setting-text-dashboard {
 		width: 80vw;
 	}
+	&__content{
+		box-sizing: border-box;
+		display: flex;
+		justify-content: space-between;
+	}
+	&__block{
+		box-sizing: border-box;
+		&.contacts{
+			display: flex;
+			flex-direction: column;
+		}
+	}
+	&__gmap{
+		display: none;
+	}
+	&__adress{
+		display: flex;
+		flex-direction: column;
+		font-size: 1.1em;
+		line-height: 1.3em;
+		&-link{
+			font-size: 1.3rem;
+			line-height: 1.7em;
+		}
+	}
+	&__contacts{
+		display: flex;
+		flex-direction: column;
+		font-size: 1.1em;
+		line-height: 1.2em;
+		letter-spacing: 0.05em;
+		flex-grow: 1;
+		&-link{
+			font-size: 1.3rem;
+			line-height: 1.7em;
+		}
+	}
+	&__socials{
+		font-size: 1.5em;
+		line-height: 1.3em;
+		*{
+			margin-right: 1em;
+		}
+	}
+	&__logo {
+		// filter: drop-shadow(10px -5px 5px #d90000);
+		height: 6em;
+		border: 1px solid #f6f4f3;
+		border-radius: 7px;
+		padding: 0.1rem 0.3rem;
+		text-align: center;
+		img {
+			height: 100%;
+		}
+	}
+	a{
+		text-decoration: none;
+		color: $color-text-menu;
+	}
 }
 
-@include sm {
-	.section {
-		padding: 20px 10px;
+@include md {
+	.header, .footer {
+		padding: .7rem 10vw !important;
+	}
+	.footer__gmap{
+		display: block;
+	}
+	.header{
+		justify-content: normal;
+		label.navigation-for-small-display {
+			display: none;
+		}
+		&__logo{
+			order: 1;
+			margin-right: 3vw;
+		}
+		&__menu{
+			order: 2;
+		}
+		&__profile{
+			order: 3;
+			margin-left: auto;
+		}
+	}
+	.section{
+		padding: 20px 10vw !important;
 		.booking {
-			&__place {
-				&-row {
-					width: 85vw !important;
-				}
-				input {
-					width: 100% !important;
-				}
-			}
 			&__participant {
 				&-name {
-					width: 30vw !important;
+					width: 20vw;
 				}
 			}
 		}
 	}
-	.header {
-		padding: 15px 5vw 20px 5vw !important;
-	}
-}
-@include md {
-	.header {
-		padding: 15px 10vw 20px 10vw !important;
-	}
 }
 @include lg {
-	.header {
-		padding: 15px 20vw 20px 20vw;
+	.header, .footer {
+		padding: .8rem 15vw !important;
+	}
+	.header{
+		&__logo{
+			margin-right: 5vw;
+		}
 	}
 	.section:not(.news-preview) {
-		padding: 40px 15vw !important;
+		padding: .7rem 15vw !important;
 	}
 	.setting-text-dashboard {
 		width: 70vw !important;
 	}
-	.footer {
-		padding: 10px 7vw !important;
-	}
 }
 @include xl {
-	.header {
-		padding: 15px 20vw 20px 20vw !important;
+	.header, .footer {
+		padding: 1rem 20vw !important;
 	}
 	.section:not(.news-preview) {
 		padding: 40px 20vw !important;
@@ -461,29 +381,23 @@ body {
 	.setting-text-dashboard {
 		width: 60vw !important;
 	}
-	.footer {
-		padding: 10px 10vw 5px 10vw !important;
-	}
 }
 
 @import "modals";
 @import "news";
 @import "page";
 @import "weeks";
+@import "booking";
 @import "game";
 @import "profile";
 @import "tables";
-
-/* .ck-body {
-	display: none;
-}
- */
+@import "settings";
 
 .dropdown {
 	position: relative;
 	&__menu{
 		position: absolute;
-		background-color: #221740;
+		background-color: $bg-color-red-blur;
 		display: none;
 		box-shadow: 0 0 10px 3px #1515158a;
 	}
@@ -541,7 +455,7 @@ body {
 		position: absolute;
 		top: 30px;
 		left: 0;
-		background-color: #150551;
+		background-color: $bg-color-red-blur;
 		list-style: none;
 		border-radius: 5px;
 

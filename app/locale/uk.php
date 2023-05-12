@@ -14,6 +14,7 @@ return [
     'Login' => 'Логін',
     'Nickname (in game)' => 'Псевдонім (ігровий)',
     'Password' => 'Пароль',
+    'New password' => 'Новий пароль',
     'Password again' => 'Пароль, ще раз',
 
     '{{ Account_Login_Page_Title }}' => 'Вхід',
@@ -30,7 +31,8 @@ return [
     '{{ Settings_List_Title }}' => 'Налаштування системи',
     '{{ Chats_List_Title }}' => 'Чати з нашим Ботом',
 
-    '{{ HEADER_MENU_INFORMATION }}' => 'Про клуб',
+    'Home' => 'Головна',
+    '{{ HEADER_MENU_START_PAGE }}' => 'Про клуб',
     '{{ HEADER_MENU_NEWS }}' => 'Новини',
     '{{ HEADER_MENU_WEEKS }}' => 'Розклад ігор',
     '{{ HEADER_ASIDE_MENU_PROFILE }}' => 'Профіль',
@@ -52,19 +54,26 @@ return [
     '{{ Account_Login_User_Not_Found }}' => "Користувач не знайден!\nПеревірте логін та пароль!",
     'Rename Temporary Player' => 'Перейменування тичасового гравця',
 
-    '{{ Account_Profile_Form_Title }}' => 'Профіль користувача <b>%s</b>',
-    '{{ Account_Profile_Form_Fio_Label }}' => 'Прізвище, Ім’я та по-батькові',
-    '{{ Account_Profile_Form_Birthday_Label }}' => 'Дата народження',
-    '{{ Account_Profile_Form_Gender_Label }}' => 'Гендер',
-    '{{ Account_Profile_Form_Email_Label }}' => 'Електонна пошта',
-    '{{ Account_Profile_Form_Telegram_Label }}' => 'Телеграм',
+    '{{ Account_Profile_Form_Title }}' => 'Особова справа агента «<b>%s</b>»',
+    'Name, secondary name, middle name' => 'П.І.Б.',
+    'Birthday' => 'Дата народження',
+    'Gender' => 'Пол',
+    'E-mail' => 'Електонна пошта',
+    'Telegram' => 'Телеграм',
+    'Phone Number' => 'Номер телефону',
     '{{ Account_Profile_Form_User_Avatar }}' => 'Аватар користувача %s',
+    'Male' => 'Пан',
+    'Female' => 'Пані',
+    'secret' => 'Дехто',
 
     '{{ Account_Avatar_Form_Title }}' => 'Аватар користувача %s',
     '{{ Account_Avatar_Form_Newcrop_Link }}' => 'Замінити',
 
     '{{ Account_Register_Form_Title }}' => 'Форма реєстрації',
 
+    'Change Password' => 'Зміна паролю',
+    'Old password is wrong!' => 'Не вірний попередній пароль!',
+    'Passwords isn’t match!' => 'Паролі не співпадають!',
     '{{ Account_Password_Reset_Title }}' => 'Зброс паролю',
     '{{ Account_Forget_Form_Title }}' => 'Відновлення паролю',
     '{{ Account_Forget_Check_Succes }}' => "Запит на відновлення паролю оброблено.\nВаше посилання на відновлення паролю:\n%s",
@@ -85,6 +94,20 @@ return [
     '{{ Day_Block_Prim_PLaceholder }}' => 'Примітка',
     '{{ Add_Field_Label }}' => 'Додати поле',
     '{{ Day_Set_Success }}' => 'Зміни успішно збережні!',
+
+    'Email SMTP Server' => 'SMTP Сервер',
+    'Email Login' => 'Логін',
+    'Email Password' => 'Пароль додатка',
+    'Email Secure Type' => 'Тип безпеки',
+    'Email SMTP Port' => 'SMTP Порт',
+    'Contacts Email' => 'Контактна ел. почта',
+    'Contacts Phone' => 'Контактний телефон',
+    'Adress' => 'Адреса',
+    'Telegram Group' => 'Група в Telegram',
+    'Telegram Group Name' => 'Назва групи в Telegram',
+    'Google Map Link' => 'Посилання на Google Maps',
+    'Google Map Widget Link' => 'Віджет Google Maps',
+    'Youtube Channel' => 'Youtube канал',
 
     '{{ Monday }}' => 'Понеділок',
     '{{ Tuesday }}' => 'Вівторок',
@@ -185,4 +208,19 @@ return [
     /promo Заголовок
 Підзголовок
 Текст... або: Тут могла бути, Ваша <b>Реклама</b><i>:)</i>",
+
+
+    '+ (week day) <i>// Booking for the scheduled games of the current week, examples:</i>
+    +вс
+    + на сегодня, на 19:30 (отсижу 1-2 игры, под ?)
+    - (week day) <i>// Unsubscribe from games on a specific day that you previously signed up for, examples:</i>
+    -вс
+    - завтра' => '+ (день тижня) <i>//Записатись на ігри поточного тижня. Зразок:</i>
+    +вс
+    + на сьогодні, на 19:30 (витримаю кілька ігор, под ?)
+- (день тижня) <i>//Відписатись від ігор, якщо раніше записувались. Зразок:</i>
+    -вс
+    - завтра',
+
+    '<u>/nick Your nickname</u> (Cyrillic) <i>// Register your nickname</i>' => '<u>/nick Ваш псевдонім</u> (кириліцею) <i>// Зарезервувати за собою псевдонім</i>',
 ];

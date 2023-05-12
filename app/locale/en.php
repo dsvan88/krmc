@@ -36,12 +36,7 @@ return [
     '{{ Account_Login_User_Not_Found }}' => "User isn’t found!\nCheck your login and password!",
 
 
-    '{{ Account_Profile_Form_Title }}' => 'Users’s profile <b>%s</b>',
-    '{{ Account_Profile_Form_Fio_Label }}' => 'Name, secondary name, middle name',
-    '{{ Account_Profile_Form_Birthday_Label }}' => 'Birthday',
-    '{{ Account_Profile_Form_Gender_Label }}' => 'Gender',
-    '{{ Account_Profile_Form_Email_Label }}' => 'E-mail',
-    '{{ Account_Profile_Form_Telegram_Label }}' => 'Telegram',
+    '{{ Account_Profile_Form_Title }}' => 'Agent’s profile «<b>%s</b>»',
     '{{ Account_Profile_Form_User_Avatar }}' => 'Users avatar of %s',
 
     '{{ Account_Avatar_Form_Title }}' => 'Avatar of %s',

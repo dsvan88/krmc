@@ -3,17 +3,22 @@
     <form class="booking" action="/days<?= $day['dayId'] ?>/w<?= $day['weekId'] ?>" method="POST">
         <h3 class="booking__title"><?= $texts['daysBlockTitle'] ?></h3>
         <div class="booking__settings">
-            <div class="booking__settings-row two-elements">
+            <div class="booking__settings-row">
                 <label for="game-day-time" class="booking__label-centered"> <?= $day['date'] ?> </label>
-                <input list="time-list" type="text" name="day_time" value="<?= $day['time'] ?>" placeholder="<?= $texts['dayGameStart'] ?>" id="game-day-time" />
+                <div class="booking__settings-wrapper">
+                    <input list="time-list" type="text" name="day_time" value="<?= $day['time'] ?>" placeholder="<?= $texts['dayGameStart'] ?>" id="game-day-time" />
+                </div>
             </div>
-            <div class="booking__settings-row multiple-elements">
+            <div class="booking__settings-row single">
                 <select name="game">
-                    <option value="mafia" <?= ($day['game'] === 'mafia' ? 'selected' : '') ?>><?= $texts['dayGameMafia'] ?></option>
+                    <? foreach($gameTypes as $num=>$gameType) :?>
+                        <option value="<?= $gameType['slug']?>" <?= ($day['game'] === $gameType['slug'] ? 'selected' : '') ?>><?= $gameType['name'] ?></option>
+                    <? endforeach ?>
+                    <? /*<option value="mafia" <?= ($day['game'] === 'mafia' ? 'selected' : '') ?>><?= $texts['dayGameMafia'] ?></option>
                     <option value="poker" <?= ($day['game'] === 'poker' ? 'selected' : '') ?>><?= $texts['dayGamePoker'] ?></option>
                     <option value="board" <?= ($day['game'] === 'board' ? 'selected' : '') ?>><?= $texts['dayGameBoard'] ?></option>
                     <option value="cash" <?= ($day['game'] === 'cash' ? 'selected' : '') ?>><?= $texts['dayGameCash'] ?></option>
-                    <option value="etc" <?= ($day['game'] === 'etc' ? 'selected' : '') ?>><?= $texts['dayGameEtc'] ?></option>
+                    <option value="etc" <?= ($day['game'] === 'etc' ? 'selected' : '') ?>><?= $texts['dayGameEtc'] ?></option>*/?>
                 </select>
                 <span class="checkbox-styled">
                     <input type="checkbox" name="mods[]" id="game-tournament-checkbox" value="tournament" class="checkbox-styled-checkbox" <?= $day['tournament'] ?> />
@@ -21,7 +26,9 @@
                 </span>
             </div>
             <div class="booking__settings-row">
-                <input type="text" name="day_prim" value='<?= $day['day_prim'] ?>' placeholder="<?= $texts['dayRemarkPlaceHolder'] ?>" />
+                <div class="booking__settings-wrapper single">
+                    <input type="text" name="day_prim" value='<?= $day['day_prim'] ?>' placeholder="<?= $texts['dayRemarkPlaceHolder'] ?>" />
+                </div>
             </div>
         </div>
         <div class="booking__participants">
@@ -42,7 +49,7 @@
                     <div class="booking__participant-info">
                         <input name="participant[]" type="text" value="<?= $userName ?>" class="booking__participant-name" data-action-input="autocomplete-users-names" list="users-names-list" autocomplete="off" data-action-change="participant-check-change" />
                         <input name="arrive[]" list="time-list" type="text" class="booking__participant-arrive" value="<?= isset($day['participants'][$x]) ? $day['participants'][$x]['arrive'] : '' ?>" autocomplete="off" />
-                        <input name="prim[]" value="<?= isset($day['participants'][$x]) ? $day['participants'][$x]['prim'] : '' ?>" placeholder="<?= $texts['dayRemarkPlaceHolder'] ?>">
+                        <input name="prim[]" type="text" class="booking__participant-prim" value="<?= isset($day['participants'][$x]) ? $day['participants'][$x]['prim'] : '' ?>" placeholder="<?= $texts['dayRemarkPlaceHolder'] ?>">
                         <i class="fa fa-minus-circle booking__participant-remove" data-action-click="participant-field-remove" title="<?= $texts['clearLabel'] ?>"></i>
                     </div>
                 </div>

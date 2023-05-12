@@ -6,8 +6,6 @@ use app\core\Controller;
 use app\core\Locale;
 use app\core\TelegramBot;
 use app\core\View;
-use app\models\Days;
-use app\models\News;
 use app\models\Settings;
 use app\models\TelegramChats;
 use app\models\Users;
@@ -36,7 +34,7 @@ class TelegramBotController extends Controller
         }
 
         $langCode = 'uk';
-        if (isset($message['message']['from']['language_code']) && in_array($message['message']['from']['language_code'], ['uk', 'en', 'ru'])) {
+        if (isset($message['message']['from']['language_code']) && in_array($message['message']['from']['language_code'], ['en', 'ru'])) {
             $langCode = $message['message']['from']['language_code'];
         }
         Locale::change($langCode);
@@ -45,15 +43,16 @@ class TelegramBotController extends Controller
     }
     public static function webhookAction()
     {
+        // exit(json_encode(['message'=>self::$message], JSON_UNESCAPED_UNICODE));
         $bot = new TelegramBot();
         $techTelegramId = Settings::getTechTelegramId();
         try {
 
             $text = trim(self::$message['message']['text']);
             $command = self::parseCommand($text);
-
+            
             if (!$command) return false;
-
+            
             $telegramId = self::$message['message']['from']['id'];
 
             $userData = Users::getDataByTelegramId($telegramId);
@@ -130,8 +129,9 @@ class TelegramBotController extends Controller
             $command = strtolower($command);
 
             if (in_array($command, ['?', 'help'])) {
-                return ['command' => 'help'];
+                return ['command' => 'help', 'arguments'=>[]];
             }
+            
             if (in_array($command, ['reg', 'set'], true)) {
                 $text = mb_substr($text, $commandLen + 1, NULL, 'UTF-8');
                 $arguments = explode(',', mb_strtolower(str_replace('на ', '', $text)));
@@ -223,25 +223,28 @@ class TelegramBotController extends Controller
     public static function execute($command = null){
 
         $command = $command ? $command : self::$command['command'];
-        $path = $_SERVER['DOCUMENT_ROOT']."/app/Controllers/TelegramCommands/$command.php";
         
-        if (!file_exists($path)) 
-            return ['result' => false, 'message' => 'Telegram command isn`t found!'];
+        $class = ucfirst($command).'Command';
+        $class = str_replace('/','\\', "/app/Repositories/TelegramCommands/{$class}");
+        
+        if (!class_exists($class)){
+            return ['result' => false, 'message' => $class.' Telegram command isn`t found!'];
+        }
         
         extract(self::$command);
-        
-        $result = false;
-        $message = '';
 
-        require $path;
+        $class::$operatorClass = self::class;
+        $class::$requester = self::$requester;
+        $class::$message = self::$message;
+        $result = $class::execute($arguments);
 
         $return = [
-            'result' => $result,
-            'message' => $message
+            'result' => $result[0],
+            'message' => $result[1]
         ];
 
-        if (isset($preMessage)){
-            $return['pre-message'] = $preMessage;
+        if (isset($result[2])){
+            $return['pre-message'] = $result[2];
         }
 
         return $return;
