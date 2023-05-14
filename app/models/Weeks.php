@@ -174,7 +174,7 @@ class Weeks extends Model
                 finish INT NOT NULL DEFAULT '0',
                 created_at TIMESTAMP DEFAULT NOW(),
                 updated_at TIMESTAMP DEFAULT NOW(),
-                date_delete TIMESTAMP DEFAULT NULL,
+                date_delete TIMESTAMP DEFAULT NULL
             );"
         );
     }
