@@ -172,9 +172,9 @@ class Weeks extends Model
                 data JSON DEFAULT NULL,
                 start INT NOT NULL DEFAULT '0',
                 finish INT NOT NULL DEFAULT '0',
-                created_at INT NOT NULL DEFAULT '0',
-                updated_at INT NOT NULL DEFAULT '0',
-                deleted_at INT NOT NULL DEFAULT '0'
+                created_at TIMESTAMP DEFAULT NOW(),
+                updated_at TIMESTAMP DEFAULT NOW(),
+                date_delete TIMESTAMP DEFAULT NULL,
             );"
         );
     }
