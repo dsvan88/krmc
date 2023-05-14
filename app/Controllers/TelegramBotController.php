@@ -101,6 +101,7 @@ class TelegramBotController extends Controller
                 'messageData' => self::$message,
             ];
             $bot->sendMessage($techTelegramId, json_encode($debugMessage, JSON_UNESCAPED_UNICODE));
+            $bot->sendMessage(self::$message['message']['chat']['id'], Locale::phrase("Something went wrong😱!\nWe are deeply sorry for that😢\nI’ve informed our administrators about your situation, and they are fixing it right now!\nThank you for understanding!"));
         }
     }
     public static function parseCommand($text)
