@@ -8,6 +8,7 @@ use app\core\View;
 use app\models\Settings;
 use app\models\Users;
 use app\core\Locale;
+use app\core\Mailer;
 use app\core\TelegramBot;
 use app\core\Validator;
 use app\models\Contacts;
@@ -155,6 +156,9 @@ class AccountController extends Controller
             $data = ContactRepository::getFields($userId, 'No data');
             $data = ContactRepository::wrapLinks($data);
         }
+        elseif ($section === 'security'){
+            $data = ContactRepository::checkApproved($userId);
+        }
         else{
             $data = AccountRepository::getFields($userId);
         }
@@ -235,40 +239,6 @@ class AccountController extends Controller
 
         View::message(['html' => $result]);
     }
-
-    // public function profileFormAction()
-    // {
-    //     $uid = (int)$_POST['uid'];
-    //     if (!in_array($_SESSION['privilege']['status'], ['manager', 'admin'])) {
-    //         $uid = (int) $_SESSION['id'];
-    //     }
-    //     $userData = Users::getDataById($uid);
-
-    //     if ($userData['personal']['avatar'] !== '') {
-    //         $avatar = FILE_USRGALL . "{$userData['id']}/{$userData['personal']['avatar']}";
-    //     } else {
-    //         $avatar = Settings::getImage('empty_avatar')['value'];
-    //     }
-    //     $userData['avatar'] = ImageProcessing::inputImage($avatar, ['title' => Locale::phrase(['string' => '{{ Account_Profile_Form_User_Avatar }}', 'vars' => [$userData['name']]])]);
-
-    //     $vars = [
-    //         'title' => [
-    //             'string' => '{{ Account_Profile_Form_Title }}',
-    //             'vars' => [$userData['name']]
-    //         ],
-    //         'texts' => [
-    //             'FioLabel' => 'Name, secondary name, middle name',
-    //             'BirthdayLabel' => 'Birthday',
-    //             'GenderLabel' => 'Gender',
-    //             'EmailLabel' => 'Email',
-    //             'SaveLabel' => 'Save',
-    //             'CancelLabel' => 'Cancel'
-    //         ],
-    //         'userId' => $uid,
-    //         'data' => $userData
-    //     ];
-    //     View::modal($vars);
-    // }
     public function setNicknameAction()
     {
         if (empty($_POST)) {
@@ -357,6 +327,113 @@ class AccountController extends Controller
         ];
         View::modal($vars);
     }
+    public function emailVerifyHashAction(){
+        if (empty($_SESSION['id'])){
+            View::errorCode(404, ['message'=>'<p>Your aren’t authorized yet!</p><p>Please - use browser, where you made your request!</p>']);
+        }
+        extract(self::$route['vars']);
+
+        $contacts = Contacts::getByUserId($_SESSION['id']);
+        
+        $emailData = [];
+        foreach($contacts as $num=>$contact){
+            if ($contact['type'] !== 'email') continue;
+            $emailData = $contact;
+            break;
+        }
+
+        if (empty($emailData['data'])){
+            View::errorCode(404, ['message'=>'<p>We can’t find your request</p><p>Or</p><p>Link has been expired!</p>']);
+        }
+
+        $emailData['data'] = json_decode($emailData['data'], true);
+        if ($emailData['data']['approve']['hash'] !== $hash){
+            View::errorCode(404, ['message'=>'<p>We can’t find your request</p><p>Or</p><p>Link has been expired!</p>']);
+        }
+        unset($emailData['data']['approve']);
+        $emailData['data']['approved'] = $_SERVER['REQUEST_TIME'];
+        Contacts::edit(['data'=>$emailData['data']], ['id'=> $emailData['id']]);
+        
+        View::redirect('/');
+    }
+    public function emailVerifyCodeAction(){
+        if (empty($_SESSION['id'])){
+            View::errorCode(404, ['message'=>'<p>Your aren’t authorized yet!</p><p>Please - use browser, where you made your request!</p>']);
+        }
+
+        $code = $_POST['approval_code'];
+        $contacts = Contacts::getByUserId($_SESSION['id']);
+        
+        $emailData = [];
+        foreach($contacts as $num=>$contact){
+            if ($contact['type'] !== 'email') continue;
+            $emailData = $contact;
+            break;
+        }
+
+        if (empty($emailData['data'])){
+            View::errorCode(404, ['message'=>'<p>We can’t find your request</p><p>Or</p><p>Link has been expired!</p>']);
+        }
+
+        $emailData['data'] = json_decode($emailData['data'], true);
+        if ($emailData['data']['approve']['code'] !== $code){
+            View::errorCode(404, ['message'=>'<p>We can’t find your request</p><p>Or</p><p>Link has been expired!</p>']);
+        }
+        unset($emailData['data']['approve']);
+        $emailData['data']['approved'] = $_SERVER['REQUEST_TIME'];
+        Contacts::edit(['data'=>$emailData['data']], ['id'=> $emailData['id']]);
+        
+        View::message(['message'=>'Success!', 'location' => '/account/profile/'.$_SESSION['id']]);
+    }
+    public function emailApproveFormAction()
+    {
+        $contacts = Settings::load('contacts');
+        $userData = Users::getDataById($_SESSION['id']);
+        $userContacts = Contacts::getByUserId($_SESSION['id']);
+
+        $mailer = new Mailer();
+
+        $contact = ContactRepository::setApproveData('email',$userContacts);
+
+        $mail = [
+            'title' => '<no-reply> '.MAFCLUB_NAME.' - Verify your E-mail',
+            'body' => "
+            <p>Please follow this link to verify your email:</p>
+            <p>https://krmc.gigalixirapp.com/account/approve/email/{$contact['data']['approve']['hash']}</p>
+            <p>or</p>
+            <p>Enter this code in the previous window:</p>
+            <p>{$contact['data']['approve']['code']}</p>",
+        ];
+        $mailer->prepMessage($mail);
+        $mailer->send($contact['contact']);
+
+        $vars = [
+            'title' => 'Approve User’s Email',
+            'texts' => [
+                'SubmitLabel' => 'Send',
+                'CancelLabel' => 'Cancel',
+            ],
+            'userId' => $userData['id'],
+            'userName' => $userData['name'],
+            'contacts' => $contacts,
+        ];
+        View::modal($vars);
+    }
+    public function telegramApproveFormAction()
+    {
+        $contacts = Settings::load('contacts');
+        $userData = Users::getDataById($_SESSION['id']);
+        $vars = [
+            'title' => 'Approve User’s Telegram',
+            'texts' => [
+                'AgreeLabel' => 'Agree',
+            ],
+            'userId' => $userData['id'],
+            'userName' => $userData['name'],
+            'contacts' => $contacts,
+        ];
+        View::modal($vars);
+    }
     public function renameDummyPlayerFormAction()
     {
         if (!in_array($_SESSION['privilege']['status'], ['manager', 'admin'])) {
@@ -367,7 +444,7 @@ class AccountController extends Controller
             'title' => 'Rename Temporary Player',
             'texts' => [
                 'SaveLabel' => 'Save',
-                'CancelLabel' => 'Cancel'
+                'CancelLabel' => 'Cancel',
             ],
             'scripts' => '/public/scripts/apply-input-listener.js?v=' . $_SERVER['REQUEST_TIME']
         ];

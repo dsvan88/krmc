@@ -1,5 +1,7 @@
 <?php
 
+namespace app\core;
+
 use app\core\PHPMailer\PHPMailer;
 use app\models\Settings;
 
@@ -25,22 +27,22 @@ class Mailer
     public function prepMailer()
     {
         $this->mail = new PHPMailer();
-
+        
         $this->mail->isSMTP();
         $this->mail->CharSet = "UTF-8";
         $this->mail->SMTPAuth   = true;
-        // $this->mail->SMTPDebug = 4;
-        // $this->mail->Debugoutput = function ($str, $level) {
-        //     $GLOBALS['status'][] = $str;
-        // };
+        $this->mail->SMTPDebug = 4;
+        $this->mail->Debugoutput = function ($str, $level) {
+            $GLOBALS['status'][] = $str;
+        };
+            
+        $settings = Settings::load('email');
 
-        // Settings
-
-        $this->mail->Host       = 'smtp.gmail.com';
-        $this->mail->Username   = 'dsv.tester33@gmail.com';
-        $this->mail->Password   = 'cgzmcmkvjkaowrxs';
-        $this->mail->SMTPSecure = 'ssl';
-        $this->mail->Port       = 465;
+        $this->mail->Host       = $settings['host']['value'];
+        $this->mail->Username   = $settings['username']['value'];
+        $this->mail->Password   = $settings['password']['value'];
+        $this->mail->SMTPSecure   = $settings['secure']['value'];
+        $this->mail->Port   = (int) $settings['port']['value'];
 
         if (isset($this->senderData['email']))
             $this->mail->setFrom($this->senderData['email'], $this->senderData['name']);

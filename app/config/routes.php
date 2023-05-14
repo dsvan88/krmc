@@ -66,6 +66,13 @@ return  [
         'action' => 'show',
         'access' => ['category' => 'user']
     ],
+    'account/approve/email/{hash}' =>
+    [
+        'controller' => 'account',
+        'action' => 'emailVerifyHash',
+        'access' => ['category' => 'all']
+    ],
+    
     'users/list' => [
         'controller' => 'account',
         'action' => 'list',
@@ -113,7 +120,7 @@ return  [
         'access' => ['category' => 'manager']
     ],
 
-    'days{dayId}/w{weekId}' => [
+    'week/{weekId}/day/{dayId}' => [
         'controller' => 'days',
         'action' => 'show',
         'access' => ['category' => 'all']
@@ -203,6 +210,24 @@ return  [
     [
         'controller' => 'account',
         'action' => 'passwordChange',
+        'access' => ['category' => 'user']
+    ],
+    'api/account/email/approve' =>
+    [
+        'controller' => 'account',
+        'action' => 'emailVerifyCode',
+        'access' => ['category' => 'user']
+    ],
+    'api/account/email/approve/form' =>
+    [
+        'controller' => 'account',
+        'action' => 'emailApproveForm',
+        'access' => ['category' => 'user']
+    ],
+    'api/account/telegram/approve/form' =>
+    [
+        'controller' => 'account',
+        'action' => 'telegramApproveForm',
         'access' => ['category' => 'user']
     ],
     'api/account/profile/form' =>

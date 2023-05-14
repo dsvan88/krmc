@@ -211,6 +211,7 @@ class Users extends Model
         self::edit(['password' => $newPassword], ['id' => $userId]);
         return true;
     }
+
     public static function getList()
     {
         $table = self::$table;

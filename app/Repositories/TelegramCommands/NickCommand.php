@@ -72,11 +72,13 @@ class NickCommand extends ChatCommand {
                 'type' => 'telegramid',
                 'contact' => $telegramId,
             ]);
-            Contacts::add([
-                'user_id' => $userExistsData['id'],
-                'type' => 'telegram',
-                'contact' => $telegram,
-            ]);
+            if (!empty($telegram)){
+                Contacts::add([
+                    'user_id' => $userExistsData['id'],
+                    'type' => 'telegram',
+                    'contact' => $telegram,
+                ]);
+            }
         }
         return [true, self::locale(['string' => '{{ Tg_Command_Name_Save_Success }}', 'vars' => [$username]])];
     }

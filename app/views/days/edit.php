@@ -1,16 +1,16 @@
 <section class="section near-evening">
     <? /*<form class="booking" action="/days<?= $dayId ?>/w<?= $weekId ?>" data-wid="<?= $weekId ?>" data-did="<?= $dayId ?>">*/ ?>
-    <form class="booking" action="/days<?= $day['dayId'] ?>/w<?= $day['weekId'] ?>" method="POST">
-        <h3 class="booking__title"><?= $texts['daysBlockTitle'] ?></h3>
-        <div class="booking__settings">
-            <div class="booking__settings-row">
-                <label for="game-day-time" class="booking__label-centered"> <?= $day['date'] ?> </label>
-                <div class="booking__settings-wrapper">
-                    <input list="time-list" type="text" name="day_time" value="<?= $day['time'] ?>" placeholder="<?= $texts['dayGameStart'] ?>" id="game-day-time" />
+        <form class="booking" action="/week/<?= $day['weekId'] ?>/day/<?= $day['dayId'] ?>/" method="POST">
+            <h3 class="booking__title"><?= $texts['daysBlockTitle'] ?></h3>
+            <div class="booking__settings">
+                <div class="booking__settings-row">
+                    <label for="game-day-time" class="booking__label-centered"> <?= $day['date'] ?> </label>
+                    <div class="booking__settings-wrapper">
+                        <input list="time-list" type="text" name="day_time" value="<?= $day['time'] ?>" placeholder="<?= $texts['dayGameStart'] ?>" id="game-day-time" />
+                    </div>
                 </div>
-            </div>
-            <div class="booking__settings-row single">
-                <select name="game">
+                <div class="booking__settings-row single">
+                    <select name="game">
                     <? foreach($gameTypes as $num=>$gameType) :?>
                         <option value="<?= $gameType['slug']?>" <?= ($day['game'] === $gameType['slug'] ? 'selected' : '') ?>><?= $gameType['name'] ?></option>
                     <? endforeach ?>

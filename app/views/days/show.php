@@ -3,7 +3,7 @@
         <h3 class="booking__title"><?= $texts['daysBlockTitle'] ?></h3>
         <div class="booking__day-settings">
             <div class="booking__day-settings-row">
-                <h2 class="booking__day-event"><?= $texts['dayGame' . ucfirst($day['game'])] ?></h2>
+                <h2 class="booking__day-event"><?= $gameName ?></h2>
             </div>
             <div class="booking__day-settings-row">
                 <h4 class="booking__day-prim"><?= $day['day_prim'] ?></h4>

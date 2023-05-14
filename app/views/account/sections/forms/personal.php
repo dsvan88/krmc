@@ -3,25 +3,25 @@
         <h3 class="profile__card-title">Справа № <span class="text-accent"><?= $userId ?></span>:</h3>
     </div>
     <div class="profile__card-row">
-        <div class="profile__card-label">
+        <h5 class="profile__card-label">
             <?= $texts['FioLabel'] ?>:
-        </div>
+        </h5>
         <div class="profile__card-value">
             <input type="text" name='fio' value="<?= $data['personal']['fio'] ?>">
         </div>
     </div>
     <div class="profile__card-row">
-        <div class="profile__card-label">
+        <h5 class="profile__card-label">
             <?= $texts['BirthdayLabel'] ?>:
-        </div>
+        </h5>
         <div class="profile__card-value">
             <input type="date" name='birthday' value="<?= date('Y-m-d', $data['personal']['birthday']) ?>">
         </div>
     </div>
     <div class="profile__card-row">
-        <div class="profile__card-label">
+        <h5 class="profile__card-label">
             <?= $texts['GenderLabel'] ?>:
-        </div>
+        </h5>
         <div class="profile__card-value">
             <select name="gender">
                 <option value=""></option>

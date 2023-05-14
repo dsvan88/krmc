@@ -7,8 +7,6 @@ use app\core\Locale;
 use app\core\View;
 use app\models\Days;
 use app\models\GameTypes;
-use app\models\Users;
-use app\models\Weeks;
 
 class DaysController extends Controller
 {
@@ -19,13 +17,13 @@ class DaysController extends Controller
         if (isset($_SESSION['privilege']['status']) && in_array($_SESSION['privilege']['status'], ['manager', 'admin'])) {
             if (!empty($_POST)) {
                 $weekId = Days::edit($weekId, $dayId, $_POST);
-                View::message(['message' => '{{ Day_Set_Success }}', 'url' => "/days$dayId/w$weekId"]);
+                View::message(['message' => '{{ Day_Set_Success }}', 'url' => "/week/$weekId/day/$dayId/"]);
             }
             self::$route['action'] = 'edit';
             View::set(self::$route);
         }
-        $gameTypes = GameTypes::menu();
-
+        $gameTypes = Locale::apply(GameTypes::menu());
+        
         $vars = [
             'title' => '{{ Day_Set_Page_Title }}',
             'texts' => [
@@ -34,11 +32,6 @@ class DaysController extends Controller
                 'daysBlockParticipantsTitle' => '{{ Day_Block_Participants_Title }}',
                 'dayTournamentCheckboxLabel' => '{{ Day_Block_Tournament_Checkbox_Label }}',
                 'dayGameStart' => '{{ Day_Block_Games_Start }}',
-                'dayGameMafia' => 'Mafia',
-                'dayGamePoker' => 'Poker',
-                'dayGameBoard' => 'Board',
-                'dayGameCash' => 'Cash',
-                'dayGameEtc' => 'Etc',
                 'dayEvent' => '{{ Day_Block_Game_Name }}',
                 'dayRemarkPlaceHolder' => '{{ Day_Block_Prim_PLaceholder }}',
                 'clearLabel' => 'Clear',
@@ -46,8 +39,9 @@ class DaysController extends Controller
                 'setDayApprovedLabel' => 'Save',
             ],
             'gameTypes' => $gameTypes,
+            'gameName' => $gameTypes,
         ];
-       
+
         $day = Days::weekDayData($weekId, $dayId);
 
         $day['weekId'] = $weekId;
@@ -57,6 +51,13 @@ class DaysController extends Controller
 
         if (!isset($day['time'])) {
             $day['time'] = $dayDefaultData['time'];
+        }
+
+        $gamesCount = count($gameTypes);
+        for ($i=0; $i < $gamesCount; $i++) { 
+            if ($gameTypes[$i]['slug'] !== $day['game']) continue;
+            $gameName = $gameTypes[$i]['name'];
+            break;
         }
 
         if (isset($day['weekStart'])) {
@@ -77,7 +78,7 @@ class DaysController extends Controller
 
         $playersCount = max(count($day['participants']), 11);
         $scripts = '/public/scripts/day-edit-funcs.js?v=' . $_SERVER['REQUEST_TIME'];
-        $vars = array_merge($vars, compact('day', 'playersCount', 'scripts'));
+        $vars = array_merge($vars, compact('day', 'playersCount', 'scripts', 'gameName'));
         View::render($vars);
     }
     public function addAction()

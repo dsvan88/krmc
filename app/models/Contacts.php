@@ -8,7 +8,10 @@ class Contacts extends Model
 {
     public static $table = SQL_TBL_CONTACTS;
 
-     public static function isContactExists($contact)
+    public static function getByUserId(int $userId){
+        return self::findBy('user_id', $userId);
+    }
+    public static function isContactExists($contact)
     {
         return self::isExists(['contact' => $contact], self::$table);
     }

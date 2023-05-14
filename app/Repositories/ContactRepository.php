@@ -55,4 +55,66 @@ class ContactRepository
         }
         return true;
     }
+    public static function setApproveData(string $type, array $contacts){
+        
+        $contact = false;
+        foreach($contacts as $index=>$data){
+            if ($data['type'] !== $type) continue;
+            if (!empty($data['data'])){
+                $data['data'] = json_decode($data['data'], true);
+                if (isset($data['data']['approve']))
+                    return $data;
+            }
+            $contact = $data;
+            break;
+        }
+
+        if ($contact === false)
+            return false;
+
+        do {
+            $code = preg_replace('/[^0-9]/', '', sha1(json_encode($contacts).microtime()));
+        }
+        while(strlen($code) < 5);
+
+        if (strlen($code) < 8)
+            $code = str_pad($code, 8, '0');
+        else
+            $code = substr($code, 0, 8);
+        
+        $hash = sha1($code.$_SERVER['REQUEST_TIME']);
+
+        $contact['data']['approve'] = [
+            'code' => $code,
+            'hash' => $hash,
+        ];
+
+        Contacts::edit(['data' => $contact['data']], ['id' => $contact['id']]);
+        
+        return $contact;
+    }
+    public static function checkApproved($userId){
+        $contacts = Contacts::getByUserId($userId);
+        $approved = [];
+        foreach($contacts as $num=>$data){
+            if (empty($data['data'])) continue;
+            $data['data'] = json_decode($data['data'], true);
+            if (isset($data['data']['approved'])){
+                $approved[$data['type']] = true;
+            }
+        }
+        return $approved;
+    }
+    public static function getApproved($userId){
+        $contacts = Contacts::getByUserId($userId);
+        $approved = [];
+        foreach($contacts as $num=>$data){
+            if (empty($data['data'])) continue;
+            $data['data'] = json_decode($data['data'], true);
+            if (isset($data['data']['approved'])){
+                $approved[$data['type']] = $data['value'];
+            }
+        }
+        return $approved;
+    }
 }

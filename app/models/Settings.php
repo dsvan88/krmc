@@ -164,6 +164,7 @@ class Settings extends Model
             ['contacts', 'email', 'Contacts Email', 'kr.mafia.club@gmail.com'],
             ['contacts', 'phone', 'Contacts Phone', '+380987654321'],
             ['contacts', 'telegram', 'Telegram Group', 'https://t.me/+ymO2QrwKoQgzODhi'],
+            ['contacts', 'tg-chatbot', 'Telegram Bot Username', 'KRMafiaClubBot'],
             ['contacts', 'tg-name', 'Telegram Group Name', MAFCLUB_NAME],
             ['contacts', 'adress', 'Adress', 'Україна  Дніпропетровська обл.  м. Кривий Ріг  пр. Миру, 35'],
             ['contacts', 'gmap_link', 'Google Map Link', 'https://goo.gl/maps/ig4UybMfbdeRLDYHA'],

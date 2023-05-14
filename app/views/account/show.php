@@ -5,7 +5,7 @@
             <menu class="profile__sections">
                 <li class="profile__section fa fa-user active" data-action-click="account/profile/section" data-uid="<?= $userId ?>" data-section="personal"><span class="section-label">Особисті</span><span class="edit-section fa fa-pencil-square-o" data-action-click="account/profile/section/edit" title="Редагувати"></span></li>
                 <li class="profile__section fa fa-envelope-o" data-action-click="account/profile/section" data-uid="<?= $userId ?>" data-section="contacts"><span class="section-label">Контакти</span><span class="edit-section fa fa-pencil-square-o" data-action-click="account/profile/section/edit" title="Редагувати"></span></li>
-                <li class="profile__section fa fa-quote-right" data-action-click="account/profile/section" data-uid="<?= $userId ?>" data-section="credo"><span class="section-label">Кредо</span><span class="edit-section fa fa-pencil-square-o" data-action-click="account/profile/section/edit" title="Редагувати"></span></li>
+                <!-- <li class="profile__section fa fa-quote-right" data-action-click="account/profile/section" data-uid="<?= $userId ?>" data-section="credo"><span class="section-label">Кредо</span><span class="edit-section fa fa-pencil-square-o" data-action-click="account/profile/section/edit" title="Редагувати"></span></li> -->
                 <li class="profile__section fa fa-lock" data-action-click="account/profile/section" data-uid="<?= $userId ?>" data-section="security"><span class="section-label">Безпека</span><span></span></li>
             </menu>
             <div class="profile__card">

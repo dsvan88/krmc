@@ -45,8 +45,8 @@ class View
         $content = "
             <section class='section'>
                 <header>
-                    <h2 class='title'>$title $dashboard</h2>
-                    <h3 class='subtitle'>{$texts['subtitle']}</h3>
+                    <h1 class='title'>$title $dashboard</h1>
+                    <h2 class='subtitle'>{$texts['subtitle']}</h2>
                 </header>
                 <div class='content'>
                     {$texts['html']}

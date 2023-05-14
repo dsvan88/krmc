@@ -35,8 +35,6 @@ class TechController extends Controller
             $query = !empty($_POST['table']) ? "SELECT * FROM {$_POST['table']} ORDER BY id" : $_POST['sql_query'];
             if (!empty($query)) {
                 $result = Db::query($query, [], 'Assoc');
-                // var_dump($query);
-                // var_dump($result);
                 View::file(json_encode($result, JSON_UNESCAPED_UNICODE), empty($_POST['table']) ? 'backup-query.txt' : "backup-{$_POST['table']}.txt");
             }
             View::message(['error' => true, 'message' => 'Something wrong with sql-query!' . PHP_EOL . $query]);
@@ -55,7 +53,7 @@ class TechController extends Controller
     }
     public static function migrationAction()
     {
-        View::redirect('/');
+        // View::redirect('/');
         if (!empty($_POST)) {
             $table = substr($_FILES['data']['name'], strpos($_FILES['data']['name'], '-') + 1);
             $table = substr($table, 0, strrpos($table, '.'));
@@ -145,14 +143,14 @@ class TechController extends Controller
             $mailer->isSMTP();
             $mailer->CharSet = "UTF-8";
             $mailer->SMTPAuth   = true;
-            $mailer->SMTPDebug = 4;
-            $mailer->Debugoutput = function ($str, $level) {
-                $GLOBALS['status'][] = $str;
-            };
+            // $mailer->SMTPDebug = 4;
+            // $mailer->Debugoutput = function ($str, $level) {
+            //     $GLOBALS['status'][] = $str;
+            // };
             
             $mailer->Host       = 'smtp.gmail.com';
-            $mailer->Username   = 'dsv.tester33@gmail.com';
-            $mailer->Password   = 'cgzmcmkvjkaowrxs';
+            $mailer->Username   = '';
+            $mailer->Password   = '';
             $mailer->SMTPSecure = 'ssl';
             $mailer->Port       = 465;
 
@@ -166,7 +164,7 @@ class TechController extends Controller
             // // $mailer->addAddress('yourMainEmail@gmail.com'); // If you need send message from your main tech email to your main email - you can change it here
             $mailer->isHTML(true);
 
-            $mailer->addAddress('dsvan88@gmail.com');
+            $mailer->addAddress('');
             $mailer->send();
     }
 }

@@ -233,8 +233,21 @@ body {
 			padding: 1.2em .7em;
 			text-align: justify;
 			color: $color-text-dark;
+			.title{
+				font-size: 1.9em;
+				letter-spacing: .05em;
+				line-height: 1.3em;
+				font-weight: bolder;
+				margin-bottom: .7em;
+			}
+			.subtitle{
+				font-size: 1.2em;
+				line-height: 1.3em;
+				margin-bottom: .5em;
+			}
 			p{
 				text-indent: 1.5em;
+				margin-bottom: .2em;
 			}
 			&:nth-child(even) {
 				background-color: $bg-color-light;

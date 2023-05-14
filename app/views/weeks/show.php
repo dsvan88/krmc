@@ -43,7 +43,7 @@
                 }
             }
         ?>
-            <div class="week__item <?= $dayPlateClass ?>" data-action-click="/days<?= $i ?>/w<?= $weekId ?>" data-week="<?= $weekId ?>" data-day="<?= $dayId ?>" data-mode="location">
+            <div class="week__item <?= $dayPlateClass ?>" data-action-click="/week/<?= $weekId ?>/day/<?= $i ?>/" data-week="<?= $weekId ?>" data-day="<?= $dayId ?>" data-mode="location">
                 <h4 class="week__item-date"><?= $dayDate ?></h4>
                 <h3 class="week__item-game"><?= $texts['games'][$weekData['data'][$i]['game']] ?></h3>
                 <div class="week__item-praticipants">

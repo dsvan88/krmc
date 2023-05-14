@@ -14,7 +14,10 @@
     transition: all $animation-fast ease-in;
     border-radius: 5px;
     margin-top: 3vh;
-
+	.text-accent{
+		color: $color-text-accent;
+		text-decoration: underline;
+	}
 	&__overlay {
 		position: fixed; /* чтoбы oкнo былo в видимoй зoне в любoм месте */
 		width: 100vw;
@@ -95,6 +98,10 @@
 				cursor: pointer;
 			}
 		}
+		&-accent{
+			margin: 0.5em 0;
+			padding-left: 2em;
+		}
 	}
     &__buttons {
         margin-top: 0.8em;
@@ -109,7 +116,12 @@
 		justify-content: space-between;
 		color: $color-text-accent;
 	}
-
+	&__list{
+		padding-left: 2em;
+		&-item{
+			list-style: disclosure-closed;
+		}
+	}
 	button,
 	a.anchor-button {
 		@extend %buttonStyle;
