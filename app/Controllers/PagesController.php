@@ -74,6 +74,13 @@ class PagesController extends Controller
                     $page['keywords'] = $page['data']['keywords'];
                 }
             }
+            $page['published_at'] = strtotime($page['published_at']);
+            $page['published_at'] = date('Y-m-d', $page['published_at']).'T'.date('H:i', $page['published_at']);
+
+            if (!empty($page['expired_at'])){                
+                $page['expired_at'] = strtotime($page['expired_at']);
+                $page['expired_at'] = date('Y-m-d', $page['expired_at']).'T'.date('H:i', $page['expired_at']);
+            }
         }
         else {
             $dummyPage = [
@@ -81,6 +88,8 @@ class PagesController extends Controller
                 'type'=>'game',
                 'subtitle'=>'',
                 'html'=>'',
+                'published_at'=>$_SERVER['REQUEST_TIME'],
+                'expired_at'=>'',
             ];
             $pageId = Pages::create($dummyPage);
             View::redirect("/page/edit/$pageId");

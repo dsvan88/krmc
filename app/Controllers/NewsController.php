@@ -74,6 +74,15 @@ class NewsController extends Controller
         else
             $newsData['logo'] = ImageProcessing::inputImage(Settings::getImage('news_default')['value'], ['title' => Locale::phrase('{{ News_Change_Logo }}'), 'class' => 'news__item-logo_image']);
 
+        
+        $newsData['published_at'] = strtotime($newsData['published_at']);
+        $newsData['published_at'] = date('Y-m-d', $newsData['published_at']).'T'.date('H:i', $newsData['published_at']);
+
+        if (!empty($newsData['expired_at'])){                
+            $newsData['expired_at'] = strtotime($newsData['expired_at']);
+            $newsData['expired_at'] = date('Y-m-d', $newsData['expired_at']).'T'.date('H:i', $newsData['expired_at']);
+        }
+        
         $vars = [
             'title' => '{{ News_Edit_Page_Title }}',
             'texts' => [
