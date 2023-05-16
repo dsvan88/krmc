@@ -1,7 +1,7 @@
 <section id="week-list" class="section week-list">
-    <h2 class="week__title section__title">
+    <h1 class="week__title section__title">
         <?= $texts['weeksBlockTitle'] ?>
-    </h2>
+    </h1>
     <h2 class="week__title section__subtitle">
         <? if ($prevWeek) : ?>
             <a class="week__title-link" href="/weeks/<?= $prevWeek['id'] ?>"><?= date('d.m', $prevWeek['start']) . ' - ' . date('d.m', $prevWeek['finish'] - 3600 * 5) ?></a>
@@ -19,58 +19,27 @@
     </h2>
     <div class="week__list">
         <?
-        for ($i = 0; $i < 7; $i++) :
-            if (!isset($weekData['data'][$i])) {
-                $weekData['data'][$i] = $defaultDayData;
-            } else {
-                foreach ($defaultDayData as $key => $value) {
-                    if (!isset($weekData['data'][$i][$key])) {
-                        $weekData['data'][$i][$key] = $value;
-                    }
-                }
-            }
-
-            $dayTimestamp = $monday + TIMESTAMP_DAY * $i;
-            $dayDate = date('d.m.Y', $dayTimestamp) . ' (<strong>' . $texts['days'][$i] . '</strong>) ' . $weekData['data'][$i]['time'];
-            $dayPlateClass = 'day-future';
-            if ($selectedWeekIndex < $weekCurrentIndexInList) {
-                $dayPlateClass = 'day-expire';
-            } elseif ($selectedWeekIndex === $weekCurrentIndexInList) {
-                if ($dayCurrentId > $i) {
-                    $dayPlateClass = 'day-expire';
-                } elseif ($dayCurrentId === $i) {
-                    $dayPlateClass = 'day-current';
-                }
-            }
+        foreach($days as $dayNum=>$day) :
         ?>
-            <div class="week__item <?= $dayPlateClass ?>" data-action-click="/week/<?= $weekId ?>/day/<?= $i ?>/" data-week="<?= $weekId ?>" data-day="<?= $dayId ?>" data-mode="location">
-                <h4 class="week__item-date"><?= $dayDate ?></h4>
-                <h3 class="week__item-game"><?= $texts['games'][$weekData['data'][$i]['game']] ?></h3>
+            <div class="week__item <?= $day['class'] ?>" data-action-click="/week/<?= $weekId ?>/day/<?= $dayNum ?>/" data-mode="location">
+                <h3 class="week__item-date"><a href="/week/<?= $weekId ?>/day/<?= $dayNum ?>/"><?= $day['date'] ?></a></h3>
+                <h4 class="week__item-game"><?= $day['game'] ?></h4>
                 <div class="week__item-praticipants">
-                    <ol class="day-participants__list">
-                        <div class="day-participants__list-column">
-                            <?
-                            $maxParticipantsCount = min(count($weekData['data'][$i]['participants']), 10);
-                            for ($x = 0; $x < $maxParticipantsCount; $x++) :
-                                $userName = '';
-                                if (isset($weekData['data'][$i]['participants'][$x])) {
-                                    if (strpos($weekData['data'][$i]['participants'][$x]['name'], 'tmp_user') !== false) {
-                                        $userName = '+1';
-                                    } else {
-                                        $userName = $weekData['data'][$i]['participants'][$x]['name'];
-                                    }
-                                }
-                                if ($x !== 0 && $x % 5 === 0) : ?>
-                        </div>
-                        <div class="day-participants__list-column">
-                        <? endif ?>
-                        <li class="day-participants__list-item"><?= $userName ?></li>
-                    <? endfor ?>
-                        </div>
-                    </ol>
+                    <div class="day-participants__list">
+                        <ol class="day-participants__list-column">
+                        <?
+                        for ($x = 0; $x < $day['playersCount']; $x++) :
+                            if ($x !== 0 && $x % 5 === 0) : ?>
+                                </ol>
+                                <ol class="day-participants__list-column">
+                            <? endif ?>
+                            <li class="day-participants__list-item"><?= $day['participants'][$x]['name'] ?></li>
+                        <? endfor ?>
+                        </ol>
+                    </div>
                 </div>
             </div>
-        <? endfor; ?>
+        <? endforeach; ?>
     </div>
     <? if ($weeksCount > 1) : ?>
         <div class="week__links"><?= $paginator ?></div>

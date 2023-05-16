@@ -9,9 +9,9 @@ class GameTypes extends Pages
     public static $gameNames = [];
     public static $defaultGames = [
         'mafia' => 'Mafia',
-        'poker' => 'Poker',
+        // 'poker' => 'Poker',
         'board' => 'Board',
-        'cash' => 'Cash',
+        'nlh' => 'NLH',
         'etc' => 'Etc'
     ];
     
@@ -47,7 +47,6 @@ class GameTypes extends Pages
             $names[$games[$i]['slug']] = $games[$i]['title'];
         }
         self::$gameNames = array_merge(self::$defaultGames, $names);
-
         return self::$gameNames;
     }
 }

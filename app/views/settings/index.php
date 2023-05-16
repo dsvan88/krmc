@@ -2,7 +2,7 @@
     <menu class="settings__categories">
         <li class="settings__category<?= $section==='email' ? ' active' : ''?>" data-action-click="/settings/section/index/email" data-mode='location'>Пошта</li>
         <li class="settings__category<?= $section==='contacts' ? ' active' : ''?>" data-action-click="/settings/section/index/contacts" data-mode='location'>Контакти</li>
-        <li class="settings__category<?= $section==='socails' ? ' active' : ''?>" data-action-click="/settings/section/index/socials" data-mode='location'>Соц. мережі</li>
+        <li class="settings__category<?= $section==='socials' ? ' active' : ''?>" data-action-click="/settings/section/index/socials" data-mode='location'>Соц. мережі</li>
         <li class="settings__category<?= $section==='telegram' ? ' active' : ''?>" data-action-click="/settings/section/index/telegram" data-mode='location'>Телеграм</li>
     </menu>
     <div class="settings__content">

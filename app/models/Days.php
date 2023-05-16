@@ -128,9 +128,9 @@ class Days extends Model
 
         $gameNames = [
             'mafia' => '{{ Tg_Mafia }}',
-            'poker' => '{{ Tg_Poker }}',
+            // 'poker' => '{{ Tg_Poker }}',
             'board' => '{{ Tg_Board }}',
-            'cash' => '{{ Tg_Cash }}',
+            'nlh' => '{{ Tg_NLH }}',
             'etc' => '{{ Tg_Etc }}',
         ];
         $gameNames = Locale::apply($gameNames);

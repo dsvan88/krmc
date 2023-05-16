@@ -12,7 +12,7 @@ class ViewHeader {
         $images = Settings::getGroup('img');
         $images = Locale::apply($images);
         $vars = [
-            'headerLogo' => "<a href='/'>" . ImageProcessing::inputImage($images['MainLogo']['value'], ['title' => $images['MainLogo']['name']]) . '</a>',
+            'headerLogo' => "<a href='/'>" . ImageProcessing::inputImage($images['MainLogo']['value']) . '</a>',
             'headerProfileButton' => '<a class="header__profile-button" data-action-click="account/login/form">Вхід</a>',
             'headerMenu' => self::menu(),
         ];

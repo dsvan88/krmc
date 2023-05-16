@@ -22,7 +22,7 @@ class DaysController extends Controller
             self::$route['action'] = 'edit';
             View::set(self::$route);
         }
-        $gameTypes = Locale::apply(GameTypes::menu());
+        $gameTypes = GameTypes::menu();
         
         $vars = [
             'title' => '{{ Day_Set_Page_Title }}',
@@ -39,7 +39,6 @@ class DaysController extends Controller
                 'setDayApprovedLabel' => 'Save',
             ],
             'gameTypes' => $gameTypes,
-            'gameName' => $gameTypes,
         ];
 
         $day = Days::weekDayData($weekId, $dayId);
@@ -56,7 +55,7 @@ class DaysController extends Controller
         $gamesCount = count($gameTypes);
         for ($i=0; $i < $gamesCount; $i++) { 
             if ($gameTypes[$i]['slug'] !== $day['game']) continue;
-            $gameName = $gameTypes[$i]['name'];
+            $gameName = Locale::phrase($gameTypes[$i]['name']);
             break;
         }
 

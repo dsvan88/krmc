@@ -74,15 +74,15 @@ return [
     '{{ Sunday }}' => 'Sunday',
 
     'Mafia' => 'Mafia',
-    'Poker' => 'Poker',
+    // 'Poker' => 'Poker',
     'Board' => 'Board Games',
-    'Cash' => 'Poker (NLH)',
+    'NLH' => 'NLH',
     'Etc' => 'Etc',
 
     '{{ Tg_Mafia }}' => 'Mafia 🎭',
-    '{{ Tg_Poker }}' => 'Poker ♦️',
+    // '{{ Tg_Poker }}' => 'Poker ♦️',
     '{{ Tg_Board }}' => 'Board Games 🎲',
-    '{{ Tg_Cash }}' => 'Poker (NLH) 🃏',
+    '{{ Tg_NLH }}' => 'NLH 🃏',
     '{{ Tg_Etc }}' => 'Etc ✨',
 
     '{{ Send_To_All }}' => 'All chats',

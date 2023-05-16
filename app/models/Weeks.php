@@ -41,7 +41,7 @@ class Weeks extends Model
         return self::getRawArray("SELECT id FROM $table ORDER BY id", []);
     }
     // Получить настройки недели по id недели
-    public static function weekDataById($id)
+    public static function weekDataById(int $id): array | bool
     {
         $table = self::$table;
         $result = self::query("SELECT id,data,start,finish FROM $table WHERE id = ? LIMIT 1", [$id], 'Assoc');

@@ -234,7 +234,7 @@ body {
 			text-align: justify;
 			color: $color-text-dark;
 			.title{
-				font-size: 1.9em;
+				font-size: 1.5em;
 				letter-spacing: .05em;
 				line-height: 1.3em;
 				font-weight: bolder;
@@ -260,6 +260,7 @@ body {
 }
 .footer {
 	background: $main-footer-bg-dark;
+	margin-top: 5em;
 	padding: .4rem 3vw !important;
 	flex: 0 0 auto;
 	box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.5);
@@ -276,6 +277,7 @@ body {
 		box-sizing: border-box;
 		display: flex;
 		justify-content: space-between;
+		gap: 1em
 	}
 	&__block{
 		box-sizing: border-box;
@@ -286,6 +288,9 @@ body {
 	}
 	&__gmap{
 		display: none;
+		iframe{
+			width: 100%;
+		}
 	}
 	&__adress{
 		display: flex;
@@ -330,6 +335,7 @@ body {
 	a{
 		text-decoration: none;
 		color: $color-text-menu;
+		white-space: nowrap;
 	}
 }
 

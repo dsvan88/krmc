@@ -12,6 +12,7 @@
 				font-size: 0.7em;
 				align-self: flex-end;
 			}
+
 		}
 		&__list {
 			display: flex;
@@ -80,6 +81,10 @@
 				margin-bottom: 0.8em;
 				font-size: 1em;
 				text-align: center;
+				a{
+					text-decoration: underline;
+					color: inherit;
+				}
 			}
 			&-game {
 				margin-bottom: 1em;

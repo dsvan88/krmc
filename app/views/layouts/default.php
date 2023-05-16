@@ -41,7 +41,7 @@
             <div class="header__logo"><?= $headerLogo ?></div>
             <div class="header__menu">
                 <label for="header__navigation-checkbox" class="navigation-for-small-display menu-show"><i class="fa fa-bars"></i></label>
-                <input type="checkbox" name="toggle-navigation" id="header__navigation-checkbox" class="navigation-for-small-display-chechbox" autocomplete="off" />
+                <input type="checkbox" name="toggle-navigation" id="header__navigation-checkbox" class="navigation-for-small-display-chechbox">
                 <nav class="header__navigation" id="header__navigation">
                     <label for="header__navigation-checkbox" class="navigation-for-small-display menu-hide"><i class="fa fa-times"></i></label>
                     <?=$headerMenu?>

@@ -133,6 +133,7 @@ blockquote {
 		font-size: 0.8em;
 		white-space: nowrap;
 		flex: 0 0 10vw;
+		min-width: 75px;
 	}
 	&__input {
 		flex-grow: 1;
