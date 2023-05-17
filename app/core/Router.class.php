@@ -54,6 +54,10 @@ class Router
     public static function run()
     {
         self::before();
+        if (!isset($_SESION['id']) && strpos($_SERVER['REQUEST_URI'], 'api/') == false){
+            self::savePath();
+        }
+
         if (self::isMatch()) {
             $path = 'app\Controllers\\' . ucfirst(self::$params['controller']) . 'Controller';
             if (class_exists($path)) {
@@ -79,5 +83,12 @@ class Router
             return false;
         }
         return true;
+    }
+    public static function savePath() : void
+    {
+        $url = trim($_SERVER['REQUEST_URI'], '/');
+        if (empty($url)) return;
+
+        $_SESSION['path'] = '/'.$url;
     }
 }

@@ -1,9 +1,9 @@
 <section class="section index">
-    <header class="title">
-        <h1><?=$texts['title']?></h1>
-        <h3 class="subtitle">
+    <header>
+        <h1 class="title"><?=$texts['title']?></h1>
+        <h2 class="subtitle">
             <?=$texts['subtitle']?>
-        </h3>
+        </h2>
     </header>
     <form class="game-form" action="/game/mafia/start" method="POST">
         <div class="game-form__row">

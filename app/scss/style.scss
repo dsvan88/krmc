@@ -160,11 +160,10 @@ body {
 			display: flex;
 			justify-content: space-between;
 			color: $color-text-menu;
+			gap: .8em;
 			&-item {
-				margin-right: .4em;
 				cursor: pointer;
 				color: $color-text-menu;
-				// font-family: "Underdog", cursive;
 				font-family: 'Crimson Pro', serif;
 				white-space: nowrap;
 				a {
@@ -234,14 +233,14 @@ body {
 			text-align: justify;
 			color: $color-text-dark;
 			.title{
-				font-size: 1.5em;
+				font-size: 2.5em;
 				letter-spacing: .05em;
 				line-height: 1.3em;
 				font-weight: bolder;
-				margin-bottom: .7em;
+				margin-bottom: .3em;
 			}
 			.subtitle{
-				font-size: 1.2em;
+				font-size: 1.7em;
 				line-height: 1.3em;
 				margin-bottom: .5em;
 			}
@@ -353,7 +352,7 @@ body {
 		}
 		&__logo{
 			order: 1;
-			margin-right: 3vw;
+			margin-right: 2vw;
 		}
 		&__menu{
 			order: 2;
@@ -380,7 +379,7 @@ body {
 	}
 	.header{
 		&__logo{
-			margin-right: 5vw;
+			margin-right: 3vw;
 		}
 	}
 	.section:not(.news-preview) {

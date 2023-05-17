@@ -119,7 +119,14 @@ blockquote {
 	}
 	&__columns{
 		display: flex;
-		gap:1em;
+		flex-direction: column;
+		padding: 1em 2em;
+		
+		@include md {
+			flex-direction: row;
+			gap:1em;
+			padding: 0;
+		}
 	}
 	&__column{
 		flex-grow: 1;

@@ -32,6 +32,9 @@ class AccountController extends Controller
     {
         if (!empty($_POST)) {
             if (Users::login($_POST)) {
+                if (isset($_SESSION['path'])){
+                    View::location($_SESSION['path']);
+                }
                 View::location('/');
             } else {
                 View::message(['error' => 403, 'message' => '{{ Account_Login_User_Not_Found }}']);
