@@ -4,13 +4,15 @@
     </h1>
     <h2 class="week__title section__subtitle">
         <? if ($prevWeek) : ?>
-            <a class="week__title-link" href="/weeks/<?= $prevWeek['id'] ?>"><?= date('d.m', $prevWeek['start']) . ' - ' . date('d.m', $prevWeek['finish'] - 3600 * 5) ?></a>
+            <span><a class="week__title-link" href="/weeks/<?= $prevWeek['id'] ?>"><?= date('d.m', $prevWeek['start']) . ' - ' . date('d.m', $prevWeek['finish'] - 3600 * 5) ?></a></span>
         <? else : ?>
             <span class="week__title-dummy"></span>
         <? endif; ?>
         <span><?= date('d.m', $weekData['start']) . ' - ' . date('d.m', $weekData['finish'] - 3600 * 5) ?></span>
         <? if ($nextWeek) : ?>
-            <a class="week__title-link" href="/weeks/<?= $nextWeek['id'] ?>"><?= date('d.m', $nextWeek['start']) . ' - ' . date('d.m', $nextWeek['finish'] - 3600 * 5) ?></a>
+            <span>
+                <a class="week__title-link" href="/weeks/<?= $nextWeek['id'] ?>"><?= date('d.m', $nextWeek['start']) . ' - ' . date('d.m', $nextWeek['finish'] - 3600 * 5) ?></a>
+            </span>
         <? else : ?>
             <span class="week__title-dummy">
                 &lt;&nbsp;No Data&nbsp;&gt;

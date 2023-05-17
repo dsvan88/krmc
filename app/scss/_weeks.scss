@@ -12,6 +12,10 @@
 				font-size: 0.7em;
 				align-self: flex-end;
 			}
+			& > span{
+				text-align: center;
+				line-height: 1em;
+			}
 
 		}
 		&__list {
