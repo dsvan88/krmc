@@ -106,8 +106,8 @@ class TelegramBotController extends Controller
     }
     public static function parseCommand($text)
     {
-        if (preg_match('/^[+-]\s{0,3}(пн|пон|вт|ср|чт|чет|пт|пят|сб|суб|вс|вос|сг|сег|зав)/', mb_strtolower(str_replace('на ', '', $text), 'UTF-8')) === 1) {
-            preg_match_all('/[+-]\s{0,3}(пн|пон|вт|ср|чт|чет|пт|пят|сб|суб|вс|вос|сг|сег|зав)|([0-2]{0,1}[0-9]\:[0-5][0-9])/i', mb_strtolower(str_replace('на ', '', $text), 'UTF-8'), $matches);
+        if (preg_match('/^[+-]\s{0,3}(пн|пон|вт|ср|чт|чет|пт|пят|сб|суб|вс|вос|сг|сег|сьо|зав)/', mb_strtolower(str_replace('на ', '', $text), 'UTF-8')) === 1) {
+            preg_match_all('/[+-]\s{0,3}(пн|пон|вт|ср|чт|чет|пт|пят|сб|суб|вс|вос|сг|сег|сьо|зав)|([0-2]{0,1}[0-9]\:[0-5][0-9])/i', mb_strtolower(str_replace('на ', '', $text), 'UTF-8'), $matches);
             $arguments = $matches[0];
             if (preg_match('/\([^)]+\)/', $text, $prim) === 1) {
                 $arguments['prim'] = mb_substr($prim[0], 1, -1, 'UTF-8');
@@ -196,7 +196,7 @@ class TelegramBotController extends Controller
         if (mb_strlen($dayName, 'UTF-8') > 3) {
             $dayName = mb_substr($dayName, 0, 3);
         }
-        if (in_array($dayName, ['сг', 'сег'], true)) {
+        if (in_array($dayName, ['сг', 'сег', 'сьо'], true)) {
             return $today;
         } elseif ($dayName === 'зав') {
             $dayNum = $today + 1;
@@ -226,7 +226,7 @@ class TelegramBotController extends Controller
         $command = $command ? $command : self::$command['command'];
         
         $class = ucfirst($command).'Command';
-        $class = str_replace('/','\\', "/app/Repositories/TelegramCommands/{$class}");
+        $class = str_replace('/','\\', "\\app\\Repositories\\TelegramCommands\\{$class}");
         
         if (!class_exists($class)){
             return ['result' => false, 'message' => $class.' Telegram command isn`t found!'];
