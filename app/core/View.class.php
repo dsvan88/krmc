@@ -27,11 +27,16 @@ class View
         $content = '';
         $pageTitle = preg_replace('/<.*?>/', '', $title);
         $path = $_SERVER['DOCUMENT_ROOT'] . '/app/views/' . self::$path . '.php';
+
+        $notices = Noticer::get();
+
         if (file_exists($path)) {
             ob_start();
             require $path;
             $content = ob_get_clean();
             require $_SERVER['DOCUMENT_ROOT'] . '/app/views/layouts/' . self::$layout . '.php';
+
+            Noticer::clear();
         } else {
             self::errorCode('404', ['message' => 'View ' . self::$path . ' isn’t found!']);
         }
@@ -42,6 +47,9 @@ class View
         $vars = Locale::apply($vars);
         extract($vars);
         extract(self::defaultVars());
+
+        $notices = Noticer::get();
+
         $content = "
             <section class='section'>
                 <header>
@@ -53,12 +61,14 @@ class View
                 </div>
             </section>";
         require $_SERVER['DOCUMENT_ROOT'] . '/app/views/layouts/' . self::$layout . '.php';
+
+        Noticer::clear();
     }
     public static function modal($vars = [])
     {
         $vars = Locale::apply($vars);
         extract($vars);
-                
+
         $response = [
             'error' => 0,
             'modal' => true,
@@ -74,11 +84,15 @@ class View
         if (isset($css))
             $response['cssFile'] = $css;
 
+        $notices = Noticer::get();
+
         $path = $_SERVER['DOCUMENT_ROOT'] . '/app/views/' . self::$path . '.php';
         if (file_exists($path)) {
             ob_start();
             require $path;
             $response['html'] = ob_get_clean();
+
+            Noticer::clear();
             exit(json_encode($response));
         } else {
             self::errorCode('404', ['message' => 'View ' . self::$path . ' isn’t found!']);
@@ -93,13 +107,13 @@ class View
      */
     public static function redirect(string $url = '/'): void
     {
-        if ($url[strlen($url)-1] !== '/')
+        if ($url[strlen($url) - 1] !== '/')
             $url .= '/';
         header('Location: ' . $url);
         exit;
     }
     /**
-    * Use for soft redirect for js handler
+     * Use for soft redirect for js handler
      * 
      * @param string $url - where to redirect;
      * 
@@ -107,7 +121,7 @@ class View
      */
     public static function location(string $url, int $error = 0): void
     {
-        if ($url[strlen($url)-1] !== '/')
+        if ($url[strlen($url) - 1] !== '/')
             $url .= '/';
         $message = ['location' => $url];
         if ($error > 0)
@@ -139,8 +153,24 @@ class View
         }
         exit(json_encode($data));
     }
-    public static function response($data){
-        if (is_array($data)){
+    public static function notice($data)
+    {
+        if (!is_array($data)) {
+            $data = [
+                'type' => '',
+                'message' => $data
+            ];
+        }
+        if (isset($data['message'])) {
+            $data['message'] = Locale::phrase($data['message']);
+        } else {
+            $data['message'] = '';
+        }
+        exit(json_encode(['notice' => $data]));
+    }
+    public static function response($data)
+    {
+        if (is_array($data)) {
             $data = json_encode($data, JSON_UNESCAPED_UNICODE);
         }
         exit($data);

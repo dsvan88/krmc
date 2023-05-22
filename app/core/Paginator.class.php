@@ -22,14 +22,14 @@ class Paginator
             if ($selectedIndex !== -1 && $wId == $Indexes[$selectedIndex])
                 $active = true;
             if ($count > 8) {
-                if ($index >= 1 && $wId < $Indexes[$selectedIndex] - 1) {
+                if ($index >= 1 && $wId < $Indexes[$selectedIndex] - 2) {
                     if (!$breakBefore) {
                         $breakBefore = true;
                         $pagesLinks .= '<span>...</span>';
                     }
                     continue;
                 }
-                if ($index > $Indexes[$selectedIndex] && $wId <= $count - 1) {
+                if ($index > $Indexes[$selectedIndex] + 1 && $wId <= $count - 1) {
                     if (!$breakAfter) {
                         $breakAfter = true;
                         $pagesLinks .= '<span>...</span>';
