@@ -35,6 +35,12 @@ class PagesController extends Controller
             ];
         }
 
+
+        Noticer::set('Just simple message');
+        Noticer::set(['type'=> '', 'message' => 'Another simple message']);
+        Noticer::set(['type'=> 'info', 'message' => 'Just info message']);
+        Noticer::set(['type'=> 'error', 'message' => 'ERROR: message']);
+
         $dashboard = '';
         if (isset($_SESSION['privilege']) && in_array($_SESSION['privilege']['status'], ['manager', 'admin'])) {
             $dashboard = "<span class='page__dashboard' style='float:right'>

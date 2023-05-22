@@ -38,24 +38,27 @@
 
 <body>
     <div class="wrapper">
-        <div class="notices">
-            <? if (!empty($notices)) : ?>
-                <? foreach ($notices as $num => $notice) : ?>
-                    <div class="notice <?= $notice['type'] ?>"><span class="notice__message"><?= $notice['message'] ?></span><span class="notice__close fa fa-window-close"></span></div>
-                <? endforeach ?>
-            <? endif; ?>
-        </div>
+       
         <header class="header">
-            <div class="header__logo"><?= $headerLogo ?></div>
-            <div class="header__menu">
-                <label for="header__navigation-checkbox" class="navigation-for-small-display menu-show"><i class="fa fa-bars"></i></label>
-                <input type="checkbox" name="toggle-navigation" id="header__navigation-checkbox" class="navigation-for-small-display-chechbox">
-                <nav class="header__navigation" id="header__navigation">
-                    <label for="header__navigation-checkbox" class="navigation-for-small-display menu-hide"><i class="fa fa-times"></i></label>
-                    <?= $headerMenu ?>
-                </nav>
+            <div class="notices">
+                <? if (!empty($notices)) : ?>
+                    <? foreach ($notices as $num => $notice) : ?>
+                        <div class="notice <?= $notice['type'] ?>"><span class="notice__message"><?= $notice['message'] ?></span><span class="notice__close fa fa-window-close"></span></div>
+                    <? endforeach ?>
+                <? endif; ?>
             </div>
-            <div class="header__profile"><?= $headerProfileButton ?></div>
+            <div class="header__content">
+                <div class="header__logo"><?= $headerLogo ?></div>
+                <div class="header__menu">
+                    <label for="header__navigation-checkbox" class="navigation-for-small-display menu-show"><i class="fa fa-bars"></i></label>
+                    <input type="checkbox" name="toggle-navigation" id="header__navigation-checkbox" class="navigation-for-small-display-chechbox">
+                    <nav class="header__navigation" id="header__navigation">
+                        <label for="header__navigation-checkbox" class="navigation-for-small-display menu-hide"><i class="fa fa-times"></i></label>
+                        <?= $headerMenu ?>
+                    </nav>
+                </div>
+                <div class="header__profile"><?= $headerProfileButton ?></div>
+            </div>
         </header>
         <div class="header-for-auto-scroll" id="start-page"></div>
         <main class="main">

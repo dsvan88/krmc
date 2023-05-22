@@ -32,7 +32,7 @@ body {
 	width: 100vw;
 	height: 100%;
 	display: grid;
-	grid-template-rows: auto auto 1fr auto;
+	grid-template-rows: auto 1fr auto;
 	grid-template-columns: auto;
 
 	@include md {
@@ -43,18 +43,20 @@ body {
 	.header {
 		position: sticky;
 		top: 0px;
-		background: $main-header-bg-dark;
-		color: $color-text-light;
-		height: 10vh;
-		min-height: 1.5rem;
-		max-height: 2.5rem;
-		display: flex;
-		align-items: center;
 		box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.5);
-		font-size: 1.3em;
 		z-index: 1;
-		padding: .4rem 3vw .4rem 0;
-		justify-content: space-between;
+		&__content{
+			background: $main-header-bg-dark;
+			color: $color-text-light;
+			height: 10vh;
+			min-height: 1.5rem;
+			max-height: 2.5rem;
+			align-items: center;
+			font-size: 1.3em;
+			padding: .4rem 3vw .4rem 0;
+			display: flex;
+			justify-content: space-between;
+		}
 		&__logo {
 			order: 2;
 			height: 80%;
@@ -297,8 +299,8 @@ body {
 		font-size: 1.1em;
 		line-height: 1.3em;
 		&-link{
-			font-size: 1.3rem;
-			line-height: 1.7em;
+			font-size: 1.3em;
+			line-height: 2em;
 		}
 	}
 	&__contacts{
@@ -339,7 +341,7 @@ body {
 }
 
 @include md {
-	.header, .footer {
+	.header__content, .footer {
 		padding: .7rem 10vw !important;
 	}
 	.footer__gmap{
@@ -374,10 +376,13 @@ body {
 	}
 }
 @include lg {
-	.header, .footer {
+	.footer {
 		padding: .8rem 15vw !important;
 	}
 	.header{
+		&__content{
+			padding: .8rem 15vw !important;
+		}
 		&__logo{
 			margin-right: 3vw;
 		}
@@ -390,7 +395,7 @@ body {
 	}
 }
 @include xl {
-	.header, .footer {
+	.header__content, .footer {
 		padding: 1rem 20vw !important;
 	}
 	.section:not(.news-preview) {

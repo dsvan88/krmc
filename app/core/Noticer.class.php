@@ -9,8 +9,13 @@ class Noticer
     {
         if (empty($data)) return false;
 
-        if (!is_array($data))
-            return ['type' => '', 'message' => $data];
+        if (!isset($_SESSION['notices']))
+            $_SESSION['notices'] = [];
+
+        if (!is_array($data)){
+            self::$notices = $_SESSION['notices'] = array_merge($_SESSION['notices'], [ ['type' => '', 'message' => $data] ]);
+            return true;
+        }
 
         if (!isset($data['message'])) {
             $result = [];
@@ -28,9 +33,6 @@ class Noticer
                 $data['type'] = '';
             $result[] = $data;
         }
-
-        if (!isset($_SESSION['notices']))
-            $_SESSION['notices'] = [];
 
         self::$notices = $_SESSION['notices'] = array_merge($_SESSION['notices'], $result);
 
