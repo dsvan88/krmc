@@ -331,7 +331,7 @@ class AccountController extends Controller
         View::modal($vars);
     }
     public function emailVerifyHashAction(){
-        if (empty($_SESSION['id'])){
+        if (!isset($_SESSION['id'])){
             View::errorCode(404, ['message'=>'<p>Your aren’t authorized yet!</p><p>Please - use browser, where you made your request!</p>']);
         }
         extract(self::$route['vars']);
@@ -360,7 +360,7 @@ class AccountController extends Controller
         View::redirect('/');
     }
     public function emailVerifyCodeAction(){
-        if (empty($_SESSION['id'])){
+        if (!isset($_SESSION['id'])){
             View::errorCode(404, ['message'=>'<p>Your aren’t authorized yet!</p><p>Please - use browser, where you made your request!</p>']);
         }
 

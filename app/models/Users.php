@@ -38,7 +38,7 @@ class Users extends Model
     }
     public static function logout()
     {
-        if (empty($_SESSION)) return true;
+        if (!isset($_SESSION['id'])) return true;
         
         $userId = $_SESSION['id'];
         $_SESSION = [];
