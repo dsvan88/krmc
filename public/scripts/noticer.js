@@ -33,6 +33,6 @@ class Noticer {
 	}
 	close(notice) {
 		notice.style.opacity = 0.0;
-		setTimeout(()=> notice.remove(), 500);
+		setTimeout(()=> notice.remove(), 300);
 	}
 }
