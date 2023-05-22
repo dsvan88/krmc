@@ -2,7 +2,7 @@ async function request({ url, data, method = 'POST', responseType = 'json', succ
 
 	if (error == undefined) {
 		error = function (result) {
-			console.log(`Error: Ошибка связи с сервером ${result}`);
+			console.log(`Error: Ошибка связи с сервером.`);
 		};
 	}
 
@@ -47,7 +47,6 @@ async function request({ url, data, method = 'POST', responseType = 'json', succ
 		const response = await fetch(url, options);
 
 		if (response.ok) {
-			
 			let description = response.headers.get('content-description');
 			if (description && description  === "File Transfer"){
 				let filename = response.headers.get("content-disposition").replace(/^.*?=/, '').slice(1,-1);
@@ -70,7 +69,9 @@ async function request({ url, data, method = 'POST', responseType = 'json', succ
             }
             return result;
 		}
-		error(response.status);
+		const status = response.status;
+		const result = await response.json();
+		error(result);
     } catch (throwed) {
         error(throwed);
 	}

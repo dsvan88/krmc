@@ -166,6 +166,10 @@ class View
         } else {
             $data['message'] = '';
         }
+        if ($data['error'] > 1) {
+            $data['type'] = 'error';
+            http_response_code($data['error']);
+        }
         exit(json_encode(['notice' => $data]));
     }
     public static function response($data)

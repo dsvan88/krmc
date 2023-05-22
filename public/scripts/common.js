@@ -37,5 +37,4 @@ if (pageCheckbox) {
 		}
 	});
 };
-
-let noticer = new Noticer();
+actionHandler.noticer = new Noticer();

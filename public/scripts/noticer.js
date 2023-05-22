@@ -19,6 +19,7 @@ class Noticer {
 		noticeMessageBlock.classList.add('notice__message');
 		noticeMessageBlock.textContent = notice['message'];
 
+
 		const noticeCloseBlock = document.createElement('span');
 		noticeCloseBlock.className = 'notice__close fa fa-window-close';
 

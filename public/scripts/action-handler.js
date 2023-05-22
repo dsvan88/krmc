@@ -1,4 +1,5 @@
 let actionHandler = {
+	noticer: null,
 	inputCommonHandler: function (event) {
 		let action = event.target.dataset.actionInput;
 		if (action.startsWith('autocomplete-')) {
@@ -194,10 +195,12 @@ let actionHandler = {
 	commonSubmitFormHandler: function (event, modal=null, args=null) {
 		event.preventDefault();
 		let formData = new FormData(event.target);
+		const self = this;
 		request({
 			url: event.target.action.replace(window.location.origin+'/', ''),
 			data: formData,
-			success: actionHandler.commonResponse,
+			success: (result) => actionHandler.commonResponse.call(self, result),
+			error: (result) => actionHandler.commonResponse.call(self, result),
 		});
 		return false;
 	},
@@ -208,6 +211,9 @@ let actionHandler = {
 		}
 		if (response["message"]) {
 			alert(response["message"]);
+		}
+		if (response["notice"] && this.noticer) {
+			this.noticer.add(response["notice"]);
 		}
 		if (response["location"]){
 			window.location =  response["location"];

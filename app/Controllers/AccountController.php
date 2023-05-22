@@ -37,7 +37,7 @@ class AccountController extends Controller
                 }
                 View::location('/');
             } else {
-                View::message(['error' => 403, 'message' => '{{ Account_Login_User_Not_Found }}']);
+                View::notice(['error' => 403, 'message' => '{{ Account_Login_User_Not_Found }}']);
             }
         }
         $vars = [
