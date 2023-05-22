@@ -1,26 +1,30 @@
 <?
+
 namespace app\Repositories\TelegramCommands;
 
 use app\core\ChatCommand;
 use app\models\Days;
 use app\models\Weeks;
 
-class RegCommand extends ChatCommand {
-    public static function description(){
+class SetCommand extends ChatCommand
+{
+    public static function description()
+    {
         return self::locale('<u>/day (week day)</u> <i>// Booking information for a specific day. Without specifying the day - for today</i>');
     }
-    public static function execute(array $arguments=[]){
+    public static function execute(array $arguments = [])
+    {
         if (empty($arguments)) {
             return [false, self::locale('{{ Tg_Command_Without_Arguments }}')];
         }
-        
+
         $dayName = '';
         $dayNum = -1;
         $currentDayNum = Days::current();
-        
+
         $gameName = $dayName = $time = '';
         $tournament = false;
-        
+
         foreach ($arguments as $value) {
             $value = trim($value);
             if ($gameName === '' && preg_match('/^(maf|маф|наст|board|table|пок|pok|nlh|інш|другое|etc)/', mb_strtolower($value, 'UTF-8'), $gamesPattern) > 0) {
@@ -39,17 +43,17 @@ class RegCommand extends ChatCommand {
                 continue;
             }
         }
-        
+
         if ($dayName === '')
             $dayName = 'сг';
-        
+
         $method = '+';
         if ($dayName[0] === '+' || $dayName[0] === '-') {
             $method = $dayName[0];
             $dayName = mb_substr($dayName, 1, null, 'UTF-8');
         }
         $dayNum = self::$operatorClass::parseDayNum($dayName, $currentDayNum);
-        
+
         if ($gameName !== '') {
             $gamesArray = [
                 'mafia' => ['maf', 'маф'],
@@ -57,7 +61,7 @@ class RegCommand extends ChatCommand {
                 'nlh' => ['пок', 'pok', 'nlh'],
                 'etc' => ['інш', 'другое', 'etc'],
             ];
-        
+
             foreach ($gamesArray as $name => $gameNames) {
                 if (in_array($gameName, $gameNames, true)) {
                     $gameName = $name;
@@ -65,32 +69,32 @@ class RegCommand extends ChatCommand {
                 }
             }
         }
-        
+
         $weekId = Weeks::currentId();
-        
+
         if ($dayNum < $currentDayNum) {
             ++$weekId;
         }
         $weekData = Weeks::weekDataById($weekId);
-        
+
         $weekData['data'][$dayNum]['status'] = 'set';
-        
+
         if ($method === '-') {
             $weekData['data'][$dayNum]['status'] = 'recalled';
         }
-        
+
         if ($gameName !== '') {
             $weekData['data'][$dayNum]['game'] = $gameName;
         }
-        
+
         if ($time !== '') {
             $weekData['data'][$dayNum]['time'] = $time;
         }
-        
+
         if (isset($arguments['prim'])) {
             $weekData['data'][$dayNum]['day_prim'] = $arguments['prim'];
         }
-        
+
         if ($tournament) {
             if (empty($weekData['data'][$dayNum]['mods']) || !in_array('tournament', $weekData['data'][$dayNum]['mods'])) {
                 $weekData['data'][$dayNum]['mods'][] = 'tournament';
@@ -102,13 +106,13 @@ class RegCommand extends ChatCommand {
                 $weekData['data'][$dayNum]['mods'][$index] = array_values($weekData['data'][$dayNum]['mods']);
             }
         }
-        
+
         $result = Days::setDayData($weekId, $dayNum, $weekData['data'][$dayNum]);
-        
+
         if (!$result) {
             return [false, json_encode($weekData['data'][$dayNum], JSON_UNESCAPED_UNICODE)];
         }
-        
+
         $message = $method === '-' ? self::locale('{{ Tg_Command_Successfully_Canceled }}') : Days::getFullDescription($weekData, $dayNum);
 
         return [$result, $message];

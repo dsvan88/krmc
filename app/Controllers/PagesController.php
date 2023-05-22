@@ -7,6 +7,7 @@ use app\core\Controller;
 use app\core\View;
 use app\models\Settings;
 use app\core\Locale;
+use app\core\Noticer;
 use app\models\Pages;
 
 class PagesController extends Controller
@@ -20,19 +21,18 @@ class PagesController extends Controller
     {
         extract(self::$route['vars']);
         $page = Pages::findBy('slug', $slug);
-        if ($page){
+        if ($page) {
             $page = $page[0];
         } else {
-            if ( $slug === 'home' ){
-                $page = [
-                    'id' => 'home',
-                    'title' => '&ltNo Data&gt;',
-                    'subtitle' => '&ltNo Data&gt;',
-                    'html' => '&ltNo Data&gt;',
-                ];
-            }
-            else 
+            if ($slug !== 'home')
                 View::errorCode(404, ['message' => "Page $slug isn't found!"]);
+
+            $page = [
+                'id' => 'home',
+                'title' => '&ltNo Data&gt;',
+                'subtitle' => '&ltNo Data&gt;',
+                'html' => '&ltNo Data&gt;',
+            ];
         }
 
         $dashboard = '';
@@ -65,31 +65,30 @@ class PagesController extends Controller
             View::message('Changes saved successfully!');
         }
 
-        if (is_numeric($pageId)){
+        if (is_numeric($pageId)) {
             $page = Pages::find($pageId);
             $page['keywords'] = '';
-            if (!empty($page['data'])){
+            if (!empty($page['data'])) {
                 $page['data'] = json_decode($page['data'], true);
-                if (isset($page['data']['keywords']) && !empty($page['data']['keywords'])){
+                if (isset($page['data']['keywords']) && !empty($page['data']['keywords'])) {
                     $page['keywords'] = $page['data']['keywords'];
                 }
             }
             $page['published_at'] = strtotime($page['published_at']);
-            $page['published_at'] = date('Y-m-d', $page['published_at']).'T'.date('H:i', $page['published_at']);
+            $page['published_at'] = date('Y-m-d', $page['published_at']) . 'T' . date('H:i', $page['published_at']);
 
-            if (!empty($page['expired_at'])){                
+            if (!empty($page['expired_at'])) {
                 $page['expired_at'] = strtotime($page['expired_at']);
-                $page['expired_at'] = date('Y-m-d', $page['expired_at']).'T'.date('H:i', $page['expired_at']);
+                $page['expired_at'] = date('Y-m-d', $page['expired_at']) . 'T' . date('H:i', $page['expired_at']);
             }
-        }
-        else {
+        } else {
             $dummyPage = [
-                'title'=>$pageId,
-                'type'=>'game',
-                'subtitle'=>'',
-                'html'=>'',
-                'published_at'=>$_SERVER['REQUEST_TIME'],
-                'expired_at'=>'',
+                'title' => $pageId,
+                'type' => 'game',
+                'subtitle' => '',
+                'html' => '',
+                'published_at' => $_SERVER['REQUEST_TIME'],
+                'expired_at' => '',
             ];
             $pageId = Pages::create($dummyPage);
             View::redirect("/page/edit/$pageId");

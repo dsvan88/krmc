@@ -1,0 +1,23 @@
+.notices{
+    width: 100%;
+    background-color: $notice-bg-color;
+    color: $color-text-dark;
+    font-size: 0.8em;
+    .notice{
+        padding: .3em 1.5em;
+        display: flex;
+        justify-content: space-between;
+        &__close{
+            cursor: pointer;
+            &:hover{
+                color: $bg-color-red-blur;
+            }
+        }
+        &.info{
+            background-color: $notice-bg-color-info;
+        }
+        &.error{
+            background-color: $notice-bg-color-error;
+        }
+    }
+}

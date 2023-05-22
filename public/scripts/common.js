@@ -37,3 +37,5 @@ if (pageCheckbox) {
 		}
 	});
 };
+
+let noticer = new Noticer();
