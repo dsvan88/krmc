@@ -145,7 +145,7 @@ class View
         if (isset($data['message'])) {
             $data['message'] = Locale::phrase($data['message']);
         }
-        if (!isset($data['error'])) {
+        if (empty($data['error'])) {
             $data['error'] = 0;
         }
         if ($data['error'] > 1) {
@@ -166,10 +166,15 @@ class View
         } else {
             $data['message'] = '';
         }
-        if ($data['error'] > 1) {
+        
+        if (empty($data['error'])) {
+            $data['error'] = 0;
+        }
+        else {
             $data['type'] = 'error';
             http_response_code($data['error']);
         }
+        
         exit(json_encode(['notice' => $data]));
     }
     public static function response($data)

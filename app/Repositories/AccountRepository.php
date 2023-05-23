@@ -10,7 +10,7 @@ class AccountRepository
 {
     public static function getFields(int $userId) : array{
         $data = Users::getDataById($userId);
-        $data['personal']['gender'] = Locale::phrase(ucfirst($data['personal']['gender']));
+        $data['personal']['genderName'] = Locale::phrase(ucfirst($data['personal']['gender']));
         return $data;
     }
     public static function edit(int $userId, array $data){

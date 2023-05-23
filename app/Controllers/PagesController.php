@@ -5,9 +5,6 @@ namespace app\Controllers;
 
 use app\core\Controller;
 use app\core\View;
-use app\models\Settings;
-use app\core\Locale;
-use app\core\Noticer;
 use app\models\Pages;
 
 class PagesController extends Controller
@@ -34,12 +31,6 @@ class PagesController extends Controller
                 'html' => '&ltNo Data&gt;',
             ];
         }
-
-
-        Noticer::set('Just simple message');
-        Noticer::set(['type'=> '', 'message' => 'Another simple message']);
-        Noticer::set(['type'=> 'info', 'message' => 'Just info message']);
-        Noticer::set(['type'=> 'error', 'message' => 'ERROR: message']);
 
         $dashboard = '';
         if (isset($_SESSION['privilege']) && in_array($_SESSION['privilege']['status'], ['manager', 'admin'])) {

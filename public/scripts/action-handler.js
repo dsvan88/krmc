@@ -214,6 +214,9 @@ let actionHandler = {
 		}
 		if (response["notice"] && this.noticer) {
 			this.noticer.add(response["notice"]);
+			if (response["notice"]["location"]){
+				setTimeout(()=> window.location = response["notice"]["location"], 500);
+			}
 		}
 		if (response["location"]){
 			window.location =  response["location"];

@@ -22,6 +22,6 @@
         <?= $texts['GenderLabel'] ?>:
     </h5>
     <div class="profile__card-value">
-        <?= $data['personal']['gender'] ?>
+        <?= $data['personal']['genderName'] ?>
     </div>
 </div>

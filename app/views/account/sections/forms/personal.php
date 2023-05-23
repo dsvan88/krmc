@@ -24,15 +24,15 @@
         </h5>
         <div class="profile__card-value">
             <select name="gender">
-                <option value=""></option>
-                <option value="male">Пан</option>
-                <option value="female">Пані</option>
-                <option value="secret">Дехто</option>
+                <option value="" <?= empty($data['personal']['gender']) ? 'selected' : '' ?>></option>
+                <option value="male" <?= $data['personal']['gender'] === 'male' ? 'selected' : '' ?>>Пан</option>
+                <option value="female" <?= $data['personal']['gender'] === 'female' ? 'selected' : '' ?>>Пані</option>
+                <option value="secret" <?= $data['personal']['gender'] === 'secret' ? 'selected' : '' ?>>Дехто</option>
             </select>
         </div>
     </div>
     <div class="profile__card-row buttons">
         <button type='submit' class="positive button"><span class="button__label"><?=$texts['SaveLabel']?></span><i class="fa fa-check button__icon"></i></button>
-        <button class="negative button"><span class="button__label"><?=$texts['CancelLabel']?></span><i class="fa fa-ban button__icon"></i></button>
+        <button type='button' class="negative button"><span class="button__label"><?=$texts['CancelLabel']?></span><i class="fa fa-ban button__icon"></i></button>
     </div>
 </form>

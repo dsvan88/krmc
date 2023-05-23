@@ -32,7 +32,10 @@ class Noticer {
 		noticeCloseBlock.addEventListener('click', (event) => self.close.call(self, noticeBlock))
 	}
 	close(notice) {
-		notice.style.opacity = 0.0;
+		notice.style.opacity = '0.0';
+		notice.style.height = '0px';
+		notice.style.paddingTop = '0px';
+		notice.style.paddingBottom = '0px';
 		setTimeout(()=> notice.remove(), 300);
 	}
 }

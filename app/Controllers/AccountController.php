@@ -67,10 +67,10 @@ class AccountController extends Controller
     {
         extract(self::$route['vars']);
         if (empty($_POST)) {
-            View::message(['error' => 1, 'text' => '{{ Action_Failed }}']);
+            View::notice(['error' => 1, 'message' => '{{ Action_Failed }}']);
         }
         if ($_SESSION['id'] != $userId  && $_SESSION['privilege']['status'] !== 'admin') {
-            View::message(['error' => 1, 'text' => 'Ви не можете змінювати інформацію інших користувачів']);
+            View::notice(['error' => 1, 'message' => 'Ви не можете змінювати інформацію інших користувачів']);
         }
 
         $userData = Users::getDataById($userId);
@@ -107,7 +107,7 @@ class AccountController extends Controller
             }
         }
         Users::edit($userData, ['id' => $userId]);
-        View::message('Success!');
+        View::notice('Success!');
     }
     public function showAction()
     {
@@ -117,14 +117,13 @@ class AccountController extends Controller
         }
         $userData = Users::getDataById($userId);
         
-
         if ($userData['personal']['avatar'] !== '') {
             $avatar = FILE_USRGALL . "{$userData['id']}/{$userData['personal']['avatar']}";
         } else {
             $avatar = Settings::getImage('empty_avatar')['value'];
         }
         $userData['avatar'] = ImageProcessing::inputImage($avatar, ['title' => Locale::phrase(['string' => '{{ Account_Profile_Form_User_Avatar }}', 'vars' => [$userData['name']]])]);
-        $userData['personal']['gender'] = Locale::phrase(ucfirst($userData['personal']['gender']));
+        $userData['personal']['genderName'] = Locale::phrase(ucfirst($userData['personal']['gender']));
         
         $vars = [
             'title' => [
@@ -203,7 +202,7 @@ class AccountController extends Controller
         else {
             AccountRepository::edit($userId, $_POST);
         }
-        View::message('Success!');
+        View::notice(['message'=>'Success!', 'location' => '/account/profile/'.$userId]);
     }
     public function profileSectionEditFormAction()
     {
