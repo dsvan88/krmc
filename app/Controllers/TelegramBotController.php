@@ -6,10 +6,12 @@ use app\core\Controller;
 use app\core\Locale;
 use app\core\TelegramBot;
 use app\core\View;
+use app\models\Contacts;
 use app\models\Settings;
 use app\models\TelegramChats;
 use app\models\Users;
 use app\models\Weeks;
+use app\Repositories\ContactRepository;
 
 class TelegramBotController extends Controller
 {
@@ -19,7 +21,8 @@ class TelegramBotController extends Controller
     public static $adminCommands = ['reg', 'recall', 'set', 'users', 'promo', 'newuser', 'clear'];
     public static $guestCommands = ['help', 'nick', 'week'];
 
-    public static function before(){
+    public static function before()
+    {
         $contentType = isset($_SERVER['CONTENT_TYPE']) ? trim($_SERVER['CONTENT_TYPE']) : '';
         if (strpos($contentType, 'application/json') ===  false) return true;
         $data = trim(file_get_contents('php://input'));
@@ -50,12 +53,16 @@ class TelegramBotController extends Controller
 
             $text = trim(self::$message['message']['text']);
             $command = self::parseCommand($text);
-            
-            if (!$command) return false;
-            
-            $telegramId = self::$message['message']['from']['id'];
 
-            $userData = Users::getDataByTelegramId($telegramId);
+            if (!$command) return false;
+
+            $telegramId = self::$message['message']['from']['id'];
+            $contactData = Contacts::getUserIdByContact('telegramid', $telegramId);
+
+            if (empty($contactData))
+                $userData = Users::getDataByTelegramId($telegramId);
+            else
+                $userData = Users::find($contactData[0]['user_id']);
 
             if (in_array($command['command'], self::$adminCommands, true)) {
                 if (empty($userData) || !in_array($userData['privilege']['status'], ['manager', 'admin'], true))
@@ -72,7 +79,7 @@ class TelegramBotController extends Controller
 
             $result = self::execute();
 
-            $botResult = $bot->sendMessage($techTelegramId, json_encode([self::parseArguments($command['arguments']), $result],JSON_UNESCAPED_UNICODE));
+            $botResult = $bot->sendMessage($techTelegramId, json_encode([self::parseArguments($command['arguments']), $result], JSON_UNESCAPED_UNICODE));
 
             if (isset($result['pre-message'])) {
                 $bot->sendMessage(self::$message['message']['chat']['id'], $result['pre-message'], self::$message['message']['message_id']);
@@ -130,9 +137,9 @@ class TelegramBotController extends Controller
             $command = strtolower($command);
 
             if (in_array($command, ['?', 'help'])) {
-                return ['command' => 'help', 'arguments'=>[]];
+                return ['command' => 'help', 'arguments' => []];
             }
-            
+
             if (in_array($command, ['reg', 'set'], true)) {
                 $text = mb_substr($text, $commandLen + 1, NULL, 'UTF-8');
                 $arguments = explode(',', mb_strtolower(str_replace('на ', '', $text)));
@@ -221,17 +228,18 @@ class TelegramBotController extends Controller
             }
         }
     }
-    public static function execute($command = null){
+    public static function execute($command = null)
+    {
 
         $command = $command ? $command : self::$command['command'];
-        
-        $class = ucfirst($command).'Command';
-        $class = str_replace('/','\\', "\\app\\Repositories\\TelegramCommands\\{$class}");
-        
-        if (!class_exists($class)){
-            return ['result' => false, 'message' => $class.' Telegram command isn`t found!'];
+
+        $class = ucfirst($command) . 'Command';
+        $class = str_replace('/', '\\', "\\app\\Repositories\\TelegramCommands\\{$class}");
+
+        if (!class_exists($class)) {
+            return ['result' => false, 'message' => $class . ' Telegram command isn`t found!'];
         }
-        
+
         extract(self::$command);
 
         $class::$operatorClass = self::class;
@@ -244,7 +252,7 @@ class TelegramBotController extends Controller
             'message' => $result[1]
         ];
 
-        if (isset($result[2])){
+        if (isset($result[2])) {
             $return['pre-message'] = $result[2];
         }
 

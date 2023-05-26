@@ -9,14 +9,14 @@ class Settings extends Model
     public static $table = SQL_TBL_SETTINGS;
     public static $settings = [];
 
-    public static function load(string $type): array | bool 
+    public static function load(string $type): mixed
     {
         $table = self::$table;
         $result = self::query("SELECT * FROM $table WHERE type = ? ORDER by id", [$type], 'Assoc');
         if (!$result || empty($result)) return false;
 
         self::$settings[$type] = [];
-        foreach($result as $num=>$setting){
+        foreach ($result as $num => $setting) {
             self::$settings[$type][$setting['slug']] = [
                 'id' => $setting['id'],
                 'slug' => $setting['slug'],
@@ -26,19 +26,19 @@ class Settings extends Model
         }
         return self::$settings[$type];
     }
-    public static function getImage(string $name): array | bool 
+    public static function getImage(string $name): mixed
     {
         if (!isset(self::$settings['img'])) {
             self::load('img');
         }
-        
-        if (isset(self::$settings['img'][$name])){
+
+        if (isset(self::$settings['img'][$name])) {
             return self::$settings['img'][$name];
         }
 
         return false;
     }
-    public static function getGroup(string $group = 'img'): array | bool
+    public static function getGroup(string $group = 'img'): mixed
     {
         if (isset(self::$settings[$group])) {
             return self::$settings[$group];
@@ -83,11 +83,12 @@ class Settings extends Model
 
         return self::$settings['telegram']['main_group_chat']['value'];
     }
-    public static function edit(int $settingId, array $array){
+    public static function edit(int $settingId, array $array)
+    {
         $table = self::$table;
-        foreach($array as $column=>$value){
+        foreach ($array as $column => $value) {
             if (!is_array($value)) continue;
-            $array[$column] = json_encode($value,JSON_UNESCAPED_UNICODE);
+            $array[$column] = json_encode($value, JSON_UNESCAPED_UNICODE);
         }
         return self::update($array, ['id' => $settingId], $table);
     }
@@ -96,9 +97,9 @@ class Settings extends Model
         $table = self::$table;
         try {
             $queryCond = ['type' => $data['type'], 'slug' => $data['slug']];
-            foreach($data as $column=>$value){
+            foreach ($data as $column => $value) {
                 if (!is_array($value)) continue;
-                $data[$column] = json_encode($value,JSON_UNESCAPED_UNICODE);
+                $data[$column] = json_encode($value, JSON_UNESCAPED_UNICODE);
             }
             $id = self::query("SELECT id FROM $table WHERE type = :type AND slug = :slug", $queryCond, 'Column');
             if (!$id) {
@@ -124,7 +125,8 @@ class Settings extends Model
         }
         return self::query("SELECT * FROM $table $where", $types, 'Assoc');
     }
-    public static function init(){
+    public static function init()
+    {
         $table = self::$table;
         self::query(
             "CREATE TABLE IF NOT EXISTS $table (
@@ -137,7 +139,7 @@ class Settings extends Model
                 default_value CHARACTER VARYING(500) NOT NULL DEFAULT ''
             );"
         );
-        if (self::isExists(['id'=> 1], static::$table)) return true;
+        if (self::isExists(['id' => 1], static::$table)) return true;
         $settings = [
             ['img', 'MainLogo', 'Основний логотип', '/public/images/club_logo.png'],
             ['img', 'MainFullLogo', 'Основний логотип', '/public/images/club_logo-full.png'],
@@ -151,10 +153,10 @@ class Settings extends Model
             ['telegram', 'tech_chat', 'Технический чат (лог ошибок)', ''],
             ['telegram', 'main_group_chat', 'Основной груповой чат', ''],
             ['points', 'win', 'Балы за победу', 1.0],
-            ['points', 'bm', 'Лучший ход', [0.0,0.0,0.25,0.4]],
+            ['points', 'bm', 'Лучший ход', [0.0, 0.0, 0.25, 0.4]],
             ['points', 'fk_sheriff', 'Отстрел шерифа первым',  0.3],
-            ['points', 'maf_dops', 'Допы живым мафам', [0.0,0.3,0.15,0.3]],
-            ['points', 'mir_dops', 'Допы живым мирным', [0.0,0.0,0.15,0.1]],
+            ['points', 'maf_dops', 'Допы живым мафам', [0.0, 0.3, 0.15, 0.3]],
+            ['points', 'mir_dops', 'Допы живым мирным', [0.0, 0.0, 0.15, 0.1]],
             ['points', 'fouls', 'Штраф за дискв. фол', 0.3],
             ['email', 'host', 'Email SMTP Server',  'smtp.gmail.com'],
             ['email', 'username', 'Email Login', ''],
@@ -178,9 +180,9 @@ class Settings extends Model
         $array = [];
         $keys = ['type', 'slug', 'name', 'value', 'default_value'];
         for ($i = 0; $i < count($settings); $i++) {
-            foreach($settings[$i] as $num=>$setting){
+            foreach ($settings[$i] as $num => $setting) {
                 if (!is_array($setting)) continue;
-                $settings[$i][$num] = json_encode($setting,JSON_UNESCAPED_UNICODE);
+                $settings[$i][$num] = json_encode($setting, JSON_UNESCAPED_UNICODE);
             }
             $settings[$i][] = $settings[$i][3];
             $array[] = array_combine($keys, $settings[$i]);

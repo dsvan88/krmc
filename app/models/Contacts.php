@@ -8,8 +8,15 @@ class Contacts extends Model
 {
     public static $table = SQL_TBL_CONTACTS;
 
-    public static function getByUserId(int $userId){
+    public static function getByUserId(int $userId)
+    {
         return self::findBy('user_id', $userId);
+    }
+    public static function getUserIdByContact(string $contactType, string $value): array
+    {
+        $table = self::$table;
+        $userId = Contacts::query("SELECT user_id FROM $table WHERE type = ? AND contact = ? LIMIT 1", [$contactType, $value], 'Column');
+        return empty($userId) ? false : $userId;
     }
     public static function isContactExists($contact)
     {
@@ -27,7 +34,7 @@ class Contacts extends Model
     }
     public static function add($data)
     {
-        $table = self::$table; 
+        $table = self::$table;
         foreach ($data as $key => $value) {
             if (is_array($value)) {
                 $data[$key] = json_encode($value, JSON_UNESCAPED_UNICODE);
@@ -40,7 +47,8 @@ class Contacts extends Model
         $table = self::$table;
         return self::delete($cid, $table);
     }
-    public static function init(){
+    public static function init()
+    {
         $table = self::$table;
         self::query(
             "CREATE TABLE IF NOT EXISTS $table (
