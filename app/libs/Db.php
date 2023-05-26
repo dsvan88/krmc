@@ -32,7 +32,8 @@ class Db
 
         return $pdo;
     }
-    public static function isTableExists() : bool{
+    public static function isTableExists(): bool
+    {
         $table = static::$table;
         $result = self::$db->query("SELECT EXISTS ( SELECT FROM pg_tables WHERE schemaname = 'public' AND tablename  = '$table');");
         $tableName = $result->fetchColumn();
@@ -40,20 +41,19 @@ class Db
     }
     public static function query($query, $params = [], $fetchMode = 'All', $columns = 0)
     {
-        error_log($query);
-        error_log(json_encode($params, JSON_UNESCAPED_UNICODE));
+        // error_log($query);
+        // error_log(json_encode($params, JSON_UNESCAPED_UNICODE));
         $stmt = self::connect()->prepare($query);
-        try{
+        try {
             $stmt->execute($params);
-        }
-        catch(Throwable $th){
+        } catch (Throwable $th) {
             $check = self::isTableExists();
             if (!$check) {
                 static::init();
             }
             $stmt->execute($params);
         }
-    
+
         if (strpos(trim($query), 'SELECT') === 0) {
             if ($fetchMode === 'All') {
                 return $stmt->fetchAll();
@@ -150,7 +150,8 @@ class Db
         return self::query("TRUNCATE ONLY $table CASCADE");
     }
 
-    public static function init(){
+    public static function init()
+    {
         return true;
     }
     public static function initDb()

@@ -15,7 +15,7 @@ class Weeks extends Model
     {
         $table = self::$table;
         if ($time === 0)
-        $time = $_SERVER['REQUEST_TIME'];
+            $time = $_SERVER['REQUEST_TIME'];
         $result = self::query("SELECT id,data,start,finish FROM $table WHERE start < :time AND finish > :time LIMIT 1", ['time' => $time], 'Assoc');
         if (!empty($result)) {
             $result = $result[0];
@@ -41,7 +41,7 @@ class Weeks extends Model
         return self::getRawArray("SELECT id FROM $table ORDER BY id", []);
     }
     // Получить настройки недели по id недели
-    public static function weekDataById(int $id): array | bool
+    public static function weekDataById(int $id): mixed
     {
         $table = self::$table;
         $result = self::query("SELECT id,data,start,finish FROM $table WHERE id = ? LIMIT 1", [$id], 'Assoc');
@@ -164,7 +164,8 @@ class Weeks extends Model
             return false;
         }
     }
-    public static function init(){
+    public static function init()
+    {
         $table = self::$table;
         self::query(
             "CREATE TABLE IF NOT EXISTS $table (
