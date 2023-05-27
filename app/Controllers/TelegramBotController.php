@@ -113,8 +113,8 @@ class TelegramBotController extends Controller
     }
     public static function parseCommand($text)
     {
-        if (preg_match('/^[+-]\s{0,3}(пн|пон|вт|ср|чт|чет|пт|пят|сб|суб|вс|вос|сг|сег|сьо|зав)/', mb_strtolower(str_replace('на ', '', $text), 'UTF-8')) === 1) {
-            preg_match_all('/[+-]\s{0,3}(пн|пон|вт|ср|чт|чет|пт|пят|сб|суб|вс|вос|сг|сег|сьо|зав)|([0-2]{0,1}[0-9]\:[0-5][0-9])/i', mb_strtolower(str_replace('на ', '', $text), 'UTF-8'), $matches);
+        if (preg_match('/^[+-]\s{0,3}(пн|пон|вт|вів|ср|сер|чт|чет|пт|пят|п’ят|сб|суб|вс|вос|нед|нд|сг|сег|сьо|зав|mon|tue|wed|thu|fri|sat|sun|tod|tom)/', mb_strtolower(str_replace('на ', '', $text), 'UTF-8')) === 1) {
+            preg_match_all('/[+-]\s{0,3}(пн|пон|вт|вів|ср|сер|чт|чет|пт|пят|п’ят|сб|суб|вс|вос|нед|нд|сг|сег|сьо|зав|mon|tue|wed|thu|fri|sat|sun|tod|tom)|([0-2]{0,1}[0-9]\:[0-5][0-9])/i', mb_strtolower(str_replace('на ', '', $text), 'UTF-8'), $matches);
             $arguments = $matches[0];
             if (preg_match('/\([^)]+\)/', $text, $prim) === 1) {
                 $arguments['prim'] = mb_substr($prim[0], 1, -1, 'UTF-8');
@@ -203,24 +203,24 @@ class TelegramBotController extends Controller
         if (mb_strlen($dayName, 'UTF-8') > 3) {
             $dayName = mb_substr($dayName, 0, 3);
         }
-        if (in_array($dayName, ['сг', 'сег', 'сьо'], true)) {
+        if (in_array($dayName, ['сг', 'сег', 'сьо', 'tod'], true)) {
             return $today;
-        } elseif ($dayName === 'зав') {
+        } elseif (in_array($dayName, ['зав', 'tom'], true)) {
             $dayNum = $today + 1;
             if ($dayNum === 7)
                 $dayNum = 0;
             return $dayNum;
         } else {
             $daysArray = [
-                ['пн', 'пон'],
-                ['вт', 'вто'],
-                ['ср', 'сре'],
-                ['чт', 'чет'],
-                ['пт', 'пят'],
-                ['сб', 'суб'],
-                ['вс', 'вос']
+                ['пн', 'пон', 'mon'],
+                ['вт', 'вто', 'вів', 'tue'],
+                ['ср', 'сре', 'сер', 'wed'],
+                ['чт', 'чет', 'thu'],
+                ['пт', 'пят', 'п’ят', 'fri'],
+                ['сб', 'суб', 'sat'],
+                ['вс', 'вос', 'нед', 'нд', 'sun']
             ];
-
+            
             foreach ($daysArray as $num => $daysNames) {
                 if (in_array($dayName, $daysNames, true)) {
                     return $num;
