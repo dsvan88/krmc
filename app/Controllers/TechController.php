@@ -122,7 +122,7 @@ class TechController extends Controller
                 // 'text' => '- на сегодня',
                 // 'text' => '/nick Думатель',
                 // 'text' => '/day',
-                'text' => '/week',
+                'text' => '+tod',
                 // 'text' => '/help',
             ]
         ];
@@ -131,7 +131,7 @@ class TechController extends Controller
         $options = [
             CURLOPT_RETURNTRANSFER => false,
             // CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_FRESH_CONNECT => true,
+            // CURLOPT_FRESH_CONNECT => true,
             CURLOPT_POST => true,       // отправка данных методом POST
             CURLOPT_TIMEOUT => 10,      // максимальное время выполнения запроса
             CURLOPT_FAILONERROR => true,

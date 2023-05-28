@@ -62,7 +62,7 @@ class TelegramBotController extends Controller
             if (empty($userId))
                 $userData = Users::getDataByTelegramId($telegramId);
             else
-                $userData = Users::find($userId);
+                $userData = Users::getDataById($userId);
 
             if (in_array($command['command'], self::$adminCommands, true)) {
                 if (empty($userData) || !in_array($userData['privilege']['status'], ['manager', 'admin'], true))
