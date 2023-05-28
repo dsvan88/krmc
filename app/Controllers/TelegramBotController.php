@@ -57,12 +57,12 @@ class TelegramBotController extends Controller
             if (!$command) return false;
 
             $telegramId = self::$message['message']['from']['id'];
-            $contactData = Contacts::getUserIdByContact('telegramid', $telegramId);
+            $userId = Contacts::getUserIdByContact('telegramid', $telegramId);
 
-            if (empty($contactData))
+            if (empty($userId))
                 $userData = Users::getDataByTelegramId($telegramId);
             else
-                $userData = Users::find($contactData[0]['user_id']);
+                $userData = Users::find($userId);
 
             if (in_array($command['command'], self::$adminCommands, true)) {
                 if (empty($userData) || !in_array($userData['privilege']['status'], ['manager', 'admin'], true))
