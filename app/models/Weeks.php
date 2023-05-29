@@ -146,7 +146,7 @@ class Weeks extends Model
         self::insert($weekData, SQL_TBL_WEEKS);
         return true;
     }
-    public static function setWeekData($weekId, $weekData)
+    public static function setWeekData(int $weekId, array $weekData): mixed
     {
         try {
             if (is_array($weekData['data'])) {
