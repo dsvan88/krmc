@@ -32,7 +32,7 @@ class AccountController extends Controller
     {
         if (!empty($_POST)) {
             if (Users::login($_POST)) {
-                if (isset($_SESSION['path'])){
+                if (isset($_SESSION['path'])) {
                     View::location($_SESSION['path']);
                 }
                 View::location('/');
@@ -115,12 +115,11 @@ class AccountController extends Controller
         if (!in_array($_SESSION['privilege']['status'], ['manager', 'admin'])) {
             $userId = (int) $_SESSION['id'];
             $isAdmin = false;
-        }
-        else {
+        } else {
             $isAdmin = true;
         }
         $userData = Users::getDataById($userId);
-        
+
         if ($userData['personal']['avatar'] !== '') {
             $avatar = FILE_USRGALL . "{$userData['id']}/{$userData['personal']['avatar']}";
         } else {
@@ -128,7 +127,7 @@ class AccountController extends Controller
         }
         $userData['avatar'] = ImageProcessing::inputImage($avatar, ['title' => Locale::phrase(['string' => '{{ Account_Profile_Form_User_Avatar }}', 'vars' => [$userData['name']]])]);
         $userData['personal']['genderName'] = Locale::phrase(ucfirst($userData['personal']['gender']));
-        
+
         $vars = [
             'title' => [
                 'string' => '{{ Account_Profile_Form_Title }}',
@@ -159,29 +158,27 @@ class AccountController extends Controller
         if ($_SESSION['id'] != $userId && !in_array($_SESSION['privilege']['status'], ['manager', 'admin'])) {
             View::message(['error' => 1, 'text' => 'Ви не можете змінювати інформацію інших користувачів']);
         }
-        if ($section === 'contacts'){
+        if ($section === 'contacts') {
             $data = ContactRepository::getFields($userId, 'No data');
             $data = ContactRepository::wrapLinks($data);
-        }
-        elseif ($section === 'security'){
+        } elseif ($section === 'security') {
             $data = ContactRepository::checkApproved($userId);
-        }
-        else{
+        } else {
             $data = AccountRepository::getFields($userId);
         }
         $texts = [
-                'FioLabel' => 'Name, secondary name, middle name',
-                'BirthdayLabel' => 'Birthday',
-                'GenderLabel' => 'Gender',
-                'EmailLabel' => 'E-mail',
-                'TelegramLabel' => 'Telegram',
-                'PhoneLabel' => 'Phone',
-                'CredoLiveLabel' => 'Life Creed',
-                'CredoGameLabel' => 'Gaming Creed',
-                'BestQuoteLabel' => 'Favorite Quote',
-                'SignatureLabel' => 'Signature',
-                'SaveLabel' => 'Save',
-                'CancelLabel' => 'Cancel',
+            'FioLabel' => 'Name, secondary name, middle name',
+            'BirthdayLabel' => 'Birthday',
+            'GenderLabel' => 'Gender',
+            'EmailLabel' => 'E-mail',
+            'TelegramLabel' => 'Telegram',
+            'PhoneLabel' => 'Phone',
+            'CredoLiveLabel' => 'Life Creed',
+            'CredoGameLabel' => 'Gaming Creed',
+            'BestQuoteLabel' => 'Favorite Quote',
+            'SignatureLabel' => 'Signature',
+            'SaveLabel' => 'Save',
+            'CancelLabel' => 'Cancel',
         ];
         $texts = Locale::apply($texts);
 
@@ -191,47 +188,45 @@ class AccountController extends Controller
 
         View::message(['html' => $result]);
     }
-    public function profileSectionEditAction(){
+    public function profileSectionEditAction()
+    {
         extract(self::$route['vars']);
 
         $isAdmin = false;
         if (!in_array($_SESSION['privilege']['status'], ['manager', 'admin'])) {
             $userId = (int) $_SESSION['id'];
-        }
-        else {
+        } else {
             $isAdmin = true;
         }
 
-        if ($section === 'contacts'){
+        if ($section === 'contacts') {
             $contacts = [
                 'email' => Validator::validate('email', $_POST['email']),
                 'telegram' => Validator::validate('telegram', $_POST['telegram']),
                 'phone' => Validator::validate('phone', $_POST['phone']),
             ];
             ContactRepository::edit($userId, $contacts);
-        }
-        else if ($section === 'control' && $isAdmin){
+        } else if ($section === 'control' && $isAdmin) {
             $name = trim($_POST['name']);
             $status = trim($_POST['status']);
             $userData = Users::getDataById($userId);
-            if ($userData['name'] !== $name){
+            if ($userData['name'] !== $name) {
                 $result = AccountRepository::rename($userId, $name);
-                if (!$result['result']){
+                if (!$result['result']) {
                     $result['type'] = 'error';
                     View::notice($result);
                 }
-                $result['location'] = '/account/profile/'.$userId;
+                $result['location'] = '/account/profile/' . $userId;
                 View::notice($result);
             }
-            if ($userData['privilege']['status'] !== $status){
+            if ($userData['privilege']['status'] !== $status) {
                 $userData['privilege']['status'] = $status;
                 Users::edit(['privilege' => $userData['privilege']], ['id' => $userId]);
             }
-        }
-        else {
+        } else {
             AccountRepository::edit($userId, $_POST);
         }
-        View::notice(['message'=>'Success!', 'location' => '/account/profile/'.$userId]);
+        View::notice(['message' => 'Success!', 'location' => '/account/profile/' . $userId]);
     }
     public function profileSectionEditFormAction()
     {
@@ -241,26 +236,25 @@ class AccountController extends Controller
         if (!in_array($_SESSION['privilege']['status'], ['manager', 'admin'])) {
             $userId = (int) $_SESSION['id'];
         }
-        if ($section === 'contacts'){
+        if ($section === 'contacts') {
             $data = ContactRepository::getFields($userId);
-        }
-        else{
+        } else {
             $data = AccountRepository::getFields($userId);
         }
 
         $texts = [
-                'FioLabel' => 'Name, secondary name, middle name',
-                'BirthdayLabel' => 'Birthday',
-                'GenderLabel' => 'Gender',
-                'EmailLabel' => 'E-mail',
-                'TelegramLabel' => 'Telegram',
-                'PhoneLabel' => 'Phone',
-                'CredoLiveLabel' => 'Life Creed',
-                'CredoGameLabel' => 'Gaming Creed',
-                'BestQuoteLabel' => 'Favorite Quote',
-                'SignatureLabel' => 'Signature',
-                'SaveLabel' => 'Save',
-                'CancelLabel' => 'Cancel',
+            'FioLabel' => 'Name, secondary name, middle name',
+            'BirthdayLabel' => 'Birthday',
+            'GenderLabel' => 'Gender',
+            'EmailLabel' => 'E-mail',
+            'TelegramLabel' => 'Telegram',
+            'PhoneLabel' => 'Phone',
+            'CredoLiveLabel' => 'Life Creed',
+            'CredoGameLabel' => 'Gaming Creed',
+            'BestQuoteLabel' => 'Favorite Quote',
+            'SignatureLabel' => 'Signature',
+            'SaveLabel' => 'Save',
+            'CancelLabel' => 'Cancel',
         ];
         $texts = Locale::apply($texts);
 
@@ -280,7 +274,7 @@ class AccountController extends Controller
         }
         extract(self::$route['vars']);
 
-        if (empty($_POST['name']) || $_POST['name'] === '-'){
+        if (empty($_POST['name']) || $_POST['name'] === '-') {
             $chatData =  TelegramChats::getChat($chatId);
             View::message(['error' => 1, 'message' => 'Поки не готова можливысть видаляти прив’язку користувачів до телеграму']);
         }
@@ -358,63 +352,65 @@ class AccountController extends Controller
         ];
         View::modal($vars);
     }
-    public function emailVerifyHashAction(){
-        if (!isset($_SESSION['id'])){
-            View::errorCode(404, ['message'=>'<p>Your aren’t authorized yet!</p><p>Please - use browser, where you made your request!</p>']);
+    public function emailVerifyHashAction()
+    {
+        if (!isset($_SESSION['id'])) {
+            View::errorCode(404, ['message' => '<p>Your aren’t authorized yet!</p><p>Please - use browser, where you made your request!</p>']);
         }
         extract(self::$route['vars']);
 
         $contacts = Contacts::getByUserId($_SESSION['id']);
-        
+
         $emailData = [];
-        foreach($contacts as $num=>$contact){
+        foreach ($contacts as $num => $contact) {
             if ($contact['type'] !== 'email') continue;
             $emailData = $contact;
             break;
         }
 
-        if (empty($emailData['data'])){
-            View::errorCode(404, ['message'=>'<p>We can’t find your request</p><p>Or</p><p>Link has been expired!</p>']);
+        if (empty($emailData['data'])) {
+            View::errorCode(404, ['message' => '<p>We can’t find your request</p><p>Or</p><p>Link has been expired!</p>']);
         }
 
         $emailData['data'] = json_decode($emailData['data'], true);
-        if ($emailData['data']['approve']['hash'] !== $hash){
-            View::errorCode(404, ['message'=>'<p>We can’t find your request</p><p>Or</p><p>Link has been expired!</p>']);
+        if ($emailData['data']['approve']['hash'] !== $hash) {
+            View::errorCode(404, ['message' => '<p>We can’t find your request</p><p>Or</p><p>Link has been expired!</p>']);
         }
         unset($emailData['data']['approve']);
         $emailData['data']['approved'] = $_SERVER['REQUEST_TIME'];
-        Contacts::edit(['data'=>$emailData['data']], ['id'=> $emailData['id']]);
-        
+        Contacts::edit(['data' => $emailData['data']], ['id' => $emailData['id']]);
+
         View::redirect('/');
     }
-    public function emailVerifyCodeAction(){
-        if (!isset($_SESSION['id'])){
-            View::errorCode(404, ['message'=>'<p>Your aren’t authorized yet!</p><p>Please - use browser, where you made your request!</p>']);
+    public function emailVerifyCodeAction()
+    {
+        if (!isset($_SESSION['id'])) {
+            View::errorCode(404, ['message' => '<p>Your aren’t authorized yet!</p><p>Please - use browser, where you made your request!</p>']);
         }
 
         $code = $_POST['approval_code'];
         $contacts = Contacts::getByUserId($_SESSION['id']);
-        
+
         $emailData = [];
-        foreach($contacts as $num=>$contact){
+        foreach ($contacts as $num => $contact) {
             if ($contact['type'] !== 'email') continue;
             $emailData = $contact;
             break;
         }
 
-        if (empty($emailData['data'])){
-            View::errorCode(404, ['message'=>'<p>We can’t find your request</p><p>Or</p><p>Link has been expired!</p>']);
+        if (empty($emailData['data'])) {
+            View::errorCode(404, ['message' => '<p>We can’t find your request</p><p>Or</p><p>Link has been expired!</p>']);
         }
 
         $emailData['data'] = json_decode($emailData['data'], true);
-        if ($emailData['data']['approve']['code'] !== $code){
-            View::errorCode(404, ['message'=>'<p>We can’t find your request</p><p>Or</p><p>Link has been expired!</p>']);
+        if ($emailData['data']['approve']['code'] !== $code) {
+            View::errorCode(404, ['message' => '<p>We can’t find your request</p><p>Or</p><p>Link has been expired!</p>']);
         }
         unset($emailData['data']['approve']);
         $emailData['data']['approved'] = $_SERVER['REQUEST_TIME'];
-        Contacts::edit(['data'=>$emailData['data']], ['id'=> $emailData['id']]);
-        
-        View::message(['message'=>'Success!', 'location' => '/account/profile/'.$_SESSION['id']]);
+        Contacts::edit(['data' => $emailData['data']], ['id' => $emailData['id']]);
+
+        View::message(['message' => 'Success!', 'location' => '/account/profile/' . $_SESSION['id']]);
     }
     public function emailApproveFormAction()
     {
@@ -424,10 +420,10 @@ class AccountController extends Controller
 
         $mailer = new Mailer();
 
-        $contact = ContactRepository::setApproveData('email',$userContacts);
+        $contact = ContactRepository::setApproveData('email', $userContacts);
 
         $mail = [
-            'title' => '<no-reply> '.MAFCLUB_NAME.' - Verify your E-mail',
+            'title' => '<no-reply> ' . MAFCLUB_NAME . ' - Verify your E-mail',
             'body' => "
             <p>Please follow this link to verify your email:</p>
             <p>https://krmc.gigalixirapp.com/account/approve/email/{$contact['data']['approve']['hash']}</p>

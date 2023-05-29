@@ -2,15 +2,23 @@
 
 namespace app\Repositories;
 
-use app\models\Contacts;
 use app\models\Weeks;
 
 class DayRepository
 {
-    public static function renamePlayer($userId, $name){
-        $table = Weeks::$table;
-        $search = '"name":"'.$name.'"';
-        $result = Weeks::query("SELECT * FROM $table WHERE data ILIKE ?", [$search], 'Assoc');
-        var_dump($result);
+    public static function renamePlayer(int $userId, string $name): void
+    {
+        $weeks = Weeks::getAll();
+        foreach ($weeks as $num => $week) {
+            if (!strpos($week['data'], '"id":' . $userId . ',')) continue;
+            $days = json_decode($week['data'], true);
+            foreach ($days as $dayNum => $day) {
+                foreach ($day['participants'] as $participantNum => $participant) {
+                    if ($participant['id'] !== $userId) continue;
+                    $days[$dayNum]['participants'][$participantNum]['name'] = $name;
+                }
+            }
+            Weeks::setWeekData($week['id'], ['data' => $days]);
+        }
     }
 }

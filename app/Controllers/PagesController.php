@@ -4,6 +4,7 @@
 namespace app\Controllers;
 
 use app\core\Controller;
+use app\core\Locale;
 use app\core\View;
 use app\models\Pages;
 
@@ -92,7 +93,7 @@ class PagesController extends Controller
         }
 
         $vars = [
-            'title' => 'Page edit form',
+            'title' => Locale::phrase('Page edit form'),
             'texts' => [
                 'SubmitLabel' => 'Save'
             ],

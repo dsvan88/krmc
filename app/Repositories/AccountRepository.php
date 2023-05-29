@@ -1,4 +1,5 @@
 <?
+
 namespace app\Repositories;
 
 use app\core\Locale;
@@ -8,12 +9,14 @@ use app\models\Users;
 
 class AccountRepository
 {
-    public static function getFields(int $userId) : array{
+    public static function getFields(int $userId): array
+    {
         $data = Users::getDataById($userId);
         $data['personal']['genderName'] = Locale::phrase(ucfirst($data['personal']['gender']));
         return $data;
     }
-    public static function edit(int $userId, array $data){
+    public static function edit(int $userId, array $data)
+    {
         $userData = Users::getDataById($userId);
         unset($userData['id']);
 
@@ -27,21 +30,22 @@ class AccountRepository
                 $birthday = 0;
             $userData['personal']['birthday'] = $birthday;
         }
-        if (isset($data['gender'])){
+        if (isset($data['gender'])) {
             $gender = Validator::validate('gender', $data['gender']);
-            if ($gender !== false){
+            if ($gender !== false) {
                 $userData['personal']['gender'] = $data['gender'];
             }
         }
-        $data = Users::edit($userData, ['id'=>$userId]);
+        $data = Users::edit($userData, ['id' => $userId]);
         return true;
     }
-    public static function rename(int $userId, string $name){
+    public static function rename(int $userId, string $name)
+    {
         if (Users::getDataByName($name) !== false)
-            return ['result' => false, 'message'=>'The new name already exists. Please, select another!'];
+            return ['result' => false, 'message' => "This new name already exists in the base.\nPlease, select another!"];
 
         DayRepository::renamePlayer($userId, $name);
-        // $data = Users::edit(['name' => $name], ['id'=>$userId]);
-        return ['result'=> true, 'message'=>'Success!'];
+        Users::edit(['name' => $name], ['id' => $userId]);
+        return ['result' => true, 'message' => 'Success!'];
     }
 }

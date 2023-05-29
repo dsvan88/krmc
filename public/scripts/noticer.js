@@ -12,13 +12,16 @@ class Noticer {
 	add(notice) {
 		const  noticeBlock = document.createElement('div');
 		noticeBlock.classList.add('notice');
+		const noticeMessageBlock = document.createElement('div');
+		noticeMessageBlock.classList.add('notice__message');
+		noticeMessageBlock.innerHTML = '<p> ' + notice['message'].replace(/\n/g, '</p><p>') + '</p>';
+		
 		if (notice['type']) {
 			noticeBlock.classList.add(notice['type']);
+			const noticeTitle = document.createElement('h3');
+			noticeTitle.innerText = notice['type'].toUpperCase() + ':';
+			noticeMessageBlock.prepend(noticeTitle);
 		}
-		const noticeMessageBlock = document.createElement('span');
-		noticeMessageBlock.classList.add('notice__message');
-		noticeMessageBlock.textContent = notice['message'];
-
 
 		const noticeCloseBlock = document.createElement('span');
 		noticeCloseBlock.className = 'notice__close fa fa-window-close';
