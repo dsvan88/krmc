@@ -36,4 +36,12 @@ class AccountRepository
         $data = Users::edit($userData, ['id'=>$userId]);
         return true;
     }
+    public static function rename(int $userId, string $name){
+        if (Users::getDataByName($name) !== false)
+            return ['result' => false, 'message'=>'The new name already exists. Please, select another!'];
+
+        DayRepository::renamePlayer($userId, $name);
+        // $data = Users::edit(['name' => $name], ['id'=>$userId]);
+        return ['result'=> true, 'message'=>'Success!'];
+    }
 }

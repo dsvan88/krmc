@@ -114,6 +114,10 @@ class AccountController extends Controller
         extract(self::$route['vars']);
         if (!in_array($_SESSION['privilege']['status'], ['manager', 'admin'])) {
             $userId = (int) $_SESSION['id'];
+            $isAdmin = false;
+        }
+        else {
+            $isAdmin = true;
         }
         $userData = Users::getDataById($userId);
         
@@ -143,6 +147,7 @@ class AccountController extends Controller
             ],
             'userId' => $userId,
             'data' => $userData,
+            'isAdmin' => $isAdmin,
         ];
         View::render($vars);
     }
@@ -188,9 +193,15 @@ class AccountController extends Controller
     }
     public function profileSectionEditAction(){
         extract(self::$route['vars']);
+
+        $isAdmin = false;
         if (!in_array($_SESSION['privilege']['status'], ['manager', 'admin'])) {
             $userId = (int) $_SESSION['id'];
         }
+        else {
+            $isAdmin = true;
+        }
+
         if ($section === 'contacts'){
             $contacts = [
                 'email' => Validator::validate('email', $_POST['email']),
@@ -198,6 +209,24 @@ class AccountController extends Controller
                 'phone' => Validator::validate('phone', $_POST['phone']),
             ];
             ContactRepository::edit($userId, $contacts);
+        }
+        else if ($section === 'control' && $isAdmin){
+            $name = trim($_POST['name']);
+            $status = trim($_POST['status']);
+            $userData = Users::getDataById($userId);
+            if ($userData['name'] !== $name){
+                $result = AccountRepository::rename($userId, $name);
+                if (!$result['result']){
+                    $result['type'] = 'error';
+                    View::notice($result);
+                }
+                $result['location'] = '/account/profile/'.$userId;
+                View::notice($result);
+            }
+            if ($userData['privilege']['status'] !== $status){
+                $userData['privilege']['status'] = $status;
+                Users::edit(['privilege' => $userData['privilege']], ['id' => $userId]);
+            }
         }
         else {
             AccountRepository::edit($userId, $_POST);
