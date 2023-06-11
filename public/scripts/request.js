@@ -15,27 +15,27 @@ async function request({ url, data, method = 'POST', responseType = 'json', succ
 
 	if (!data) method = 'GET';
 
-	headers = {};
+	let options = {
+		method : method.toUpperCase(),
+		headers : {
+			"X-Requested-With" : "XMLHttpRequest"
+		},
+	};
 
-	if (method === 'GET') {
+	if (options['method'] === 'GET') {
         if (data){
             url += '?' + btoa(new URLSearchParams(data).toString());
             data = undefined;
         }
-		headers['Content-Type'] = 'application/x-www-form-urlencoded';
     }
     else if (typeof data === 'string' && data[0] === '{'){
-        headers['Content-Type'] = 'application/json';
-    }
-    else if (typeof data === 'string' && data[0] === '{'){
-        headers['Content-Type'] = 'multipart/form-data';
+        options['headers']["Content-Type"] = 'application/json';
     }
 
-    let options = {
-        method: method,
-        body: data,
-        headers: headers,
+    if (data){
+        options['body'] = data;
     }
+
     if (url[0] === '/') {
         url = url.substr(1);
     }
@@ -84,3 +84,4 @@ function download(dataurl, filename='backup.txt') {
 	a.click();
 	return true;
 }
+console.log('Load');

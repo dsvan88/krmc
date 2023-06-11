@@ -603,11 +603,16 @@ class AccountController extends Controller
             'title' => '{{ Account_Forget_Form_Title }}',
             'texts' => [
                 'authPlaceholder' => '{{ Account_Login_Form_Login_Input_Placeholder }}',
-                'tgBotLink' => 'https://t.me/' . $botData['result']['username'],
                 'SubmitLabel' => 'Execute',
                 'CancelLabel' => 'Cancel',
             ]
         ];
+
+        if ($botData['ok'])
+            $vars['texts']['tgBotLink'] = 'https://t.me/' . $botData['result']['username'];
+        else
+            $vars['texts']['tgBotLink'] = 'https://t.me/';
+
         View::modal($vars);
     }
     public function registerAction()
