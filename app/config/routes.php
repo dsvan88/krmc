@@ -308,10 +308,10 @@ return  [
         'action' => 'setNickname',
         'access' => ['category' => 'manager']
     ],
-    'api/account/rename/form' =>
+    'api/account/dummy/rename/form' =>
     [
         'controller' => 'account',
-        'action' => 'renameDummyPlayerForm',
+        'action' => 'dummyRenameForm',
         'access' => ['category' => 'manager']
     ],
     'api/autocomplete/users-names' =>
@@ -324,6 +324,18 @@ return  [
     [
         'controller' => 'autocomplete',
         'action' => 'participantField',
+        'access' => ['category' => 'manager']
+    ],
+    'api/game/add-participant' =>
+    [
+        'controller' => 'account',
+        'action' => 'addParticipant',
+        'access' => ['category' => 'manager']
+    ],
+    'api/game/remove-participant' =>
+    [
+        'controller' => 'account',
+        'action' => 'removeParticipant',
         'access' => ['category' => 'manager']
     ],
     'api/game/{gameId}' =>

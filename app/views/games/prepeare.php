@@ -1,10 +1,10 @@
 <section class="section index">
-    <header>
+  <?/*  <header>
         <h1 class="title"><?=$texts['title']?></h1>
         <h2 class="subtitle">
             <?=$texts['subtitle']?>
         </h2>
-    </header>
+    </header>*/?>
     <form class="game-form" action="/game/mafia/start" method="POST">
         <div class="game-form__row">
             <input name="manager" type="text" class="game-form__input" value="" placeholder="<?=$texts['managerPlaceholder']?>"/>
@@ -13,7 +13,7 @@
             <? for($i=0; $i < $maxPlayers; $i++): ?>
                 <li>
                     <div class="game-form__row">
-                        <input name="player[<?=$i?>]" type="text" class="game-form__input" value ="<?=isset($day['participants'][$i]['name']) ? $day['participants'][$i]['name'] : ''?>" placeholder="<?=$texts['playerPlaceholder']?>"/>
+                        <input name="player[<?=$i?>]" type="text" class="game-form__input" value ="<?=isset($day['participants'][$i]['name']) ? $day['participants'][$i]['name'] : ''?>" placeholder="<?=$texts['playerPlaceholder']?>" data-action-change="check-player" data-action-input="autocomplete-users-names" list="users-names-list" autocomplete="off" />
                         <select name="role[<?=$i?>]" class="game-form__input">
                             <option value='0'> </option>
                             <option value='1'>Мафия</option>
@@ -46,4 +46,5 @@
             <span class="fa fa-plus" data-action-click="add-player"></span>
         </span>
     </div>
+    <datalist id="users-names-list"></datalist>
 </section>

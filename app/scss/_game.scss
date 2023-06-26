@@ -58,7 +58,7 @@
 			transition: all $animation-fast ease-in-out;
 			width: max-content;
 			flex-grow: 0;
-			color: $color-text-menu;
+			color: $color-text-dark-blur;
 			&:hover {
 				background-color: #0a494d;
 			}
@@ -93,9 +93,9 @@
 		text-align: center;
 		border: 0;
 		font-size: 1.4em;
-		color: $color-text-menu;
+		color: $color-text-dark;
 		&[placeholder] {
-			color: $color-text-menu;
+			color: $color-text-dark;
 		}
 		option {
 			color: $bg-color-input;

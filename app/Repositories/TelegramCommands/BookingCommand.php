@@ -58,7 +58,7 @@ class BookingCommand extends ChatCommand {
             if ($participantId !== -1) {
                 return [false, self::locale('{{ Tg_Command_Requester_Already_Booked }}')];
             }
-            $newDayData = Days::addParticipantToDayData($newDayData, $slot, $requestData);
+            $newDayData = Days::addParticipantToDayData($newDayData, $requestData, $slot);
             $reactions = [
                 '🤩',
                 '🥰',

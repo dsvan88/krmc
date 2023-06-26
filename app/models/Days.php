@@ -196,7 +196,7 @@ class Days extends Model
         }
         return $result;
     }
-    public static function addParticipantToDayData($dayData, $slot, &$data)
+    public static function addParticipantToDayData(array $dayData, array &$userData, int $slot = -1): array
     {
         if ($slot === -1) {
             while (isset($dayData['participants'][++$slot])) {
@@ -204,15 +204,11 @@ class Days extends Model
         }
 
         $dayData['participants'][$slot] = [
-            'id'        =>    $data['userId'],
-            'name'      =>    $data['userName'],
-            'arrive'    =>    $data['arrive'],
-            'prim'    =>    '',
+            'id'        =>    $userData['userId'],
+            'name'      =>    $userData['userName'],
+            'arrive'    =>    !empty($userData['arrive']) ? $userData['arrive'] : '',
+            'prim'		=>    !empty($userData['prim']) ? $userData['prim'] : '',
         ];
-
-        if ($data['prim'] != '') {
-            $dayData['participants'][$slot]['prim'] = $data['prim'];
-        }
 
         return $dayData;
     }

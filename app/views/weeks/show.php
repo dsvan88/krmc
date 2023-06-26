@@ -33,7 +33,7 @@
                         for ($x = 0; $x < $day['playersCount']; $x++) :
                             if ($x !== 0 && $x % 5 === 0) : ?>
                                 </ol>
-                                <ol class="day-participants__list-column">
+                                <ol class="day-participants__list-column" start="6" >
                             <? endif ?>
                             <li class="day-participants__list-item"><?= $day['participants'][$x]['name'] ?></li>
                         <? endfor ?>

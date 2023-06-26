@@ -5,14 +5,16 @@ namespace app\Controllers;
 use app\core\Controller;
 use app\core\ImageProcessing;
 use app\core\View;
-use app\models\Settings;
-use app\models\Users;
 use app\core\Locale;
 use app\core\Mailer;
 use app\core\TelegramBot;
 use app\core\Validator;
+use app\models\Weeks;
+use app\models\Days;
 use app\models\Contacts;
 use app\models\TelegramChats;
+use app\models\Settings;
+use app\models\Users;
 use app\Repositories\AccountRepository;
 use app\Repositories\ContactRepository;
 
@@ -461,7 +463,70 @@ class AccountController extends Controller
         ];
         View::modal($vars);
     }
-    public function renameDummyPlayerFormAction()
+    public function addParticipantAction()
+    {
+        if (!in_array($_SESSION['privilege']['status'], ['manager', 'admin'])) {
+            View::errorCode(403, ['message' => 'Something went wrong! How did you get here?']);
+        }
+
+        $userData = Users::getDataByName($_POST['name']);
+        if (empty($userData)){
+            $userId = Users::add($_POST['name']);
+            $userData = Users::getDataById($userId);
+        }
+        $weekId = Weeks::currentId();
+        $weekData = Weeks::weekDataById($weekId);
+
+        $today = getdate()['wday'] - 1;
+
+        if ($today === -1)
+            $today = 6;
+
+        foreach ($weekData['data'][$today]['participants'] as $index=>$participant){
+            if ($participant['name'] === $userData['name']){
+                View::notice(['error'=>1,'message'=>'Already in the list.']);
+            }
+        }
+
+        $userData = [
+            'userId' => $userData['id'],
+            'userName' => $userData['name'],
+        ];
+
+        $weekData['data'][$today] = Days::addParticipantToDayData($weekData['data'][$today], $userData);
+        $weekData['data'] = json_encode($weekData['data'], JSON_UNESCAPED_UNICODE);
+        Weeks::update(['data' => $weekData['data']], ['id' => $weekId]);
+
+        View::message(['name' => $userData['userName']]);
+    }
+    public function removeParticipantAction()
+    {
+        if (!in_array($_SESSION['privilege']['status'], ['manager', 'admin'])) {
+            View::errorCode(403, ['message' => 'Something went wrong! How did you get here?']);
+        }
+
+        $userData = Users::getDataByName($_POST['name']);
+        $weekId = Weeks::currentId();
+        $weekData = Weeks::weekDataById($weekId);
+
+        $today = getdate()['wday'] - 1;
+
+        if ($today === -1)
+            $today = 6;
+
+        foreach ($weekData['data'][$today]['participants'] as $index=>$participant){
+            if ($participant['name'] !== $userData['name']) continue;
+            unset($weekData['data'][$today]['participants'][$index]);
+            break;
+        }
+        $weekData['data'][$today]['participants'] = array_values($weekData['data'][$today]['participants']);
+        $weekData['data'] = json_encode($weekData['data'], JSON_UNESCAPED_UNICODE);
+
+        Weeks::update(['data' => $weekData['data']], ['id' => $weekId]);
+
+        View::notice('Done');
+    }
+    public function dummyRenameFormAction()
     {
         if (!in_array($_SESSION['privilege']['status'], ['manager', 'admin'])) {
             View::errorCode(403, ['message' => 'Something went wrong! How did you get here?']);
@@ -473,7 +538,7 @@ class AccountController extends Controller
                 'SaveLabel' => 'Save',
                 'CancelLabel' => 'Cancel',
             ],
-            'scripts' => '/public/scripts/apply-input-listener.js?v=' . $_SERVER['REQUEST_TIME']
+            'scripts' => '/public/scripts/apply-input-listener.js?v=' . $_SERVER['REQUEST_TIME'],
         ];
         View::modal($vars);
     }

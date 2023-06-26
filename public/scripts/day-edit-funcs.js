@@ -20,15 +20,11 @@ actionHandler.participantFieldClear = function (target, event) {
     const parent = target.closest('div');
     const nameInput = parent.querySelector('input[name="participant[]"]');
     const arriveInput = parent.querySelector('input[name="arrive[]"]');
-    const durationInput = parent.querySelector('select[name="duration[]"]');
     if (nameInput.value !== ''){
         nameInput.value = '';
     }
     if (arriveInput.value !== ''){
         arriveInput.value = '';
-    }
-    if (durationInput.value != 0){
-        durationInput.value = 0;
     }
 }
 actionHandler.participantCheckChange = function (event) {

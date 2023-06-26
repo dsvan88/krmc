@@ -137,7 +137,7 @@ class View
             require $path;
         exit;
     }
-    public static function message($data)
+    public static function message($data='')
     {
         if (!is_array($data)) {
             $data = ['message' => $data];
@@ -153,7 +153,7 @@ class View
         }
         exit(json_encode($data));
     }
-    public static function notice($data)
+    public static function notice($data='')
     {
         if (!is_array($data)) {
             $data = [
@@ -171,7 +171,6 @@ class View
             $data['error'] = 0;
         } else {
             $data['type'] = 'error';
-            http_response_code($data['error']);
         }
 
         exit(json_encode(['notice' => $data]));
