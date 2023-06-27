@@ -50,7 +50,7 @@
                         <input name="participant[]" type="text" value="<?= $userName ?>" class="booking__participant-name" data-action-input="autocomplete-users-names" list="users-names-list" autocomplete="off" data-action-change="participant-check-change" />
                         <input name="arrive[]" list="time-list" type="text" class="booking__participant-arrive" value="<?= isset($day['participants'][$x]) ? $day['participants'][$x]['arrive'] : '' ?>" autocomplete="off" />
                         <input name="prim[]" type="text" class="booking__participant-prim" value="<?= isset($day['participants'][$x]) ? $day['participants'][$x]['prim'] : '' ?>" placeholder="<?= $texts['dayRemarkPlaceHolder'] ?>">
-                        <i class="fa fa-minus-circle booking__participant-remove" data-action-click="participant-field-remove" title="<?= $texts['clearLabel'] ?>"></i>
+                        <i class="fa fa-minus-circle booking__participant-remove" data-action-click="participant-field-clear" title="<?= $texts['clearLabel'] ?>"></i>
                     </div>
                 </div>
             <? endfor ?>

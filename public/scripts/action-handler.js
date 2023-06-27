@@ -124,13 +124,9 @@ let actionHandler = {
 						} else if (result["modal"]) {
 							let actionModified = camelize(action.replace(/\//g, '-'));
 							actionHandler.commonFormEventEnd({ modal, data: result, formSubmitAction: actionModified + 'Submit' })
-
-							setTimeout(() => {
-								if (actionHandler[actionModified + "Ready"]) {
-									actionHandler[actionModified + "Ready"]({ modal, data: result });
-								}
-							}, 10);
-							
+							if (actionHandler[actionModified + "Ready"]) {
+								setTimeout(() => actionHandler[actionModified + "Ready"]({ modal, data: result }), 10);
+							}
 						}
 					}
 				},
@@ -168,6 +164,12 @@ let actionHandler = {
 				);
 			}
 		}
+		
+		let fields = modalWindow.querySelectorAll('input[data-action-input]');
+		fields.forEach(field => {
+			field.addEventListener('input', (event) => actionHandler.inputCommonHandler.call(actionHandler, event))
+		});
+
 		return true;
 	},
 	commonFormEventReady: function ({ modal = null, result = {}, type = null}) {

@@ -5,14 +5,16 @@ namespace app\Controllers;
 use app\core\Controller;
 use app\core\ImageProcessing;
 use app\core\View;
-use app\models\Settings;
-use app\models\Users;
 use app\core\Locale;
 use app\core\Mailer;
 use app\core\TelegramBot;
 use app\core\Validator;
+use app\models\Weeks;
+use app\models\Days;
 use app\models\Contacts;
 use app\models\TelegramChats;
+use app\models\Settings;
+use app\models\Users;
 use app\Repositories\AccountRepository;
 use app\Repositories\ContactRepository;
 
@@ -348,7 +350,7 @@ class AccountController extends Controller
                 'CancelLabel' => 'Cancel'
             ],
             'chatData' => $chatData,
-            'scripts' => '/public/scripts/apply-input-listener.js?v=' . $_SERVER['REQUEST_TIME']
+            // 'scripts' => '/public/scripts/apply-input-listener.js?v=' . $_SERVER['REQUEST_TIME']
         ];
         View::modal($vars);
     }
@@ -461,7 +463,47 @@ class AccountController extends Controller
         ];
         View::modal($vars);
     }
-    public function renameDummyPlayerFormAction()
+    public function addParticipantAction()
+    {
+        if (!in_array($_SESSION['privilege']['status'], ['manager', 'admin'])) {
+            return View::errorCode(403, ['message' => 'Something went wrong! How did you get here?']);
+        }
+
+        $result = AccountRepository::addParticipantToDay($_POST['name']);
+
+        if ($result['result']){
+            return View::message(['name' => $result['name']]);
+        }
+        return View::notice(['error'=>1, 'message' => $result['message']]);
+    }
+    public function removeParticipantAction()
+    {
+        if (!in_array($_SESSION['privilege']['status'], ['manager', 'admin'])) {
+            View::errorCode(403, ['message' => 'Something went wrong! How did you get here?']);
+        }
+
+        $userData = Users::getDataByName($_POST['name']);
+        $weekId = Weeks::currentId();
+        $weekData = Weeks::weekDataById($weekId);
+
+        $today = getdate()['wday'] - 1;
+
+        if ($today === -1)
+            $today = 6;
+
+        foreach ($weekData['data'][$today]['participants'] as $index=>$participant){
+            if ($participant['name'] !== $userData['name']) continue;
+            unset($weekData['data'][$today]['participants'][$index]);
+            break;
+        }
+        $weekData['data'][$today]['participants'] = array_values($weekData['data'][$today]['participants']);
+        $weekData['data'] = json_encode($weekData['data'], JSON_UNESCAPED_UNICODE);
+
+        Weeks::update(['data' => $weekData['data']], ['id' => $weekId]);
+
+        View::notice('Done');
+    }
+    public function dummyRenameFormAction()
     {
         if (!in_array($_SESSION['privilege']['status'], ['manager', 'admin'])) {
             View::errorCode(403, ['message' => 'Something went wrong! How did you get here?']);
@@ -473,7 +515,23 @@ class AccountController extends Controller
                 'SaveLabel' => 'Save',
                 'CancelLabel' => 'Cancel',
             ],
-            'scripts' => '/public/scripts/apply-input-listener.js?v=' . $_SERVER['REQUEST_TIME']
+            // 'scripts' => '/public/scripts/apply-input-listener.js?v=' . $_SERVER['REQUEST_TIME'],
+        ];
+        View::modal($vars);
+    }
+    public function addParticipantFormAction()
+    {
+        if (!in_array($_SESSION['privilege']['status'], ['manager', 'admin'])) {
+            View::errorCode(403, ['message' => 'Something went wrong! How did you get here?']);
+        }
+
+        $vars = [
+            'title' => 'Add Participant',
+            'texts' => [
+                'SaveLabel' => 'Save',
+                'CancelLabel' => 'Cancel',
+            ],
+            // 'scripts' => '/public/scripts/apply-input-listener.js?v=' . $_SERVER['REQUEST_TIME'],
         ];
         View::modal($vars);
     }

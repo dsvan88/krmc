@@ -231,7 +231,7 @@ class Users extends Model
         $table = self::$table;
         $result = self::query("SELECT name FROM $table WHERE name ILIKE ? ORDER BY id", ["%$name%"], 'Num');
 
-        if (!$result) return $result;
+        if (empty($result)) return $result;
 
         return $result;
     }
@@ -268,7 +268,7 @@ class Users extends Model
     {
         $table = self::$table;
         $userData = self::query("SELECT * FROM $table WHERE id = ? LIMIT 1", [$id], 'Assoc');
-        if (!$userData || empty($userData)) return false;
+        if (empty($userData)) return false;
 
         $userData = $userData[0];
         unset($userData['password']);
@@ -280,7 +280,7 @@ class Users extends Model
     {
         $table = self::$table;
         $userData = self::query("SELECT * FROM $table WHERE name ILIKE ? LIMIT 1", [$name], 'Assoc');
-        if (!$userData || empty($userData)) return false;
+        if (empty($userData)) return false;
 
         $userData = $userData[0];
         unset($userData['password']);
@@ -296,7 +296,7 @@ class Users extends Model
     {
         $table = self::$table;
         $userData = self::query("SELECT * FROM $table WHERE name != ? ORDER BY random() LIMIT $count", [''], 'Assoc');
-        if (!$userData || empty($userData)) return false;
+        if (empty($userData)) return false;
 
         for ($i = 0; $i < count($userData); $i++) {
             $userData[$i]['password'] = '***';
@@ -317,7 +317,7 @@ class Users extends Model
 
         $table = self::$table;
         $usersData = self::query("SELECT * FROM $table WHERE $column IN ($places) LIMIT $count", $players, 'Assoc');
-        if (!$usersData || empty($usersData)) return false;
+        if (empty($usersData)) return false;
 
         for ($i = 0; $i < count($usersData); $i++) {
             $usersData[$i]['password'] = '***';
@@ -331,7 +331,7 @@ class Users extends Model
     {
         $table = self::$table;
         $userData = self::query("SELECT * FROM $table WHERE contacts->>'telegramid' = ? LIMIT 1", [$tgId], 'Assoc');
-        if (!$userData || empty($userData)) return false;
+        if (empty($userData)) return false;
 
         $userData = $userData[0];
         unset($userData['password']);
@@ -382,15 +382,8 @@ class Users extends Model
     public static function add($name)
     {
         $table = self::$table;
-        $nickname = '';
-        $nameArray = explode(' ', trim($name));
-
-        foreach ($nameArray as $slug) {
-            $nickname .= Locale::mb_ucfirst($slug) . ' ';
-        }
-
-        $nickname = mb_substr($nickname, 0, -1, 'UTF-8');
-        
+        $nickname = self::formatName($name);
+       
         return self::insert(['name' => $nickname], $table);
     }
     public static function remove($uid)
@@ -400,11 +393,32 @@ class Users extends Model
     }
     public static function decodeJson($userData)
     {
-        $userData['privilege'] = json_decode($userData['privilege'], true);
-        $userData['personal'] = json_decode($userData['personal'], true);
-        $userData['contacts'] = json_decode($userData['contacts'], true);
-        $userData['credo'] = json_decode($userData['credo'], true);
+        $userData['privilege']  = json_decode($userData['privilege'], true);
+        $userData['personal']   = json_decode($userData['personal'], true);
+        $userData['contacts']   = json_decode($userData['contacts'], true);
+        $userData['credo']      = json_decode($userData['credo'], true);
         return $userData;
+    }
+    /**
+     * @param string $name  - user's nickname
+     * 
+     * @return mixed        - new, formated nickname
+     */
+    public static function formatName(string $name){
+
+        $name = trim(preg_replace(['/\s+/','/[^а-яА-ЯрРсСтТуУфФчЧхХШшЩщЪъЫыЬьЭэЮюЄєІіЇїҐґ.0-9 ]+/'], [' ', ''], $name));
+
+        if (empty($name)) return false;
+
+        $nickname = '';
+
+        $_name = explode(' ', $name);
+
+        foreach ($_name as $slug) {
+            $nickname .= Locale::mb_ucfirst($slug) . ' ';
+        }
+
+        return mb_substr($nickname, 0, -1, 'UTF-8');
     }
     public static function init(){
         $table = self::$table;

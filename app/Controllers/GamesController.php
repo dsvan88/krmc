@@ -28,7 +28,7 @@ class GamesController extends Controller
             'title' => 'Title',
             'subtitle' => 'Subtitle',
             'content' => 'Content',
-            'managerPlaceholder' => 'Managing',
+            'managerPlaceholder' => 'Manager',
             'playerPlaceholder' => 'Nickname',
             'Start' => 'Start',
             'addPlayer' => 'Add Player',
@@ -72,7 +72,7 @@ class GamesController extends Controller
             'title' => 'Title',
             'subtitle' => 'Subtitle',
             'content' => 'Content',
-            'managerPlaceholder' => 'Managing',
+            'managerPlaceholder' => 'Manager',
             'playerPlaceholder' => 'Nickname',
             'Start' => 'Start',
         ];

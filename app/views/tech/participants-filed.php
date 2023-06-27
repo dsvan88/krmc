@@ -5,6 +5,6 @@
                                                                                                                                                                                                                                     ?>
         <input name="arrive[]" list="time-list" type="text" class="booking__participant-arrive" value="" autocomplete="off" placeholder="<?= $texts['TimeArrivePlaceholder'] ?>" />
         <input name="prim[]" type="text" class="booking__participant-prim" value="" placeholder="<?= $texts['RemarkPlaceHolder'] ?>">
-        <i class="fa fa-minus-circle booking__participant-remove" data-action-click="participant-field-remove" title="<?= $texts['ClearLabel'] ?>"></i>
+        <i class="fa fa-minus-circle booking__participant-remove" data-action-click="participant-field-clear" title="<?= $texts['ClearLabel'] ?>"></i>
     </div>
 </div>

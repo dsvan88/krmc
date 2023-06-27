@@ -146,6 +146,10 @@ class TechController extends Controller
         var_dump($result);
         return $result;
     }
+    // public static function testAction(){
+    //     error_log(json_encode($_POST));
+    //     return View::redirect('/game/mafia/start/');
+    // }
     public static function sendMailAction()
     {
             $mailer = new PHPMailer();
