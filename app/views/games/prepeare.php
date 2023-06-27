@@ -38,12 +38,11 @@
             ?>
             <span class="game-form__pool-unit">
                 <span class="game-form__pool-name <?=implode(' ',$class)?>" data-action-click="toggle-player"><?=$day['participants'][$i]['name']?></span>
-                <span class="game-form__pool-remove fa fa-times" data-action-click="remove-player"></span>
+                <span class="game-form__pool-remove fa fa-times" data-action-click="remove-participant"></span>
             </span>
         <? endfor ?>
-        <span class="game-form__pool-unit add" data-action-click="add-player">
-            <span><?=$texts['addPlayer']?></span>
-            <span class="fa fa-plus" data-action-click="add-player"></span>
+        <span class="game-form__pool-unit add" data-action-click="add/participant/form">
+            <span class="fa fa-plus"><?=$texts['addPlayer']?></span>
         </span>
     </div>
     <datalist id="users-names-list"></datalist>

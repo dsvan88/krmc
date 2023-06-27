@@ -1,5 +1,5 @@
 actionHandler.gameFormSubmit = function (event) {
-	let self = this;
+	const self = actionHandler;
     event.preventDefault();
 	const manager = document.querySelector('input[name="manager"]');
 	if (!manager.value.trim())
@@ -26,7 +26,7 @@ actionHandler.gameFormSubmit = function (event) {
 	request({
 		url: event.target.action,
 		data: formData,
-		success: self.commonResponse,
+		success: result => self.commonResponse.call(self, result),
 	});
 	return true;
 		
@@ -97,29 +97,7 @@ actionHandler.checkPlayer = function (event) {
 		return false;
 	}
 	
-	const formData = new FormData();
-	formData.append('name', target.value);
-	request({
-		url: 'game/add-participant',
-		data: formData,
-		success: (result) => {
-			self.commonResponse.call(self, result);
-			if (result['notice'] && result['notice']['error']){
-				target.value = '';
-				return false;
-			}
-			target.value = result['name'];
-			const poolUniExpample = document.querySelector('span.game-form__pool-unit');
-			if (poolUniExpample){
-				const poolUnitNew = poolUniExpample.cloneNode(true);
-				poolUnitNew.querySelector('span.game-form__pool-name').innerText = result['name'];
-				const parentElement = poolUniExpample.closest('div.game-form__pool');
-				parentElement.insertBefore(poolUnitNew, document.querySelector('span.game-form__pool-unit.add'));
-				
-			}
-		},
-	});
-	self.resetSelectedPoolUnits();
+	this.addParticipant(target.value, target);
 }
 
 actionHandler.resetSelectedPoolUnits = function () {
@@ -139,7 +117,7 @@ actionHandler.resetSelectedPoolUnits = function () {
 	}
 }
 
-actionHandler.removePlayer = function (target) {
+actionHandler.removeParticipant = function (target) {
 	
 	const self = this;
 	const button = target.closest('.game-form__pool-unit');
@@ -166,4 +144,39 @@ actionHandler.removePlayer = function (target) {
 		},
 	});
 
+}
+
+actionHandler.addParticipantSubmit = function (event, modal) {
+	event.preventDefault();
+	console.log(event, modal);
+}
+
+actionHandler.addParticipant = function (name, target = null) {
+	const self = this;
+	const formData = new FormData();
+	formData.append('name', name);
+	request({
+		url: 'game/add-participant',
+		data: formData,
+		success: (result) => {
+			self.commonResponse.call(self, result);
+			if (target){
+				if (result['notice'] && result['notice']['error']){
+					target.value = '';
+					return false;
+				}
+				target.value = result['name'];
+			}
+
+			const poolUniExpample = document.querySelector('span.game-form__pool-unit');
+			if (poolUniExpample){
+				const poolUnitNew = poolUniExpample.cloneNode(true);
+				poolUnitNew.querySelector('span.game-form__pool-name').innerText = result['name'];
+				const parentElement = poolUniExpample.closest('div.game-form__pool');
+				parentElement.insertBefore(poolUnitNew, document.querySelector('span.game-form__pool-unit.add'));
+				
+			}
+		},
+	});
+	self.resetSelectedPoolUnits();
 }

@@ -41,8 +41,8 @@ class Db
     }
     public static function query($query, $params = [], $fetchMode = 'All', $columns = 0)
     {
-        error_log($query);
-        error_log(json_encode($params, JSON_UNESCAPED_UNICODE));
+        // error_log($query);
+        // error_log(json_encode($params, JSON_UNESCAPED_UNICODE));
         $stmt = self::connect()->prepare($query);
         try {
             $stmt->execute($params);

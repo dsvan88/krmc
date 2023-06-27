@@ -350,7 +350,7 @@ class AccountController extends Controller
                 'CancelLabel' => 'Cancel'
             ],
             'chatData' => $chatData,
-            'scripts' => '/public/scripts/apply-input-listener.js?v=' . $_SERVER['REQUEST_TIME']
+            // 'scripts' => '/public/scripts/apply-input-listener.js?v=' . $_SERVER['REQUEST_TIME']
         ];
         View::modal($vars);
     }
@@ -466,38 +466,15 @@ class AccountController extends Controller
     public function addParticipantAction()
     {
         if (!in_array($_SESSION['privilege']['status'], ['manager', 'admin'])) {
-            View::errorCode(403, ['message' => 'Something went wrong! How did you get here?']);
+            return View::errorCode(403, ['message' => 'Something went wrong! How did you get here?']);
         }
 
-        $userData = Users::getDataByName($_POST['name']);
-        if (empty($userData)){
-            $userId = Users::add($_POST['name']);
-            $userData = Users::getDataById($userId);
+        $result = AccountRepository::addParticipantToDay($_POST['name']);
+
+        if ($result['result']){
+            return View::message(['name' => $result['name']]);
         }
-        $weekId = Weeks::currentId();
-        $weekData = Weeks::weekDataById($weekId);
-
-        $today = getdate()['wday'] - 1;
-
-        if ($today === -1)
-            $today = 6;
-
-        foreach ($weekData['data'][$today]['participants'] as $index=>$participant){
-            if ($participant['name'] === $userData['name']){
-                View::notice(['error'=>1,'message'=>'Already in the list.']);
-            }
-        }
-
-        $userData = [
-            'userId' => $userData['id'],
-            'userName' => $userData['name'],
-        ];
-
-        $weekData['data'][$today] = Days::addParticipantToDayData($weekData['data'][$today], $userData);
-        $weekData['data'] = json_encode($weekData['data'], JSON_UNESCAPED_UNICODE);
-        Weeks::update(['data' => $weekData['data']], ['id' => $weekId]);
-
-        View::message(['name' => $userData['userName']]);
+        return View::notice(['error'=>1, 'message' => $result['message']]);
     }
     public function removeParticipantAction()
     {
@@ -538,7 +515,23 @@ class AccountController extends Controller
                 'SaveLabel' => 'Save',
                 'CancelLabel' => 'Cancel',
             ],
-            'scripts' => '/public/scripts/apply-input-listener.js?v=' . $_SERVER['REQUEST_TIME'],
+            // 'scripts' => '/public/scripts/apply-input-listener.js?v=' . $_SERVER['REQUEST_TIME'],
+        ];
+        View::modal($vars);
+    }
+    public function addParticipantFormAction()
+    {
+        if (!in_array($_SESSION['privilege']['status'], ['manager', 'admin'])) {
+            View::errorCode(403, ['message' => 'Something went wrong! How did you get here?']);
+        }
+
+        $vars = [
+            'title' => 'Add Participant',
+            'texts' => [
+                'SaveLabel' => 'Save',
+                'CancelLabel' => 'Cancel',
+            ],
+            // 'scripts' => '/public/scripts/apply-input-listener.js?v=' . $_SERVER['REQUEST_TIME'],
         ];
         View::modal($vars);
     }

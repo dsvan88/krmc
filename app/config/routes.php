@@ -326,6 +326,12 @@ return  [
         'action' => 'participantField',
         'access' => ['category' => 'manager']
     ],
+    'api/add/participant/form' =>
+    [
+        'controller' => 'account',
+        'action' => 'addParticipantForm',
+        'access' => ['category' => 'manager']
+    ],
     'api/game/add-participant' =>
     [
         'controller' => 'account',
@@ -340,13 +346,13 @@ return  [
     ],
     'api/game/{gameId}' =>
     [
-        'controller' => 'gamePlays',
+        'controller' => 'games',
         'action' => 'load',
         'access' => ['category' => 'manager']
     ],
     'api/game/save/{gameId}' =>
     [
-        'controller' => 'gamePlays',
+        'controller' => 'games',
         'action' => 'save',
         'access' => ['category' => 'manager']
     ],
@@ -398,6 +404,12 @@ return  [
         'action' => 'selfTestTelegram',
         'access' => ['category' => 'admin']
     ],
+    // 'tech/test' =>
+    // [
+    //     'controller' => 'tech',
+    //     'action' => 'test',
+    //     'access' => ['category' => 'admin']
+    // ],
     // 'tech/mail' =>
     // [
     //     'controller' => 'tech',

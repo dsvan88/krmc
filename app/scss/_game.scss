@@ -110,6 +110,20 @@
 	padding: 10px;
 	margin: 10px;
 	white-space: nowrap;
+	@include md{
+		&__wrapper{
+			display: flex;
+			flex-direction: row-reverse;
+			gap: 2em;
+		}
+		&__description{
+			display: flex;
+			flex-direction: column-reverse;
+			justify-content: flex-end;
+			width: 40vw;
+			padding-top: 3em;
+		}
+	}
 	&__stage {
 		text-align: center;
 		max-width: 100vw;
@@ -125,12 +139,12 @@
 	}
 	&__table {
 		border-collapse: collapse;
-		width: 100vw;
+		width: 100%;
 		font-size: 1.8em;
 		background-color: #062744bd;
-		@include md{
-			width: clamp(40vw, 250px, 80vw);
-		}
+		// @include md{
+		// 	width: clamp(40vw, 250px, 80vw);
+		// }
 		td,th{
 			border: 1px solid $color-text-menu;
 			padding: 0.3em 0.6em;
