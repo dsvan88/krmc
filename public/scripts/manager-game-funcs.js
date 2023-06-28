@@ -1,6 +1,6 @@
 actionHandler.gameFormSubmit = function (event) {
+	event.preventDefault();
 	const self = actionHandler;
-    event.preventDefault();
 	const manager = document.querySelector('input[name="manager"]');
 	if (!manager.value.trim())
 	{
@@ -18,7 +18,7 @@ actionHandler.gameFormSubmit = function (event) {
 		roles[role]++;
 	}
 	if (roles[1] !== 2 || roles[2] !== 1 || roles[4] !==1){
-		alert('Невірно розподілені ролі!\n(Ролей всього: Гравців Мафії - 2, Дон - 1, Шеріф - 1, Мирні - 6');
+		alert('Невірно розподілені ролі!\n(Ролей всього: Гравців Мафії - 2, Дон - 1, Шеріф - 1, Мирні - 6)');
 		return false;
 	}
 
@@ -118,7 +118,6 @@ actionHandler.resetSelectedPoolUnits = function () {
 }
 
 actionHandler.removeParticipant = function (target) {
-	
 	const self = this;
 	const button = target.closest('.game-form__pool-unit');
 	const name = button.querySelector('.game-form__pool-name').innerText;
@@ -146,9 +145,11 @@ actionHandler.removeParticipant = function (target) {
 
 }
 
-actionHandler.addParticipantSubmit = function (event, modal) {
+actionHandler.addParticipantFormSubmit = function (event, modal) {
 	event.preventDefault();
-	console.log(event, modal);
+	const name = event.target.querySelector('input[name="name"]').value;
+	actionHandler.addParticipant(name);
+	modal.close()
 }
 
 actionHandler.addParticipant = function (name, target = null) {
@@ -176,7 +177,7 @@ actionHandler.addParticipant = function (name, target = null) {
 				parentElement.insertBefore(poolUnitNew, document.querySelector('span.game-form__pool-unit.add'));
 				
 			}
+			self.resetSelectedPoolUnits();
 		},
 	});
-	self.resetSelectedPoolUnits();
 }

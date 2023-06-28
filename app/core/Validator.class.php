@@ -4,17 +4,17 @@ namespace app\core;
 
 class Validator
 {
-    public static function validate(string $method, mixed $value): mixed
+    public static function validate(string $method, mixed $value)
     {
         return self::$method($value);
     }
-    private static function email(string $value): mixed
+    private static function email(string $value)
     {
         $value = trim($value);
         if (empty($value)) return false;
         return filter_var($value, FILTER_VALIDATE_EMAIL) ? $value : false;
     }
-    private static function telegram(string $value): mixed
+    private static function telegram(string $value)
     {
         $value = trim($value);
         if (strlen($value) < 5)
@@ -23,11 +23,11 @@ class Validator
             return false;
         return $value;
     }
-    private static function phone(string $value): mixed
+    private static function phone(string $value)
     {
         $value = trim($value);
         if (empty($value)) return false;
-        $_clearPhone = preg_replace('/[^+0-9]/i', '', $value);
+        $_clearPhone = preg_replace('/[^+0-9]/', '', $value);
         $pattern = "/^(\+38){0,1}\d{10}$/";
         return preg_match($pattern, $_clearPhone) === 1 ? $value : false;
     }
