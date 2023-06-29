@@ -151,7 +151,7 @@ let actionHandler = {
 		if (data["cssFile"]) {
 			addCssFile(data["cssFile"]);
 		};		
-		
+		console.log(formSubmitAction);
 		if (data['html']) {
 			const form = modalWindow.querySelector('form');
 			if (form !== null){
