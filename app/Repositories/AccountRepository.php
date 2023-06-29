@@ -49,23 +49,26 @@ class AccountRepository
         Users::edit(['name' => $name], ['id' => $userId]);
         return ['result' => true, 'message' => 'Success!'];
     }
-    public static function addParticipantToDay(string $name){
-        $userData = Users::getDataByName($_POST['name']);
-        if (empty($userData)){
-            $userId = Users::add($_POST['name']);
+    public static function addParticipantToDay(string $name, int $day = null)
+    {
+        $userData = Users::getDataByName($name);
+        if (empty($userData)) {
+            $userId = Users::add($name);
             $userData = Users::getDataById($userId);
         }
         $weekId = Weeks::currentId();
         $weekData = Weeks::weekDataById($weekId);
 
-        $today = getdate()['wday'] - 1;
+        if (is_null($day)) {
+            $day = getdate()['wday'] - 1;
 
-        if ($today === -1)
-            $today = 6;
+            if ($day === -1)
+                $day = 6;
+        }
 
-        foreach ($weekData['data'][$today]['participants'] as $index=>$participant){
-            if ($participant['name'] === $userData['name']){
-                return ['result'=>false,'message'=>'Already in the list.'];
+        foreach ($weekData['data'][$day]['participants'] as $index => $participant) {
+            if ($participant['name'] === $userData['name']) {
+                return ['result' => false, 'message' => 'Already in the list.'];
             }
         }
 
@@ -74,9 +77,10 @@ class AccountRepository
             'userName' => $userData['name'],
         ];
 
-        $weekData['data'][$today] = Days::addParticipantToDayData($weekData['data'][$today], $userData);
+        $weekData['data'][$day] = Days::addParticipantToDayData($weekData['data'][$day], $userData);
         $weekData['data'] = json_encode($weekData['data'], JSON_UNESCAPED_UNICODE);
         Weeks::update(['data' => $weekData['data']], ['id' => $weekId]);
-        return ['result'=> true,'name'=> $userData['userName']];
+
+        return ['result' => true, 'name' => $userData['userName']];
     }
 }

@@ -1,12 +1,15 @@
 <?
+
 namespace app\Repositories\TelegramCommands;
 
 use app\core\ChatCommand;
 use app\models\Days;
 use app\models\Weeks;
 
-class BookingCommand extends ChatCommand {
-    public static function description(){
+class BookingCommand extends ChatCommand
+{
+    public static function description()
+    {
         return self::locale('+ (week day) <i>// Booking for the scheduled games of the current week, examples:</i>
         +вс
         + на сегодня, на 19:30 (отсижу 1-2 игры, под ?)
@@ -14,7 +17,8 @@ class BookingCommand extends ChatCommand {
         -вс
         - завтра');
     }
-    public static function execute(array $arguments=[]){
+    public static function execute(array $arguments = [])
+    {
         $requestData = self::$operatorClass::parseArguments($arguments);
         $requestData['userId'] = self::$requester['id'];
         $requestData['userName'] = self::$requester['name'];
@@ -29,7 +33,7 @@ class BookingCommand extends ChatCommand {
 
         $participantId = $slot = -1;
         if ($weekData['data'][$requestData['dayNum']]['status'] !== 'set') {
-            if (!in_array($requestData['userStatus'], ['manager', 'admin'])){
+            if (!in_array($requestData['userStatus'], ['manager', 'admin'])) {
                 return [false, self::locale('{{ Tg_Gameday_Not_Set }}')];
             }
             if (!isset($weekData['data'][$requestData['dayNum']]['game']))
@@ -37,20 +41,21 @@ class BookingCommand extends ChatCommand {
 
             if ($requestData['arrive'] !== '')
                 $weekData['data'][$requestData['dayNum']]['time'] = $requestData['arrive'];
-                
+
             $requestData['arrive'] = '';
             $weekData['data'][$requestData['dayNum']]['status'] = 'set';
         }
 
         foreach ($weekData['data'][$requestData['dayNum']]['participants'] as $index => $userData) {
-            if ($userData['id'] === $requestData['userId']) {
-                if ($requestData['arrive'] !== '' && $requestData['arrive'] !== $userData['arrive']) {
-                    $slot = $index;
-                    break;
-                }
-                $participantId = $index;
+            if ($userData['id'] !== $requestData['userId']) continue;
+
+            if ($requestData['arrive'] !== '' && $requestData['arrive'] !== $userData['arrive']) {
+                $slot = $index;
                 break;
             }
+
+            $participantId = $index;
+            break;
         }
 
         $newDayData = $weekData['data'][$requestData['dayNum']];
