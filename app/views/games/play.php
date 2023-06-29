@@ -5,6 +5,10 @@
 				<div class="game__description">
 					<header class="title">
 						<div class="game__stage"></div>
+						<form class="game__vote" style="">
+							<div class="game__vote-row"><input class="game__vote-input" type="number" value="0" step="1" max="10" min="0"></div>
+							<div class="game__vote-row"><button class="game__vote-button" type="submit">Accept</button></div>
+						</form>
 					</header>
 					<div class="timer">
 						<div class="timer__caption">
