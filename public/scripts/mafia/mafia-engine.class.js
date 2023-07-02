@@ -15,6 +15,7 @@ class MafiaEngine extends GameEngine {
     lastWill = [];
     debaters = [];
     courtRoom = [];
+    voted = {};
     leaveThisRound = [];
 
     reasons = ['', 'Вбитий', 'Засуджений', '4 Фола', 'Дісквал.'];
@@ -396,12 +397,14 @@ class MafiaEngine extends GameEngine {
         for (; ;) {
             player = this.players[this.speakers.shift()];
             if (player === this.activeSpeaker) continue;
-            if (player.out > 0 && player.muted) {
+            if (player.muted && player.out > 0) {
                 player.unmute();
                 continue;
             }
             if (player.out > 0) continue;
+
             if (!player.muted) return player;
+
             if (this.getActivePlayersCount() < 5) {
                 player.unmute();
                 this.timer.left = this.config.mutedSpeakTime;
@@ -411,8 +414,8 @@ class MafiaEngine extends GameEngine {
             if (put > 0) {
                 this.prevSpeaker = player.id;
                 this.putPlayerOnVote(put - 1);
-                player.unmute();
             };
+            player.unmute();
         }
     };
     actionCourtStart() {
@@ -436,16 +439,98 @@ class MafiaEngine extends GameEngine {
 
         this.needFix = false;
 
-        this.votesAll = 0,
-        this.playersCount = 0,
-        this.voted = new Map(),
+        this.voted = [],
         this.maxVotes = 0;
+        this.votesAll = this.playersCount = this.getActivePlayersCount();
         this.defendantCount = this.courtRoom.length;
+
+        
+        if (this.defendantCount === 0)
+        {
+            message += '\nНа голосование никто не выставлен. Голосование не проводится.'
+            alert( message );
+            this.addLog(message);
+            return this.dispatchNext();
+        }
+        
+        alert(message);
+
+        if (this.defendantCount === 1)
+        {
+            message = 'На голосование был выставлен лишь 1 игрок\n';
+            let playerId = this.courtRoom.pop();
+            if (this.daysCount > 0)
+            {
+                message += `Наш город покидает игрок №${this.players[playerId].num}}!`;
+                alert(message + '\nУ вас есть 1 минута для последней речи');
+                this.outPlayer(playerId,2);
+            }
+            else {
+                message += `Этого недостаточно для проведения голосования.`;
+                alert(message + '\n\nНаступает фаза ночи!')
+            }
+            this.addLog(message);
+            return this.dispatchNext();
+        }
 
         return this.dispatchNext();
     }
     actionCourt() {
+        const playerId = this.courtRoom.shift();
+
+        if (this.votesAll < 1) {
+            return this.processVotes(playerId, this.votesAll);
+        }
+        if (this.courtRoom.length === 0){
+            return this.processVotes(playerId, this.votesAll);
+        }
+        const prompt = new Prompt({
+            title: 'Голосування',
+            text: `Хто за те, аби наше місто покинув гравець №${this.players[playerId].num}`,
+            input: {
+                type: 'number',
+                min: 0,
+                max: this.votesAll,
+            },
+            value: '',
+            action: voted => this.processVotes.call(this, playerId, voted),
+        });
+    }
+    processVotes(playerId, vote){
+
+        vote = parseInt(vote) || 0;
+        if (vote > this.votesAll) vote = this.votesAll;
+        this.voted.push({ id: playerId, votes: vote });
+        this.votesAll -= vote;
+        if (this.maxVotes < vote) {
+            this.maxVotes = vote;
+        }
+
+        return this.dispatchNext();
+    }
+    actionCourtEnd() {
+
+        message = `Голоса распределились следующим образом:\n`;
+        this.voted.forEach( data => {
+            message += `Игрок  № ${this.players[data.id].num} \tГолоса: ${data.votes}\n`;
+            if (data.votes === this.maxVotes){
+                this.debaters.push(data.id);
+            }
+        });
+
+        if (this.debaters.length===1)
+        {
+            let player = this.defendant;
+            message += `\nНас покидает Игрок под № ${player.num}.\nУ вас прощальная минута.`;
+            this.outPlayer(player.id, 2);
+            alert(message);
+            this.addLog(message);
+            return this.dispatchNext();
+        }
         
+        let _debaters = this.courtList(this.debaters);
+        message += 'В нашем городе перестрелка. Между игроками под номерами: ' + _debaters;
+
     }
     // actionCourt() {
     //     this.activeSpeaker = null;

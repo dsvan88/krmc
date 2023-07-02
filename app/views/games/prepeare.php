@@ -1,10 +1,4 @@
 <section class="section index">
-  <?/*  <header>
-        <h1 class="title"><?=$texts['title']?></h1>
-        <h2 class="subtitle">
-            <?=$texts['subtitle']?>
-        </h2>
-    </header>*/?>
     <form class="game-form" action="/game/mafia/start" method="POST">
         <div class="game-form__row">
             <input name="manager" type="text" class="game-form__input" value="" placeholder="<?=$texts['managerPlaceholder']?>"/>

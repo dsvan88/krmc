@@ -82,6 +82,7 @@ class GamesController extends Controller
             'texts' => $texts,
             'game' => $game,
             'scripts' => [
+                '/public/scripts/prompt.js?v=' . $_SERVER['REQUEST_TIME'],
                 '/public/scripts/manager-game-funcs.js?v=' . $_SERVER['REQUEST_TIME'],
                 '/public/scripts/mafia/player.class.js?v=' . $_SERVER['REQUEST_TIME'],
                 '/public/scripts/mafia/game-engine.class.js?v=' . $_SERVER['REQUEST_TIME'],
