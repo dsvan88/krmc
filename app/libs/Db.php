@@ -120,10 +120,10 @@ class Db
     // $table - таблица в которую будет добавлена запись
     public static function update($data, $where, $table = '')
     {
-        if (empty($table)){
+        if (empty($table)) {
             $table = static::$table;
         }
-        
+
         $query = "UPDATE $table SET ";
         foreach ($data as $k => $v)
             $query .= "$k = :$k,";

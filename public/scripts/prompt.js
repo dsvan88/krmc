@@ -9,15 +9,15 @@ class Prompt {
     state = true;
     dragged = false;
 
-    constructor({title = "Prompt", text="Need help?", value="No", action=null, cancel=null, input={type:'text'}}={}){
+    constructor({ title = "Prompt", text = "Need help?", value = "No", action = null, cancel = null, input = { type: 'text' } } = {}) {
         let dialogExample = document.querySelector('dialog.prompt');
-        if (!dialogExample){
+        if (!dialogExample) {
             dialogExample = this.build();
         }
 
         this.dialog = dialogExample.cloneNode(true);
         document.body.append(this.dialog);
-        this.fill({title, text, value, input});
+        this.fill({ title, text, value, input });
         this.dialog.show();
 
         this.form.addEventListener('submit', (event) => {
@@ -42,18 +42,18 @@ class Prompt {
             this.dialog.remove();
         });
 
-        this.dialog.ondragstart = function() {
+        this.dialog.ondragstart = function () {
             return false;
         };
 
-        this.title.addEventListener('mousedown', (event)=> {
+        this.title.addEventListener('mousedown', (event) => {
             if (this.dragged) return;
             this.dragged = true;
             this.dragnDrop.call(this, event);
         })
     }
 
-    build(){
+    build() {
         const dialog = document.createElement('dialog');
         dialog.classList.add('prompt');
         dialog.draggable
@@ -95,7 +95,7 @@ class Prompt {
         document.body.append(dialog);
         return dialog;
     }
-    fill({title = "Prompt", text="Need help?", value="No", input = {type:"text"}}){
+    fill({ title = "Prompt", text = "Need help?", value = "No", input = { type: "text" } }) {
         this.form = this.dialog.querySelector('form');
 
         this.title = this.dialog.querySelector('h4.prompt__title');
@@ -103,23 +103,23 @@ class Prompt {
 
         this.text = this.dialog.querySelector('p.prompt__text');
         this.text.innerText = text;
-        
+
         this.input = this.dialog.querySelector('input.prompt__input');
         this.input.value = value;
 
-        for (const attr in input){
+        for (const attr in input) {
             this.input[attr] = input[attr];
         }
 
         this.agreeButton = this.dialog.querySelector('button.prompt__button.agree');
         this.agreeButton.innerText = 'Ok';
-        
+
         this.cancelButton = this.dialog.querySelector('button.prompt__button.cancel');
         this.cancelButton.innerText = 'Cancel';
     }
 
-    dragnDrop(event){
-        
+    dragnDrop(event) {
+
         const self = this;
 
         let shiftX = event.clientX - self.dialog.getBoundingClientRect().left;
@@ -128,7 +128,7 @@ class Prompt {
         self.dialog.style.position = 'absolute';
         self.dialog.style.zIndex = 1000;
         self.dialog.style.margin = 0;
-        
+
         document.body.append(self.dialog);
 
         moveAt(event.pageX, event.pageY);
@@ -144,7 +144,7 @@ class Prompt {
 
         document.addEventListener('mousemove', onMouseMove);
 
-        self.dialog.onmouseup = function() {
+        self.dialog.onmouseup = function () {
             document.removeEventListener('mousemove', onMouseMove);
             self.dialog.onmouseup = null;
             self.dragged = false;

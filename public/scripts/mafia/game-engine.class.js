@@ -8,16 +8,16 @@ class GameEngine {
     maxPlayers = 10;
 
     prevStates = [];
-    maxStatesSave = 10;
+    maxStatesSave = 30;
     #checkStates = [];
 
     _log = {};
 
-    get gameTable(){
+    get gameTable() {
         return this.#gameTable;
     }
-    get logBlock(){
-        if (!this.#logBlock){
+    get logBlock() {
+        if (!this.#logBlock) {
             this.#logBlock = this.gameTable.closest('.game').querySelector('.game__log');
         }
         return this.#logBlock;
@@ -25,8 +25,8 @@ class GameEngine {
     /**
      * @param {(arg0: Object) => void} data
      */
-    set log(data){
-        for(let [key, value] of Object.entries(data)){
+    set log(data) {
+        for (let [key, value] of Object.entries(data)) {
             if (!this._log[key])
                 this._log[key] = [];
             if (value instanceof Array)
@@ -36,9 +36,9 @@ class GameEngine {
         }
         this.logBlock.innerHTML = '';
 
-        for(let [key, value] of Object.entries(this._log)){
+        for (let [key, value] of Object.entries(this._log)) {
             let message = value.join('</br></br>').replace(/\n/g, '<br>');
-            let block =     `
+            let block = `
             <div class="game__log-entity">
                 <div class="game__log-day">${key}: </div>
                 <div class="game__log-events">${message}</div>
@@ -46,7 +46,7 @@ class GameEngine {
             this.logBlock.insertAdjacentHTML('beforeend', block);
         }
     }
-    constructor({ gameTable = null}) {
+    constructor({ gameTable = null }) {
         if (typeof gameTable === "string") {
             gameTable = document.querySelector(gameTable);
         }
@@ -56,7 +56,7 @@ class GameEngine {
     init() {
         this.gameId = parseInt(window.location.pathname.replace(/[^0-9]+/g, ''));
         request({
-            url: 'game/'+this.gameId,
+            url: 'game/' + this.gameId,
             success: (result) => {
                 let players = JSON.parse(result.players);
                 for (let index = 0; index < this.maxPlayers; index++) {
@@ -68,7 +68,7 @@ class GameEngine {
                     this.players.push(player);
                     this.gameTable.append(player.getRow(index));
                 }
-                if (result.state){
+                if (result.state) {
                     this.load(result.state);
                     this.prevStates = JSON.parse(result.prevstates);
                     return true;
@@ -91,7 +91,7 @@ class GameEngine {
 
         if (this.prevStates.length > this.maxStatesSave)
             this.prevStates.shift();
-        
+
         return true;
     }
     load(state) {
@@ -115,12 +115,12 @@ class GameEngine {
     loadPlayersStates(state) {
         return this.players.forEach((player, index) => player.load(state[index]));
     }
-    send(state){
+    send(state) {
         const data = new FormData;
         data.append('state', state);
         data.append('prevstates', JSON.stringify(this.prevStates));
         request({
-            url: 'game/save/'+this.gameId,
+            url: 'game/save/' + this.gameId,
             data: data,
             success: (result) => debug && console.log(result),
         })
