@@ -19,7 +19,13 @@ $bg-color-dark: #151515;
 $bg-color-dark-blur: #646464;
 $bg-color-red: #380707;
 $bg-color-red-blur: #7d0000;
-$bg-color-input: rgba(0, 0, 0, 0.16);
+$bg-color-light-red: #bb3434;
+$bg-color-light-red-blur: #ea8282;
+$bg-color-green: #04eb5c;
+$bg-color-green-blur: #94d7cd;
+$bg-color-blue: #0470eb;
+$bg-color-blue-blur: #57a5fd;
+$bg-color-input: #00000029;
 
 $bg-profile-button: #a486866c;
 $bg-profile-button-hover: $color-text-light;
@@ -29,7 +35,7 @@ $button-bg-color: $bg-color-red-blur;
 $button-bg-color-hover: $bg-color-red;
 
 $button-bg-color-positive: $bg-color-red;
-$button-bg-color-positive-hover: #00ac43;
+$button-bg-color-positive-hover: $bg-color-green;
 $button-color-positive: $color-text-dark;
 
 

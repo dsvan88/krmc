@@ -51,7 +51,7 @@
 		}
 		&-name{
 			display: inline-block;
-			border: 1px solid #94d7cd;
+			border: 1px solid $bg-color-green-blur;
 			border-radius: 5px 0 0 5px;
 			padding: 0.2em 0.3em;
 			cursor: pointer;
@@ -60,19 +60,19 @@
 			flex-grow: 0;
 			color: $color-text-dark-blur;
 			&:hover {
-				background-color: #0a494d;
+				background-color: $bg-color-green;//#0a494d;
 			}
 			&.selected {
-				background-color: #7714149e;
-				border-color: #aa1414;
+				background-color: $bg-color-light-red-blur;
+				border-color: $bg-color-light-red-blur;
 				text-decoration: line-through;
 				&:hover {
-					background-color: #771414;
+					background-color: $bg-color-light-red;
 				}
 			}
 		}
 		&-remove{
-			border: 1px solid #94d7cd;
+			border: 1px solid $bg-color-green-blur;
 			border-radius: 0 5px 5px 0;
 			padding: 0.2em 0.3em;
 			flex-grow: 0;
@@ -159,35 +159,28 @@
 		border-collapse: collapse;
 		width: 100%;
 		font-size: 1.8em;
-		background-color: #062744bd;
-		// @include md{
-		// 	width: clamp(40vw, 250px, 80vw);
-		// }
 		td,th{
 			border: 1px solid $color-text-menu;
 			padding: 0.3em 0.6em;
 			user-select: none;
 		}
 		th {
-			// padding: 0.3em 0.6em;
 			text-align: center;
 		}
 		tr > td:first-of-type{
 			text-align: center;
 		}
 		.player {
-			border-bottom: 1px dashed $color-text-main;
+			&:nth-child(odd){
+				background-color: $bg-color-light;
+			}
 			&.out {
-				background-color: #d92020;
+				background-color: $bg-color-light-red-blur;
 				color: $bg-color-dark;
 				text-decoration: line-through;
 			}
-			&.fixing {
-				background-color: #06409d;
-				animation: rowFixing 4s ease-out infinite;
-			}
 			&.shooted {
-				background-color: #97003f;
+				background-color: $bg-color-light-red-blur;
 				animation: rowShootedPlayer 1s ease-out infinite;
 			}
 			&.best-moved {
@@ -195,11 +188,11 @@
 				animation: rowForBestMove 1s ease-out infinite;
 			}
 			&.speaker {
-				background-color: #0d5023;
+				background-color: $bg-color-green;
 				animation: activeSpeaker 1.5s ease-out infinite;
 			}
 			.positive{
-				color:#0d5023;
+				color:$bg-color-green;
 			}
 			.negative{
 				color:#be0020;
@@ -244,31 +237,31 @@
 }
 @keyframes activeSpeaker {
 	50% {
-		background-color: #0d502381;
+		background-color: $bg-color-green-blur;
 	}
 	100% {
-		background-color: #0d5023;
+		background-color: $bg-color-green;
 	}
 }
 @keyframes rowFixing {
 	50% {
-		background-color: #06409d88;
+		background-color: $bg-color-blue-blur;
 	}
 	100% {
-		background-color: #06409d;
+		background-color: $bg-color-blue;
 	}
 }
 @keyframes rowShootedPlayer {
 	50% {
-		background-color: #97003f8a;
+		background-color: $bg-color-light-red;
 	}
 	100% {
-		background-color: #97003f;
+		background-color: $bg-color-light-red-blur;
 	}
 }
 @keyframes rowForBestMove {
 	50% {
-		background-color: #6c40108a;
+		background-color: $bg-color-red-blur;
 	}
 	100% {
 		background-color: #6c4010;
