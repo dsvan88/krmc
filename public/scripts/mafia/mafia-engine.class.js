@@ -135,7 +135,7 @@ class MafiaEngine extends GameEngine {
     }
     undo() {
         let state = this.prevStates.pop();
-        this.playerVotedId = null;
+        this.playerVotedId = null; // проверить в работе - можно ли это удалить? При возрате на предыдущий шаг - показывает голосовалку.
         if (this.load(state)) {
             this.stageDescr = this._stageDescr;
             this.resetView();
