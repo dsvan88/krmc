@@ -17,13 +17,13 @@ class MafiaEngine extends GameEngine {
     courtRoom = [];
     voted = {};
     leaveThisRound = [];
-
+    
     reasons = ['', 'Вбитий', 'Засуджений', '4 Фола', 'Дісквал.'];
-
+    
     prevSpeaker = null;
     activeSpeaker = null;
     lastWillReason = null;
-
+    
     config = {
         getOutHalfPlayers: true,
         killsPerNight: 1,
@@ -42,8 +42,9 @@ class MafiaEngine extends GameEngine {
             sherifFirstKill: -0.3,
         }
     };
-
+    
     #courtRoomList = null;
+    #prompt = null;
 
     constructor(data) {
         super(data);
@@ -79,6 +80,19 @@ class MafiaEngine extends GameEngine {
 
         throw new Error('Element Courtroom not found in DOM tree!');
     }
+
+    get prompt() {
+        return this.#prompt;
+    }
+    set prompt(data) {
+        if (!data) {
+            this.#prompt.close();
+            this.#prompt = null;
+            return null;
+        }
+        this.#prompt = new Prompt(data);
+        return true;
+    }
     /**
      * @param {string} descr
      */
@@ -95,6 +109,24 @@ class MafiaEngine extends GameEngine {
         this.stageDescr = this._stageDescr;
         this.resetLog()
         this.resetView();
+
+        if (this.prompt){
+            this.prompt = null;
+        }
+        console.log(this.playerVotedId);
+        if (this.playerVotedId !== null){
+            this.prompt = {
+                title: 'Голосування',
+                text: `Хто за те, аби наше місто покинув гравець №${this.players[this.playerVotedId].num}`,
+                input: {
+                    type: 'number',
+                        min: 0,
+                        max: this.votesAll,
+                    },
+                value: '',
+                action: voted => this.processVotes.call(this, voted),
+            };
+        }
     }
     undo() {
         let state = this.prevStates.pop();
@@ -140,12 +172,12 @@ class MafiaEngine extends GameEngine {
             return 'actionLastWill';
     }
     next() {
+        if (this.prompt) return false;
+
         this.save();
 
         this.prevStage = this.stage;
         this.stage = this.getNextStage();
-
-        console.log(this.stage);
 
         if (this[this.stage]) {
             this[this.stage]();
@@ -487,35 +519,37 @@ class MafiaEngine extends GameEngine {
         if (!this.checkLeaveThisRound()) {
             return this.dispatchNext();
         }
-        const playerId = this.courtRoom.shift();
+        this.playerVotedId = this.courtRoom.shift();
 
         if (this.votesAll < 1) {
-            return this.processVotes(playerId, this.votesAll);
+            return this.processVotes(this.playerVotedId, this.votesAll);
         }
         if (this.courtRoom.length === 0) {
-            return this.processVotes(playerId, this.votesAll);
+            return this.processVotes(this.playerVotedId, this.votesAll);
         }
-        const prompt = new Prompt({
-            title: 'Голосування',
-            text: `Хто за те, аби наше місто покинув гравець №${this.players[playerId].num}`,
-            input: {
-                type: 'number',
-                min: 0,
-                max: this.votesAll,
-            },
-            value: '',
-            action: voted => this.processVotes.call(this, playerId, voted),
-        });
+        this.prompt = {
+                title: 'Голосування',
+                text: `Хто за те, аби наше місто покинув гравець №${this.players[this.playerVotedId].num}`,
+                input: {
+                    type: 'number',
+                        min: 0,
+                        max: this.votesAll,
+                    },
+                value: '',
+                action: voted => this.processVotes.call(this, voted),
+            };
     }
-    processVotes(playerId, vote) {
+    processVotes(vote) {
 
         vote = parseInt(vote) || 0;
         if (vote > this.votesAll) vote = this.votesAll;
-        this.voted.push({ id: playerId, votes: vote });
+        this.voted.push({ id: this.playerVotedId, votes: vote });
         this.votesAll -= vote;
         if (this.maxVotes < vote) {
             this.maxVotes = vote;
         }
+
+        this.prompt = null;
 
         return this.dispatchNext();
     }
@@ -535,6 +569,7 @@ class MafiaEngine extends GameEngine {
         else
             message = `Більшість (${this.playersCount - vote}) з ${this.playersCount}) - проти!\nНихто не покидає стол.`;
 
+        this.prompt = null;
         this.debaters.length = 0;
         this.addLog(message, true);
         return this.dispatchNext();
@@ -545,6 +580,7 @@ class MafiaEngine extends GameEngine {
             return this.dispatchNext();
         }
 
+        this.playerVotedId = null;
         let message = `Голоса распределились следующим образом:\n`;
         this.voted.forEach(data => {
             message += `Игрок  № ${this.players[data.id].num} \tГолоса: ${data.votes}\n`;
@@ -566,7 +602,7 @@ class MafiaEngine extends GameEngine {
 
         if (this.debate && this.debaters.length === this.defendantCount) {
             if (this.playersCount > 4 || this.config.getOutHalfPlayers) {
-                return new Prompt({
+                return this.prompt = {
                     title: 'Голосування',
                     text: `Хто за те, аби гравці №${_debaters}, покинули наше місто?`,
                     input: {
@@ -576,7 +612,7 @@ class MafiaEngine extends GameEngine {
                     },
                     value: '',
                     action: voted => this.processVotesMassGetOut.call(this, voted),
-                });
+                };
             }
             message = 'При кількості гравців менш 5 не можна підняти 2 та більше гравців.\nНихто не покидає наше місто.';
             this.debaters.length = 0;
@@ -588,135 +624,6 @@ class MafiaEngine extends GameEngine {
         this.addLog(message, true);
         return this.dispatchNext();
     }
-    // actionCourt() {
-    //     this.activeSpeaker = null;
-    //     if (this.leaveThisRound.length > 0 && this.config.courtAfterFouls)
-    //     {
-    //         let message = `Сьогодні нас ${(this.leaveThisRound.length > 1 ? 'покинули гравці №' + this.courtList(this.leaveThisRound) : 'покинув гравець №' + this.players[this.leaveThisRound.pop()].num)}. Голосування не проводится.`;
-    //         alert(message);
-    //         this.addLog(message);
-    //         this.courtRoom.length = 0;
-    //         return this.dispatchNext();
-    //     }
-
-    //     if (!this.debate && !confirm((this.courtRoom.length > 0 ? `На голосування обрані гравці з номерами: ${this.courtList(this.courtRoom)}.` : 'Ніхто не був виставлений.') + `\nУсе вірно?`)){
-    //         this.needFix = true;
-    //         return this.dispatchNext();
-    //     }
-
-    //     this.needFix = false;
-    //     this.stageDescr = 'Зал суда.\nПрохання до гравців припинити будь-яку комунікацію та прибрати руки від стола';
-
-    //     let votesAll = 0,
-    //     playersCount = 0,
-    //     voted = new Map(),
-    //     maxVotes = 0,
-    //     message = `Шановні гравці, ми переходимо до зали суду!\nНа ${(this.debate ? 'перестрільці' : 'голосуванні')} знаходяться гравці з номерами: ${this.courtList(this.courtRoom)}\n`,
-    //     defendantCount = this.courtRoom.length;
-
-    //     if (defendantCount === 0)
-    //     {
-    //         message += '\nНа голосование никто не выставлен. Голосование не проводится.'
-    //         alert( message );
-    //         this.addLog(message);
-    //         return this.dispatchNext();
-    //     }
-
-    //     alert(message);
-
-    //     if (defendantCount === 1)
-    //     {
-    //         message = 'На голосование был выставлен лишь 1 игрок\n';
-    //         let playerId = this.courtRoom.pop();
-    //         if (this.daysCount > 0)
-    //         {
-    //             message += `Наш город покидает игрок №${this.players[playerId].num}}!`;
-    //             alert(message + '\nУ вас есть 1 минута для последней речи');
-    //             this.outPlayer(playerId,2);
-    //         }
-    //         else {
-    //             message += `Этого недостаточно для проведения голосования.`;
-    //             alert(message + '\n\nНаступает фаза ночи!')
-    //         }
-    //         this.addLog(message);
-    //         return this.dispatchNext();
-    //     }
-    //     votesAll = playersCount = this.getActivePlayersCount();
-
-    //     message = '';
-    //     while(this.courtRoom.length > 0){
-    //         let playerId = this.courtRoom.shift();
-    //         if (votesAll < 1) {
-    //             voted.set(playerId, 0);
-    //             message += `Игрок  №${this.players[playerId].num} \tГолоса: 0\n`;
-    //             continue;
-    //         }
-    //         let vote = this.courtRoom.length !== 0 ? parseInt(prompt(`${this.players[playerId].num}! Кто за то, что бы наш город покинул игрок под № ${this.players[playerId].num}`, '0')) : votesAll;
-
-    //         if (vote > votesAll) vote = votesAll;
-
-    //         message += `Игрок  № ${this.players[playerId].num} \tГолоса: ${vote}\n`;
-    //         if (vote > 0) {
-    //             voted.set(playerId, vote);
-    //             votesAll -= vote;
-    //             if (maxVotes < vote) {
-    //                 maxVotes = vote;
-    //             }
-    //         }
-    //     };
-    //     voted.forEach((votes, playerId) => {
-    //         if (votes === maxVotes){
-    //             this.debaters.push(playerId);
-    //         }
-    //     });
-
-    //     message = `Голоса распределились следующим образом:\n${message}`;
-    //     if (this.debaters.length===1)
-    //     {
-    //         let player = this.defendant;
-    //         message += `\nНас покидает Игрок под № ${player.num}.\nУ вас прощальная минута.`;
-    //         this.outPlayer(player.id, 2);
-    //         alert(message);
-    //         this.addLog(message);
-    //         return this.dispatchNext();
-    //     }
-
-    //     let _debaters = this.courtList(this.debaters);
-    //     message += 'В нашем городе перестрелка. Между игроками под номерами: ' + _debaters;
-
-    //     alert(message);
-
-    //     if (this.debate && this.debaters.length === defendantCount)
-    //     {
-    //         if (playersCount > 4 || this.config.getOutHalfPlayers)
-    //         {
-    //             let vote = parseInt(prompt(`Кто за то, что все игроки под номерами: ${_debaters} покинули стол?'`,'0'));
-
-    //             if (vote > playersCount) vote = playersCount;
-
-    //             if ( vote > playersCount/2 )
-    //             {
-    //                 message=`Большинство (${vote} из ${playersCount}) - за!\nИгроки под номерами: ${_debaters} покидают стол.`;
-    //                 while(this.debaters.length > 0)
-    //                     this.outPlayer(this.debaters.shift(),2);
-    //             }
-    //             else 
-    //                 message = `Большинство (${playersCount-vote}) из ${playersCount}) - против!\nНикто не покидает стол.`;
-    //         }
-    //         else 
-    //             message = 'При количестве игроков менее 5 нельзя поднять 2 и более игроков.\nНикто не покидает стол.';
-    //         this.debaters.length = 0;
-    //     }
-    //     if (this.debaters.length > 0)
-    //     {
-    //         this.debate = true;
-    //         this.courtRoom = this.debaters.slice(0);
-    //     }
-
-    //     alert(message);
-    //     this.addLog(message);
-    //     return this.dispatchNext();
-    // }
     wakeUpRoles() {
         if (!this.config.wakeUpRoles) return this.dispatchNext();
 

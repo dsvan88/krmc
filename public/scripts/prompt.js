@@ -115,6 +115,10 @@ class Prompt {
         this.cancelButton = this.dialog.querySelector('button.prompt__button.cancel');
         this.cancelButton.innerText = 'Cancel';
     }
+
+    close(){
+        this.dialog.close();
+    }
     dragDialogStart(event){
         if (this.dragged) return;
         this.dragged = true;
@@ -146,26 +150,25 @@ class Prompt {
         document.addEventListener('mousemove', self.onMouseMove);
         document.addEventListener('touchmove', self.onMouseMove);
 
-        self.dialog.onmouseup = () => {
-            document.removeEventListener('mousemove', self.onMouseMove);
-            self.dialog.onmouseup = null;
-            self.dragged = false;
-        };
+        self.dialog.onmouseup = (event) => this.moveEnd(event, 'mousemove');
+        self.dialog.ontouchend = (event) => this.moveEnd(event, 'touchmove');
 
-        self.dialog.ontouchend = () => {
-            document.removeEventListener('touchmove', self.onMouseMove);
-            self.dragged = false;
-            self.dialog.ontouchend = null;
-        };
+    }
+    moveEnd(event, eventName){
+        document.removeEventListener(eventName, this.onMouseMove);
+        this.dragged = false;
+        this.dialog.ontouchend = null;
+        document.context = null;
     }
     moveAt(pageX, pageY) {
         this.dialog.style.left = pageX - this.shiftX + 'px';
         this.dialog.style.top = pageY - this.shiftY + 'px';
     }
     onMouseMove(event) {
-        event.preventDefault();
         const self = this.context;
 
+        if (!self) return false;
+        
         const pageX = event.pageX || event.targetTouches[0].pageX;
         const pageY = event.pageY || event.targetTouches[0].pageY;
 
