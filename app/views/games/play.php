@@ -1,5 +1,4 @@
-<section class="section index">
-
+<section class="section game">
     <div class="game">
 			<div class="game__wrapper">
 				<div class="game__description">
