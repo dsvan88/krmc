@@ -69,7 +69,10 @@ class PagesController extends Controller
             if (!empty($page['data'])) {
                 $page['data'] = json_decode($page['data'], true);
                 if (isset($page['data']['keywords']) && !empty($page['data']['keywords'])) {
-                    $page['keywords'] = $page['data']['keywords'];
+                    if (is_array($page['data']['keywords']))
+                        $page['keywords'] = implode(', ', $page['data']['keywords']);
+                    else 
+                        $page['keywords'] = $page['data']['keywords'];
                 }
             }
             $page['published_at'] = strtotime($page['published_at']);

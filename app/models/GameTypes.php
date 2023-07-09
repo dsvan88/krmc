@@ -49,4 +49,20 @@ class GameTypes extends Pages
         self::$gameNames = array_merge(self::$defaultGames, $names);
         return self::$gameNames;
     }
+    public static function getKeywords(){
+        $games = self::findBy('type', 'game');
+
+        if (!$games)
+            return false;
+
+        $keywords = [];
+
+        $count = count($games);
+        for ($i=0; $i < $count; $i++) {
+            if (empty($games[$i]['data'])) continue;
+            $games[$i]['data'] = json_decode($games[$i]['data'], true);
+            $keywords[$games[$i]['slug']] = $games[$i]['data']['keywords'];
+        }
+        return empty($keywords) ? false : $keywords;
+    }
 }

@@ -4,6 +4,7 @@ namespace app\Repositories\TelegramCommands;
 
 use app\core\ChatCommand;
 use app\models\Days;
+use app\models\GameTypes;
 use app\models\Weeks;
 
 class SetCommand extends ChatCommand
@@ -25,9 +26,39 @@ class SetCommand extends ChatCommand
         $gameName = $dayName = $time = '';
         $tournament = false;
 
+        $pattern = 'maf|маф|наст|board|table|пок|pok|nlh|інш|другое|etc';
+        $gamesArray = [
+            'mafia' => ['maf', 'маф'],
+            'board' => ['наст', 'board', 'table'],
+            'nlh' => ['пок', 'pok', 'nlh'],
+            'etc' => ['інш', 'другое', 'etc'],
+        ];
+        
+        $gamesKeywords = GameTypes::getKeywords();
+
+        if (!empty($gamesKeywords)){
+            $_gamesArray = [];
+            $_pattern = [];
+            foreach($gamesKeywords as $slug=>$keywords){
+
+                if (empty($keywords)) continue;
+
+                $_gamesArray[$slug] = array_slice($keywords, 0, 3);
+
+                foreach($_gamesArray[$slug] as $index=>$keyword){
+                    $_gamesArray[$slug][$index] = trim($keyword);
+                    $_pattern[] = $_gamesArray[$slug][$index];
+                }
+            }
+            if (!empty($_pattern)){
+                $pattern = implode('|', $_pattern);
+                $gamesArray = $_gamesArray;
+            }
+        }
+
         foreach ($arguments as $value) {
             $value = trim($value);
-            if ($gameName === '' && preg_match('/^(maf|маф|наст|board|table|пок|pok|nlh|інш|другое|etc)/', mb_strtolower($value, 'UTF-8'), $gamesPattern) > 0) {
+            if ($gameName === '' && preg_match("/^($pattern)/", mb_strtolower($value, 'UTF-8'), $gamesPattern) > 0) {
                 $gameName = $gamesPattern[0];
                 if ($tournament === false && preg_match('/(тур|tour)/', mb_strtolower($value, 'UTF-8')) > 0) {
                     $tournament = true;
@@ -55,13 +86,6 @@ class SetCommand extends ChatCommand
         $dayNum = self::$operatorClass::parseDayNum($dayName, $currentDayNum);
 
         if ($gameName !== '') {
-            $gamesArray = [
-                'mafia' => ['maf', 'маф'],
-                'board' => ['наст', 'board', 'table'],
-                'nlh' => ['пок', 'pok', 'nlh'],
-                'etc' => ['інш', 'другое', 'etc'],
-            ];
-
             foreach ($gamesArray as $name => $gameNames) {
                 if (in_array($gameName, $gameNames, true)) {
                     $gameName = $name;

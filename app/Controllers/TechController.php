@@ -122,8 +122,8 @@ class TechController extends Controller
                 // 'text' => '- на сегодня',
                 // 'text' => '/nick Думатель',
                 // 'text' => '/day',
-                'text' => '+tod',
-                // 'text' => '/help',
+                // 'text' => '+tod',
+                'text' => '/set вс,покер, 20:15',
             ]
         ];
 

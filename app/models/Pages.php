@@ -58,17 +58,20 @@ class Pages extends Model
             'html' => trim($data['html']),
             'published_at' => date('Y-m-d H:i:s', strtotime($data['published_at'])),
         ];
-        if (isset($data['type'])) {
+        if (!empty($data['type'])) {
             $array['type'] = trim($data['type']);
         }
-        if (isset($data['expired_at']) && !empty($data['expired_at'])) {
+        if (!empty($data['expired_at'])) {
             $array['expired_at'] = date('Y-m-d H:i:s', strtotime($data['expired_at']));
         }
-        if (isset($data['logo'])) {
+        if (!empty($data['logo'])) {
             $array['data']['logo'] = $data['logo'];
         }
-        if (isset($data['keywords']) && !empty($data['keywords'])) {
-            $array['data']['keywords'] = $data['keywords'];
+        if (!empty($data['keywords'])) {
+            $array['data']['keywords'] = explode(',',$data['keywords']);
+            foreach($array['data']['keywords'] as $index=>$keyword){
+                $array['data']['keywords'][$index] = trim($keyword);
+            }
         }
         if (!empty($array['data'])){
             $array['data'] = json_encode($array['data'], JSON_UNESCAPED_UNICODE);
