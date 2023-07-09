@@ -315,9 +315,10 @@ class MafiaEngine extends GameEngine {
             return false;
         }
         let maker = (this.timer.left === this.config.timerMax ? this.players[this.prevSpeaker] : this.activeSpeaker);
+
         if (!maker) return false;
 
-        if (maker.puted[this.daysCount] > 0 && maker.puted[this.daysCount] !== putedId) return false;
+        if (maker.puted[this.daysCount] >= 0 && maker.puted[this.daysCount] !== putedId) return false;
 
         let check = this.courtRoom.indexOf(putedId);
         if (check === -1) {
