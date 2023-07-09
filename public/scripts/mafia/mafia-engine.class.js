@@ -407,6 +407,7 @@ class MafiaEngine extends GameEngine {
         this.prevSpeaker = null;
         this.speakers = this.getSpeakers();
         this.courtBlock = false;
+        this.debate = false;
 
         this.next();
     }
