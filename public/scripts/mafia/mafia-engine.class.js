@@ -23,6 +23,7 @@ class MafiaEngine extends GameEngine {
     prevSpeaker = null;
     activeSpeaker = null;
     lastWillReason = null;
+    playerVotedId = null;
     
     config = {
         getOutHalfPlayers: true,
@@ -86,8 +87,12 @@ class MafiaEngine extends GameEngine {
     }
     set prompt(data) {
         if (!data) {
+            if (!this.#prompt)
+                return null;
+
             this.#prompt.close();
             this.#prompt = null;
+
             return null;
         }
         this.#prompt = new Prompt(data);
@@ -113,7 +118,7 @@ class MafiaEngine extends GameEngine {
         if (this.prompt){
             this.prompt = null;
         }
-        console.log(this.playerVotedId);
+
         if (this.playerVotedId !== null){
             this.prompt = {
                 title: 'Голосування',
@@ -130,6 +135,7 @@ class MafiaEngine extends GameEngine {
     }
     undo() {
         let state = this.prevStates.pop();
+        this.playerVotedId = null;
         if (this.load(state)) {
             this.stageDescr = this._stageDescr;
             this.resetView();
@@ -488,7 +494,7 @@ class MafiaEngine extends GameEngine {
             this.maxVotes = 0;
         this.votesAll = this.playersCount = this.getActivePlayersCount();
         this.defendantCount = this.courtRoom.length;
-
+        console.log(this.votesAll);
 
         if (this.defendantCount === 0) {
             message += '\nНа голосование никто не выставлен. Голосование не проводится.'
@@ -522,11 +528,14 @@ class MafiaEngine extends GameEngine {
         }
         this.playerVotedId = this.courtRoom.shift();
 
+        console.log(this.votesAll);
+
         if (this.votesAll < 1) {
-            return this.processVotes(this.playerVotedId, this.votesAll);
+            return this.processVotes(this.votesAll);
         }
         if (this.courtRoom.length === 0) {
-            return this.processVotes(this.playerVotedId, this.votesAll);
+            console.log('vote', this.votesAll);
+            return this.processVotes(this.votesAll);
         }
         this.prompt = {
                 title: 'Голосування',
@@ -541,9 +550,9 @@ class MafiaEngine extends GameEngine {
             };
     }
     processVotes(vote) {
-
-        vote = parseInt(vote) || 0;
+         vote = parseInt(vote) || 0;
         if (vote > this.votesAll) vote = this.votesAll;
+        
         this.voted.push({ id: this.playerVotedId, votes: vote });
         this.votesAll -= vote;
         if (this.maxVotes < vote) {
@@ -568,7 +577,7 @@ class MafiaEngine extends GameEngine {
                 this.outPlayer(this.debaters.shift(), 2);
         }
         else
-            message = `Більшість (${this.playersCount - vote}) з ${this.playersCount}) - проти!\nНихто не покидає стол.`;
+            message = `Більшість (${this.playersCount - vote}) з ${this.playersCount}) - проти!\nНіхто не покидає стол.`;
 
         this.prompt = null;
         this.debaters.length = 0;
@@ -582,16 +591,16 @@ class MafiaEngine extends GameEngine {
         }
 
         this.playerVotedId = null;
-        let message = `Голоса распределились следующим образом:\n`;
+        let message = `Підведемо ітоги голосування:\n`;
         this.voted.forEach(data => {
-            message += `Игрок  № ${this.players[data.id].num} \tГолоса: ${data.votes}\n`;
+            message += `Гравець  № ${this.players[data.id].num} \tГолосів: ${data.votes}\n`;
             if (data.votes !== this.maxVotes) return;
             this.debaters.push(data.id);
         });
 
         if (this.debaters.length === 1) {
             const player = this.defendant;
-            message += `\nНас покидает Игрок под № ${player.num}.\nУ вас прощальная минута.`;
+            message += `\nНас залишає Гравець № ${player.num}.\nВи маєте хвилину на прощання.`;
             this.outPlayer(player.id, 2);
             this.addLog(message, true);
             return this.dispatchNext();
@@ -622,7 +631,7 @@ class MafiaEngine extends GameEngine {
             this.debate = true;
             this.courtRoom = this.debaters.slice(0);
         }
-        this.addLog(message, true);
+        this.addLog(message);
         return this.dispatchNext();
     }
     wakeUpRoles() {
