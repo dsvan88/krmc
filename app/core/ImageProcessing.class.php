@@ -67,6 +67,10 @@ class ImageProcessing
                 $attrs .= "$attr='$value' alt='$value' ";
             }
         }
+        if (empty($attrs) || (!isset($options['title']) && !isset($options['alt']))) {
+            $attrs .= 'alt=""';
+        }
+
         return str_ireplace($_SERVER['DOCUMENT_ROOT'], '.', $output . PHP_EOL .
             "<img $attrs src='$source' loading='lazy'>
 		 </picture>");
