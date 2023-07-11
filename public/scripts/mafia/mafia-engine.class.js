@@ -317,8 +317,8 @@ class MafiaEngine extends GameEngine {
         if (reason < 3) {
             this.lastWillReason = reason;
             this.lastWill.push(id);
-            this.players[id].prim = this.reasons[reason];
         }
+        this.players[id].prim = this.reasons[reason];
 
         if (this.players[id].muted) {
             this.players[id].unmute();
