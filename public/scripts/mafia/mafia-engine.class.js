@@ -142,6 +142,7 @@ class MafiaEngine extends GameEngine {
     }
     undo() {
         let state = this.prevStates.pop();
+        if (!state) return false;
         this.load(state)
     };
     getNextStage() {
@@ -215,7 +216,7 @@ class MafiaEngine extends GameEngine {
             player.putedCell.innerText = '';
             player.putedCell.classList.remove('puted');
 
-            // player.primCell.innerText = '';
+            player.primField.innerText = '';
             for (let foul = 1; foul <= 4; foul++) {
                 let foulCell = player.row.querySelector(`[data-foul="${foul}"]`);
                 if (foulCell)
@@ -234,7 +235,11 @@ class MafiaEngine extends GameEngine {
             }
             if (player.out) {
                 player.row.classList.add('out');
-                // player.primCell.innerText = this.reasons[player.out];
+                // player.primField.innerText = this.reasons[player.out];
+                // player.primField.innerText = player.prim;
+            }
+            if (player.prim) {
+                player.prim = player.prim;
             }
             if (this.shooting.includes(player.id)) {
                 player.row.classList.add('shooted');
@@ -312,10 +317,14 @@ class MafiaEngine extends GameEngine {
         if (reason < 3) {
             this.lastWillReason = reason;
             this.lastWill.push(id);
+            this.players[id].prim = this.reasons[reason];
         }
-        else this.players[id].muted = false;
 
-        this.addLog(`Гравець №${this.players[id].num} - залишає наше місто. Причина: ${this.reasons[reason]}!`);
+        if (this.players[id].muted) {
+            this.players[id].unmute();
+        }
+
+        this.addLog(`Гравець №${this.players[id].num} - залишає наше місто. Привід: ${this.reasons[reason]}!`);
         return true;
     };
     putPlayerOnVote(putedId) {
@@ -661,8 +670,9 @@ class MafiaEngine extends GameEngine {
     };
     actionBestMove(playerId) {
 
-        if (!this.activeSpeaker.bestMoveAuthor)
+        if (!this.activeSpeaker.bestMoveAuthor) {
             this.activeSpeaker.bestMoveAuthor = true;
+        }
 
         this.bestMove.push(playerId);
         if (this.bestMove.length === 3) {
@@ -707,6 +717,7 @@ class MafiaEngine extends GameEngine {
         return courtList;
     }
     shootingNight() {
+        this.activeSpeaker = null;
         const message = 'Мафія підіймає свою зброю та стріляє по гравцям.\nЗробіть Ваш вибір!'
         this.stageDescr = `Ніч №${this.daysCount}.\n${message}`;
         this.addLog(message);
