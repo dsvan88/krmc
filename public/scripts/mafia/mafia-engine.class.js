@@ -120,10 +120,9 @@ class MafiaEngine extends GameEngine {
         }
 
         if (this.playerVotedId !== null) {
-
-            for (const [index, data] of this.voted.entries()) {
-                if (data['id'] !== this.playerVotedId) continue;
-                this.voted.splice(index, 1);
+            for (let x = this.voted.length - 1; x >= 0; --x) {
+                if (this.voted[x]['id'] !== this.playerVotedId) continue;
+                this.voted.splice(x, 1);
                 break;
             }
 
