@@ -15,16 +15,16 @@ class MafiaEngine extends GameEngine {
     lastWill = [];
     debaters = [];
     courtRoom = [];
-    voted = {};
+    voted = [];
     leaveThisRound = [];
-    
+
     reasons = ['', 'Вбитий', 'Засуджений', '4 Фола', 'Дісквал.'];
-    
+
     prevSpeaker = null;
     activeSpeaker = null;
     lastWillReason = null;
     playerVotedId = null;
-    
+
     config = {
         getOutHalfPlayers: true,
         killsPerNight: 1,
@@ -43,7 +43,7 @@ class MafiaEngine extends GameEngine {
             sherifFirstKill: -0.3,
         }
     };
-    
+
     #courtRoomList = null;
     #prompt = null;
 
@@ -115,31 +115,36 @@ class MafiaEngine extends GameEngine {
         this.resetLog()
         this.resetView();
 
-        if (this.prompt){
+        if (this.prompt) {
             this.prompt = null;
         }
 
-        if (this.playerVotedId !== null){
+        if (this.playerVotedId !== null) {
+
+            for (const [index, data] of this.voted.entries()) {
+                if (data['id'] !== this.playerVotedId) continue;
+                this.voted.splice(index, 1);
+                break;
+            }
+
             this.prompt = {
                 title: 'Голосування',
                 text: `Хто за те, аби наше місто покинув гравець №${this.players[this.playerVotedId].num}`,
                 input: {
                     type: 'number',
-                        min: 0,
-                        max: this.votesAll,
-                    },
+                    min: 0,
+                    max: this.votesAll,
+                },
                 value: '',
                 action: voted => this.processVotes.call(this, voted),
             };
         }
+        return true;
     }
     undo() {
         let state = this.prevStates.pop();
-        this.playerVotedId = null; // проверить в работе - можно ли это удалить? При возрате на предыдущий шаг - показывает голосовалку.
-        if (this.load(state)) {
-            this.stageDescr = this._stageDescr;
-            this.resetView();
-        }
+        // this.playerVotedId = null; // проверить в работе - можно ли это удалить? При возрате на предыдущий шаг - показывает голосовалку.
+        this.load(state)
     };
     getNextStage() {
         if (this.theEnd() && this.stage === 'finish')
@@ -539,21 +544,21 @@ class MafiaEngine extends GameEngine {
             return this.processVotes(this.votesAll);
         }
         this.prompt = {
-                title: 'Голосування',
-                text: `Хто за те, аби наше місто покинув гравець №${this.players[this.playerVotedId].num}`,
-                input: {
-                    type: 'number',
-                        min: 0,
-                        max: this.votesAll,
-                    },
-                value: '',
-                action: voted => this.processVotes.call(this, voted),
-            };
+            title: 'Голосування',
+            text: `Хто за те, аби наше місто покинув гравець №${this.players[this.playerVotedId].num}`,
+            input: {
+                type: 'number',
+                min: 0,
+                max: this.votesAll,
+            },
+            value: '',
+            action: voted => this.processVotes.call(this, voted),
+        };
     }
     processVotes(vote) {
-         vote = parseInt(vote) || 0;
+        vote = parseInt(vote) || 0;
         if (vote > this.votesAll) vote = this.votesAll;
-        
+
         this.voted.push({ id: this.playerVotedId, votes: vote });
         this.votesAll -= vote;
         if (this.maxVotes < vote) {
