@@ -85,12 +85,13 @@ class TechController extends Controller
         ];
         View::render($vars);
     }
-    public static function dbrebuildAction(){
+    public static function dbrebuildAction()
+    {
         // View::redirect('/');db
         $weekId = 0;
-        while($weekData = Weeks::weekDataById(++$weekId)){
+        while ($weekData = Weeks::weekDataById(++$weekId)) {
             // echo '$weekData id - '.$weekId.'</br>';
-            foreach($weekData['data'] as $dayNum=>$dayData){
+            foreach ($weekData['data'] as $dayNum => $dayData) {
                 if (!in_array($dayData['game'], ['poker', 'cash'])) continue;
                 $weekData['data'][$dayNum]['game'] = 'nlh';
             }
@@ -98,36 +99,37 @@ class TechController extends Controller
         }
         echo 'Done!';
     }
-    public static function selfTestTelegramAction(){
+    public static function selfTestTelegramAction()
+    {
         // View::redirect('/');
         $params = [
-            'message'=> [
+            'message' => [
                 'message_id' => 189,
                 'from' => [
-                        'id' => 900669168,
-                        'is_bot' => false,
-                        'first_name' => 'Dmytro',
-                        'last_name' => 'Vankevych',
-                        'username' => 'dsvan88',
-                        'language_code' => 'uk',
-                    ],
+                    'id' => 900669168,
+                    'is_bot' => false,
+                    'first_name' => 'Dmytro',
+                    'last_name' => 'Vankevych',
+                    'username' => 'dsvan88',
+                    'language_code' => 'uk',
+                ],
                 'chat' => [
-                        'id' => 900669168,
-                        'first_name' => 'Dmytro',
-                        'last_name' => 'Vankevych',
-                        'username' => 'dsvan88',
-                        'type' => 'private',
-                    ],
+                    'id' => 900669168,
+                    'first_name' => 'Dmytro',
+                    'last_name' => 'Vankevych',
+                    'username' => 'dsvan88',
+                    'type' => 'private',
+                ],
                 'date' => 1652025484,
                 // 'text' => '- на сегодня',
                 // 'text' => '/nick Думатель',
-                // 'text' => '/day',
+                'text' => '/day',
                 // 'text' => '+tod',
-                'text' => '/set вс,покер, 20:15',
+                // 'text' => '/set вс,покер, 20:15',
             ]
         ];
 
-        $url = strtolower($_SERVER['HTTP_X_FORWARDED_PROTO']).'://'.$_SERVER['HTTP_HOST'].'/api/telegram/webhook';
+        $url = strtolower($_SERVER['HTTP_X_FORWARDED_PROTO']) . '://' . $_SERVER['HTTP_HOST'] . '/api/telegram/webhook';
         $options = [
             CURLOPT_RETURNTRANSFER => false,
             // CURLOPT_RETURNTRANSFER => true,
@@ -152,33 +154,33 @@ class TechController extends Controller
     // }
     public static function sendMailAction()
     {
-            $mailer = new PHPMailer();
+        $mailer = new PHPMailer();
 
-            $mailer->isSMTP();
-            $mailer->CharSet = "UTF-8";
-            $mailer->SMTPAuth   = true;
-            // $mailer->SMTPDebug = 4;
-            // $mailer->Debugoutput = function ($str, $level) {
-            //     $GLOBALS['status'][] = $str;
-            // };
-            
-            $mailer->Host       = 'smtp.gmail.com';
-            $mailer->Username   = '';
-            $mailer->Password   = '';
-            $mailer->SMTPSecure = 'ssl';
-            $mailer->Port       = 465;
+        $mailer->isSMTP();
+        $mailer->CharSet = "UTF-8";
+        $mailer->SMTPAuth   = true;
+        // $mailer->SMTPDebug = 4;
+        // $mailer->Debugoutput = function ($str, $level) {
+        //     $GLOBALS['status'][] = $str;
+        // };
 
-            $mailer->Subject    = 'Test mail';
-            $mailer->Body       = "That's my second try to send simple email";
+        $mailer->Host       = 'smtp.gmail.com';
+        $mailer->Username   = '';
+        $mailer->Password   = '';
+        $mailer->SMTPSecure = 'ssl';
+        $mailer->Port       = 465;
 
-            // if (isset($this->senderData['email']))
-            //     $mailer->setFrom($this->senderData['email'], $this->senderData['name']);
-            // else
-            //     $mailer->setFrom($authData['email'], $authData['name']);
-            // // $mailer->addAddress('yourMainEmail@gmail.com'); // If you need send message from your main tech email to your main email - you can change it here
-            $mailer->isHTML(true);
+        $mailer->Subject    = 'Test mail';
+        $mailer->Body       = "That's my second try to send simple email";
 
-            $mailer->addAddress('');
-            $mailer->send();
+        // if (isset($this->senderData['email']))
+        //     $mailer->setFrom($this->senderData['email'], $this->senderData['name']);
+        // else
+        //     $mailer->setFrom($authData['email'], $authData['name']);
+        // // $mailer->addAddress('yourMainEmail@gmail.com'); // If you need send message from your main tech email to your main email - you can change it here
+        $mailer->isHTML(true);
+
+        $mailer->addAddress('');
+        $mailer->send();
     }
 }

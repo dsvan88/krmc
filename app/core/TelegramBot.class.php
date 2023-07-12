@@ -36,6 +36,7 @@ class TelegramBot
         if ($message !== '') {
             $params['text'] = $message;
             $params['parse_mode'] = 'HTML';
+            $params['disable_web_page_preview'] = true;
         }
         if ($messageId !== -1) {
             $params['reply_to_message_id'] = $messageId;
@@ -74,11 +75,11 @@ class TelegramBot
         }
         if ($image !== '') {
             $image = "{$_SERVER['HTTP_X_FORWARDED_PROTO']}://{$_SERVER['SERVER_NAME']}$image";
-            $params['text'] .= "<a href='$image'>&#8205;</a>";
+            $params['text'] = "<a href='$image'>&#8205;</a>" . $params['text'];
             $params['disable_web_page_preview'] = false;
         }
-        var_dump($params);
-        echo PHP_EOL;
+        /*         var_dump($params);
+        echo PHP_EOL; */
         $options = self::$options;
         $options[CURLOPT_URL] = "https://api.telegram.org/bot$botToken/sendMessage"; // адрес api телеграмм-бота
         $options[CURLOPT_POSTFIELDS] = $params; // адрес api телеграмм-бота

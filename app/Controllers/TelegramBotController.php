@@ -46,7 +46,7 @@ class TelegramBotController extends Controller
     }
     public static function webhookAction()
     {
-        // exit(json_encode(['message'=>self::$message], JSON_UNESCAPED_UNICODE));
+        // exit(json_encode(['message' => self::$message], JSON_UNESCAPED_UNICODE));
         $bot = new TelegramBot();
         $techTelegramId = Settings::getTechTelegramId();
         try {
@@ -220,7 +220,7 @@ class TelegramBotController extends Controller
                 ['сб', 'суб', 'sat'],
                 ['вс', 'вос', 'нед', 'нд', 'sun']
             ];
-            
+
             foreach ($daysArray as $num => $daysNames) {
                 if (in_array($dayName, $daysNames, true)) {
                     return $num;

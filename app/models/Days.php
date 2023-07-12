@@ -26,11 +26,12 @@ class Days extends Model
         'participants' => [],
         'day_prim' => ''
     ];
-    public static function current(){
-        if (!empty(self::$currentDay)){
+    public static function current()
+    {
+        if (!empty(self::$currentDay)) {
             return self::$currentDay;
         }
-        
+
         self::$currentDay = getdate()['wday'] - 1;
 
         if (self::$currentDay === -1)
@@ -128,18 +129,18 @@ class Days extends Model
 
         $gameNames = [
             'mafia' => '{{ Tg_Mafia }}',
-            // 'poker' => '{{ Tg_Poker }}',
             'board' => '{{ Tg_Board }}',
             'nlh' => '{{ Tg_NLH }}',
             'etc' => '{{ Tg_Etc }}',
         ];
         $gameNames = Locale::apply($gameNames);
-        
-        if (!isset($gameNames[$game])){
+
+        if (!isset($gameNames[$game])) {
             $gameNames = GameTypes::names();
         }
 
-        $result = "$date - {$gameNames[$weekData['data'][$day]['game']]}\n";
+        // $result = "$date - {$gameNames[$weekData['data'][$day]['game']]}\n";
+        $result = "$date - <a href='{$_SERVER['HTTP_X_FORWARDED_PROTO']}://{$_SERVER['SERVER_NAME']}/game/{$weekData['data'][$day]['game']}/'>{$gameNames[$weekData['data'][$day]['game']]}</a>\n";
 
         if (isset($weekData['data'][$day]['mods'])) {
             if (in_array('fans', $weekData['data'][$day]['mods'], true))
@@ -207,7 +208,7 @@ class Days extends Model
             'id'        =>    $userData['userId'],
             'name'      =>    $userData['userName'],
             'arrive'    =>    !empty($userData['arrive']) ? $userData['arrive'] : '',
-            'prim'		=>    !empty($userData['prim']) ? $userData['prim'] : '',
+            'prim'        =>    !empty($userData['prim']) ? $userData['prim'] : '',
         ];
 
         return $dayData;
