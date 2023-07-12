@@ -507,7 +507,6 @@ class MafiaEngine extends GameEngine {
             this.maxVotes = 0;
         this.votesAll = this.playersCount = this.getActivePlayersCount();
         this.defendantCount = this.courtRoom.length;
-        console.log(this.votesAll);
 
         if (this.defendantCount === 0) {
             message += '\nНа голосование никто не выставлен. Голосование не проводится.'
@@ -541,13 +540,10 @@ class MafiaEngine extends GameEngine {
         }
         this.playerVotedId = this.courtRoom.shift();
 
-        console.log(this.votesAll);
-
         if (this.votesAll < 1) {
             return this.processVotes(this.votesAll);
         }
         if (this.courtRoom.length === 0) {
-            console.log('vote', this.votesAll);
             return this.processVotes(this.votesAll);
         }
         this.prompt = {
