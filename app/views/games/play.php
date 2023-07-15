@@ -14,7 +14,7 @@
 							<span class="stopwatch">01:00:00</span>
 						</div>
 						<div class="timer__dashboard">
-							<span class="timer__dashboard-item fa fa-fast-backward" title="Сброс" data-timer="undo"></span>
+							<span class="timer__dashboard-item fa fa-history" title="Повернутись" data-timer="undo"></span>
 							<span class="timer__dashboard-item fa fa-play" title="Старт" data-timer="start"></span>
 							<span class="timer__dashboard-item fa fa-pause" title="Пауза" data-timer="pause"></span>
 							<span class="timer__dashboard-item fa fa-undo disabled" title="Відміна" data-timer="reset"></span>

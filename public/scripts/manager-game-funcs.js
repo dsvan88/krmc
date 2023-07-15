@@ -181,3 +181,25 @@ actionHandler.addParticipant = function (name, target = null) {
 		},
 	});
 }
+
+actionHandler.playersShuffle = function () {
+	const self = this;
+	const fields = document.querySelectorAll('input[name^="player"]');
+	const players = [];
+	for(const field of fields){
+		players.push(field.value);
+		field.value = '';
+	};
+	players.shuffle();
+	for(const field of fields){
+		field.value = players.pop();
+	};
+}
+actionHandler.playersClear = function () {
+	const self = this;
+	const fields = document.querySelectorAll('input[name^="player"]');
+	for(const field of fields){
+		field.value = '';
+	};
+	self.resetSelectedPoolUnits();
+}

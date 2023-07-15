@@ -1,13 +1,24 @@
 <section class="section index">
     <form class="game-form" action="/game/mafia/start" method="POST">
-        <div class="game-form__row">
-            <input name="manager" type="text" class="game-form__input" value="" placeholder="<?=$texts['managerPlaceholder']?>"/>
+        <div class="game-form__row spaced">
+            <button class="fa fa-random" data-action-click="players-shuffle"></button>
+            <input name="manager" type="text" class="game-form__input" value="<?= $manager ?>" placeholder="<?=$texts['managerPlaceholder']?>"/>
+            <button class="fa fa-eraser" data-action-click="players-clear"></button>
         </div>
         <ol class="game-form__players-list">
-            <? for($i=0; $i < $maxPlayers; $i++): ?>
+            <? for($i=0; $i < $maxPlayers; $i++):
+                $playerName= '';
+                if (!empty($shuffled))
+                    $playerName = array_shift($shuffled);
+
+                if ($playerName === $manager){
+                    ++$maxPlayers;
+                    continue;
+                }
+                ?>
                 <li>
                     <div class="game-form__row">
-                        <input name="player[<?=$i?>]" type="text" class="game-form__input" value ="<?=isset($day['participants'][$i]['name']) ? $day['participants'][$i]['name'] : ''?>" placeholder="<?=$texts['playerPlaceholder']?>" data-action-change="check-player" data-action-input="autocomplete-users-names" list="users-names-list" autocomplete="off" />
+                        <input name="player[<?=$i?>]" type="text" class="game-form__input" value ="<?= $playerName ?>" placeholder="<?=$texts['playerPlaceholder']?>" data-action-change="check-player" data-action-input="autocomplete-users-names" list="users-names-list" autocomplete="off" />
                         <select name="role[<?=$i?>]" class="game-form__input">
                             <option value='0'> </option>
                             <option value='1'>Мафия</option>
@@ -25,7 +36,9 @@
     <div class="game-form__pool">
         <? for($i=0; $i < $playersCount; $i++): 
             $class = [];
-            if ($i < $maxPlayers)
+            if ($day['participants'][$i]['name'] === $manager)
+                $class[] = 'manager';
+            else if (!in_array($day['participants'][$i]['name'], $shuffled))
                 $class[] = 'selected';
             if ($day['participants'][$i]['name'] === '+1')
                 $class[] = 'dummy-player';

@@ -38,21 +38,30 @@ class GamesController extends Controller
 
         $needed = 16;
         $count  = count($day['participants']);
+        $manager = '';
         if ( $count < $needed){
             $participants = [];
             $_participants = array_merge($day['participants'], Users::random($needed - $count));
             $day['participants'] = [];
             foreach($_participants as $participant){
+                if (empty($manager) && $participant['id'] === $_SESSION['id']){
+                    $manager = $participant['name'];
+                }
                 if (in_array($participant['name'], $participants)) continue;
                 $participants[] = $participant['name'];
                 array_push($day['participants'], $participant);
             }
         }
+        
+        $shuffled = array_map(fn($value): string => $value['name'], $day['participants']);
+        shuffle($shuffled);
 
         $vars = [
             'title' => 'Prepeare a game',
             'texts' => $texts,
             'day' => $day,
+            'manager' => $manager,
+            'shuffled' => $shuffled,
             'maxPlayers' => 10,
             'playersCount' => count($day['participants']),
             'scripts' => [

@@ -15,6 +15,9 @@
 	&__input {
 		flex-grow: 1;
 		margin: 0em 0.1em;
+		&[name='manager']{
+			margin: 0 2em;
+		}
 	}
 
 	&__players-list {
@@ -75,7 +78,7 @@
 				background-color: $bg-color-green; //#0a494d;
 			}
 
-			&.selected {
+			&.selected, &.manager {
 				background-color: $bg-color-light-red-blur;
 				border-color: $bg-color-light-red-blur;
 				text-decoration: line-through;

@@ -364,22 +364,29 @@ class MafiaEngine extends GameEngine {
             alert(`За столом нема гравця №${maker.num}!`);
             return false;
         }
+        
+        let putedNum = null;
+        do {
+            putedNum = prompt(`Гравець №${maker.num}, під час своєї промови ставив гравця №:`, 0);
+        } while (isNaN(putedNum) || putedNum < 0 || putedNum > 10)
+        
 
-        let putedNum = prompt(`Гравець №${maker.num}, під час своєї промови ставив гравця №:`, 0);
+        if (putedNum === null)
+            return false;
 
-        if (!putedNum) {
+        putedNum = parseInt(putedNum) || 0;
+        if (!putedNum || putedNum > 10) {
+
             if (maker.puted[this.daysCount] === -1)
                 return false;
-            putedNum = 0;
-        }
-
-        const putedId = putedNum - 1;
-        if (!putedId || putedId < 0) {
+                
+            const wrongId = maker.puted[this.daysCount];
+            this.addLog(`Гравець №${maker.num} - не виставляв гравця №${this.players[wrongId].num} (${this.players[wrongId].name})!`);
             maker.puted[this.daysCount] = -1;
-            this.addLog(`Гравець №${maker.num} - не виставляв гравця №${this.players[putedId].num} (${this.players[putedId].name})!`);
             return this.rebuildCourtroom();
         }
-
+        
+        const putedId = putedNum - 1;
         let check = this.courtRoom.indexOf(putedId);
         if (check === -1) {
             maker.puted[this.daysCount] = putedId;
