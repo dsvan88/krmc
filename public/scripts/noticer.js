@@ -33,12 +33,20 @@ class Noticer {
 
 		const self = this;
 		noticeCloseBlock.addEventListener('click', (event) => self.close.call(self, noticeBlock))
+		if (notice['time']){
+			noticeCloseBlock.timeOut = setTimeout((event) => self.close.call(self, noticeBlock), notice['time']);
+		}
 	}
 	close(notice) {
+		notice.style.color = '#00000000';
 		notice.style.opacity = '0.0';
 		notice.style.height = '0px';
 		notice.style.paddingTop = '0px';
 		notice.style.paddingBottom = '0px';
+		notice.style.marginBottom = '0px';
+		if (notice.timeOut){
+			clearTimeout(noticeCloseBlock.timeOut);
+		}
 		setTimeout(()=> notice.remove(), 300);
 	}
 }
