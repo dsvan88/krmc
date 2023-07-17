@@ -117,15 +117,18 @@ class Days extends Model
     }
     public static function getFullDescription($weekData, $day)
     {
-        $format = "d.m.Y {$weekData['data'][$day]['time']}";
-        $dayDate = strtotime(date($format, $weekData['start'] + TIMESTAMP_DAY * $day));
+        $dayTimestamp = $weekData['start'] + (TIMESTAMP_DAY * $day);
+        $format = 'd.m.Y ' . $weekData['data'][$day]['time'];
+        $dayDate = strtotime(date($format, $dayTimestamp));
+
         $game = $weekData['data'][$day]['game'];
 
         if ($_SERVER['REQUEST_TIME'] > $dayDate + DATE_MARGE || in_array($weekData['data'][$day]['status'], ['', 'recalled'])) {
             return '';
         }
 
-        $date = date('d.m.Y (<b>' . Locale::phrase(self::$days[$day]) . '</b>) H:i', $dayDate);
+        // $date = date('d.m.Y', $dayDate) . '(<b>' . Locale::phrase(self::$days[$day]) . '</b>)' . date('H:i', $dayDate);
+        $date = date('d.m.Y', $dayDate) . ' (<b>' . Locale::phrase(self::$days[$day]) . '</b>) ' . $weekData['data'][$day]['time'];
 
         $gameNames = [
             'mafia' => '{{ Tg_Mafia }}',
