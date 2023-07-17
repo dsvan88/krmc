@@ -4,7 +4,7 @@ return [
     '{{ Account_Register_Page_Title }}' => 'Register',
     '{{ Main_Home_Page_Title }}' => 'Home page',
     '{{ Weeks_Show_Page_Title }}' => 'Weekly schedule',
-    '{{ Week_Set_Page_Title }}' => 'Set week schelude',
+    '{{ Week_Set_Page_Title }}' => 'Set week schedule',
     '{{ Day_Show_Page_Title }}' => 'Event',
     '{{ Day_Set_Page_Title }}' => 'Setting event',
     '{{ Users_List_Page_Title }}' => 'Users List',
@@ -16,7 +16,7 @@ return [
 
     '{{ HEADER_MENU_START_PAGE }}' => 'About Club',
     '{{ HEADER_MENU_NEWS }}' => 'News',
-    '{{ HEADER_MENU_WEEKS }}' => 'Games Schelude',
+    '{{ HEADER_MENU_WEEKS }}' => 'Games Schedule',
     '{{ HEADER_ASIDE_MENU_PROFILE }}' => 'Profile',
     '{{ HEADER_ASIDE_MENU_ADD_NEWS }}' => 'Add News',
     '{{ HEADER_ASIDE_MENU_CHANGE_PROMO }}' => 'Change Promo',
@@ -52,7 +52,7 @@ return [
     '{{ Settings_Edit_Title }}' => 'Edit setting',
 
     '{{ Weeks_Block_Title }}' => 'Weekly schedule',
-    '{{ Week_Set_Block_Title }}' => 'Set week schelude',
+    '{{ Week_Set_Block_Title }}' => 'Set week schedule',
 
     '{{ Day_Block_Title }}' => 'Event’s setup',
     '{{ Day_Block_Game_Name }}' => 'Game’s type:',
