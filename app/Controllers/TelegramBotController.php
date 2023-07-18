@@ -10,20 +10,25 @@ use app\models\Contacts;
 use app\models\Settings;
 use app\models\TelegramChats;
 use app\models\Users;
-use app\models\Weeks;
-use app\Repositories\ContactRepository;
 
 class TelegramBotController extends Controller
 {
+    private static $bot = null;
+    private static $techTelegramId = null;
+
     public static $requester = [];
     public static $message = [];
-    public static $command = [];
-    public static $adminCommands = ['reg', 'recall', 'set', 'users', 'promo', 'newuser', 'clear'];
+    public static $chatId = null;
+    public static $command = '';
+    public static $commandArguments = [];
     public static $guestCommands = ['help', 'nick', 'week'];
+
+    public static $resultMessage = '';
+    public static $resultPreMessage = '';
 
     public static function before()
     {
-        $contentType = isset($_SERVER['CONTENT_TYPE']) ? trim($_SERVER['CONTENT_TYPE']) : '';
+        $contentType = isset($_SERVER['CONTENT_TYPE']) ? strtolower(trim($_SERVER['CONTENT_TYPE'])) : '';
         if (strpos($contentType, 'application/json') ===  false) return true;
         $data = trim(file_get_contents('php://input'));
         $message = json_decode($data, true);
@@ -32,7 +37,7 @@ class TelegramBotController extends Controller
             die('{"error":"1","title":"Error!","text":"Error: Nothing to get."}');
         }
 
-        if (isset($message['message']) && empty($message['message']['from']['is_bot'])) {
+        if (empty($message['message']['from']['is_bot'])) {
             TelegramChats::save($message);
         }
 
@@ -42,64 +47,51 @@ class TelegramBotController extends Controller
         }
         Locale::change($langCode);
 
+        $text = trim($message['message']['text']);
+
+        if (!self::parseCommand($text)) exit();
+
         self::$message = $message;
+        self::$bot = new TelegramBot();
+        self::$techTelegramId = Settings::getTechTelegramId();
+        self::$chatId = $message['message']['chat']['id'];
+
+        $userTelegramId = $message['message']['from']['id'];
+
+        $userId = Contacts::getUserIdByContact('telegramid', $userTelegramId);
+
+        self::$requester = empty($userId) ? $requester = Users::getDataByTelegramId($userTelegramId) : Users::getDataById($userId);
+
+        if (empty(self::$requester) && !in_array(self::$command, self::$guestCommands)) {
+            self::$bot->sendMessage(self::$chatId, Locale::phrase('{{ Tg_Unknown_Requester }}'));
+            exit();
+        }
     }
     public static function webhookAction()
     {
         // exit(json_encode(['message' => self::$message], JSON_UNESCAPED_UNICODE));
-        $bot = new TelegramBot();
-        $techTelegramId = Settings::getTechTelegramId();
         try {
-
-            $text = trim(self::$message['message']['text']);
-            $command = self::parseCommand($text);
-
-            if (!$command) return false;
-
-            $telegramId = self::$message['message']['from']['id'];
-            $userId = Contacts::getUserIdByContact('telegramid', $telegramId);
-
-            if (empty($userId))
-                $userData = Users::getDataByTelegramId($telegramId);
-            else
-                $userData = Users::getDataById($userId);
-
-            if (in_array($command['command'], self::$adminCommands, true)) {
-                if (empty($userData) || !in_array($userData['privilege']['status'], ['manager', 'admin'], true))
-                    return false;
+            if (!self::execute()) {
+                if (empty(self::$resultMessage))
+                    exit();
+                $botResult = self::$bot->sendMessage(self::$techTelegramId, json_encode([self::$message, /*self::$requester,*/ self::parseArguments(self::$commandArguments)], JSON_UNESCAPED_UNICODE));
             }
 
-            if (empty($userData) && !in_array($command['command'], self::$guestCommands)) {
-                $bot->sendMessage(self::$message['message']['chat']['id'], Locale::phrase('{{ Tg_Unknown_Requester }}'));
-                exit();
+            if (!empty(self::$resultPreMessage)) {
+                self::$bot->sendMessage(self::$chatId, self::$resultPreMessage, self::$message['message']['message_id']);
             }
 
-            self::$requester = $userData;
-            self::$command = $command;
+            $botResult = self::$bot->sendMessage(self::$chatId, Locale::phrase(self::$resultMessage));
 
-            $result = self::execute();
-
-            $botResult = $bot->sendMessage($techTelegramId, json_encode([self::parseArguments($command['arguments']), $result], JSON_UNESCAPED_UNICODE));
-
-            if (isset($result['pre-message'])) {
-                $bot->sendMessage(self::$message['message']['chat']['id'], $result['pre-message'], self::$message['message']['message_id']);
-            }
-
-            $botResult = $bot->sendMessage(self::$message['message']['chat']['id'], Locale::phrase($result['message']));
             if ($botResult[0]['ok']) {
-                if ($command['command'] === 'week') {
-                    $bot->pinMessage(self::$message['message']['chat']['id'], $botResult[0]['result']['message_id']);
-                    TelegramChats::savePinned(self::$message, $botResult[0]['result']['message_id']);
+                if (self::$command === 'week') {
+                    self::pinMessage($botResult[0]['result']['message_id']);
                 }
-                /*                 if (in_array($command['command'], ['reg', 'set', 'week', 'recall', 'today', 'day', 'promo'], true) && self::$message['message']['chat']['id'] !== $techTelegramId) {
-                    $bot->deleteMessage(self::$message['message']['chat']['id'], self::$message['message']['message_id']);
+                /*                 if (in_array($command, ['reg', 'set', 'week', 'recall', 'today', 'day', 'promo'], true) && self::$chatId !== self::$techTelegramId) {
+                    $bot->deleteMessage(self::$chatId, self::$message['message']['message_id']);
                 } */
-                if (in_array($command['command'], ['booking', 'reg', 'set', 'recall', 'promo'], true)) {
-                    $chatData = TelegramChats::getChatsWithPinned();
-                    $weekData = self::execute('week');
-                    foreach ($chatData as $chatId => $pinned) {
-                        $result[] = $bot->editMessage($chatId, $pinned, $weekData['message']);
-                    }
+                if (in_array(self::$command, ['booking', 'reg', 'set', 'recall', 'promo'], true)) {
+                    self::updateWeekMessages();
                 }
             }
         } catch (\Throwable $th) {
@@ -107,11 +99,11 @@ class TelegramBotController extends Controller
                 'commonError' => $th->__toString(),
                 'messageData' => self::$message,
             ];
-            $bot->sendMessage($techTelegramId, json_encode($debugMessage, JSON_UNESCAPED_UNICODE));
-            $bot->sendMessage(self::$message['message']['chat']['id'], Locale::phrase("Something went wrong😱!\nWe are deeply sorry for that😢\nI’ve informed our administrators about your situation, and they are fixing it right now!\nThank you for understanding!"));
+            self::$bot->sendMessage(self::$techTelegramId, json_encode($debugMessage, JSON_UNESCAPED_UNICODE));
+            self::$bot->sendMessage(self::$chatId, Locale::phrase("Something went wrong😱!\nWe are deeply sorry for that😢\nI’ve informed our administrators about your situation, and they are fixing it right now!\nThank you for understanding!"));
         }
     }
-    public static function parseCommand($text)
+    public static function parseCommand(string $text): bool
     {
         if (preg_match('/^[+-]\s{0,3}(пн|пон|вт|вів|ср|сер|чт|чет|пт|пят|п’ят|сб|суб|вс|вос|нед|нд|сг|сег|сьо|зав|mon|tue|wed|thu|fri|sat|sun|tod|tom)/', mb_strtolower(str_replace('на ', '', $text), 'UTF-8')) === 1) {
             preg_match_all('/[+-]\s{0,3}(пн|пон|вт|вів|ср|сер|чт|чет|пт|пят|п’ят|сб|суб|вс|вос|нед|нд|сг|сег|сьо|зав|mon|tue|wed|thu|fri|sat|sun|tod|tom)|([0-2]{0,1}[0-9]\:[0-5][0-9])/i', mb_strtolower(str_replace('на ', '', $text), 'UTF-8'), $matches);
@@ -119,7 +111,9 @@ class TelegramBotController extends Controller
             if (preg_match('/\([^)]+\)/', $text, $prim) === 1) {
                 $arguments['prim'] = mb_substr($prim[0], 1, -1, 'UTF-8');
             }
-            return ['command' => 'booking', 'arguments' => $arguments];
+            self::$command = 'booking';
+            self::$commandArguments = $arguments;
+            return true;
         }
         if ($text[0] === '/') {
             $command = mb_substr($text, 1, NULL, 'UTF-8');
@@ -136,8 +130,9 @@ class TelegramBotController extends Controller
             }
             $command = strtolower($command);
 
-            if (in_array($command, ['?', 'help'])) {
-                return ['command' => 'help', 'arguments' => []];
+            if (in_array($command, ['?', 'help', 'start'])) {
+                self::$command = 'help';
+                return true;
             }
 
             if (in_array($command, ['reg', 'set'], true)) {
@@ -146,11 +141,15 @@ class TelegramBotController extends Controller
                 if (preg_match('/\([^)]+\)/', $text, $prim) === 1) {
                     $arguments['prim'] = mb_substr($prim[0], 1, -1, 'UTF-8');
                 }
-                return ['command' => $command, 'arguments' => $arguments];
+                self::$command = $command;
+                self::$commandArguments = $arguments;
+                return true;
             }
             preg_match_all('/([a-zA-Zа-яА-ЯрРсСтТуУфФчЧхХШшЩщЪъЫыЬьЭэЮюЄєІіЇїҐґ.0-9]+)/', trim(mb_substr($text, $commandLen + 1, NULL, 'UTF-8')), $matches);
-            $arguments = $matches[0];
-            return ['command' => $command, 'arguments' => $arguments];
+
+            self::$command = $command;
+            self::$commandArguments = $matches[0];
+            return true;
         }
         return false;
     }
@@ -231,32 +230,27 @@ class TelegramBotController extends Controller
     public static function execute($command = null)
     {
 
-        $command = $command ? $command : self::$command['command'];
+        if (empty($command)) {
+            $command = self::$command;
+        }
 
         $class = ucfirst($command) . 'Command';
         $class = str_replace('/', '\\', "\\app\\Repositories\\TelegramCommands\\{$class}");
 
         if (!class_exists($class)) {
-            return ['result' => false, 'message' => $class . ' Telegram command isn`t found!'];
+            self::$resultMessage = $class . ' Telegram command isn`t found!';
+            return false;
         }
-
-        extract(self::$command);
 
         $class::$operatorClass = self::class;
         $class::$requester = self::$requester;
         $class::$message = self::$message;
-        $result = $class::execute($arguments);
 
-        $return = [
-            'result' => $result[0],
-            'message' => $result[1]
-        ];
-
-        if (isset($result[2])) {
-            $return['pre-message'] = $result[2];
+        if (!self::checkAccess($class::$accessLevel)) {
+            return false;
         }
 
-        return $return;
+        return $class::execute(self::$commandArguments);
     }
     public static function chatsListAction()
     {
@@ -325,5 +319,36 @@ class TelegramBotController extends Controller
             ],
         ];
         View::render($vars);
+    }
+    public static function checkAccess(string $level = 'guest')
+    {
+        $levels = ['guest' => 0, 'user' => 1, 'manager' => 2, 'admin' => 3, 'root' => 4];
+        $status = 'guest';
+
+        if (!empty(self::$requester['privilege']['status']))
+            $status = self::$requester['privilege']['status'];
+
+        return $levels[$level] <= $levels[$status];
+    }
+    public static function updateWeekMessages(): array
+    {
+        $result = [];
+        self::execute('week');
+
+        $chatData = TelegramChats::getChatsWithPinned();
+        foreach ($chatData as $chatId => $pinned) {
+            $result[] = self::$bot->editMessage($chatId, $pinned, self::$resultMessage);
+        }
+
+        return $result;
+    }
+    public static function pinMessage($messageId = null)
+    {
+        if (empty($messageId)) return false;
+
+        self::$bot->pinMessage(self::$chatId, $messageId);
+        TelegramChats::savePinned(self::$message, $messageId);
+
+        return true;
     }
 }

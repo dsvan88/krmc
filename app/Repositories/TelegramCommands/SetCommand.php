@@ -9,6 +9,7 @@ use app\models\Weeks;
 
 class SetCommand extends ChatCommand
 {
+    public static $accessLevel = 'manager';
     public static function description()
     {
         return self::locale('<u>/day (week day)</u> <i>// Booking information for a specific day. Without specifying the day - for today</i>');
@@ -16,7 +17,8 @@ class SetCommand extends ChatCommand
     public static function execute(array $arguments = [])
     {
         if (empty($arguments)) {
-            return [false, self::locale('{{ Tg_Command_Without_Arguments }}')];
+            self::$operatorClass::$resultMessage = self::locale('{{ Tg_Command_Without_Arguments }}');
+            return false;
         }
 
         $dayName = '';
@@ -33,24 +35,24 @@ class SetCommand extends ChatCommand
             'nlh' => ['пок', 'pok', 'nlh'],
             'etc' => ['інш', 'другое', 'etc'],
         ];
-        
+
         $gamesKeywords = GameTypes::getKeywords();
 
-        if (!empty($gamesKeywords)){
+        if (!empty($gamesKeywords)) {
             $_gamesArray = [];
             $_pattern = [];
-            foreach($gamesKeywords as $slug=>$keywords){
+            foreach ($gamesKeywords as $slug => $keywords) {
 
                 if (empty($keywords)) continue;
 
                 $_gamesArray[$slug] = array_slice($keywords, 0, 3);
 
-                foreach($_gamesArray[$slug] as $index=>$keyword){
+                foreach ($_gamesArray[$slug] as $index => $keyword) {
                     $_gamesArray[$slug][$index] = trim($keyword);
                     $_pattern[] = $_gamesArray[$slug][$index];
                 }
             }
-            if (!empty($_pattern)){
+            if (!empty($_pattern)) {
                 $pattern = implode('|', $_pattern);
                 $gamesArray = $_gamesArray;
             }
@@ -134,11 +136,11 @@ class SetCommand extends ChatCommand
         $result = Days::setDayData($weekId, $dayNum, $weekData['data'][$dayNum]);
 
         if (!$result) {
-            return [false, json_encode($weekData['data'][$dayNum], JSON_UNESCAPED_UNICODE)];
+            self::$operatorClass::$resultMessage = json_encode($weekData['data'][$dayNum], JSON_UNESCAPED_UNICODE);
+            return false;
         }
 
-        $message = $method === '-' ? self::locale('{{ Tg_Command_Successfully_Canceled }}') : Days::getFullDescription($weekData, $dayNum);
-
-        return [$result, $message];
+        self::$operatorClass::$resultMessage = $method === '-' ? self::locale('{{ Tg_Command_Successfully_Canceled }}') : Days::getFullDescription($weekData, $dayNum);
+        return true;
     }
 }

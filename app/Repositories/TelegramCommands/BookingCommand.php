@@ -8,6 +8,7 @@ use app\models\Weeks;
 
 class BookingCommand extends ChatCommand
 {
+    public static $accessLevel = 'user';
     public static function description()
     {
         return self::locale('+ (week day) <i>// Booking for the scheduled games of the current week, examples:</i>
@@ -34,7 +35,8 @@ class BookingCommand extends ChatCommand
         $participantId = $slot = -1;
         if ($weekData['data'][$requestData['dayNum']]['status'] !== 'set') {
             if (!in_array($requestData['userStatus'], ['manager', 'admin'])) {
-                return [false, self::locale('{{ Tg_Gameday_Not_Set }}')];
+                self::$operatorClass::$resultMessage = self::locale('{{ Tg_Gameday_Not_Set }}');
+                return false;
             }
             if (!isset($weekData['data'][$requestData['dayNum']]['game']))
                 $weekData['data'][$requestData['dayNum']] = Days::$dayDataDefault;
@@ -61,7 +63,8 @@ class BookingCommand extends ChatCommand
         $newDayData = $weekData['data'][$requestData['dayNum']];
         if ($requestData['method'] === '+') {
             if ($participantId !== -1) {
-                return [false, self::locale('{{ Tg_Command_Requester_Already_Booked }}')];
+                self::$operatorClass::$resultMessage = self::locale('{{ Tg_Command_Requester_Already_Booked }}');
+                return false;
             }
             $newDayData = Days::addParticipantToDayData($newDayData, $requestData, $slot);
             $reactions = [
@@ -72,7 +75,8 @@ class BookingCommand extends ChatCommand
             ];
         } else {
             if ($participantId === -1) {
-                return [false, self::locale('{{ Tg_Command_Requester_Not_Booked }}')];
+                self::$operatorClass::$resultMessage = self::locale('{{ Tg_Command_Requester_Not_Booked }}');
+                return false;
             }
             unset($newDayData['participants'][$participantId]);
             $newDayData['participants'] = array_values($newDayData['participants']);
@@ -84,14 +88,17 @@ class BookingCommand extends ChatCommand
             ];
         }
 
-        $result = Days::setDayData($weekId, $requestData['dayNum'], $newDayData);
+        Days::setDayData($weekId, $requestData['dayNum'], $newDayData);
 
         $botReaction = '';
-        if (isset($reactions)) {
+        if (!empty($reactions)) {
             $botReaction = $reactions[mt_rand(0, count($reactions) - 1)];
         }
 
         $weekData['data'][$requestData['dayNum']] = $newDayData;
-        return [$result, Days::getFullDescription($weekData, $requestData['dayNum']), $botReaction];
+
+        self::$operatorClass::$resultMessage = Days::getFullDescription($weekData, $requestData['dayNum']);
+        self::$operatorClass::$resultPreMessage = $botReaction;
+        return true;
     }
 }

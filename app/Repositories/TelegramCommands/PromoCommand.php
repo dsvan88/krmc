@@ -1,14 +1,19 @@
 <?
+
 namespace app\Repositories\TelegramCommands;
 
 use app\core\ChatCommand;
 use app\models\News;
 
-class PromoCommand extends ChatCommand {
-    public static function description(){
+class PromoCommand extends ChatCommand
+{
+    public static $accessLevel = 'manager';
+    public static function description()
+    {
         return self::locale('<u>/day (week day)</u> <i>// Booking information for a specific day. Without specifying the day - for today</i>');
     }
-    public static function execute(array $arguments=[]){
+    public static function execute(array $arguments = [])
+    {
         $text = self::$message['message']['text'];
         $promoText = trim(mb_substr($text, mb_strpos($text, ' ', 0, 'UTF-8') + 1, NULL, 'UTF-8'));
 
@@ -48,6 +53,7 @@ class PromoCommand extends ChatCommand {
 
         News::edit($data, 'promo');
 
-        return [true, self::locale('{{ Tg_Command_Promo_Saved }}')];
+        self::$operatorClass::$resultMessage = self::locale('{{ Tg_Command_Promo_Saved }}');
+        return true;
     }
 }

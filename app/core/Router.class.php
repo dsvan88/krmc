@@ -6,7 +6,7 @@ class Router
 {
     protected static $routes = [];
     protected static $params = [];
-    protected static $accessLevels = ['all' => 0, 'user' => 1, 'manager' => 2, 'admin' => 3];
+    protected static $accessLevels = ['all' => 0, 'user' => 1, 'manager' => 2, 'admin' => 3, 'root' => 4];
     public static function before()
     {
         if (!empty(self::$routes)) {
@@ -54,7 +54,7 @@ class Router
     public static function run()
     {
         self::before();
-        if (!isset($_SESION['id']) && strpos($_SERVER['REQUEST_URI'], 'api/') == false){
+        if (!isset($_SESION['id']) && strpos($_SERVER['REQUEST_URI'], 'api/') == false) {
             self::savePath();
         }
 
@@ -84,11 +84,11 @@ class Router
         }
         return true;
     }
-    public static function savePath() : void
+    public static function savePath(): void
     {
         $url = trim($_SERVER['REQUEST_URI'], '/');
         if (empty($url)) return;
 
-        $_SESSION['path'] = '/'.$url;
+        $_SESSION['path'] = '/' . $url;
     }
 }

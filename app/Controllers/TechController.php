@@ -123,9 +123,9 @@ class TechController extends Controller
                 'date' => 1652025484,
                 // 'text' => '- на сегодня',
                 // 'text' => '/nick Думатель',
-                'text' => '/day',
+                // 'text' => '/day',
                 // 'text' => '+tod',
-                // 'text' => '/set вс,покер, 20:15',
+                'text' => '/users',
             ]
         ];
 

@@ -17,13 +17,13 @@ class TelegramChats extends Model
         if (!$result) {
             $chatData = ['uid' => $uid, 'personal' => ['id' => $uid], 'data' => ['last_seems' => $messageArray['message']['date']]];
 
-            if (isset($messageArray['message']['from']['first_name']) && !empty($messageArray['message']['from']['first_name'])) {
+            if (!empty($messageArray['message']['from']['first_name'])) {
                 $chatData['personal']['first_name'] = $messageArray['message']['from']['first_name'];
             }
-            if (isset($messageArray['message']['from']['last_name']) && !empty($messageArray['message']['from']['last_name'])) {
+            if (!empty($messageArray['message']['from']['last_name'])) {
                 $chatData['personal']['last_name'] = $messageArray['message']['from']['last_name'];
             }
-            if (isset($messageArray['message']['from']['username']) && !empty($messageArray['message']['from']['username'])) {
+            if (!empty($messageArray['message']['from']['username'])) {
                 $chatData['personal']['username'] = $messageArray['message']['from']['username'];
             }
             if ($messageArray['message']['chat']['type'] === 'private') {
@@ -43,20 +43,20 @@ class TelegramChats extends Model
         $savedChatId = $result['id'];
 
         $chatData = $result;
-        if (!isset($chatData['personal']['first_name']) && isset($messageArray['message']['from']['first_name']) && !empty($messageArray['message']['from']['first_name'])) {
+        if (empty($chatData['personal']['first_name']) && !empty($messageArray['message']['from']['first_name'])) {
             $chatData['personal']['first_name'] = $messageArray['message']['from']['first_name'];
         }
-        if (!isset($chatData['personal']['last_name']) && isset($messageArray['message']['from']['last_name']) && !empty($messageArray['message']['from']['last_name'])) {
+        if (empty($chatData['personal']['last_name']) && !empty($messageArray['message']['from']['last_name'])) {
             $chatData['personal']['last_name'] = $messageArray['message']['from']['last_name'];
         }
-        if (!isset($chatData['personal']['username']) && isset($messageArray['message']['from']['username']) && !empty($messageArray['message']['from']['username'])) {
+        if (empty($chatData['personal']['username']) && !empty($messageArray['message']['from']['username'])) {
             $chatData['personal']['username'] = $messageArray['message']['from']['username'];
         }
         if ($messageArray['message']['chat']['type'] === 'private') {
             $chatData['data']['direct'] = true;
         }
 
-        if (!isset($chatData['personal']['nickname'])) {
+        if (empty($chatData['personal']['nickname'])) {
             $userData = Users::getDataByTelegramId($uid);
             if ($userData) {
                 $chatData['personal']['nickname'] = $userData['name'];
@@ -182,7 +182,8 @@ class TelegramChats extends Model
         $chatData['data'] = json_decode($chatData['data'], true);
         return $chatData;
     }
-    public static function init(){
+    public static function init()
+    {
         $table = self::$table;
         self::query(
             "CREATE TABLE IF NOT EXISTS $table (

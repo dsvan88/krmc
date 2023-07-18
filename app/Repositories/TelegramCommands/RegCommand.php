@@ -8,6 +8,7 @@ use app\models\Weeks;
 
 class RegCommand extends ChatCommand
 {
+    public static $accessLevel = 'manager';
     public static function description()
     {
         return self::locale('<u>/day (week day)</u> <i>// Booking information for a specific day. Without specifying the day - for today</i>');
@@ -15,13 +16,15 @@ class RegCommand extends ChatCommand
     public static function execute(array $arguments = [])
     {
         if (empty($arguments)) {
-            return [false, self::locale('{{ Tg_Command_Without_Arguments }}')];
+            self::$operatorClass::$resultMessage = self::locale('{{ Tg_Command_Without_Arguments }}');
+            return false;
         }
 
         $requestData = self::$operatorClass::parseArguments($arguments);
 
         if (!isset($requestData['nonames']) && $requestData['userId'] < 2) {
-            return [false, self::locale('{{ Tg_Command_User_Not_Found }}')];
+            self::$operatorClass::$resultMessage = self::locale('{{ Tg_Command_User_Not_Found }}');
+            return false;
         }
 
         $weekId = Weeks::currentId();
@@ -63,7 +66,8 @@ class RegCommand extends ChatCommand
         $newDayData = $weekData['data'][$requestData['dayNum']];
         if ($requestData['method'] === '+') {
             if ($participantId !== -1) {
-                return [false, self::locale('{{ Tg_Command_User_Already_Booked }}')];
+                self::$operatorClass::$resultMessage = self::locale('{{ Tg_Command_User_Already_Booked }}');
+                return false;
             }
             if (isset($requestData['nonames'])) {
                 $newDayData = Days::addNonamesToDayData($newDayData, $slot, $requestData['nonames'], $requestData['prim']);
@@ -75,7 +79,8 @@ class RegCommand extends ChatCommand
                 $newDayData = Days::removeNonamesFromDayData($newDayData, $requestData['nonames']);
             } else {
                 if ($participantId === -1) {
-                    return [false, self::locale('{{ Tg_Command_User_Not_Booked }}')];
+                    self::$operatorClass::$resultMessage = self::locale('{{ Tg_Command_User_Not_Booked }}');
+                    return false;
                 }
                 unset($newDayData['participants'][$participantId]);
                 $newDayData['participants'] = array_values($newDayData['participants']);
@@ -86,6 +91,7 @@ class RegCommand extends ChatCommand
 
         $weekData['data'][$requestData['dayNum']] = $newDayData;
 
-        return [$result, Days::getFullDescription($weekData, $requestData['dayNum'])];
+        self::$operatorClass::$resultMessage = Days::getFullDescription($weekData, $requestData['dayNum']);
+        return true;
     }
 }
