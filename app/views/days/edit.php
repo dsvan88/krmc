@@ -1,28 +1,32 @@
 <section class="section near-evening">
     <? /*<form class="booking" action="/days<?= $dayId ?>/w<?= $weekId ?>" data-wid="<?= $weekId ?>" data-did="<?= $dayId ?>">*/ ?>
-        <form class="booking" action="/week/<?= $day['weekId'] ?>/day/<?= $day['dayId'] ?>/" method="POST">
-            <h3 class="booking__title"><?= $texts['daysBlockTitle'] ?></h3>
-            <div class="booking__settings">
-                <div class="booking__settings-row">
-                    <label for="game-day-time" class="booking__label-centered"> <?= $day['date'] ?> </label>
-                    <div class="booking__settings-wrapper">
-                        <input list="time-list" type="text" name="day_time" value="<?= $day['time'] ?>" placeholder="<?= $texts['dayGameStart'] ?>" id="game-day-time" />
-                    </div>
+    <form class="booking" action="/week/<?= $day['weekId'] ?>/day/<?= $day['dayId'] ?>/" method="POST">
+        <h3 class="booking__title"><?= $texts['daysBlockTitle'] ?></h3>
+        <div class="booking__settings">
+            <div class="booking__settings-row">
+                <label for="game-day-time" class="booking__label-centered"> <?= $day['date'] ?> </label>
+                <div class="booking__settings-wrapper">
+                    <input list="time-list" type="text" name="day_time" value="<?= $day['time'] ?>" placeholder="<?= $texts['dayGameStart'] ?>" id="game-day-time" />
                 </div>
-                <div class="booking__settings-row single">
-                    <select name="game">
-                    <? foreach($gameTypes as $num=>$gameType) :?>
-                        <option value="<?= $gameType['slug']?>" <?= ($day['game'] === $gameType['slug'] ? 'selected' : '') ?>><?= $gameType['name'] ?></option>
+            </div>
+            <div class="booking__settings-row single">
+                <select name="game">
+                    <? foreach ($gameTypes as $num => $gameType) : ?>
+                        <option value="<?= $gameType['slug'] ?>" <?= ($day['game'] === $gameType['slug'] ? 'selected' : '') ?>><?= $gameType['name'] ?></option>
                     <? endforeach ?>
                     <? /*<option value="mafia" <?= ($day['game'] === 'mafia' ? 'selected' : '') ?>><?= $texts['dayGameMafia'] ?></option>
                     <option value="poker" <?= ($day['game'] === 'poker' ? 'selected' : '') ?>><?= $texts['dayGamePoker'] ?></option>
                     <option value="board" <?= ($day['game'] === 'board' ? 'selected' : '') ?>><?= $texts['dayGameBoard'] ?></option>
                     <option value="cash" <?= ($day['game'] === 'cash' ? 'selected' : '') ?>><?= $texts['dayGameCash'] ?></option>
-                    <option value="etc" <?= ($day['game'] === 'etc' ? 'selected' : '') ?>><?= $texts['dayGameEtc'] ?></option>*/?>
+                    <option value="etc" <?= ($day['game'] === 'etc' ? 'selected' : '') ?>><?= $texts['dayGameEtc'] ?></option>*/ ?>
                 </select>
                 <span class="checkbox-styled">
                     <input type="checkbox" name="mods[]" id="game-tournament-checkbox" value="tournament" class="checkbox-styled-checkbox" <?= $day['tournament'] ?> />
                     <label for="game-tournament-checkbox" class="checkbox-styled__label"> <?= $texts['dayTournamentCheckboxLabel'] ?> </label>
+                </span>
+                <span class="checkbox-styled">
+                    <input type="checkbox" name="send" id="game-send-checkbox" value="1" class="checkbox-styled-checkbox" />
+                    <label for="game-send-checkbox" class="checkbox-styled__label"> <?= $texts['daySendCheckboxLabel'] ?> </label>
                 </span>
             </div>
             <div class="booking__settings-row">

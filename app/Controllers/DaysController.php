@@ -23,14 +23,15 @@ class DaysController extends Controller
             View::set(self::$route);
         }
         $gameTypes = GameTypes::menu();
-        
+
         $vars = [
             'title' => '{{ Day_Set_Page_Title }}',
             'texts' => [
                 'daysBlockTitle' => '{{ Day_Block_Title }}',
                 'dayStartTime' => '{{ Day_Block_Start_Time }}',
                 'daysBlockParticipantsTitle' => '{{ Day_Block_Participants_Title }}',
-                'dayTournamentCheckboxLabel' => '{{ Day_Block_Tournament_Checkbox_Label }}',
+                'dayTournamentCheckboxLabel' => 'Tournament',
+                'daySendCheckboxLabel' => 'Send to chat',
                 'dayGameStart' => '{{ Day_Block_Games_Start }}',
                 'dayEvent' => '{{ Day_Block_Game_Name }}',
                 'dayRemarkPlaceHolder' => '{{ Day_Block_Prim_PLaceholder }}',
@@ -53,7 +54,7 @@ class DaysController extends Controller
         }
 
         $gamesCount = count($gameTypes);
-        for ($i=0; $i < $gamesCount; $i++) { 
+        for ($i = 0; $i < $gamesCount; $i++) {
             if ($gameTypes[$i]['slug'] !== $day['game']) continue;
             $gameName = Locale::phrase($gameTypes[$i]['name']);
             break;

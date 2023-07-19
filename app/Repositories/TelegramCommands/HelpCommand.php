@@ -39,7 +39,10 @@ class HelpCommand extends ChatCommand
 
         $commandsList = array_values(array_filter($commandsList));
 
-        $message = implode("\n", $commandsList);
+        $message = self::locale("<i>Thіs іs my instruction😊</i>:\n");
+        $message .= implode("\n", $commandsList);
+        $message .= self::locale("\n\nFeel free to ask the admins or community, if something is not clear!");
+
         self::$operatorClass::$resultMessage = $message;
         return true;
     }

@@ -58,7 +58,6 @@ return [
     '{{ Day_Block_Game_Name }}' => 'Game’s type:',
     '{{ Day_Block_Start_Time }}' => 'Start:',
     '{{ Day_Block_Participants_Title }}' => 'Participants',
-    '{{ Day_Block_Tournament_Checkbox_Label }}' => 'Tournament',
     '{{ Day_Block_Games_Start }}' => 'Booking time',
     '{{ Time_Arrive }}' => 'Time',
     '{{ Day_Block_Prim_PLaceholder }}' => 'Remark',
@@ -111,7 +110,7 @@ return [
     '{{ Tg_Game_Mod_Fan }}' => "*<b>Fun game</b>!\nHave a good time and have fun!\n",
     '{{ Tg_Game_Mod_Tournament }}' => "<b>Tournament</b>!\nBecome a champion in a glorious and fair competition!\n",
 
-    '{{ Tg_Unknown_Requester }}' => "Sorry! I don't recognize you in makeup🤷‍♂️\nLet's get acquainted!😏\nI'm a digital bot for booking. Your faithful friend and assistant in the matter of signing up for the games of our club🤗\nNow, please tell me your nickname in the game so that I can remember you!\nWrite: /nick <b>Your nickname</b> (<b>Cyrillic</b>!)",
+    '{{ Tg_Unknown_Requester }}' => "Sorry! I don't recognize you in makeup🤷‍♂️\nLet's get acquainted!😏\nI'm a digital bot for booking. Your faithful friend and assistant in the matter of signing up for the games of our club🤗\nNow, please tell me your nickname in the game so that I can remember you!\nWrite: /nick <b>Your nickname</b> (<b>Cyrillic</b>!)\nExample:\n/nick Телеграм Бот",
     '{{ Tg_Command_Without_Arguments }}' => "This <b>Command</b> can't be executed without any arguments!",
 
     '{{ Tg_Command_Name_Already_Set }}' => "I already remember you as <b>%s</b>!\n\nChanges only through administrators",
