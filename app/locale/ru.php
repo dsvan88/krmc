@@ -214,20 +214,32 @@ return [
 Подзголовок
 Текст сообщения, или: Тут могла быть, Ваша <b>Реклама</b><i>:)</i>",
 
-    '+ (week day) <i>// Booking for the scheduled games of the current week, examples:</i>
-    +вс
-    + на сегодня, на 19:30 (отсижу 1-2 игры, под ?)
-- (week day) <i>// Unsubscribe from games on a specific day that you previously signed up for, examples:</i>
-    -вс
-    - завтра' => '+ (день недели) <i>// Записаться на игры текущей недели. Пример:</i>
-    +вс
-    + на сегодня, на 19:30 (отсижу 1-2 игры, под ?)
-- (день недели) <i>// Отписаться от игр в определённый день, на который ранее записались. Примеры:</i>
-    -вс
-    - завтра',
+    "+ (week day) <i>// Booking for the scheduled games of the current week, examples:</i>\n\t\t+вс\n\t\t+ на сегодня, на 19:30 (отсижу 1-2 игры, под ?)\n- (week day) <i>// Unsubscribe from games on a specific day that you previously signed up for, examples:</i>\n\t\t-вс\n\t\t- завтра" =>
+    "+ (день недели) <i>// Записаться на игры текущей недели. Пример:</i>\n\t\t+вс\n\t\t+ на сегодня, на 19:30 (отсижу 1-2 игры, под ?)\n- (день недели) <i>// Отписаться от игр в определённый день, на который ранее записались. Примеры:</i>\n\t\t-вс\n\t\t- завтра",
 
     '<u>/nick Your nickname</u> (Cyrillic) <i>// Register your nickname</i>' => '<u>/nick Ваш псевдоним</u> (кириллицей) <i>// Забронировать за собой псевдоним</i>',
     '<u>/day (week day)</u> <i>// Booking information for a specific day. Without specifying the day - for today</i>' => '<u>/day (день недели)</u> <i>// Информация по записи на конкретный день. Без указания дня - на сегодня</i>',
+    '<u>/today</u> <i>// Booking information for today.</i>' => '<u>/today</u> <i>// Информация по записаям на сегодня</i>',
+    '<u>/week</u> <i>// Schedule of upcoming games</i>' => '<u>/week</u> <i>// Расписание ближайших игр</i>',
+    '<u>/?</u> or <u>/start</u> or <u>/help</u> <i>// This help menu</i>' => '<u>/?</u> или <u>/start</u> или <u>/help</u> <i>// Это меню помощи</i>',
 
+    "<u>/recall (week day)</u> <i>// Recall day settings for a specific day.\nRestored by a new registration from the admin.\nWithout specifying the day - for today</i>\n" =>
+    "<u>/recall (день недели)</u> <i>// Отменить сбор.\nВосстанавливается новой регистрацией от админа.\nБез указания дня - сегодня</i>\n",
 
+    "<u>/clear (week day)</u> <i>// Clear patricipant’s list of a specific day.\n\tWithout specifying the day - for today.\n\tWorking on recalled day only!</i>" => "<u>/clear (день недели)</u> <i>// Очистить список учасников на конкретный день.\n\tБез уточнения дня - очищает список на сегодня.\n\tРаботает толька на днях, по которым случился \"отбой\".</i>",
+    '<u>/newuser Player’s nickname</u> (in Cyrillic) <i>// Register a new nickname in the system.</i>' => '<u>/newuser Псевдоним Игрока</u> (кириллицей) <i>// Зарегистрировать в системе новый псевдоним игрока.</i>',
+    '<u>/users</u> <i>// Users list, registered in system.</i>' => '<u>/users</u> <i>// Список пользователей, зарегистрированных в системе.</i>',
+
+    "<u>/set</u> <i>// Set data for a specific day. Example:</i>\n\t\t/set вс, mafia, 18:00, (Good luck, have fun!)\n" => "<u>/set</u> <i>// Вказати дані дня. Зразок:</i>\n\t\t/set вс, mafia, 18:00, (Разважтесь!)\n",
+    '<u>/reg</u> <i>// Booking/unbooking players for a specific day. Examples:</i>
+    /reg +mon, nickname, 18:00, (with ?)
+    /reg -mon, nickname
+' => '<u>/reg</u> <i>// Записать/отписать игрока на указанный день. Пример:</i>
+    /reg +вс, псевдоним, 18:00, (под ?)
+    /reg -вс, псевдоним
+',
+
+    "<u>/promo</u> <i>// Fix notification that is added at the bottom of the /week command.</i> The text before the first line break is the title, before the second one is the subtitle, everything below is the text of the alert. Example:
+    /promo Title\nSubtitle\nText, or: here could be your <b>Advertising</b><i>:)</i>\n" => "<u>/promo</u> <i>// Зафиксировать оповещение, что добавляется внизу команды /week.</i> Текст до первого переноса строки - заголовок, до второго - подзаголовок, всё что ниже - текст оповещения. Пример:
+    /promo Заголовок\nПодзголовок\nТекст сообщения, или: Тут могла быть, Ваша <b>Реклама</b><i>:)</i>\n",
 ];

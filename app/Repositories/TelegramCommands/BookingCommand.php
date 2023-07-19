@@ -11,12 +11,7 @@ class BookingCommand extends ChatCommand
     public static $accessLevel = 'user';
     public static function description()
     {
-        return self::locale('+ (week day) <i>// Booking for the scheduled games of the current week, examples:</i>
-        +вс
-        + на сегодня, на 19:30 (отсижу 1-2 игры, под ?)
-    - (week day) <i>// Unsubscribe from games on a specific day that you previously signed up for, examples:</i>
-        -вс
-        - завтра');
+        return self::locale("+ (week day) <i>// Booking for the scheduled games of the current week, examples:</i>\n\t\t+вс\n\t\t+ на сегодня, на 19:30 (отсижу 1-2 игры, под ?)\n- (week day) <i>// Unsubscribe from games on a specific day that you previously signed up for, examples:</i>\n\t\t-вс\n\t\t- завтра");
     }
     public static function execute(array $arguments = [])
     {

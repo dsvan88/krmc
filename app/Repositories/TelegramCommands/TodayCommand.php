@@ -8,7 +8,6 @@ use app\models\Weeks;
 
 class TodayCommand extends ChatCommand
 {
-    public static $accessLevel = 'user';
     public static function description()
     {
         return self::locale('<u>/today</u> <i>// Booking information for today.</i>');

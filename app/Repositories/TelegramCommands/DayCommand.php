@@ -8,7 +8,6 @@ use app\models\Weeks;
 
 class DayCommand extends ChatCommand
 {
-    public static $accessLevel = 'user';
     public static function description()
     {
         return self::locale('<u>/day (week day)</u> <i>// Booking information for a specific day. Without specifying the day - for today</i>');

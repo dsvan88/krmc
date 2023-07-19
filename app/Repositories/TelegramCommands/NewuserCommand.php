@@ -11,7 +11,7 @@ class NewuserCommand extends ChatCommand
     public static $accessLevel = 'manager';
     public static function description()
     {
-        return self::locale('<u>/nick Your nickname</u> (Cyrillic) <i>// Register your nickname</i>');
+        return self::locale('<u>/newuser Player’s nickname</u> (in Cyrillic) <i>// Register a new nickname in the system.</i>');
     }
     public static function execute(array $arguments = [])
     {

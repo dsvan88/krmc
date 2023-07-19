@@ -11,7 +11,7 @@ class RecallCommand extends ChatCommand
     public static $accessLevel = 'manager';
     public static function description()
     {
-        return self::locale('<u>/day (week day)</u> <i>// Booking information for a specific day. Without specifying the day - for today</i>');
+        return self::locale("<u>/recall (week day)</u> <i>// Recall day settings for a specific day.\nRestored by a new registration from the admin.\nWithout specifying the day - for today</i>\n");
     }
     public static function execute(array $arguments = [])
     {

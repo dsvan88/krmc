@@ -11,7 +11,7 @@ class ClearCommand extends ChatCommand
     public static $accessLevel = 'manager';
     public static function description()
     {
-        return self::locale('<u>/day (week day)</u> <i>// Booking information for a specific day. Without specifying the day - for today</i>');
+        return self::locale("<u>/clear (week day)</u> <i>// Clear patricipant’s list of a specific day.\n\tWithout specifying the day - for today.\n\tWorking on recalled day only!</i>");
     }
     public static function execute(array $arguments = [])
     {

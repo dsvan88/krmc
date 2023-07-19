@@ -11,7 +11,10 @@ class RegCommand extends ChatCommand
     public static $accessLevel = 'manager';
     public static function description()
     {
-        return self::locale('<u>/day (week day)</u> <i>// Booking information for a specific day. Without specifying the day - for today</i>');
+        return self::locale('<u>/reg</u> <i>// Booking/unbooking players for a specific day. Examples:</i>
+    /reg +mon, nickname, 18:00, (with ?)
+    /reg -mon, nickname
+');
     }
     public static function execute(array $arguments = [])
     {

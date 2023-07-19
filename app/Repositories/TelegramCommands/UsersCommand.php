@@ -10,7 +10,7 @@ class UsersCommand extends ChatCommand
     public static $accessLevel = 'manager';
     public static function description()
     {
-        return self::locale('<u>/day (week day)</u> <i>// Booking information for a specific day. Without specifying the day - for today</i>');
+        return self::locale('<u>/users</u> <i>// Users list, registered in system.</i>');
     }
     public static function execute(array $arguments = [])
     {

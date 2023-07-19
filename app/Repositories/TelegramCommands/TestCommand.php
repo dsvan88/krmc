@@ -6,10 +6,10 @@ use app\core\ChatCommand;
 
 class TestCommand extends ChatCommand
 {
-    public static $accessLevel = 'admin';
+    public static $accessLevel = 'root';
     public static function description()
     {
-        return self::locale('<u>/day (week day)</u> <i>// Booking information for a specific day. Without specifying the day - for today</i>');
+        return self::locale('<u>/test</u> //<i>Command for testing new functions.</i>');
     }
     public static function execute(array $arguments = [])
     {

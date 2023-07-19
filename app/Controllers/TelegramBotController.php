@@ -21,7 +21,8 @@ class TelegramBotController extends Controller
     public static $chatId = null;
     public static $command = '';
     public static $commandArguments = [];
-    public static $guestCommands = ['help', 'nick', 'week'];
+    public static $guestCommands = ['help', 'nick', 'week', 'day', 'today'];
+    public static $CommandNamespace = '\\app\\Repositories\\TelegramCommands';
 
     public static $resultMessage = '';
     public static $resultPreMessage = '';
@@ -235,7 +236,7 @@ class TelegramBotController extends Controller
         }
 
         $class = ucfirst($command) . 'Command';
-        $class = str_replace('/', '\\', "\\app\\Repositories\\TelegramCommands\\{$class}");
+        $class = str_replace('/', '\\', self::$CommandNamespace . '\\' . $class);
 
         if (!class_exists($class)) {
             self::$resultMessage = $class . ' Telegram command isn`t found!';
@@ -328,6 +329,10 @@ class TelegramBotController extends Controller
         if (!empty(self::$requester['privilege']['status']))
             $status = self::$requester['privilege']['status'];
 
+        if (self::$message['message']['chat']['type'] !== 'private' && $levels[$status] > 1) {
+            $status = 'user';
+        }
+        error_log("status: $status, level: $level");
         return $levels[$level] <= $levels[$status];
     }
     public static function updateWeekMessages(): array

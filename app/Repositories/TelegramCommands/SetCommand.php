@@ -12,7 +12,7 @@ class SetCommand extends ChatCommand
     public static $accessLevel = 'manager';
     public static function description()
     {
-        return self::locale('<u>/day (week day)</u> <i>// Booking information for a specific day. Without specifying the day - for today</i>');
+        return self::locale("<u>/set</u> <i>// Set data for a specific day. Example:</i>\n\t\t/set вс, mafia, 18:00, (Good luck, have fun!)\n");
     }
     public static function execute(array $arguments = [])
     {

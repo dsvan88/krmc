@@ -205,7 +205,7 @@ return [
 
 <u>/set</u> <i>// Вказати дані дня. Зразок:</i>
     /set вс, mafia, 18:00, (Разважтесь!)
-    
+
 <u>/newuser Псевдонім Гравця</u> (кириліцею) <i>// Зареєструвати у системи новий псевдонім гравця.</i>
 <u>/recall</u> <i>// Відмінити збір. Поновлюється новою реєстрацією від адміна. Можна вказати конкретний день.</i>
 <u>/users</u> <i>// Список користувачів, зареєстрованих у системі.</i>
@@ -214,18 +214,30 @@ return [
 Підзголовок
 Текст... або: Тут могла бути, Ваша <b>Реклама</b><i>:)</i>",
 
-
-    '+ (week day) <i>// Booking for the scheduled games of the current week, examples:</i>
-    +вс
-    + на сегодня, на 19:30 (отсижу 1-2 игры, под ?)
-    - (week day) <i>// Unsubscribe from games on a specific day that you previously signed up for, examples:</i>
-    -вс
-    - завтра' => '+ (день тижня) <i>//Записатись на ігри поточного тижня. Зразок:</i>
-    +вс
-    + на сьогодні, на 19:30 (витримаю кілька ігор, под ?)
-- (день тижня) <i>//Відписатись від ігор, якщо раніше записувались. Зразок:</i>
-    -вс
-    - завтра',
+    "+ (week day) <i>// Booking for the scheduled games of the current week, examples:</i>\n\t\t+вс\n\t\t+ на сегодня, на 19:30 (отсижу 1-2 игры, под ?)\n- (week day) <i>// Unsubscribe from games on a specific day that you previously signed up for, examples:</i>\n\t\t-вс\n\t\t- завтра" =>
+    "+ (день тижня) <i>//Записатись на ігри поточного тижня. Зразок:</i>\n\t\t+нд\n\t\t+ на сьогодні, на 19:30 (витримаю кілька ігор, под ?)\n- (день тижня) <i>//Відписатись від ігор, якщо раніше записувались. Зразок:</i>\n\t\t-нд\n\t\t- завтра",
 
     '<u>/nick Your nickname</u> (Cyrillic) <i>// Register your nickname</i>' => '<u>/nick Ваш псевдонім</u> (кириліцею) <i>// Зарезервувати за собою псевдонім</i>',
+    '<u>/day (week day)</u> <i>// Booking information for a specific day. Without specifying the day - for today</i>' => '<u>/day (день тиждня)</u> <i>// Інформація по записам на конкретний день тиждня. Без вказаного дня - інформація про "сьогодні"</i>',
+    '<u>/today</u> <i>// Booking information for today.</i>' => '<u>/today</u> <i>// Інформація по зборам на сьогодні</i>',
+    '<u>/week</u> <i>// Schedule of upcoming games</i>' => '<u>/week</u> <i>// Розклад ігор на найближчий час</i>',
+    '<u>/?</u> or <u>/start</u> or <u>/help</u> <i>// This help menu</i>' => '<u>/?</u> или <u>/start</u> или <u>/help</u> <i>// Це меню допомоги</i>',
+
+    "<u>/recall (week day)</u> <i>// Recall day settings for a specific day.\nRestored by a new registration from the admin.\nWithout specifying the day - for today</i>\n" =>
+    "<u>/recall (день недели)</u> <i>// Отменить сбор.\nВосстанавливается новой регистрацией от админа.\nБез уточнення дня - очищає список на сьогодні.</i>",
+
+    "<u>/clear (week day)</u> <i>// Clear patricipant’s list of a specific day.\n\tWithout specifying the day - for today.\n\tWorking on recalled day only!</i>" => "<u>/clear (день тиждня)</u> <i>// Очистити список учасників на конкретний день.\n\tБез уточнення дня - очищає список на сьогодні.\n\tПрацює лише на днях, по яким стався \"відбій\".</i>",
+    '<u>/newuser Player’s nickname</u> (in Cyrillic) <i>// Register a new nickname in the system.</i>' => '<u>/newuser Псевдонім Гравця</u> (кириліцею) <i>// Зареєструвати у системи новий псевдонім гравця.</i>',
+    '<u>/users</u> <i>// Users list, registered in system.</i>' => '<u>/users</u> <i>// Список користувачів, зареєстрованих у системі.</i>',
+
+    "<u>/set</u> <i>// Set data for a specific day. Example:</i>\n\t\t/set вс, mafia, 18:00, (Good luck, have fun!)\n" => "<u>/set</u> <i>// Вказати дані дня. Зразок:</i>\n\t\t/set вс, mafia, 18:00, (Разважтесь!)\n",
+    '<u>/reg</u> <i>// Booking/unbooking players for a specific day. Examples:</i>
+    /reg +mon, nickname, 18:00, (with ?)
+    /reg -mon, nickname
+' => '<u>/reg</u> <i>// Записати/відписати гравця на вказаний день. Зразок:</i>
+    /reg +нд, псевдонім, 18:00, (под ?)
+    /reg -нд, псевдонім
+',
+    "<u>/promo</u> <i>// Fix notification that is added at the bottom of the /week command.</i> The text before the first line break is the title, before the second one is the subtitle, everything below is the text of the alert. Example:\n\t\t/promo Title\nSubtitle\nText, or: here could be your <b>Advertising</b><i>:)</i>\n" =>
+    "<u>/promo</u> <i>// Зафиксувати повідомлення, що додається знизу команди /week.</i> Текст до першого переносу рядку - заголовок, до другого - підзаголовок та все, що нижче - текст повідомлення. Зразок:\n\t\t/promo Заголовок\nПідзголовок\nТекст... або: Тут могла бути, Ваша <b>Реклама</b><i>:)</i>\n",
 ];
