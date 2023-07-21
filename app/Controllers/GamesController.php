@@ -16,9 +16,9 @@ class GamesController extends Controller
     public function prepeareAction()
     {
         extract(self::$route['vars']);
-        if (!empty($_POST)){
+        if (!empty($_POST)) {
             $gameId = Games::create($_POST);
-            View::location('/game/mafia/'.$gameId);
+            View::location('/game/mafia/' . $gameId);
         }
 
         $weekId = Weeks::currentId();
@@ -39,12 +39,12 @@ class GamesController extends Controller
         $needed = 16;
         $count  = count($day['participants']);
         $manager = '';
-        if ( $count < $needed){
+        if ($count < $needed) {
             $participants = [];
             $_participants = array_merge($day['participants'], Users::random($needed - $count));
             $day['participants'] = [];
-            foreach($_participants as $participant){
-                if (empty($manager) && $participant['id'] === $_SESSION['id']){
+            foreach ($_participants as $participant) {
+                if (empty($manager) && $participant['id'] === $_SESSION['id']) {
                     $manager = $participant['name'];
                 }
                 if (in_array($participant['name'], $participants)) continue;
@@ -52,8 +52,10 @@ class GamesController extends Controller
                 array_push($day['participants'], $participant);
             }
         }
-        
-        $shuffled = array_map(fn($value): string => $value['name'], $day['participants']);
+
+        $shuffled = array_map(function ($element): string {
+            return $element['name'];
+        }, $day['participants']);
         shuffle($shuffled);
 
         $vars = [
@@ -68,7 +70,7 @@ class GamesController extends Controller
                 '/public/scripts/manager-game-funcs.js?v=' . $_SERVER['REQUEST_TIME'],
             ],
         ];
-        
+
         View::render($vars);
     }
     public function playAction()
@@ -91,7 +93,7 @@ class GamesController extends Controller
             'texts' => $texts,
             'game' => $game,
             'scripts' => [
-                '/public/scripts/prompt.js?v=' . $_SERVER['REQUEST_TIME'],
+                '/public/scripts/numpad.js?v=' . $_SERVER['REQUEST_TIME'],
                 '/public/scripts/manager-game-funcs.js?v=' . $_SERVER['REQUEST_TIME'],
                 '/public/scripts/mafia/player.class.js?v=' . $_SERVER['REQUEST_TIME'],
                 '/public/scripts/mafia/game-engine.class.js?v=' . $_SERVER['REQUEST_TIME'],
@@ -102,16 +104,18 @@ class GamesController extends Controller
         ];
         View::render($vars);
     }
-    public function saveAction(){
+    public function saveAction()
+    {
         extract(self::$route['vars']);
         $game = Games::find($gameId);
-        if (!$game){
+        if (!$game) {
             View::message("Game with id: $gameId is not found");
         }
         Games::save($_POST, $gameId);
         View::response(json_encode($game, JSON_UNESCAPED_UNICODE));
     }
-    public function loadAction(){
+    public function loadAction()
+    {
         extract(self::$route['vars']);
         $game = Games::find($gameId);
         View::response(json_encode($game, JSON_UNESCAPED_UNICODE));

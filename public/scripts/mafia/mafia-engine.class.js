@@ -341,7 +341,7 @@ class MafiaEngine extends GameEngine {
         }
 
         this.addLog(`Гравець №${this.players[id].num} - залишає наше місто. Привід: ${this.reasons[reason]}!`);
-        this.noticer.add({message: `Гравець №${this.players[id].num} - залишає наше місто. Привід: ${this.reasons[reason]}!`, time: 5000});
+        this.noticer.add({ message: `Гравець №${this.players[id].num} - залишає наше місто. Привід: ${this.reasons[reason]}!`, time: 5000 });
         return true;
     };
     putPlayerOnVote(putedId) {
@@ -360,18 +360,18 @@ class MafiaEngine extends GameEngine {
             this.courtRoom.push(putedId);
             maker.puted[this.daysCount] = putedId;
             this.addLog(`Гравець №${maker.num} - виставляє гравця №${this.players[putedId].num} (${this.players[putedId].name})!`);
-            this.noticer.add({message:`Гравець №${maker.num} - виставляє гравця №${this.players[putedId].num} (${this.players[putedId].name})!`, time:5000});
+            this.noticer.add({ message: `Гравець №${maker.num} - виставляє гравця №${this.players[putedId].num} (${this.players[putedId].name})!`, time: 5000 });
         }
         else {
             if (maker.puted[this.daysCount] === putedId) {
                 this.courtRoom.splice(check, 1);
                 maker.puted[this.daysCount] = -1;
                 this.addLog('Помилкове виставлення. Відміна!');
-                this.noticer.add({type:'info', message:'Помилкове виставлення. Відміна!', time:5000});
+                this.noticer.add({ type: 'info', message: 'Помилкове виставлення. Відміна!', time: 5000 });
             }
             else {
                 this.addLog(`Гравець №${maker.num} - виставляє гравця № ${this.players[putedId].num}!\nНе прийнято! Вже виставлений!`);
-                this.noticer.add({type:'error', message:`Гравець №${maker.num} - виставляє гравця № ${this.players[putedId].num}!\nНе прийнято! Вже виставлений!`, time:5000});
+                this.noticer.add({ type: 'error', message: `Гравець №${maker.num} - виставляє гравця № ${this.players[putedId].num}!\nНе прийнято! Вже виставлений!`, time: 5000 });
                 return false;
             }
         }
@@ -384,12 +384,12 @@ class MafiaEngine extends GameEngine {
             alert(`За столом нема гравця №${maker.num}!`);
             return false;
         }
-        
+
         let putedNum = null;
         do {
             putedNum = prompt(`Гравець №${maker.num}, під час своєї промови ставив гравця №:`, 0);
         } while (isNaN(putedNum) || putedNum < 0 || putedNum > 10)
-        
+
 
         if (putedNum === null)
             return false;
@@ -399,24 +399,24 @@ class MafiaEngine extends GameEngine {
 
             if (maker.puted[this.daysCount] === -1)
                 return false;
-                
+
             const wrongId = maker.puted[this.daysCount];
             this.addLog(`Гравець №${maker.num} - не виставляв гравця №${this.players[wrongId].num} (${this.players[wrongId].name})!`);
-            this.noticer.add({type:'info', message: `Гравець №${maker.num} - не виставляв гравця №${this.players[wrongId].num} (${this.players[wrongId].name})!`, time: 5000});
+            this.noticer.add({ type: 'info', message: `Гравець №${maker.num} - не виставляв гравця №${this.players[wrongId].num} (${this.players[wrongId].name})!`, time: 5000 });
             maker.puted[this.daysCount] = -1;
             return this.rebuildCourtroom();
         }
-        
+
         const putedId = putedNum - 1;
         let check = this.courtRoom.indexOf(putedId);
         if (check === -1) {
             maker.puted[this.daysCount] = putedId;
             this.addLog(`Гравець №${maker.num} - виставляє гравця №${this.players[putedId].num} (${this.players[putedId].name})!`);
-            this.noticer.add({message: `Гравець №${maker.num} - виставляє гравця №${this.players[putedId].num} (${this.players[putedId].name})!`, time: 5000});
+            this.noticer.add({ message: `Гравець №${maker.num} - виставляє гравця №${this.players[putedId].num} (${this.players[putedId].name})!`, time: 5000 });
         }
         else {
             this.addLog(`Гравець №${maker.num} - виставляє гравця № ${this.players[putedId].num}!\nНе прийнято! Вже висталений!`);
-            this.noticer.add({type:'error', message: `Гравець №${maker.num} - виставляє гравця № ${this.players[putedId].num}!\nНе прийнято! Вже висталений!`, time: 5000});
+            this.noticer.add({ type: 'error', message: `Гравець №${maker.num} - виставляє гравця № ${this.players[putedId].num}!\nНе прийнято! Вже висталений!`, time: 5000 });
             return false;
         }
         return this.rebuildCourtroom();

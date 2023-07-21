@@ -1,0 +1,75 @@
+//Custom alert, confirm and prompt
+.popup {
+    position: fixed;
+    top: 10vh;
+    left: 30vw;
+    border: none;
+    outline: 1px solid gray;
+    border-radius: 5px;
+    padding: 1em;
+
+    &__title {
+        margin: 0;
+        border-bottom: 1px solid black;
+        padding: .5em 0;
+        cursor: grab;
+
+        &:active {
+            cursor: grabbing;
+        }
+    }
+
+    &__text {
+        margin: 1em 0;
+    }
+
+    &__input {
+        border-radius: 5px;
+        outline: none;
+
+        &-wrapper {
+            text-align: center;
+            margin: .5em 0;
+        }
+    }
+
+    &__button {
+        &-wrapper {
+            display: flex;
+            justify-content: space-evenly;
+        }
+
+        &.positive {
+            padding: .4em 2em;
+        }
+
+        padding: .4em 1em;
+        box-sizing: content-box;
+        cursor: pointer;
+    }
+
+    &__numpad {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        grid-gap: .1em;
+        margin: .5em 1em
+    }
+
+    &__checkbox {
+        &-wrapper {
+            border: 1px solid black;
+            border-radius: 2px;
+        }
+
+        &-label {
+            font-size: 4em;
+            display: inline-block;
+            width: 100%;
+            text-align: center;
+        }
+
+        &:checked~label {
+            background-color: aqua;
+        }
+    }
+}

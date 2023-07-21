@@ -13,12 +13,13 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+Pro">
 
     <?/*= //$styles */ ?>
-    <script defer="" src="/public/scripts/jquery.min.js"></script>
+    <!--     <script defer="" src="/public/scripts/jquery.min.js"></script>
     <script defer="" src="/public/scripts/jquery-ui.min.js"></script>
     <script defer="" src="/public/scripts/jquery.datetimepicker.full.min.js"></script>
-    <script defer="" src="/public/scripts/jquery-cropper.js"></script>
+    <script defer="" src="/public/scripts/jquery-cropper.js"></script> -->
     <script defer="" src="/public/scripts/request.js?v=<?= $_SERVER['REQUEST_TIME'] ?>"></script>
     <script defer="" src="/public/scripts/action-handler.js?v=<?= $_SERVER['REQUEST_TIME'] ?>"></script>
+    <script defer="" src="/public/scripts/popups.js?v=<?= $_SERVER['REQUEST_TIME'] ?>"></script>
     <script defer="" src="/public/scripts/noticer.js?v=<?= $_SERVER['REQUEST_TIME'] ?>"></script>
     <script defer="" src="/public/scripts/common-funcs.js?v=<?= $_SERVER['REQUEST_TIME'] ?>"></script>
     <? if (!empty($scripts)) : ?>
@@ -38,7 +39,7 @@
 
 <body>
     <div class="wrapper">
-       
+
         <header class="header">
             <div class="notices">
                 <? if (!empty($notices)) : ?>
