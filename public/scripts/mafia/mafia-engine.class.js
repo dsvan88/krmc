@@ -586,7 +586,7 @@ class MafiaEngine extends GameEngine {
 
 
         if (this.defendantCount === 0) {
-            message += '\nНа голосование никто не выставлен. Голосование не проводится.'
+            message += '\nНа голосування ніхто не був виставлений. Голосування не проводиться.'
             this.addLog(message, true);
             return this.dispatchNext();
         }
@@ -594,16 +594,16 @@ class MafiaEngine extends GameEngine {
         alert(message);
 
         if (this.defendantCount === 1) {
-            message = 'На голосование был выставлен лишь 1 игрок\n';
+            message = 'На голосування був выставлений лише 1 гравець\n';
             let playerId = this.courtRoom.pop();
             if (this.daysCount > 0) {
-                message += `Наш город покидает игрок №${this.players[playerId].num}}!`;
-                alert(message + '\nУ вас есть 1 минута для последней речи');
+                message += `Наше місто покидає гравець №${this.players[playerId].num}}!`;
+                alert(message + '\nВи маєте 1 минуту для останьої промови.');
                 this.outPlayer(playerId, 2);
             }
             else {
-                message += `Этого недостаточно для проведения голосования.`;
-                alert(message + '\n\nНаступает фаза ночи!')
+                message += `Цього недостатньо для проведення голосування.`;
+                alert(message + '\n\nНаступає фаза ночі!')
             }
             this.addLog(message);
             return this.dispatchNext();
@@ -717,7 +717,7 @@ class MafiaEngine extends GameEngine {
         }
 
         const _debaters = this.courtList(this.debaters);
-        message += 'В нашем городе перестрелка. Между игроками под номерами: ' + _debaters;
+        message += 'В нашому місті перестрілка. Між гравцями, під номерами: ' + _debaters;
         alert(message);
 
         if (this.debate && this.debaters.length === this.defendantCount) {
