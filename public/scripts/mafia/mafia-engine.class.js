@@ -559,12 +559,10 @@ class MafiaEngine extends GameEngine {
     }
     actionCourtStart() {
         this.activeSpeaker = null;
-        if (!this.courtLog[this.daysCount]){
-            if (this.daysCount > 0)
-                this.courtLog.fill([], this.courtLog.length, this.daysCount);
-            else 
-                this.courtLog.push([]);
-        }
+
+        do {
+            this.courtLog.push([])
+        } while (!this.courtLog[this.daysCount]);
             
         if (!this.checkLeaveThisRound()) {
             return this.dispatchNext();
