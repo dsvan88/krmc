@@ -69,7 +69,12 @@
         }
 
         &:checked~label {
-            background-color: aqua;
+            background-color: $bg-color-green-blur;
+            color:$color-text-accent;
+        }
+        &:disabled~label {
+            background-color: $bg-color-dark-blur;
+            color:$color-text-dark-blur;
         }
     }
 }

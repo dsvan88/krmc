@@ -93,13 +93,13 @@ class GamesController extends Controller
             'texts' => $texts,
             'game' => $game,
             'scripts' => [
-                '/public/scripts/numpad.js?v=' . $_SERVER['REQUEST_TIME'],
                 '/public/scripts/manager-game-funcs.js?v=' . $_SERVER['REQUEST_TIME'],
                 '/public/scripts/mafia/player.class.js?v=' . $_SERVER['REQUEST_TIME'],
                 '/public/scripts/mafia/game-engine.class.js?v=' . $_SERVER['REQUEST_TIME'],
                 '/public/scripts/mafia/mafia-engine.class.js?v=' . $_SERVER['REQUEST_TIME'],
                 '/public/scripts/mafia/timer.class.js?v=' . $_SERVER['REQUEST_TIME'],
                 '/public/scripts/mafia/game.js?v=' . $_SERVER['REQUEST_TIME'],
+                '/public/scripts/mafia/mafia-vote-numpad.js?v=' . $_SERVER['REQUEST_TIME'],
             ],
         ];
         View::render($vars);

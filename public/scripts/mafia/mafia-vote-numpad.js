@@ -1,15 +1,15 @@
-class Numpad extends Prompt {
+class MafiaVoteNumpad extends Prompt {
     checkboxs = [];
     values = [];
     allButton = null;
-    constructor({ title = "Prompt", text = "Need help?", value = "No", action = null, cancel = null, input = { type: 'text' } } = {}) {
+    constructor({ title = "Mafia Vote Numpad", text = "Enter player’s numbers:", value='', action = null, cancel = null, block=[] } = {}) {
         value = '';
-        super({ title, text, value: value, action, cancel, input })
-        this.modifyForNumpad().modifyEventsNumpad();
+        super({ title, text, value, action, cancel })
+        this.modifyForNumpad(block).modifyEventsNumpad();
         this.dialog.focus();
     }
 
-    modifyForNumpad() {
+    modifyForNumpad(block = []) {
         this.input.classList.add('hidden');
         const inputWrapper = this.input.closest('.popup__input-wrapper');
         inputWrapper.classList.add('numpad');
@@ -27,6 +27,10 @@ class Numpad extends Prompt {
             this.checkboxs[x].id = `checkbox[${x}]`;
             this.checkboxs[x].value = x;
             this.checkboxs[x].classList.add('popup__checkbox', 'hidden');
+            if (block.includes(`${x}`)){
+                this.checkboxs[x].disabled = true;
+            }
+
             checkboxWrapper.append(this.checkboxs[x]);
 
             let label = document.createElement('label');
@@ -54,7 +58,6 @@ class Numpad extends Prompt {
     }
     keyUpHandler(event) {
         super.keyUpHandler(event);
-
         const self = this;
         let num = null;
         if (event.keyCode >= 48 && event.keyCode <= 57) {
@@ -66,6 +69,8 @@ class Numpad extends Prompt {
         if (num === null) return true;
 
         if (--num === -1) num = 9;
+
+        if (self.checkboxs[num].disabled) return true;
 
         self.checkboxs[num].checked = !self.checkboxs[num].checked;
         self.updateInput.call(self, self.checkboxs[num]);
@@ -85,6 +90,7 @@ class Numpad extends Prompt {
     sendAll() {
         const values = [];
         for (const checkbox of this.checkboxs) {
+            if (checkbox.disabled) continue;
             values.push(checkbox.value);
         }
         this.input.value = values.join(',');

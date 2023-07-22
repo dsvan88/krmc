@@ -6,6 +6,7 @@ class Alert {
     buttonWrapper = null;
     agreeButton = null;
     dragged = false;
+    keyDown = false;
 
     constructor({ title = "Alert", text = "There is no information, yet!" } = {}) {
 
@@ -44,6 +45,7 @@ class Alert {
         this.form.append(this.buttonWrapper);
 
         this.dialog.append(this.form);
+        
         document.body.append(this.dialog);
         this.dialog.tabIndex = -1;
         return this.dialog;
@@ -58,9 +60,10 @@ class Alert {
     attachEvents() {
         const self = this;
 
+        self.dialog.addEventListener('keydown', (event) => self.keyDownHandler.call(self, event));
         self.dialog.addEventListener('keyup', (event) => self.keyUpHandler.call(self, event));
 
-        self.dialog.addEventListener('close', (event) => self.dialog.remove())
+        self.dialog.addEventListener('close', () => self.dialog.remove())
 
         self.dialog.ondragstart = () => false;
 
@@ -68,8 +71,12 @@ class Alert {
 
         self.dialog.addEventListener('touchstart', (event) => self.dragStart.call(self, event));
     }
-    keyUpHandler(event) {
+    keyDownHandler(event) {
         if (event.isComposing) return false;
+        if (event.keyCode === 13 || event.keyCode === 27) this.keyDown = true;
+    }
+    keyUpHandler(event) {
+        if (event.isComposing || !this.keyDown) return false;
         if (event.keyCode === 13 || event.keyCode === 27) this.agreeButton.click();
     }
     dragStart(event) {
@@ -94,8 +101,8 @@ class Alert {
 
         document.body.append(self.dialog);
 
-        let pageX = event.pageX || event.targetTouches[0].pageX;
-        let pageY = event.pageY || event.targetTouches[0].pageY;
+        const pageX = event.pageX || event.targetTouches[0].pageX;
+        const pageY = event.pageY || event.targetTouches[0].pageY;
 
         self.moveAt(pageX, pageY);
 
@@ -138,6 +145,7 @@ class Confirm extends Alert {
 
         this.action = action || ((data) => console.log(data));
         this.cancel = cancel;
+        
         this.modifyForm().modifyEvents();
         return this;
     }
@@ -150,13 +158,14 @@ class Confirm extends Alert {
         this.cancelButton.value = "cancel";
         this.cancelButton.innerText = "No";
         this.buttonWrapper.append(this.cancelButton);
+
         return this;
     }
     modifyEvents() {
         const self = this;
         self.form.addEventListener('submit', (event) => self.submit.call(self, event), { once: true });
 
-        self.cancelButton.addEventListener('click', (event) => self.state = false);
+        self.cancelButton.addEventListener('click', () => self.state = false);
     }
     submit() {
         if (this.state)
@@ -165,8 +174,9 @@ class Confirm extends Alert {
             return this.cancel ? this.cancel(false) : this.action(false);
     }
     keyUpHandler(event) {
-        if (event.isComposing) return false;
-        if (event.keyCode === 27) return this.cancelButton.click();
+        if (event.isComposing || !this.keyDown) return false;
+        if (event.keyCode === 13) return this.agreeButton.click();
+        else if (event.keyCode === 27) return this.cancelButton.click();
     }
 }
 
@@ -176,8 +186,7 @@ class Prompt extends Confirm {
     state = true;
     inputWrapper = null;
 
-    constructor({ title = "Prompt", text = "Enter value:", value = "No1", action = null, cancel = null, input = { type: 'text' } } = {}) {
-
+    constructor({ title = "Prompt", text = "Enter value:", value = "No", action = null, cancel = null, input = { type: 'text' } } = {}) {
         super({ title, text, action, cancel });
         this.modifyPrompt({ value, input });
         return this;
@@ -204,7 +213,6 @@ class Prompt extends Confirm {
         return this;
     }
     submit() {
-        console.log(this.dialog);
         if (this.state)
             return this.action(this.input.value);
         else

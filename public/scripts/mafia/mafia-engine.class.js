@@ -15,6 +15,7 @@ class MafiaEngine extends GameEngine {
     lastWill = [];
     debaters = [];
     courtRoom = [];
+    courtLog = [];
     voted = [];
     leaveThisRound = [];
 
@@ -26,7 +27,7 @@ class MafiaEngine extends GameEngine {
     playerVotedId = null;
 
     config = {
-        getOutHalfPlayers: true,
+        getOutHalfPlayersMin: 4,
         killsPerNight: 1,
         timerMax: 6000,
         lastWillTime: 6000,
@@ -34,13 +35,14 @@ class MafiaEngine extends GameEngine {
         mutedSpeakTime: 3000,
         courtAfterFouls: true,
         wakeUpRoles: 2000,
+        voteType: 'enum', // 'count'
         points: {
             winner: 1.0,
             bestMove: [0.0, 0.0, 0.25, 0.4],
             aliveMafs: [0.0, 0.3, 0.15, 0.3],
             aliveReds: [0.0, 0.0, 0.15, 0.1],
             dis: -0.3,
-            sherifFirstKill: -0.3,
+            sherifFirstKill: 0.3,
         }
     };
 
@@ -50,9 +52,11 @@ class MafiaEngine extends GameEngine {
 
     constructor(data) {
         super(data);
+
+        document.addEventListener("keyup", (event) => this.keyUpHandler.call(this, event));
         this.gameTable.addEventListener("next", (event) => this.next.call(this, event));
         this.stageDescr = 'Нульова ніч.\nПрокидаються Дон та гравці мафії.\nУ вас є хвилина на узгодження дій.';
-
+        
         try {
             this.noticer = new Noticer();
         } catch (error) {
@@ -102,7 +106,14 @@ class MafiaEngine extends GameEngine {
 
             return null;
         }
-        this.#prompt = new Prompt(data);
+        if (this.config.voteType === 'enum'){
+            data.block = this.getOutPlayers();
+            for(const voted of this.voted){
+                data.block = [...data.block, ...voted.voted];
+            }
+            this.#prompt = new MafiaVoteNumpad(data);
+        }
+        else this.#prompt = new Prompt(data);
         return true;
     }
     /**
@@ -215,6 +226,20 @@ class MafiaEngine extends GameEngine {
     };
     dispatchNext() {
         this.gameTable.dispatchEvent(new Event("next"));
+    }
+    keyUpHandler(event){
+        if (this.prompt) return false;
+        let num = null;
+        if (event.keyCode >= 48 && event.keyCode <= 57) {
+            num = event.keyCode - 48;
+        }
+        else if (event.keyCode >= 96 && event.keyCode <= 105) {
+            num = event.keyCode - 96;
+        }
+        if (num === null) return true;
+
+        if (--num === -1) num = 9;
+        this.putPlayer(num);
     }
     resetLog() {
         let _log = this._log;
@@ -453,6 +478,21 @@ class MafiaEngine extends GameEngine {
 
         this.next();
     }
+    getOutPlayers(){
+        const players = [];
+        this.players.forEach((player) => (player.out > 0) ? players.push(player.id) : false);
+        return players;
+    }
+    getNonVotedPlayers(){
+        let votedPlayers = [];
+        for(const voted of this.voted){
+            votedPlayers = [...votedPlayers, ...voted.voted];
+        }
+
+        const players = [];
+        this.players.forEach((player) => (player.out > 0 || votedPlayers.includes(`${player.id}`)) ? false : players.push(player.id));
+        return players;
+    }
     getActivePlayersCount(role = 0) {
         return this.players.reduce((playersCount, player) => {
             if (player.out > 0) return playersCount;
@@ -519,6 +559,13 @@ class MafiaEngine extends GameEngine {
     }
     actionCourtStart() {
         this.activeSpeaker = null;
+        if (!this.courtLog[this.daysCount]){
+            if (this.daysCount > 0)
+                this.courtLog.fill([], this.courtLog.length, this.daysCount);
+            else 
+                this.courtLog.push([]);
+        }
+            
         if (!this.checkLeaveThisRound()) {
             return this.dispatchNext();
         }
@@ -537,6 +584,8 @@ class MafiaEngine extends GameEngine {
             this.maxVotes = 0;
         this.votesAll = this.playersCount = this.getActivePlayersCount();
         this.defendantCount = this.courtRoom.length;
+
+
 
         if (this.defendantCount === 0) {
             message += '\nНа голосование никто не выставлен. Голосование не проводится.'
@@ -571,11 +620,12 @@ class MafiaEngine extends GameEngine {
         this.playerVotedId = this.courtRoom.shift();
 
         if (this.votesAll < 1) {
-            return this.processVotes(this.votesAll);
+            return this.processVotes(this.config.voteType === 'count' ? 0 : false);
         }
         if (this.courtRoom.length === 0) {
-            return this.processVotes(this.votesAll);
+            return this.processVotes(this.config.voteType === 'count' ? this.votesAll : this.getNonVotedPlayers().join(','));
         }
+
         this.prompt = {
             title: 'Голосування',
             text: `Хто за те, аби наше місто покинув гравець №${this.players[this.playerVotedId].num}`,
@@ -589,34 +639,56 @@ class MafiaEngine extends GameEngine {
         };
     }
     processVotes(vote) {
-        vote = parseInt(vote) || 0;
-        if (vote > this.votesAll) vote = this.votesAll;
 
-        this.voted.push({ id: this.playerVotedId, votes: vote });
-        this.votesAll -= vote;
-        if (this.maxVotes < vote) {
-            this.maxVotes = vote;
+        let voted = [], votes = 0;
+        if (this.config.voteType === 'enum'){
+            if (vote !== false && vote !== ''){
+                voted = vote.split(',');
+                votes = voted.length;
+            }
+        }
+        else {
+            votes = parseInt(vote) || 0;
         }
 
+        if (votes > this.votesAll) votes = this.votesAll;
+
+        this.voted.push({ id: this.playerVotedId, votes: votes, voted: voted });
+
+        this.votesAll -= votes;
+        if (this.maxVotes < votes) {
+            this.maxVotes = votes;
+        }
         this.prompt = null;
 
         return this.dispatchNext();
     }
     processVotesMassGetOut(vote) {
 
-        vote = parseInt(vote) || 0;
+        let voted = [], votes = 0;
+        if (this.config.voteType === 'enum'){
+            if (vote !== false && vote !== ''){
+                voted = vote.split(',');
+                votes = voted.length;
+                this.courtLog[this.daysCount].push([...voted]);
+            }
+        }
+        else {
+            votes = parseInt(vote) || 0;
+        }
+
         const _debaters = this.courtList(this.debaters);
 
-        if (vote > this.playersCount) vote = this.playersCount;
+        if (votes > this.playersCount) votes = this.playersCount;
 
         let message = '';
-        if (vote > this.playersCount / 2) {
-            message += `Більшість (${vote} з ${this.playersCount}) - за!\nГравці під номерами: ${_debaters} залишають наше місто.`;
+        if (votes > this.playersCount / 2) {
+            message += `Більшість (${votes} з ${this.playersCount}) - за!\nГравці під номерами: ${_debaters} залишають наше місто.`;
             while (this.debaters.length > 0)
                 this.outPlayer(this.debaters.shift(), 2);
         }
         else
-            message = `Більшість (${this.playersCount - vote}) з ${this.playersCount}) - проти!\nНіхто не покидає стол.`;
+            message = `Більшість (${this.playersCount - votes}) з ${this.playersCount}) - проти!\nНіхто не покидає стол.`;
 
         this.prompt = null;
         this.debaters.length = 0;
@@ -629,6 +701,7 @@ class MafiaEngine extends GameEngine {
             return this.dispatchNext();
         }
 
+        this.courtLog[this.daysCount].push([...this.voted]);
         this.playerVotedId = null;
         let message = `Підведемо ітоги голосування:\n`;
         this.voted.forEach(data => {
@@ -650,7 +723,8 @@ class MafiaEngine extends GameEngine {
         alert(message);
 
         if (this.debate && this.debaters.length === this.defendantCount) {
-            if (this.playersCount > 4 || this.config.getOutHalfPlayers) {
+            if (this.playersCount > this.config.getOutHalfPlayersMin) {
+                this.voted.length = 0;
                 return this.prompt = {
                     title: 'Голосування',
                     text: `Хто за те, аби гравці №${_debaters}, покинули наше місто?`,
