@@ -21,7 +21,7 @@ class HelpCommand extends ChatCommand
         $folder = str_replace('\\','/',$_SERVER['DOCUMENT_ROOT'] . self::$operatorClass::$CommandNamespace);
 
         if (!is_dir($folder) || !file_exists($folder)) {
-            self::$operatorClass::$resultMessage = 'Something went wrong! Folder isn’t found!: ' . $folder;
+            self::$operatorClass::$resultMessage = 'Something went wrong!';
             return false;
         }
 

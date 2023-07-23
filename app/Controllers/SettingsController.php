@@ -51,7 +51,7 @@ class SettingsController extends Controller
         
         $setting = Settings::find($settingId);
 
-        Settings::edit($settingId, ['value' => $_POST['value']]);
+        Settings::edit($settingId, ['value' => trim($_POST['value'])]);
 
         View::message(['message'=>'Success!', 'location' => '/settings/section/index/'.$setting['type']]);
     }
