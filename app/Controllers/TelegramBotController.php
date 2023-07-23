@@ -346,7 +346,6 @@ class TelegramBotController extends Controller
         if (self::$message['message']['chat']['type'] !== 'private' && $levels[$status] > 1) {
             $status = 'user';
         }
-        error_log("status: $status, level: $level");
         return $levels[$level] <= $levels[$status];
     }
     public static function updateWeekMessages(): array

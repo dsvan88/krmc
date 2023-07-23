@@ -21,14 +21,14 @@ class HelpCommand extends ChatCommand
         $folder = $_SERVER['DOCUMENT_ROOT'] . self::$operatorClass::$CommandNamespace;
 
         if (!is_dir($folder) || !file_exists($folder)) {
-            self::$operatorClass::$resultMessage = 'Something went wrong!';
+            self::$operatorClass::$resultMessage = 'Something went wrong! Folder isn’t found!: ' . $folder;
             return false;
         }
 
         $list = scandir($folder);
 
         if (!$list) {
-            self::$operatorClass::$resultMessage = 'Something went wrong!';
+            self::$operatorClass::$resultMessage = 'Something went wrong! List is empty.';
             return false;
         }
 
