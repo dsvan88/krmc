@@ -239,8 +239,8 @@ return [
     /reg +нд, псевдонім, 18:00, (под ?)
     /reg -нд, псевдонім
 ',
-    "<u>/promo</u> <i>// Fix notification that is added at the bottom of the /week command.</i> The text before the first line break is the title, before the second one is the subtitle, everything below is the text of the alert. Example:\n\t\t/promo Title\nSubtitle\nText, or: here could be your <b>Advertising</b><i>:)</i>\n" =>
-    "<u>/promo</u> <i>// Зафиксувати повідомлення, що додається знизу команди /week.</i> Текст до першого переносу рядку - заголовок, до другого - підзаголовок та все, що нижче - текст повідомлення. Зразок:\n\t\t/promo Заголовок\nПідзголовок\nТекст... або: Тут могла бути, Ваша <b>Реклама</b><i>:)</i>\n",
+    "\n<u>/promo</u> <i>// Fix notification that is added at the bottom of the /week command.</i> The text before the first line break is the title, before the second one is the subtitle, everything below is the text of the alert. Example:\n\t\t/promo Title\nSubtitle\nText, or: here could be your <b>Advertising</b><i>:)</i>\n" =>
+    "\n<u>/promo</u> <i>// Зафиксувати повідомлення, що додається знизу команди /week.</i> Текст до першого переносу рядку - заголовок, до другого - підзаголовок та все, що нижче - текст повідомлення. Зразок:\n\t\t/promo Заголовок\nПідзголовок\nТекст... або: Тут могла бути, Ваша <b>Реклама</b><i>:)</i>\n",
     "<i>Thіs іs my instruction😊</i>:\n" => "<i>Ось моя інструкція😊</i>:\n",
     "\n\nFeel free to ask the admins or community, if something is not clear!" => "\n\nНе соромьтесь запитувати админів чи спільноту, якщо щось не зрозуміло!",
 ];

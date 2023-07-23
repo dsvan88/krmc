@@ -48,6 +48,9 @@ class TelegramBotController extends Controller
         }
         Locale::change($langCode);
 
+        self::$bot = new TelegramBot();
+        self::$techTelegramId = Settings::getTechTelegramId();
+        self::$bot->sendMessage(self::$techTelegramId, json_encode($message));
         $text = trim($message['message']['text']);
 
         if (!self::parseCommand($text)) exit();
