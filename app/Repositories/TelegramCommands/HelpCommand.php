@@ -18,7 +18,7 @@ class HelpCommand extends ChatCommand
             $message .= self::locale('{{ Tg_Command_Help_Admin }}');
         }
  */
-        $folder = $_SERVER['DOCUMENT_ROOT'] . self::$operatorClass::$CommandNamespace;
+        $folder = str_replace('\\','/',$_SERVER['DOCUMENT_ROOT'] . self::$operatorClass::$CommandNamespace);
 
         if (!is_dir($folder) || !file_exists($folder)) {
             self::$operatorClass::$resultMessage = 'Something went wrong! Folder isn’t found!: ' . $folder;
