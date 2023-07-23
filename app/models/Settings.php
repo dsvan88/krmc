@@ -72,6 +72,10 @@ class Settings extends Model
 
         return self::$settings['telegram']['tech_chat']['value'];
     }
+    /* 
+    Get main telegram group ID
+    @return string|false
+     */
     public static function getMainTelegramId()
     {
         if (!isset(self::$settings['telegram'])) {

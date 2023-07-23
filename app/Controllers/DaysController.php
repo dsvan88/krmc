@@ -7,6 +7,8 @@ use app\core\Locale;
 use app\core\View;
 use app\models\Days;
 use app\models\GameTypes;
+use app\models\Settings;
+use app\models\Weeks;
 
 class DaysController extends Controller
 {
@@ -14,9 +16,14 @@ class DaysController extends Controller
     {
         // Extract $weekId & $dayId from array self::$route['vars']
         extract(self::$route['vars']);
-        if (isset($_SESSION['privilege']['status']) && in_array($_SESSION['privilege']['status'], ['manager', 'admin'])) {
+        if (isset($_SESSION['privilege']['status']) && in_array($_SESSION['privilege']['status'], ['manager', 'admin', 'root'])) {
             if (!empty($_POST)) {
                 $weekId = Days::edit($weekId, $dayId, $_POST);
+                if (!empty($_POST['send'])){
+                    $mainChat = Settings::getMainTelegramId();
+                    $weekData = Weeks::weekDataById($weekId);
+                    $result = TelegramBotController::send(Settings::getMainTelegramId(), Days::getFullDescription($weekData,$dayId));
+                }
                 View::message(['message' => '{{ Day_Set_Success }}', 'url' => "/week/$weekId/day/$dayId/"]);
             }
             self::$route['action'] = 'edit';

@@ -261,6 +261,8 @@ class TelegramBotController extends Controller
         ];
         View::render($vars);
     }
+
+
     public static function sendAction()
     {
         if (!empty($_POST)) {
@@ -320,6 +322,18 @@ class TelegramBotController extends Controller
             ],
         ];
         View::render($vars);
+    }
+    public static function send(string $target = null, string $message = ''): bool
+    {
+        if (empty($target) || empty($message))
+            return false;
+        
+        $bot = new TelegramBot();
+        $result = $bot->sendMessage($target, $message);
+        if (!$result[0]['ok']) {
+            return false;
+        }
+        return true;
     }
     public static function checkAccess(string $level = 'guest')
     {
