@@ -619,10 +619,6 @@ class MafiaEngine extends GameEngine {
         }
         this.playerVotedId = this.courtRoom.shift();
 
-        console.log(this.votesAll);
-        console.log(this.playerVotedId);
-        console.log(this.voted);
-        console.log(this.getNonVotedPlayers());
         if (this.votesAll < 1) {
             return this.processVotes(this.config.voteType === 'count' ? 0 : false);
         }
