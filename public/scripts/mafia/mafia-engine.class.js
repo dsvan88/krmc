@@ -56,7 +56,7 @@ class MafiaEngine extends GameEngine {
         document.addEventListener("keyup", (event) => this.keyUpHandler.call(this, event));
         this.gameTable.addEventListener("next", (event) => this.next.call(this, event));
         this.stageDescr = 'Нульова ніч.\nПрокидаються Дон та гравці мафії.\nУ вас є хвилина на узгодження дій.';
-        
+
         try {
             this.noticer = new Noticer();
         } catch (error) {
@@ -106,9 +106,9 @@ class MafiaEngine extends GameEngine {
 
             return null;
         }
-        if (this.config.voteType === 'enum'){
+        if (this.config.voteType === 'enum') {
             data.block = this.getOutPlayers();
-            for(const voted of this.voted){
+            for (const voted of this.voted) {
                 data.block = [...data.block, ...voted.voted];
             }
             this.#prompt = new MafiaVoteNumpad(data);
@@ -149,6 +149,7 @@ class MafiaEngine extends GameEngine {
         if (this.playerVotedId !== null) {
             for (let x = this.voted.length - 1; x >= 0; --x) {
                 if (this.voted[x]['id'] !== this.playerVotedId) continue;
+                this.votesAll += this.voted[x].votes;
                 this.voted.splice(x, 1);
                 break;
             }
@@ -171,6 +172,7 @@ class MafiaEngine extends GameEngine {
         let state = this.prevStates.pop();
         if (!state) return false;
         this.load(state)
+        this.timer.reset();
     };
     getNextStage() {
         if (this.theEnd() && this.stage === 'finish')
@@ -227,7 +229,7 @@ class MafiaEngine extends GameEngine {
     dispatchNext() {
         this.gameTable.dispatchEvent(new Event("next"));
     }
-    keyUpHandler(event){
+    keyUpHandler(event) {
         if (this.prompt) return false;
         let num = null;
         if (event.keyCode >= 48 && event.keyCode <= 57) {
@@ -478,14 +480,14 @@ class MafiaEngine extends GameEngine {
 
         this.next();
     }
-    getOutPlayers(){
+    getOutPlayers() {
         const players = [];
         this.players.forEach((player) => (player.out > 0) ? players.push(player.id) : false);
         return players;
     }
-    getNonVotedPlayers(){
+    getNonVotedPlayers() {
         let votedPlayers = [];
-        for(const voted of this.voted){
+        for (const voted of this.voted) {
             votedPlayers = [...votedPlayers, ...voted.voted];
         }
 
@@ -563,7 +565,7 @@ class MafiaEngine extends GameEngine {
         do {
             this.courtLog.push([])
         } while (!this.courtLog[this.daysCount]);
-            
+
         if (!this.checkLeaveThisRound()) {
             return this.dispatchNext();
         }
@@ -617,6 +619,10 @@ class MafiaEngine extends GameEngine {
         }
         this.playerVotedId = this.courtRoom.shift();
 
+        console.log(this.votesAll);
+        console.log(this.playerVotedId);
+        console.log(this.voted);
+        console.log(this.getNonVotedPlayers());
         if (this.votesAll < 1) {
             return this.processVotes(this.config.voteType === 'count' ? 0 : false);
         }
@@ -639,8 +645,8 @@ class MafiaEngine extends GameEngine {
     processVotes(vote) {
 
         let voted = [], votes = 0;
-        if (this.config.voteType === 'enum'){
-            if (vote !== false && vote !== ''){
+        if (this.config.voteType === 'enum') {
+            if (vote !== false && vote !== '') {
                 voted = vote.split(',');
                 votes = voted.length;
             }
@@ -664,8 +670,8 @@ class MafiaEngine extends GameEngine {
     processVotesMassGetOut(vote) {
 
         let voted = [], votes = 0;
-        if (this.config.voteType === 'enum'){
-            if (vote !== false && vote !== ''){
+        if (this.config.voteType === 'enum') {
+            if (vote !== false && vote !== '') {
                 voted = vote.split(',');
                 votes = voted.length;
                 this.courtLog[this.daysCount].push([...voted]);
