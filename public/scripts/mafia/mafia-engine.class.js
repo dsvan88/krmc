@@ -8,6 +8,9 @@ class MafiaEngine extends GameEngine {
 
     debate = false;
     needFix = false;
+    courtBlock = false;
+    dynamicShoot = true;
+
     speakers = [];
     shooting = [];
     killed = [];
@@ -18,6 +21,7 @@ class MafiaEngine extends GameEngine {
     courtLog = [];
     voted = [];
     leaveThisRound = [];
+    staticOrder = [];
 
     reasons = ['', 'Вбитий', 'Засуджений', '4 Фола', 'Дісквал.'];
 
@@ -41,8 +45,9 @@ class MafiaEngine extends GameEngine {
             bestMove: [0.0, 0.0, 0.25, 0.4],
             aliveMafs: [0.0, 0.3, 0.15, 0.3],
             aliveReds: [0.0, 0.0, 0.15, 0.1],
-            dis: -0.3,
-            sherifFirstKill: 0.3,
+            disqualified: -0.3,
+            sherifFirstStaticKill: 0.3,
+            sherifFirstDynamicKill: 0.3,
         }
     };
 
@@ -284,7 +289,7 @@ class MafiaEngine extends GameEngine {
             if (player.prim) {
                 player.prim = player.prim;
             }
-            if (this.shooting.includes(player.id)) {
+            if (this.shooting.includes(player.id) || this.stage === 'firstNight' && this.staticOrder.includes(player.id)) {
                 player.row.classList.add('shooted');
             }
             if (this.activeSpeaker && this.activeSpeaker.bestMove && this.bestMove.includes(player.id)) {
@@ -316,6 +321,9 @@ class MafiaEngine extends GameEngine {
         if (this.stage === 'finish') {
             this.players[playerId].addPoints();
         }
+        else if (this.stage === 'firstNight') {
+            this.actionAddStaticKillOrder(playerId)
+        }
         else if (this.stage === 'actionLastWill' && this.activeSpeaker.bestMove) {
             this.actionBestMove(playerId)
         }
@@ -328,6 +336,26 @@ class MafiaEngine extends GameEngine {
         else if (this.stage === 'shootingNight') {
             this.shootPlayer(playerId);
         }
+        this.resetView();
+    };
+    actionAddStaticKillOrder(playerId) {
+        let message = '';
+        if (this.staticOrder.includes(playerId)) {
+            this.staticOrder.splice(this.staticOrder.indexOf(playerId), 1);
+            message = `Зміна замовлення!\nГравець №${this.players[playerId].num} - видалений зі статичного замовлення.`;
+            this.addLog(message);
+            this.noticer.add({ message: message, time: 5000 });
+            if (this.staticOrder.length > 0)
+                dynamicOrder = true;
+            return false;
+        }
+
+        this.staticOrder.push(playerId);
+        dynamicOrder = false;
+        message = `Мафія обирає гравця №${this.players[playerId].num}, у статичне замовлення на відстріл.`;
+        this.addLog(message);
+        this.noticer.add({ message: message, time: 5000 });
+
         this.resetView();
     };
     shootPlayer(playerId) {
@@ -453,7 +481,7 @@ class MafiaEngine extends GameEngine {
             if (this.shooting.length === 1) {
                 let killed = this.shooting.pop();
                 this.killed[this.daysCount].push(killed);
-                if (this.checkFirstKill()) {
+                if (this.checkFirstKill() && this.getActivePlayersCount() > 8) {
                     this.players[killed].bestMove = true;
                     const message = `Гравець №${this.players[killed].num} - вбит першим!\nВ нього є право залишити по собі кращій хід`;
                     this.addLog(message, true);
@@ -533,12 +561,12 @@ class MafiaEngine extends GameEngine {
 
             if (!player.muted) return player;
 
-            if (this.getActivePlayersCount() < 5) {
+            if (this.getActivePlayersCount() < 5 && this.config.mutedSpeakTime > 0) {
                 player.unmute();
                 this.timer.left = this.config.mutedSpeakTime;
                 return player;
             }
-            let put = parseInt(prompt(`Гравець №${player.num} мовчить, але може виставити кандидатуру: `, '0'));
+            let put = parseInt(prompt(`Гравець №${player.num} мовчить, але може виставити кандидатуру: `, '0').trim());
             if (put > 0) {
                 this.prevSpeaker = player.id;
                 this.putPlayerOnVote(put - 1);
@@ -767,6 +795,9 @@ class MafiaEngine extends GameEngine {
         this.timer.left = this.config.lastWillTime;
         this.activeSpeaker = this.lastWiller;
         this.stageDescr = `Заповіт.\nПромова гравця №${this.activeSpeaker.num}`;
+        if (this.daysCount === 0 && this.lastWillReason === 1 && dynamicOrder) {
+            dynamicOrder = confirm(`Гравця №${this.activeSpeaker.num}, вбили за динамікою?`)
+        }
     };
     actionBestMove(playerId) {
 
@@ -862,14 +893,14 @@ class MafiaEngine extends GameEngine {
 
         this.players.forEach(player => {
             if (player.out === 4) {
-                player.points += this.config.points.dis;
+                player.points += this.config.points.disqualified;
                 return true;
+            }
+            if (player.bestMoveAuthor && bestMove > 0) {
+                player.points += this.config.points.bestMove[bestMove];
             }
             if (this.winners == 1 && (player.role == 0 || player.role == 4)) {
                 player.points += this.config.points.winner + this.config.points.aliveReds[red];
-                if (player.bestMoveAuthor && bestMove > 0) {
-                    player.points += this.config.points.bestMove[bestMove];
-                }
             }
             else if (this.winners == 2 && (player.role == 1 || player.role == 2)) {
                 player.points += this.config.points.winner + this.config.points.aliveMafs[mafs];

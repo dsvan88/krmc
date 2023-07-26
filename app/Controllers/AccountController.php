@@ -48,8 +48,8 @@ class AccountController extends Controller
                 'LoginInputPlaceholder' => '{{ Account_Login_Form_Login_Input_Placeholder }}',
                 'PasswordInputPlaceholder' => '{{ Account_Login_Form_Password_Input_Placeholder }}',
                 'SubmitLabel' => '{{ Account_Login_Form_Submit_Title }}',
-                'ForgetLinkLabel' => '{{ Account_Login_Form_Forget_link }}',
-                'RegisterLinkLabel' => '{{ Account_Login_Form_Register_Link }}',
+                'ForgetLinkLabel' => 'Forget Password',
+                'RegisterLinkLabel' => 'Register',
             ]
         ];
         View::modal($vars);
@@ -168,6 +168,7 @@ class AccountController extends Controller
         } else {
             $data = AccountRepository::getFields($userId);
         }
+        error_log(json_encode($data));
         $texts = [
             'FioLabel' => 'Name, secondary name, middle name',
             'BirthdayLabel' => 'Birthday',
@@ -471,10 +472,10 @@ class AccountController extends Controller
 
         $result = AccountRepository::addParticipantToDay($_POST['name']);
 
-        if ($result['result']){
+        if ($result['result']) {
             return View::message(['name' => $result['name']]);
         }
-        return View::notice(['error'=>1, 'message' => $result['message']]);
+        return View::notice(['error' => 1, 'message' => $result['message']]);
     }
     public function removeParticipantAction()
     {
@@ -491,7 +492,7 @@ class AccountController extends Controller
         if ($today === -1)
             $today = 6;
 
-        foreach ($weekData['data'][$today]['participants'] as $index=>$participant){
+        foreach ($weekData['data'][$today]['participants'] as $index => $participant) {
             if ($participant['name'] !== $userData['name']) continue;
             unset($weekData['data'][$today]['participants'][$index]);
             break;
@@ -673,6 +674,31 @@ class AccountController extends Controller
 
         View::modal($vars);
     }
+    /* public function nameCheckAction()
+    {
+        if (empty($_POST))
+            View::message('Empty data!');
+
+        $userData = Users::getDataByName($_POST['name']);
+        $userId = $userData['id'];
+        $data = ContactRepository::getApproved($userId);
+
+        if (!empty($data['telegramid'])) {
+            $code = AccountRepository::saveTelegramApproveCode($userId);
+            TelegramBotController::send($data['telegramid'], "Your verification code:\n<b>$code</b>");
+            $botData = TelegramBotController::getMe();
+            View::message("This account has a Telegram Account connected to it!\nYour verification code has been sent to your Telegram.\nPlease, start a dialog with our <a href='https://t.me/{$botData['result']['username']}' target='_blank'>Telegram bot</a> to get a verification code!");
+        }
+        $vars = [
+            'title' => '{{ Account_Forget_Form_Title }}',
+            'texts' => [
+                'authPlaceholder' => '{{ Account_Login_Form_Login_Input_Placeholder }}',
+                'SubmitLabel' => 'Execute',
+                'CancelLabel' => 'Cancel',
+            ]
+        ];
+        View::message('Success!');
+    } */
     public function registerAction()
     {
         if (!empty($_POST)) {
@@ -689,9 +715,12 @@ class AccountController extends Controller
                 'NameLabel' => 'Nickname (in game)',
                 'PasswordLabel' => 'Password',
                 'PasswordAgainLabel' => 'Password again',
-                'RegisterSubmit' => '{{ Account_Login_Form_Register_Link }}',
+                'RegisterSubmit' => 'Register',
                 'CancelLabel' => 'Cancel',
-            ]
+            ],
+            'scripts' => [
+                '/public/scripts/account-register.js?v=' . $_SERVER['REQUEST_TIME'],
+            ],
         ];
         View::modal($vars);
     }

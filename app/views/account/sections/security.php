@@ -14,11 +14,11 @@
         Пошта:
     </h5>
     <div class="profile__card-value">
-        <? if (isset($data['email'])) :?>
+        <? if (isset($data['email'])) : ?>
             <span class="fa fa-check-circle text-accent"> Approved</span>
-        <? else :?>
+        <? else : ?>
             <button type="button" class="positive" data-action-click="account/email/approve/form">Підтвердити</button>
-        <?endif;?>
+        <? endif; ?>
     </div>
 </div>
 <div class="profile__card-row">
@@ -26,10 +26,10 @@
         Телеграм:
     </h5>
     <div class="profile__card-value">
-        <? if (isset($data['telegram'])) :?>
+        <? if (isset($data['telegramid'])) : ?>
             <span class="fa fa-check-circle text-accent"> Approved</span>
-        <? else :?>
-            <button type="button" class="positive" data-action-click="account/telegram/approve/form">Підтвердити</button>
-        <?endif;?>
+        <? else : ?>
+            <span class="fa fa-times-circle"> Not connected</span>
+        <? endif; ?>
     </div>
 </div>

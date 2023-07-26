@@ -14,4 +14,19 @@ class Tech
         }
         return '';
     }
+    public static function getCode(string $seed): string
+    {
+        $code = '';
+
+        do {
+            $code = preg_replace('/[^0-9]/', '', sha1($seed . microtime()));
+        } while (strlen($code) < 5);
+
+        if (strlen($code) < 8)
+            $code = str_pad($code, 8, '0');
+        else
+            $code = substr($code, 0, 8);
+
+        return $code;
+    }
 }

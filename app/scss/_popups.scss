@@ -1,6 +1,7 @@
 //Custom alert, confirm and prompt
 .popup {
     position: fixed;
+    z-index: 10;
     top: 10vh;
     left: 30vw;
     border: none;
@@ -70,11 +71,12 @@
 
         &:checked~label {
             background-color: $bg-color-green-blur;
-            color:$color-text-accent;
+            color: $color-text-accent;
         }
+
         &:disabled~label {
             background-color: $bg-color-dark-blur;
-            color:$color-text-dark-blur;
+            color: $color-text-dark-blur;
         }
     }
 }

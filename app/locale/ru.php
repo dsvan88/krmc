@@ -49,8 +49,14 @@ return [
     '{{ Account_Login_Form_Login_Input_Placeholder }}' => 'Логин/почта',
     '{{ Account_Login_Form_Password_Input_Placeholder }}' => 'Пароль',
     '{{ Account_Login_Form_Submit_Title }}' => 'Войти',
-    '{{ Account_Login_Form_Forget_link }}' => 'Забыли пароль?',
-    '{{ Account_Login_Form_Register_Link }}' => 'Регистрация',
+    'Forget Password' => 'Забыли пароль?',
+    'Register' => 'Регистрация',
+
+    "This nickname is not among those registered on the site.\nYou can only register after you play at least one game in our club!" => "Такого псевдонима нет среди зарегистрированных в системе.\nВы сможете зарегистрироваться на сайте только после того, как хотя бы раз запишетесь на игру!",
+    'This nickname is alerady has account on this site.' => 'Этот псевдоним уже зарегистрирован на сайте.',
+    "This account has a Telegram Account connected to it!\nYour verification code has been sent to your Telegram.\nPlease, start a dialog with our <a href='https://t.me/%s' target='_blank'>Telegram bot</a> to get a verification code!" =>
+    "К этому псевдониму подключён Телеграм!\nВаш проверочный код отправлен Вам в Телеграм.\nНачните, пожалуйста, диалог с нашим <a href='https://t.me/%s' target='_blank'>Телеграм ботом</a> для получения проверочного кода!",
+
     '{{ Account_Login_User_Not_Found }}' => "Пользователь не найден!\nПроверьте логин и пароль!",
     'Rename Temporary Player' => 'Смена имени временного игрока',
 

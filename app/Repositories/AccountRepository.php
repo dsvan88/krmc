@@ -3,6 +3,7 @@
 namespace app\Repositories;
 
 use app\core\Locale;
+use app\core\Tech;
 use app\core\Validator;
 use app\models\Days;
 use app\models\Users;
@@ -82,5 +83,11 @@ class AccountRepository
         Weeks::update(['data' => $weekData['data']], ['id' => $weekId]);
 
         return ['result' => true, 'name' => $userData['userName']];
+    }
+    public static function saveTelegramApproveCode(array $userData, string $code)
+    {
+        $userData['personal']['tg-code'] = $code;
+        Users::edit(['personal' => $userData['personal']], ['id' => $userData['id']]);
+        return true;
     }
 }

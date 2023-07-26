@@ -45,14 +45,17 @@ class Alert {
         this.form.append(this.buttonWrapper);
 
         this.dialog.append(this.form);
-        
+
         document.body.append(this.dialog);
         this.dialog.tabIndex = -1;
         return this.dialog;
     }
     fill({ title = "PopUp", text = "There is no information, yet!" }) {
         this.title.innerText = title;
-        this.text.innerText = text;
+        if (/\<[a-s]/.test(text))
+            this.text.innerHTML = '<p>' + text.replace(/\n/g, '</p><p>') + '</p>';
+        else
+            this.text.innerText = text;
     }
     close() {
         this.dialog.close();
@@ -145,7 +148,7 @@ class Confirm extends Alert {
 
         this.action = action || ((data) => console.log(data));
         this.cancel = cancel;
-        
+
         this.modifyForm().modifyEvents();
         return this;
     }

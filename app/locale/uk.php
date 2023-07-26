@@ -49,8 +49,14 @@ return [
     '{{ Account_Login_Form_Login_Input_Placeholder }}' => 'Логін/пошта',
     '{{ Account_Login_Form_Password_Input_Placeholder }}' => 'Пароль',
     '{{ Account_Login_Form_Submit_Title }}' => 'Увійти',
-    '{{ Account_Login_Form_Forget_link }}' => 'Забули пароль?',
-    '{{ Account_Login_Form_Register_Link }}' => 'Реєстрація',
+    'Forget Password' => 'Забули пароль?',
+    'Register' => 'Реєстрація',
+
+    "This nickname is not among those registered on the site.\nYou can only register after you play at least one game in our club!" => "Такого псевдоніма нема серед зареєстрованих в системі.\nВи зможете зареструватись на сайті лише після того, як хоча б раз запишитесь на гру!",
+    'This nickname is alerady has account on this site.' => 'Цей псевдонім вже зареєстрований на сайті.',
+    "This account has a Telegram Account connected to it!\nYour verification code has been sent to your Telegram.\nPlease, start a dialog with our <a href='https://t.me/%s' target='_blank'>Telegram bot</a> to get a verification code!" =>
+    "Цей псевдонім має підключений Телеграм!\nВаш перевірочний код відправлений до Вашого Телеграму.\nПочніть, будь-ласка, спілкування з нашим <a href='https://t.me/%s' target='_blank'>Телеграм ботом</a> для отримання перевірочного коду!",
+
     '{{ Account_Login_User_Not_Found }}' => "Користувач не знайден!\nПеревірте логін та пароль!",
     'Rename Temporary Player' => 'Перейменування тичасового гравця',
 

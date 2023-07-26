@@ -72,7 +72,7 @@ return  [
         'action' => 'emailVerifyHash',
         'access' => ['category' => 'all']
     ],
-    
+
     'users/list' => [
         'controller' => 'account',
         'action' => 'list',
@@ -365,6 +365,13 @@ return  [
         'controller' => 'settings',
         'action' => 'edit',
         'access' => ['category' => 'admin']
+    ],
+
+    'api/verification/register/name' =>
+    [
+        'controller' => 'verification',
+        'action' => 'registerName',
+        'access' => ['category' => 'all']
     ],
 
     'api/telegram/webhook' =>

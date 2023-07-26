@@ -38,26 +38,15 @@ class Locale
         self::loadDictionary();
 
         if (is_array($key)) {
-            if (isset($key['string']) && isset($key['vars']) && isset(self::$dictionary[$key['string']])) {
+            if (isset($key['string']) && isset($key['vars']))
                 return sprintf(self::$dictionary[$key['string']], ...$key['vars']);
-            } else return $key;
+            return $key;
         }
+
         if (isset(self::$dictionary[$key]))
             return self::$dictionary[$key];
 
         return $key;
-    }
-    public static function format(array $phrase){
-        if (!is_array($phrase)) return $phrase;
-
-        self::loadDictionary();
-
-        if (isset($phrase['string']) && isset($phrase['vars']) && isset(self::$dictionary[$phrase['string']])) {
-            return sprintf(self::$dictionary[$phrase['string']], ...$phrase['vars']);
-        } else return $phrase;
-
-        if (isset(self::$dictionary[$phrase]))
-            return self::$dictionary[$phrase];
     }
     public static function mb_ucfirst($string, $encoding = 'UTF8')
     {

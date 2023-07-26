@@ -47,11 +47,11 @@ class TelegramBotController extends Controller
             $langCode = $message['message']['from']['language_code'];
         }
         Locale::change($langCode);
-/* 
+        /* 
         self::$bot = new TelegramBot();
         self::$techTelegramId = Settings::getTechTelegramId();
         self::$bot->sendMessage(self::$techTelegramId, json_encode($message)); */
-        
+
         $text = trim($message['message']['text']);
 
         if (!self::parseCommand($text)) exit();
@@ -270,7 +270,10 @@ class TelegramBotController extends Controller
     public static function sendAction()
     {
         if (!empty($_POST)) {
-            $bot = new TelegramBot();
+
+            if (!self::$bot)
+                self::$bot = new TelegramBot();
+
             $message =  preg_replace('/(<((?!b|u|s|strong|em|i|\/b|\/u|\/s|\/strong|\/em|\/i)[^>]+)>)/i', '', str_replace(['<br />', '<br/>', '<br>', '</p>'], "\n", trim($_POST['html'])));
             if (is_numeric($_POST['target'])) {
                 $targets = $_POST['target'];
@@ -296,9 +299,9 @@ class TelegramBotController extends Controller
                 }
             }
             if ($_FILES['logo']['size'] > 0 && $_FILES['logo']['size'] < 10485760) { // 10 Мб = 10 * 1024 *1024
-                $result = $bot->sendPhoto($targets, $message, $_FILES['logo']['tmp_name']);
+                $result = self::$bot->sendPhoto($targets, $message, $_FILES['logo']['tmp_name']);
             } else {
-                $result = $bot->sendMessage($targets, $message);
+                $result = self::$bot->sendMessage($targets, $message);
             }
             $message = 'Success!';
             if (!$result[0]['ok']) {
@@ -331,13 +334,28 @@ class TelegramBotController extends Controller
     {
         if (empty($target) || empty($message))
             return false;
-        
-        $bot = new TelegramBot();
-        $result = $bot->sendMessage($target, $message);
+
+        if (!self::$bot)
+            self::$bot = new TelegramBot();
+
+        $result = self::$bot->sendMessage($target, $message);
+
         if (!$result[0]['ok']) {
             return false;
         }
         return true;
+    }
+    public static function getMe()
+    {
+        if (!self::$bot)
+            self::$bot = new TelegramBot();
+
+        $botData['ok'] = self::$bot->getMe();
+
+        if (!$botData['ok']) {
+            return false;
+        }
+        return $botData['ok'];
     }
     public static function checkAccess(string $level = 'guest')
     {
