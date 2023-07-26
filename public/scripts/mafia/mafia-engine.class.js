@@ -33,6 +33,7 @@ class MafiaEngine extends GameEngine {
     config = {
         getOutHalfPlayersMin: 4,
         killsPerNight: 1,
+        mutedSpeakMaxCount: 5,
         timerMax: 6000,
         lastWillTime: 6000,
         debateTime: 3000,
@@ -561,7 +562,7 @@ class MafiaEngine extends GameEngine {
 
             if (!player.muted) return player;
 
-            if (this.getActivePlayersCount() < 5 && this.config.mutedSpeakTime > 0) {
+            if (this.getActivePlayersCount() < this.config.mutedSpeakMaxCount && this.config.mutedSpeakTime > 0) {
                 player.unmute();
                 this.timer.left = this.config.mutedSpeakTime;
                 return player;
