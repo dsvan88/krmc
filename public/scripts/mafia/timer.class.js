@@ -1,27 +1,26 @@
 class GameTimer {
 
-    _left = 0;
-    maxTime = 0;
+	_left = 0;
+	maxTime = 0;
 	timerInterval = null;
 	timerStep = 50;
 	game = null;
 
-    timerBlock = null;
-    stopwatch = null;
+	timerBlock = null;
+	stopwatch = null;
 
 	buttons = {};
 	audioContext = null;
 
 	#MainTimer = null;
-	
-    constructor({ maxTime = 2000, timerBlock = ".timer", gameEngine = null} ={})
-	{
+
+	constructor({ maxTime = 2000, timerBlock = ".timer", gameEngine = null } = {}) {
 		this.timerBlock = timerBlock;
-        if (typeof timerBlock === "string"){
+		if (typeof timerBlock === "string") {
 			this.timerBlock = document.querySelector(timerBlock);
-        }
+		}
 		this.stopwatch = this.timerBlock.querySelector('.stopwatch');
-		
+
 		let buttons = this.timerBlock.querySelectorAll('[data-timer]');
 		buttons.forEach(button => {
 			button.addEventListener('click', (event) => this[button.dataset.timer].call(this, event));
@@ -38,7 +37,7 @@ class GameTimer {
 	/**
 	 * @param {number} value
 	 */
-	set left(value){
+	set left(value) {
 		this._left = value;
 		this.stopwatch.innerText = this.inttotime(value);
 	}
@@ -54,7 +53,7 @@ class GameTimer {
 		if (this.#MainTimer) return false;
 
 		this.#MainTimer = setInterval(() => this.countdown(), this.timerStep);
-		
+
 		this.buttons.start.style.display = 'none';
 		this.buttons.pause.style.display = 'block';
 	}
@@ -89,36 +88,34 @@ class GameTimer {
 
 		this.left -= 5
 
-		if (this.left < 0)
-		{
+		if (this.left < 0) {
 			this.reset();
 			this.next();
 			return true;
 		}
-		
-		if (this.left === 100){
+
+		if (this.left === 100) {
 			return this.beep(900, 800)
 		}
 
-		if ([1000,500,300, 200].indexOf(this.left) !== -1){
+		if ([1000, 500, 300, 200].indexOf(this.left) !== -1) {
 			return this.beep();
 		}
 	}
-	beep(duration=100, frequency=500) {
+	beep(duration = 100, frequency = 500) {
 		let oscillator = this.audioContext.createOscillator();
 		oscillator.type = 'sine'; // форма сигнала
 		oscillator.frequency.value = frequency; // частота
 		oscillator.connect(this.audioContext.destination);
 		oscillator.start(); //для запуска
-		
+
 		let oscillatorTimer = setTimeout(() => oscillator.stop(), duration);
 	};
-	inttotime(t)
-	{
+	inttotime(t) {
 		let params = [
-			new String(Math.floor(t/6000)).padStart(2,'0'),
-			new String(Math.floor(t%6000/100)).padStart(2,'0'),
-			new String(t%100).padStart(2,'0'),
+			new String(Math.floor(t / 6000)).padStart(2, '0'),
+			new String(Math.floor(t % 6000 / 100)).padStart(2, '0'),
+			new String(t % 100).padStart(2, '0'),
 		];
 		return params.join(':');
 	}

@@ -9,7 +9,7 @@ class MafiaEngine extends GameEngine {
     debate = false;
     needFix = false;
     courtBlock = false;
-    dynamicShoot = true;
+    dynamicOrder = true;
 
     speakers = [];
     shooting = [];
@@ -144,6 +144,7 @@ class MafiaEngine extends GameEngine {
     }
     load(state) {
         super.load(state);
+        if (this.timer.maxTime !== this.config.timerMax) this.timer.maxTime = this.config.timerMax;
         this.stageDescr = this._stageDescr;
         this.resetLog()
         this.resetView();
@@ -346,13 +347,13 @@ class MafiaEngine extends GameEngine {
             message = `Зміна замовлення!\nГравець №${this.players[playerId].num} - видалений зі статичного замовлення.`;
             this.addLog(message);
             this.noticer.add({ message: message, time: 5000 });
-            if (this.staticOrder.length > 0)
-                dynamicOrder = true;
+            if (this.staticOrder.length === 0)
+                this.dynamicOrder = true;
             return false;
         }
 
         this.staticOrder.push(playerId);
-        dynamicOrder = false;
+        this.dynamicOrder = false;
         message = `Мафія обирає гравця №${this.players[playerId].num}, у статичне замовлення на відстріл.`;
         this.addLog(message);
         this.noticer.add({ message: message, time: 5000 });
@@ -609,8 +610,8 @@ class MafiaEngine extends GameEngine {
 
         this.needFix = false;
 
-        this.voted = [],
-            this.maxVotes = 0;
+        this.voted = [];
+        this.maxVotes = 0;
         this.votesAll = this.playersCount = this.getActivePlayersCount();
         this.defendantCount = this.courtRoom.length;
 
@@ -668,7 +669,6 @@ class MafiaEngine extends GameEngine {
         };
     }
     processVotes(vote) {
-
         let voted = [], votes = 0;
         if (this.config.voteType === 'enum') {
             if (vote !== false && vote !== '') {
@@ -780,7 +780,7 @@ class MafiaEngine extends GameEngine {
         if (!this.config.wakeUpRoles) return this.dispatchNext();
 
         this.timer.left = this.config.wakeUpRoles;
-        this.stageDescr = `Прокидається шериф.\nВи маєте 20 секунд, аби подивитись на місто.`;
+        this.stageDescr = `Прокидається шериф.\nВи маєте ${this.config.wakeUpRoles / 100} секунд, аби подивитись на місто.`;
     };
     daySpeaker() {
         this.prevSpeaker = this.activeSpeaker ? this.activeSpeaker.id : null;
@@ -796,8 +796,8 @@ class MafiaEngine extends GameEngine {
         this.timer.left = this.config.lastWillTime;
         this.activeSpeaker = this.lastWiller;
         this.stageDescr = `Заповіт.\nПромова гравця №${this.activeSpeaker.num}`;
-        if (this.daysCount === 0 && this.lastWillReason === 1 && dynamicOrder) {
-            dynamicOrder = confirm(`Гравця №${this.activeSpeaker.num}, вбили за динамікою?`)
+        if (this.daysCount === 0 && this.lastWillReason === 1 && this.dynamicOrder) {
+            this.dynamicOrder = confirm(`Гравця №${this.activeSpeaker.num}, вбили за динамікою?`)
         }
     };
     actionBestMove(playerId) {

@@ -4,16 +4,21 @@ namespace app\models;
 
 use app\core\Model;
 use app\core\Locale;
+use app\Repositories\GameRepository;
 
 class Games extends Model
 {
-    
+
     public static $table = SQL_TBL_GAMES;
 
-    public static function create($post){
+    public static function create($post)
+    {
         $table = self::$table;
 
         $manager = Users::getDataByName($post['manager']);
+        $state = [
+            'config' => GameRepository::formConfig($post)
+        ];
 
         $data = [
             'week_id' => Weeks::currentId(),
@@ -22,13 +27,15 @@ class Games extends Model
                 'id' => $manager['id'],
                 'name' => $manager['name'],
             ], JSON_UNESCAPED_UNICODE),
+            'state' => json_encode($state, JSON_UNESCAPED_UNICODE),
             'players' => json_encode(Users::assingIds($post['player'], $post['role']), JSON_UNESCAPED_UNICODE),
             'started_at' => $_SERVER['REQUEST_TIME'],
         ];
-        return self::insert($data,$table);
+        return self::insert($data, $table);
     }
 
-    public static function save($post, $id){
+    public static function save($post, $id)
+    {
         $table = self::$table;
         $data = [
             'state' => $post['state'],
@@ -36,7 +43,7 @@ class Games extends Model
         ];
         self::update($data, ['id' => $id], $table);
     }
-    
+
     public static function init()
     {
         $table = self::$table;

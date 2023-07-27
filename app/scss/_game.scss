@@ -15,7 +15,8 @@
 	&__input {
 		flex-grow: 1;
 		margin: 0em 0.1em;
-		&[name='manager']{
+
+		&[name='manager'] {
 			margin: 0 2em;
 		}
 	}
@@ -29,6 +30,10 @@
 		text-align: center;
 		font-size: 2em;
 		text-transform: uppercase;
+	}
+
+	&__label {
+		flex-grow: 1;
 	}
 
 	&__subtitle {
@@ -78,7 +83,8 @@
 				background-color: $bg-color-green; //#0a494d;
 			}
 
-			&.selected, &.manager {
+			&.selected,
+			&.manager {
 				background-color: $bg-color-light-red-blur;
 				border-color: $bg-color-light-red-blur;
 				text-decoration: line-through;

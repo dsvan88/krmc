@@ -27,6 +27,7 @@ class GamesController extends Controller
         $texts = [
             'title' => 'Title',
             'subtitle' => 'Subtitle',
+            'gameSettingsTitle' => 'Game Settings',
             'content' => 'Content',
             'managerPlaceholder' => 'Manager',
             'playerPlaceholder' => 'Nickname',
@@ -56,6 +57,10 @@ class GamesController extends Controller
         $shuffled = array_map(function ($element): string {
             return $element['name'];
         }, $day['participants']);
+
+        $shuffled = array_filter($shuffled, function (string $name) use ($manager) {
+            return !($name === $manager || strpos($name, 'tmp_') !== false);
+        });
         shuffle($shuffled);
 
         $vars = [

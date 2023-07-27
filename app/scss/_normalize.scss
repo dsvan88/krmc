@@ -3,50 +3,62 @@
 	margin: 0;
 	font-weight: 100;
 }
+
 html {
 	line-height: 1.15;
 	-webkit-text-size-adjust: 100%;
 }
+
 body {
 	margin: 0;
 }
+
 main {
 	display: block;
 }
+
 h1 {
 	font-size: 2em;
 	margin: 0.67em 0;
 }
+
 hr {
 	box-sizing: content-box;
 	height: 0;
 	overflow: visible;
 }
+
 pre {
 	font-family: monospace, monospace;
 	font-size: 1em;
 }
+
 a {
 	background-color: transparent;
 }
+
 abbr[title] {
 	border-bottom: none;
 	text-decoration: underline;
 	text-decoration: underline dotted;
 }
+
 b,
 strong {
 	font-weight: bolder;
 }
+
 code,
 kbd,
 samp {
 	font-family: monospace, monospace;
 	font-size: 1em;
 }
+
 small {
 	font-size: 80%;
 }
+
 sub,
 sup {
 	font-size: 75%;
@@ -62,9 +74,11 @@ sub {
 sup {
 	top: -0.5em;
 }
+
 img {
 	border-style: none;
 }
+
 button,
 input,
 optgroup,
@@ -75,10 +89,12 @@ textarea {
 	line-height: 1.15;
 	margin: 0;
 }
+
 button,
 input {
 	overflow: visible;
 }
+
 button,
 select {
 	text-transform: none;
@@ -151,13 +167,16 @@ textarea {
 	-webkit-appearance: button;
 	font: inherit;
 }
+
 details {
 	display: block;
 }
 
 summary {
 	display: list-item;
+	cursor: pointer;
 }
+
 template {
 	display: none;
 }

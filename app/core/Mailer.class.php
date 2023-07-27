@@ -27,7 +27,7 @@ class Mailer
     public function prepMailer()
     {
         $this->mail = new PHPMailer();
-        
+
         $this->mail->isSMTP();
         $this->mail->CharSet = "UTF-8";
         $this->mail->SMTPAuth   = true;
@@ -35,7 +35,7 @@ class Mailer
         $this->mail->Debugoutput = function ($str, $level) {
             $GLOBALS['status'][] = $str;
         };
-            
+
         $settings = Settings::load('email');
 
         $this->mail->Host       = $settings['host']['value'];
@@ -71,7 +71,7 @@ class Mailer
     public function send($emails = '')
     {
 
-        if ($emails === '') return false;
+        if (empty($emails)) return false;
 
         if (!is_array($emails))
             $this->mail->addAddress($emails);

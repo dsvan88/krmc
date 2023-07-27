@@ -179,7 +179,7 @@ class VerificationController extends Controller
             View::message('Success!');
         }
         $vars = [
-            'title' => '{{ Account_Register_Form_Title }}',
+            'title' => 'Registration form',
             'texts' => [
                 'LoginLabel' => 'Login',
                 'NameLabel' => 'Nickname (in game)',

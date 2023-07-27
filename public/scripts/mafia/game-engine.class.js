@@ -9,9 +9,10 @@ class GameEngine {
 
     prevStates = [];
     maxStatesSave = 30;
-    #checkStates = [];
 
     _log = {};
+
+    config = {};
 
     get gameTable() {
         return this.#gameTable;
@@ -53,7 +54,7 @@ class GameEngine {
         this.#gameTable = gameTable;
         this.init();
     }
-    init() {
+    async init() {
         this.gameId = parseInt(window.location.pathname.replace(/[^0-9]+/g, ''));
         request({
             url: 'game/' + this.gameId,
@@ -70,7 +71,8 @@ class GameEngine {
                 }
                 if (result.state) {
                     this.load(result.state);
-                    this.prevStates = JSON.parse(result.prevstates);
+                    if (result.prevstates)
+                        this.prevStates = JSON.parse(result.prevstates);
                     return true;
                 }
                 return true;
@@ -99,6 +101,12 @@ class GameEngine {
         for (let property in state) {
             if (property === 'players') {
                 this.loadPlayersStates(state[property]);
+                continue;
+            }
+            if (property === 'config') {
+                for (let setting in property) {
+                    this.config[setting] = property[setting];
+                }
                 continue;
             }
             if (property === 'activeSpeaker') {

@@ -2,26 +2,24 @@ actionHandler.gameFormSubmit = function (event) {
 	event.preventDefault();
 	const self = actionHandler;
 	const manager = document.querySelector('input[name="manager"]');
-	if (!manager.value.trim())
-	{
+	if (!manager.value.trim()) {
 		alert('Спочатку оберіть ведучого серед учасників!')
 		return false;
 	}
-	let role=0, roles=[0, 0, 0, 0, 0];
+	let role = 0, roles = [0, 0, 0, 0, 0];
 	const players = document.querySelectorAll('input[name^="player"]');
-	for(const [index, player] of Object.entries(players)){
-		if (!player.value){
-			alert(`Когось не вистачає! (Відсутній гравець №${index+1})`);
+	for (const [index, player] of Object.entries(players)) {
+		if (!player.value) {
+			alert(`Когось не вистачає! (Відсутній гравець №${index + 1})`);
 			return false;
 		}
 		role = document.querySelector(`select[name="role[${index}]"]`).value;
 		roles[role]++;
 	}
-	if (roles[1] !== 2 || roles[2] !== 1 || roles[4] !==1){
+	if (roles[1] !== 2 || roles[2] !== 1 || roles[4] !== 1) {
 		alert('Невірно розподілені ролі!\n(Ролей всього: Гравців Мафії - 2, Дон - 1, Шеріф - 1, Мирні - 6)');
 		return false;
 	}
-
 	const formData = new FormData(event.target);
 	request({
 		url: event.target.action,
@@ -29,21 +27,20 @@ actionHandler.gameFormSubmit = function (event) {
 		success: result => self.commonResponse.call(self, result),
 	});
 	return true;
-		
 }
 
 let gameForm = document.body.querySelector('.game-form');
 if (gameForm) {
-    gameForm.onsubmit = actionHandler.gameFormSubmit;
+	gameForm.onsubmit = actionHandler.gameFormSubmit;
 }
 
 
 actionHandler.togglePlayer = function (target) {
-	if (target.classList.contains('dummy-player')){
+	if (target.classList.contains('dummy-player')) {
 		const modal = new ModalWindow();
 		request({
 			url: 'account/dummy/rename/form',
-			success: response => modal.fill({html:response['html'], title: response['title']}),
+			success: response => modal.fill({ html: response['html'], title: response['title'] }),
 		});
 	}
 	const fields = document.querySelectorAll('input[name^="player"],input[name^="manager"]');
@@ -54,10 +51,10 @@ actionHandler.togglePlayer = function (target) {
 			return current.set(field.value, field);
 		if (firstEmpty)
 			return false;
-		firstEmpty = field;		
+		firstEmpty = field;
 	});
 
-	if (current.has(target.innerText)){
+	if (current.has(target.innerText)) {
 		current.get(target.innerText).value = '';
 		target.classList.remove('selected');
 		return true;
@@ -74,42 +71,42 @@ actionHandler.checkPlayer = function (event) {
 	const self = this;
 	const target = event.target;
 	const fields = document.querySelectorAll('input[name^="player"],input[name^="manager"]');
-	for(const field of fields){
+	for (const field of fields) {
 		if (field.value === '' || field === target) continue;
 		if (field.value === target.value) {
 			if (confirm('Already in the list!\nRemove previous?'))
 				field.value = '';
-			else 
+			else
 				target.value = '';
 			return false;
 		}
 	};
 	const playerButtons = document.querySelectorAll('*[data-action-click="toggle-player"]');
-	for (const button of playerButtons){
-		if (button.innerText === target.value){
+	for (const button of playerButtons) {
+		if (button.innerText === target.value) {
 			self.resetSelectedPoolUnits();
 			return true;
 		}
 	}
 
-	if (!confirm(`New player "${target.value}"?\nAre you sure?`)){
+	if (!confirm(`New player "${target.value}"?\nAre you sure?`)) {
 		target.value = '';
 		return false;
 	}
-	
+
 	this.addParticipant(target.value, target);
 }
 
 actionHandler.resetSelectedPoolUnits = function () {
 	const fields = document.querySelectorAll('input[name^="player"],input[name^="manager"]');
 	const players = new Set();
-	for(const field of fields){
+	for (const field of fields) {
 		if (field.value === '') continue;
 		players.add(field.value);
 	};
 	const playerButtons = document.querySelectorAll('*[data-action-click="toggle-player"]');
-	for (const button of playerButtons){
-		if (players.has(button.innerText)){
+	for (const button of playerButtons) {
+		if (players.has(button.innerText)) {
 			button.classList.add('selected');
 			continue;
 		}
@@ -122,11 +119,11 @@ actionHandler.removeParticipant = function (target) {
 	const button = target.closest('.game-form__pool-unit');
 	const name = button.querySelector('.game-form__pool-name').innerText;
 	const answer = prompt(`Are you sure?\nIt will remove ${name}'s progress for today?\nEnter 'Y' or 'Yes' below:`, 'No') || 'No';
-	
+
 	if (answer.toLowerCase().trim()[0] !== 'y') return false;
 
 	const fields = document.querySelectorAll('input[name^="player"],input[name^="manager"]');
-	for(const field of fields){
+	for (const field of fields) {
 		if (field.value === '' || field.value !== name) continue;
 		field.value = '';
 		break;
@@ -161,8 +158,8 @@ actionHandler.addParticipant = function (name, target = null) {
 		data: formData,
 		success: (result) => {
 			self.commonResponse.call(self, result);
-			if (target){
-				if (result['notice'] && result['notice']['error']){
+			if (target) {
+				if (result['notice'] && result['notice']['error']) {
 					target.value = '';
 					return false;
 				}
@@ -170,12 +167,12 @@ actionHandler.addParticipant = function (name, target = null) {
 			}
 
 			const poolUniExpample = document.querySelector('span.game-form__pool-unit');
-			if (poolUniExpample){
+			if (poolUniExpample) {
 				const poolUnitNew = poolUniExpample.cloneNode(true);
 				poolUnitNew.querySelector('span.game-form__pool-name').innerText = result['name'];
 				const parentElement = poolUniExpample.closest('div.game-form__pool');
 				parentElement.insertBefore(poolUnitNew, document.querySelector('span.game-form__pool-unit.add'));
-				
+
 			}
 			self.resetSelectedPoolUnits();
 		},
@@ -185,18 +182,18 @@ actionHandler.addParticipant = function (name, target = null) {
 actionHandler.playersShuffle = function () {
 	const fields = document.querySelectorAll('input[name^="player"]');
 	const players = [];
-	for(const field of fields){
+	for (const field of fields) {
 		players.push(field.value);
 		field.value = '';
 	};
 	players.shuffle();
-	for(const field of fields){
+	for (const field of fields) {
 		field.value = players.pop();
 	};
 }
 actionHandler.playersClear = function () {
 	const fields = document.querySelectorAll('input[name^="player"]');
-	for(const field of fields){
+	for (const field of fields) {
 		field.value = '';
 	};
 	this.resetSelectedPoolUnits();

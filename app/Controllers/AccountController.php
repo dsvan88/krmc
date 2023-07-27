@@ -132,7 +132,7 @@ class AccountController extends Controller
 
         $vars = [
             'title' => [
-                'string' => '{{ Account_Profile_Form_Title }}',
+                'string' => 'Agent’s profile «<b>%s</b>»',
                 'vars' => [$userData['name']]
             ],
             'texts' => [
@@ -343,7 +343,7 @@ class AccountController extends Controller
         }
         $vars = [
             'title' => [
-                'string' => '{{ Account_Profile_Form_Title }}',
+                'string' => 'Agent’s profile «<b>%s</b>»',
                 'vars' => [$chatTitle]
             ],
             'texts' => [
@@ -351,7 +351,6 @@ class AccountController extends Controller
                 'CancelLabel' => 'Cancel'
             ],
             'chatData' => $chatData,
-            // 'scripts' => '/public/scripts/apply-input-listener.js?v=' . $_SERVER['REQUEST_TIME']
         ];
         View::modal($vars);
     }
@@ -516,7 +515,6 @@ class AccountController extends Controller
                 'SaveLabel' => 'Save',
                 'CancelLabel' => 'Cancel',
             ],
-            // 'scripts' => '/public/scripts/apply-input-listener.js?v=' . $_SERVER['REQUEST_TIME'],
         ];
         View::modal($vars);
     }
@@ -532,7 +530,6 @@ class AccountController extends Controller
                 'SaveLabel' => 'Save',
                 'CancelLabel' => 'Cancel',
             ],
-            // 'scripts' => '/public/scripts/apply-input-listener.js?v=' . $_SERVER['REQUEST_TIME'],
         ];
         View::modal($vars);
     }
@@ -674,31 +671,6 @@ class AccountController extends Controller
 
         View::modal($vars);
     }
-    /* public function nameCheckAction()
-    {
-        if (empty($_POST))
-            View::message('Empty data!');
-
-        $userData = Users::getDataByName($_POST['name']);
-        $userId = $userData['id'];
-        $data = ContactRepository::getApproved($userId);
-
-        if (!empty($data['telegramid'])) {
-            $code = AccountRepository::saveTelegramApproveCode($userId);
-            TelegramBotController::send($data['telegramid'], "Your verification code:\n<b>$code</b>");
-            $botData = TelegramBotController::getMe();
-            View::message("This account has a Telegram Account connected to it!\nYour verification code has been sent to your Telegram.\nPlease, start a dialog with our <a href='https://t.me/{$botData['result']['username']}' target='_blank'>Telegram bot</a> to get a verification code!");
-        }
-        $vars = [
-            'title' => '{{ Account_Forget_Form_Title }}',
-            'texts' => [
-                'authPlaceholder' => '{{ Account_Login_Form_Login_Input_Placeholder }}',
-                'SubmitLabel' => 'Execute',
-                'CancelLabel' => 'Cancel',
-            ]
-        ];
-        View::message('Success!');
-    } */
     public function registerAction()
     {
         if (!empty($_POST)) {
@@ -709,7 +681,7 @@ class AccountController extends Controller
             View::message('Success!');
         }
         $vars = [
-            'title' => '{{ Account_Register_Form_Title }}',
+            'title' => 'Registration form',
             'texts' => [
                 'LoginLabel' => 'Login',
                 'NameLabel' => 'Nickname (in game)',

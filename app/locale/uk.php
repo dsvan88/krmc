@@ -60,7 +60,7 @@ return [
     '{{ Account_Login_User_Not_Found }}' => "Користувач не знайден!\nПеревірте логін та пароль!",
     'Rename Temporary Player' => 'Перейменування тичасового гравця',
 
-    '{{ Account_Profile_Form_Title }}' => 'Особова справа агента «<b>%s</b>»',
+    'Agent’s profile «<b>%s</b>»' => 'Особова справа агента «<b>%s</b>»',
     'Name, secondary name, middle name' => 'П.І.Б.',
     'Birthday' => 'Дата народження',
     'Gender' => 'Пол',
@@ -75,7 +75,7 @@ return [
     '{{ Account_Avatar_Form_Title }}' => 'Аватар користувача %s',
     '{{ Account_Avatar_Form_Newcrop_Link }}' => 'Замінити',
 
-    '{{ Account_Register_Form_Title }}' => 'Форма реєстрації',
+    'Registration form' => 'Форма реєстрації',
 
     'Change Password' => 'Зміна паролю',
     'Old password is wrong!' => 'Не вірний попередній пароль!',
@@ -116,6 +116,7 @@ return [
     'Google Map Link' => 'Посилання на Google Maps',
     'Google Map Widget Link' => 'Віджет Google Maps',
     'Youtube Channel' => 'Youtube канал',
+    'Game Settings' => 'Налаштування гри',
 
     '{{ Monday }}' => 'Понеділок',
     '{{ Tuesday }}' => 'Вівторок',

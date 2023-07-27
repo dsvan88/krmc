@@ -11,7 +11,7 @@ class Locale
         self::loadDictionary();
         foreach ($vars as $key => $value) {
             if (is_array($value)) {
-                if (isset($value['string']) && isset($value['vars'])) {
+                if (isset($value['string']) && isset($value['vars']) && isset(self::$dictionary[$value['string']])) {
                     $vars[$key] = sprintf(self::$dictionary[$value['string']], ...$value['vars']);
                     continue;
                 }
@@ -24,9 +24,8 @@ class Locale
     }
     public static function loadDictionary()
     {
-        if (empty(self::$dictionary)) {
-            self::$dictionary = require $_SERVER['DOCUMENT_ROOT'] . '/app/locale/' . self::$langCode . '.php';
-        }
+        if (!empty(self::$dictionary)) return false;
+        self::$dictionary = require $_SERVER['DOCUMENT_ROOT'] . '/app/locale/' . self::$langCode . '.php';
     }
     public static function change($code)
     {
@@ -38,7 +37,7 @@ class Locale
         self::loadDictionary();
 
         if (is_array($key)) {
-            if (isset($key['string']) && isset($key['vars']))
+            if (isset($key['string']) && isset($key['vars']) && isset(self::$dictionary[$key['string']]))
                 return sprintf(self::$dictionary[$key['string']], ...$key['vars']);
             return $key;
         }
@@ -60,14 +59,28 @@ class Locale
         }
         return mb_strtoupper(mb_substr($string, 0, 1, $encoding), $encoding) . mb_substr($string, 1, mb_strlen($string, $encoding), $encoding);
     }
-    public static function translitization($string)
+    public static function translitization(string $string)
     {
-        $string = (string) $string;
         $string = function_exists('mb_strtolower') ? mb_strtolower($string, 'UTF-8') : strtolower($string);
-        preg_match_all('/([-0-9а-яА-ЯрРсСтТуУфФчЧхХШшЩщЪъЫыЬьЭэЮюЄєІіЇїҐґa-z ]+)/', $string, $matches);
-        $string = implode('', $matches[0]);
+        /*         preg_match_all('/([-0-9а-яА-ЯрРсСтТуУфФчЧхХШшЩщЪъЫыЬьЭэЮюЄєІіЇїҐґa-z ]+)/', $string, $matches);
+        $string = implode('', $matches[0]); */
+        $string = preg_replace('/[^-0-9а-яА-ЯрРсСтТуУфФчЧхХШшЩщЪъЫыЬьЭэЮюЄєІіЇїҐґa-z ]/', '', $string);
         $string = trim($string);
         $string = strtr($string, array('а' => 'a', 'б' => 'b', 'в' => 'v', 'г' => 'g', 'д' => 'd', 'е' => 'e', 'ё' => 'e', 'ж' => 'j', 'з' => 'z', 'и' => 'i', 'й' => 'y', 'к' => 'k', 'л' => 'l', 'м' => 'm', 'н' => 'n', 'о' => 'o', 'п' => 'p', 'р' => 'r', 'с' => 's', 'т' => 't', 'у' => 'u', 'ф' => 'f', 'х' => 'h', 'ц' => 'c', 'ч' => 'ch', 'ш' => 'sh', 'щ' => 'shch', 'ы' => 'y', 'э' => 'e', 'ю' => 'yu', 'я' => 'ya', 'ъ' => '', 'ь' => '', 'є' => 'e', 'і' => 'i', 'ї' => 'i', 'ґ' => 'g', ' ' => '_'));
         return $string;
+    }
+    public static function camelize(string $string)
+    {
+        if (!strpos($string, '-')) return $string;
+
+        $array = explode('-', $string);
+        $result = $array[0];
+        $count = count($array);
+
+        for ($x = 1; $x < $count; ++$x) {
+            $result .= self::mb_ucfirst($array[$x]);
+        }
+
+        return $result;
     }
 }
