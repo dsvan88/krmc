@@ -20,6 +20,7 @@ class MafiaEngine extends GameEngine {
     courtRoom = [];
     courtLog = [];
     voted = [];
+    breakers = [];
     leaveThisRound = [];
     staticOrder = [];
 
@@ -32,6 +33,7 @@ class MafiaEngine extends GameEngine {
 
     config = {
         getOutHalfPlayersMin: 4,
+        bestMovePlayersMin: 9,
         killsPerNight: 1,
         mutedSpeakMaxCount: 5,
         timerMax: 6000,
@@ -46,9 +48,11 @@ class MafiaEngine extends GameEngine {
             bestMove: [0.0, 0.0, 0.25, 0.4],
             aliveMafs: [0.0, 0.3, 0.15, 0.3],
             aliveReds: [0.0, 0.0, 0.15, 0.1],
+            fourFouls: -0.1,
             disqualified: -0.3,
             sherifFirstStaticKill: 0.3,
             sherifFirstDynamicKill: 0.3,
+            voteInSherif: -0.1,
         }
     };
 
@@ -113,9 +117,11 @@ class MafiaEngine extends GameEngine {
             return null;
         }
         if (this.config.voteType === 'enum') {
-            data.block = this.getOutPlayers();
-            for (const voted of this.voted) {
-                data.block = [...data.block, ...voted.voted];
+            if (data.pause){
+                data.block = this.getOutPlayers();
+                for (const voted of this.voted) {
+                    data.block = [...data.block, ...voted.voted];
+                }
             }
             this.#prompt = new MafiaVoteNumpad(data);
         }
@@ -144,7 +150,6 @@ class MafiaEngine extends GameEngine {
     }
     load(state) {
         super.load(state);
-        if (this.timer.maxTime !== this.config.timerMax) this.timer.maxTime = this.config.timerMax;
         this.stageDescr = this._stageDescr;
         this.resetLog()
         this.resetView();
@@ -195,30 +200,23 @@ class MafiaEngine extends GameEngine {
             return 'daySpeaker';
         else if ((['daySpeaker', 'actionFixCourtroom'].includes(this.stage) && this.speakers.length === 0) || this.stage === 'actionDebate' && this.debaters.length === 0 && this.courtRoom.length > 0)
             return 'actionCourtStart';
-        else if (this.stage === 'actionCourtStart') {
-            if (this.needFix) {
-                return 'actionFixCourtroom';
-            }
+        else if (this.stage === 'actionCourtStart' && this.needFix)
+            return 'actionFixCourtroom';
+        else if (this.courtRoom.length > 0 && ['actionCourt', 'actionCourtStart'].includes(this.stage) && !this.courtBlock)
             return 'actionCourt';
-        }
-        else if (this.stage === 'actionCourt') {
-            if (this.courtRoom.length > 0) {
-                return 'actionCourt';
-            }
+        else if (this.courtRoom.length === 0 && this.stage === 'actionCourt' && !this.courtBlock)
             return 'actionCourtEnd';
-        }
-        else if (['actionCourtEnd', 'actionDebate'].includes(this.stage) && this.debaters.length > 0)
+        else if (['actionCourtEnd', 'actionDebate'].includes(this.stage) && this.debaters.length > 0 && !this.courtBlock)
             return 'actionDebate';
-        else if (this.stage === 'actionDebate' && this.debaters.length === 0)
+        else if (this.stage === 'actionDebate' && this.debaters.length === 0 && !this.courtBlock)
             return 'actionCourt';
-        else if ((this.courtBlock && ['actionCourtStart', 'actionCourt', 'actionDebate', 'actionCourtEnd'].includes(this.stage)) ||
-            (this.stage === 'actionCourtEnd' || this.stage === 'actionLastWill' && this.prevStage !== 'shootingNight') && this.courtRoom.length === 0 && this.lastWill.length === 0)
+        else if (this.stage !== 'shootingNight' && this.courtBlock || (['actionCourtEnd', 'actionCourtStart'].includes(this.stage) || this.stage === 'actionLastWill' && this.prevStage !== 'shootingNight') && this.courtRoom.length === 0 && this.lastWill.length === 0)
             return 'shootingNight';
-        else if (['actionCourtEnd', 'actionLastWill', 'shootingNight'].includes(this.stage) && this.lastWill.length > 0)
+        else if (['actionCourtStart', 'actionCourtEnd', 'actionLastWill', 'shootingNight'].includes(this.stage) && this.lastWill.length > 0)
             return 'actionLastWill';
     }
     next() {
-        if (this.prompt) return false;
+        if (this.prompt && this.prompt.pause) return false;
 
         this.save();
 
@@ -285,8 +283,6 @@ class MafiaEngine extends GameEngine {
             }
             if (player.out) {
                 player.row.classList.add('out');
-                // player.primField.innerText = this.reasons[player.out];
-                // player.primField.innerText = player.prim;
             }
             if (player.prim) {
                 player.prim = player.prim;
@@ -307,10 +303,10 @@ class MafiaEngine extends GameEngine {
                     }
                 }
             }
-            if (player.points > 0 || player.adds > 0) {
+            if (player.points || player.adds) {
                 const points = player.points + player.adds
                 player.putedCell.innerText = points > 0 ? `+${points}` : points;
-                player.putedCell.classList.add(points >= 0 ? 'positive' : 'negative')
+                player.putedCell.classList.add('points', points >= 0 ? 'positive' : 'negative');
             }
         })
         if (this.activeSpeaker) {
@@ -479,23 +475,21 @@ class MafiaEngine extends GameEngine {
         return this.rebuildCourtroom();
     };
     shootingCheck() {
-        if (this.config.killsPerNight === 1) {
-            if (this.shooting.length === 1) {
-                let killed = this.shooting.pop();
-                this.killed[this.daysCount].push(killed);
-                if (this.checkFirstKill() && this.getActivePlayersCount() > 8) {
-                    this.players[killed].bestMove = true;
-                    const message = `Гравець №${this.players[killed].num} - вбит першим!\nВ нього є право залишити по собі кращій хід`;
-                    this.addLog(message, true);
-                }
-                return this.outPlayer(killed, 1);
-            }
-            else {
-                this.shooting.length = 0;
-                const message = 'Промах! Ніхто не був вбитий цією ніччю.';
+        if (this.config.killsPerNight !== 1) return false;
+        
+        if (this.shooting.length === 1) {
+            let killed = this.shooting.pop();
+            this.killed[this.daysCount].push(killed);
+            if (this.checkFirstKill() && this.getActivePlayersCount() >= this.config.bestMovePlayersMin) {
+                this.players[killed].bestMove = true;
+                const message = `Гравець №${this.players[killed].num} - вбит першим!\nВ нього є право залишити по собі кращій хід`;
                 this.addLog(message, true);
             }
+            return this.outPlayer(killed, 1);
         }
+        this.shooting.length = 0;
+        const message = 'Промах! Ніхто не був вбитий цією ніччю.';
+        this.addLog(message, true);
         return false;
     }
     morning() {
@@ -505,8 +499,9 @@ class MafiaEngine extends GameEngine {
 
         this.prevSpeaker = null;
         this.speakers = this.getSpeakers();
-        this.courtBlock = false;
         this.debate = false;
+        this.courtBlock = false;
+        this.leaveThisRound.length = 0;
 
         this.next();
     }
@@ -577,8 +572,7 @@ class MafiaEngine extends GameEngine {
         }
     };
     checkLeaveThisRound() {
-        if (!this.config.courtAfterFouls) return true;
-        if (this.leaveThisRound.length === 0) return true;
+        if (this.config.courtAfterFouls || this.leaveThisRound.length === 0) return true;
 
         const message = `Сьогодні нас ${(this.leaveThisRound.length > 1 ? 'покинули гравці №' + this.courtList(this.leaveThisRound) : 'покинув гравець №' + this.players[this.leaveThisRound[0]].num)}.\nГолосування не проводится.`;
         this.courtRoom.length = 0;
@@ -605,8 +599,17 @@ class MafiaEngine extends GameEngine {
             return this.dispatchNext();
         }
 
+        let message = '';
+
+        if (this.courtRoom.length === 0) {
+            message += 'Зал суда.\n\nНа голосування ніхто не був виставлений. Голосування не проводиться.'
+            this.addLog(message);
+            this.noticer.add(message)
+            return this.dispatchNext();
+        }
+
         this.stageDescr = 'Зал суда.\nПрохання до гравців припинити будь-яку комунікацію та прибрати руки від стола';
-        let message = `Шановні гравці, ми переходимо до зали суду!\nНа ${(this.debate ? 'перестрільці' : 'голосуванні')} знаходяться гравці з номерами: ${this.courtList(this.courtRoom)}\n`;
+        message = `Шановні гравці, ми переходимо до зали суду!\nНа ${(this.debate ? 'перестрільці' : 'голосуванні')} знаходяться гравці з номерами: ${this.courtList(this.courtRoom)}\n`;
 
         this.needFix = false;
 
@@ -615,21 +618,13 @@ class MafiaEngine extends GameEngine {
         this.votesAll = this.playersCount = this.getActivePlayersCount();
         this.defendantCount = this.courtRoom.length;
 
-
-
-        if (this.defendantCount === 0) {
-            message += '\nНа голосування ніхто не був виставлений. Голосування не проводиться.'
-            this.addLog(message, true);
-            return this.dispatchNext();
-        }
-
         alert(message);
 
         if (this.defendantCount === 1) {
             message = 'На голосування був выставлений лише 1 гравець\n';
             let playerId = this.courtRoom.pop();
             if (this.daysCount > 0) {
-                message += `Наше місто покидає гравець №${this.players[playerId].num}}!`;
+                message += `Наше місто покидає гравець №${this.players[playerId].num}!`;
                 alert(message + '\nВи маєте 1 минуту для останьої промови.');
                 this.outPlayer(playerId, 2);
             }
@@ -647,6 +642,7 @@ class MafiaEngine extends GameEngine {
         if (!this.checkLeaveThisRound()) {
             return this.dispatchNext();
         }
+
         this.playerVotedId = this.courtRoom.shift();
 
         if (this.votesAll < 1) {
@@ -699,7 +695,7 @@ class MafiaEngine extends GameEngine {
             if (vote !== false && vote !== '') {
                 voted = vote.split(',');
                 votes = voted.length;
-                this.courtLog[this.daysCount].push([...voted]);
+                this.courtLog[this.daysCount].push([]);
             }
         }
         else {
@@ -713,8 +709,13 @@ class MafiaEngine extends GameEngine {
         let message = '';
         if (votes > this.playersCount / 2) {
             message += `Більшість (${votes} з ${this.playersCount}) - за!\nГравці під номерами: ${_debaters} залишають наше місто.`;
-            while (this.debaters.length > 0)
-                this.outPlayer(this.debaters.shift(), 2);
+            while (this.debaters.length > 0){
+                let defendant = this.defendant;
+                this.outPlayer(defendant.id, 2);
+                if (voted.length > 0){
+                    this.courtLog[this.daysCount][this.courtLog[this.daysCount].length-1].push({id: defendant.id, votes:voted.length, voted: [...voted], massOut: true});
+                }
+            }
         }
         else
             message = `Більшість (${this.playersCount - votes}) з ${this.playersCount}) - проти!\nНіхто не покидає стол.`;
@@ -744,6 +745,18 @@ class MafiaEngine extends GameEngine {
             message += `\nНас залишає Гравець № ${player.num}.\nВи маєте хвилину на прощання.`;
             this.outPlayer(player.id, 2);
             this.addLog(message, true);
+            
+            const firstVoted = this.getFirstVoted();
+
+            if (firstVoted.length === 1 && firstVoted[0].id === player.id){
+                this.prompt = {
+                    title: 'Був злам голосування?',
+                    text: `Якщо злам був й чітко зрозуміло, хто це зробив - вкажіть їх номери:`,
+                    value: '',
+                    pause: false,
+                    action: breakers => this.saveBreakers.call(this, breakers),
+                };
+            }
             return this.dispatchNext();
         }
 
@@ -766,7 +779,7 @@ class MafiaEngine extends GameEngine {
                     action: voted => this.processVotesMassGetOut.call(this, voted),
                 };
             }
-            message = 'При кількості гравців менш 5 не можна підняти 2 та більше гравців.\nНихто не покидає наше місто.';
+            message = `При кількості гравців менш ${this.config.getOutHalfPlayersMin} не можна підняти 2 та більше гравців.\nНихто не покидає наше місто.`;
             this.debaters.length = 0;
         }
         if (this.debaters.length > 0) {
@@ -775,6 +788,13 @@ class MafiaEngine extends GameEngine {
         }
         this.addLog(message);
         return this.dispatchNext();
+    }
+    saveBreakers(breakers){
+        this.prompt = null;
+
+        if (!breakers) return false;
+
+        breakers.split(',').forEach(breaker => this.breakers.push( this.config.voteType === 'enum' ? +breaker : --breaker));
     }
     wakeUpRoles() {
         if (!this.config.wakeUpRoles) return this.dispatchNext();
@@ -820,12 +840,7 @@ class MafiaEngine extends GameEngine {
         }
     }
     compareBestMove() {
-        let count = 0;
-        for (let playerId of this.bestMove) {
-            if (this.players[playerId].role === 1 || this.players[playerId].role === 2)
-                count++;
-        }
-        return count;
+        return this.bestMove.reduce((count, playerId) => this.players[playerId].role == 1 || this.players[playerId].role == 2 ? ++count : count, 0);
     }
     actionFixCourtroom() {
         const message = 'Ведучій помилився із виставленими гравцями...\nВиправляємо!';
@@ -871,6 +886,51 @@ class MafiaEngine extends GameEngine {
         let check = this.killed.reduce((killedCount, killedAtDay) => killedCount + killedAtDay.length, 0);
         return check === 1;
     }
+    checkFirstKillSheriff() {
+        for(const [day, killed] of this.killed.entries()){
+            if (killed[0]) return killed.shift();
+        }
+        return false;
+    }
+    checkBreakerIsMafia() {
+        if (this.breakers.length === 0) return true;
+        for(let playerId of this.breakers){
+            if (this.player[playerId].role === 1 || this.player[playerId].role === 2) return true;
+        }
+        return false;
+    }
+    checkVotedInSheriffFirst() {
+        const voted = this.getFirstVoted();
+        for(let candidat = 0; candidat < voted.length; candidat++){
+            if (this.players[voted[candidat].id].role != 4) continue;
+            return voted[candidat].voted;
+        }
+        return [];
+    }
+    getFirstVoted(){
+        let day = -1;
+        let fisrtVoted = [];
+        let maxVote = 0;
+        do {
+            if (++day >= this.daysCount+2) break;
+
+            if (!this.courtLog[day] || this.courtLog[day].length === 0 || this.courtLog[day][this.courtLog[day].length-1].length === 0) continue;
+            
+            let voted = this.courtLog[day][this.courtLog[day].length-1];
+            
+            for(let candidat = 0; candidat < voted.length; candidat++ ){
+                if (voted[candidat].massOut) return voted;
+                if (voted[candidat].votes < maxVote) continue;
+
+                if (fisrtVoted.length > 0) fisrtVoted.length = 0;
+                fisrtVoted.push(voted[candidat]);
+                maxVote = voted[candidat].votes;
+            }
+        }
+        while (fisrtVoted.length === 0)
+        
+        return fisrtVoted;
+    }
     addLog(message, show = false) {
         let logEntity = {};
         logEntity[this.logKey] = message;
@@ -888,25 +948,62 @@ class MafiaEngine extends GameEngine {
     assignPoints() {
         let red = this.getActivePlayersCount(1),
             mafs = this.getActivePlayersCount(2),
-            bestMove = this.compareBestMove();
+            bestMove = this.compareBestMove(),
+            firstKill = this.checkFirstKillSheriff(),
+            votedInSheriff = this.checkVotedInSheriffFirst(),
+            breakerIsMafia = this.checkBreakerIsMafia();
 
         if (red > 3) red = 3;
 
         this.players.forEach(player => {
-            if (player.out === 4) {
+            player.pointsLog = [];
+            if (player.out == 4) {
                 player.points += this.config.points.disqualified;
+                player.pointsLog.push({ 'Disqualification': this.config.points.disqualified })
                 return true;
+            }
+            if (player.out == 3) {
+                player.points += this.config.points.fourFouls;
+                player.pointsLog.push({ 'FourFouls': this.config.points.fourFouls })
             }
             if (player.bestMoveAuthor && bestMove > 0) {
                 player.points += this.config.points.bestMove[bestMove];
+                player.pointsLog.push({ 'BestMove': this.config.points.bestMove[bestMove] })
             }
-            if (this.winners == 1 && (player.role == 0 || player.role == 4)) {
-                player.points += this.config.points.winner + this.config.points.aliveReds[red];
+            if (player.role == 0 || player.role == 4){
+                if (this.winners == 1){
+                    player.points += this.config.points.winner;
+                    player.pointsLog.push({ 'Winners': this.config.points.winner });
+                    if (!player.out){
+                        player.points += this.config.points.aliveReds[red];
+                        player.pointsLog.push({ 'AliveRed': this.config.points.aliveReds[red] });
+                    }
+                }
+                else {
+                    if (!breakerIsMafia && votedInSheriff.includes(player.id)){
+                        player.points += this.config.voteInSherif;
+                        player.pointsLog.push({ 'VotedInSherif': this.config.voteInSherif });
+                    }
+                }
             }
-            else if (this.winners == 2 && (player.role == 1 || player.role == 2)) {
-                player.points += this.config.points.winner + this.config.points.aliveMafs[mafs];
-                if (player.role === 2 && this.players[this.killed[0]].role === 4) {
-                    player.points += this.config.points.sherifFirstKill;
+            else{
+                if (this.winners == 2){
+                    player.points += this.config.points.winner;
+                    player.pointsLog.push({ 'Winners': this.config.points.winner });
+                    if (!player.out){
+                        player.points += this.config.points.aliveMafs[mafs];
+                        player.pointsLog.push({ 'AliveMafia': this.config.points.aliveMafs[mafs] });
+                    }
+                }
+                if (this.players[firstKill].role == 4){
+                    if (this.dynamicOrder){
+                        player.points += this.config.points.sherifFirstDynamicKill;
+                        player.pointsLog.push({ 'FirstKillSherifDynamic': this.config.points.sherifFirstDynamicKill});
+                    }
+                    else {
+                        player.points += this.config.points.sherifFirstStaticKill;
+                        player.pointsLog.push({ 'FirstKillSherifStatic': this.config.points.sherifFirstStaticKill});
+                    }
                 }
             }
         })

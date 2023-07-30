@@ -2,11 +2,12 @@ class MafiaVoteNumpad extends Prompt {
     checkboxs = [];
     values = [];
     allButton = null;
-    constructor({ title = "Mafia Vote Numpad", text = "Enter player’s numbers:", value='', action = null, cancel = null, block=[] } = {}) {
+    constructor({ title = "Mafia Vote Numpad", text = "Enter player’s numbers:", value='', action = null, cancel = null, block=[], pause = true } = {}) {
         value = '';
         super({ title, text, value, action, cancel })
         for(const index in block)
             block[index] = block[index] + '';
+        this.pause = pause;
         this.modifyForNumpad(block).modifyEventsNumpad();
         this.dialog.focus();
     }

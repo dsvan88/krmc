@@ -10,6 +10,9 @@ class Noticer {
 		});
 	};
 	add(notice) {
+		if (typeof notice === 'string'){
+			notice = { message: notice };
+		}
 		const  noticeBlock = document.createElement('div');
 		noticeBlock.classList.add('notice');
 		const noticeMessageBlock = document.createElement('div');

@@ -1,9 +1,13 @@
 let Mafia = new MafiaEngine({
     gameTable: ".game__table .game__table-body",
 });
-let Timer = new GameTimer({
-    gameEngine: Mafia,
+let Timer = null;
+Mafia.gameTable.addEventListener('ready', (event) => {
+    Timer = new GameTimer({
+        gameEngine: Mafia,
+    });
 });
+
 
 actionHandler.gamePutHim = function (target) {
     let playerRow = target.closest('tr');

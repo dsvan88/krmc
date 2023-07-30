@@ -19,7 +19,6 @@ class Games extends Model
         $state = [
             'config' => GameRepository::formConfig($post)
         ];
-
         $data = [
             'week_id' => Weeks::currentId(),
             'day_id' => Days::current(),

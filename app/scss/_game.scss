@@ -295,7 +295,7 @@
 				right: -7em;
 				font-weight: 700;
 				letter-spacing: .2em;
-				opacity: .6;
+				opacity: .25;
 				color: $bg-color-light-red-blur;
 				mix-blend-mode: difference;
 			}
@@ -307,6 +307,28 @@
 				}
 			}
 		}
+	}
+}
+.pointlog{
+	position: absolute;
+	z-index: 2;
+	background-color: $bg-color-light-odd;
+	pointer-events: none;
+	right: -120%;
+	padding: .5em 1em;
+	border-radius: 5px;
+	border: 2px solid $bg-color-red;
+	&__title{
+		margin-bottom: .5em;
+	}
+	&__row{
+		display: flex;
+		justify-content: space-between;
+		margin-bottom: .3em;
+		border-bottom: 1px dotted $bg-color-red;
+	}
+	&__label{
+		margin-right: 1em;
 	}
 }
 

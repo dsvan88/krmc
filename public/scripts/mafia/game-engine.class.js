@@ -56,29 +56,30 @@ class GameEngine {
     }
     async init() {
         this.gameId = parseInt(window.location.pathname.replace(/[^0-9]+/g, ''));
-        request({
-            url: 'game/' + this.gameId,
-            success: (result) => {
-                let players = JSON.parse(result.players);
-                for (let index = 0; index < this.maxPlayers; index++) {
-                    let player = new Player({
-                        id: index,
-                        name: players[index].name,
-                        role: players[index].role,
-                    });
-                    this.players.push(player);
-                    this.gameTable.append(player.getRow(index));
-                }
-                if (result.state) {
-                    this.load(result.state);
-                    if (result.prevstates)
-                        this.prevStates = JSON.parse(result.prevstates);
-                    return true;
-                }
-                return true;
-            },
+        const promise = new Promise((resolve) => {
+            request({url: 'game/' + this.gameId, success: resolve})
         })
+        const result = await promise.then()
+        this.pending  = false;
 
+        let players = JSON.parse(result.players);
+
+        for (let index = 0; index < this.maxPlayers; index++) {
+            let player = new Player({
+                id: index,
+                name: players[index].name,
+                role: players[index].role,
+            });
+            this.players.push(player);
+            this.gameTable.append(player.getRow(index));
+        }
+        if (result.state) {
+            this.load(result.state);
+            if (result.prevstates)
+                this.prevStates = JSON.parse(result.prevstates);
+        }
+        this.gameTable.dispatchEvent(new Event('ready'));
+        return true;        
     }
     save() {
         let state = {};
@@ -93,7 +94,6 @@ class GameEngine {
 
         if (this.prevStates.length > this.maxStatesSave)
             this.prevStates.shift();
-
         return true;
     }
     load(state) {
@@ -104,8 +104,8 @@ class GameEngine {
                 continue;
             }
             if (property === 'config') {
-                for (let setting in property) {
-                    this.config[setting] = property[setting];
+                for (let setting in state[property]) {
+                    this.config[setting] = state[property][setting];
                 }
                 continue;
             }

@@ -29,28 +29,32 @@
                     <label for="muted-speak-max-count" class="game-form__label">Для промови мовчазних:</label>
                     <input type="number" name="muted-speak-max-count" id="muted-speak-max-count" value="5">
                 </div>
+                <div class="game-form__row">
+                    <label for="best-move-players-min" class="game-form__label">Для залишення КХ:</label>
+                    <input type="number" name="best-move-players-min" id="best-move-players-min" value="9">
+                </div>
             </fieldset>
             <fieldset>
                 <legend>Тривалість:</legend>
                 <div class="game-form__row">
                     <label for="timer-max" class="game-form__label">Час промови:</label>
-                    <input type="number" name="timer-max" value="6000">
+                    <input type="number" name="timer-max" id="timer-max" value="6000" step="500">
                 </div>
                 <div class="game-form__row">
                     <label for="last-will-time" class="game-form__label">Час заповіту:</label>
-                    <input type="number" name="last-will-time" id="last-will-time" value="6000">
+                    <input type="number" name="last-will-time" id="last-will-time" value="6000" step="500">
                 </div>
                 <div class="game-form__row">
                     <label for="debate-time" class="game-form__label">Час дебатів:</label>
-                    <input type="number" name="debate-time" id="debate-time" value="3000">
+                    <input type="number" name="debate-time" id="debate-time" value="3000" step="500">
                 </div>
                 <div class="game-form__row">
                     <label for="muted-speak-time" class="game-form__label">Час мовчазного гравця:</label>
-                    <input type="number" name="muted-speak-time" id="muted-speak-time" value="3000">
+                    <input type="number" name="muted-speak-time" id="muted-speak-time" value="3000" step="500">
                 </div>
                 <div class="game-form__row">
                     <label for="wake-up-roles" class="game-form__label">Час шерифа:</label>
-                    <input type="number" name="wake-up-roles" id="wake-up-roles" value="2000">
+                    <input type="number" name="wake-up-roles" id="wake-up-roles" value="2000" step="500">
                 </div>
             </fieldset>
             <fieldset>
@@ -60,15 +64,11 @@
                     <input type="number" step="0.1" name="points[winner]" id="points[winner]" value="1.0">
                 </div>
                 <div class="game-form__row">
-                    <label for="points[disqualified]" class="game-form__label">Дискваліфікація:</label>
-                    <input type="number" step="0.1" name="points[disqualified]" id="points[disqualified]" value="-0.3">
-                </div>
-                <div class="game-form__row">
                     <label for="points[sherifFirstStaticKill]" class="game-form__label">Статичне вбивство Шерифа:</label>
                     <input type="number" step="0.1" name="points[sherifFirstStaticKill]" id="points[sherifFirstStaticKill]" value="0.1">
                 </div>
                 <div class="game-form__row">
-                    <label for="points[sherifFirstDynamicKill]" class="game-form__label">Дінамічне вбивство Шерифа:</label>
+                    <label for="points[sherifFirstDynamicKill]" class="game-form__label">Динамічне вбивство Шерифа:</label>
                     <input type="number" step="0.1" name="points[sherifFirstDynamicKill]" id="points[sherifFirstDynamicKill]" value="0.3">
                 </div>
                 <div class="game-form__row">
@@ -82,6 +82,21 @@
                 <div class="game-form__row">
                     <label for="points[aliveReds]" class="game-form__label">Живим мирним:</label>
                     <input type="text" name="points[aliveReds]" id="points[aliveReds]" value="0.0, 0.0, 0.15, 0.1">
+                </div>
+            </fieldset>
+            <fieldset>
+                <legend>Штрафи:</legend>
+                <div class="game-form__row">
+                    <label for="points[fourFouls]" class="game-form__label">4-й фолл:</label>
+                    <input type="number" step="0.1" name="points[fourFouls]" id="points[fourFouls]" value="-0.1">
+                </div>
+                <div class="game-form__row">
+                    <label for="points[disqualified]" class="game-form__label">Дискваліфікація:</label>
+                    <input type="number" step="0.1" name="points[disqualified]" id="points[disqualified]" value="-0.3">
+                </div>
+                <div class="game-form__row">
+                    <label for="points[voteInSherif]" class="game-form__label">Голос в Шерифа при 9х:</label>
+                    <input type="number" step="0.1" name="points[voteInSherif]" id="points[voteInSherif]" value="-0.1">
                 </div>
             </fieldset>
         </details>

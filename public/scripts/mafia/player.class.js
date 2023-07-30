@@ -8,6 +8,7 @@ class Player {
 
     points = 0.0;
     adds = 0.0;
+    pointsLog = [];
 
     muted = false;
     out = false;
@@ -21,10 +22,10 @@ class Player {
     #mutedText = 'Мовчить';
 
     constructor(playerData = null) {
-        if (playerData) {
-            for (let property in playerData) {
-                this[property] = playerData[property];
-            }
+        if (!playerData) return true;
+
+        for (let property in playerData) {
+            this[property] = playerData[property];
         }
     }
 
@@ -71,7 +72,7 @@ class Player {
         this.row.append(nick);
 
         this.#putedCell = document.createElement('td');
-        this.row.append(this.putedCell);
+        this.row.append(this.#putedCell);
 
         for (let foul = 1; foul < 5; foul++) {
             let cell = document.createElement('td');
@@ -79,20 +80,19 @@ class Player {
             cell.dataset.foul = foul;
             this.row.append(cell);
         }
-
-        // this.#primCell = document.createElement('td');
-        // this.primCell.innerText = this.prim;
-        // this.row.append(this.primCell);
-
+        this.putedCell.addEventListener('mouseenter', (event) => this.showPointsLog.call(this, event));
+        this.putedCell.addEventListener('mouseleave', (event) => this.hidePointsLog.call(this, event));
         return this.row;
     }
     addPoints() {
         let points = prompt(`Додаткові бали!\nНа Ваш розсуд, скільки можна додати балів гравцю №${this.num} (${this.name})?`, '0.0')
         if (points && points != 0.0) {
             points = parseFloat(points.replace(',', '.'));
-            alert(`Гравцю №${this.num} ${(points > 0.0 ? ' додано ' : ' виписан штраф в ')} ${points} балів рейтинга!`);
+            const message = `Гравцю №${this.num} ${(points > 0.0 ? ' додано ' : ' виписан штраф в ')} ${points} балів рейтинга!`;
+            alert(message);
 
             this.adds += points;
+            this.pointsLog.push({'Manager Adds': points});
         }
     }
     addFouls(foulNum) {
@@ -124,5 +124,48 @@ class Player {
             this[property] = state[property];
         }
         return this;
+    }
+    showPointsLog(event){
+        const target = event.target;
+        if (!(target.classList.contains('positive') || target.classList.contains('negative'))) return false;
+
+        target.style.position = 'relative';
+        
+        const pointsLogBlock = document.createElement('div');
+        pointsLogBlock.classList.add('pointlog');
+
+        const pointsLogTitle = document.createElement('h4');
+        pointsLogTitle.classList.add('pointlog__title');
+        pointsLogTitle.innerText = 'Points history:';
+        pointsLogBlock.append(pointsLogTitle);
+
+        const pointsLogContents = document.createElement('div');
+        
+        for (let index=0; index < this.pointsLog.length; index++){
+            const logRow = document.createElement('div');
+            for(const [key, value] of Object.entries(this.pointsLog[index])){
+                logRow.classList.add('pointlog__row', value > 0 ? 'positive' : 'negative');
+                const logRowLabel = document.createElement('span');
+                logRowLabel.classList.add('pointlog__label');
+                logRowLabel.innerText = key + ': ';
+                const logRowValue = document.createElement('span');
+                logRowLabel.classList.add('pointlog__value');
+                logRowValue.innerText = value;
+                logRow.append(logRowLabel);
+                logRow.append(logRowValue);
+            }
+            pointsLogContents.append(logRow);
+        }
+        pointsLogBlock.append(pointsLogContents);
+        this.putedCell.append(pointsLogBlock);
+    }
+    hidePointsLog(event){
+        const target = event.target;
+        if (!(target.classList.contains('positive') || target.classList.contains('negative'))) return false;
+
+        const pointsLogBlock = target.querySelector('.pointlog');
+        if (!pointsLogBlock) return false;
+
+        pointsLogBlock.remove();
     }
 }
