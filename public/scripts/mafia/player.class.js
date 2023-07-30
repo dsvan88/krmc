@@ -140,7 +140,7 @@ class Player {
         pointsLogBlock.append(pointsLogTitle);
 
         const pointsLogContents = document.createElement('div');
-        
+        let summ = 0.0;
         for (let index=0; index < this.pointsLog.length; index++){
             const logRow = document.createElement('div');
             for(const [key, value] of Object.entries(this.pointsLog[index])){
@@ -153,9 +153,22 @@ class Player {
                 logRowValue.innerText = value;
                 logRow.append(logRowLabel);
                 logRow.append(logRowValue);
+                summ += value;
             }
             pointsLogContents.append(logRow);
         }
+        const logRow = document.createElement('div');
+        logRow.classList.add('pointlog__result', summ > 0 ? 'positive' : 'negative');
+        const logRowLabel = document.createElement('span');
+        logRowLabel.classList.add('pointlog__label');
+        logRowLabel.innerText = 'Result: ';
+        const logRowValue = document.createElement('span');
+        logRowLabel.classList.add('pointlog__value');
+        logRowValue.innerText = summ;
+        logRow.append(logRowLabel);
+        logRow.append(logRowValue);
+        pointsLogContents.append(logRow);
+
         pointsLogBlock.append(pointsLogContents);
         this.putedCell.append(pointsLogBlock);
     }

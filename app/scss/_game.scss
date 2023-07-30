@@ -330,6 +330,12 @@
 	&__label{
 		margin-right: 1em;
 	}
+	&__result{
+		display: flex;
+		justify-content: space-between;
+		padding-top: .2em;
+		border-top: 1px solid $bg-color-red;
+	}
 }
 
 .hidden {
