@@ -53,7 +53,7 @@ actionHandler.accountProfileAvatarChange = function (event, modal) {
 	let buttonCancel = createNewElement({
 		tag: 'button',
 		type: 'button',
-		className: 'modal-close negative',
+		className: 'modal__close negative',
 		innerText: 'Відміна'
 	});
 	divButtonsRow.appendChild(buttonAgree);
@@ -76,7 +76,7 @@ actionHandler.profileCropImageSubmit = function (event, modal, img) {
 	event.preventDefault();
 	let canvasData = $(img).cropper("getData", true);
 	let canvasUrl = $(img).cropper("getCroppedCanvas", { maxWidth: 4096, maxHeight: 4096 }).toDataURL('image/jpeg', 1.0);
-	modal.modal.querySelector('.modal-close').click();
+	modal.modal.querySelector('.modal__close').click();
 	let image = new Image();
 	image.src = canvasUrl;
 	let hiddenInput = createNewElement({

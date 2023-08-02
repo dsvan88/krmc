@@ -7,7 +7,7 @@
     <? if ($_SESSION['id'] == $userData['id']) : ?>
         <div class="modal-form__button-place">
             <button type="button" class="positive" data-action-click="account/profile/avatar/recrop/form"><?= $texts['ReCropLabel'] ?></button>
-            <button type="button" class="modal-close negative"><?= $texts['CancelLabel'] ?></button>
+            <button type="button" class="modal__close negative"><?= $texts['CancelLabel'] ?></button>
         </div>
     <? endif; ?>
 </form>

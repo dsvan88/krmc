@@ -6,6 +6,6 @@
     <datalist id="users-names-list"> </datalist>
     <div class="modal__buttons">
         <button type="submit" class="positive"><?= $texts['SaveLabel'] ?></button>
-        <button type="button" class="modal-close negative"><?= $texts['CancelLabel'] ?></button>
+        <button type="button" class="modal__close negative"><?= $texts['CancelLabel'] ?></button>
     </div>
 </form>
