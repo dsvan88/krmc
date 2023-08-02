@@ -56,9 +56,10 @@ class AccountController extends Controller
     }
     public function listAction()
     {
+        $usersData = Users::getList();
         $vars = [
             'title' => '{{ Users_List_Page_Title }}',
-            'usersData' => Users::getList(),
+            'usersData' => $usersData,
             'texts' => [
                 'formTitle' => '{{ Users_List_Title }}',
             ]
@@ -72,7 +73,7 @@ class AccountController extends Controller
             View::notice(['error' => 1, 'message' => 'Fail!']);
         }
         if ($_SESSION['id'] != $userId  && $_SESSION['privilege']['status'] !== 'admin') {
-            View::notice(['error' => 1, 'message' => 'Ви не можете змінювати інформацію інших користувачів']);
+            View::notice(['error' => 1, 'message' => 'You don’t have enough rights to change information about other users!']);
         }
 
         $userData = Users::getDataById($userId);
@@ -158,7 +159,7 @@ class AccountController extends Controller
         $section = trim($_POST['section']);
 
         if ($_SESSION['id'] != $userId && !in_array($_SESSION['privilege']['status'], ['manager', 'admin'])) {
-            View::message(['error' => 1, 'text' => 'Ви не можете змінювати інформацію інших користувачів']);
+            View::message(['error' => 1, 'text' => 'You don’t have enough rights to change information about other users!']);
         }
         if ($section === 'contacts') {
             $data = ContactRepository::getFields($userId, 'No data');
