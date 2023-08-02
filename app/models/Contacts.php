@@ -22,6 +22,17 @@ class Contacts extends Model
     {
         return self::isExists(['contact' => $contact], self::$table);
     }
+    public static function new(array $data, int $userId):void
+    {
+        foreach($data as $column => $value){
+            if (empty($value)) continue;
+            Contacts::add([
+                'user_id' => $userId,
+                'type' => $column,
+                'contact' => $value,
+            ]);
+        }
+    }
     public static function edit($data, $where)
     {
         $table = self::$table;

@@ -6,6 +6,7 @@ use app\core\Locale;
 use app\core\Tech;
 use app\core\Validator;
 use app\models\Days;
+use app\models\TelegramChats;
 use app\models\Users;
 use app\models\Weeks;
 
@@ -89,5 +90,64 @@ class AccountRepository
         $userData['personal']['tg-code'] = $code;
         Users::edit(['personal' => $userData['personal']], ['id' => $userData['id']]);
         return true;
+    }
+    public static function unlinkTelegram(int $chatId){
+
+        $chatData =  TelegramChats::getChat($chatId);
+        $chatId = (int) $chatData['id'];
+        unset($chatData['id']);
+
+        if (!empty($chatData['user_id'])){
+            $userData = Users::getDataById($chatData['user_id']);
+            if (!empty($userData['contacts']['telegram'])){
+                unset($userData['contacts']['telegram']);
+            }
+            if (!empty($userData['personal']['fio']) && $userData['personal']['fio'] === self::formFioFromChatData($chatData)){
+                unset($userData['personal']['fio']);
+            }
+            $chatData['user_id'] = null;
+
+            $userId = (int) $userData['id'];
+            unset($userData['id']);
+            Users::edit($userData, ['id' => $userId]);
+        }
+        if (!empty($chatData['personal']['nickname'])){
+            unset($chatData['personal']['nickname']);
+        }
+        TelegramChats::edit($chatData, $chatId);
+        return true;
+    }
+    public static function linkTelegram(int $chatId, string $name){
+
+        $chatData =  TelegramChats::getChat($chatId);
+        $chatId = (int) $chatData['id'];
+        unset($chatData['id']);
+
+        $userData = Users::getDataByName($name);
+        if (!$userData) {
+            $userId = Users::add($name);
+            $userData = Users::getDataById($userId);
+        } else {
+            $userId = (int) $userData['id'];
+        }
+        unset($userData['id']);
+
+        $userData['personal']['fio'] = self::formFioFromChatData($chatData);
+        $chatData['user_id'] = $userId;
+
+        Users::edit($userData, ['id' => $userId]);
+        TelegramChats::edit($chatData, $chatId);
+        return true;
+    }
+    public static function formFioFromChatData(array $chatData):string
+    {
+        $fio = '';
+        if (!empty($chatData['personal']['first_name'])) {
+            $fio .= $chatData['personal']['first_name'];
+        }
+        if (!empty($chatData['personal']['last_name'])) {
+            $fio .= ' ' . $chatData['personal']['last_name'];
+        }
+        return trim($fio);
     }
 }

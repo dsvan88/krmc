@@ -69,7 +69,7 @@ class AccountController extends Controller
     {
         extract(self::$route['vars']);
         if (empty($_POST)) {
-            View::notice(['error' => 1, 'message' => '{{ Action_Failed }}']);
+            View::notice(['error' => 1, 'message' => 'Fail!']);
         }
         if ($_SESSION['id'] != $userId  && $_SESSION['privilege']['status'] !== 'admin') {
             View::notice(['error' => 1, 'message' => 'Ви не можете змінювати інформацію інших користувачів']);
@@ -270,50 +270,21 @@ class AccountController extends Controller
     public function setNicknameAction()
     {
         if (empty($_POST)) {
-            View::message(['error' => 1, 'message' => '{{ Action_Failed }}']);
+            View::message(['error' => 1, 'message' => 'Fail!']);
         }
         if ($_SESSION['privilege']['status'] !== 'admin') {
-            View::message(['error' => 1, 'message' => 'Ви не можете змінювати інформацію других користувачів']);
+            View::message(['error' => 1, 'message' => 'You don’t have enough rights to change information about other users!']);
         }
         extract(self::$route['vars']);
-
-        if (empty($_POST['name']) || $_POST['name'] === '-') {
-            $chatData =  TelegramChats::getChat($chatId);
-            View::message(['error' => 1, 'message' => 'Поки не готова можливысть видаляти прив’язку користувачів до телеграму']);
-        }
+        
         $name = trim($_POST['name']);
-        $chatData =  TelegramChats::getChat($chatId);
-        $chatId = $chatData['id'];
-        unset($chatData['id']);
-
-        $userData = Users::getDataByName($name);
-        if (!$userData) {
-            $userId = Users::add($name);
-            $userData = Users::getDataById($userId);
-        } else {
-            $userId = $userData['id'];
-        }
-        unset($userData['id']);
-
-        $fio = '';
-        if (isset($chatData['personal']['first_name'])) {
-            $fio .= $chatData['personal']['first_name'];
-        }
-        if (isset($chatData['personal']['last_name'])) {
-            $fio .= ' ' . $chatData['personal']['last_name'];
-        }
-        $fio = trim($fio);
-
-        $userData['personal']['fio'] = $fio;
-        $userData['contacts']['telegramid'] = $chatData['uid'];
-        if (isset($chatData['personal']['username'])) {
-            $userData['contacts']['telegram'] = $chatData['personal']['username'];
+        
+        if (empty($name) || $name === '-') {
+            AccountRepository::unlinkTelegram($chatId);
+            View::message('Success!');
         }
 
-        $chatData['personal']['nickname'] = $name;
-
-        Users::edit($userData, ['id' => $userId]);
-        TelegramChats::edit($chatData, $chatId);
+        AccountRepository::linkTelegram($chatId, $name);
         View::message('Success!');
     }
     public function setNicknameFormAction()
@@ -322,7 +293,7 @@ class AccountController extends Controller
             View::errorCode(403, ['message' => 'Something went wrong! How did you get here?']);
         }
 
-        $cid = (int)$_POST['cid'];
+        $cid = (int) $_POST['cid'];
         $chatData = TelegramChats::getChat($cid);
 
         $chatTitle = '';

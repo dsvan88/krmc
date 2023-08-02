@@ -406,7 +406,7 @@ class Users extends Model
      */
     public static function formatName(string $name){
 
-        $name = trim(preg_replace(['/\s+/','/[^а-яА-ЯрРсСтТуУфФчЧхХШшЩщЪъЫыЬьЭэЮюЄєІіЇїҐґ.0-9 ]+/'], [' ', ''], $name));
+        $name = preg_replace(['/\s+/','/[^а-яА-ЯрРсСтТуУфФчЧхХШшЩщЪъЫыЬьЭэЮюЄєІіЇїҐґ.0-9 ]+/'], [' ', ''], trim($name));
 
         if (empty($name)) return false;
 

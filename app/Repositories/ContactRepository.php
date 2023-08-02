@@ -21,6 +21,13 @@ class ContactRepository
         }
         return $contacts;
     }
+    public static function formatUserContacts(array $contacts){
+        $result = [];
+        foreach($contacts as $num => $contact){
+            $result[$contact['type']] = $contact['contact'];
+        }
+        return $result;
+    }
     public static function wrapLinks(array $data): array
     {
         foreach ($data as $type => $value) {
