@@ -11,11 +11,11 @@ class TelegramChats extends Model
     {
         $table = self::$table;
 
-        $uid = $messageArray['message']['from']['id'];
+        $chatId = $messageArray['message']['from']['id'];
 
-        $result = self::getChat($uid);
+        $result = self::getChat($chatId);
         if (!$result) {
-            $chatData = ['uid' => $uid, 'personal' => ['id' => $uid], 'data' => ['last_seems' => $messageArray['message']['date']]];
+            $chatData = ['uid' => $chatId, 'personal' => ['id' => $chatId], 'data' => ['last_seems' => $messageArray['message']['date']]];
 
             if (!empty($messageArray['message']['from']['first_name'])) {
                 $chatData['personal']['first_name'] = $messageArray['message']['from']['first_name'];
@@ -29,9 +29,10 @@ class TelegramChats extends Model
             if ($messageArray['message']['chat']['type'] === 'private') {
                 $chatData['data']['direct'] = true;
             }
-            $userData = Users::getDataByTelegramId($uid);
 
-            if ($userData) {
+            $userId = Contacts::getUserIdByContact('telegramid', $chatId);
+            if (!empty($userId)) {
+                $userData = Users::getDataById($userId);
                 $chatData['personal']['nickname'] = $userData['name'];
             }
 
@@ -57,8 +58,10 @@ class TelegramChats extends Model
         }
 
         if (empty($chatData['personal']['nickname'])) {
-            $userData = Users::getDataByTelegramId($uid);
-            if ($userData) {
+
+            $userId = Contacts::getUserIdByContact('telegramid', $chatId);
+            if (!empty($userId)) {
+                $userData = Users::getDataById($userId);
                 $chatData['personal']['nickname'] = $userData['name'];
             }
         }

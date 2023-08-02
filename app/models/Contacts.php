@@ -12,6 +12,12 @@ class Contacts extends Model
     {
         return self::findBy('user_id', $userId);
     }
+    public static function getUserContact(int $userId, string $contactType)
+    {
+        $table = self::$table;
+        $contact = Contacts::query("SELECT contact FROM $table WHERE user_id = ? AND type = ? LIMIT 1", [$userId, $contactType], 'Column');
+        return empty($contact) ? false : $contact;
+    }
     public static function getUserIdByContact(string $contactType, string $value): mixed
     {
         $table = self::$table;

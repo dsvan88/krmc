@@ -10,7 +10,6 @@ use app\core\Mailer;
 use app\core\TelegramBot;
 use app\core\Validator;
 use app\models\Weeks;
-use app\models\Days;
 use app\models\Contacts;
 use app\models\TelegramChats;
 use app\models\Settings;
@@ -57,6 +56,8 @@ class AccountController extends Controller
     public function listAction()
     {
         $usersData = Users::getList();
+        $usersData = Users::contacts($usersData);
+
         $vars = [
             'title' => '{{ Users_List_Page_Title }}',
             'usersData' => $usersData,
@@ -77,6 +78,7 @@ class AccountController extends Controller
         }
 
         $userData = Users::getDataById($userId);
+        $userData = Users::contacts($userData);
         unset($userData['id']);
 
         if ($_POST['birthday'] !== '') {
@@ -618,13 +620,14 @@ class AccountController extends Controller
             if (isset($userData['personal']['forget'])) {
                 $hash = $userData['personal']['forget'];
             } else {
-                $hash = md5(json_encode([$userData['personal'], $userData['privilege'], $userData['contacts']]) . $_SERVER['REQUEST_TIME']);
+                $hash = md5(json_encode([$userData['personal'], $userData['privilege']]) . $_SERVER['REQUEST_TIME']);
             }
             Users::saveForget($userData, $hash);
+            $telegramId = Contacts::getUserContact($userData['id'], 'telegramid');
             $link = "{$_SERVER['HTTP_X_FORWARDED_PROTO']}://{$_SERVER['SERVER_NAME']}/account/password-reset/$hash";
             $link = "<a href='$link'>$link</a>";
             $bot = new TelegramBot();
-            $bot->sendMessage($userData['contacts']['telegramid'], Locale::phrase(['string' => '{{ Account_Forget_Check_Succes }}', 'vars' => [$link]]));
+            $bot->sendMessage($telegramId, Locale::phrase(['string' => '{{ Account_Forget_Check_Succes }}', 'vars' => [$link]]));
         }
         $botData = $bot->getMe();
         $vars = [

@@ -99,6 +99,7 @@ class AccountRepository
 
         if (!empty($chatData['user_id'])){
             $userData = Users::getDataById($chatData['user_id']);
+            
             if (!empty($userData['contacts']['telegram'])){
                 unset($userData['contacts']['telegram']);
             }

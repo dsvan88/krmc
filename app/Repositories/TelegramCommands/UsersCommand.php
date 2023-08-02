@@ -15,6 +15,7 @@ class UsersCommand extends ChatCommand
     public static function execute(array $arguments = [])
     {
         $usersList = Users::getList();
+        $usersList = Users::contacts($usersList);
         $message = '';
         $x = 0;
         for ($i = 0; $i < count($usersList); $i++) {
@@ -28,7 +29,6 @@ class UsersCommand extends ChatCommand
             }
             $message .= "\n";
         }
-
         $message .= "______________________________\n✅ - " . self::locale('{{ Tg_User_With_Telegramid }}');
 
         self::$operatorClass::$resultMessage = $message;

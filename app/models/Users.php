@@ -20,7 +20,7 @@ class Users extends Model
         $password = sha1(trim($data['password']));
 
         $table = self::$table;
-        $authData = self::query("SELECT * FROM $table WHERE login = :login OR contacts->>'email' = :login LIMIT 1", ['login' => $login], 'Assoc');
+        $authData = self::query("SELECT * FROM $table WHERE login = ? LIMIT 1", [$login], 'Assoc');
         if (empty($authData)) return false;
         $authData =  $authData[0];
         if (password_verify($password, $authData['password'])) {
@@ -326,18 +326,18 @@ class Users extends Model
 
         return $usersData;
     }
-    // Получить всю информацию об игроке по его TelegramID
-    public static function getDataByTelegramId($tgId)
-    {
-        $table = self::$table;
-        $userData = self::query("SELECT * FROM $table WHERE contacts->>'telegramid' = ? LIMIT 1", [$tgId], 'Assoc');
-        if (empty($userData)) return false;
+    // // Получить всю информацию об игроке по его TelegramID
+    // public static function getDataByTelegramId($tgId)
+    // {
+    //     $table = self::$table;
+    //     $userData = self::query("SELECT * FROM $table WHERE contacts->>'telegramid' = ? LIMIT 1", [$tgId], 'Assoc');
+    //     if (empty($userData)) return false;
 
-        $userData = $userData[0];
-        unset($userData['password']);
+    //     $userData = $userData[0];
+    //     unset($userData['password']);
 
-        return self::decodeJson($userData);
-    }
+    //     return self::decodeJson($userData);
+    // }
     public static function getDataByToken($token)
     {
         $table = self::$table;
@@ -395,9 +395,39 @@ class Users extends Model
     {
         $userData['privilege']  = json_decode($userData['privilege'], true);
         $userData['personal']   = json_decode($userData['personal'], true);
-        $userData['contacts']   = json_decode($userData['contacts'], true);
+        // $userData['contacts']   = json_decode($userData['contacts'], true);
         $userData['credo']      = json_decode($userData['credo'], true);
         return $userData;
+    }
+    public static function contacts(array $usersData):array{
+        if (!empty($usersData['id'])){
+            $contacts = Contacts::findBy('user_id', $usersData['id']);
+            if ($contacts){
+                $usersData['contacts'] = [];
+                return $usersData;
+            }
+            $count = count($contacts);
+            for($x=0; $x < $count; $x++){
+                $usersData['contacts'][$contacts['type']] = $contacts['contact'];
+            }
+            return $usersData;
+        }
+
+        $countUsers = count($usersData);
+        $ids = [];
+        for($x=0; $x < $countUsers; $x++){
+            $ids[] = $usersData[$x]['id'];
+        }
+
+        $contacts = Contacts::findGroup('user_id', $ids);
+        $countContacts = count($contacts);
+        for($x=0; $x < $countContacts; $x++){
+            for($y=0; $y < $countUsers; $y++){
+                if ($contacts[$x]['user_id'] != $usersData[$y]['id']) continue;
+                $usersData[$y]['contacts'][$contacts[$x]['type']] = $contacts[$x]['contact'];
+            }
+        }
+        return $usersData;
     }
     /**
      * @param string $name  - user's nickname
