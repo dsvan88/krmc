@@ -13,7 +13,7 @@ class GameTypesController extends Controller
     {
         // Extract $weekId & $dayId from array self::$route['vars']
         $dashboard = '';
-        if (isset($_SESSION['privilege']) && in_array($_SESSION['privilege']['status'], ['manager', 'admin'])) {
+        if (isset($_SESSION['privilege']) && in_array($_SESSION['privilege']['status'], ['trusted', 'manager', 'admin'])) {
             $dashboard = "<span class='page__dashboard' style='float:right'>
                 <a href='/page/add' title='Додати' class='fa fa-plus-square-o'></a>
                 ";
@@ -47,7 +47,7 @@ class GameTypesController extends Controller
         }
 
         $dashboard = '';
-        if (isset($_SESSION['privilege']) && in_array($_SESSION['privilege']['status'], ['manager', 'admin'])) {
+        if (isset($_SESSION['privilege']) && in_array($_SESSION['privilege']['status'], ['trusted', 'manager', 'admin'])) {
             $id = isset($gameData['id']) ? $gameData['id'] : $game;
             $dashboard = "<span class='page__dashboard' style='float:right'>
                 <a href='/page/edit/{$id}' title='Редагувати'><i class='fa fa-pencil-square-o'></i></a>

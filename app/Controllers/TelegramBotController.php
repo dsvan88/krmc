@@ -257,7 +257,7 @@ class TelegramBotController extends Controller
 
         return $class::execute(self::$commandArguments);
     }
-    public static function chatsListAction()
+    public static function indexAction()
     {
         $vars = [
             'title' => '{{ Chats_List_Title }}',
@@ -359,7 +359,7 @@ class TelegramBotController extends Controller
     }
     public static function checkAccess(string $level = 'guest')
     {
-        $levels = ['guest' => 0, 'user' => 1, 'manager' => 2, 'admin' => 3, 'root' => 4];
+        $levels = ['guest' => 0, 'user' => 1, 'trusted' => 2,'manager' => 3, 'admin' => 4, 'root' => 5];
         $status = 'guest';
 
         if (!empty(self::$requester['privilege']['status']))

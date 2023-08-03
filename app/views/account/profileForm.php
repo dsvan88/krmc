@@ -33,8 +33,9 @@
                     <select class="modal-form__select" id="profile-status" name="status">
                         <option value="" <?= ($userData['privilege']['status'] === '' ? ' selected' : '')  ?>>Гість</option>
                         <option value="user" <?= ($userData['privilege']['status'] === 'user' ? ' selected' : '')  ?>>Користувач</option>
-                        <option value="admin" <?= ($userData['privilege']['status'] === 'admin' ? ' selected' : '')  ?>>Админ</option>
+                        <option value="trusted" <?= ($userData['privilege']['status'] === 'trusted' ? ' selected' : '')  ?>>Довірений користувач</option>
                         <option value="manager" <?= ($userData['privilege']['status'] === 'manager' ? ' selected' : '')  ?>>Менеджер</option>
+                        <option value="admin" <?= ($userData['privilege']['status'] === 'admin' ? ' selected' : '')  ?>>Админ</option>
                     </select>
                 </div>
             <? endif ?>

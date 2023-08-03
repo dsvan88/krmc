@@ -2,9 +2,11 @@
 /*
 categories:
 all = all (guests+unauthorized users); 
-user = authorized (authorized users + manager + admins)
+user = authorized (authorized users + trusted + manager + admins)
+trusted = level 2 users  (trusted + manager + admins)
 manager = level 1 admin  (manager + admins)
-admin = root level admin  (admins only)
+admin = level 2 admin  (admins only)
+root = root level admin (root only)
 */
 return  [
     '' => [
@@ -154,9 +156,9 @@ return  [
         'action' => 'send',
         'access' => ['category' => 'admin'],
     ],
-    'chat/list' => [
+    'chat/index' => [
         'controller' => 'telegramBot',
-        'action' => 'chatsList',
+        'action' => 'index',
         'access' => ['category' => 'admin'],
     ],
 
@@ -210,12 +212,6 @@ return  [
     [
         'controller' => 'account',
         'action' => 'emailApproveForm',
-        'access' => ['category' => 'user']
-    ],
-    'api/account/telegram/approve/form' =>
-    [
-        'controller' => 'account',
-        'action' => 'telegramApproveForm',
         'access' => ['category' => 'user']
     ],
     'api/account/profile/form' =>

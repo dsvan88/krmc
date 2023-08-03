@@ -3,7 +3,15 @@ actionHandler.accountRegisterFormSubmit = async function (event, modal, args) {
     event.preventDefault();
     const verification = await self.verification(event.target, 'verification/register/name');
 
-    // console.log(verification);
+    const formData = new FormData(event.target);
+    if (verification){
+        formData.append('code', verification);
+    }
+    request({
+        url: 'account/register',
+        data: formData,
+        success: self.commonResponse,
+    });
 }
 
 /* actionHandler.accountRegisterSubmit(event, modal, formData){

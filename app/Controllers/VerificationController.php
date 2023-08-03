@@ -115,24 +115,9 @@ class VerificationController extends Controller
         ];
         View::modal($vars);
     }
-    public function telegramApproveFormAction()
-    {
-        $contacts = Settings::load('contacts');
-        $userData = Users::getDataById($_SESSION['id']);
-        $vars = [
-            'title' => 'Approve User’s Telegram',
-            'texts' => [
-                'AgreeLabel' => 'Agree',
-            ],
-            'userId' => $userData['id'],
-            'userName' => $userData['name'],
-            'contacts' => $contacts,
-        ];
-        View::modal($vars);
-    }
     public function registerNameAction()
     {
-        $userData = Users::getDataByName($_POST['name']);
+        $userData = Users::getDataByName(trim($_POST['name']));
 
         if (empty($userData)) {
             View::message([
@@ -141,28 +126,29 @@ class VerificationController extends Controller
             ]);
         }
 
-        if (!empty($userData['login'])) {
+/*         if (!empty($userData['login'])) {
             View::message([
                 'result' => false,
                 'message' => 'This nickname is alerady has account on this site.',
             ]);
-        }
+        } */
 
         $userId = (int) $userData['id'];
         $approved = ContactRepository::getApproved($userId);
 
         if (empty($approved['telegramid'])) {
-            View::message(['result' => false]);
+            View::message(['result' => true]);
         }
 
-        $code = Tech::getCode(json_encode($userData));
-        AccountRepository::saveTelegramApproveCode($userData, $code);
+        if (empty($_SESSION['tg-code'])){
+            $_SESSION['tg-code'] = Tech::getCode($_SERVER['HTTP_USER_AGENT'] . Tech::getClientIP() . date('W.F.Y'));
+        }
 
         $message = Locale::phrase([
             'string' => "Your verification code:\n<b>%s</b>",
-            'vars' => [ $code ],
+            'vars' => [ $_SESSION['tg-code'] ],
         ]);
-
+        
         TelegramBotController::send($approved['telegramid'], $message);
         $botData = TelegramBotController::getMe();
 

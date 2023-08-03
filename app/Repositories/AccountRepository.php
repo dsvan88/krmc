@@ -85,12 +85,6 @@ class AccountRepository
 
         return ['result' => true, 'name' => $userData['userName']];
     }
-    public static function saveTelegramApproveCode(array $userData, string $code)
-    {
-        $userData['personal']['tg-code'] = $code;
-        Users::edit(['personal' => $userData['personal']], ['id' => $userData['id']]);
-        return true;
-    }
     public static function unlinkTelegram(int $chatId){
 
         $chatData =  TelegramChats::getChat($chatId);

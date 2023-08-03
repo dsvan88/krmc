@@ -223,15 +223,12 @@ let actionHandler = {
 		});
 	},
 	verification: async function (form, url) {
-		const self = this;
 		const formData = new FormData(form);
 		const verification = await request({ url: url, data: formData });
 
 		if (verification['result'] === false) {
-
 			if (verification['message']) new Alert({ text: verification['message'] });
-
-			return true;
+			return false;
 		}
 
 		const promise = new Promise((resolve) => {

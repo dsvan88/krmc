@@ -5,6 +5,7 @@ namespace app\models;
 use app\core\Locale;
 use app\core\Model;
 use app\core\Tech;
+use app\Repositories\ContactRepository;
 
 class Users extends Model
 {
@@ -119,6 +120,13 @@ class Users extends Model
     }
     public static function register($data)
     {
+        if ($data['password'] !== $data['chk_password']) {
+            return [
+                'error' => 1,
+                'message' => 'Паролі не співпадають!',
+                'wrong' => 'password'
+            ];
+        }
         if (self::isUserExists($data['login'])) {
             return [
                 'error' => 1,
@@ -129,7 +137,7 @@ class Users extends Model
         if (self::isNameFree($data['name'])) {
             return [
                 'error' => 1,
-                'message' => "Гравeць з таким іменем, вже зареєстрований!\nБудь-ласка, вкажіть своє ім’я у нашому клубі!",
+                'message' => "Гравeць з таким іменем, вже кимось зареєстрований!\nБудь-ласка, вкажіть своє ім’я у нашому клубі!",
                 'wrong' => 'name'
             ];
         }
@@ -141,18 +149,25 @@ class Users extends Model
                 'wrong' => 'name'
             ];
         }
-        if ($data['password'] !== $data['chk_password']) {
+        if (empty($_SESSION['tg-code'])){
+            $approved = ContactRepository::getApproved($uid);
+            if (!empty($approved['telegramid']))
+                return [
+                    'error' => 1,
+                    'message' => 'Застарілий код верифікації. Будь-ласка, спробуйте ще раз!',
+                ];
+        }
+
+        if (!empty($_SESSION['tg-code']) && (empty($data['code']) || $data['code'] != $_SESSION['tg-code'])){
             return [
                 'error' => 1,
-                'message' => 'Паролі не співпадають!',
-                'wrong' => 'password'
+                'message' => 'Не вірний код верифікації!',
             ];
         }
+
         $userData = [
             'login' => strtolower($data['login']),
             'password' => password_hash(sha1($data['password']), PASSWORD_DEFAULT),
-            /* 'email' => strtolower($data['email']),
-            'telegram' => strtolower($data['telegram']), */
         ];
         $userData['id'] = self::edit($userData, ['id' => $uid]);
 

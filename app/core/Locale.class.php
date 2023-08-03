@@ -11,7 +11,11 @@ class Locale
         self::loadDictionary();
         foreach ($vars as $key => $value) {
             if (is_array($value)) {
-                if (isset($value['string']) && isset($value['vars']) && isset(self::$dictionary[$value['string']])) {
+                if (isset($value['string']) && isset($value['vars'])){
+                    if (empty(self::$dictionary[$key['string']])){
+                        $vars[$key] = sprintf($key['string'], ...$key['vars']);
+                        continue;
+                    }
                     $vars[$key] = sprintf(self::$dictionary[$value['string']], ...$value['vars']);
                     continue;
                 }
@@ -37,8 +41,11 @@ class Locale
         self::loadDictionary();
 
         if (is_array($key)) {
-            if (isset($key['string']) && isset($key['vars']) && isset(self::$dictionary[$key['string']]))
+            if (isset($key['string']) && isset($key['vars'])){
+                if (empty(self::$dictionary[$key['string']]))
+                    return sprintf($key['string'], ...$key['vars']);
                 return sprintf(self::$dictionary[$key['string']], ...$key['vars']);
+            }
             return $key;
         }
 

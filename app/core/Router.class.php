@@ -6,7 +6,7 @@ class Router
 {
     protected static $routes = [];
     protected static $params = [];
-    protected static $accessLevels = ['all' => 0, 'user' => 1, 'manager' => 2, 'admin' => 3, 'root' => 4];
+    protected static $accessLevels = ['all' => 0, 'user' => 1, 'trusted' => 2, 'manager' => 3, 'admin' => 4, 'root' => 5];
     public static function before()
     {
         if (!empty(self::$routes)) {

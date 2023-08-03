@@ -58,7 +58,6 @@ class TelegramChats extends Model
         }
 
         if (empty($chatData['personal']['nickname'])) {
-
             $userId = Contacts::getUserIdByContact('telegramid', $chatId);
             if (!empty($userId)) {
                 $userData = Users::getDataById($userId);

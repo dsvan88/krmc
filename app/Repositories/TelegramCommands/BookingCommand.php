@@ -29,7 +29,7 @@ class BookingCommand extends ChatCommand
 
         $participantId = $slot = -1;
         if ($weekData['data'][$requestData['dayNum']]['status'] !== 'set') {
-            if (!in_array($requestData['userStatus'], ['manager', 'admin'])) {
+            if (!in_array($requestData['userStatus'], ['trusted', 'manager', 'admin'])) {
                 self::$operatorClass::$resultMessage = self::locale('{{ Tg_Gameday_Not_Set }}');
                 return false;
             }

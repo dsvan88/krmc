@@ -12,12 +12,6 @@ class HelpCommand extends ChatCommand
     }
     public static function execute(array $arguments = [])
     {
-        /*         $message = self::locale('{{ Tg_Command_Help }}');
-
-        if (self::$message['message']['chat']['type'] === 'private' && in_array(self::$requester['privilege']['status'], ['manager', 'admin'])) {
-            $message .= self::locale('{{ Tg_Command_Help_Admin }}');
-        }
- */
         $folder = str_replace('\\','/',$_SERVER['DOCUMENT_ROOT'] . self::$operatorClass::$CommandNamespace);
 
         if (!is_dir($folder) || !file_exists($folder)) {

@@ -10,6 +10,7 @@
             <select name="status">
                 <option value="" <?= empty($data['privilege']['status']) ? 'selected' : '' ?>></option>
                 <option value="user" <?= $data['privilege']['status'] === 'user' ? 'selected' : '' ?>>Користувач</option>
+                <option value="trusted" <?= $data['privilege']['status'] === 'trusted' ? 'selected' : '' ?>>Довірений користувач</option>
                 <option value="manager" <?= $data['privilege']['status'] === 'manager' ? 'selected' : '' ?>>Менеджер</option>
                 <option value="admin" <?= $data['privilege']['status'] === 'admin' ? 'selected' : '' ?>>Адмін</option>
             </select>
