@@ -33,7 +33,7 @@ class AccountController extends Controller
     {
         if (!empty($_POST)) {
             if (Validator::csrfCheck() || Users::trottling()){
-                View::notice(['error' => 403, 'message' => 'Try again after some time:)']);
+                View::notice(['error' => 403, 'message' => 'Try again later:)']);
             }
             if (!Users::login($_POST)) {
                 $_SESSION['login_fails'][] = $_SERVER['REQUEST_TIME'];
