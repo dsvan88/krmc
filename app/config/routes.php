@@ -66,12 +66,6 @@ return  [
         'action' => 'show',
         'access' => ['category' => 'user']
     ],
-    'account/approve/email/{hash}' =>
-    [
-        'controller' => 'account',
-        'action' => 'emailVerifyHash',
-        'access' => ['category' => 'all']
-    ],
 
     'users/list' => [
         'controller' => 'account',
@@ -210,12 +204,6 @@ return  [
     [
         'controller' => 'account',
         'action' => 'passwordChange',
-        'access' => ['category' => 'user']
-    ],
-    'api/account/email/approve' =>
-    [
-        'controller' => 'account',
-        'action' => 'emailVerifyCode',
         'access' => ['category' => 'user']
     ],
     'api/account/email/approve/form' =>
@@ -367,6 +355,19 @@ return  [
         'access' => ['category' => 'admin']
     ],
 
+
+    'account/approve/email/{hash}' =>
+    [
+        'controller' => 'verification',
+        'action' => 'emailVerifyHash',
+        'access' => ['category' => 'all']
+    ],
+    'api/account/email/approve' =>
+    [
+        'controller' => 'verification',
+        'action' => 'emailVerifyCode',
+        'access' => ['category' => 'user']
+    ],
     'api/verification/register/name' =>
     [
         'controller' => 'verification',

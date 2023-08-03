@@ -328,7 +328,7 @@ class AccountController extends Controller
         ];
         View::modal($vars);
     }
-    public function emailVerifyHashAction()
+    /* public function emailVerifyHashAction()
     {
         if (!isset($_SESSION['id'])) {
             View::errorCode(404, ['message' => '<p>Your aren’t authorized yet!</p><p>Please - use browser, where you made your request!</p>']);
@@ -357,8 +357,8 @@ class AccountController extends Controller
         Contacts::edit(['data' => $emailData['data']], ['id' => $emailData['id']]);
 
         View::redirect('/');
-    }
-    public function emailVerifyCodeAction()
+    } */
+    /* public function emailVerifyCodeAction()
     {
         if (!isset($_SESSION['id'])) {
             View::errorCode(404, ['message' => '<p>Your aren’t authorized yet!</p><p>Please - use browser, where you made your request!</p>']);
@@ -387,7 +387,7 @@ class AccountController extends Controller
         Contacts::edit(['data' => $emailData['data']], ['id' => $emailData['id']]);
 
         View::message(['message' => 'Success!', 'location' => '/account/profile/' . $_SESSION['id']]);
-    }
+    } */
     public function emailApproveFormAction()
     {
         $contacts = Settings::load('contacts');

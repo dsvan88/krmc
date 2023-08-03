@@ -157,7 +157,13 @@ class VerificationController extends Controller
 
         $code = Tech::getCode(json_encode($userData));
         AccountRepository::saveTelegramApproveCode($userData, $code);
-        TelegramBotController::send($approved['telegramid'], "Your verification code:\n<b>$code</b>");
+
+        $message = Locale::phrase([
+            'string' => "Your verification code:\n<b>%s</b>",
+            'vars' => [ $code ],
+        ]);
+
+        TelegramBotController::send($approved['telegramid'], $message);
         $botData = TelegramBotController::getMe();
 
         $message = Locale::phrase([
