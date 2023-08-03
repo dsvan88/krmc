@@ -8,6 +8,16 @@ class Validator
     {
         return self::$method($value);
     }
+    public static function csrfCheck(): bool
+    {
+        return empty($_POST[CSRF_NAME]) || !self::validate('csrf', $_POST[CSRF_NAME]);
+    }
+    private static function csrf(string $value): string
+    {
+        $value = trim($value);
+        if (empty($value)) return false;
+        return $value === $_SESSION['csrf'];
+    }
     private static function email(string $value)
     {
         $value = trim($value);

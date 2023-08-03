@@ -1,6 +1,7 @@
 <?php
 if (!session_id()) {
     session_start();
+    $_SESSION['csrf'] = sha1(session_id());
 }
 if (!defined('SQL_HOST')) {
     // Determine base for saving files (Heroku - as Blob in DB, on real filesystems - as files)
@@ -51,6 +52,7 @@ if (!defined('SQL_HOST')) {
     define('FILE_MAINGALL', '/public/gallery/site/');
     define('CFG_AUTHOR', 'DSVan');
     define('CFG_TOKEN_NAME', 'KRMCtoken');
+    define('CSRF_NAME', '_token');
 }
 
 if (CFG_DEBUG) {

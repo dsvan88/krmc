@@ -32,7 +32,7 @@ class AccountController extends Controller
     public function loginAction()
     {
         if (!empty($_POST)) {
-            if (Users::trottling()){
+            if (Validator::csrfCheck() || Users::trottling()){
                 View::notice(['error' => 403, 'message' => 'Try again after some time:)']);
             }
             if (!Users::login($_POST)) {
