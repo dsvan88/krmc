@@ -126,12 +126,12 @@ class VerificationController extends Controller
             ]);
         }
 
-/*         if (!empty($userData['login'])) {
+        if (!empty($userData['login'])) {
             View::message([
                 'result' => false,
                 'message' => 'This nickname is alerady has account on this site.',
             ]);
-        } */
+        }
 
         $userId = (int) $userData['id'];
         $approved = ContactRepository::getApproved($userId);

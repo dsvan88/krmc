@@ -12,8 +12,8 @@ class Locale
         foreach ($vars as $key => $value) {
             if (is_array($value)) {
                 if (isset($value['string']) && isset($value['vars'])){
-                    if (empty(self::$dictionary[$key['string']])){
-                        $vars[$key] = sprintf($key['string'], ...$key['vars']);
+                    if (empty(self::$dictionary[$value['string']])){
+                        $vars[$key] = sprintf($value['string'], ...$value['vars']);
                         continue;
                     }
                     $vars[$key] = sprintf(self::$dictionary[$value['string']], ...$value['vars']);
