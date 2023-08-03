@@ -243,7 +243,7 @@ class TelegramBotController extends Controller
         $class = str_replace('/', '\\', self::$CommandNamespace . '\\' . $class);
 
         if (!class_exists($class)) {
-            self::$resultMessage = $class . ' Telegram command isn`t found!';
+            // self::$resultMessage = $class . ' Telegram command isn`t found!';
             return false;
         }
 
