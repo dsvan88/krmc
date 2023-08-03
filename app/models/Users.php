@@ -24,18 +24,22 @@ class Users extends Model
         $authData = self::query("SELECT * FROM $table WHERE login = ? LIMIT 1", [$login], 'Assoc');
         if (empty($authData)) return false;
         $authData =  $authData[0];
-        if (password_verify($password, $authData['password'])) {
-            $authData = self::decodeJson($authData);
-            self::setSessionData($authData);
-            self::setToken($authData);
+        
+        if (!password_verify($password, $authData['password']))
+            return false;
 
-            if (isset($_SESSION['personal']['forget'])) {
-                self::deleteForget($_SESSION['id'], $_SESSION['personal']);
-                unset($_SESSION['personal']['forget']);
-            }
-            return true;
+        $authData = self::decodeJson($authData);
+        self::setSessionData($authData);
+        self::setToken($authData);
+
+        if (isset($_SESSION['personal']['forget'])) {
+            self::deleteForget($_SESSION['id'], $_SESSION['personal']);
+            unset($_SESSION['personal']['forget']);
         }
-        return false;
+        if (!empty($_SESSION['login_fails'])) {
+            unset($_SESSION['login_fails']);
+        }
+        return true;
     }
     public static function logout()
     {
@@ -116,6 +120,11 @@ class Users extends Model
         unset($userData['id']);
         $userData['personal']['token'] = self::$userToken;
         self::edit($userData, ['id' => $userId]);
+        return true;
+    }
+    public static function trottling():bool {
+        if (empty($_SESSION['login_fails']) || ($count = count($_SESSION['login_fails'])) < PASS_FAIL_MIN) return false;
+        if ($_SESSION['login_fails'][$count-1] + PASS_FAIL_TROTTLING * ($count-3) < $_SERVER['REQUEST_TIME']) return false;
         return true;
     }
     public static function register($data)

@@ -32,14 +32,14 @@ class AccountController extends Controller
     public function loginAction()
     {
         if (!empty($_POST)) {
-            if (Users::login($_POST)) {
-                if (isset($_SESSION['path'])) {
-                    View::location($_SESSION['path']);
-                }
-                View::location('/');
-            } else {
+            if (Users::trottling()){
+                View::notice(['error' => 403, 'message' => 'Try again after some time:)']);
+            }
+            if (!Users::login($_POST)) {
+                $_SESSION['login_fails'][] = $_SERVER['REQUEST_TIME'];
                 View::notice(['error' => 403, 'message' => '{{ Account_Login_User_Not_Found }}']);
             }
+            View::location(isset($_SESSION['path']) ? $_SESSION['path'] : '/');
         }
         $vars = [
             'title' => '{{ Account_Login_Form_Title }}',
