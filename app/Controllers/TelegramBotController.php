@@ -368,7 +368,7 @@ class TelegramBotController extends Controller
         if (!empty(self::$requester) && $status === 'guest')
             $status = 'user';
 
-        if (self::$message['message']['chat']['type'] !== 'private' && $levels[$status] > 1) {
+        if (self::$message['message']['chat']['type'] !== 'private' && self::$chatId !== self::$techTelegramId && $levels[$status] > 1) {
             $status = 'user';
         }
         return $levels[$level] <= $levels[$status];
