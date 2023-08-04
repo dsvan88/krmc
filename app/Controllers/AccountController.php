@@ -6,7 +6,6 @@ use app\core\Controller;
 use app\core\ImageProcessing;
 use app\core\View;
 use app\core\Locale;
-use app\core\Mailer;
 use app\core\TelegramBot;
 use app\core\Validator;
 use app\models\Weeks;
@@ -514,7 +513,8 @@ class AccountController extends Controller
                 $hash = md5(json_encode([$userData['personal'], $userData['privilege']]) . $_SERVER['REQUEST_TIME']);
             }
             Users::saveForget($userData, $hash);
-            $telegramId = Contacts::getUserContact($userData['id'], 'telegramid');
+            $contact = Contacts::getUserContact($userData['id'], 'telegramid');
+            $telegramId = $contact['contact'];
             $link = "{$_SERVER['HTTP_X_FORWARDED_PROTO']}://{$_SERVER['SERVER_NAME']}/account/password-reset/$hash";
             $link = "<a href='$link'>$link</a>";
             $bot = new TelegramBot();

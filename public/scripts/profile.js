@@ -14,6 +14,21 @@ actionHandler.accountProfileSectionEdit = function (target, event) {
     
     this.changeCardContent(target.dataset.actionClick, parent);
 }
+actionHandler.verificationEmail = async function (target, event) {
+    const self = this;
+    event.preventDefault();
+    const verification = await self.verification(event.target, target.dataset.actionClick);
+
+    if (!verification) return false;
+
+    const formData = new FormData();
+    formData.append('approval_code', verification)
+    request({
+        url: target.dataset.actionClick,
+        data: formData,
+        success: (result) => self.commonResponse.call(self, result),
+    });
+}
 actionHandler.changeCardContent = function (url, target){
     let data = new FormData();
     data.append('uid', target.dataset.uid);

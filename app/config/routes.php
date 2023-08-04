@@ -208,12 +208,6 @@ return  [
         'action' => 'passwordChange',
         'access' => ['category' => 'user']
     ],
-    'api/account/email/approve/form' =>
-    [
-        'controller' => 'account',
-        'action' => 'emailApproveForm',
-        'access' => ['category' => 'user']
-    ],
     'api/account/profile/form' =>
     [
         'controller' => 'account',
@@ -351,17 +345,16 @@ return  [
         'access' => ['category' => 'admin']
     ],
 
-
-    'account/approve/email/{hash}' =>
+    'account/verification/email/{hash}' =>
     [
         'controller' => 'verification',
         'action' => 'emailVerifyHash',
         'access' => ['category' => 'all']
     ],
-    'api/account/email/approve' =>
+    'api/verification/email' =>
     [
         'controller' => 'verification',
-        'action' => 'emailVerifyCode',
+        'action' => 'emailVerification',
         'access' => ['category' => 'user']
     ],
     'api/verification/register/name' =>

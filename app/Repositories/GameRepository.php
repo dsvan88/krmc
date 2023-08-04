@@ -3,7 +3,6 @@
 namespace app\Repositories;
 
 use app\core\Locale;
-use app\models\Weeks;
 
 class GameRepository
 {

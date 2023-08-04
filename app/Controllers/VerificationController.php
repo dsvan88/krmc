@@ -12,6 +12,7 @@ use app\models\Settings;
 use app\models\Users;
 use app\Repositories\AccountRepository;
 use app\Repositories\ContactRepository;
+use app\Repositories\VerificationRepository;
 
 class VerificationController extends Controller
 {
@@ -28,92 +29,37 @@ class VerificationController extends Controller
         }
         extract(self::$route['vars']);
 
-        $contacts = Contacts::getByUserId($_SESSION['id']);
-
-        $emailData = [];
-        foreach ($contacts as $num => $contact) {
-            if ($contact['type'] !== 'email') continue;
-            $emailData = $contact;
-            break;
-        }
-
-        if (empty($emailData['data'])) {
+        if (empty($hash)){
             View::errorCode(404, ['message' => '<p>We can’t find your request</p><p>Or</p><p>Link has been expired!</p>']);
         }
 
-        $emailData['data'] = json_decode($emailData['data'], true);
-        if ($emailData['data']['approve']['hash'] !== $hash) {
-            View::errorCode(404, ['message' => '<p>We can’t find your request</p><p>Or</p><p>Link has been expired!</p>']);
+        $result = VerificationRepository::setApproved('email', $hash);
+        if (is_string($result)){
+            View::errorCode(404, ['message' => $result ]);
         }
-        unset($emailData['data']['approve']);
-        $emailData['data']['approved'] = $_SERVER['REQUEST_TIME'];
-        Contacts::edit(['data' => $emailData['data']], ['id' => $emailData['id']]);
-
-        View::redirect('/');
+        View::redirect('/account/profile/' . $_SESSION['id']);
     }
-    public function emailVerifyCodeAction()
+    public function emailVerificationAction()
     {
         if (!isset($_SESSION['id'])) {
             View::errorCode(404, ['message' => '<p>Your aren’t authorized yet!</p><p>Please - use browser, where you made your request!</p>']);
         }
-
-        $code = $_POST['approval_code'];
-        $contacts = Contacts::getByUserId($_SESSION['id']);
-
-        $emailData = [];
-        foreach ($contacts as $num => $contact) {
-            if ($contact['type'] !== 'email') continue;
-            $emailData = $contact;
-            break;
+        if (!empty($_POST) && VerificationRepository::check2FAVerification(trim($_POST['approval_code']))){
+            $result = VerificationRepository::setApproved('email');
+            if (is_string($result)){
+                View::notice(['type' => 'error', 'message' => $result, 'location' => "/account/profile/{$_SESSION['id']}/"]);
+            }
+            View::notice(['message' => 'Success!', 'location' => "/account/profile/{$_SESSION['id']}/"]);
         }
 
-        if (empty($emailData['data'])) {
-            View::errorCode(404, ['message' => '<p>We can’t find your request</p><p>Or</p><p>Link has been expired!</p>']);
+        if (!VerificationRepository::send2FAVerification('email')){
+            View::message([
+                'result' => false,
+                'message' => 'Something went wrong!',
+            ]);
         }
 
-        $emailData['data'] = json_decode($emailData['data'], true);
-        if ($emailData['data']['approve']['code'] !== $code) {
-            View::errorCode(404, ['message' => '<p>We can’t find your request</p><p>Or</p><p>Link has been expired!</p>']);
-        }
-        unset($emailData['data']['approve']);
-        $emailData['data']['approved'] = $_SERVER['REQUEST_TIME'];
-        Contacts::edit(['data' => $emailData['data']], ['id' => $emailData['id']]);
-
-        View::message(['message' => 'Success!', 'location' => '/account/profile/' . $_SESSION['id']]);
-    }
-    public function emailApproveFormAction()
-    {
-        $contacts = Settings::load('contacts');
-        $userData = Users::getDataById($_SESSION['id']);
-        $userContacts = Contacts::getByUserId($_SESSION['id']);
-
-        $mailer = new Mailer();
-
-        $contact = ContactRepository::setApproveData('email', $userContacts);
-
-        $mail = [
-            'title' => '<no-reply> ' . MAFCLUB_NAME . ' - Verify your E-mail',
-            'body' => "
-            <p>Please follow this link to verify your email:</p>
-            <p>https://krmc.gigalixirapp.com/account/approve/email/{$contact['data']['approve']['hash']}</p>
-            <p>or</p>
-            <p>Enter this code in the previous window:</p>
-            <p>{$contact['data']['approve']['code']}</p>",
-        ];
-        $mailer->prepMessage($mail);
-        $mailer->send($contact['contact']);
-
-        $vars = [
-            'title' => 'Approve User’s Email',
-            'texts' => [
-                'SubmitLabel' => 'Send',
-                'CancelLabel' => 'Cancel',
-            ],
-            'userId' => $userData['id'],
-            'userName' => $userData['name'],
-            'contacts' => $contacts,
-        ];
-        View::modal($vars);
+        View::message("To confirm your action, we have sent an email to your email adress.\nPlease, paste the code from it here:\n");
     }
     public function registerNameAction()
     {

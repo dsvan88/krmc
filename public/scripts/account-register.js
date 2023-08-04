@@ -10,7 +10,7 @@ actionHandler.accountRegisterFormSubmit = async function (event, modal, args) {
     request({
         url: 'account/register',
         data: formData,
-        success: self.commonResponse,
+        success: (result) => self.commonResponse.call(self, result),
     });
 }
 

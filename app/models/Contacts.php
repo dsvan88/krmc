@@ -15,8 +15,8 @@ class Contacts extends Model
     public static function getUserContact(int $userId, string $contactType)
     {
         $table = self::$table;
-        $contact = Contacts::query("SELECT contact FROM $table WHERE user_id = ? AND type = ? LIMIT 1", [$userId, $contactType], 'Column');
-        return empty($contact) ? false : $contact;
+        $contact = Contacts::query("SELECT * FROM $table WHERE user_id = ? AND type = ? LIMIT 1", [$userId, $contactType], 'Assoc');
+        return empty($contact) ? false : $contact[0];
     }
     public static function getUserIdByContact(string $contactType, string $value): mixed
     {

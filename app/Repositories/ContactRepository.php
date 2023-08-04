@@ -67,33 +67,45 @@ class ContactRepository
         }
         return true;
     }
-    public static function setApproveData(string $type, array $contacts)
-    {
-
-        $contact = false;
+    public static function findContactByType(string $type, array $contacts){
         foreach ($contacts as $index => $data) {
             if ($data['type'] !== $type) continue;
             if (!empty($data['data'])) {
                 $data['data'] = json_decode($data['data'], true);
-                if (isset($data['data']['approve']))
+
+                if (empty($data['data']['approve']))
                     return $data;
+
+                if ($data['data']['approve']['expired'] < $_SERVER['REQUEST_TIME']){
+                    unset($data['data']['approve']);
+                }
             }
-            $contact = $data;
-            break;
+            return $data;
         }
+        return false;
+    }
+    public static function setApproveData(string $type, array $contacts)
+    {
+        $contact = self::findContactByType($type, $contacts);
 
         if ($contact === false)
             return false;
+                        
+        if (empty($contact['data']['approve']['code'])){
+            $_SESSION['approve_code'] = Tech::getCode(json_encode($contacts));
+        }
+        else {
+            $_SESSION['approve_code'] = $contact['data']['approve']['code'];
+        }
 
-        $code = Tech::getCode(json_encode($contacts));
+        if (!empty($contact['data']['approved'])) return $contact;
 
-        $hash = sha1($code . $_SERVER['REQUEST_TIME']);
-
+        $hash = sha1($_SESSION['approve_code'] . $_SERVER['REQUEST_TIME']);
         $contact['data']['approve'] = [
-            'code' => $code,
             'hash' => $hash,
+            'code' => $_SESSION['approve_code'],
+            'expired' => $_SERVER['REQUEST_TIME'] + 3600,
         ];
-
         Contacts::edit(['data' => $contact['data']], ['id' => $contact['id']]);
 
         return $contact;

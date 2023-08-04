@@ -17,7 +17,7 @@
         <? if (isset($data['email'])) : ?>
             <span class="fa fa-check-circle text-accent"> Approved</span>
         <? else : ?>
-            <button type="button" class="positive" data-action-click="account/email/approve/form">Підтвердити</button>
+            <button type="button" class="positive" data-action-click="verification/email">Підтвердити</button>
         <? endif; ?>
     </div>
 </div>

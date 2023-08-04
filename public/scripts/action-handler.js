@@ -183,10 +183,13 @@ let actionHandler = {
 		if (response["message"]) {
 			new Alert({ text: response["message"] });
 		}
+		console.log(response["notice"]);
+		console.log(this);
+		console.log(this.noticer);
 		if (response["notice"] && this.noticer) {
 			this.noticer.add(response["notice"]);
 			if (response["notice"]["location"]) {
-				setTimeout(() => window.location = response["notice"]["location"], 500);
+				setTimeout(() => window.location = response["notice"]["location"], 1000);
 			}
 		}
 		if (response["location"]) {
@@ -223,7 +226,7 @@ let actionHandler = {
 		});
 	},
 	verification: async function (form, url) {
-		const formData = new FormData(form);
+		const formData = new FormData(form.tagName === 'FORM' ? form : undefined);
 		const verification = await request({ url: url, data: formData });
 
 		if (verification['result'] === false) {
