@@ -183,9 +183,6 @@ let actionHandler = {
 		if (response["message"]) {
 			new Alert({ text: response["message"] });
 		}
-		console.log(response["notice"]);
-		console.log(this);
-		console.log(this.noticer);
 		if (response["notice"] && this.noticer) {
 			this.noticer.add(response["notice"]);
 			if (response["notice"]["location"]) {
