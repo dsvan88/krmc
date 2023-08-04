@@ -181,7 +181,8 @@ let actionHandler = {
 			return false;
 		}
 		if (response["message"]) {
-			new Alert({ text: response["message"] });
+			alert(response["message"]);
+			// new Alert({ text: response["message"] });
 		}
 		if (response["notice"] && this.noticer) {
 			this.noticer.add(response["notice"]);
