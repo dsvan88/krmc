@@ -23,6 +23,9 @@ class Settings extends Model
                 'name' => $setting['name'],
                 'value' => $setting['value'],
             ];
+            if (!empty($setting['options'])){
+                self::$settings[$type][$setting['slug']]['options'] = json_decode($setting['options'], true);
+            }
         }
         return self::$settings[$type];
     }

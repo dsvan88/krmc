@@ -14,11 +14,6 @@
                     <? foreach ($gameTypes as $num => $gameType) : ?>
                         <option value="<?= $gameType['slug'] ?>" <?= ($day['game'] === $gameType['slug'] ? 'selected' : '') ?>><?= $gameType['name'] ?></option>
                     <? endforeach ?>
-                    <? /*<option value="mafia" <?= ($day['game'] === 'mafia' ? 'selected' : '') ?>><?= $texts['dayGameMafia'] ?></option>
-                    <option value="poker" <?= ($day['game'] === 'poker' ? 'selected' : '') ?>><?= $texts['dayGamePoker'] ?></option>
-                    <option value="board" <?= ($day['game'] === 'board' ? 'selected' : '') ?>><?= $texts['dayGameBoard'] ?></option>
-                    <option value="cash" <?= ($day['game'] === 'cash' ? 'selected' : '') ?>><?= $texts['dayGameCash'] ?></option>
-                    <option value="etc" <?= ($day['game'] === 'etc' ? 'selected' : '') ?>><?= $texts['dayGameEtc'] ?></option>*/ ?>
                 </select>
                 <span class="checkbox-styled">
                     <input type="checkbox" name="mods[]" id="game-tournament-checkbox" value="tournament" class="checkbox-styled-checkbox" <?= $day['tournament'] ?> />

@@ -30,6 +30,14 @@ class Games extends Model
             'players' => json_encode(Users::assingIds($post['player'], $post['role']), JSON_UNESCAPED_UNICODE),
             'started_at' => $_SERVER['REQUEST_TIME'],
         ];
+        if (!empty($post['default'])){
+            $setting = [
+                'type' => 'mafia_config',
+                'slug' => 'mafia-config',
+                'options' => $state['config'],
+            ];
+            Settings::save($setting);
+        }
         return self::insert($data, $table);
     }
 

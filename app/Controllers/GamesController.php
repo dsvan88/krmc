@@ -7,6 +7,7 @@ use app\core\Locale;
 use app\core\View;
 use app\models\Days;
 use app\models\Games;
+use app\models\Settings;
 use app\models\Users;
 use app\models\Weeks;
 
@@ -63,6 +64,35 @@ class GamesController extends Controller
         });
         shuffle($shuffled);
 
+        $config = [
+            "voteType" => "enum",
+            "courtAfterFouls" => false,
+            "getOutHalfPlayersMin" => 4,
+            "mutedSpeakMaxCount" => 5,
+            "bestMovePlayersMin" => 9,
+            "timerMax" => 6000,
+            "lastWillTime" => 6000,
+            "debateTime" => 3000,
+            "mutedSpeakTime" => 3000,
+            "wakeUpRoles" => 2000,
+            "points" => [
+                "winner" => 1,
+                "sherifFirstStaticKill" => 0.1,
+                "sherifFirstDynamicKill" => 0.3,
+                "bestMove" => [0, 0, 0.25, 0.4],
+                "aliveMafs" => [0, 0, 0.25, 0.4],
+                "aliveReds" => [0, 0, 0.15, 0.1],
+                "fourFouls" => -0.1,
+                "disqualified" => -0.3,
+                "voteInSherif" => -0.1,
+            ],
+        ];
+        
+        $settings = Settings::getGroup('mafia_config');
+        if (!empty($settings)){
+            $config = $settings['mafia-config']['options'];
+        }
+
         $vars = [
             'title' => 'Prepeare a game',
             'texts' => $texts,
@@ -71,6 +101,7 @@ class GamesController extends Controller
             'shuffled' => $shuffled,
             'maxPlayers' => 10,
             'playersCount' => count($day['participants']),
+            'config' => $config,
             'scripts' => [
                 '/public/scripts/manager-game-funcs.js?v=' . $_SERVER['REQUEST_TIME'],
             ],

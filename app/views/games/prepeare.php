@@ -7,15 +7,15 @@
                 <div class="game-form__row">
                     <label for="vote-type" class="game-form__label">Тип голосування:</label>
                     <select name="vote-type" id="vote-type" class="game-form__input">
-                        <option value="count">Кількість</option>
-                        <option value="enum" selected>Список</option>
+                        <option value="count" <?= $config['voteType'] === 'count' ? 'selected' : ''?>>Кількість</option>
+                        <option value="enum" <?= $config['voteType'] === 'enum' ? 'selected' : ''?>>Список</option>
                     </select>
                 </div>
                 <div class="game-form__row">
                     <label for="court-after-fouls" class="game-form__label">Суд після 4-го фола:</label>
                     <select name="court-after-fouls" id="court-after-fouls" class="game-form__input">
-                        <option value="1">Так</option>
-                        <option value="0" selected>Ні</option>
+                        <option value="1" <?= $config['courtAfterFouls'] ? 'selected' : ''?>>Так</option>
+                        <option value="0" <?= $config['courtAfterFouls'] ? '' : 'selected'?>>Ні</option>
                     </select>
                 </div>
             </fieldset>
@@ -23,80 +23,89 @@
                 <legend>Максимальна кількість гравців за столом:</legend>
                 <div class="game-form__row">
                     <label for="get-out-half-players-min" class="game-form__label">Для підняття половини гравців:</label>
-                    <input type="number" name="get-out-half-players-min" id="get-out-half-players-min" value="4">
+                    <input type="number" name="get-out-half-players-min" id="get-out-half-players-min" value="<?= $config['getOutHalfPlayersMin']?>">
                 </div>
                 <div class="game-form__row">
                     <label for="muted-speak-max-count" class="game-form__label">Для промови мовчазних:</label>
-                    <input type="number" name="muted-speak-max-count" id="muted-speak-max-count" value="5">
+                    <input type="number" name="muted-speak-max-count" id="muted-speak-max-count" value="<?= $config['mutedSpeakMaxCount']?>">
                 </div>
                 <div class="game-form__row">
                     <label for="best-move-players-min" class="game-form__label">Для залишення КХ:</label>
-                    <input type="number" name="best-move-players-min" id="best-move-players-min" value="9">
+                    <input type="number" name="best-move-players-min" id="best-move-players-min" value="<?= $config['bestMovePlayersMin']?>">
                 </div>
             </fieldset>
             <fieldset>
                 <legend>Тривалість:</legend>
                 <div class="game-form__row">
                     <label for="timer-max" class="game-form__label">Час промови:</label>
-                    <input type="number" name="timer-max" id="timer-max" value="6000" step="500">
+                    <input type="number" name="timer-max" id="timer-max" value="<?= $config['timerMax']?>" step="500">
                 </div>
                 <div class="game-form__row">
                     <label for="last-will-time" class="game-form__label">Час заповіту:</label>
-                    <input type="number" name="last-will-time" id="last-will-time" value="6000" step="500">
+                    <input type="number" name="last-will-time" id="last-will-time" value="<?= $config['lastWillTime']?>" step="500">
                 </div>
                 <div class="game-form__row">
                     <label for="debate-time" class="game-form__label">Час дебатів:</label>
-                    <input type="number" name="debate-time" id="debate-time" value="3000" step="500">
+                    <input type="number" name="debate-time" id="debate-time" value="<?= $config['debateTime']?>" step="500">
                 </div>
                 <div class="game-form__row">
                     <label for="muted-speak-time" class="game-form__label">Час мовчазного гравця:</label>
-                    <input type="number" name="muted-speak-time" id="muted-speak-time" value="3000" step="500">
+                    <input type="number" name="muted-speak-time" id="muted-speak-time" value="<?= $config['mutedSpeakTime']?>" step="500">
                 </div>
                 <div class="game-form__row">
                     <label for="wake-up-roles" class="game-form__label">Час шерифа:</label>
-                    <input type="number" name="wake-up-roles" id="wake-up-roles" value="2000" step="500">
+                    <input type="number" name="wake-up-roles" id="wake-up-roles" value="<?= $config['wakeUpRoles']?>" step="500">
                 </div>
             </fieldset>
             <fieldset>
                 <legend>Нарахування балів:</legend>
                 <div class="game-form__row">
                     <label for="points[winner]" class="game-form__label">Перемога:</label>
-                    <input type="number" step="0.1" name="points[winner]" id="points[winner]" value="1.0">
+                    <input type="number" step="0.1" name="points[winner]" id="points[winner]" value="<?= $config['points']['winner']?>">
                 </div>
                 <div class="game-form__row">
                     <label for="points[sherifFirstStaticKill]" class="game-form__label">Статичне вбивство Шерифа:</label>
-                    <input type="number" step="0.1" name="points[sherifFirstStaticKill]" id="points[sherifFirstStaticKill]" value="0.1">
+                    <input type="number" step="0.1" name="points[sherifFirstStaticKill]" id="points[sherifFirstStaticKill]" value="<?= $config['points']['sherifFirstStaticKill']?>">
                 </div>
                 <div class="game-form__row">
                     <label for="points[sherifFirstDynamicKill]" class="game-form__label">Динамічне вбивство Шерифа:</label>
-                    <input type="number" step="0.1" name="points[sherifFirstDynamicKill]" id="points[sherifFirstDynamicKill]" value="0.3">
+                    <input type="number" step="0.1" name="points[sherifFirstDynamicKill]" id="points[sherifFirstDynamicKill]" value="<?= $config['points']['sherifFirstDynamicKill']?>">
                 </div>
                 <div class="game-form__row">
                     <label for="points[bestMove]" class="game-form__label">Кращій хід:</label>
-                    <input type="text" name="points[bestMove]" id="points[bestMove]" value="0.0, 0.0, 0.25, 0.4">
+                    <input type="text" name="points[bestMove]" id="points[bestMove]" value="<?= implode(', ',$config['points']['bestMove'])?>">
                 </div>
                 <div class="game-form__row">
                     <label for="points[aliveMafs]" class="game-form__label">Живим мафіозі:</label>
-                    <input type="text" name="points[aliveMafs]" id="points[aliveMafs]" value="0.0, 0.0, 0.25, 0.4">
+                    <input type="text" name="points[aliveMafs]" id="points[aliveMafs]" value="<?= implode(', ',$config['points']['aliveMafs'])?>">
                 </div>
                 <div class="game-form__row">
                     <label for="points[aliveReds]" class="game-form__label">Живим мирним:</label>
-                    <input type="text" name="points[aliveReds]" id="points[aliveReds]" value="0.0, 0.0, 0.15, 0.1">
+                    <input type="text" name="points[aliveReds]" id="points[aliveReds]" value="<?= implode(', ',$config['points']['aliveReds'])?>">
                 </div>
             </fieldset>
             <fieldset>
                 <legend>Штрафи:</legend>
                 <div class="game-form__row">
                     <label for="points[fourFouls]" class="game-form__label">4-й фолл:</label>
-                    <input type="number" step="0.1" name="points[fourFouls]" id="points[fourFouls]" value="-0.1">
+                    <input type="number" step="0.1" name="points[fourFouls]" id="points[fourFouls]" value="<?= $config['points']['fourFouls']?>">
                 </div>
                 <div class="game-form__row">
                     <label for="points[disqualified]" class="game-form__label">Дискваліфікація:</label>
-                    <input type="number" step="0.1" name="points[disqualified]" id="points[disqualified]" value="-0.3">
+                    <input type="number" step="0.1" name="points[disqualified]" id="points[disqualified]" value="<?= $config['points']['disqualified']?>">
                 </div>
                 <div class="game-form__row">
                     <label for="points[voteInSherif]" class="game-form__label">Голос в Шерифа при 9х:</label>
-                    <input type="number" step="0.1" name="points[voteInSherif]" id="points[voteInSherif]" value="-0.1">
+                    <input type="number" step="0.1" name="points[voteInSherif]" id="points[voteInSherif]" value="<?= $config['points']['voteInSherif']?>">
+                </div>
+            </fieldset>
+            <fieldset>
+                <legend>Налаштування за замовчуванням:</legend>
+                <div class="game-form__row">
+                    <span class="checkbox-styled">
+                        <input type="checkbox" name="default" id="save-as-default-checkbox" value="1" class="checkbox-styled-checkbox" />
+                        <label for="save-as-default-checkbox" class="checkbox-styled__label">Сохранить</label>
+                    </span>
                 </div>
             </fieldset>
         </details>
