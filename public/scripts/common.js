@@ -9,6 +9,10 @@ document.body.querySelectorAll('input[data-action-change]').forEach(element =>
 document.body.querySelectorAll('form[data-action-submit]').forEach(element =>
 	element.addEventListener('submit', (event) => actionHandler.commonSubmitFormHandler.call(actionHandler, event))
 );
+document.body.querySelectorAll('input[type="tel"]').forEach(element =>{
+	element.addEventListener('focus', (event) => actionHandler.phoneInputFocus.call(actionHandler, event));
+    element.addEventListener('input', (event) => actionHandler.phoneInputFormat.call(actionHandler, event), false);
+});
 
 let menuCheckbox = document.body.querySelector('#profile-menu-checkbox');
 if (menuCheckbox) {

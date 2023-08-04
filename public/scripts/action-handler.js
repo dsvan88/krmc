@@ -1,5 +1,6 @@
 let actionHandler = {
 	noticer: null,
+	phoneMask: "+38 (0__) ___-__-__",
 	inputCommonHandler: function (event) {
 		let action = event.target.dataset.actionInput;
 		if (!action.startsWith('autocomplete-') || event.target.value.length <= 2) return false;
@@ -242,5 +243,60 @@ let actionHandler = {
 		});
 
 		return promise.then();
+	},
+	phoneInputFocus: function (event){
+		const input = event.target,
+        	inputNumbersValue = input.value.replace(/\D/g, '');
+
+		if (!inputNumbersValue)
+			input.value = this.phoneMask;
+
+		let pos = input.value.indexOf('_');
+		if (pos) {
+			input.setSelectionRange(pos, pos);
+		}
+	},
+	phoneInputFormat: function (event){
+		let input = event.target,
+			inputNumbersValue = input.value.replace(/\D/g, '');
+
+		if (!inputNumbersValue) {
+			return input.value = "";
+		}
+		let maskLength = phoneMask.replace(/[^0-9_]/g, '').length;
+
+		if (inputNumbersValue.length < maskLength)
+		inputNumbersValue = inputNumbersValue.padEnd(maskLength, '_');
+		
+		let result = '';
+		let index = -1;
+		for (let char of inputNumbersValue) {
+			++index;
+			if (index >= maskLength)
+				break;
+			if (index === 0)
+				char = `+${char}`;
+			else if (index === 2)
+				char = ` (${char}`;
+			else if (index === 4)
+				char = `${char}) `;
+			else if (index === 8 || index=== 10)
+				char = `-${char}`;
+			result += char;
+		}
+		input.value = result;
+
+		let pos = input.value.indexOf('_');
+		if (pos) {
+			if (!event.data){
+				if (input.value[pos-1] === '-'){
+					--pos;
+				}
+				else if ([' ', '('].indexOf(input.value[pos - 1]) !== -1) {
+					pos -= 2;
+				}
+			}
+			input.setSelectionRange(pos, pos);
+		}
 	}
 };
