@@ -174,6 +174,7 @@ class MafiaEngine extends GameEngine {
                     min: 0,
                     max: this.votesAll,
                 },
+                pause: true,
                 value: '',
                 action: voted => this.processVotes.call(this, voted),
             };
@@ -660,6 +661,7 @@ class MafiaEngine extends GameEngine {
                 min: 0,
                 max: this.votesAll,
             },
+            pause: true,
             value: '',
             action: voted => this.processVotes.call(this, voted),
         };
@@ -775,6 +777,7 @@ class MafiaEngine extends GameEngine {
                         min: 0,
                         max: this.playersCount,
                     },
+                    pause: true,
                     value: '',
                     action: voted => this.processVotesMassGetOut.call(this, voted),
                 };
