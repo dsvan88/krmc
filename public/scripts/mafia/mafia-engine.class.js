@@ -899,7 +899,7 @@ class MafiaEngine extends GameEngine {
     checkBreakerIsMafia() {
         if (this.breakers.length === 0) return true;
         for(let playerId of this.breakers){
-            if (this.player[playerId].role === 1 || this.player[playerId].role === 2) return true;
+            if (this.players[playerId].role === 1 || this.players[playerId].role === 2) return true;
         }
         return false;
     }
