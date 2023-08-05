@@ -232,13 +232,13 @@ return [
     '<u>/?</u> or <u>/start</u> or <u>/help</u> <i>// This help menu</i>' => '<u>/?</u> или <u>/start</u> или <u>/help</u> <i>// Це меню допомоги</i>',
 
     "<u>/recall (week day)</u> <i>// Recall day settings for a specific day.\nRestored by a new registration from the admin.\nWithout specifying the day - for today</i>\n" =>
-    "<u>/recall (день недели)</u> <i>// Отменить сбор.\nВосстанавливается новой регистрацией от админа.\nБез уточнення дня - очищає список на сьогодні.</i>",
+    "<u>/recall (день тиждня)</u> <i>// Відмінити сбір.\nВідновлюється новою реєстрацією від адміна.\nБез уточнення дня - відміняє сбір на сьогодні.</i>",
 
     "<u>/clear (week day)</u> <i>// Clear patricipant’s list of a specific day.\n\tWithout specifying the day - for today.\n\tWorking on recalled day only!</i>" => "<u>/clear (день тиждня)</u> <i>// Очистити список учасників на конкретний день.\n\tБез уточнення дня - очищає список на сьогодні.\n\tПрацює лише на днях, по яким стався \"відбій\".</i>",
     '<u>/newuser Player’s nickname</u> (in Cyrillic) <i>// Register a new nickname in the system.</i>' => '<u>/newuser Псевдонім Гравця</u> (кириліцею) <i>// Зареєструвати у системи новий псевдонім гравця.</i>',
     '<u>/users</u> <i>// Users list, registered in system.</i>' => '<u>/users</u> <i>// Список користувачів, зареєстрованих у системі.</i>',
 
-    "<u>/set</u> <i>// Set data for a specific day. Example:</i>\n\t\t/set вс, mafia, 18:00, (Good luck, have fun!)\n" => "<u>/set</u> <i>// Вказати дані дня. Зразок:</i>\n\t\t/set вс, mafia, 18:00, (Разважтесь!)\n",
+    "<u>/set</u> <i>// Set data for a specific day. Example:</i>\n\t\t/set sun, mafia, 18:00, (Good luck, have fun!)\n" => "<u>/set</u> <i>// Вказати дані дня. Зразок:</i>\n\t\t/set неділя, mafia, 18:00, (Разважтесь!)\n",
     '<u>/reg</u> <i>// Booking/unbooking players for a specific day. Examples:</i>
     /reg +mon, nickname, 18:00, (with ?)
     /reg -mon, nickname

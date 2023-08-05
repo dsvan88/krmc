@@ -232,7 +232,7 @@ return [
     '<u>/?</u> or <u>/start</u> or <u>/help</u> <i>// This help menu</i>' => '<u>/?</u> или <u>/start</u> или <u>/help</u> <i>// Это меню помощи</i>',
 
     "<u>/recall (week day)</u> <i>// Recall day settings for a specific day.\nRestored by a new registration from the admin.\nWithout specifying the day - for today</i>\n" =>
-    "<u>/recall (день недели)</u> <i>// Отменить сбор.\nВосстанавливается новой регистрацией от админа.\nБез указания дня - сегодня</i>\n",
+    "<u>/recall (день недели)</u> <i>// Отменить сбор.\nВосстанавливается новой регистрацией от админа.\nБез указания дня - отменяет сбор на сегодня</i>\n",
 
     "<u>/clear (week day)</u> <i>// Clear patricipant’s list of a specific day.\n\tWithout specifying the day - for today.\n\tWorking on recalled day only!</i>" => "<u>/clear (день недели)</u> <i>// Очистить список учасников на конкретный день.\n\tБез уточнения дня - очищает список на сегодня.\n\tРаботает толька на днях, по которым случился \"отбой\".</i>",
     '<u>/newuser Player’s nickname</u> (in Cyrillic) <i>// Register a new nickname in the system.</i>' => '<u>/newuser Псевдоним Игрока</u> (кириллицей) <i>// Зарегистрировать в системе новый псевдоним игрока.</i>',
