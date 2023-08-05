@@ -50,7 +50,7 @@ class HelpCommand extends ChatCommand
         $class = str_replace('/', '\\', self::$operatorClass::$CommandNamespace . '\\' . $class);
 
         if (!class_exists($class) || !self::$operatorClass::checkAccess($class::$accessLevel)) {
-            error_log("Command $command - false");
+            // error_log("Command $command - false");
             return false;
         }
         return $class::description();

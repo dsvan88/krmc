@@ -114,7 +114,7 @@ class TechController extends Controller
                     'language_code' => 'uk',
                 ],
                 'chat' => [
-                    'id' => 900669168,
+                    'id' => -684025311,
                     'first_name' => 'Dmytro',
                     'last_name' => 'Vankevych',
                     'username' => 'dsvan88',

@@ -47,10 +47,6 @@ class TelegramBotController extends Controller
             $langCode = $message['message']['from']['language_code'];
         }
         Locale::change($langCode);
-        /* 
-        self::$bot = new TelegramBot();
-        self::$techTelegramId = Settings::getTechTelegramId();
-        self::$bot->sendMessage(self::$techTelegramId, json_encode($message)); */
 
         $text = trim($message['message']['text']);
 
@@ -368,7 +364,7 @@ class TelegramBotController extends Controller
         if (!empty(self::$requester) && $status === 'guest')
             $status = 'user';
 
-        if (self::$message['message']['chat']['type'] !== 'private' && self::$chatId !== self::$techTelegramId && $levels[$status] > 1) {
+        if (self::$message['message']['chat']['type'] !== 'private' && self::$chatId != self::$techTelegramId && $levels[$status] > 1) {
             $status = 'user';
         }
         return $levels[$level] <= $levels[$status];
