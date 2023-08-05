@@ -238,7 +238,7 @@ return [
     '<u>/newuser Player’s nickname</u> (in Cyrillic) <i>// Register a new nickname in the system.</i>' => '<u>/newuser Псевдоним Игрока</u> (кириллицей) <i>// Зарегистрировать в системе новый псевдоним игрока.</i>',
     '<u>/users</u> <i>// Users list, registered in system.</i>' => '<u>/users</u> <i>// Список пользователей, зарегистрированных в системе.</i>',
 
-    "<u>/set</u> <i>// Set data for a specific day. Example:</i>\n\t\t/set вс, mafia, 18:00, (Good luck, have fun!)\n" => "<u>/set</u> <i>// Вказати дані дня. Зразок:</i>\n\t\t/set вс, mafia, 18:00, (Разважтесь!)\n",
+    "<u>/set</u> <i>// Set data for a specific day. Example:</i>\n\t\t/set sun, mafia, 18:00, (Good luck, have fun!)\n" => "<u>/set</u> <i>// Вказати дані дня. Зразок:</i>\n\t\t/set вс, mafia, 18:00, (Разважтесь!)\n",
     '<u>/reg</u> <i>// Booking/unbooking players for a specific day. Examples:</i>
     /reg +mon, nickname, 18:00, (with ?)
     /reg -mon, nickname
