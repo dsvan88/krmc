@@ -795,6 +795,7 @@ class MafiaEngine extends GameEngine {
         if (!breakers) return false;
 
         breakers.split(',').forEach(breaker => this.breakers.push( this.config.voteType === 'enum' ? +breaker : --breaker));
+        this.addLog('Злам на голосуванні! ' + (this.breakers.length > 1 ? 'Відповідальні, гравці під номерами: ' : 'Відповідальний, гравець № ') + this.courtList(this.breakers));
     }
     wakeUpRoles() {
         if (!this.config.wakeUpRoles) return this.dispatchNext();
