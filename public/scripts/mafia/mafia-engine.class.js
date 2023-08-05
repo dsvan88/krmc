@@ -5,6 +5,7 @@ class MafiaEngine extends GameEngine {
     daysCount = -1;
     prevStage = null;
     timer = null;
+    winners = false;
 
     debate = false;
     needFix = false;
