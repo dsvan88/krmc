@@ -2,6 +2,7 @@ class ModalWindow {
 
 	modal = null;
 	modalIndex = null;
+	modalClose = null;
 	commonOverlay = null;
 	currentOverlay = null;
 	title = null;
@@ -69,6 +70,7 @@ class ModalWindow {
 			}
 			form.addEventListener('submit', event => this.submit(event))
 		}
+		this.attachEvents();
 		return this.content;
 	};
 	clear() {
@@ -82,10 +84,10 @@ class ModalWindow {
 		this.title.className = 'modal__title';
 		this.title.innerHTML = 'Завантаження...';
 
-		let modalClose = document.createElement("i");
-		modalClose.className = "fa fa-window-close modal__close";
+		this.modalClose = document.createElement("i");
+		this.modalClose.className = "fa fa-window-close modal__close";
 		modalHeader.append(this.title);
-		modalHeader.append(modalClose);
+		modalHeader.append(this.modalClose);
 
 		this.modal = document.createElement("div");
 		this.modal.className = "modal";
@@ -105,15 +107,14 @@ class ModalWindow {
 		this.content.append(modalRow);
 		this.modal.append(this.content);
 
-
 		this.currentOverlay = document.createElement("div");
 		this.currentOverlay.className = "modal__overlay modal__close";
 		this.currentOverlay.id = divId;
 		this.currentOverlay.append(this.modal);
 
 		document.body.append(this.currentOverlay);
-		const _self = this;
-		this.currentOverlay.addEventListener("click",  (event) => _self.close(event));
+
+		this.currentOverlay.addEventListener("click",  (event) => this.close(event));
 
 		this.popUp();
 	};
@@ -143,7 +144,6 @@ class ModalWindow {
 			setTimeout(() => this.commonOverlay.remove(), 300);
 		}
 		const _self = this;
-		this.currentOverlay.removeEventListener("click", (event) => _self.close(event));
 
 		this.modal.style.opacity = 0;
 		this.modal.style.transform = 'translateY(2%)';
@@ -162,11 +162,13 @@ class ModalWindow {
 	attachEvents() {
         const self = this;
 
-        self.modal.ondragstart = () => false;
+		self.currentOverlay.querySelectorAll('.modal__close').forEach(element => element.addEventListener("click",  (event) => self.close(event)) );
 
-        self.title.addEventListener('mousedown', (event) => self.dragStart.call(self, event));
+        // self.modal.ondragstart = () => false;
 
-        self.modal.addEventListener('touchstart', (event) => self.dragStart.call(self, event));
+        // self.title.addEventListener('mousedown', (event) => self.dragStart.call(self, event));
+
+        // self.modal.addEventListener('touchstart', (event) => self.dragStart.call(self, event));
     }
 	dragStart(event) {
 
@@ -200,12 +202,12 @@ class ModalWindow {
         document.addEventListener('mousemove', self.onMouseMove);
         document.addEventListener('touchmove', self.onMouseMove);
 
-        self.modal.onmouseup = (event) => this.moveEnd(event, 'mousemove');
-        self.modal.ontouchend = (event) => this.moveEnd(event, 'touchmove');
-
+        self.modal.onmouseup = (event) => this.moveEnd(event);
+        self.modal.ontouchend = (event) => this.moveEnd(event);
     }
-    moveEnd(event, eventName) {
-        document.removeEventListener(eventName, this.onMouseMove);
+    moveEnd(event) {
+		// console.log(event);
+        document.removeEventListener(event.type, this.onMouseMove);
         this.dragged = false;
         this.modal.ontouchend = null;
         document.context = null;
