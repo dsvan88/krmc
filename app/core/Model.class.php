@@ -37,8 +37,7 @@ class Model extends Db
         $table = static::$table;
         $places = implode(', ', array_fill(0, count($data), '?'));
         $result = self::query("SELECT * FROM $table WHERE $column IN ($places)", $data, 'Assoc');
-        if (empty($result)) return false;
-        return $result;
+        return empty($result) ? false : $result;
     }
     public static function getSimpleArray($query, $params = [])
     {

@@ -243,7 +243,8 @@ class Users extends Model
 
         if (!$result) return $result;
 
-        for ($i = 0; $i < count($result); $i++) {
+        $count = count($result);
+        for ($i = 0; $i < $count; $i++) {
             $result[$i]['password'] = '***';
             $result[$i] = self::decodeJson($result[$i]);
         }
@@ -419,7 +420,7 @@ class Users extends Model
     {
         $userData['privilege']  = json_decode($userData['privilege'], true);
         $userData['personal']   = json_decode($userData['personal'], true);
-        // $userData['contacts']   = json_decode($userData['contacts'], true);
+        $userData['contacts']   = json_decode($userData['contacts'], true);
         $userData['credo']      = json_decode($userData['credo'], true);
         return $userData;
     }
@@ -448,7 +449,8 @@ class Users extends Model
         for($x=0; $x < $countContacts; $x++){
             for($y=0; $y < $countUsers; $y++){
                 if ($contacts[$x]['user_id'] != $usersData[$y]['id']) continue;
-                $usersData[$y]['contacts'][$contacts[$x]['type']] = $contacts[$x]['contact'];
+                $usersData[$y]['contacts'][$contacts[$x]['type']] = 
+                    $contacts[$x]['contact'];
             }
         }
         return $usersData;

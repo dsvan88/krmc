@@ -4,10 +4,11 @@ class ModalWindow {
 	modalIndex = null;
 	commonOverlay = null;
 	currentOverlay = null;
-	headerTitle = null;
+	title = null;
 	formSubmitHandler = null;
 	context = null;
 	content = null;
+	dragged = false;
 
 	constructor({ divId = "modalWindow", html = "", title = "", buttons = [], submit = null, context = null } = {}) {
 		this.commonOverlay = document.body.querySelector("#overlay");
@@ -23,6 +24,7 @@ class ModalWindow {
 		if (html) {
 			this.fill({ html, title, buttons, submit, context });
 		}
+		this.attachEvents();
 	};
 	fill({ html = "", title = "", buttons = [], submit = null, context = null }) {
 		let modalContainer = null;
@@ -31,9 +33,13 @@ class ModalWindow {
 			this.content.innerHTML = html;
 		}
 		
-		if (title)
-			this.modal.querySelector('.modal__title').innerText = title;
-		
+		if (title){
+			if (/<\w+?>/.test(title)){
+				this.title.innerHTML = title;
+			} else {
+				this.title.innerText = title;
+			}
+		}
 		if (buttons.length !== 0) {
 			modalContainer = this.content || this.modal.querySelector('.modal__container');
 			const modalButtons = document.createElement('div');
@@ -72,18 +78,19 @@ class ModalWindow {
 		let modalHeader = document.createElement("div");
 		modalHeader.className = "modal__header";
 
-		this.headerTitle = document.createElement("h3");
-		this.headerTitle.className = 'modal__title';
-		this.headerTitle.innerHTML = 'Завантаження...';
+		this.title = document.createElement("h3");
+		this.title.className = 'modal__title';
+		this.title.innerHTML = 'Завантаження...';
 
 		let modalClose = document.createElement("i");
 		modalClose.className = "fa fa-window-close modal__close";
-		modalHeader.append(this.headerTitle);
+		modalHeader.append(this.title);
 		modalHeader.append(modalClose);
 
 		this.modal = document.createElement("div");
 		this.modal.className = "modal";
 		this.modal.append(modalHeader);
+		/* ВОТ ГДЕ КОСЯК*/
 		this.modal.innerHTML += `
 			<div class="modal__container">
 				<div class="modal__buttons">
@@ -146,4 +153,69 @@ class ModalWindow {
 		}
 		this.close();
 	}
+	attachEvents() {
+        const self = this;
+
+        self.modal.ondragstart = () => false;
+
+        self.title.addEventListener('mousedown', (event) => self.dragStart.call(self, event));
+
+        self.modal.addEventListener('touchstart', (event) => self.dragStart.call(self, event));
+    }
+	dragStart(event) {
+		console.log(event)
+        if (this.dragged) return;
+        this.dragged = true;
+
+        const clientX = event.clientX || event.targetTouches[0].clientX;
+        const clientY = event.clientY || event.targetTouches[0].clientY;
+
+        this.shiftX = clientX - this.dialog.getBoundingClientRect().left;
+        this.shiftY = clientY - this.dialog.getBoundingClientRect().top;
+
+        this.dragnDrop(event);
+    }
+    dragnDrop(event) {
+
+        const self = this;
+
+        self.modal.style.position = 'absolute';
+        self.modal.style.zIndex = 1000;
+        self.modal.style.margin = 0;
+
+        document.body.append(self.modal);
+
+        const pageX = event.pageX || event.targetTouches[0].pageX;
+        const pageY = event.pageY || event.targetTouches[0].pageY;
+
+        self.moveAt(pageX, pageY);
+
+        document.context = self;
+        document.addEventListener('mousemove', self.onMouseMove);
+        document.addEventListener('touchmove', self.onMouseMove);
+
+        self.modal.onmouseup = (event) => this.moveEnd(event, 'mousemove');
+        self.modal.ontouchend = (event) => this.moveEnd(event, 'touchmove');
+
+    }
+    moveEnd(event, eventName) {
+        document.removeEventListener(eventName, this.onMouseMove);
+        this.dragged = false;
+        this.modal.ontouchend = null;
+        document.context = null;
+    }
+    moveAt(pageX, pageY) {
+        this.modal.style.left = pageX - this.shiftX + 'px';
+        this.modal.style.top = pageY - this.shiftY + 'px';
+    }
+    onMouseMove(event) {
+        const self = document.context;
+
+        if (!self) return false;
+
+        const pageX = event.pageX || event.targetTouches[0].pageX;
+        const pageY = event.pageY || event.targetTouches[0].pageY;
+
+        self.moveAt(pageX, pageY);
+    }
 }
