@@ -61,7 +61,9 @@ class TelegramBotController extends Controller
 
         $userId = Contacts::getUserIdByContact('telegramid', $userTelegramId);
 
-        self::$requester = Users::getDataById($userId);
+        if (!empty($userId)){
+            self::$requester = Users::getDataById($userId);
+        }
 
         if (empty(self::$requester) && !in_array(self::$command, self::$guestCommands)) {
             self::$bot->sendMessage(self::$chatId, Locale::phrase('{{ Tg_Unknown_Requester }}'));
@@ -75,7 +77,7 @@ class TelegramBotController extends Controller
             if (!self::execute()) {
                 if (empty(self::$resultMessage))
                     exit();
-                $botResult = self::$bot->sendMessage(self::$techTelegramId, json_encode([self::$message, /*self::$requester,*/ self::parseArguments(self::$commandArguments)], JSON_UNESCAPED_UNICODE));
+                $botResult = self::$bot->sendMessage(self::$techTelegramId, json_encode([self::$message, self::$requester, self::parseArguments(self::$commandArguments)], JSON_UNESCAPED_UNICODE));
             }
 
             if (!empty(self::$resultPreMessage)) {
@@ -255,13 +257,14 @@ class TelegramBotController extends Controller
     }
     public static function indexAction()
     {
+        $chatsData = TelegramChats::getChatsList();
+        $chatsData = TelegramChats::nicknames($chatsData);
         $vars = [
             'title' => '{{ Chats_List_Title }}',
-            'chatsData' => TelegramChats::getChatsList()
+            'chatsData' => $chatsData,
         ];
         View::render($vars);
     }
-
 
     public static function sendAction()
     {

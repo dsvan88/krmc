@@ -108,9 +108,6 @@ class AccountRepository
             Users::edit($userData, ['id' => $userId]);
             Contacts::deleteByUserId($userId);
         }
-        if (!empty($chatData['personal']['nickname'])){
-            unset($chatData['personal']['nickname']);
-        }
         TelegramChats::edit($chatData, $chatId);
         return true;
     }
@@ -131,7 +128,6 @@ class AccountRepository
 
         $userData['personal']['fio'] = self::formFioFromChatData($chatData);
         $chatData['user_id'] = $userId;
-        $chatData['personal']['nickname'] = $userData['name'];
         $telegram = $chatData['personal']['username'];
 
         $chatData['personal'] = json_encode($chatData['personal'], JSON_UNESCAPED_UNICODE);

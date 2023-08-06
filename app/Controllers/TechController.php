@@ -96,7 +96,8 @@ class TechController extends Controller
             if (empty($chat['personal']['nickname'])) continue;
             $userData = Users::getDataByName($chat['personal']['nickname']);
             if (empty($userData['id'])) continue;
-            TelegramChats::edit(['user_id' => $userData['id']], $chat['id']);
+            unset($chat['personal']['nickname']);
+            TelegramChats::edit(['user_id' => $userData['id'], 'personal' => $chat['personal']], $chat['id']);
         }
         // $weekId = 0;
         // while ($weekData = Weeks::weekDataById(++$weekId)) {
@@ -116,7 +117,8 @@ class TechController extends Controller
             'message' => [
                 'message_id' => 189,
                 'from' => [
-                    'id' => 900669168,
+                    // 'id' => 900669168,
+                    'id' => 412223734,
                     'is_bot' => false,
                     'first_name' => 'Dmytro',
                     'last_name' => 'Vankevych',
@@ -124,7 +126,8 @@ class TechController extends Controller
                     'language_code' => 'uk',
                 ],
                 'chat' => [
-                    'id' => -684025311,
+                    'id' => 900669168,
+                    // 'id' => -684025311,
                     'first_name' => 'Dmytro',
                     'last_name' => 'Vankevych',
                     'username' => 'dsvan88',
@@ -133,10 +136,10 @@ class TechController extends Controller
                 'date' => 1652025484,
                 // 'text' => '- на сегодня',
                 // 'text' => '/nick Думатель',
-                // 'text' => '/day',
+                'text' => '/day',
                 // 'text' => '+tod',
                 // 'text' => '/users',
-                'text' => '/?',
+                // 'text' => '/?',
             ]
         ];
 

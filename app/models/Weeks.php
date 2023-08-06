@@ -31,8 +31,7 @@ class Weeks extends Model
         if (self::$currentWeekId !== -1)
             return self::$currentWeekId;
 
-        $time = $_SERVER['REQUEST_TIME'];
-        self::$currentWeekId = self::query("SELECT id FROM $table WHERE start < :time AND finish > :time LIMIT 1", ['time' => $time], 'Column');
+        self::$currentWeekId = self::query("SELECT id FROM $table WHERE start < :time AND finish > :time LIMIT 1", ['time' => $_SERVER['REQUEST_TIME']], 'Column');
         return self::$currentWeekId;
     }
     public static function getIds()

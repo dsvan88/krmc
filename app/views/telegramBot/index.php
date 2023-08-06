@@ -1,6 +1,6 @@
 <section class="section section-users-list">
     <? if (empty($chatsData)) : ?>
-        There is no dat yet:)
+        There is no data yet:)
     <? else : ?>
         <table class="users-list" style="width:100%">
             <thead>
@@ -31,8 +31,8 @@
                         $chatTitle = implode(' ', $titleParts);
                     }
                     $nickname = ' - ';
-                    if (isset($chatsData[$x]['personal']['nickname'])) {
-                        $nickname = $chatsData[$x]['personal']['nickname'];
+                    if (isset($chatsData[$x]['nickname'])) {
+                        $nickname = $chatsData[$x]['nickname'];
                     }
                 ?>
                     <tr>

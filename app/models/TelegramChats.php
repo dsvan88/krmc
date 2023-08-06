@@ -32,9 +32,7 @@ class TelegramChats extends Model
 
             $userId = Contacts::getUserIdByContact('telegramid', $chatId);
             if (!empty($userId)) {
-                $userData = Users::getDataById($userId);
                 $chatData['user_id'] = $userId;
-                $chatData['personal']['nickname'] = $userData['name'];
             }
 
             $chatData['personal'] = json_encode($chatData['personal'], JSON_UNESCAPED_UNICODE);
@@ -58,21 +56,22 @@ class TelegramChats extends Model
             $chatData['data']['direct'] = true;
         }
 
-        if (empty($chatData['personal']['nickname'])) {
+        if (empty($chatData['user_id'])) {
             $userId = Contacts::getUserIdByContact('telegramid', $chatId);
             if (!empty($userId)) {
-                $userData = Users::getDataById($userId);
                 $chatData['user_id'] = $userId;
-                $chatData['personal']['nickname'] = $userData['name'];
             }
         }
-
         $chatData['data']['last_seems'] = $messageArray['message']['date'];
 
         $chatData['personal'] = json_encode($chatData['personal'], JSON_UNESCAPED_UNICODE);
         $chatData['data'] = json_encode($chatData['data'], JSON_UNESCAPED_UNICODE);
 
-        self::update(['user_id' => $chatData['userId'], 'personal' => $chatData['personal'], 'data' => $chatData['data']], ['id' => $savedChatId], $table);
+        $saveData = ['personal' => $chatData['personal'], 'data' => $chatData['data']];
+        if (!empty($chatData['user_id']) && !is_null($chatData['user_id'])){
+            $saveData['user_id'] = $chatData['user_id'];
+        }
+        self::update($saveData, ['id' => $savedChatId], $table);
         return true;
     }
     public static function savePinned($messageArray, $messageId)
@@ -146,6 +145,30 @@ class TelegramChats extends Model
             }
         }
         return $result;
+    }
+    public static function nicknames(array $chatsData){
+        if (!empty($chatsData['user_id'])){
+            $userData = Users::findBy('id', $chatsData['user_id']);
+            $chatsData['nickname'] = $userData['name'];
+            return $chatsData;
+        }
+
+        $countChats = count($chatsData);
+        $ids = [];
+        for($x=0; $x < $countChats; $x++){
+            if (empty($chatsData[$x]['user_id'])) continue;
+            $ids[] = $chatsData[$x]['user_id'];
+        }
+
+        $usersData = Users::findGroup('id', $ids);
+        $countUsers = count($usersData);
+        for($x=0; $x < $countUsers; $x++){
+            for($y=0; $y < $countChats; $y++){
+                if ($usersData[$x]['id'] != $chatsData[$y]['user_id']) continue;
+                $chatsData[$y]['nickname'] = $usersData[$x]['name'];
+            }
+        }
+        return $chatsData;
     }
     public static function createPinned($chatId, $messageArray, $messageId)
     {
