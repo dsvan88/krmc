@@ -442,6 +442,7 @@ class Users extends Model
         $ids = [];
         for($x=0; $x < $countUsers; $x++){
             $ids[] = $usersData[$x]['id'];
+            $usersData[$x]['contacts'] = [];
         }
 
         $contacts = Contacts::findGroup('user_id', $ids);
