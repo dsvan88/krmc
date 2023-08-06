@@ -92,22 +92,25 @@ class AccountRepository
         $chatId = (int) $chatData['id'];
         unset($chatData['id']);
 
-        if (!empty($chatData['user_id'])){
-            $userData = Users::getDataById($chatData['user_id']);
-            
-            if (!empty($userData['contacts']['telegram'])){
-                unset($userData['contacts']['telegram']);
-            }
-            if (!empty($userData['personal']['fio']) && $userData['personal']['fio'] === self::formFioFromChatData($chatData)){
-                unset($userData['personal']['fio']);
-            }
-            $chatData['user_id'] = null;
-
-            $userId = (int) $userData['id'];
-            unset($userData['id']);
-            Users::edit($userData, ['id' => $userId]);
-            Contacts::deleteByUserId($userId);
+        if (empty($chatData['user_id']))
+            return false;
+        
+        $userData = Users::getDataById($chatData['user_id']);
+        
+        if (!empty($userData['contacts']['telegram'])){
+            unset($userData['contacts']['telegram']);
         }
+        if (!empty($userData['personal']['fio']) && $userData['personal']['fio'] === self::formFioFromChatData($chatData)){
+            unset($userData['personal']['fio']);
+        }
+        
+        $userId = (int) $userData['id'];
+        unset($userData['id']);
+        
+        Users::edit($userData, ['id' => $userId]);
+        Contacts::deleteByUserId($userId);
+        
+        $chatData['user_id'] = null;
         TelegramChats::edit($chatData, $chatId);
         return true;
     }
