@@ -128,7 +128,8 @@ class AccountRepository
 
         $userData['personal']['fio'] = self::formFioFromChatData($chatData);
         $chatData['user_id'] = $userId;
-        $telegram = $chatData['personal']['username'];
+
+        $telegram = empty($chatData['personal']['username']) ? null : $chatData['personal']['username'];
 
         $chatData['personal'] = json_encode($chatData['personal'], JSON_UNESCAPED_UNICODE);
         Users::edit($userData, ['id' => $userId]);
