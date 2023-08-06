@@ -90,20 +90,26 @@ class ModalWindow {
 		this.modal = document.createElement("div");
 		this.modal.className = "modal";
 		this.modal.append(modalHeader);
-		/* ВОТ ГДЕ КОСЯК*/
-		this.modal.innerHTML += `
-			<div class="modal__container">
-				<div class="modal__buttons">
-					<i class="fa fa-cog fa-spin fa-3x fa-fw" ></i>
-					<span class="sr-only">Завантаження...</span>
-				</div>
-			</div>`;
+		
+		this.content = document.createElement("div");
+		this.content.classList.add('modal__container');
+
+		const modalRow = document.createElement("div");
+		modalRow.classList.add('modal__buttons');
+		const icon = document.createElement("i");
+		icon.classList.add('fa', 'fa-cog', 'fa-spin', 'fa-3x', 'fa-fw')
+		const iconLabel = document.createElement("span");
+		iconLabel.classList.add('sr-only');
+		iconLabel.innerText = 'Завантаження...';
+		modalRow.append(icon, iconLabel);
+		this.content.append(modalRow);
+		this.modal.append(this.content);
+
 
 		this.currentOverlay = document.createElement("div");
 		this.currentOverlay.className = "modal__overlay modal__close";
 		this.currentOverlay.id = divId;
 		this.currentOverlay.append(this.modal);
-		this.content = this.modal.querySelector('.modal__container');
 
 		document.body.append(this.currentOverlay);
 		const _self = this;
@@ -163,15 +169,15 @@ class ModalWindow {
         self.modal.addEventListener('touchstart', (event) => self.dragStart.call(self, event));
     }
 	dragStart(event) {
-		console.log(event)
+
         if (this.dragged) return;
         this.dragged = true;
 
         const clientX = event.clientX || event.targetTouches[0].clientX;
         const clientY = event.clientY || event.targetTouches[0].clientY;
 
-        this.shiftX = clientX - this.dialog.getBoundingClientRect().left;
-        this.shiftY = clientY - this.dialog.getBoundingClientRect().top;
+        this.shiftX = clientX - this.modal.getBoundingClientRect().left;
+        this.shiftY = clientY - this.modal.getBoundingClientRect().top;
 
         this.dragnDrop(event);
     }

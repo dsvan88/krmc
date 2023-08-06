@@ -449,8 +449,7 @@ class Users extends Model
         for($x=0; $x < $countContacts; $x++){
             for($y=0; $y < $countUsers; $y++){
                 if ($contacts[$x]['user_id'] != $usersData[$y]['id']) continue;
-                $usersData[$y]['contacts'][$contacts[$x]['type']] = 
-                    $contacts[$x]['contact'];
+                $usersData[$y]['contacts'][$contacts[$x]['type']] = $contacts[$x]['contact'];
             }
         }
         return $usersData;
