@@ -427,7 +427,7 @@ class Users extends Model
     public static function contacts(array $usersData):array{
         if (!empty($usersData['id'])){
             $contacts = Contacts::findBy('user_id', $usersData['id']);
-            if ($contacts){
+            if (!$contacts){
                 $usersData['contacts'] = [];
                 return $usersData;
             }

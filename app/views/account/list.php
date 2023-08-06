@@ -19,9 +19,9 @@
                     <td title="Псевдонім"><?= $usersData[$x]['name'] ?></td>
                     <td title="Логін"><?= $usersData[$x]['login'] ?></td>
                     <td title="Статус"><?= $usersData[$x]['privilege']['status'] ?></td>
-                    <td title="Гендер"><?= isset($usersData[$x]['contacts']['gender']) ? $usersData[$x]['contacts']['gender'] : '' ?></td>
-                    <td title="E-mail"><?= isset($usersData[$x]['contacts']['email']) ? $usersData[$x]['contacts']['email'] : '' ?></td>
-                    <td title="Telegram"><?= $usersData[$x]['contacts']['telegramid'] !== '' ? '<i class="fa fa-check-square-o"></i>' : '<i class="fa fa-square-o"></i>' ?></td>
+                    <td title="Гендер"><?= empty($usersData[$x]['contacts']['gender']) ? '' : $usersData[$x]['contacts']['gender'] ?></td>
+                    <td title="E-mail"><?= empty($usersData[$x]['contacts']['email']) ? '' : $usersData[$x]['contacts']['email'] ?></td>
+                    <td title="Telegram"><?= empty($usersData[$x]['contacts']['telegramid']) ? '<i class="fa fa-square-o"></i>' : '<i class="fa fa-check-square-o"></i>' ?></td>
                     <td title="Меню">
                         <a class='fa fa-pencil-square-o' href='/account/profile/<?= $usersData[$x]['id'] ?>' title='Редагувати'></a>
                         <a href="/users/delete/<?= $usersData[$x]['id'] ?>" onclick="return confirm('Are you sure?')" title='Видалити' class="fa fa-trash-o"></a>
