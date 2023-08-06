@@ -108,8 +108,8 @@ class AccountRepository
         unset($userData['id']);
         
         Users::edit($userData, ['id' => $userId]);
-        Contacts::deleteByUserId($userId);
-        
+        Contacts::deleteByUserId($userId, ['telegram', 'telegramid']);
+
         $chatData['user_id'] = null;
         TelegramChats::edit($chatData, $chatId);
         return true;
