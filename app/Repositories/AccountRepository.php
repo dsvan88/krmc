@@ -5,6 +5,7 @@ namespace app\Repositories;
 use app\core\Locale;
 use app\core\Tech;
 use app\core\Validator;
+use app\models\Contacts;
 use app\models\Days;
 use app\models\TelegramChats;
 use app\models\Users;
@@ -105,6 +106,7 @@ class AccountRepository
             $userId = (int) $userData['id'];
             unset($userData['id']);
             Users::edit($userData, ['id' => $userId]);
+            Contacts::deleteByUserId($userId);
         }
         if (!empty($chatData['personal']['nickname'])){
             unset($chatData['personal']['nickname']);
@@ -129,9 +131,19 @@ class AccountRepository
 
         $userData['personal']['fio'] = self::formFioFromChatData($chatData);
         $chatData['user_id'] = $userId;
+        $chatData['personal']['nickname'] = $userData['name'];
+        $telegram = $chatData['personal']['username'];
 
+        $chatData['personal'] = json_encode($chatData['personal'], JSON_UNESCAPED_UNICODE);
         Users::edit($userData, ['id' => $userId]);
         TelegramChats::edit($chatData, $chatId);
+        
+        $contacts = ['telegramid'=>$chatData['uid']];
+        if (!empty($telegram)){
+            $contacts['telegram'] = $telegram;
+        }
+        Contacts::reLink($contacts,$userId);
+
         return true;
     }
     public static function formFioFromChatData(array $chatData):string

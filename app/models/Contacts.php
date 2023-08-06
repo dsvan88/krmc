@@ -39,6 +39,11 @@ class Contacts extends Model
             ]);
         }
     }
+    public static function reLink(array $data, int $userId):void
+    {
+        self::deleteByUserId($userId);
+        self::new($data, $userId);
+    }
     public static function edit($data, $where)
     {
         $table = self::$table;
@@ -58,6 +63,16 @@ class Contacts extends Model
             }
         }
         return self::insert($data, $table);
+    }
+    public static function deleteByUserId(int $userId)
+    {
+        $contacts = self::getByUserId($userId);
+        if (empty($contacts)) return true;
+        $count = count($contacts);
+        for($x=0; $x < $count; $x++){
+            self::remove($contacts[$x]['id']);
+        }
+        return true;
     }
     public static function remove($cid)
     {

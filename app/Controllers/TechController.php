@@ -6,6 +6,9 @@ use app\core\Controller;
 use app\core\PHPMailer\PHPMailer;
 use app\core\View;
 use app\libs\Db;
+use app\models\Contacts;
+use app\models\TelegramChats;
+use app\models\Users;
 use app\models\Weeks;
 
 class TechController extends Controller
@@ -88,15 +91,22 @@ class TechController extends Controller
     public static function dbrebuildAction()
     {
         // View::redirect('/');db
-        $weekId = 0;
-        while ($weekData = Weeks::weekDataById(++$weekId)) {
-            // echo '$weekData id - '.$weekId.'</br>';
-            foreach ($weekData['data'] as $dayNum => $dayData) {
-                if (!in_array($dayData['game'], ['poker', 'cash'])) continue;
-                $weekData['data'][$dayNum]['game'] = 'nlh';
-            }
-            Weeks::update(['data' => json_encode($weekData['data'], JSON_UNESCAPED_UNICODE)], ['id' => $weekData['id']], Weeks::$table);
+        $chatsData = TelegramChats::getChatsList();
+        foreach ($chatsData as $index => $chat) {
+            if (empty($chat['personal']['nickname'])) continue;
+            $userData = Users::getDataByName($chat['personal']['nickname']);
+            if (empty($userData['id'])) continue;
+            TelegramChats::edit(['user_id' => $userData['id']], $chat['id']);
         }
+        // $weekId = 0;
+        // while ($weekData = Weeks::weekDataById(++$weekId)) {
+        //     // echo '$weekData id - '.$weekId.'</br>';
+        //     foreach ($weekData['data'] as $dayNum => $dayData) {
+        //         if (!in_array($dayData['game'], ['poker', 'cash'])) continue;
+        //         $weekData['data'][$dayNum]['game'] = 'nlh';
+        //     }
+        //     Weeks::update(['data' => json_encode($weekData['data'], JSON_UNESCAPED_UNICODE)], ['id' => $weekData['id']], Weeks::$table);
+        // }
         echo 'Done!';
     }
     public static function selfTestTelegramAction()

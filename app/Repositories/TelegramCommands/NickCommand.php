@@ -5,6 +5,7 @@ namespace app\Repositories\TelegramCommands;
 use app\core\ChatCommand;
 use app\core\Locale;
 use app\models\Contacts;
+use app\models\TelegramChats;
 use app\models\Users;
 use app\Repositories\ContactRepository;
 
@@ -22,15 +23,6 @@ class NickCommand extends ChatCommand
         }
 
         $username = Users::formatName(implode(' ',$arguments));
-/*         foreach ($arguments as $string) {
-            $username .= Locale::mb_ucfirst($string) . ' ';
-        }
-        $username = mb_substr($username, 0, -1, 'UTF-8'); */
-
-/*         if (preg_match('/([^а-яА-ЯрРсСтТуУфФчЧхХШшЩщЪъЫыЬьЭэЮюЄєІіЇїҐґ .0-9])/', $username) === 1) {
-            self::$operatorClass::$resultMessage = self::locale('{{ Tg_Command_Name_Wrong_Format }}');
-            return false;
-        } */
 
         if (empty($username)) {
             self::$operatorClass::$resultMessage = self::locale('{{ Tg_Command_Name_Wrong_Format }}');
@@ -52,12 +44,14 @@ class NickCommand extends ChatCommand
             $userId = Users::add($username);
 
             Contacts::new(['telegramid'=> $telegramId, 'telegram' => $telegram], $userId);
+            TelegramChats::save(self::$message);
 
             self::$operatorClass::$resultMessage = self::locale(['string' => '{{ Tg_Command_Name_Save_Success }}', 'vars' => [$username]]);
             return true;
         }
 
         $userContacts = Contacts::getByUserId($userExistsData['id']);
+        TelegramChats::save(self::$message);
 
         if (empty($userContacts)){
             Contacts::new(['telegramid'=> $telegramId, 'telegram' => $telegram], $userExistsData['id']);

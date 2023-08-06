@@ -33,6 +33,7 @@ class TelegramChats extends Model
             $userId = Contacts::getUserIdByContact('telegramid', $chatId);
             if (!empty($userId)) {
                 $userData = Users::getDataById($userId);
+                $chatData['user_id'] = $userId;
                 $chatData['personal']['nickname'] = $userData['name'];
             }
 
@@ -61,6 +62,7 @@ class TelegramChats extends Model
             $userId = Contacts::getUserIdByContact('telegramid', $chatId);
             if (!empty($userId)) {
                 $userData = Users::getDataById($userId);
+                $chatData['user_id'] = $userId;
                 $chatData['personal']['nickname'] = $userData['name'];
             }
         }
@@ -70,7 +72,7 @@ class TelegramChats extends Model
         $chatData['personal'] = json_encode($chatData['personal'], JSON_UNESCAPED_UNICODE);
         $chatData['data'] = json_encode($chatData['data'], JSON_UNESCAPED_UNICODE);
 
-        self::update(['personal' => $chatData['personal'], 'data' => $chatData['data']], ['id' => $savedChatId], $table);
+        self::update(['user_id' => $chatData['userId'], 'personal' => $chatData['personal'], 'data' => $chatData['data']], ['id' => $savedChatId], $table);
         return true;
     }
     public static function savePinned($messageArray, $messageId)

@@ -147,6 +147,7 @@ class Settings extends Model
             );"
         );
         if (self::isExists(['id' => 1], static::$table)) return true;
+
         $settings = [
             ['img', 'MainLogo', 'Основний логотип', '/public/images/club_logo.png'],
             ['img', 'MainFullLogo', 'Основний логотип', '/public/images/club_logo-full.png'],
@@ -195,5 +196,31 @@ class Settings extends Model
             $array[] = array_combine($keys, $settings[$i]);
         }
         self::insert($array, $table);
+
+        $mafiaConfig = json_encode([
+            "voteType" => "enum",
+            "courtAfterFouls" => false,
+            "getOutHalfPlayersMin" => 4,
+            "mutedSpeakMaxCount" => 5,
+            "bestMovePlayersMin" => 9,
+            "timerMax" => 6000,
+            "lastWillTime" => 6000,
+            "debateTime" => 3000,
+            "mutedSpeakTime" => 3000,
+            "wakeUpRoles" => 2000,
+            "points" => [
+                "winner" => 1,
+                "sherifFirstStaticKill" => 0.1,
+                "sherifFirstDynamicKill" => 0.3,
+                "bestMove" => [0, 0, 0.25, 0.4],
+                "aliveMafs" => [0, 0, 0.25, 0.4],
+                "aliveReds" => [0, 0, 0.15, 0.1],
+                "fourFouls" => -0.1,
+                "disqualified" => -0.3,
+                "voteInSherif" => -0.1,
+            ],
+        ]);
+
+        self::insert(['type'=>'mafia_config', 'slug'=>'mafia-config', 'options'=>$mafiaConfig], $table);
     }
 }
