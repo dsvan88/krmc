@@ -90,4 +90,8 @@ class Locale
 
         return $result;
     }
+    public static function decamelize(string $string)
+    {
+        return strtolower(preg_replace('/([A-Z])/', ' $1',$string));
+    }
 }

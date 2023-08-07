@@ -19,7 +19,7 @@ class Model extends Db
         }
         return self::query("SELECT * FROM $table $where", $condition, 'Assoc');
     }
-    public static function find($id){
+    public static function find(int $id){
         $table = static::$table;
         $result = self::query("SELECT * FROM $table WHERE id = ? LIMIT 1", [$id], 'Assoc');
         if (empty($result)) return false;

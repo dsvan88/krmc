@@ -44,7 +44,7 @@ return  [
     ],
     'account/login' => [
         'controller' => 'account',
-        'action' => 'login',
+        'action' => 'loginForm',
         'access' => ['category' => 'all']
     ],
     'account/logout' => [
@@ -187,33 +187,45 @@ return  [
     'api/account/login' =>
     [
         'controller' => 'account',
-        'action' => 'login',
+        'action' => 'loginForm',
         'access' => ['category' => 'all']
     ],
     'api/account/login/form' =>
     [
         'controller' => 'account',
-        'action' => 'login',
+        'action' => 'loginForm',
         'access' => ['category' => 'all']
     ],
     'api/account/password/change' =>
     [
         'controller' => 'account',
-        'action' => 'passwordChange',
+        'action' => 'passwordChangeForm',
         'access' => ['category' => 'user']
     ],
     'api/account/password/change/form' =>
     [
         'controller' => 'account',
-        'action' => 'passwordChange',
+        'action' => 'passwordChangeForm',
         'access' => ['category' => 'user']
     ],
-    'api/account/profile/form' =>
+    'api/account/doubles/{userId}' =>
+    [
+        'controller' => 'account',
+        'action' => 'doubles',
+        'access' => ['category' => 'admin']
+    ],
+    'api/account/doubles/{userId}/form' =>
+    [
+        'controller' => 'account',
+        'action' => 'doublesForm',
+        'access' => ['category' => 'admin']
+    ],
+/*     'api/account/profile/form' =>
     [
         'controller' => 'account',
         'action' => 'profileForm',
         'access' => ['category' => 'all']
-    ],
+    ], */
     'api/account/profile/section' =>
     [
         'controller' => 'account',
@@ -265,13 +277,13 @@ return  [
     'api/account/register/form' =>
     [
         'controller' => 'account',
-        'action' => 'register',
+        'action' => 'registerForm',
         'access' => ['category' => 'all']
     ],
     'api/account/register' =>
     [
         'controller' => 'account',
-        'action' => 'register',
+        'action' => 'registerForm',
         'access' => ['category' => 'all']
     ],
     'api/account/set/nickname/form' =>

@@ -28,17 +28,20 @@ class AccountController extends Controller
         Users::logout();
         View::redirect('/');
     }
-    public function loginAction()
+    public function login($data){
+        if (Validator::csrfCheck() || Users::trottling()){
+            View::notice(['error' => 403, 'message' => 'Try again later:)']);
+        }
+        if (!Users::login($data)) {
+            $_SESSION['login_fails'][] = $_SERVER['REQUEST_TIME'];
+            View::notice(['error' => 403, 'message' => '{{ Account_Login_User_Not_Found }}']);
+        }
+        View::location(isset($_SESSION['path']) ? $_SESSION['path'] : '/');
+    }
+    public function loginFormAction()
     {
         if (!empty($_POST)) {
-            if (Validator::csrfCheck() || Users::trottling()){
-                View::notice(['error' => 403, 'message' => 'Try again later:)']);
-            }
-            if (!Users::login($_POST)) {
-                $_SESSION['login_fails'][] = $_SERVER['REQUEST_TIME'];
-                View::notice(['error' => 403, 'message' => '{{ Account_Login_User_Not_Found }}']);
-            }
-            View::location(isset($_SESSION['path']) ? $_SESSION['path'] : '/');
+            $this->login($_POST);
         }
         $vars = [
             'title' => '{{ Account_Login_Form_Title }}',
@@ -433,32 +436,35 @@ class AccountController extends Controller
         $vars = ['modal' => true, 'jsFile' => '/public/scripts/avatar-get-recrop.js?v=' . $_SERVER['REQUEST_TIME']];
         View::message($vars);
     }
-    public function passwordChangeAction()
+    public function passwordChange($userData, $post){
+        if ($post['new_password'] != $post['new_password_confirmation']) {
+            $message = [
+                'error' => 1,
+                'message' => Locale::phrase('Passwords Not Match!'),
+                'wrong' => 'new_password',
+            ];
+            View::message($message);
+        }
+        if (!password_verify($post['new_password'], $userData['password'])) {
+            $message = [
+                'error' => 1,
+                'message' => Locale::phrase('Old password is wrong!'),
+                'wrong' => 'password',
+            ];
+            View::message($message);
+        }
+        Users::passwordChange($_SESSION['id'], $post['password']);
+        View::message(['message' => 'Success!', 'url' => '/']);
+    }
+    public function passwordChangeFormAction()
     {
-        $userId = $_SESSION['id'];
-        $userData = Users::find($userId);
+        $userData = Users::find($_SESSION['id']);
         if (!$userData) {
             View::errorCode(404, ['message' => 'Page not found!']);
         }
+
         if (!empty($_POST)) {
-            if ($_POST['new_password'] != $_POST['new_password_confirmation']) {
-                $message = [
-                    'error' => 1,
-                    'message' => Locale::phrase('Passwords Not Match!'),
-                    'wrong' => 'new_password',
-                ];
-                View::message($message);
-            }
-            if (!password_verify($_POST['new_password'], $userData['password'])) {
-                $message = [
-                    'error' => 1,
-                    'message' => Locale::phrase('Old password is wrong!'),
-                    'wrong' => 'password',
-                ];
-                View::message($message);
-            }
-            Users::passwordChange($userId, $_POST['password']);
-            View::message(['message' => 'Success!', 'url' => '/']);
+            $this->passwordChange($userData, $_POST);
         }
 
         $vars = [
@@ -467,7 +473,7 @@ class AccountController extends Controller
                 'SubmitLabel' => 'Execute',
                 'CancelLabel' => 'Cancel'
             ],
-            'userId' => $userId,
+            'userId' => $_SESSION['id'],
         ];
         View::modal($vars);
     }
@@ -537,14 +543,17 @@ class AccountController extends Controller
 
         View::modal($vars);
     }
-    public function registerAction()
+    public function register($data){
+        $result = Users::register($data);
+        if ($result !== true) {
+            View::message($result);
+        }
+        View::message('Success!');
+    }
+    public function registerFormAction()
     {
         if (!empty($_POST)) {
-            $result = Users::register($_POST);
-            if ($result !== true) {
-                View::message($result);
-            }
-            View::message('Success!');
+            $this->register($_POST);
         }
         $vars = [
             'title' => 'Registration form',
@@ -573,5 +582,18 @@ class AccountController extends Controller
             View::message($result);
         }
         View::redirect('/users/list');
+    }
+    public function doublesFormAction()
+    {
+        extract(self::$route['vars']);
+        if (!in_array($_SESSION['privilege']['status'], ['manager', 'admin'])) {
+            View::message(['error'=>404, 'message' => 'How do you get here?']);
+        }
+        View::message(['error'=>404, 'message' => 'Not ready yet!']);
+        $userData = Users::find($userId);
+        $vars = [
+            'userData' => $userData,
+        ];
+        View::modal($vars);
     }
 }

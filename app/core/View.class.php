@@ -16,7 +16,14 @@ class View
     public static function set($route)
     {
         self::$route = $route;
-        self::$path = $route['controller'] . '/' . $route['action'];
+        if (strpos($route['action'], 'Form') === false){
+            self::$path = $route['controller'] . '/' . $route['action'];
+            return true;
+        }
+        $decamelized = Locale::decamelize($route['action']);
+        $viewPath = str_replace(' ', '-', mb_substr($decamelized, 0, mb_strrpos($decamelized, ' ', 0, 'UTF-8'), 'UTF-8'));
+        $viewPath = Locale::camelize($viewPath);
+        self::$path = "{$route['controller']}/forms/$viewPath";
     }
     public static function render($vars = [])
     {
@@ -84,15 +91,12 @@ class View
         if (isset($css))
             $response['cssFile'] = $css;
 
-        $notices = Noticer::get();
-
         $path = $_SERVER['DOCUMENT_ROOT'] . '/app/views/' . self::$path . '.php';
         if (file_exists($path)) {
             ob_start();
             require $path;
             $response['html'] = ob_get_clean();
 
-            Noticer::clear();
             exit(json_encode($response));
         } else {
             self::errorCode('404', ['message' => 'View ' . self::$path . ' isn’t found!']);
