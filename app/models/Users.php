@@ -230,7 +230,7 @@ class Users extends Model
     }
     public static function passwordChange($userId, $password)
     {
-        $newPassword = password_hash(sha1($password), PASSWORD_DEFAULT);
+        $newPassword = password_hash(sha1(trim($password)), PASSWORD_DEFAULT);
 
         self::edit(['password' => $newPassword], ['id' => $userId]);
         return true;

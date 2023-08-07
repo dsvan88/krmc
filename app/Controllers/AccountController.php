@@ -445,7 +445,9 @@ class AccountController extends Controller
             ];
             View::message($message);
         }
-        if (!password_verify($post['new_password'], $userData['password'])) {
+
+        $oldPass = sha1(trim($post['password']));
+        if (!password_verify($oldPass, $userData['password'])) {
             $message = [
                 'error' => 1,
                 'message' => Locale::phrase('Old password is wrong!'),
@@ -453,7 +455,7 @@ class AccountController extends Controller
             ];
             View::message($message);
         }
-        Users::passwordChange($_SESSION['id'], $post['password']);
+        Users::passwordChange($_SESSION['id'], $post['new_password']);
         View::message(['message' => 'Success!', 'url' => '/']);
     }
     public function passwordChangeFormAction()

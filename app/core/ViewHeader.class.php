@@ -78,7 +78,7 @@ class ViewHeader {
             $menu = array_values($menu);
         }
 
-        if (isset($_SESSION['privilege']) && in_array($_SESSION['privilege']['status'], ['trusted', 'manager', 'admin'])) {
+        if (!empty($_SESSION['privilege']['status']) && in_array($_SESSION['privilege']['status'], ['trusted', 'manager', 'admin'])) {
             $menu[] = [
                 'path' => 'game/mafia/start',
                 'label' => Locale::phrase('Play a game'),
