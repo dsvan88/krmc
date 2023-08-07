@@ -265,13 +265,13 @@ return  [
     'api/account/forget/form' =>
     [
         'controller' => 'account',
-        'action' => 'forget',
+        'action' => 'forgetForm',
         'access' => ['category' => 'all']
     ],
     'api/account/forget' =>
     [
         'controller' => 'account',
-        'action' => 'forget',
+        'action' => 'forgetForm',
         'access' => ['category' => 'all']
     ],
     'api/account/register/form' =>

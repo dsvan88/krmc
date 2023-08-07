@@ -418,10 +418,12 @@ class Users extends Model
     }
     public static function decodeJson($userData)
     {
-        $userData['privilege']  = json_decode($userData['privilege'], true);
-        $userData['personal']   = json_decode($userData['personal'], true);
-        $userData['contacts']   = json_decode($userData['contacts'], true);
-        $userData['credo']      = json_decode($userData['credo'], true);
+        $arrays = ['privilege', 'personal', 'contacts', 'credo'];
+        $count = count($arrays);
+        for ($i=0; $i < $count; $i++) { 
+            if (empty($userData[$arrays[$i]])) continue;
+            $userData[$arrays[$i]] = json_decode($userData[$arrays[$i]], true);
+        }
         return $userData;
     }
     public static function contacts(array $usersData):array{

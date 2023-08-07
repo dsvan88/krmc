@@ -507,7 +507,7 @@ class AccountController extends Controller
         ];
         View::render($vars);
     }
-    public function forgetAction()
+    public function forgetFormAction()
     {
         $bot = new TelegramBot();
         if (!empty($_POST)) {
