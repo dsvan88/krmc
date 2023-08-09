@@ -359,7 +359,7 @@ class AccountController extends Controller
             $today = 6;
 
         foreach ($weekData['data'][$today]['participants'] as $index => $participant) {
-            if ($participant['name'] !== $userData['name']) continue;
+            if ($participant['id'] !== $userData['id']) continue;
             unset($weekData['data'][$today]['participants'][$index]);
             break;
         }
@@ -372,8 +372,8 @@ class AccountController extends Controller
     }
     public function dummyRenameFormAction()
     {
-        if (!in_array($_SESSION['privilege']['status'], ['manager', 'admin'])) {
-            View::errorCode(403, ['message' => 'Something went wrong! How did you get here?']);
+        if (!in_array($_SESSION['privilege']['status'], ['manager', 'admin', 'root'])) {
+            View::message(['error'=> 403, 'message' => 'Something went wrong! How did you get here?']);
         }
 
         $vars = [
@@ -513,7 +513,7 @@ class AccountController extends Controller
         if (!empty($_POST)) {
             $userData = Users::checkForget(trim($_POST['auth']));
             if (empty($userData)) {
-                View::message('Перевірте бота!');
+                View::message('Перевірте введені дані!');
             }
             if (isset($userData['personal']['forget'])) {
                 $hash = $userData['personal']['forget'];
@@ -585,16 +585,47 @@ class AccountController extends Controller
         }
         View::redirect('/users/list');
     }
+    public function doubles($post){
+
+        $name = Users::formatName($post['name']);
+        if (empty($name)){
+            View::message(['error'=>404, 'message' => 'Not found!']);
+        }
+
+        extract(self::$route['vars']);
+
+        $result = AccountRepository::mergeAccounts($userId, $name);
+
+        if ($result)
+            View::message(['message' => 'Success!']);
+        
+        View::message(['error'=>404, 'message' => 'Not found!']);
+    }
     public function doublesFormAction()
     {
-        extract(self::$route['vars']);
-        if (!in_array($_SESSION['privilege']['status'], ['manager', 'admin'])) {
+        if (!in_array($_SESSION['privilege']['status'], ['admin', 'root'])) {
             View::message(['error'=>404, 'message' => 'How do you get here?']);
         }
+        if (!empty($_POST)){
+            $this->doubles($_POST);
+        }
+        extract(self::$route['vars']);
+
         View::message(['error'=>404, 'message' => 'Not ready yet!']);
         $userData = Users::find($userId);
+        
+        if (empty($userData)){
+            View::message(['error'=>404, 'message' => 'Not found!']);
+        }
+
         $vars = [
+            'title' => 'Merge double registration',
+            'userId' => (int) $userId,
             'userData' => $userData,
+            'texts' => [
+                'SaveLabel' => 'Save',
+                'CancelLabel' => 'Cancel',
+            ],
         ];
         View::modal($vars);
     }

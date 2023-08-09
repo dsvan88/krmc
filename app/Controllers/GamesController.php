@@ -10,7 +10,7 @@ use app\models\Games;
 use app\models\Settings;
 use app\models\Users;
 use app\models\Weeks;
-
+use Throwable;
 
 class GamesController extends Controller
 {
@@ -18,7 +18,12 @@ class GamesController extends Controller
     {
         extract(self::$route['vars']);
         if (!empty($_POST)) {
-            $gameId = Games::create($_POST);
+            try{
+                $gameId = Games::create($_POST);
+            }
+            catch(Throwable $th){
+                View::message('Fail!');
+            }
             View::location('/game/mafia/' . $gameId);
         }
 
@@ -60,7 +65,7 @@ class GamesController extends Controller
         }, $day['participants']);
 
         $shuffled = array_filter($shuffled, function (string $name) use ($manager) {
-            return !($name === $manager || strpos($name, 'tmp_') !== false);
+            return !($name === $manager || $name === '+1');
         });
         shuffle($shuffled);
 
@@ -113,8 +118,6 @@ class GamesController extends Controller
     {
         extract(self::$route['vars']);
 
-        $game = Games::find($gameId);
-
         $texts = [
             'title' => 'Title',
             'subtitle' => 'Subtitle',
@@ -127,7 +130,6 @@ class GamesController extends Controller
         $vars = [
             'title' => 'Play a game',
             'texts' => $texts,
-            'game' => $game,
             'scripts' => [
                 '/public/scripts/manager-game-funcs.js?v=' . $_SERVER['REQUEST_TIME'],
                 '/public/scripts/mafia/player.class.js?v=' . $_SERVER['REQUEST_TIME'],
@@ -153,7 +155,7 @@ class GamesController extends Controller
     public function loadAction()
     {
         extract(self::$route['vars']);
-        $game = Games::find($gameId);
+        $game = Games::load($gameId);
         View::response(json_encode($game, JSON_UNESCAPED_UNICODE));
     }
 }

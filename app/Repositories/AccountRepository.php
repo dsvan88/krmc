@@ -157,4 +157,37 @@ class AccountRepository
         }
         return trim($fio);
     }
+    public static function mergeUsersData($main, $merged){
+        $new = [];
+        foreach($main as $key=>$value){
+            if (in_array($key, ['created_at','updated_at','date_delete'])) continue;
+
+            if (in_array($key, ['id','name'])){
+                $new[$key] = $value;
+                continue;
+            }
+            if (is_array($value) && !empty($merged[$key])){
+                $new[$key] = self::mergeUsersData($value, $merged[$key]);
+                continue;
+            }
+            $new[$key] = empty($value) && !empty($merged[$key]) ? $merged[$key] : $value;
+        }
+        return $new;
+    }
+    public static function mergeAccounts($userId, $name){
+        $mainUserData = Users::decodeJson(Users::find($userId));
+        $mergedUserData = Users::decodeJson(Users::findBy('name', $name)[0]);
+        
+        if (empty($mainUserData) || empty($mergedUserData)){
+            return false;
+        }
+                
+        $mainUserData = Users::contacts($mainUserData);
+        $mergedUserData = Users::contacts($mergedUserData);
+        
+        $newUserData = self::mergeUsersData($mainUserData, $mergedUserData);
+        DayRepository::renamePlayer($mergedUserData['id'], $newUserData['name']);
+        
+        Users::edit($newUserData, ['id' => $newUserData['id']]);
+    }
 }

@@ -3,6 +3,7 @@
         <h2 class="common-form__title"><?= $title ?></h2>
         <select name="table" id="table">
             <option value=""></option>
+            <option value="all">Всі</option>
             <option value="contacts">Контакти</option>
             <option value="pages">Сторінки</option>
             <option value="settings">Налаштування</option>

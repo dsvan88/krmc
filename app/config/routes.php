@@ -211,7 +211,7 @@ return  [
     'api/account/doubles/{userId}' =>
     [
         'controller' => 'account',
-        'action' => 'doubles',
+        'action' => 'doublesForm',
         'access' => ['category' => 'admin']
     ],
     'api/account/doubles/{userId}/form' =>

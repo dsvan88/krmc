@@ -51,22 +51,23 @@ class Days extends Model
             $newData['mods'] = $data['mods'];
         }
         $newData['participants'] = [];
-        for ($i = 0; $i < count($data['participant']); $i++) {
-            $name = trim($data['participant'][$i]);
-            if ($name === '') continue;
+        $count = count($data['participant']);
+        for ($i = 0; $i < $count; $i++) {
+            if ($data['participant'][$i] === '+1') { 
+                $id = null;
+            }
+            else {
+                $name = Users::formatName($data['participant'][$i]);
 
-            if ($name !== '+1') {
-                $id = Users::getId(trim($data['participant'][$i]));
+                if (empty($name)) continue;
+
+                $id = Users::getId($name);
                 if ($id < 2) {
                     $id = Users::add($name);
                 }
-            } else {
-                $name = 'tmp_user_' . $i;
-                $id = -1;
             }
             $newData['participants'][] = [
                 'id' => $id,
-                'name' => $name,
                 'arrive' => trim($data['arrive'][$i]),
                 'prim' => trim($data['prim'][$i]),
             ];
@@ -109,11 +110,21 @@ class Days extends Model
     {
         $weekData = Weeks::weekDataById($weekId);
 
-        if ($weekData) {
-            $weekData['data'][$dayId]['weekStart'] = $weekData['start'];
-            return $weekData['data'][$dayId];
+        if (!$weekData) return self::$dayDataDefault;
+
+        $weekData['data'][$dayId]['weekStart'] = $weekData['start'];
+
+        if (empty($weekData['data'][$dayId]['participants'])) return $weekData['data'][$dayId];
+        
+        $weekData['data'][$dayId]['participants'] = Users::addNames($weekData['data'][$dayId]['participants']);
+        $count = count($weekData['data'][$dayId]['participants']);
+        for ($x=0; $x < $count; $x++) {
+            if (!empty($weekData['data'][$dayId]['participants'][$x]['id'])) continue;
+            $weekData['data'][$dayId]['participants'][$x]['name'] = '+1';
         }
-        return self::$dayDataDefault;
+
+        return $weekData['data'][$dayId];
+
     }
     public static function getFullDescription($weekData, $day)
     {
@@ -156,17 +167,20 @@ class Days extends Model
 
         $result .= "\n";
 
+
         $participants = [];
         $participantsToEnd = [];
         $noNames = [];
 
-        for ($x = 0; $x < count($weekData['data'][$day]['participants']); $x++) {
-            if (!isset($weekData['data'][$day]['participants'][$x]['name']) || $weekData['data'][$day]['participants'][$x]['name'] === '')
-                continue;
-            if (strpos($weekData['data'][$day]['participants'][$x]['name'], 'tmp_user') !== false) {
+        $weekData['data'][$day]['participants'] = Users::addNames($weekData['data'][$day]['participants']);
+        $count = count($weekData['data'][$day]['participants']);
+        for ($x = 0; $x < $count; $x++) {
+            if (empty($weekData['data'][$day]['participants'][$x]['id'])) {
                 $noNames[] = $weekData['data'][$day]['participants'][$x];
                 continue;
             }
+            if (empty($weekData['data'][$day]['participants'][$x]['name']))
+                continue;
             if (!empty($weekData['data'][$day]['participants'][$x]['prim']) || !empty($weekData['data'][$day]['participants'][$x]['arrive'])) {
                 $participantsToEnd[] = $weekData['data'][$day]['participants'][$x];
                 continue;
@@ -175,12 +189,13 @@ class Days extends Model
         }
         $participants = array_merge($participants, $participantsToEnd, $noNames);
 
-        for ($x = 0; $x < count($participants); $x++) {
+        $count = count($participants);
+        for ($x = 0; $x < $count; $x++) {
             $modsData = '';
             $userName = '';
             if (!isset($participants[$x]['name']))
                 continue;
-            if (strpos($participants[$x]['name'], 'tmp_user') === false) {
+            if (!empty($participants[$x]['name'])) {
                 $userName = $participants[$x]['name'];
             } else {
                 $userName = '+1';
@@ -209,7 +224,6 @@ class Days extends Model
 
         $dayData['participants'][$slot] = [
             'id'        =>    $userData['userId'],
-            'name'      =>    $userData['userName'],
             'arrive'    =>    !empty($userData['arrive']) ? $userData['arrive'] : '',
             'prim'        =>    !empty($userData['prim']) ? $userData['prim'] : '',
         ];
@@ -225,8 +239,7 @@ class Days extends Model
 
         for ($x = 0; $x < $count; $x++) {
             $dayData['participants'][$slot + $x] = [
-                'id'        =>    -1,
-                'name'      =>    'tmp_user_' . ($slot + $x),
+                'id'        =>    null,
                 'arrive'    =>    '',
                 'prim'    =>     $prim,
             ];
@@ -238,7 +251,7 @@ class Days extends Model
         $count = (int) $count;
         $newParticipants = [];
         for ($x = 0; $x < count($dayData['participants']); $x++) {
-            if (strpos($dayData['participants'][$x]['name'], 'tmp_user') === false || $count <= 0) {
+            if (!empty($dayData['participants'][$x]['id']) || $count <= 0) {
                 $newParticipants[] = $dayData['participants'][$x];
                 continue;
             }

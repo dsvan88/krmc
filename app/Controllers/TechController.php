@@ -10,6 +10,7 @@ use app\models\Contacts;
 use app\models\TelegramChats;
 use app\models\Users;
 use app\models\Weeks;
+use app\Repositories\TechRepository;
 
 class TechController extends Controller
 {
@@ -36,12 +37,17 @@ class TechController extends Controller
     public static function backupAction()
     {
         if (!empty($_POST)) {
-            $query = !empty($_POST['table']) ? "SELECT * FROM {$_POST['table']} ORDER BY id" : $_POST['sql_query'];
-            if (!empty($query)) {
-                $result = Db::query($query, [], 'Assoc');
-                View::file(json_encode($result, JSON_UNESCAPED_UNICODE), empty($_POST['table']) ? 'backup-query.txt' : "backup-{$_POST['table']}.txt");
+            if (empty($_POST['table']))
+                View::message(['error' => 1, 'message' => 'Something wrong with your query!']);
+            $table = trim($_POST['table']);
+            $result = TechRepository::backup($table);
+            $archiveName = 'backup '.date('d.m.Y', $_SERVER['REQUEST_TIME']);
+            if ($table !=='all'){
+                $result = [ $table => array_values($result)];
+                $archiveName = "$table $archiveName";
             }
-            View::message(['error' => true, 'message' => 'Something wrong with sql-query!' . PHP_EOL . $query]);
+            $archive = TechRepository::archive($archiveName, $result);
+            View::file(file_get_contents($archive), mb_substr($archive, mb_strrpos($archive, '/', 0, 'UTF-8')+1, null, 'UTF-8'));
         }
         $vars = [
             'title' => '{{ SQL_Action_Title }}',
@@ -117,8 +123,8 @@ class TechController extends Controller
             'message' => [
                 'message_id' => 189,
                 'from' => [
-                    // 'id' => 900669168,
-                    'id' => 412223734,
+                    'id' => 900669168,
+                    // 'id' => 412223734,
                     'is_bot' => false,
                     'first_name' => 'Dmytro',
                     'last_name' => 'Vankevych',
@@ -134,9 +140,9 @@ class TechController extends Controller
                     'type' => 'group',
                 ],
                 'date' => 1652025484,
-                // 'text' => '- на сегодня',
+                'text' => '- на сегодня',
                 // 'text' => '/nick Думатель',
-                'text' => '/day',
+                // 'text' => '/day',
                 // 'text' => '+tod',
                 // 'text' => '/users',
                 // 'text' => '/?',

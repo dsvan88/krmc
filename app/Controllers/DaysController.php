@@ -20,7 +20,6 @@ class DaysController extends Controller
             if (!empty($_POST)) {
                 $weekId = Days::edit($weekId, $dayId, $_POST);
                 if (!empty($_POST['send'])){
-                    $mainChat = Settings::getMainTelegramId();
                     $weekData = Weeks::weekDataById($weekId);
                     $result = TelegramBotController::send(Settings::getMainTelegramId(), Days::getFullDescription($weekData,$dayId));
                 }

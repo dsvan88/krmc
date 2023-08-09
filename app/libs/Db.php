@@ -39,6 +39,12 @@ class Db
         $tableName = $result->fetchColumn();
         return boolval($tableName);
     }
+    public static function getTables()
+    {
+        $result = self::query('SELECT tablename FROM pg_tables WHERE schemaname = ?', ['public'], 'Assoc');
+        return empty($result) ? false : $result;
+    }
+
     public static function query($query, $params = [], $fetchMode = 'All', $columns = 0)
     {
         // error_log($query);

@@ -32,11 +32,15 @@ class Model extends Db
         if (empty($result)) return false;
         return $result;
     }
-    public static function findGroup($column, $data)
+    public static function findGroup($column, $data, $limit = 0)
     {
         $table = static::$table;
         $places = implode(', ', array_fill(0, count($data), '?'));
-        $result = self::query("SELECT * FROM $table WHERE $column IN ($places)", $data, 'Assoc');
+        $query = "SELECT * FROM $table WHERE $column IN ($places)";
+        
+        if ($limit > 0) $query .= ' LIMIT '.$limit;
+
+        $result = self::query($query, $data, 'Assoc');
         return empty($result) ? false : $result;
     }
     public static function getSimpleArray($query, $params = [])

@@ -255,27 +255,15 @@ class Users extends Model
     {
         $table = self::$table;
         $result = self::query("SELECT name FROM $table WHERE name ILIKE ? ORDER BY id", ["%$name%"], 'Num');
-
-        if (empty($result)) return $result;
-
-        return $result;
+        return empty($result) ? [] : $result;
     }
     // Получение ID в системе по никнейму в игре
     public static function getId($name, $free = false)
     {
         $table = self::$table;
-        $condArray = [$name];
-        $addCondition = '';
-        if ($free) {
-            $addCondition = 'AND login != ?';
-            $condArray[] = '';
-        }
-        $result = self::query("SELECT id FROM $table WHERE name ILIKE ? $addCondition LIMIT 1", $condArray, 'Column');
+        $result = self::query("SELECT id FROM $table WHERE name ILIKE ? LIMIT 1", [$name], 'Column');
 
-        if ($result)
-            return $result;
-
-        return 0;
+        return empty($result) ? 0 : $result;
     }
     // Поверка, зарегистрирован ли логин у конкретного игрока
     public static function isNameFree($name)
@@ -283,19 +271,14 @@ class Users extends Model
         $table = self::$table;
         $result = self::query("SELECT id FROM $table WHERE name ILIKE ? AND login != ? LIMIT 1", [$name, ''], 'Column');
 
-        if ($result)
-            return true;
-
-        return false;
+        return !empty($result);
     }
     // Получить всю информацию об игроке по его ID
-    public static function getDataById($id)
+    public static function getDataById(int $id)
     {
-        $table = self::$table;
-        $userData = self::query("SELECT * FROM $table WHERE id = ? LIMIT 1", [$id], 'Assoc');
+        $userData = self::find($id);
         if (empty($userData)) return false;
 
-        $userData = $userData[0];
         unset($userData['password']);
 
         return self::decodeJson($userData);
@@ -337,11 +320,7 @@ class Users extends Model
      * */ 
     public static function getByList($players, $column='name')
     {
-        $count = count($players);
-        $places = implode(',', array_fill(0, $count, '?'));
-
-        $table = self::$table;
-        $usersData = self::query("SELECT * FROM $table WHERE $column IN ($places) LIMIT $count", $players, 'Assoc');
+        $usersData = self::findGroup($column, $players, count($players));
         if (empty($usersData)) return false;
 
         for ($i = 0; $i < count($usersData); $i++) {
@@ -385,7 +364,7 @@ class Users extends Model
             $index = array_search($user['name'], $players, true);
             $result[$index] = [
                 'id' => $user['id'],
-                'name' => $user['name'],
+                // 'name' => $user['name'],
                 'role' => $roles[$index],
             ];
         }
@@ -397,6 +376,12 @@ class Users extends Model
     }
     public static function edit($data, $where)
     {
+        if (!empty($data['contacts'])){
+            if (!empty($where['id'])){
+                Contacts::reLink($data['contacts'], $where['id']);
+            }
+            unset($data['contacts']);
+        }
         foreach ($data as $key => $value) {
             if (is_array($value)) {
                 $data[$key] = json_encode($value, JSON_UNESCAPED_UNICODE);
@@ -426,36 +411,63 @@ class Users extends Model
         }
         return $userData;
     }
-    public static function contacts(array $usersData):array{
-        if (!empty($usersData['id'])){
-            $contacts = Contacts::findBy('user_id', $usersData['id']);
+    public static function contacts(array $source):array{
+        if (!empty($source['id'])){
+            $contacts = Contacts::findBy('user_id', $source['id']);
             if (!$contacts){
-                $usersData['contacts'] = [];
-                return $usersData;
+                $source['contacts'] = [];
+                return $source;
             }
             $count = count($contacts);
             for($x=0; $x < $count; $x++){
-                $usersData['contacts'][$contacts['type']] = $contacts['contact'];
+                $source['contacts'][$contacts[$x]['type']] = $contacts[$x]['contact'];
             }
-            return $usersData;
+            return $source;
         }
 
-        $countUsers = count($usersData);
+        $countUsers = count($source);
         $ids = [];
         for($x=0; $x < $countUsers; $x++){
-            $ids[] = $usersData[$x]['id'];
-            $usersData[$x]['contacts'] = [];
+            if (empty($source[$x]['id'])) continue;
+            $ids[] = $source[$x]['id'];
+            $source[$x]['contacts'] = [];
         }
 
         $contacts = Contacts::findGroup('user_id', $ids);
         $countContacts = count($contacts);
         for($x=0; $x < $countContacts; $x++){
             for($y=0; $y < $countUsers; $y++){
-                if ($contacts[$x]['user_id'] != $usersData[$y]['id']) continue;
-                $usersData[$y]['contacts'][$contacts[$x]['type']] = $contacts[$x]['contact'];
+                if ($contacts[$x]['user_id'] != $source[$y]['id']) continue;
+                $source[$y]['contacts'][$contacts[$x]['type']] = $contacts[$x]['contact'];
             }
         }
-        return $usersData;
+        return $source;
+    }
+    public static function addNames(array $source):array{
+        if (empty($source))
+            return $source;
+        if (!empty($source['id'])){
+            $userData = self::find($source['id']);
+            $source['name'] = $userData['name'];
+            return $source;
+        }
+
+        $countSource = count($source);
+        $ids = [];
+        for($x=0; $x < $countSource; $x++){
+            if (empty($source[$x]['id'])) continue;
+            $ids[] = $source[$x]['id'];
+        }
+
+        $data = self::findGroup('id', $ids);
+        $countData = count($data);
+        for($x=0; $x < $countData; $x++){
+            for($y=0; $y < $countSource; $y++){
+                if ($source[$y]['id'] != $data[$x]['id']) continue;
+                $source[$y]['name'] = $data[$x]['name'];
+            }
+        }
+        return $source;
     }
     /**
      * @param string $name  - user's nickname

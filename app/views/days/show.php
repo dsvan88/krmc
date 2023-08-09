@@ -18,19 +18,10 @@
                 <div class="booking__participant">
                     <label class="booking__participant-num"><?= ($x + 1) ?>.</label>
                     <div class="booking__participant-info">
-                        <? if (isset($day['participants'][$x])) :
-                            $userName = '';
-                            if (isset($day['participants'][$x]['name'])) {
-                                if (strpos($day['participants'][$x]['name'], 'tmp_user') === false) {
-                                    $userName = $day['participants'][$x]['name'];
-                                } else {
-                                    $userName = '+1';
-                                }
-                            };
-                        ?>
-                            <span class="booking__participant-name"><?= $userName ?></span>
-                            <span><?= $day['participants'][$x]['arrive'] ?></span>
-                            <span><?= !empty($day['participants'][$x]['prim']) ? " (<em>{$day['participants'][$x]['prim']}</em>)" : '' ?></span>
+                        <? if (isset($day['participants'][$x])) : ?>
+                            <span class="booking__participant-name"><?= empty($day['participants'][$x]['name']) ? '' : $day['participants'][$x]['name'] ?></span>
+                            <span><?= empty($day['participants'][$x]['arrive']) ? '' : $day['participants'][$x]['arrive'] ?></span>
+                            <span><?= empty($day['participants'][$x]['prim']) ? '' : " (<em>{$day['participants'][$x]['prim']}</em>)" ?></span>
                         <? else : ?>
                             <span class="booking__participant-name"></span>
                             <span></span>

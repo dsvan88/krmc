@@ -8,6 +8,7 @@ use app\core\Paginator;
 use app\core\View;
 use app\models\Days;
 use app\models\GameTypes;
+use app\models\Users;
 use app\models\Weeks;
 
 class WeeksController extends Controller
@@ -100,11 +101,10 @@ class WeeksController extends Controller
                 }
             }
 
+            $days[$i]['participants'] = Users::addNames($days[$i]['participants']);
             $days[$i]['playersCount'] = min(count($days[$i]['participants']), 10);
             for($x=0; $x < $days[$i]['playersCount']; $x++){
-                if (isset($days[$i]['participants'][$x])) {
-                    if (strpos($days[$i]['participants'][$x]['name'], 'tmp_user') === false)
-                        continue;
+                if (!empty($days[$i]['participants'][$x]) && empty($days[$i]['participants'][$x]['id'])) {
                     $days[$i]['participants'][$x]['name'] = '+1';
                 }
             }

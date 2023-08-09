@@ -33,22 +33,13 @@
         <div class="booking__participants">
             <h2 class="booking__subtitle"><?= $texts['daysBlockParticipantsTitle'] ?>:</h2>
 
-            <? for ($x = 0; $x < $playersCount; $x++) :
-                $userName = '';
-                if (isset($day['participants'][$x]['name'])) {
-                    if (strpos($day['participants'][$x]['name'], 'tmp_user') === false) {
-                        $userName = $day['participants'][$x]['name'];
-                    } else {
-                        $userName = '+1';
-                    }
-                };
-            ?>
+            <? for ($x = 0; $x < $playersCount; $x++) : ?>
                 <div class="booking__participant">
                     <label for="booking__participant-<?= $x ?>" class="booking__participant-num"><?= ($x + 1) ?>.</label>
                     <div class="booking__participant-info">
-                        <input name="participant[]" type="text" value="<?= $userName ?>" class="booking__participant-name" data-action-input="autocomplete-users-names" list="users-names-list" autocomplete="off" data-action-change="participant-check-change" />
-                        <input name="arrive[]" list="time-list" type="text" class="booking__participant-arrive" value="<?= isset($day['participants'][$x]) ? $day['participants'][$x]['arrive'] : '' ?>" autocomplete="off" />
-                        <input name="prim[]" type="text" class="booking__participant-prim" value="<?= isset($day['participants'][$x]) ? $day['participants'][$x]['prim'] : '' ?>" placeholder="<?= $texts['dayRemarkPlaceHolder'] ?>">
+                        <input name="participant[]" type="text" value="<?= empty($day['participants'][$x]) ? '' : $day['participants'][$x]['name'] ?>" class="booking__participant-name" data-action-input="autocomplete-users-names" list="users-names-list" autocomplete="off" data-action-change="participant-check-change" />
+                        <input name="arrive[]" list="time-list" type="text" class="booking__participant-arrive" value="<?= empty($day['participants'][$x]) ? '' : $day['participants'][$x]['arrive'] ?>" autocomplete="off" />
+                        <input name="prim[]" type="text" class="booking__participant-prim" value="<?= empty($day['participants'][$x]) ? '' : $day['participants'][$x]['prim'] ?>" placeholder="<?= $texts['dayRemarkPlaceHolder'] ?>">
                         <i class="fa fa-minus-circle booking__participant-remove" data-action-click="participant-field-clear" title="<?= $texts['clearLabel'] ?>"></i>
                     </div>
                 </div>
