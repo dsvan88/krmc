@@ -30,24 +30,27 @@ class Router
     {
         $url = trim($_SERVER['REQUEST_URI'], '/');
         foreach (self::$routes as $route => $params) {
-            if (preg_match($route, $url, $match) === 1) {
-                if (isset($params['redirect'])) {
-                    View::redirect('/' . $params['redirect']);
-                }
-                if ($params['access']['category'] !== 'all') {
-                    if (!self::checkAccessLevel($params)) {
-                        if (isset($params['access']['redirect'])) {
-                            View::redirect('/' . $params['access']['redirect']);
-                        }
-                        View::redirect('/');
-                    }
-                }
-                for ($i = 1; $i < count($match); $i++) {
-                    $params['vars'][$params['varNames'][$i - 1]] = $match[$i];
-                }
-                self::$params = $params;
-                return true;
+            if (!preg_match($route, $url, $match)) continue;
+
+            if (isset($params['redirect'])) {
+                View::redirect('/' . $params['redirect']);
             }
+            if ($params['access']['category'] !== 'all') {
+                if (!self::checkAccessLevel($params)) {
+                    if (isset($params['access']['redirect'])) {
+                        View::redirect('/' . $params['access']['redirect']);
+                    }
+                    View::redirect('/');
+                }
+            }
+
+            $params['vars'] = [];
+            for ($i = 1; $i < count($match); $i++) {
+                $params['vars'][$params['varNames'][$i - 1]] = $match[$i];
+            }
+            self::$params = $params;
+            
+            return true;
         }
         return false;
     }

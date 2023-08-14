@@ -4,7 +4,6 @@ namespace app\libs;
 
 use app\models\Users;
 use PDO;
-use Throwable;
 
 class Db
 {
@@ -35,9 +34,9 @@ class Db
     public static function isTableExists(): bool
     {
         $table = static::$table;
-        $result = self::$db->query("SELECT EXISTS ( SELECT FROM pg_tables WHERE schemaname = 'public' AND tablename  = '$table');");
-        $tableName = $result->fetchColumn();
-        return boolval($tableName);
+        $stmt = self::$db->prepare('SELECT EXISTS ( SELECT FROM pg_tables WHERE schemaname = ? AND tablename  = ? )');
+        $stmt->execute(['public', $table]);
+        return boolval($stmt->fetchColumn());
     }
     public static function getTables()
     {
@@ -52,7 +51,7 @@ class Db
         $stmt = self::connect()->prepare($query);
         try {
             $stmt->execute($params);
-        } catch (Throwable $th) {
+        } catch (\Throwable $th) {
             $check = self::isTableExists();
             if (!$check) {
                 static::init();
@@ -84,8 +83,10 @@ class Db
         return true;
     }
     // Проверка наличия записей в базе по критериям
-    public static function isExists($criteria, $table, $criteriaType = 'OR')
+    public static function isExists($criteria, string $table = null, $criteriaType = 'OR')
     {
+        if (empty($table)) $table = static::$table;
+
         $keys = array_keys($criteria);
         $query = "SELECT COUNT(id) FROM $table WHERE ";
 
@@ -100,8 +101,10 @@ class Db
     // $data - ассоциативный массив со значениями записи: array('column_name'=>'column_value',...)
     // $table - таблица в которую будет добавлена запись
     // возвращает последнюю запись из таблицы (id новой записи, если верно указан $g_id)
-    public static function insert($data, $table)
+    public static function insert($data, string $table = null)
     {
+        if (empty($table)) $table = static::$table;
+
         $preKeys = [];
         if (count($data) === count($data, COUNT_RECURSIVE)) {
             $keys = array_keys($data);
@@ -124,11 +127,9 @@ class Db
     // $data - ассоциативный массив со значениями записи: array('column_name'=>'column_value',...)
     // $where - ассоциативный массив со значенниями по которым искать запись для обновления ('key'=>'value') ('id'=>1)
     // $table - таблица в которую будет добавлена запись
-    public static function update($data, $where, $table = '')
+    public static function update($data, $where, $table = null)
     {
-        if (empty($table)) {
-            $table = static::$table;
-        }
+        if (empty($table)) $table = static::$table;
 
         $query = "UPDATE $table SET ";
         foreach ($data as $k => $v)
@@ -150,16 +151,17 @@ class Db
         return self::query(substr($query, 0, -1) . substr($conditon, 0, -3), $data);
     }
     // Удаляет строку по её полю ID в таблице
-    public static function delete($id, $table)
+    public static function delete(int $id, string $table = null)
     {
+        if (empty($table)) $table = static::$table;
         return self::query("DELETE FROM $table WHERE id = ?", [$id]);
     }
     //Очищает таблицу
-    public static function tableTruncate($table)
+    public static function tableTruncate(string $table = null)
     {
+        if (empty($table)) $table = static::$table;
         return self::query("TRUNCATE ONLY $table CASCADE");
     }
-
     public static function init()
     {
         return true;

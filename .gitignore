@@ -1,4 +1,5 @@
 /rudiments/*
+/app/backups/*
 git-get.bat
 git-push.bat
 git-stash.bat

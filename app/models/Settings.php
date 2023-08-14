@@ -9,7 +9,7 @@ class Settings extends Model
     public static $table = SQL_TBL_SETTINGS;
     public static $settings = [];
 
-    public static function load(string $type): mixed
+    public static function load(string $type)
     {
         $table = self::$table;
         $result = self::query("SELECT * FROM $table WHERE type = ? ORDER by id", [$type], 'Assoc');
@@ -19,6 +19,7 @@ class Settings extends Model
         foreach ($result as $num => $setting) {
             self::$settings[$type][$setting['slug']] = [
                 'id' => $setting['id'],
+                'type' => $setting['type'],
                 'slug' => $setting['slug'],
                 'name' => $setting['name'],
                 'value' => $setting['value'],
@@ -29,7 +30,7 @@ class Settings extends Model
         }
         return self::$settings[$type];
     }
-    public static function getImage(string $name): mixed
+    public static function getImage(string $name)
     {
         if (!isset(self::$settings['img'])) {
             self::load('img');
@@ -41,7 +42,7 @@ class Settings extends Model
 
         return false;
     }
-    public static function getGroup(string $group = 'img'): mixed
+    public static function getGroup(string $group = 'img')
     {
         if (isset(self::$settings[$group])) {
             return self::$settings[$group];
@@ -110,9 +111,9 @@ class Settings extends Model
             }
             $id = self::query("SELECT id FROM $table WHERE type = :type AND slug = :slug", $queryCond, 'Column');
             if (!$id) {
-                return self::insert($data, $table);
+                return self::insert($data);
             }
-            self::update($data, ['id' => $id], $table);
+            self::update($data, ['id' => $data['id']]);
             return true;
         } catch (\Throwable $th) {
             error_log($th->__toString());
@@ -182,6 +183,9 @@ class Settings extends Model
             ['socials', 'youtube', 'Youtube Channel', ''],
             ['socials', 'instagram', 'Instagram', ''],
             ['socials', 'facebook', 'Facebook', ''],
+
+            ['backup', 'email', 'Backup Email', ''],
+            ['backup', 'last', 'Last backup', ''],
             // ['socials', 'tiktok', 'Tik-Tok Channel',  ''],
         ];
 

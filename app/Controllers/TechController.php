@@ -7,6 +7,7 @@ use app\core\PHPMailer\PHPMailer;
 use app\core\View;
 use app\libs\Db;
 use app\models\Contacts;
+use app\models\Settings;
 use app\models\TelegramChats;
 use app\models\Users;
 use app\models\Weeks;
@@ -105,15 +106,32 @@ class TechController extends Controller
             unset($chat['personal']['nickname']);
             TelegramChats::edit(['user_id' => $userData['id'], 'personal' => $chat['personal']], $chat['id']);
         }
-        // $weekId = 0;
-        // while ($weekData = Weeks::weekDataById(++$weekId)) {
-        //     // echo '$weekData id - '.$weekId.'</br>';
-        //     foreach ($weekData['data'] as $dayNum => $dayData) {
-        //         if (!in_array($dayData['game'], ['poker', 'cash'])) continue;
-        //         $weekData['data'][$dayNum]['game'] = 'nlh';
-        //     }
-        //     Weeks::update(['data' => json_encode($weekData['data'], JSON_UNESCAPED_UNICODE)], ['id' => $weekData['id']], Weeks::$table);
-        // }
+
+        $settings = [
+            ['backup', 'email', 'Backup Email', ''],
+            ['backup', 'last', 'Last backup', ''],
+        ];
+
+        $array = [];
+        $keys = ['type', 'slug', 'name', 'value', 'default_value'];
+        for ($i = 0; $i < count($settings); $i++) {
+            foreach ($settings[$i] as $num => $setting) {
+                if (!is_array($setting)) continue;
+                $settings[$i][$num] = json_encode($setting, JSON_UNESCAPED_UNICODE);
+            }
+            $settings[$i][] = $settings[$i][3];
+            $array[] = array_combine($keys, $settings[$i]);
+        }
+        Settings::insert($array);
+/*         
+        $weekId = 0;
+        while ($weekData = Weeks::weekDataById(++$weekId)) {
+            foreach ($weekData['data'] as $dayNum => $dayData) {
+                if (!in_array($dayData['game'], ['poker', 'cash'])) continue;
+                $weekData['data'][$dayNum]['game'] = 'nlh';
+            }
+            Weeks::update(['data' => json_encode($weekData['data'], JSON_UNESCAPED_UNICODE)], ['id' => $weekData['id']], Weeks::$table);
+        } */
         echo 'Done!';
     }
     public static function selfTestTelegramAction()

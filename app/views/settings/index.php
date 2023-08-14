@@ -4,6 +4,7 @@
         <li class="settings__category<?= $section==='contacts' ? ' active' : ''?>" data-action-click="/settings/section/index/contacts" data-mode='location'>Контакти</li>
         <li class="settings__category<?= $section==='socials' ? ' active' : ''?>" data-action-click="/settings/section/index/socials" data-mode='location'>Соц. мережі</li>
         <li class="settings__category<?= $section==='telegram' ? ' active' : ''?>" data-action-click="/settings/section/index/telegram" data-mode='location'>Телеграм</li>
+        <li class="settings__category<?= $section==='backup' ? ' active' : ''?>" data-action-click="/settings/section/index/backup" data-mode='location'>Резервування</li>
     </menu>
     <div class="settings__content">
         <table class="settings__table">
@@ -28,5 +29,4 @@
             </tbody>
         </table>
     </div>
-    <!-- <a href="/settings/add">Додати</a> -->
 </section>

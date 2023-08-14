@@ -2,6 +2,8 @@
 
 namespace app\Repositories;
 
+use app\core\Locale;
+use app\core\Mailer;
 use app\libs\Db;
 use ZipArchive;
 
@@ -35,5 +37,19 @@ class TechRepository
             $zip->addFromString("$name.json", json_encode($data, JSON_UNESCAPED_UNICODE));
         }
         return $fullpath;
+    }
+    public static function sendBackup(string $email){
+        error_reporting(0);
+        $result = self::backup();
+        $archiveName = 'backup '.date('d.m.Y', $_SERVER['REQUEST_TIME']);
+        $archive = self::archive($archiveName, $result);
+
+        $mailer = new Mailer();
+        $mailer->prepMessage([
+            'title' => Locale::phrase(['string' => '<no-reply> %s - %s', 'vars' => [ MAFCLUB_NAME, $archiveName ]]),
+            'body' => '<p>Database backup.</p><p>Full DB in attached file.</p>',
+        ]);
+        $mailer->attach($archive, $archiveName.'.zip');
+        return $mailer->send($email);
     }
 }

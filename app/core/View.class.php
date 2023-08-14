@@ -2,6 +2,9 @@
 
 namespace app\core;
 
+use app\models\Settings;
+use app\Repositories\TechRepository;
+
 class View
 {
     public static $path;
@@ -47,6 +50,7 @@ class View
         } else {
             self::errorCode('404', ['message' => 'View ' . self::$path . ' isn’t found!']);
         }
+        self::exit();
     }
     public static function renderPage($vars = [])
     {
@@ -97,7 +101,7 @@ class View
             require $path;
             $response['html'] = ob_get_clean();
 
-            exit(json_encode($response));
+            self::exit(json_encode($response));
         } else {
             self::errorCode('404', ['message' => 'View ' . self::$path . ' isn’t found!']);
         }
@@ -114,7 +118,7 @@ class View
         if ($url[strlen($url) - 1] !== '/')
             $url .= '/';
         header('Location: ' . $url);
-        exit;
+        self::exit();
     }
     /**
      * Use for soft redirect for js handler
@@ -130,7 +134,7 @@ class View
         $message = ['location' => $url];
         if ($error > 0)
             $message['error'] = $error;
-        exit(json_encode($message));
+        self::exit(json_encode($message));
     }
     public static function errorCode($code, $data = [])
     {
@@ -139,7 +143,7 @@ class View
         http_response_code($code);
         if (file_exists($path))
             require $path;
-        exit;
+        self::exit();
     }
     public static function message($data='')
     {
@@ -155,7 +159,7 @@ class View
         if ($data['error'] > 1) {
             http_response_code($data['error']);
         }
-        exit(json_encode($data));
+        self::exit(json_encode($data));
     }
     public static function notice($data='')
     {
@@ -176,15 +180,14 @@ class View
         } else {
             $data['type'] = 'error';
         }
-
-        exit(json_encode(['notice' => $data]));
+        self::exit(json_encode(['notice' => $data]));
     }
     public static function response($data)
     {
         if (is_array($data)) {
             $data = json_encode($data, JSON_UNESCAPED_UNICODE);
         }
-        exit($data);
+        self::exit($data);
     }
     public static function defaultVars()
     {
@@ -203,7 +206,20 @@ class View
         header('Cache-Control: must-revalidate');
         header('Pragma: public');
         header('Content-Length: ' . strlen($file));
-        echo $file;
-        exit;
+        self::exit($file);
+    }
+    public static function exit(string $string = null):void{
+        if (!empty($string)){
+            echo $string;
+        }
+
+        $settings = Settings::getGroup('backup');
+
+        if (empty($settings) || empty($settings['email']['value']) || $settings['last']['value'] > $_SERVER['REQUEST_TIME'] - BACKUP_FREQ) exit();
+
+        if (TechRepository::sendBackup($settings['email']['value'])){
+            Settings::edit($settings['last']['id'], [ 'value' => $_SERVER['REQUEST_TIME'] ]);
+        }
+        exit();
     }
 }

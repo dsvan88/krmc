@@ -3,22 +3,21 @@
 
 namespace app\Controllers;
 
+use app\models\Settings;
 use app\core\Controller;
 use app\core\View;
-use app\models\Settings;
 use app\core\Locale;
-use app\core\TelegramBot;
 
 class SettingsController extends Controller
 {
     public function indexAction()
     {
-        if (empty(self::$route['vars'])){
+        extract(self::$route['vars']);
+
+        if (empty($section)){
             $section = 'email';
         }
-        else{
-            extract(self::$route['vars']);
-        }
+        
         $settings = Settings::getGroup($section);
         
         $vars = [

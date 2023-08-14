@@ -40,6 +40,7 @@ if (!defined('SQL_HOST')) {
     define('PASS_FAIL_MIN', 3); //3 = три спроби невірного введення даних авторизації для початку троттлінга
     define('TIMESTAMP_DAY', 86400);
     define('TIMESTAMP_WEEK', 604800);
+    define('BACKUP_FREQ', TIMESTAMP_DAY*3);
     define('CFG_DEBUG', true);
     define('CFG_SOFT_DELETE', true);
     define('CFG_NEWS_PER_PAGE', 6);

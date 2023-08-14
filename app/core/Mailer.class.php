@@ -61,23 +61,25 @@ class Mailer
             $uploadfile = tempnam(sys_get_temp_dir(), sha1($files['name'][$ct]));
             $filename = $files['name'][$ct];
             if (move_uploaded_file($files['tmp_name'][$ct], $uploadfile)) {
-                $this->mail->addAttachment($uploadfile, $filename);
-                $this->status['fileResult'] = "Файл $filename прикреплён";
+                $this->attach($uploadfile, $filename);
             } else {
                 $this->status['fileResult'] = "Не удалось прикрепить файл $filename";
             }
         }
     }
+    public function attach($uploadfile, $filename){
+        $this->mail->addAttachment($uploadfile, $filename);
+        $this->status['fileResult'] = "Файл $filename прикреплён";
+    }
     public function send($emails = '')
     {
-
         if (empty($emails)) return false;
-
+        
         if (!is_array($emails))
             $this->mail->addAddress($emails);
         else {
             for ($x = 0; $x < count($emails); $x++)
-                $this->mail->addAddress($emails[$x]);
+            $this->mail->addAddress($emails[$x]);
         }
 
         return $this->mail->send();
