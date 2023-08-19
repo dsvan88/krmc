@@ -26,7 +26,7 @@ class TechRepository
         if (empty($dataArray))
             return false;
 
-        $zip = new ZipArchive();
+        // $zip = new ZipArchive();
 
         $folder = realpath($_SERVER['DOCUMENT_ROOT'] .'/app/backups');
 
@@ -34,17 +34,22 @@ class TechRepository
             mkdir($folder, 0777, true);
         }
 
-        $extension = 'zip';
+        $extension = 'json.gz';
         $fullpath = "$folder/$filename.$extension";
 
-        if ($zip->open($fullpath, ZipArchive::CREATE)!==TRUE) {
-            exit("Невозможно открыть <$fullpath>\n");
-        }
-        foreach($dataArray as $name=>$data){
-            $zip->addFromString("$name.json", json_encode($data, JSON_UNESCAPED_UNICODE));
-        }
-        error_log(json_encode($zip, JSON_UNESCAPED_UNICODE));
-        $zip->close();
+        file_put_contents($fullpath, gzencode(json_encode($dataArray, JSON_UNESCAPED_UNICODE), 9));
+
+        // $zip->addFromString("$name.json", json_encode($data, JSON_UNESCAPED_UNICODE));
+        // }
+
+        // if ($zip->open($fullpath, ZipArchive::CREATE)!==TRUE) {
+        //     exit("Невозможно открыть <$fullpath>\n");
+        // }
+        // foreach($dataArray as $name=>$data){
+            // $zip->addFromString("$name.json", json_encode($data, JSON_UNESCAPED_UNICODE));
+        // }
+        // error_log(json_encode($zip, JSON_UNESCAPED_UNICODE));
+        // $zip->close();
 
         return $fullpath;
     }
