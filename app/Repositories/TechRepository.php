@@ -38,12 +38,12 @@ class TechRepository
         $fullpath = "$folder/$filename.$extension";
 
         if ($zip->open($fullpath, ZipArchive::CREATE)!==TRUE) {
-            error_log("Невозможно открыть <$fullpath>\n");
             exit("Невозможно открыть <$fullpath>\n");
         }
         foreach($dataArray as $name=>$data){
             $zip->addFromString("$name.json", json_encode($data, JSON_UNESCAPED_UNICODE));
         }
+        error_log(json_encode($zip, JSON_UNESCAPED_UNICODE));
         $zip->close();
 
         return $fullpath;
