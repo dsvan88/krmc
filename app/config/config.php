@@ -49,6 +49,7 @@ if (!defined('SQL_HOST')) {
     define('SCRIPT_VERSION', '0.15b');
     define('MAFCLUB_NAME', 'Mafia Club Kryvyi Rih');
     define('MAFCLUB_SNAME', 'KRMC');
+    define('FILE_BACKUPS', '/public/backups');
     define('FILE_USRGALL', '/public/gallery/users/');
     define('FILE_MAINGALL', '/public/gallery/site/');
     define('CFG_AUTHOR', 'DSVan');
