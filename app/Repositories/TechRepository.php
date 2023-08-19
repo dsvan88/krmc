@@ -46,7 +46,7 @@ class TechRepository
         return $fullpath;
     }
     public static function sendBackup(string $email){
-        error_reporting(0);
+        // error_reporting(0);
         $result = self::backup();
         $archiveName = 'backup '.date('d.m.Y', $_SERVER['REQUEST_TIME']);
         $archive = self::archive($archiveName, $result);
