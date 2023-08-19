@@ -2,6 +2,7 @@
     <h1 class="modal__form-title"><?= $title ?></h1>
     <div class="modal__row">
         <input class="modal__input" required type="text" name="login" placeholder="<?= $texts['LoginLabel'] ?>" autofocus />
+        <input type="hidden" name="<?= CSRF_NAME ?>" value="<?= $_SESSION['csrf'] ?>" />
     </div>
     <div class="modal__row">
         <input class="modal__input" required type="text" name="name" placeholder="<?= $texts['NameLabel'] ?>" data-autocomplete="user-name" />

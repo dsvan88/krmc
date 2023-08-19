@@ -29,7 +29,7 @@ class AccountController extends Controller
         View::redirect('/');
     }
     public function login($data){
-        if (Validator::csrfCheck() || Users::trottling()){
+        if (!Validator::csrfCheck() || Users::trottling()){
             View::notice(['error' => 403, 'message' => 'Try again later:)']);
         }
         if (!Users::login($data)) {
@@ -555,6 +555,9 @@ class AccountController extends Controller
     public function registerFormAction()
     {
         if (!empty($_POST)) {
+            if (!Validator::csrfCheck()){
+                View::notice(['error' => 403, 'message' => 'Try again later:)']);
+            }
             $this->register($_POST);
         }
         $vars = [
