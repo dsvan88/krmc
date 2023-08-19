@@ -37,7 +37,7 @@ class TechController extends Controller
     }
     public static function backupAction()
     {
-        phpinfo();
+        // phpinfo();
         if (!empty($_POST)) {
             if (empty($_POST['table']))
                 View::message(['error' => 1, 'message' => 'Something wrong with your query!']);

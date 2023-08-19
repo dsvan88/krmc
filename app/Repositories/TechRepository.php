@@ -28,7 +28,7 @@ class TechRepository
 
         // $zip = new ZipArchive();
 
-        $folder = realpath($_SERVER['DOCUMENT_ROOT'] .'/app/backups');
+        $folder = realpath($_SERVER['DOCUMENT_ROOT'] .'/public/backups');
 
         if (!file_exists($folder)) {
             mkdir($folder, 0777, true);
