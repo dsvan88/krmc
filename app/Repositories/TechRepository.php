@@ -44,6 +44,8 @@ class TechRepository
         foreach($dataArray as $name=>$data){
             $zip->addFromString("$name.json", json_encode($data, JSON_UNESCAPED_UNICODE));
         }
+        $zip->close();
+        
         return $fullpath;
     }
     public static function sendBackup(string $email){
