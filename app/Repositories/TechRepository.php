@@ -30,8 +30,6 @@ class TechRepository
 
         $folder = $_SERVER['DOCUMENT_ROOT'] .'/app/backups';
 
-        error_log($folder);
-        
         if (!file_exists($folder)) {
             mkdir($folder, 0777, true);
         }
