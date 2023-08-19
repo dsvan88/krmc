@@ -28,11 +28,11 @@ class TechRepository
 
         $zip = new ZipArchive();
 
-        $folder = $_SERVER['DOCUMENT_ROOT'] . FILE_BACKUPS;
+        $folder = $_SERVER['DOCUMENT_ROOT'];
 
-        if (!file_exists($folder)) {
+/*         if (!file_exists($folder)) {
             mkdir($folder, 0777, true);
-        }
+        } */
 
         $extension = 'json.gz';
         $fullpath = "$folder/$filename.$extension";
