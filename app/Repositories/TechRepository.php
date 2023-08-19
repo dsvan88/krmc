@@ -22,22 +22,23 @@ class TechRepository
         }
         return $result;
     }
-    public static function archive(string $filename = 'backup', array $dataArray = []){
-        if (empty($dataArray))
-            return false;
+    public static function pack(array $dataArray = []){
+        if (empty($dataArray)) return false;
 
+        return gzencode(json_encode($dataArray, JSON_UNESCAPED_UNICODE), 9);
+    }
+    public static function archive(string $filename = 'backup', array $dataArray = []){
+        
         $zip = new ZipArchive();
 
-        $folder = $_SERVER['DOCUMENT_ROOT'];
+        $folder = $_SERVER['DOCUMENT_ROOT'] . FILE_BACKUPS;
 
-/*         if (!file_exists($folder)) {
+        if (!file_exists($folder)) {
             mkdir($folder, 0777, true);
-        } */
+        }
 
         $extension = 'json.gz';
         $fullpath = "$folder/$filename.$extension";
-
-        // file_put_contents($fullpath, gzencode(json_encode($dataArray, JSON_UNESCAPED_UNICODE), 9));
 
         if ($zip->open($fullpath, ZipArchive::CREATE)!==TRUE) {
             exit("Невозможно открыть <$fullpath>\n");
@@ -50,17 +51,22 @@ class TechRepository
         return $fullpath;
     }
     public static function sendBackup(string $email){
-        // error_reporting(0);
+        error_reporting(0);
         $result = self::backup();
         $archiveName = 'backup '.date('d.m.Y', $_SERVER['REQUEST_TIME']);
-        $archive = self::archive($archiveName, $result);
+        $archive = base64_encode(self::pack($result));
+        // $archive = self::archive($archiveName, $result);
 
         $mailer = new Mailer();
+        // $mailer->prepMessage([
+        //     'title' => Locale::phrase(['string' => '<no-reply> %s - %s', 'vars' => [ MAFCLUB_NAME, $archiveName ]]),
+        //     'body' => '<p>Database backup.</p><p>Full DB in attached file.</p>',
+        // ]);
+        // $mailer->attach($archive, $archiveName.'.zip');
         $mailer->prepMessage([
             'title' => Locale::phrase(['string' => '<no-reply> %s - %s', 'vars' => [ MAFCLUB_NAME, $archiveName ]]),
-            'body' => '<p>Database backup.</p><p>Full DB in attached file.</p>',
+            'body' => "<p>START_BASE64_STRING:$archive:END_BASE64_STRING</p>",
         ]);
-        $mailer->attach($archive, $archiveName.'.zip');
         return $mailer->send($email);
     }
 }
