@@ -195,10 +195,14 @@ class TechController extends Controller
         var_dump($result);
         return $result;
     }
-    // public static function testAction(){
-    //     error_log(json_encode($_POST));
-    //     return View::redirect('/game/mafia/start/');
-    // }
+    public static function testAction(){
+        
+        $directory = 'testDir';
+        mkdir($directory);
+        
+        var_dump(file_exists($directory) ? 'Exists' : 'Error');
+        View::errorCode(404, ['message' => 'Result is Ok']);
+    }
     public static function sendMailAction()
     {
         $mailer = new PHPMailer();

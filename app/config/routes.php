@@ -418,12 +418,12 @@ return  [
         'action' => 'selfTestTelegram',
         'access' => ['category' => 'admin']
     ],
-    // 'tech/test' =>
-    // [
-    //     'controller' => 'tech',
-    //     'action' => 'test',
-    //     'access' => ['category' => 'admin']
-    // ],
+    'tech/test' =>
+    [
+        'controller' => 'tech',
+        'action' => 'test',
+        'access' => ['category' => 'admin']
+    ],
     // 'tech/mail' =>
     // [
     //     'controller' => 'tech',
