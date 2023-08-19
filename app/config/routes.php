@@ -126,6 +126,11 @@ return  [
         'action' => 'show',
         'access' => ['category' => 'all']
     ],
+    'weeks/add' => [
+        'controller' => 'weeks',
+        'action' => 'add',
+        'access' => ['category' => 'manager']
+    ],
     'weeks/{weekId}' => [
         'controller' => 'weeks',
         'action' => 'show',

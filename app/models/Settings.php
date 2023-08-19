@@ -147,7 +147,7 @@ class Settings extends Model
                 default_value CHARACTER VARYING(500) NOT NULL DEFAULT ''
             );"
         );
-        if (self::isExists(['id' => 1], static::$table)) return true;
+        if (self::isExists(['id' => 1])) return true;
 
         $settings = [
             ['img', 'MainLogo', 'Основний логотип', '/public/images/club_logo.png'],

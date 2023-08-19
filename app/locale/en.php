@@ -1,15 +1,12 @@
 <?php
 return [
-    '{{ Account_Login_Page_Title }}' => 'Log In',
     '{{ Account_Register_Page_Title }}' => 'Register',
     '{{ Main_Home_Page_Title }}' => 'Home page',
-    '{{ Weeks_Show_Page_Title }}' => 'Weekly schedule',
     '{{ Week_Set_Page_Title }}' => 'Set week schedule',
     '{{ Day_Show_Page_Title }}' => 'Event',
     '{{ Day_Set_Page_Title }}' => 'Setting event',
     '{{ Users_List_Page_Title }}' => 'Users List',
     '{{ Settings_List_Page_Title }}' => 'System’s settings',
-    '{{ SQL_Action_Title }}' => 'Execute SQL-query',
     '{{ Users_List_Title }}' => 'Users list',
     '{{ Settings_List_Title }}' => 'System’s settings',
     '{{ Chats_List_Title }}' => 'Chats with our Bot',
@@ -27,14 +24,10 @@ return [
     '{{ HEADER_ASIDE_MENU_SETTINGS_LIST }}' => 'Settings List',
     '{{ HEADER_ASIDE_MENU_LOGOUT }}' => 'Log Out',
 
-    '{{ Account_Login_Form_Title }}' => 'Authorization form',
     '{{ Account_Login_Form_Login_Input_Placeholder }}' => 'Login/e-mail',
     '{{ Account_Login_Form_Password_Input_Placeholder }}' => 'Password',
-    '{{ Account_Login_Form_Submit_Title }}' => 'Log In',
     '{{ Account_Login_Form_Forget_link }}' => 'Forget password?',
     '{{ Account_Login_Form_Register_Link }}' => 'Register',
-    '{{ Account_Login_User_Not_Found }}' => "User isn’t found!\nCheck your login and password!",
-
 
     '{{ Account_Profile_Form_Title }}' => 'Agent’s profile «<b>%s</b>»',
     '{{ Account_Profile_Form_User_Avatar }}' => 'Users avatar of %s',
@@ -51,7 +44,6 @@ return [
     '{{ Settings_Add_Title }}' => 'Add setting',
     '{{ Settings_Edit_Title }}' => 'Edit setting',
 
-    '{{ Weeks_Block_Title }}' => 'Weekly schedule',
     '{{ Week_Set_Block_Title }}' => 'Set week schedule',
 
     '{{ Day_Block_Title }}' => 'Event’s setup',
@@ -63,14 +55,6 @@ return [
     '{{ Day_Block_Prim_PLaceholder }}' => 'Remark',
     '{{ Add_Field_Label }}' => 'Add field',
     '{{ Day_Set_Success }}' => 'Changes saved successfully!',
-
-    '{{ Monday }}' => 'Monday',
-    '{{ Tuesday }}' => 'Tuesday',
-    '{{ Wednesday }}' => 'Wednesday',
-    '{{ Thursday }}' => 'Thursday',
-    '{{ Friday }}' => 'Friday',
-    '{{ Saturday }}' => 'Saturday',
-    '{{ Sunday }}' => 'Sunday',
 
     'Mafia' => 'Mafia',
     // 'Poker' => 'Poker',
@@ -98,14 +82,11 @@ return [
     '{{ News_Edit_Page_Title }}' => 'Edit news',
     '{{ News_Change_Logo }}' => 'Change main image',
     '{{ News_Edit_Block_Title }}' => 'Edit news',
-    '{{ News_Edit_Block_Submit_Title }}' => 'Save',
     '{{ News_Add_Page_Title }}' => 'Create news',
     '{{ News_Add_Block_Title }}' => 'Create news',
-    '{{ News_Add_Block_Submit_Title }}' => 'Save',
 
     '{{ Page_Add_Page_Title }}' => 'Create new Page',
     '{{ Page_Add_Block_Title }}' => 'Create new Page',
-    '{{ Page_Add_Block_Submit_Title }}' => 'Create',
 
     '{{ Tg_Game_Mod_Fan }}' => "*<b>Fun game</b>!\nHave a good time and have fun!\n",
     '{{ Tg_Game_Mod_Tournament }}' => "<b>Tournament</b>!\nBecome a champion in a glorious and fair competition!\n",

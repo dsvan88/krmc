@@ -110,7 +110,7 @@ class Pages extends Model
             );"
         );
 
-        if (self::isExists(['id'=> 1], $table)) return true;
+        if (self::isExists(['id'=> 1])) return true;
 
         $data = [
             [

@@ -10,13 +10,13 @@ class Days extends Model
     public static $currentDay;
 
     public static $days = [
-        '{{ Monday }}',
-        '{{ Tuesday }}',
-        '{{ Wednesday }}',
-        '{{ Thursday }}',
-        '{{ Friday }}',
-        '{{ Saturday }}',
-        '{{ Sunday }}',
+        'Monday',
+        'Tuesday',
+        'Wednesday ',
+        'Thursday',
+        'Friday',
+        'Saturday',
+        'Sunday',
     ];
     public static $dayDataDefault = [
         'game' => 'mafia',
@@ -85,7 +85,7 @@ class Days extends Model
             if ($weekId > 0) {
                 $weekData = Weeks::weekDataById($weekId);
             } else {
-                $weekData = Weeks::weekDataDefault();
+                $weekData = Weeks::defaultWeekData();
                 $weekData['start'] = strtotime('last Monday');
                 $weekData['finish'] = strtotime('next Sunday');
             }

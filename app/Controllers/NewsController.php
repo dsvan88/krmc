@@ -87,7 +87,7 @@ class NewsController extends Controller
             'title' => '{{ News_Edit_Page_Title }}',
             'texts' => [
                 'BlockTitle' => '{{ News_Edit_Block_Title }}',
-                'SubmitLabel' => '{{ News_Edit_Block_Submit_Title }}'
+                'SubmitLabel' => 'Save'
             ],
             'newsData' => $newsData,
             'scripts' => [
@@ -108,7 +108,7 @@ class NewsController extends Controller
             'title' => '{{ News_Edit_Page_Title }}',
             'texts' => [
                 'BlockTitle' => '{{ News_Edit_Block_Title }}',
-                'SubmitLabel' => '{{ News_Edit_Block_Submit_Title }}'
+                'SubmitLabel' => 'Save'
             ],
             'newsData' => $newsData,
             'scripts' => [
@@ -138,7 +138,7 @@ class NewsController extends Controller
             'title' => '{{ News_Add_Page_Title }}',
             'texts' => [
                 'BlockTitle' => '{{ News_Add_Block_Title }}',
-                'SubmitLabel' => '{{ News_Add_Block_Submit_Title }}'
+                'SubmitLabel' => 'Save'
             ],
             'scripts' => [
                 '/public/scripts/plugins/ckeditor.js?v=' . $_SERVER['REQUEST_TIME'],

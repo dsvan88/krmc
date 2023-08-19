@@ -2,6 +2,7 @@
 return [
     'Games' => 'Игры',
     'Execute' => 'Исполнить',
+    'Create' => 'Создать',
     'Save' => 'Сохранить',
     'Send' => 'Отправить',
     'Cancel' => 'Отмена',
@@ -17,16 +18,15 @@ return [
     'New password' => 'Новий пароль',
     'Password again' => 'Пароль, ещё раз',
 
-    '{{ Account_Login_Page_Title }}' => 'Вход',
+    'Log In' => 'Вход',
     '{{ Account_Register_Page_Title }}' => 'Регистрация',
     '{{ Main_Home_Page_Title }}' => 'Главная страница',
-    '{{ Weeks_Show_Page_Title }}' => 'Недельное расписание',
     '{{ Week_Set_Page_Title }}' => 'Планирование недели',
     '{{ Day_Show_Page_Title }}' => 'План на день',
     '{{ Day_Set_Page_Title }}' => 'Настройка события',
     '{{ Users_List_Page_Title }}' => 'Пользователи',
     '{{ Settings_List_Page_Title }}' => 'Настройки системы',
-    '{{ SQL_Action_Title }}' => 'Исполнение SQL запроса',
+    'Execute SQL-query' => 'Исполнение SQL запроса',
     '{{ Users_List_Title }}' => 'Список пользователей',
     '{{ Settings_List_Title }}' => 'Настройки системы',
     '{{ Chats_List_Title }}' => 'Чаты с нашим Ботом',
@@ -45,10 +45,9 @@ return [
     '{{ HEADER_ASIDE_MENU_SETTINGS_LIST }}' => 'Настройки',
     '{{ HEADER_ASIDE_MENU_LOGOUT }}' => 'Выход',
 
-    '{{ Account_Login_Form_Title }}' => 'Авторизация',
+    'Authorization form' => 'Авторизация',
     '{{ Account_Login_Form_Login_Input_Placeholder }}' => 'Логин/почта',
     '{{ Account_Login_Form_Password_Input_Placeholder }}' => 'Пароль',
-    '{{ Account_Login_Form_Submit_Title }}' => 'Войти',
     'Forget Password' => 'Забыли пароль?',
     'Register' => 'Регистрация',
 
@@ -57,7 +56,7 @@ return [
     "This account has a Telegram Account connected to it!\nYour verification code has been sent to your Telegram.\nPlease, start a dialog with our <a href='https://t.me/%s' target='_blank'>Telegram bot</a> to get a verification code!" =>
     "К этому псевдониму подключён Телеграм!\nВаш проверочный код отправлен Вам в Телеграм.\nНачните, пожалуйста, диалог с нашим <a href='https://t.me/%s' target='_blank'>Телеграм ботом</a> для получения проверочного кода!",
 
-    '{{ Account_Login_User_Not_Found }}' => "Пользователь не найден!\nПроверьте логин и пароль!",
+    "User isn’t found!\nCheck your login and password!" => "Пользователь не найден!\nПроверьте логин и пароль!",
     'Rename Temporary Player' => 'Смена имени временного игрока',
 
     'Agent’s profile «<b>%s</b>»' => 'Личное дело агента «<b>%s</b>»',
@@ -88,7 +87,7 @@ return [
     '{{ Settings_Add_Title }}' => 'Добавить настройку',
     '{{ Settings_Edit_Title }}' => 'Изменить настройку',
 
-    '{{ Weeks_Block_Title }}' => 'Недельное расписание',
+    'Weekly schedule' => 'Недельное расписание',
     '{{ Week_Set_Block_Title }}' => 'Планирование недели',
 
     '{{ Day_Block_Title }}' => 'Настройка события',
@@ -118,13 +117,13 @@ return [
     'Youtube Channel' => 'Youtube канал',
     'Game Settings' => 'Настройки игры',
 
-    '{{ Monday }}' => 'Понедельник',
-    '{{ Tuesday }}' => 'Вторник',
-    '{{ Wednesday }}' => 'Среда',
-    '{{ Thursday }}' => 'Четверг',
-    '{{ Friday }}' => 'Пятница',
-    '{{ Saturday }}' => 'Суббота',
-    '{{ Sunday }}' => 'Воскресенье',
+    'Monday' => 'Понедельник',
+    'Tuesday' => 'Вторник',
+    'Wednesday ' => 'Среда',
+    'Thursday' => 'Четверг',
+    'Friday' => 'Пятница',
+    'Saturday' => 'Суббота',
+    'Sunday' => 'Воскресенье',
 
     'Mafia' => 'Мафия',
     // 'Poker' => 'Покер',
@@ -152,14 +151,11 @@ return [
     '{{ News_Edit_Page_Title }}' => 'Редактирование новости',
     '{{ News_Change_Logo }}' => 'Изменить основное изображение',
     '{{ News_Edit_Block_Title }}' => 'Редактирование новости',
-    '{{ News_Edit_Block_Submit_Title }}' => 'Сохранить',
     '{{ News_Add_Page_Title }}' => 'Создание новости',
     '{{ News_Add_Block_Title }}' => 'Создание новости',
-    '{{ News_Add_Block_Submit_Title }}' => 'Сохранить',
 
     '{{ Page_Add_Page_Title }}' => 'Создание новой страницы',
     '{{ Page_Add_Block_Title }}' => 'Создание новой страницы',
-    '{{ Page_Add_Block_Submit_Title }}' => 'Создать',
     'Page edit form' => 'Форма редактирования страницы',
 
     "Something went wrong😱!\nWe are deeply sorry for that😢\nI’ve informed our administrators about your situation, and they are fixing it right now!\nThank you for understanding!" =>

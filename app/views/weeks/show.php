@@ -4,7 +4,9 @@
     </h1>
     <h2 class="week__title section__subtitle">
         <? if ($prevWeek) : ?>
-            <span><a class="week__title-link" href="/weeks/<?= $prevWeek['id'] ?>"><?= date('d.m', $prevWeek['start']) . ' - ' . date('d.m', $prevWeek['finish'] - 3600 * 5) ?></a></span>
+            <span>
+                <a class="week__title-link" href="/weeks/<?= $prevWeek['id'] ?>"><?= date('d.m', $prevWeek['start']) . ' - ' . date('d.m', $prevWeek['finish'] - 3600 * 5) ?></a>
+            </span>
         <? else : ?>
             <span class="week__title-dummy"></span>
         <? endif; ?>
@@ -14,15 +16,13 @@
                 <a class="week__title-link" href="/weeks/<?= $nextWeek['id'] ?>"><?= date('d.m', $nextWeek['start']) . ' - ' . date('d.m', $nextWeek['finish'] - 3600 * 5) ?></a>
             </span>
         <? else : ?>
-            <span class="week__title-dummy">
-                &lt;&nbsp;No Data&nbsp;&gt;
+            <span>
+                <a class="week__title-link" href="/weeks/add">&lt;&nbsp;<i class="fa fa-plus-circle"></i>&nbsp;&gt;</a>
             </span>
         <? endif; ?>
     </h2>
     <div class="week__list">
-        <?
-        foreach($days as $dayNum=>$day) :
-        ?>
+        <? foreach($days as $dayNum=>$day) : ?>
             <div class="week__item <?= $day['class'] ?>" data-action-click="/week/<?= $weekId ?>/day/<?= $dayNum ?>/" data-mode="location">
                 <h3 class="week__item-date"><a href="/week/<?= $weekId ?>/day/<?= $dayNum ?>/"><?= $day['date'] ?></a></h3>
                 <h4 class="week__item-game"><?= $day['game'] ?></h4>

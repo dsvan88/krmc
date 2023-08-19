@@ -26,7 +26,7 @@ class Contacts extends Model
     }
     public static function isContactExists($contact)
     {
-        return self::isExists(['contact' => $contact], self::$table);
+        return self::isExists(['contact' => $contact]);
     }
     public static function new(array $data, int $userId):void
     {

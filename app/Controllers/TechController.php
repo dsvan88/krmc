@@ -24,7 +24,7 @@ class TechController extends Controller
             }
         }
         $vars = [
-            'title' => '{{ SQL_Action_Title }}',
+            'title' => 'Execute SQL-query',
             'texts' => [
                 'SubmitLabel' => 'Execute',
             ],
@@ -40,9 +40,10 @@ class TechController extends Controller
         if (!empty($_POST)) {
             if (empty($_POST['table']))
                 View::message(['error' => 1, 'message' => 'Something wrong with your query!']);
+
             $table = trim($_POST['table']);
             $result = TechRepository::backup($table);
-            $archiveName = 'backup '.date('d.m.Y', $_SERVER['REQUEST_TIME']);
+            $archiveName = MAFCLUB_NAME.' backup '.date('d.m.Y', $_SERVER['REQUEST_TIME']);
             if ($table !=='all'){
                 $result = [ $table => array_values($result)];
                 $archiveName = "$table $archiveName";
@@ -51,7 +52,7 @@ class TechController extends Controller
             View::file(file_get_contents($archive), mb_substr($archive, mb_strrpos($archive, '/', 0, 'UTF-8')+1, null, 'UTF-8'));
         }
         $vars = [
-            'title' => '{{ SQL_Action_Title }}',
+            'title' => 'DB Backup form',
             'texts' => [
                 'SubmitLabel' => 'Execute',
             ],
@@ -84,7 +85,7 @@ class TechController extends Controller
             View::message('Done!');
         }
         $vars = [
-            'title' => '{{ SQL_Action_Title }}',
+            'title' => 'DB Migration Form',
             'texts' => [
                 'SubmitLabel' => 'Execute',
             ],
@@ -97,7 +98,7 @@ class TechController extends Controller
     }
     public static function dbrebuildAction()
     {
-        // View::redirect('/');db
+        // View::redirect('/');
         $chatsData = TelegramChats::getChatsList();
         foreach ($chatsData as $index => $chat) {
             if (empty($chat['personal']['nickname'])) continue;
@@ -107,31 +108,38 @@ class TechController extends Controller
             TelegramChats::edit(['user_id' => $userData['id'], 'personal' => $chat['personal']], $chat['id']);
         }
 
-        $settings = [
-            ['backup', 'email', 'Backup Email', ''],
-            ['backup', 'last', 'Last backup', ''],
-        ];
 
-        $array = [];
-        $keys = ['type', 'slug', 'name', 'value', 'default_value'];
-        for ($i = 0; $i < count($settings); $i++) {
-            foreach ($settings[$i] as $num => $setting) {
-                if (!is_array($setting)) continue;
-                $settings[$i][$num] = json_encode($setting, JSON_UNESCAPED_UNICODE);
+        if (!Settings::isExists(['type' => 'backup'])){
+            $settings = [
+                ['backup', 'email', 'Backup Email', ''],
+                ['backup', 'last', 'Last backup', ''],
+            ];
+            $array = [];
+            $keys = ['type', 'slug', 'name', 'value', 'default_value'];
+            for ($i = 0; $i < count($settings); $i++) {
+                foreach ($settings[$i] as $num => $setting) {
+                    if (!is_array($setting)) continue;
+                    $settings[$i][$num] = json_encode($setting, JSON_UNESCAPED_UNICODE);
+                }
+                $settings[$i][] = $settings[$i][3];
+                $array[] = array_combine($keys, $settings[$i]);
             }
-            $settings[$i][] = $settings[$i][3];
-            $array[] = array_combine($keys, $settings[$i]);
+            Settings::insert($array);
         }
-        Settings::insert($array);
-/*         
-        $weekId = 0;
-        while ($weekData = Weeks::weekDataById(++$weekId)) {
+
+
+        $weeksIds = Weeks::getIds();
+        foreach ($weeksIds as $weekId) {
+            $weekData = Weeks::weekDataById($weekId);
             foreach ($weekData['data'] as $dayNum => $dayData) {
-                if (!in_array($dayData['game'], ['poker', 'cash'])) continue;
-                $weekData['data'][$dayNum]['game'] = 'nlh';
+                foreach($dayData['participants'] as $playerNum => $player){
+                    unset($weekData['data'][$dayNum]['participants'][$playerNum]['name']);
+                    if ($player['id'] === null || $player['id'] > 0 || !empty($player['name']) && strpos($player['name'], 'tmp_user') === false) continue;
+                    $weekData['data'][$dayNum]['participants'][$playerNum]['id'] = null;
+                }
             }
-            Weeks::update(['data' => json_encode($weekData['data'], JSON_UNESCAPED_UNICODE)], ['id' => $weekData['id']], Weeks::$table);
-        } */
+            Weeks::update(['data' => json_encode($weekData['data'], JSON_UNESCAPED_UNICODE)], ['id' => $weekId]);
+        }
         echo 'Done!';
     }
     public static function selfTestTelegramAction()

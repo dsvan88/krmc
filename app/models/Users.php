@@ -372,7 +372,7 @@ class Users extends Model
     }
     public static function isUserExists($login)
     {
-        return self::isExists(['login' => $login], self::$table);
+        return self::isExists(['login' => $login]);
     }
     public static function edit($data, $where)
     {
@@ -533,7 +533,7 @@ class Users extends Model
                 date_delete TIMESTAMP DEFAULT NULL
             );"
         );
-        if (self::isExists(['id' => 1], $table)) return true;
+        if (self::isExists(['id' => 1])) return true;
 
         $privilege = ['status' => 'admin', 'admin' => 1, 'rank' => 0];
         self::insert([

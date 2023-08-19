@@ -68,7 +68,7 @@ class DaysController extends Controller
 
         if (isset($day['weekStart'])) {
             $dayTimestamp = $day['weekStart'] + TIMESTAMP_DAY * $dayId;
-            $day['date'] = date('d.m.Y', $dayTimestamp) . ' (<strong>' . Locale::phrase('{{ ' . date('l', $dayTimestamp) . ' }}') . '</strong>) ' . $day['time'];
+            $day['date'] = date('d.m.Y', $dayTimestamp) . ' (<strong>' . Locale::phrase(date('l', $dayTimestamp)) . '</strong>) ' . $day['time'];
         } else {
             $day['date'] = '{{ Day_Date_Not_Set }}';
         }

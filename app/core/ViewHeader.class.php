@@ -13,7 +13,7 @@ class ViewHeader {
         $images = Locale::apply($images);
         $vars = [
             'headerLogo' => "<a href='/'>" . ImageProcessing::inputImage($images['MainLogo']['value']) . '</a>',
-            'headerProfileButton' => '<a class="header__profile-button" data-action-click="account/login/form">Вхід</a>',
+            'headerProfileButton' => '<a class="header__profile-button" data-action-click="account/login/form">'.Locale::phrase('Log In').'</a>',
             'headerMenu' => self::menu(),
         ];
         if (isset($_SESSION['id'])) {

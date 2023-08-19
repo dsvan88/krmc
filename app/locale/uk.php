@@ -2,6 +2,7 @@
 return [
     'Games' => 'Ігри',
     'Execute' => 'Виконати',
+    'Create' => 'Створити',
     'Save' => 'Зберегти',
     'Send' => 'Надіслати',
     'Cancel' => 'Відміна',
@@ -17,16 +18,15 @@ return [
     'New password' => 'Новий пароль',
     'Password again' => 'Пароль, ще раз',
 
-    '{{ Account_Login_Page_Title }}' => 'Вхід',
+    'Log In' => 'Вхід',
     '{{ Account_Register_Page_Title }}' => 'Реєстрація',
     '{{ Main_Home_Page_Title }}' => 'Домашня сторінка',
-    '{{ Weeks_Show_Page_Title }}' => 'Тижневий розклад',
     '{{ Week_Set_Page_Title }}' => 'Планування тиждня',
     '{{ Day_Show_Page_Title }}' => 'Запланована подія',
     '{{ Day_Set_Page_Title }}' => 'Налаштування події',
     '{{ Users_List_Page_Title }}' => 'Користувачі',
     '{{ Settings_List_Page_Title }}' => 'Налаштування системи',
-    '{{ SQL_Action_Title }}' => 'Виконання SQL запиту',
+    'Execute SQL-query' => 'Виконання SQL запиту',
     '{{ Users_List_Title }}' => 'Список користувачів',
     '{{ Settings_List_Title }}' => 'Налаштування системи',
     '{{ Chats_List_Title }}' => 'Чати з нашим Ботом',
@@ -45,10 +45,9 @@ return [
     '{{ HEADER_ASIDE_MENU_SETTINGS_LIST }}' => 'Налаштування',
     '{{ HEADER_ASIDE_MENU_LOGOUT }}' => 'Вихід',
 
-    '{{ Account_Login_Form_Title }}' => 'Авторізація',
+    'Authorization form' => 'Авторізація',
     '{{ Account_Login_Form_Login_Input_Placeholder }}' => 'Логін/пошта',
     '{{ Account_Login_Form_Password_Input_Placeholder }}' => 'Пароль',
-    '{{ Account_Login_Form_Submit_Title }}' => 'Увійти',
     'Forget Password' => 'Забули пароль?',
     'Register' => 'Реєстрація',
 
@@ -57,7 +56,7 @@ return [
     "This account has a Telegram Account connected to it!\nYour verification code has been sent to your Telegram.\nPlease, start a dialog with our <a href='https://t.me/%s' target='_blank'>Telegram bot</a> to get a verification code!" =>
     "Цей псевдонім має підключений Телеграм!\nВаш перевірочний код відправлений до Вашого Телеграму.\nПочніть, будь-ласка, спілкування з нашим <a href='https://t.me/%s' target='_blank'>Телеграм ботом</a> для отримання перевірочного коду!",
 
-    '{{ Account_Login_User_Not_Found }}' => "Користувач не знайден!\nПеревірте логін та пароль!",
+    "User isn’t found!\nCheck your login and password!" => "Користувач не знайден!\nПеревірте логін та пароль!",
     'Rename Temporary Player' => 'Перейменування тичасового гравця',
 
     'Agent’s profile «<b>%s</b>»' => 'Особова справа агента «<b>%s</b>»',
@@ -88,7 +87,7 @@ return [
     '{{ Settings_Add_Title }}' => 'Додати налаштування',
     '{{ Settings_Edit_Title }}' => 'Змінити налаштування',
 
-    '{{ Weeks_Block_Title }}' => 'Тижневий розклад',
+    'Weekly schedule' => 'Тижневий розклад',
     '{{ Week_Set_Block_Title }}' => 'Планування тиждня',
 
     '{{ Day_Block_Title }}' => 'Налаштування події',
@@ -118,13 +117,13 @@ return [
     'Youtube Channel' => 'Youtube канал',
     'Game Settings' => 'Налаштування гри',
 
-    '{{ Monday }}' => 'Понеділок',
-    '{{ Tuesday }}' => 'Вівторок',
-    '{{ Wednesday }}' => 'Середа',
-    '{{ Thursday }}' => 'Четвер',
-    '{{ Friday }}' => 'П’ятниця',
-    '{{ Saturday }}' => 'Субота',
-    '{{ Sunday }}' => 'Неділя',
+    'Monday' => 'Понеділок',
+    'Tuesday' => 'Вівторок',
+    'Wednesday ' => 'Середа',
+    'Thursday' => 'Четвер',
+    'Friday' => 'П’ятниця',
+    'Saturday' => 'Субота',
+    'Sunday' => 'Неділя',
 
     'Mafia' => 'Мафія',
     // 'Poker' => 'Покер',
@@ -152,14 +151,11 @@ return [
     '{{ News_Edit_Page_Title }}' => 'Редагування новини',
     '{{ News_Change_Logo }}' => 'Змінити основне зображення',
     '{{ News_Edit_Block_Title }}' => 'Редагування новини',
-    '{{ News_Edit_Block_Submit_Title }}' => 'Редагувати',
     '{{ News_Add_Page_Title }}' => 'Створення новини',
     '{{ News_Add_Block_Title }}' => 'Створення новини',
-    '{{ News_Add_Block_Submit_Title }}' => 'Створити',
 
     '{{ Page_Add_Page_Title }}' => 'Створення нової сторінки',
     '{{ Page_Add_Block_Title }}' => 'Створення нової сторінки',
-    '{{ Page_Add_Block_Submit_Title }}' => 'Створити',
     'Page edit form' => 'Форма редагування сторінки',
 
     "Something went wrong😱!\nWe are deeply sorry for that😢\nI’ve informed our administrators about your situation, and they are fixing it right now!\nThank you for understanding!" =>

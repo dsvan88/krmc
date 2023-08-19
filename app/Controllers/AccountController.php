@@ -34,7 +34,7 @@ class AccountController extends Controller
         }
         if (!Users::login($data)) {
             $_SESSION['login_fails'][] = $_SERVER['REQUEST_TIME'];
-            View::notice(['error' => 403, 'message' => '{{ Account_Login_User_Not_Found }}']);
+            View::notice(['error' => 403, 'message' => "User isn’t found!\nCheck your login and password!"]);
         }
         View::location(isset($_SESSION['path']) ? $_SESSION['path'] : '/');
     }
@@ -44,11 +44,11 @@ class AccountController extends Controller
             $this->login($_POST);
         }
         $vars = [
-            'title' => '{{ Account_Login_Form_Title }}',
+            'title' => 'Authorization form',
             'texts' => [
                 'LoginInputPlaceholder' => '{{ Account_Login_Form_Login_Input_Placeholder }}',
                 'PasswordInputPlaceholder' => '{{ Account_Login_Form_Password_Input_Placeholder }}',
-                'SubmitLabel' => '{{ Account_Login_Form_Submit_Title }}',
+                'SubmitLabel' => 'Log In',
                 'ForgetLinkLabel' => 'Forget Password',
                 'RegisterLinkLabel' => 'Register',
             ]

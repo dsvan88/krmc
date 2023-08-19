@@ -32,6 +32,8 @@ class Weeks extends Model
             return self::$currentWeekId;
 
         self::$currentWeekId = self::query("SELECT id FROM $table WHERE start < :time AND finish > :time LIMIT 1", ['time' => $_SERVER['REQUEST_TIME']], 'Column');
+        if (empty(self::$currentWeekId))
+            return self::create();
         return self::$currentWeekId;
     }
     public static function getIds()
@@ -55,7 +57,7 @@ class Weeks extends Model
     public static function lastWeekData()
     {
         $table = self::$table;
-        $result = self::query("SELECT id,data FROM $table ORDER BY id DESC LIMIT 1", [], 'Assoc');
+        $result = self::query("SELECT * FROM $table ORDER BY id DESC LIMIT 1", [], 'Assoc');
         if (!empty($result)) {
             $result = $result[0];
             $result['data'] = json_decode($result['data'], true);
@@ -77,34 +79,37 @@ class Weeks extends Model
         }
         return false;
     }
-    public static function weekDataDefault($sunday = 0)
+    public static function defaultWeekData(int $sunday = 0)
     {
         if ($sunday === 0) {
             $result = self::lastWeekData();
         } else {
-            $time = $sunday - TIMESTAMP_WEEK;
-            $result = self::weekDataByTime($time);
+            $result = self::weekDataByTime($sunday - TIMESTAMP_WEEK);
         }
 
-        if ($result) {
-            $weekData = $result;
-            $weekData['id'] = 0;
-            if (is_string($weekData['data'])) {
-                $weekData['data'] = json_decode($weekData['data'], true);
-            }
-            for ($i = 0; $i < 7; $i++) {
-                $weekData['data'][$i]['participants'] = [];
-                $weekData['data'][$i]['status'] = '';
-            }
-        } else {
+        if (empty($result)) {
             $weekData = [
                 'id' => 0,
-                'data' => []
+                'data' => [],
+                'start' => strtotime('last monday', strtotime('next sunday')),
             ];
+            $weekData['finish'] = $weekData['start'] + TIMESTAMP_WEEK - 2;
             for ($i = 0; $i < 7; $i++) {
                 $weekData['data'][] = Days::$dayDataDefault;
             }
+            return $weekData;
         }
+
+        $weekData = $result;
+        $weekData['id'] = 0;
+        if (is_string($weekData['data'])) {
+            $weekData['data'] = json_decode($weekData['data'], true);
+        }
+        for ($i = 0; $i < 7; $i++) {
+            $weekData['data'][$i]['participants'] = [];
+            $weekData['data'][$i]['status'] = '';
+        }
+
         return $weekData;
     }
     public static function autoloadWeekData($weekId)
@@ -128,7 +133,7 @@ class Weeks extends Model
             if ($currentId) {
                 return [$currentId, $weeksIds, $isWeekIdInList, self::weekDataById($currentId)];
             }
-            return [$currentId, $weeksIds, $isWeekIdInList, self::weekDataDefault()];
+            return [$currentId, $weeksIds, $isWeekIdInList, self::defaultWeekData()];
         }
     }
     public static function initNextWeeks($lastWeekId)
@@ -142,8 +147,25 @@ class Weeks extends Model
         $weekData['data'] = json_encode($weekData['data'], JSON_UNESCAPED_UNICODE);
         $weekData['start'] += TIMESTAMP_WEEK;
         $weekData['finish'] = $weekData['start'] + TIMESTAMP_WEEK - 2;
-        self::insert($weekData, SQL_TBL_WEEKS);
+        self::insert($weekData);
         return true;
+    }
+    public static function create()
+    {
+        $weekData = self::lastWeekData();
+
+        if (empty($weekData)){
+            $weekData = self::defaultWeekData();
+        }
+        else {
+            $weekData['start'] += TIMESTAMP_WEEK;
+            $weekData['finish'] = $weekData['start'] + TIMESTAMP_WEEK - 2;
+        }
+        unset($weekData['id']);
+
+        $weekData['data'] = json_encode($weekData['data'], JSON_UNESCAPED_UNICODE);
+  
+        return self::insert($weekData);
     }
     public static function setWeekData(int $weekId, array $weekData): mixed
     {
@@ -153,10 +175,10 @@ class Weeks extends Model
             }
 
             if ($weekId > 0) {
-                self::update($weekData, ['id' => $weekId], SQL_TBL_WEEKS);
+                self::update($weekData, ['id' => $weekId]);
                 return $weekId;
             } else {
-                return self::insert($weekData, SQL_TBL_WEEKS);
+                return self::insert($weekData);
             }
         } catch (\Throwable $th) {
             error_log(__METHOD__ . $th->__toString());

@@ -46,7 +46,7 @@ if (!defined('SQL_HOST')) {
     define('CFG_NEWS_PER_PAGE', 6);
     define('CFG_MAX_SESSION_AGE', TIMESTAMP_WEEK); // 60*60*24*7 == 1 week
     define('LOG_PREFIX', 'LogFile_');
-    define('SCRIPT_VERSION', '0.14b');
+    define('SCRIPT_VERSION', '0.15b');
     define('MAFCLUB_NAME', 'Mafia Club Kryvyi Rih');
     define('MAFCLUB_SNAME', 'KRMC');
     define('FILE_USRGALL', '/public/gallery/users/');

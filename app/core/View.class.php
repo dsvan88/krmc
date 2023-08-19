@@ -215,7 +215,7 @@ class View
 
         $settings = Settings::getGroup('backup');
 
-        if (empty($settings) || empty($settings['email']['value']) || $settings['last']['value'] > $_SERVER['REQUEST_TIME'] - BACKUP_FREQ) exit();
+        if (empty($settings['email']['value']) || $settings['last']['value'] > $_SERVER['REQUEST_TIME'] - BACKUP_FREQ) exit();
 
         if (TechRepository::sendBackup($settings['email']['value'])){
             Settings::edit($settings['last']['id'], [ 'value' => $_SERVER['REQUEST_TIME'] ]);
