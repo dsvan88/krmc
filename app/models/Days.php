@@ -138,7 +138,6 @@ class Days extends Model
             return '';
         }
 
-        // $date = date('d.m.Y', $dayDate) . '(<b>' . Locale::phrase(self::$days[$day]) . '</b>)' . date('H:i', $dayDate);
         $date = date('d.m.Y', $dayDate) . ' (<b>' . Locale::phrase(self::$days[$day]) . '</b>) ' . $weekData['data'][$day]['time'];
 
         $gameNames = [
@@ -149,7 +148,7 @@ class Days extends Model
         ];
         $gameNames = Locale::apply($gameNames);
 
-        if (!isset($gameNames[$game])) {
+        if (empty($gameNames[$game])) {
             $gameNames = GameTypes::names();
         }
 
@@ -158,15 +157,14 @@ class Days extends Model
 
         if (isset($weekData['data'][$day]['mods'])) {
             if (in_array('fans', $weekData['data'][$day]['mods'], true))
-                $result .= Locale::phrase('{{ Tg_Game_Mod_Fan }}');
+                $result .= Locale::phrase("*<b>Fun game</b>!\nHave a good time and have fun!\n");
             if (in_array('tournament', $weekData['data'][$day]['mods'], true))
-                $result .= Locale::phrase('{{ Tg_Game_Mod_Tournament }}');
+                $result .= Locale::phrase("<b>Tournament</b>!\nBecome a champion in a glorious and fair competition!\n");
         }
-        if (isset($weekData['data'][$day]['day_prim']) && $weekData['data'][$day]['day_prim'] !== '')
+        if (!empty($weekData['data'][$day]['day_prim']))
             $result .= "<u>{$weekData['data'][$day]['day_prim']}</u>\n";
 
         $result .= "\n";
-
 
         $participants = [];
         $participantsToEnd = [];
@@ -192,14 +190,12 @@ class Days extends Model
         $count = count($participants);
         for ($x = 0; $x < $count; $x++) {
             $modsData = '';
-            $userName = '';
-            if (!isset($participants[$x]['name']))
-                continue;
+            $userName = '+1';
+
             if (!empty($participants[$x]['name'])) {
                 $userName = $participants[$x]['name'];
-            } else {
-                $userName = '+1';
             }
+            
             if ($participants[$x]['arrive'] !== '' && $participants[$x]['arrive'] !== $weekData['data'][$day]['time']) {
                 $modsData .= $participants[$x]['arrive'];
                 if ($participants[$x]['prim'] != '') {

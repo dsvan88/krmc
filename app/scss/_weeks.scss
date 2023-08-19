@@ -12,6 +12,11 @@
 				font-size: 0.7em;
 				align-self: flex-end;
 			}
+			&-dummy{
+				color: $color-text-dark-blur;
+				font-size: 0.7em;
+				align-self: center;
+			}
 			& > span{
 				text-align: center;
 				line-height: 1em;

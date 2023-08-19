@@ -158,6 +158,10 @@ class Weeks extends Model
             $weekData = self::defaultWeekData();
         }
         else {
+            for ($i = 0; $i < 7; $i++) {
+                $weekData['data'][$i]['participants'] = [];
+                $weekData['data'][$i]['status'] = '';
+            }
             $weekData['start'] += TIMESTAMP_WEEK;
             $weekData['finish'] = $weekData['start'] + TIMESTAMP_WEEK - 2;
         }

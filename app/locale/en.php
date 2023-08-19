@@ -88,9 +88,6 @@ return [
     '{{ Page_Add_Page_Title }}' => 'Create new Page',
     '{{ Page_Add_Block_Title }}' => 'Create new Page',
 
-    '{{ Tg_Game_Mod_Fan }}' => "*<b>Fun game</b>!\nHave a good time and have fun!\n",
-    '{{ Tg_Game_Mod_Tournament }}' => "<b>Tournament</b>!\nBecome a champion in a glorious and fair competition!\n",
-
     '{{ Tg_Unknown_Requester }}' => "Sorry! I don't recognize you in makeup🤷‍♂️\nLet's get acquainted!😏\nI'm a digital bot for booking. Your faithful friend and assistant in the matter of signing up for the games of our club🤗\nNow, please tell me your nickname in the game so that I can remember you!\nWrite: /nick <b>Your nickname</b> (<b>Cyrillic</b>!)\nExample:\n/nick Телеграм Бот",
     '{{ Tg_Command_Without_Arguments }}' => "This <b>Command</b> can't be executed without any arguments!",
 

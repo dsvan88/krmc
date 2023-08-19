@@ -11,7 +11,7 @@
         </ul>
     </div>
     <div class="modal__row">
-        <span>й зареєструйте собі ігрове ім’я командою:</span>
+        <span>й зареєструйте собі ігрове ім’я, командою:</span>
     </div>
     <div class="modal__row-accent">
         <h4 class="text-accent">/nick <?= $userName ?></h4>

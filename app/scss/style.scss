@@ -264,7 +264,15 @@ body {
 			padding: 1.2em .7em;
 			text-align: justify;
 			color: $color-text-dark;
-
+			ul {
+				padding-left: 2.5em;
+			}
+			h3, h4{
+				margin: .5em 0;
+			}
+			.text-big{
+				font-size: 1.5em;
+			}
 			&.game {
 				padding: 0;
 			}

@@ -46,7 +46,7 @@ class WeekRepository
 
         $games = GameTypes::names();
         $days = [];
-        
+
         for ($i = 0; $i < 7; $i++){
 
             $days[$i] = $weekData['data'][$i];
@@ -70,12 +70,13 @@ class WeekRepository
             $days[$i]['participants'] = Users::addNames($days[$i]['participants']);
             $days[$i]['playersCount'] = min(count($days[$i]['participants']), 10);
             for($x=0; $x < $days[$i]['playersCount']; $x++){
-                if (!empty($days[$i]['participants'][$x]) && empty($days[$i]['participants'][$x]['id'])) {
-                    $days[$i]['participants'][$x]['name'] = '+1';
-                }
+                if (!empty($days[$i]['participants'][$x]['id'])) continue;
+                $days[$i]['participants'][$x]['name'] = '+1';
             }
         }
         $paginator = Paginator::weekly(['weeksIds' => $weeksIds, 'currentIndex' => $weekCurrentIndexInList, 'selectedIndex' => $selectedWeekIndex]);
+
+        $isManager = !empty($_SESSION['privilege']['status']) && in_array($_SESSION['privilege']['status'], ['manager', 'admin']);
 
         return compact(
             'weekId',
@@ -91,6 +92,7 @@ class WeekRepository
             'dayNames',
             'games',
             'days',
+            'isManager',
             'paginator',
         );
     }
