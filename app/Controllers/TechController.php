@@ -48,6 +48,7 @@ class TechController extends Controller
                 $result = [ $table => array_values($result)];
                 $archiveName = "$table $archiveName";
             }
+            $archiveName = str_replace(' ', '_', $archiveName);
             $archive = TechRepository::archive($archiveName, $result);
             View::file(file_get_contents($archive), mb_substr($archive, mb_strrpos($archive, '/', 0, 'UTF-8')+1, null, 'UTF-8'));
         }
