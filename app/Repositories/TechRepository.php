@@ -28,7 +28,7 @@ class TechRepository
 
         $zip = new ZipArchive();
 
-        $folder = $_SERVER['DOCUMENT_ROOT'] .'/app/backups';
+        $folder = realpath($_SERVER['DOCUMENT_ROOT'] .'/app/backups');
 
         if (!file_exists($folder)) {
             mkdir($folder, 0777, true);
@@ -45,7 +45,7 @@ class TechRepository
             $zip->addFromString("$name.json", json_encode($data, JSON_UNESCAPED_UNICODE));
         }
         $zip->close();
-        
+
         return $fullpath;
     }
     public static function sendBackup(string $email){
