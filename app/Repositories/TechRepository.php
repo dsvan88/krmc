@@ -29,10 +29,13 @@ class TechRepository
         $zip = new ZipArchive();
 
         $folder = $_SERVER['DOCUMENT_ROOT'] .'/app/backups';
+
+        error_log($folder);
+        
         if (!file_exists($folder)) {
             mkdir($folder, 0777, true);
         }
-        
+
         $extension = '.zip';
         $fullpath = "$folder/$filename.$extension";
 
