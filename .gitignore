@@ -6,3 +6,4 @@ git-stash.bat
 composer.phar
 tg-message.txt
 /vendor/*
+/public/backups/*
