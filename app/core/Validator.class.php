@@ -10,7 +10,7 @@ class Validator
     }
     public static function csrfCheck(): bool
     {
-        return !empty($_POST[CSRF_NAME]) || self::validate('csrf', $_POST[CSRF_NAME]);
+        return !empty($_POST[CSRF_NAME]) && self::validate('csrf', $_POST[CSRF_NAME]);
     }
     private static function csrf(string $value): string
     {
