@@ -53,7 +53,7 @@
 
 			&.add {
 				display: inline-block;
-				border: 1px solid #94d7a8;
+				border: 1px solid $bg-color-green-blur;
 				border-radius: 5px;
 				padding: 0.2em 0.3em;
 				cursor: pointer;
@@ -63,7 +63,7 @@
 				color: $color-text-menu;
 
 				&:hover {
-					background-color: #067018;
+					background-color: $bg-color-green;
 				}
 			}
 		}
