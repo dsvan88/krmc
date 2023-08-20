@@ -2,12 +2,17 @@
 .popup {
     position: fixed;
     z-index: 10;
-    top: 10vh;
-    left: 30vw;
+    margin: auto;
     border: none;
     outline: 1px solid gray;
     border-radius: 5px;
     padding: 1em;
+
+    &__overlay{
+        position: absolute;
+        width: 100vw;
+        height: 100vh;
+    }
 
     &__title {
         margin: 0;

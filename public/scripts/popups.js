@@ -11,7 +11,7 @@ class Alert {
     constructor({ title = "Alert", text = "There is no information, yet!" } = {}) {
 
         this.dialog = this.build();
-        document.body.append(this.dialog);
+        // document.overlaybody.append(this.dialog);
         this.fill({ title, text });
         this.dialog.show();
 
@@ -20,6 +20,10 @@ class Alert {
     }
 
     build() {
+
+        this.overlay = document.createElement('div');
+        this.overlay.classList.add('popup__overlay');
+
         this.dialog = document.createElement('dialog');
         this.dialog.classList.add('popup');
         this.dialog.draggable
@@ -45,8 +49,9 @@ class Alert {
         this.form.append(this.buttonWrapper);
 
         this.dialog.append(this.form);
+        this.overlay.append(this.dialog);
 
-        document.body.append(this.dialog);
+        document.body.append(this.overlay);
         this.dialog.tabIndex = -1;
         return this.dialog;
     }
@@ -59,6 +64,7 @@ class Alert {
     }
     close() {
         this.dialog.close();
+        this.overlay.remove();
     }
     attachEvents() {
         const self = this;
@@ -66,7 +72,7 @@ class Alert {
         self.dialog.addEventListener('keydown', (event) => self.keyDownHandler.call(self, event));
         self.dialog.addEventListener('keyup', (event) => self.keyUpHandler.call(self, event));
 
-        self.dialog.addEventListener('close', () => self.dialog.remove())
+        self.dialog.addEventListener('close', () => self.overlay.remove())
 
         self.dialog.ondragstart = () => false;
 
