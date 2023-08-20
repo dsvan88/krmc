@@ -29,6 +29,7 @@ class AccountController extends Controller
         View::redirect('/');
     }
     public function login($data){
+        error_log(json_encode($data, JSON_UNESCAPED_UNICODE));
         if (!Validator::csrfCheck() || Users::trottling()){
             View::notice(['error' => 403, 'message' => 'Try again later:)']);
         }
