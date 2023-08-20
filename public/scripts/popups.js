@@ -11,7 +11,6 @@ class Alert {
     constructor({ title = "Alert", text = "There is no information, yet!" } = {}) {
 
         this.dialog = this.build();
-        // document.overlaybody.append(this.dialog);
         this.fill({ title, text });
         this.dialog.show();
 
