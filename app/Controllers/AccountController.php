@@ -30,6 +30,7 @@ class AccountController extends Controller
     }
     public function login($data){
         error_log(json_encode($data, JSON_UNESCAPED_UNICODE));
+        error_log($_SESSION['csrf']);
         if (!Validator::csrfCheck() || Users::trottling()){
             View::notice(['error' => 403, 'message' => 'Try again later:)']);
         }
