@@ -49,7 +49,8 @@ class TechController extends Controller
                 $result = [ $table => array_values($result)];
                 $archiveName = "$table $archiveName";
             }
-            // $archive = TechRepository::archive($archiveName, $result);
+            $archive = TechRepository::archive($archiveName, $result);
+            View::file($archive, $archiveName.'.zip');
             View::file(TechRepository::pack($result), $archiveName.'.json.gz');
         }
         $vars = [
@@ -167,10 +168,10 @@ class TechController extends Controller
                     'type' => 'group',
                 ],
                 'date' => 1652025484,
-                'text' => '- на сегодня',
+                'text' => '+ на 18',
                 // 'text' => '/nick Думатель',
                 // 'text' => '/day',
-                // 'text' => '+tod',
+                // 'text' => '+tod 18:15',
                 // 'text' => '/users',
                 // 'text' => '/?',
             ]
