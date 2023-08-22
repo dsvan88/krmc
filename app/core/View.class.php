@@ -206,7 +206,7 @@ class View
         header('Cache-Control: must-revalidate');
         header('Pragma: public');
         header('Content-Length: ' . strlen($file));
-        self::exit($file);
+        exit($file);
     }
     public static function exit(string $string = null):void{
         if (!empty($string)){

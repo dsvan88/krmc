@@ -44,14 +44,14 @@ class TechController extends Controller
 
             $table = trim($_POST['table']);
             $result = TechRepository::backup($table);
-            $archiveName = MAFCLUB_NAME.' backup '.date('d.m.Y', $_SERVER['REQUEST_TIME']);
+            $archiveName = MAFCLUB_SNAME.' backup '.date('d.m.Y', $_SERVER['REQUEST_TIME']);
             if ($table !=='all'){
                 $result = [ $table => array_values($result)];
                 $archiveName = "$table $archiveName";
             }
             $archive = TechRepository::archive($archiveName, $result);
             View::file($archive, basename($archive));
-            
+
             View::file(TechRepository::pack($result), $archiveName.'.json.gz');
         }
         $vars = [
