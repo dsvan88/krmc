@@ -32,15 +32,15 @@ class TechRepository
         $zip = new ZipArchive();
 
         // $folder = $_SERVER['DOCUMENT_ROOT'] . FILE_BACKUPS;
-        $folder = sys_get_temp_dir() . '/backups';
+        $folder = sys_get_temp_dir();
 
-        error_log($folder);
+/*         error_log($folder);
 
         if (!file_exists($folder)) {
             mkdir($folder, 0777, true);
-        }
+        } */
 
-        $extension = 'json.gz';
+        $extension = 'zip';
         $fullpath = "$folder/$filename.$extension";
 
         if ($zip->open($fullpath, ZipArchive::CREATE)!==TRUE) {
