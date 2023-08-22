@@ -31,7 +31,10 @@ class TechRepository
         
         $zip = new ZipArchive();
 
-        $folder = $_SERVER['DOCUMENT_ROOT'] . FILE_BACKUPS;
+        // $folder = $_SERVER['DOCUMENT_ROOT'] . FILE_BACKUPS;
+        $folder = sys_get_temp_dir() . '/backups';
+
+        error_log($folder);
 
         if (!file_exists($folder)) {
             mkdir($folder, 0777, true);

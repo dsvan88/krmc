@@ -34,7 +34,7 @@ class TelegramBotController extends Controller
         $data = trim(file_get_contents('php://input'));
         $message = json_decode($data, true);
 
-        if (!is_array($message)) {
+        if (!is_array($message) || empty($message['message'])) {
             die('{"error":"1","title":"Error!","text":"Error: Nothing to get."}');
         }
 
@@ -120,9 +120,13 @@ class TelegramBotController extends Controller
         }
         if (preg_match('/^[+]\s{0,3}[0-2]{0,1}[0-9]/', mb_strtolower(str_replace('на ', '', $text), 'UTF-8')) === 1) {
             preg_match('/^(\+)\s{0,3}([0-2]{0,1}[0-9])(:[0-5][0-9]){0,1}/i', mb_strtolower(str_replace(['на ', '.'], ['', ':'], $text), 'UTF-8'), $matches);
+            
+            if ($matches[2] > 23) return false;
+            if (empty($matches[3]) || substr($matches[3], 1) > 59) $matches[3] = ':00';
+
             $arguments = [
                 '+tod',
-                $matches[2] . (empty($matches[3]) ? ':00' : $matches[3]),
+                $matches[2] . $matches[3],
             ];
             if (preg_match('/\([^)]+\)/', $text, $prim) === 1) {
                 $arguments['prim'] = mb_substr($prim[0], 1, -1, 'UTF-8');
