@@ -50,7 +50,8 @@ class TechController extends Controller
                 $archiveName = "$table $archiveName";
             }
             $archive = TechRepository::archive($archiveName, $result);
-            View::file($archive, $archiveName.'.zip');
+            View::file($archive, basename($archive));
+            
             View::file(TechRepository::pack($result), $archiveName.'.json.gz');
         }
         $vars = [

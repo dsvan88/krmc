@@ -50,6 +50,9 @@ class TechRepository
             $zip->addFromString("$name.json", json_encode($data, JSON_UNESCAPED_UNICODE));
         }
         $zip->close();
+        
+        error_log($fullpath);
+        error_log(filesize($fullpath));
 
         return $fullpath;
     }
