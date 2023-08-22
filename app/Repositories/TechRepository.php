@@ -50,19 +50,19 @@ class TechRepository
         error_reporting(0);
         $result = self::backup();
         $archiveName = 'backup '.date('d.m.Y', $_SERVER['REQUEST_TIME']);
-        $archive = base64_encode(self::pack($result));
-        // $archive = self::archive($archiveName, $result);
+        // $archive = base64_encode(self::pack($result));
+        $archive = self::archive($archiveName, $result);
 
         $mailer = new Mailer();
-        // $mailer->prepMessage([
-        //     'title' => Locale::phrase(['string' => '<no-reply> %s - %s', 'vars' => [ MAFCLUB_NAME, $archiveName ]]),
-        //     'body' => '<p>Database backup.</p><p>Full DB in attached file.</p>',
-        // ]);
-        // $mailer->attach($archive, $archiveName.'.zip');
         $mailer->prepMessage([
             'title' => Locale::phrase(['string' => '<no-reply> %s - %s', 'vars' => [ MAFCLUB_NAME, $archiveName ]]),
-            'body' => "<p>START_BASE64_STRING:$archive:END_BASE64_STRING</p>",
+            'body' => '<p>Database backup.</p><p>Full DB in attached file.</p>',
         ]);
+        $mailer->attach($archive, $archiveName.'.zip');
+/*         $mailer->prepMessage([
+            'title' => Locale::phrase(['string' => '<no-reply> %s - %s', 'vars' => [ MAFCLUB_NAME, $archiveName ]]),
+            'body' => "<p>START_BASE64_STRING:$archive:END_BASE64_STRING</p>",
+        ]); */
         return $mailer->send($email);
     }
 }
