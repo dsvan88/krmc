@@ -31,14 +31,7 @@ class TechRepository
         
         $zip = new ZipArchive();
 
-        // $folder = $_SERVER['DOCUMENT_ROOT'] . FILE_BACKUPS;
         $folder = sys_get_temp_dir();
-
-/*         error_log($folder);
-
-        if (!file_exists($folder)) {
-            mkdir($folder, 0777, true);
-        } */
 
         $extension = 'zip';
         $fullpath = "$folder/$filename.$extension";
@@ -50,9 +43,6 @@ class TechRepository
             $zip->addFromString("$name.json", json_encode($data, JSON_UNESCAPED_UNICODE));
         }
         $zip->close();
-        
-        error_log($fullpath);
-        error_log(filesize($fullpath));
 
         return $fullpath;
     }

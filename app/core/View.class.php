@@ -198,6 +198,9 @@ class View
 
     public static function file($file, $name = 'backup.txt')
     {
+        if(!file_exists($file)){ // file does not exist
+            exit('file not found');
+        }
         header('Content-Description: File Transfer');
         header('Content-Type: application/octet-stream');
         header("Content-Disposition: attachment; filename='$name'");
@@ -207,6 +210,7 @@ class View
         header('Pragma: public');
         header('Content-Length: ' . filesize($file));
         readfile($file);
+        exit();
     }
     public static function exit(string $string = null):void{
         if (!empty($string)){

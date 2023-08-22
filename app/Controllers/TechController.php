@@ -51,8 +51,6 @@ class TechController extends Controller
             }
             $archive = TechRepository::archive($archiveName, $result);
             View::file($archive, basename($archive));
-
-            View::file(TechRepository::pack($result), $archiveName.'.json.gz');
         }
         $vars = [
             'title' => 'DB Backup form',
