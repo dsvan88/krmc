@@ -122,7 +122,7 @@ class TelegramBotController extends Controller
             preg_match('/^(\+)\s{0,3}([0-2]{0,1}[0-9])(:[0-5][0-9]){0,1}/i', mb_strtolower(str_replace(['на ', '.'], ['', ':'], $text), 'UTF-8'), $matches);
             
             if ($matches[2] > 23) return false;
-            if (empty($matches[3]) || substr($matches[3], 1) > 59) $matches[3] = ':00';
+            if (empty($matches[3])) $matches[3] = ':00';
 
             $arguments = [
                 '+tod',

@@ -7,6 +7,7 @@ use app\core\PHPMailer\PHPMailer;
 use app\core\View;
 use app\libs\Db;
 use app\models\Contacts;
+use app\models\Pages;
 use app\models\Settings;
 use app\models\TelegramChats;
 use app\models\Users;
@@ -100,7 +101,11 @@ class TechController extends Controller
     public static function dbrebuildAction()
     {
         // View::redirect('/');
-        $chatsData = TelegramChats::getChatsList();
+        
+        $table = Pages::$table;
+        Pages::query("ALTER TABLE $table ADD COLUMN description CHARACTER VARYING(300) NOT NULL DEFAULT ''");
+
+        /* $chatsData = TelegramChats::getChatsList();
         foreach ($chatsData as $index => $chat) {
             if (empty($chat['personal']['nickname'])) continue;
             $userData = Users::getDataByName($chat['personal']['nickname']);
@@ -140,7 +145,7 @@ class TechController extends Controller
                 }
             }
             Weeks::update(['data' => json_encode($weekData['data'], JSON_UNESCAPED_UNICODE)], ['id' => $weekId]);
-        }
+        } */
         echo 'Done!';
     }
     public static function selfTestTelegramAction()

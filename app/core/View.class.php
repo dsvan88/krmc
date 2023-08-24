@@ -198,8 +198,8 @@ class View
 
     public static function file($file, $name = 'backup.txt')
     {
-        if(!file_exists($file)){ // file does not exist
-            exit('file not found');
+        if(empty($file) || !file_exists($file)){
+            exit('File is not found');
         }
         header('Content-Description: File Transfer');
         header('Content-Type: application/octet-stream');

@@ -3,8 +3,10 @@ actionHandler.commonFormSubmit = function (event) {
     let url = event.target.action.slice(window.location.length);
 	let formData = new FormData(event.target);
 	if (window.CKEDITOR){
-		let newHTML = CKEDITOR.instances[event.target.querySelector("div.editor-block").id].getData();
-		formData.append('html', newHTML);
+		const EditorsBlocks = event.target.querySelectorAll("div.editor-block");
+		EditorsBlocks.forEach(block => {
+			formData.append(block.dataset.field, CKEDITOR.instances[block.id].getData());
+		})
 	}
     request({
         url: url,

@@ -268,7 +268,10 @@ body {
 				padding-left: 2.5em;
 			}
 			h3, h4{
-				margin: .5em 0;
+				margin: 1.5em 0 .5em 0;
+				padding-left: 1em;
+				font-weight: bolder;
+				letter-spacing: .15em;
 			}
 			.text-big{
 				font-size: 1.5em;
@@ -292,8 +295,7 @@ body {
 			}
 
 			p {
-				text-indent: 1.5em;
-				margin-bottom: .2em;
+				margin-bottom: .8em;
 			}
 
 			&:nth-child(even) {

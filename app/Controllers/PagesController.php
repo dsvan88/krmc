@@ -34,7 +34,7 @@ class PagesController extends Controller
         }
 
         $dashboard = '';
-        if (isset($_SESSION['privilege']) && in_array($_SESSION['privilege']['status'], ['manager', 'admin'])) {
+        if (!empty($_SESSION['privilege']['status']) && in_array($_SESSION['privilege']['status'], ['manager', 'admin'])) {
             $dashboard = "<span class='page__dashboard' style='float:right'>
                 <a href='/page/edit/{$page['id']}' title='Редагувати' class='fa fa-pencil-square-o'></a>";
             if ($slug !== 'home') {
@@ -87,6 +87,7 @@ class PagesController extends Controller
                 'title' => $pageId,
                 'type' => 'game',
                 'subtitle' => '',
+                'description' => '',
                 'html' => '',
                 'published_at' => $_SERVER['REQUEST_TIME'],
                 'expired_at' => '',
@@ -111,6 +112,10 @@ class PagesController extends Controller
     public function deleteAction()
     {
         extract(self::$route['vars']);
+
+        if (empty($pageId))
+            return View::redirect('/');
+
         Pages::remove($pageId);
         View::redirect('/');
     }

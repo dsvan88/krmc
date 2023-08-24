@@ -40,7 +40,7 @@ if (!defined('SQL_HOST')) {
     define('PASS_FAIL_MIN', 3); //3 = три спроби невірного введення даних авторизації для початку троттлінга
     define('TIMESTAMP_DAY', 86400);
     define('TIMESTAMP_WEEK', 604800);
-    define('BACKUP_FREQ', TIMESTAMP_DAY*3);
+    define('BACKUP_FREQ', TIMESTAMP_DAY*2);
     define('CFG_DEBUG', true);
     define('CFG_SOFT_DELETE', true);
     define('CFG_NEWS_PER_PAGE', 6);
@@ -49,7 +49,6 @@ if (!defined('SQL_HOST')) {
     define('SCRIPT_VERSION', '0.15b');
     define('MAFCLUB_NAME', 'Mafia Club Kryvyi Rih');
     define('MAFCLUB_SNAME', 'KRMC');
-    define('FILE_BACKUPS', $_SERVER['DOCUMENT_ROOT'].'/public/backups');
     define('FILE_USRGALL', '/public/gallery/users/');
     define('FILE_MAINGALL', '/public/gallery/site/');
     define('CFG_AUTHOR', 'DSVan');
