@@ -15,11 +15,11 @@
             </div>
             <div class="common-form__column">
                 <div class="common-form__row"><label class="common-form__label" for="keywords">Ключові слова:</label><input type="text" id="keywords" name="keywords" value="" class="common-form__input" placeholder="Keywords"></div>
-                <div class="common-form__row"><label class="common-form__label" for="published_at">Дата публікації:</label><input type="datetime-local" id="published_at" name="published_at" value="<?=date('Y-m-d').'T'.date('H:i')?>" class="common-form__input" placeholder="Дата публікації"></div>
+                <div class="common-form__row"><label class="common-form__label" for="published_at">Дата публікації:</label><input type="datetime-local" id="published_at" name="published_at" value="<?= date('Y-m-d') . 'T' . date('H:i') ?>" class="common-form__input" placeholder="Дата публікації"></div>
                 <div class="common-form__row"><label class="common-form__label" for="expired_at">Дійсна до:</label><input type="datetime-local" id="expired_at" name="expired_at" value="" class="common-form__input" placeholder="Дата публікації"></div>
             </div>
         </div>
-        <div class="editor-block">
+        <div class="editor-block" data-field="html">
             <div class="toolbar-container"></div>
             <div class="content-container">
                 <div class="editor"></div>

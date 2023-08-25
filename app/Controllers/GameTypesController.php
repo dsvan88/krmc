@@ -6,6 +6,7 @@ use app\core\Controller;
 use app\core\Locale;
 use app\core\View;
 use app\models\GameTypes;
+use app\Repositories\PageRepository;
 
 class GameTypesController extends Controller
 {
@@ -29,13 +30,31 @@ class GameTypesController extends Controller
     public function gameAction()
     {
         extract(self::$route['vars']);
-        $gameName = GameTypes::names()[$game];
-        $texts = [
-            'title' => 'No data',
-            'subtitle' => 'No data',
-            'content' => 'No data',
-        ];
 
+        $gameNames = GameTypes::names();
+
+        if (empty($gameNames[$game]))
+            View::errorCode(404, ['message' => "Game $game isn't found!"]);
+
+        $vars['texts'] = PageRepository::$defaultData;
+
+        $page = PageRepository::getPage($game);
+
+        if (!empty($page)) {
+            $vars['texts'] = [
+                'title' => trim($page['title']),
+                'subtitle' => trim($page['subtitle']),
+                'html' => trim($page['html']),
+            ];
+        }
+
+        $vars['title'] = $gameNames[$game];
+        $vars['dashboard'] = PageRepository::dashboard(empty($page['id']) ? $game : $page['id']);
+
+        View::renderPage($vars);
+
+
+        /* 
         $gameData = GameTypes::findBy('slug', $game);
         if ($gameData){
             $gameData = $gameData[0];
@@ -61,6 +80,6 @@ class GameTypesController extends Controller
             'title' => $gameName,
             'texts' => $texts,
         ];
-        View::render($vars);
+        View::render($vars); */
     }
 }

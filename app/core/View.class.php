@@ -19,7 +19,7 @@ class View
     public static function set($route)
     {
         self::$route = $route;
-        if (strpos($route['action'], 'Form') === false){
+        if (strpos($route['action'], 'Form') === false) {
             self::$path = $route['controller'] . '/' . $route['action'];
             return true;
         }
@@ -62,7 +62,7 @@ class View
         $notices = Noticer::get();
 
         $content = "
-            <section class='section'>
+            <section class='section page'>
                 <header>
                     <h1 class='title'>$title $dashboard</h1>
                     <h2 class='subtitle'>{$texts['subtitle']}</h2>
@@ -145,7 +145,7 @@ class View
             require $path;
         self::exit();
     }
-    public static function message($data='')
+    public static function message($data = '')
     {
         if (!is_array($data)) {
             $data = ['message' => $data];
@@ -161,7 +161,7 @@ class View
         }
         self::exit(json_encode($data));
     }
-    public static function notice($data='')
+    public static function notice($data = '')
     {
         if (!is_array($data)) {
             $data = [
@@ -198,7 +198,7 @@ class View
 
     public static function file($file, $name = 'backup.txt')
     {
-        if(empty($file) || !file_exists($file)){
+        if (empty($file) || !file_exists($file)) {
             exit('File is not found');
         }
         header('Content-Description: File Transfer');
@@ -212,8 +212,9 @@ class View
         readfile($file);
         exit();
     }
-    public static function exit(string $string = null):void{
-        if (!empty($string)){
+    public static function exit(string $string = null): void
+    {
+        if (!empty($string)) {
             echo $string;
         }
 
@@ -221,8 +222,8 @@ class View
 
         if (empty($settings['email']['value']) || $settings['last']['value'] > $_SERVER['REQUEST_TIME'] - BACKUP_FREQ) exit();
 
-        if (TechRepository::sendBackup($settings['email']['value'])){
-            Settings::edit($settings['last']['id'], [ 'value' => $_SERVER['REQUEST_TIME'] ]);
+        if (TechRepository::sendBackup($settings['email']['value'])) {
+            Settings::edit($settings['last']['id'], ['value' => $_SERVER['REQUEST_TIME']]);
         }
         exit();
     }

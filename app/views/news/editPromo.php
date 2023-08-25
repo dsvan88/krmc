@@ -10,7 +10,7 @@
         </div>*/ ?>
         <div><input type="text" name="title" value="<?= $newsData['title'] ?>" class="common-form__input title" placeholder="Title"></div>
         <div><input type="text" name="subtitle" value="<?= $newsData['subtitle'] ?>" class="common-form__input subtitle" placeholder="Subtitle"></div>
-        <div class="editor-block">
+        <div class="editor-block" data-field="html">
             <div class="toolbar-container"></div>
             <div class="content-container">
                 <div class="editor"><?= $newsData['html'] ?></div>

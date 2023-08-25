@@ -9,17 +9,16 @@ class GameTypes extends Pages
     public static $gameNames = [];
     public static $defaultGames = [
         'mafia' => 'Mafia',
-        // 'poker' => 'Poker',
         'board' => 'Board',
         'nlh' => 'NLH',
         'etc' => 'Etc'
     ];
-    
+
     public static function menu()
     {
         $games = Locale::apply(self::names());
         $result = [];
-        foreach($games as $game=>$name){
+        foreach ($games as $game => $name) {
             $result[] =
                 [
                     'name' => $name,
@@ -30,8 +29,9 @@ class GameTypes extends Pages
         return $result;
     }
 
-    public static function names(){
-        
+    public static function names()
+    {
+
         if (!empty(self::$gameNames))
             return self::$gameNames;
 
@@ -43,13 +43,15 @@ class GameTypes extends Pages
         $count = count($games);
         $names = [];
 
-        for ($i=0; $i < $count; $i++) {
+        for ($i = 0; $i < $count; $i++) {
+            if (!empty($games[$i]['date_delete'])) continue;
             $names[$games[$i]['slug']] = $games[$i]['title'];
         }
         self::$gameNames = array_merge(self::$defaultGames, $names);
         return self::$gameNames;
     }
-    public static function getKeywords(){
+    public static function getKeywords()
+    {
         $games = self::findBy('type', 'game');
 
         if (!$games)
@@ -58,7 +60,7 @@ class GameTypes extends Pages
         $keywords = [];
 
         $count = count($games);
-        for ($i=0; $i < $count; $i++) {
+        for ($i = 0; $i < $count; $i++) {
             if (empty($games[$i]['data'])) continue;
             $games[$i]['data'] = json_decode($games[$i]['data'], true);
             $keywords[$games[$i]['slug']] = $games[$i]['data']['keywords'];

@@ -7,6 +7,7 @@ use app\core\Controller;
 use app\core\Locale;
 use app\core\View;
 use app\models\Pages;
+use app\Repositories\PageRepository;
 
 class PagesController extends Controller
 {
@@ -18,30 +19,11 @@ class PagesController extends Controller
     public function showAction()
     {
         extract(self::$route['vars']);
-        $page = Pages::findBy('slug', $slug);
-        if ($page) {
-            $page = $page[0];
-        } else {
-            if ($slug !== 'home')
-                View::errorCode(404, ['message' => "Page $slug isn't found!"]);
+        $page = PageRepository::getPage($slug);
 
-            $page = [
-                'id' => 'home',
-                'title' => '&ltNo Data&gt;',
-                'subtitle' => '&ltNo Data&gt;',
-                'html' => '&ltNo Data&gt;',
-            ];
-        }
+        if (empty($page))
+            View::errorCode(404, ['message' => "Page $slug isn't found!"]);
 
-        $dashboard = '';
-        if (!empty($_SESSION['privilege']['status']) && in_array($_SESSION['privilege']['status'], ['manager', 'admin'])) {
-            $dashboard = "<span class='page__dashboard' style='float:right'>
-                <a href='/page/edit/{$page['id']}' title='Редагувати' class='fa fa-pencil-square-o'></a>";
-            if ($slug !== 'home') {
-                $dashboard .= "<a href='/page/delete/{$page['id']}' onclick='return confirm(\"Are you sure?\")' title='Видалити' class='fa fa-trash-o'></a>";
-            }
-            $dashboard .= '</span>';
-        }
         $vars = [
             'title' => $page['title'],
             'texts' => [
@@ -49,8 +31,9 @@ class PagesController extends Controller
                 'subtitle' => trim($page['subtitle']),
                 'html' => trim($page['html']),
             ],
-            'dashboard' => $dashboard,
         ];
+        $vars['dashboard'] = PageRepository::dashboard(empty($page['id']) ? $slug : $page['id']);
+
         View::renderPage($vars);
         exit();
     }
@@ -71,7 +54,7 @@ class PagesController extends Controller
                 if (isset($page['data']['keywords']) && !empty($page['data']['keywords'])) {
                     if (is_array($page['data']['keywords']))
                         $page['keywords'] = implode(', ', $page['data']['keywords']);
-                    else 
+                    else
                         $page['keywords'] = $page['data']['keywords'];
                 }
             }
@@ -113,7 +96,7 @@ class PagesController extends Controller
     {
         extract(self::$route['vars']);
 
-        if (empty($pageId))
+        if (empty($pageId) || !is_numeric($pageId))
             return View::redirect('/');
 
         Pages::remove($pageId);

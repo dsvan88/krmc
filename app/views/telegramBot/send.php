@@ -35,7 +35,7 @@
                 <input type="file" name="logo" value="<?= $newsData['logo'] ?>" placeholder="Logo" class="common-form__input logo" id="news-logo-input-file">
             </label>
         </div>
-        <div class="editor-block">
+        <div class="editor-block" data-field="html">
             <div class="toolbar-container"></div>
             <div class="content-container">
                 <div class="editor"></div>

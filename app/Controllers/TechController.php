@@ -38,16 +38,15 @@ class TechController extends Controller
     }
     public static function backupAction()
     {
-        // phpinfo();
         if (!empty($_POST)) {
             if (empty($_POST['table']))
                 View::message(['error' => 1, 'message' => 'Something wrong with your query!']);
 
             $table = trim($_POST['table']);
             $result = TechRepository::backup($table);
-            $archiveName = MAFCLUB_SNAME.' backup '.date('d.m.Y', $_SERVER['REQUEST_TIME']);
-            if ($table !=='all'){
-                $result = [ $table => array_values($result)];
+            $archiveName = MAFCLUB_SNAME . ' backup ' . date('d.m.Y', $_SERVER['REQUEST_TIME']);
+            if ($table !== 'all') {
+                $result = [$table => array_values($result)];
                 $archiveName = "$table $archiveName";
             }
             $archive = TechRepository::archive($archiveName, $result);
@@ -101,7 +100,7 @@ class TechController extends Controller
     public static function dbrebuildAction()
     {
         // View::redirect('/');
-        
+
         $table = Pages::$table;
         Pages::query("ALTER TABLE $table ADD COLUMN description CHARACTER VARYING(300) NOT NULL DEFAULT ''");
 
@@ -200,11 +199,12 @@ class TechController extends Controller
         var_dump($result);
         return $result;
     }
-    public static function testAction(){
-        
+    public static function testAction()
+    {
+
         $directory = 'testDir';
         mkdir($directory);
-        
+
         var_dump(file_exists($directory) ? 'Exists' : 'Error');
         View::errorCode(404, ['message' => 'Result is Ok']);
     }

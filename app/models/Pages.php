@@ -9,7 +9,7 @@ class Pages extends Model
 {
     public static $table = SQL_TBL_PAGES;
 
-    public static function getCount(string $type='page', bool $all = false)
+    public static function getCount(string $type = 'page', bool $all = false)
     {
         $table = static::$table;
         $query = "SELECT COUNT(id) FROM $table WHERE type = ?";
@@ -17,17 +17,17 @@ class Pages extends Model
             return self::query($query, [$type], 'Column');
 
         $query .= ' AND ( expired_at IS NULL OR expired_at < CURRENT_TIMESTAMP )';
-        if (CFG_SOFT_DELETE){
+        if (CFG_SOFT_DELETE) {
             $query .= ' AND date_delete IS NULL';
         }
         return self::query($query, [$type], 'Column');
     }
-    public static function getPerPage($page = 0, $type='news')
+    public static function getPerPage($page = 0, $type = 'news')
     {
         $table = static::$table;
         $query = "SELECT * FROM $table WHERE type = ? ";
         $values = [$type];
-        if (CFG_SOFT_DELETE){
+        if (CFG_SOFT_DELETE) {
             $query .= ' AND date_delete IS NULL';
         }
         $query .= ' ORDER BY id DESC';
@@ -51,7 +51,8 @@ class Pages extends Model
         $array['updated_at'] = date('Y-m-d H:i:s', $_SERVER['REQUEST_TIME']);
         return self::update($array, ['id' => $id], static::$table);
     }
-    public static function prepDbArray(&$data){
+    public static function prepDbArray(&$data)
+    {
         $array = [
             'title' => trim($data['title']),
             'subtitle' => trim($data['subtitle']),
@@ -71,20 +72,20 @@ class Pages extends Model
             $array['data']['logo'] = $data['logo'];
         }
         if (!empty($data['keywords'])) {
-            $array['data']['keywords'] = explode(',',$data['keywords']);
-            foreach($array['data']['keywords'] as $index=>$keyword){
+            $array['data']['keywords'] = explode(',', $data['keywords']);
+            foreach ($array['data']['keywords'] as $index => $keyword) {
                 $array['data']['keywords'][$index] = trim($keyword);
             }
         }
-        if (!empty($array['data'])){
+        if (!empty($array['data'])) {
             $array['data'] = json_encode($array['data'], JSON_UNESCAPED_UNICODE);
         }
         return $array;
     }
-    public static function remove($id)
+    public static function remove(int $id)
     {
-        if (CFG_SOFT_DELETE){
-            return self::update(['date_delete' => date('Y-m-d H:i:s',$_SERVER['REQUEST_TIME'])], ['id' => $id], static::$table);
+        if (CFG_SOFT_DELETE) {
+            return self::update(['date_delete' => date('Y-m-d H:i:s', $_SERVER['REQUEST_TIME'])], ['id' => $id]);
         }
         return self::delete($id, static::$table);
     }
@@ -114,7 +115,7 @@ class Pages extends Model
             );"
         );
 
-        if (self::isExists(['id'=> 1])) return true;
+        if (self::isExists(['id' => 1])) return true;
 
         $data = [
             [
