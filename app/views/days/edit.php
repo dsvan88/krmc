@@ -26,23 +26,14 @@
             </div>
             <div class="booking__settings-row">
                 <div class="booking__settings-wrapper single">
-                    <input type="text" name="day_prim" value='<?= $day['day_prim'] ?>' placeholder="<?= $texts['dayRemarkPlaceHolder'] ?>" />
+                    <input type="text" name="day_prim" value='<?= $day['day_prim'] ?>' placeholder="<?= $texts['RemarkPlaceHolder'] ?>" />
                 </div>
             </div>
         </div>
         <div class="booking__participants">
             <h2 class="booking__subtitle"><?= $texts['daysBlockParticipantsTitle'] ?>:</h2>
-
             <? for ($x = 0; $x < $playersCount; $x++) : ?>
-                <div class="booking__participant">
-                    <label for="booking__participant-<?= $x ?>" class="booking__participant-num"><?= ($x + 1) ?>.</label>
-                    <div class="booking__participant-info">
-                        <input name="participant[]" type="text" value="<?= empty($day['participants'][$x]) ? '' : $day['participants'][$x]['name'] ?>" class="booking__participant-name" data-action-input="autocomplete-users-names" list="users-names-list" autocomplete="off" data-action-change="participant-check-change" />
-                        <input name="arrive[]" list="time-list" type="text" class="booking__participant-arrive" value="<?= empty($day['participants'][$x]) ? '' : $day['participants'][$x]['arrive'] ?>" autocomplete="off" />
-                        <input name="prim[]" type="text" class="booking__participant-prim" value="<?= empty($day['participants'][$x]) ? '' : $day['participants'][$x]['prim'] ?>" placeholder="<?= $texts['dayRemarkPlaceHolder'] ?>">
-                        <i class="fa fa-minus-circle booking__participant-remove" data-action-click="participant-field-clear" title="<?= $texts['clearLabel'] ?>"></i>
-                    </div>
-                </div>
+                <? self::component('participants-field', [ 'participantId'=> $x, 'participant' => empty($day['participants'][$x]) ? [] : $day['participants'][$x] ]) ?>
             <? endfor ?>
 
         </div>

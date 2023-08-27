@@ -29,19 +29,4 @@ class PageRepository
         }
         return $page;
     }
-
-    public static function dashboard($index)
-    {
-        $dashboard = '';
-        if (!empty($_SESSION['privilege']['status']) && in_array($_SESSION['privilege']['status'], ['manager', 'admin'])) {
-            // $id = empty($page['id']) ? $slug : $page['id'];
-            $dashboard = "<span class='page__dashboard' style='float:right'>
-                <a href='/page/edit/$index' title='Редагувати' class='fa fa-pencil-square-o'></a>";
-            if ($index !== 'home') {
-                $dashboard .= "<a href='/page/delete/$index' onclick='return confirm(\"Are you sure?\")' title='Видалити' class='fa fa-trash-o'></a>";
-            }
-            $dashboard .= '</span>';
-        }
-        return $dashboard;
-    }
 }

@@ -25,7 +25,10 @@ class GameTypesController extends Controller
             'dashboard' => $dashboard,
             'games' => Locale::apply(GameTypes::names()),
         ];
-        View::render($vars);
+        
+        View::$route['vars'] = array_merge(View::$route['vars'], $vars);
+    
+        View::render();
     }
     public function gameAction()
     {
@@ -36,50 +39,26 @@ class GameTypesController extends Controller
         if (empty($gameNames[$game]))
             View::errorCode(404, ['message' => "Game $game isn't found!"]);
 
-        $vars['texts'] = PageRepository::$defaultData;
-
         $page = PageRepository::getPage($game);
 
-        if (!empty($page)) {
-            $vars['texts'] = [
-                'title' => trim($page['title']),
-                'subtitle' => trim($page['subtitle']),
-                'html' => trim($page['html']),
-            ];
+        if (empty($page)) {
+            $page = PageRepository::$defaultData;
+            $page['title'] = $gameNames[$game];
         }
 
         $vars['title'] = $gameNames[$game];
-        $vars['dashboard'] = PageRepository::dashboard(empty($page['id']) ? $game : $page['id']);
 
-        View::renderPage($vars);
-
-
-        /* 
-        $gameData = GameTypes::findBy('slug', $game);
-        if ($gameData){
-            $gameData = $gameData[0];
-            $texts = [
-                'title' => $gameData['title'],
-                'subtitle' => $gameData['subtitle'],
-                'content' => $gameData['html'],
-            ];
+        if (!empty($_SESSION['privilege']['status']) && in_array($_SESSION['privilege']['status'], ['manager', 'admin'])) {
+            $vars['dashboard'] = (empty($page['id']) ? $game : $page['id']);
         }
+        
+        $vars['page'] = $page;
+        $vars['mainClass'] = 'pages';
+        
+        View::$path = 'pages/show';
 
-        $dashboard = '';
-        if (isset($_SESSION['privilege']) && in_array($_SESSION['privilege']['status'], ['trusted', 'manager', 'admin'])) {
-            $id = isset($gameData['id']) ? $gameData['id'] : $game;
-            $dashboard = "<span class='page__dashboard' style='float:right'>
-                <a href='/page/edit/{$id}' title='Редагувати'><i class='fa fa-pencil-square-o'></i></a>
-                <a href='/page/delete/{$id}' onclick='return confirm(\"Are you sure?\")' title='Видалити'><i class='fa fa-trash-o'></i></a>";
-            $dashboard .= '</span>';
-        }
-
-        $texts['title'] .= $dashboard;
-
-        $vars = [
-            'title' => $gameName,
-            'texts' => $texts,
-        ];
-        View::render($vars); */
+        View::$route['vars'] = array_merge(View::$route['vars'], $vars);
+    
+        View::render();
     }
 }

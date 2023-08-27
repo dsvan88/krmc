@@ -280,7 +280,9 @@ class TelegramBotController extends Controller
             'title' => '{{ Chats_List_Title }}',
             'chatsData' => $chatsData,
         ];
-        View::render($vars);
+        View::$route['vars'] = array_merge(View::$route['vars'], $vars);
+    
+        View::render();
     }
 
     public static function sendAction()
@@ -344,7 +346,9 @@ class TelegramBotController extends Controller
                 '/public/scripts/forms-admin-funcs.js?v=' . $_SERVER['REQUEST_TIME'],
             ],
         ];
-        View::render($vars);
+        View::$route['vars'] = array_merge(View::$route['vars'], $vars);
+    
+        View::render();
     }
     public static function send(string $target = null, string $message = ''): bool
     {

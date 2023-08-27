@@ -25,7 +25,9 @@ class SettingsController extends Controller
             'section' => $section,
             'settings' => $settings,
         ];
-        View::render($vars);
+        View::$route['vars'] = array_merge(View::$route['vars'], $vars);
+    
+        View::render();
     }
     public function addAction()
     {
@@ -42,7 +44,9 @@ class SettingsController extends Controller
                 'SubmitLabel' => 'Save',
             ]
         ];
-        View::render($vars);
+        View::$route['vars'] = array_merge(View::$route['vars'], $vars);
+    
+        View::render();
     }
     public function editAction(){
 
@@ -66,7 +70,8 @@ class SettingsController extends Controller
             ],
             'setting' => $setting,
         ];
-        View::modal($vars);
+        View::$route['vars'] = array_merge(View::$route['vars'], $vars);
+        View::modal();
     }
     public function deleteAction()
     {

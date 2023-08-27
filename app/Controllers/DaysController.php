@@ -40,10 +40,12 @@ class DaysController extends Controller
                 'daySendCheckboxLabel' => 'Send to chat',
                 'dayGameStart' => '{{ Day_Block_Games_Start }}',
                 'dayEvent' => '{{ Day_Block_Game_Name }}',
-                'dayRemarkPlaceHolder' => '{{ Day_Block_Prim_PLaceholder }}',
+                'ArrivePlaceHolder' => 'Arrive',
+                'RemarkPlaceHolder' => 'Remark',
                 'clearLabel' => 'Clear',
                 'addFieldLabel' => '{{ Add_Field_Label }}',
                 'setDayApprovedLabel' => 'Save',
+                'TimeArrivePlaceholder' => 'Arrive Time',
             ],
             'gameTypes' => $gameTypes,
         ];
@@ -84,8 +86,10 @@ class DaysController extends Controller
 
         $playersCount = max(count($day['participants']), 11);
         $scripts = '/public/scripts/day-edit-funcs.js?v=' . $_SERVER['REQUEST_TIME'];
-        $vars = array_merge($vars, compact('day', 'playersCount', 'scripts', 'gameName'));
-        View::render($vars);
+
+        View::$route['vars'] = array_merge(View::$route['vars'], $vars, compact('day', 'playersCount', 'scripts', 'gameName'));
+    
+        View::render();
     }
     public function addAction()
     {
@@ -96,6 +100,8 @@ class DaysController extends Controller
                 'daysBlockParticipantsTitle' => '{{ Day_Block_Participants_Title }}',
             ]
         ];
-        View::render($vars);
+        View::$route['vars'] = array_merge(View::$route['vars'], $vars);
+    
+        View::render();
     }
 }

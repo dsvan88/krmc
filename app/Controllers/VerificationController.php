@@ -130,7 +130,8 @@ class VerificationController extends Controller
                 '/public/scripts/account-register.js?v=' . $_SERVER['REQUEST_TIME'],
             ],
         ];
-        View::modal($vars);
+        View::$route['vars'] = array_merge(View::$route['vars'], $vars);
+        View::modal();
     }
     public function deleteAction()
     {

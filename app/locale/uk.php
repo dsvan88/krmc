@@ -97,8 +97,8 @@ return [
     'Tournament' => 'Турнір',
     'Send to chat' => 'Відправити до чату',
     '{{ Day_Block_Games_Start }}' => 'Час початку першої гри',
-    '{{ Time_Arrive }}' => 'Час',
-    '{{ Day_Block_Prim_PLaceholder }}' => 'Примітка',
+    'Arrive' => 'Час',
+    'Remark' => 'Примітка',
     '{{ Add_Field_Label }}' => 'Додати поле',
     '{{ Day_Set_Success }}' => 'Зміни успішно збережні!',
 

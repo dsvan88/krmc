@@ -1,22 +1,24 @@
-.page {
-	&__item{
-		&-logo {
-			float: left;
-			width: 20vw;
-			padding: 0 10px 0 5px;
-			&_image {
-				width: 100%;
-				height: auto;
-			}
-		}
-		&-title{
-			font-size: 2.5em;
-			margin: 0.2em 0 0.4em 0;
-			text-align: center;
-		}
-		&-subtitle{
-			font-size: 2em;
-			margin: 0.1em 0 0.2em 0;
-		}
+.pages {
+
+	ol,
+	ul {
+		padding-left: 2.5em;
+		margin-bottom: 1.2em;
+	}
+
+	h3,
+	h4 {
+		margin: 1.5em 0 .5em 0;
+		padding-left: 1em;
+		font-weight: bolder;
+		letter-spacing: .15em;
+	}
+
+	p {
+		margin-bottom: .8em;
+	}
+
+	.text-big {
+		font-size: 1.5em;
 	}
 }

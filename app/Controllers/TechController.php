@@ -34,7 +34,9 @@ class TechController extends Controller
                 '/public/scripts/forms-admin-funcs.js?v=' . $_SERVER['REQUEST_TIME'],
             ],
         ];
-        View::render($vars);
+        View::$route['vars'] = array_merge(View::$route['vars'], $vars);
+    
+        View::render();
     }
     public static function backupAction()
     {
@@ -62,7 +64,9 @@ class TechController extends Controller
                 '/public/scripts/forms-admin-funcs.js?v=' . $_SERVER['REQUEST_TIME'],
             ],
         ];
-        View::render($vars);
+        View::$route['vars'] = array_merge(View::$route['vars'], $vars);
+    
+        View::render();
     }
     public static function migrationAction()
     {
@@ -95,7 +99,9 @@ class TechController extends Controller
                 '/public/scripts/forms-admin-funcs.js?v=' . $_SERVER['REQUEST_TIME'],
             ],
         ];
-        View::render($vars);
+        View::$route['vars'] = array_merge(View::$route['vars'], $vars);
+    
+        View::render();
     }
     public static function dbrebuildAction()
     {

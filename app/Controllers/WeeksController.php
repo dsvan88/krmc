@@ -16,21 +16,15 @@ class WeeksController extends Controller
         
         $vars = WeekRepository::getShowData($weekId);
 
-        $texts = [
+        $vars['texts'] = [
             'weeksBlockTitle' => 'Weekly schedule',
             'days' => $vars['dayNames'],
         ];
+        $vars['title'] = 'Weekly schedule';
 
-        $title = 'Weekly schedule';
-        View::render(
-            array_merge(
-                $vars,
-                compact(
-                    'title',
-                    'texts',
-                )
-            )
-        );
+        View::$route['vars'] = array_merge(View::$route['vars'], $vars);
+
+        View::render();
     }
     public function addAction()
     {

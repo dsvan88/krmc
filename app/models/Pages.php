@@ -60,7 +60,8 @@ class Pages extends Model
             'published_at' => date('Y-m-d H:i:s', strtotime($data['published_at'])),
         ];
         if (!empty($data['description'])) {
-            $array['description'] = trim($data['description']);
+            $array['description'] = preg_replace(['/<\/p>\s*<p>/', '/<.*?>/'], ["\n", ''], trim($data['description']));
+            var_dump($array['description']);
         }
         if (!empty($data['type'])) {
             $array['type'] = trim($data['type']);

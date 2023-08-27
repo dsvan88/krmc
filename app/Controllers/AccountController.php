@@ -48,14 +48,15 @@ class AccountController extends Controller
         $vars = [
             'title' => 'Authorization form',
             'texts' => [
-                'LoginInputPlaceholder' => '{{ Account_Login_Form_Login_Input_Placeholder }}',
+                'LoginInputPlaceholder' => 'Login',
                 'PasswordInputPlaceholder' => '{{ Account_Login_Form_Password_Input_Placeholder }}',
                 'SubmitLabel' => 'Log In',
                 'ForgetLinkLabel' => 'Forget Password',
                 'RegisterLinkLabel' => 'Register',
             ]
         ];
-        View::modal($vars);
+        View::$route['vars'] = array_merge(View::$route['vars'], $vars);
+        View::modal();
     }
     public function listAction()
     {
@@ -69,7 +70,10 @@ class AccountController extends Controller
                 'formTitle' => '{{ Users_List_Title }}',
             ]
         ];
-        View::render($vars);
+
+        View::$route['vars'] = array_merge(View::$route['vars'], $vars);
+    
+        View::render();
     }
     public function profileEditAction()
     {
@@ -157,7 +161,9 @@ class AccountController extends Controller
             'data' => $userData,
             'isAdmin' => $isAdmin,
         ];
-        View::render($vars);
+        View::$route['vars'] = array_merge(View::$route['vars'], $vars);
+    
+        View::render();
     }
     public function profileSectionAction()
     {
@@ -330,7 +336,8 @@ class AccountController extends Controller
             ],
             'chatData' => $chatData,
         ];
-        View::modal($vars);
+        View::$route['vars'] = array_merge(View::$route['vars'], $vars);
+        View::modal();
     }
     public function addParticipantAction()
     {
@@ -385,7 +392,8 @@ class AccountController extends Controller
                 'CancelLabel' => 'Cancel',
             ],
         ];
-        View::modal($vars);
+        View::$route['vars'] = array_merge(View::$route['vars'], $vars);
+        View::modal();
     }
     public function addParticipantFormAction()
     {
@@ -400,7 +408,8 @@ class AccountController extends Controller
                 'CancelLabel' => 'Cancel',
             ],
         ];
-        View::modal($vars);
+        View::$route['vars'] = array_merge(View::$route['vars'], $vars);
+        View::modal();
     }
     public function profileAvatarFormAction()
     {
@@ -431,7 +440,8 @@ class AccountController extends Controller
             ],
             'userData' => $userData
         ];
-        View::modal($vars);
+        View::$route['vars'] = array_merge(View::$route['vars'], $vars);
+        View::modal();
     }
     public function profileAvatarRecropFormAction()
     {
@@ -479,7 +489,8 @@ class AccountController extends Controller
             ],
             'userId' => $_SESSION['id'],
         ];
-        View::modal($vars);
+        View::$route['vars'] = array_merge(View::$route['vars'], $vars);
+        View::modal();
     }
     public function passwordResetAction()
     {
@@ -507,7 +518,9 @@ class AccountController extends Controller
                 '/public/scripts/forms-admin-funcs.js?v=' . $_SERVER['REQUEST_TIME'],
             ],
         ];
-        View::render($vars);
+        View::$route['vars'] = array_merge(View::$route['vars'], $vars);
+    
+        View::render();
     }
     public function forgetFormAction()
     {
@@ -545,7 +558,8 @@ class AccountController extends Controller
         else
             $vars['texts']['tgBotLink'] = 'https://t.me/';
 
-        View::modal($vars);
+        View::$route['vars'] = array_merge(View::$route['vars'], $vars);
+        View::modal();
     }
     public function register($data){
         $result = Users::register($data);
@@ -576,7 +590,8 @@ class AccountController extends Controller
                 '/public/scripts/account-register.js?v=' . $_SERVER['REQUEST_TIME'],
             ],
         ];
-        View::modal($vars);
+        View::$route['vars'] = array_merge(View::$route['vars'], $vars);
+        View::modal();
     }
     public function deleteAction()
     {
@@ -632,6 +647,7 @@ class AccountController extends Controller
                 'CancelLabel' => 'Cancel',
             ],
         ];
-        View::modal($vars);
+        View::$route['vars'] = array_merge(View::$route['vars'], $vars);
+        View::modal();
     }
 }

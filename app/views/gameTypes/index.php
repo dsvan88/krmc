@@ -1,4 +1,4 @@
-<section class="section index">
+<section class="section">
     <header>
         <h1 class="title">Ігри нашого клуба:<?=$dashboard?></h1>
         <h2 class="subtitle">Наш клуб дозвілля збирається для ігор у такі ігри:</h3>

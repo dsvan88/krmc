@@ -34,7 +34,8 @@ class NewsController extends Controller
             'ReadMore' => '{{ News_Block_Read_More }}'
         ];
         $paginator = Paginator::news(['page' => $page, 'count' => $newsCount]);
-        View::render(compact('title', 'texts', 'newsAll', 'newsCount', 'page', 'setDashBoard', 'paginator', 'defaultImage'));
+        View::$route['vars'] = array_merge(View::$route['vars'], compact('title', 'texts', 'newsAll', 'newsCount', 'page', 'setDashBoard', 'paginator', 'defaultImage'));
+        View::render();
     }
     public function showAction()
     {
@@ -49,7 +50,10 @@ class NewsController extends Controller
             'title' => '{{ News_Show_Item_Page_Title }}',
             'newsData' => $newsData
         ];
-        View::render($vars);
+        
+        View::$route['vars'] = array_merge(View::$route['vars'], $vars);
+    
+        View::render();
     }
     public function editAction()
     {
@@ -95,7 +99,9 @@ class NewsController extends Controller
                 '/public/scripts/forms-admin-funcs.js?v=' . $_SERVER['REQUEST_TIME'],
             ],
         ];
-        View::render($vars);
+        View::$route['vars'] = array_merge(View::$route['vars'], $vars);
+    
+        View::render();
     }
     public function editPromoAction()
     {
@@ -117,7 +123,9 @@ class NewsController extends Controller
             ],
         ];
 
-        View::render($vars);
+        View::$route['vars'] = array_merge(View::$route['vars'], $vars);
+    
+        View::render();
     }
     public function addAction()
     {
@@ -146,7 +154,9 @@ class NewsController extends Controller
             ],
         ];
 
-        View::render($vars);
+        View::$route['vars'] = array_merge(View::$route['vars'], $vars);
+    
+        View::render();
     }
     public function deleteAction()
     {

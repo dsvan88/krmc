@@ -51,8 +51,6 @@ return [
     '{{ Day_Block_Start_Time }}' => 'Start:',
     '{{ Day_Block_Participants_Title }}' => 'Participants',
     '{{ Day_Block_Games_Start }}' => 'Booking time',
-    '{{ Time_Arrive }}' => 'Time',
-    '{{ Day_Block_Prim_PLaceholder }}' => 'Remark',
     '{{ Add_Field_Label }}' => 'Add field',
     '{{ Day_Set_Success }}' => 'Changes saved successfully!',
 

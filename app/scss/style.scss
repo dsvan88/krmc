@@ -265,25 +265,6 @@ body {
 			text-align: justify;
 			color: $color-text-dark;
 
-			ul {
-				padding-left: 2.5em;
-			}
-
-			.pages {
-
-				h3,
-				h4 {
-					margin: 1.5em 0 .5em 0;
-					padding-left: 1em;
-					font-weight: bolder;
-					letter-spacing: .15em;
-				}
-
-				.text-big {
-					font-size: 1.5em;
-				}
-			}
-
 			&.game {
 				padding: 0;
 			}
@@ -301,11 +282,6 @@ body {
 				line-height: 1.3em;
 				margin-bottom: .5em;
 			}
-
-			p {
-				margin-bottom: .8em;
-			}
-
 			&:nth-child(even) {
 				background-color: $bg-color-light;
 			}

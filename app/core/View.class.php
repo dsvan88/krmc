@@ -10,6 +10,7 @@ class View
     public static $path;
     public static $route;
     public static $layout = 'default';
+    public static $viewsFolder = '/app/views';
 
     public function __construct($route)
     {
@@ -28,57 +29,42 @@ class View
         $viewPath = Locale::camelize($viewPath);
         self::$path = "{$route['controller']}/forms/$viewPath";
     }
-    public static function render($vars = [])
+    public static function render()
     {
         $styles = $scripts = '';
-        $vars = Locale::apply($vars);
-        extract($vars);
+        self::$route['vars'] = Locale::apply(self::$route['vars']);
+
+        extract(self::$route['vars']);
         extract(self::defaultVars());
-        $content = '';
+        
+        if (empty($mainClass)) $mainClass = 'index';
+
         $pageTitle = preg_replace('/<.*?>/', '', $title);
-        $path = $_SERVER['DOCUMENT_ROOT'] . '/app/views/' . self::$path . '.php';
 
-        $notices = Noticer::get();
-
-        if (file_exists($path)) {
+        $filename = self::$path;
+        $path = $_SERVER['DOCUMENT_ROOT']. self::$viewsFolder ."/$filename.php";
+        if (file_exists($path)){
             ob_start();
             require $path;
             $content = ob_get_clean();
-            require $_SERVER['DOCUMENT_ROOT'] . '/app/views/layouts/' . self::$layout . '.php';
-
-            Noticer::clear();
-        } else {
-            self::errorCode('404', ['message' => 'View ' . self::$path . ' isn’t found!']);
         }
-        self::exit();
-    }
-    public static function renderPage($vars = [])
-    {
-        $styles = $scripts = '';
-        $vars = Locale::apply($vars);
-        extract($vars);
-        extract(self::defaultVars());
+
+        if (empty($content)) {
+            self::errorCode('404', ['message' => "View $filename isn’t found!"]);
+        }
 
         $notices = Noticer::get();
-
-        $content = "
-            <section class='section page'>
-                <header>
-                    <h1 class='title'>$title $dashboard</h1>
-                    <h2 class='subtitle'>{$texts['subtitle']}</h2>
-                </header>
-                <div class='content'>
-                    {$texts['html']}
-                </div>
-            </section>";
-        require $_SERVER['DOCUMENT_ROOT'] . '/app/views/layouts/' . self::$layout . '.php';
-
         Noticer::clear();
+
+        require $_SERVER['DOCUMENT_ROOT']. self::$viewsFolder . '/layouts/' . self::$layout . '.php';
+
+        self::exit();
     }
-    public static function modal($vars = [])
+    public static function modal()
     {
-        $vars = Locale::apply($vars);
-        extract($vars);
+        self::$route['vars'] = Locale::apply(self::$route['vars']);
+        // extract($vars);
+        extract(self::$route['vars']);
 
         $response = [
             'error' => 0,
@@ -87,15 +73,12 @@ class View
             'title' => $title,
         ];
 
-        // Extract vars from array self::$route['vars'] (Arrays of vars in URL)
-        if (isset(self::$route['vars']))
-            extract(self::$route['vars']);
         if (isset($scripts))
             $response['jsFile'] = $scripts;
         if (isset($css))
             $response['cssFile'] = $css;
 
-        $path = $_SERVER['DOCUMENT_ROOT'] . '/app/views/' . self::$path . '.php';
+        $path = $_SERVER['DOCUMENT_ROOT'] . self::$viewsFolder . '/' . self::$path . '.php';
         if (file_exists($path)) {
             ob_start();
             require $path;
@@ -139,7 +122,7 @@ class View
     public static function errorCode($code, $data = [])
     {
         extract($data);
-        $path = "{$_SERVER['DOCUMENT_ROOT']}/app/views/errors/$code.php";
+        $path = $_SERVER['DOCUMENT_ROOT'] . self::$viewsFolder."/errors/$code.php";
         http_response_code($code);
         if (file_exists($path))
             require $path;
@@ -226,5 +209,14 @@ class View
             Settings::edit($settings['last']['id'], ['value' => $_SERVER['REQUEST_TIME']]);
         }
         exit();
+    }
+    public static function component(string $filename, array $vars = []){
+        
+        self::$route['vars'] = Locale::apply(self::$route['vars']);
+        
+        extract(self::$route['vars']);
+        extract($vars);
+
+        return require $_SERVER['DOCUMENT_ROOT'] . self::$viewsFolder."/components/$filename.php";
     }
 }

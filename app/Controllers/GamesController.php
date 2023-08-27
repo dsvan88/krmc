@@ -112,7 +112,9 @@ class GamesController extends Controller
             ],
         ];
 
-        View::render($vars);
+        View::$route['vars'] = array_merge(View::$route['vars'], $vars);
+    
+        View::render();
     }
     public function playAction()
     {
@@ -140,7 +142,9 @@ class GamesController extends Controller
                 '/public/scripts/mafia/mafia-vote-numpad.js?v=' . $_SERVER['REQUEST_TIME'],
             ],
         ];
-        View::render($vars);
+        View::$route['vars'] = array_merge(View::$route['vars'], $vars);
+    
+        View::render();
     }
     public function saveAction()
     {

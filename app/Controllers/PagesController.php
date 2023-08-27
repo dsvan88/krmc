@@ -25,16 +25,23 @@ class PagesController extends Controller
             View::errorCode(404, ['message' => "Page $slug isn't found!"]);
 
         $vars = [
+            'mainClass' => 'pages',
             'title' => $page['title'],
+            'page' => $page,
             'texts' => [
-                'title' => trim($page['title']),
-                'subtitle' => trim($page['subtitle']),
-                'html' => trim($page['html']),
-            ],
+                'edit' => 'Edit',
+                'delete' => 'Delete',
+            ]
         ];
-        $vars['dashboard'] = PageRepository::dashboard(empty($page['id']) ? $slug : $page['id']);
+        if (!empty($_SESSION['privilege']['status']) && in_array($_SESSION['privilege']['status'], ['manager', 'admin'])) {
+            $vars['dashboard'] = (empty($page['id']) ? $game : $page['id']);
+        }
 
-        View::renderPage($vars);
+        View::$path = 'pages/show';
+
+        View::$route['vars'] = array_merge(View::$route['vars'], $vars);
+    
+        View::render();
         exit();
     }
     public function editAction()
@@ -48,6 +55,8 @@ class PagesController extends Controller
 
         if (is_numeric($pageId)) {
             $page = Pages::find($pageId);
+            $page['description'] = '<p>'.str_replace("\n", '</p><p>', $page['description']).'</p>';
+
             $page['keywords'] = '';
             if (!empty($page['data'])) {
                 $page['data'] = json_decode($page['data'], true);
@@ -90,7 +99,9 @@ class PagesController extends Controller
             ],
             'page' => $page,
         ];
-        View::render($vars);
+        View::$route['vars'] = array_merge(View::$route['vars'], $vars);
+    
+        View::render();
     }
     public function deleteAction()
     {
@@ -119,6 +130,8 @@ class PagesController extends Controller
                 '/public/scripts/forms-admin-funcs.js?v=' . $_SERVER['REQUEST_TIME'],
             ],
         ];
-        View::render($vars);
+        View::$route['vars'] = array_merge(View::$route['vars'], $vars);
+    
+        View::render();
     }
 }

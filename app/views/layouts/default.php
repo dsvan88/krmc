@@ -62,7 +62,7 @@
             </div>
         </header>
         <div class="header-for-auto-scroll" id="start-page"></div>
-        <main class="main">
+        <main class="main <?=$mainClass ?>">
             <?= $content ?>
         </main>
         <footer class="footer">
