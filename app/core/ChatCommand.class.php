@@ -9,7 +9,6 @@ class ChatCommand implements Command
     public static $requester = [];
     public static $message = [];
     public static $operatorClass;
-    public static $forAdmins = false;
     public static $accessLevel = 'guest';
 
     public static function description()

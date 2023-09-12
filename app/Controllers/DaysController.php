@@ -38,12 +38,12 @@ class DaysController extends Controller
                 'daysBlockParticipantsTitle' => '{{ Day_Block_Participants_Title }}',
                 'dayTournamentCheckboxLabel' => 'Tournament',
                 'daySendCheckboxLabel' => 'Send to chat',
-                'dayGameStart' => '{{ Day_Block_Games_Start }}',
-                'dayEvent' => '{{ Day_Block_Game_Name }}',
+                'dayGameStart' => 'Booking time',
+                'dayEvent' => 'Game’s type:',
                 'ArrivePlaceHolder' => 'Arrive',
                 'RemarkPlaceHolder' => 'Remark',
                 'clearLabel' => 'Clear',
-                'addFieldLabel' => '{{ Add_Field_Label }}',
+                'addFieldLabel' => 'Add field',
                 'setDayApprovedLabel' => 'Save',
                 'TimeArrivePlaceholder' => 'Arrive Time',
             ],
@@ -75,6 +75,15 @@ class DaysController extends Controller
             $day['date'] = '{{ Day_Date_Not_Set }}';
         }
 
+        $yesterday = [
+            'link' => $dayId > 0 ? "/week/$weekId/day/" . ($dayId - 1).'/' : '/week/'. ($weekId-1) .'/day/6/',
+            'label' => date('d.m', $dayTimestamp - TIMESTAMP_DAY),
+        ];
+        $tomorrow = [
+            'link' => $dayId < 6 ? "/week/$weekId/day/" . ($dayId + 1).'/' : '/week/'. ($weekId+1) .'/day/0/',
+            'label' => date('d.m', $dayTimestamp + TIMESTAMP_DAY),
+        ];
+
         if (!isset($day['day_prim'])) {
             $day['day_prim'] = '';
         }
@@ -87,7 +96,7 @@ class DaysController extends Controller
         $playersCount = max(count($day['participants']), 11);
         $scripts = '/public/scripts/day-edit-funcs.js?v=' . $_SERVER['REQUEST_TIME'];
 
-        View::$route['vars'] = array_merge(View::$route['vars'], $vars, compact('day', 'playersCount', 'scripts', 'gameName'));
+        View::$route['vars'] = array_merge(View::$route['vars'], $vars, compact('day', 'playersCount', 'scripts', 'gameName', 'yesterday', 'tomorrow' ));
     
         View::render();
     }

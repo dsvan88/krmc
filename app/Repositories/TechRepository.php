@@ -46,6 +46,14 @@ class TechRepository
 
         return $fullpath;
     }
+    public static function rowsCount(array $array){
+        $count = 0;
+        foreach($array as $table => $rows){
+            $count += count($rows);
+        }
+        return $rows;
+    }
+
     public static function sendBackup(string $email){
         error_reporting(0);
         $result = self::backup();
@@ -53,10 +61,11 @@ class TechRepository
         // $archive = base64_encode(self::pack($result));
         $archive = self::archive($archiveName, $result);
 
+        $rowsCount = self::rowsCount($result);
         $mailer = new Mailer();
         $mailer->prepMessage([
             'title' => Locale::phrase(['string' => '<no-reply> %s - %s', 'vars' => [ MAFCLUB_NAME, $archiveName ]]),
-            'body' => '<p>Database backup.</p><p>Full DB in attached file.</p>',
+            'body' => "<p>Database backup.</p><p>Full DB in attached file.</p><p>Rows count: <b>$rowsCount</b></p>",
         ]);
         $mailer->attach($archive, $archiveName.'.zip');
 /*         $mailer->prepMessage([

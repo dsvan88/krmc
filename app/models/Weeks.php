@@ -32,8 +32,10 @@ class Weeks extends Model
             return self::$currentWeekId;
 
         self::$currentWeekId = self::query("SELECT id FROM $table WHERE start < :time AND finish > :time LIMIT 1", ['time' => $_SERVER['REQUEST_TIME']], 'Column');
+
         if (empty(self::$currentWeekId))
-            return self::create();
+            self::$currentWeekId = self::create();
+
         return self::$currentWeekId;
     }
     public static function getIds()
@@ -42,16 +44,20 @@ class Weeks extends Model
         return self::getRawArray("SELECT id FROM $table ORDER BY id", []);
     }
     // Получить настройки недели по id недели
-    public static function weekDataById(int $id)
+    public static function weekDataById(int $id = 0)
     {
+        if ($id < 1) return false;
+
         $table = self::$table;
-        $result = self::query("SELECT id,data,start,finish FROM $table WHERE id = ? LIMIT 1", [$id], 'Assoc');
+        $result = self::query("SELECT * FROM $table WHERE id = ? LIMIT 1", [$id], 'Assoc');
         if (!empty($result)) {
             $result = $result[0];
             $result['data'] = json_decode($result['data'], true);
             return $result;
         }
-        return false;
+        $id = self::create();
+
+        return self::weekDataById($id);
     }
     // Получить настройки последней зарегистрированной недели
     public static function lastWeekData()
@@ -112,44 +118,6 @@ class Weeks extends Model
 
         return $weekData;
     }
-    public static function autoloadWeekData($weekId)
-    {
-        $currentId = self::currentId();
-        $weeksIds = self::getIds();
-        $isWeekIdInList = -1;
-        if ($currentId) {
-            $isWeekIdInList = array_search($currentId, $weeksIds);
-            $countWeeks = count($weeksIds);
-            if ($isWeekIdInList > $countWeeks - 4) {
-                self::initNextWeeks($weeksIds[$countWeeks - 1]);
-            }
-        } else
-            $currentId = 0;
-
-        if (is_numeric($weekId) && $weekId > 0) {
-            return [$currentId, $weeksIds, $isWeekIdInList, self::weekDataById($weekId)];
-        }
-        if ($weekId === 0) {
-            if ($currentId) {
-                return [$currentId, $weeksIds, $isWeekIdInList, self::weekDataById($currentId)];
-            }
-            return [$currentId, $weeksIds, $isWeekIdInList, self::defaultWeekData()];
-        }
-    }
-    public static function initNextWeeks($lastWeekId)
-    {
-        $weekData = self::weekDataById($lastWeekId);
-        unset($weekData['id']);
-        for ($x = 0; $x < count($weekData['data']); $x++) {
-            $weekData['data'][$x]['participants'] = [];
-            $weekData['data'][$x]['status'] = '';
-        }
-        $weekData['data'] = json_encode($weekData['data'], JSON_UNESCAPED_UNICODE);
-        $weekData['start'] += TIMESTAMP_WEEK;
-        $weekData['finish'] = $weekData['start'] + TIMESTAMP_WEEK - 2;
-        self::insert($weekData);
-        return true;
-    }
     public static function create()
     {
         $weekData = self::lastWeekData();
@@ -158,12 +126,14 @@ class Weeks extends Model
             $weekData = self::defaultWeekData();
         }
         else {
+            if ($weekData['start'] > $_SERVER['REQUEST_TIME'] + TIMESTAMP_WEEK * MAX_WEEKS_AHEAD) return false;
+
             for ($i = 0; $i < 7; $i++) {
                 $weekData['data'][$i]['participants'] = [];
                 $weekData['data'][$i]['status'] = '';
             }
             $weekData['start'] += TIMESTAMP_WEEK;
-            $weekData['finish'] = $weekData['start'] + TIMESTAMP_WEEK - 2;
+            $weekData['finish'] = $weekData['start'] + TIMESTAMP_WEEK - 1;
         }
         unset($weekData['id']);
 
@@ -178,12 +148,8 @@ class Weeks extends Model
                 $weekData['data'] = json_encode($weekData['data'], JSON_UNESCAPED_UNICODE);
             }
 
-            if ($weekId > 0) {
-                self::update($weekData, ['id' => $weekId]);
-                return $weekId;
-            } else {
-                return self::insert($weekData);
-            }
+            self::update($weekData, ['id' => $weekId]);
+            return $weekId;
         } catch (\Throwable $th) {
             error_log(__METHOD__ . $th->__toString());
             return false;

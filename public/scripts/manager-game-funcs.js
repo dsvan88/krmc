@@ -35,13 +35,30 @@ if (gameForm) {
 }
 
 
-actionHandler.togglePlayer = function (target) {
-	if (target.classList.contains('dummy-player')) {
-		const modal = new ModalWindow();
-		request({
-			url: 'account/dummy/rename/form',
-			success: response => modal.fill({ html: response['html'], title: response['title'] }),
+actionHandler.renameDummy = async function (target) {
+
+	return new Promise((resolve) => {
+		new Prompt({
+			title : 'Rename dummy Player',
+			text: "Enter new name:",
+			value: "",
+			action: resolve,
 		});
+	}).then(
+		async result => {
+			const formData = new FormData();
+			formData.append('name', result.trim());
+			return await request({ url: 'account/dummy/rename/form', data: formData });
+		}
+	).then();
+}
+
+actionHandler.togglePlayer = async function (target) {
+	if (target.classList.contains('dummy-player')) {
+		const renamed = await actionHandler.renameDummy(target);
+		if (!renamed['name']) return false;
+		target.innerText = renamed['name'];
+		target.classList.remove('dummy-player');
 	}
 	const fields = document.querySelectorAll('input[name^="player"],input[name^="manager"]');
 	const current = new Map();

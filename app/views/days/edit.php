@@ -1,7 +1,11 @@
 <section class="section near-evening">
     <? /*<form class="booking" action="/days<?= $dayId ?>/w<?= $weekId ?>" data-wid="<?= $weekId ?>" data-did="<?= $dayId ?>">*/ ?>
     <form class="booking" action="/week/<?= $day['weekId'] ?>/day/<?= $day['dayId'] ?>/" method="POST">
-        <h3 class="booking__title"><?= $texts['daysBlockTitle'] ?></h3>
+        <header class="booking__header">
+            <span class="booking__header-link"><a href="<?= $yesterday['link'] ?>"><i class="fa fa-angle-double-left"></i>&nbsp;<?= $yesterday['label'] ?></a></span>
+            <h3 class="booking__title"><?= $texts['daysBlockTitle'] ?></h3>
+            <span class="booking__header-link"><a href="<?= $tomorrow['link'] ?>"><?= $tomorrow['label'] ?>&nbsp;<i class="fa fa-angle-double-right"></i></a></span>
+        </header>
         <div class="booking__settings">
             <div class="booking__settings-row">
                 <label for="game-day-time" class="booking__label-centered"> <?= $day['date'] ?> </label>

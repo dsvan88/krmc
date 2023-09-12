@@ -443,7 +443,8 @@ class Users extends Model
         }
         return $source;
     }
-    public static function addNames(array $source):array{
+    public static function addNames(array $source):array
+    {
         if (empty($source))
             return $source;
         if (!empty($source['id'])){
@@ -458,6 +459,9 @@ class Users extends Model
             if (empty($source[$x]['id'])) continue;
             $ids[] = $source[$x]['id'];
         }
+
+        if (empty($ids))
+            return $source;
 
         $data = self::findGroup('id', $ids);
         $countData = count($data);

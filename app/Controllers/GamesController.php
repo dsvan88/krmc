@@ -46,6 +46,7 @@ class GamesController extends Controller
         $needed = 16;
         $count  = count($day['participants']);
         $manager = '';
+
         if ($count < $needed) {
             $participants = [];
             $_participants = array_merge($day['participants'], Users::random($needed - $count));
@@ -54,7 +55,7 @@ class GamesController extends Controller
                 if (empty($manager) && $participant['id'] === $_SESSION['id']) {
                     $manager = $participant['name'];
                 }
-                if (in_array($participant['name'], $participants)) continue;
+                if (!empty($participant['id']) && in_array($participant['name'], $participants)) continue;
                 $participants[] = $participant['name'];
                 array_push($day['participants'], $participant);
             }

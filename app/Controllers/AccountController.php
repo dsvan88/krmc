@@ -290,10 +290,10 @@ class AccountController extends Controller
         }
         extract(self::$route['vars']);
         
+        AccountRepository::unlinkTelegram($chatId);
+       
         $name = trim($_POST['name']);
-        
         if (empty($name) || $name === '-') {
-            AccountRepository::unlinkTelegram($chatId);
             View::message('Success!');
         }
 
@@ -384,7 +384,20 @@ class AccountController extends Controller
         if (!in_array($_SESSION['privilege']['status'], ['manager', 'admin', 'root'])) {
             View::message(['error'=> 403, 'message' => 'Something went wrong! How did you get here?']);
         }
+        
+        if (!empty($_POST)){
 
+            $name = Users::formatName(trim($_POST['name']));
+
+            if (empty($name)) View::message('Fail!');
+
+            if (AccountRepository::renameDummy($name)){
+                View::message(['name'=> $name, 'message'=>'Success!']);
+            }
+
+            View::message('Fail!');
+        }
+        
         $vars = [
             'title' => 'Rename Temporary Player',
             'texts' => [

@@ -198,6 +198,7 @@ let actionHandler = {
 	autocompleteInput: function (target) {
 		const action = target.dataset.actionInput;
 		const type = action.replace(/autocomplete-/, '');
+		console.log(target.value);
 		let formData = new FormData();
 		formData.append('command', type);
 		formData.append('term', target.value);

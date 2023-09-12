@@ -2,7 +2,6 @@
 
 namespace app\Repositories;
 
-use app\models\Games;
 use app\models\Weeks;
 
 class DayRepository

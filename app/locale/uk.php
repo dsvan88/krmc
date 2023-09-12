@@ -91,15 +91,15 @@ return [
     '{{ Week_Set_Block_Title }}' => 'Планування тиждня',
 
     '{{ Day_Block_Title }}' => 'Налаштування події',
-    '{{ Day_Block_Game_Name }}' => 'Вид гри:',
+    'Game’s type:' => 'Вид гри:',
     '{{ Day_Block_Start_Time }}' => 'Початок:',
     '{{ Day_Block_Participants_Title }}' => 'Учасники',
     'Tournament' => 'Турнір',
     'Send to chat' => 'Відправити до чату',
-    '{{ Day_Block_Games_Start }}' => 'Час початку першої гри',
+    'Booking time' => 'Час початку першої гри',
     'Arrive' => 'Час',
     'Remark' => 'Примітка',
-    '{{ Add_Field_Label }}' => 'Додати поле',
+    'Add field' => 'Додати поле',
     '{{ Day_Set_Success }}' => 'Зміни успішно збережні!',
 
     'Email SMTP Server' => 'SMTP Сервер',

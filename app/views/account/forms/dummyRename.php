@@ -1,7 +1,7 @@
 <form class="modal__form" method="POST" action="/account/dummy/rename/form">
     <h1 class="modal__form-title"><?= $title ?></h1>
     <div class="modal__row">
-        <input class="modal__input" required type="text" name="name" placeholder="Псевдонім" autofocus data-action-input="autocomplete-users-names" list="users-names-list" autocomplete="off" />
+        <input class="modal__input" required type="text" name="name" placeholder="Псевдонім" autofocus data-action-input="autocomplete-users-names" list="users-names-list" autocomplete="off">
     </div>
     <datalist id="users-names-list"> </datalist>
     <div class="modal__buttons">

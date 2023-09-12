@@ -91,15 +91,15 @@ return [
     '{{ Week_Set_Block_Title }}' => 'Планирование недели',
 
     '{{ Day_Block_Title }}' => 'Настройка события',
-    '{{ Day_Block_Game_Name }}' => 'Вид игры:',
+    'Game’s type:' => 'Вид игры:',
     '{{ Day_Block_Start_Time }}' => 'Начало:',
     '{{ Day_Block_Participants_Title }}' => 'Участники',
     'Tournament' => 'Турнир',
     'Send to chat' => 'Отправить в чат',
-    '{{ Day_Block_Games_Start }}' => 'Время начала игр',
+    'Booking time' => 'Время начала игр',
     'Arrive' => 'Время',
     'Remark' => 'Примечание',
-    '{{ Add_Field_Label }}' => 'Добавить поле',
+    'Add field' => 'Добавить поле',
     '{{ Day_Set_Success }}' => 'Изменения успешно сохранены!',
 
     'Email SMTP Server' => 'SMTP Сервер',

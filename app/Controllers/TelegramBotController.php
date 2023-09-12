@@ -61,14 +61,11 @@ class TelegramBotController extends Controller
 
         $userId = Contacts::getUserIdByContact('telegramid', $userTelegramId);
 
-        if (!empty($userId)){
-            self::$requester = Users::getDataById($userId);
-        }
-
-        if (empty(self::$requester) && !in_array(self::$command, self::$guestCommands)) {
+        if (empty($userId) && !in_array(self::$command, self::$guestCommands)){
             self::$bot->sendMessage(self::$chatId, Locale::phrase('{{ Tg_Unknown_Requester }}'));
             exit();
         }
+        self::$requester = Users::getDataById($userId);
     }
     public static function webhookAction()
     {

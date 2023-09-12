@@ -142,10 +142,9 @@
             $class = [];
             if ($day['participants'][$i]['name'] === $manager)
                 $class[] = 'manager';
-            else if (!in_array($day['participants'][$i]['name'], $shuffled))
-                $class[] = 'selected';
-            if ($day['participants'][$i]['name'] === '+1')
-                $class[] = 'dummy-player';
+            else if (!in_array($day['participants'][$i]['name'], $shuffled)){
+                $class[] = $day['participants'][$i]['name'] === '+1' ? 'dummy-player' : 'selected';
+            }
         ?>
             <span class="game-form__pool-unit">
                 <span class="game-form__pool-name <?= implode(' ', $class) ?>" data-action-click="toggle-player"><?= $day['participants'][$i]['name'] ?></span>

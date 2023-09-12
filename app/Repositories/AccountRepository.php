@@ -127,6 +127,7 @@ class AccountRepository
         } else {
             $userId = (int) $userData['id'];
         }
+        
         unset($userData['id']);
 
         $userData['personal']['fio'] = self::formFioFromChatData($chatData);
@@ -189,5 +190,31 @@ class AccountRepository
         DayRepository::renamePlayer($mergedUserData['id'], $newUserData['name']);
         
         Users::edit($newUserData, ['id' => $newUserData['id']]);
+    }
+    public static function renameDummy(string $name): bool
+    {
+        $weekData = Weeks::weekDataByTime();
+        $dayId = Days::current();
+
+        $id = Users::getId($name);
+        if ($id < 2) {
+            $id = Users::add($name);
+        }
+
+        $countParticipants = count($weekData['data'][$dayId]['participants']);
+        $firstSlot = null;
+
+        for ($x=0; $x < $countParticipants; $x++) { 
+            if ($weekData['data'][$dayId]['participants'][$x]['id'] === $id) return false;
+            if (!empty($weekData['data'][$dayId]['participants'][$x]['id'])) continue;
+            if (!empty($firstSlot)) continue;
+            $firstSlot = $x;
+        }
+        $weekData['data'][$dayId]['participants'][$firstSlot]['id'] = $id;
+
+        $weekId = $weekData['id'];
+        unset($weekData['id']);
+
+        return Weeks::setWeekData($weekId, $weekData);
     }
 }
