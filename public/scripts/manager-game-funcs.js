@@ -56,7 +56,9 @@ actionHandler.renameDummy = async function (target) {
 actionHandler.togglePlayer = async function (target) {
 	if (target.classList.contains('dummy-player')) {
 		const renamed = await actionHandler.renameDummy(target);
+
 		if (!renamed['name']) return false;
+		
 		target.innerText = renamed['name'];
 		target.classList.remove('dummy-player');
 	}
