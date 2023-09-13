@@ -72,7 +72,7 @@ class Days extends Model
                 'prim' => trim($data['prim'][$i]),
             ];
         }
-        return Days::setDayData($weekId, $dayId, $newData);
+        return self::setDayData($weekId, $dayId, $newData);
     }
     public static function setDayData($weekId, $dayId, $data)
     {
@@ -211,7 +211,27 @@ class Days extends Model
         }
         return $result;
     }
-    public static function addParticipantToDayData(array $dayData, array &$userData, int $slot = -1): array
+    public static function removeParticipant(int $weekId, int $dayId, int $userId): bool
+    {
+        $dayData = self::weekDayData($weekId, $dayId);
+        $slot = -1;
+        while (isset($dayData['participants'][++$slot])) {
+            if ($dayData['participants'][$slot]['id'] != $userId) continue;
+
+            unset($dayData['participants'][$slot]);
+            $dayData['participants'] = array_values($dayData['participants']);
+
+            return self::setDayData($weekId, $dayId, $dayData);
+        }
+        return false;
+    }
+    public static function addParticipant(int $weekId, int $dayId, int $userId): bool
+    {
+        $dayData = self::weekDayData($weekId, $dayId);
+        $dayData = self::addParticipantToDayData($dayData, ['userId' => $userId]);
+        return self::setDayData($weekId, $dayId, $dayData);
+    }
+    public static function addParticipantToDayData(array $dayData, array $userData, int $slot = -1): array
     {
         if ($slot === -1) {
             while (isset($dayData['participants'][++$slot])) {

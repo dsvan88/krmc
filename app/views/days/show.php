@@ -35,6 +35,9 @@
                     </div>
                 </div>
             <? endfor ?>
+            <? if (!empty($selfBooking)) :?>
+                <a href="<?=$selfBooking['link']?>" class="button"><?=$selfBooking['label']?></a>
+            <?endif;?>
         </div>
     </form>
 </section>

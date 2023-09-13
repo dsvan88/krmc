@@ -136,6 +136,11 @@ return  [
         'action' => 'show',
         'access' => ['category' => 'all']
     ],
+    'week/{weekId}/day/{dayId}/{bookingMode}' => [
+        'controller' => 'days',
+        'action' => 'selfBooking',
+        'access' => ['category' => 'user']
+    ],
     'settings/index' => [
         'controller' => 'settings',
         'action' => 'index',

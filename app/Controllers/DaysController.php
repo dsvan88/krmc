@@ -4,6 +4,7 @@ namespace app\Controllers;
 
 use app\core\Controller;
 use app\core\Locale;
+use app\core\Noticer;
 use app\core\View;
 use app\models\Days;
 use app\models\GameTypes;
@@ -23,10 +24,11 @@ class DaysController extends Controller
                     $weekData = Weeks::weekDataById($weekId);
                     $result = TelegramBotController::send(Settings::getMainTelegramId(), Days::getFullDescription($weekData,$dayId));
                 }
-                View::message(['message' => '{{ Day_Set_Success }}', 'url' => "/week/$weekId/day/$dayId/"]);
+                View::message(['message' => 'Changes saved successfully!', 'url' => "/week/$weekId/day/$dayId/"]);
             }
             self::$route['action'] = 'edit';
             View::set(self::$route);
+            View::$route['vars']['scripts'] = '/public/scripts/day-edit-funcs.js?v=' . $_SERVER['REQUEST_TIME'];
         }
         $gameTypes = GameTypes::menu();
 
@@ -94,11 +96,46 @@ class DaysController extends Controller
         }
 
         $playersCount = max(count($day['participants']), 11);
-        $scripts = '/public/scripts/day-edit-funcs.js?v=' . $_SERVER['REQUEST_TIME'];
 
-        View::$route['vars'] = array_merge(View::$route['vars'], $vars, compact('day', 'playersCount', 'scripts', 'gameName', 'yesterday', 'tomorrow' ));
+        $selfBooking = [];
+        
+        if (!empty($_SESSION['id'])){
+            $url = self::$route['url'];
+            $selfBooking = [
+                'link' => "/$url/booking",
+                'label' => 'Booking',
+            ];
+            for ($i=0; $i < $playersCount; $i++) { 
+                if (empty($day['participants'][$i])) break;
+                if (empty($day['participants'][$i]['id'])) continue;
+                if ($day['participants'][$i]['id'] !== $_SESSION['id']) continue;
+                $selfBooking = [
+                    'link' => "/$url/unbooking",
+                    'label' => 'Unbooking',
+                ];
+            }
+        }
+
+        View::$route['vars'] = array_merge(View::$route['vars'], $vars, compact('day', 'playersCount', 'gameName', 'selfBooking', 'yesterday', 'tomorrow' ));
     
         View::render();
+    }
+    public function selfBookingAction()
+    {
+        extract(self::$route['vars']);
+    
+        if ($bookingMode === 'booking'){
+            if (Days::addParticipant($weekId, $dayId, $_SESSION['id']))
+                Noticer::set('Success!');
+            else 
+                Noticer::set(['type'=>'error', 'message'=>'Fail!']);
+        } else {
+            if (Days::removeParticipant($weekId, $dayId, $_SESSION['id']))
+                Noticer::set('Success!');
+            else 
+                Noticer::set(['type'=>'error', 'message'=>'Fail!']);
+        }
+        View::redirect("/week/$weekId/day/$dayId/");   
     }
     public function addAction()
     {

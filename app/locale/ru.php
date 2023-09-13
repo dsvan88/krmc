@@ -100,7 +100,7 @@ return [
     'Arrive' => 'Время',
     'Remark' => 'Примечание',
     'Add field' => 'Добавить поле',
-    '{{ Day_Set_Success }}' => 'Изменения успешно сохранены!',
+    'Changes saved successfully!' => 'Изменения успешно сохранены!',
 
     'Email SMTP Server' => 'SMTP Сервер',
     'Email Login' => 'Логин',

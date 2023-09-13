@@ -44,6 +44,7 @@ class Router
                 }
             }
 
+            $params['url'] = $url;
             $params['vars'] = [];
             for ($i = 1; $i < count($match); $i++) {
                 $params['vars'][$params['varNames'][$i - 1]] = $match[$i];

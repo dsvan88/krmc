@@ -49,7 +49,6 @@ return [
     '{{ Day_Block_Title }}' => 'Event’s setup',
     '{{ Day_Block_Start_Time }}' => 'Start:',
     '{{ Day_Block_Participants_Title }}' => 'Participants',
-    '{{ Day_Set_Success }}' => 'Changes saved successfully!',
 
     'Mafia' => 'Mafia',
     // 'Poker' => 'Poker',

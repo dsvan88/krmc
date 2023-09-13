@@ -100,7 +100,7 @@ return [
     'Arrive' => 'Час',
     'Remark' => 'Примітка',
     'Add field' => 'Додати поле',
-    '{{ Day_Set_Success }}' => 'Зміни успішно збережні!',
+    'Changes saved successfully!' => 'Зміни успішно збережні!',
 
     'Email SMTP Server' => 'SMTP Сервер',
     'Email Login' => 'Логін',
