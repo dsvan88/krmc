@@ -101,7 +101,7 @@ class TechController extends Controller
             $game['manager'] = json_decode($game['manager'], true);
             Games::update([ 'manager' => empty($game['manager']['id']) ? 1 : (int) $game['manager']['id'] ], ['id'=>$game['id']]);
         }
-        Games::query("ALTER TABLE $table ALTER COLUMN manager TYPE INT");
+        Games::query("ALTER TABLE $table ALTER COLUMN manager TYPE INT USING manager::integer");
 /* 
         $table = Pages::$table;
         Pages::query("ALTER TABLE $table ADD COLUMN description CHARACTER VARYING(300) NOT NULL DEFAULT ''");
