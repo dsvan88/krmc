@@ -27,6 +27,7 @@ class PagesController extends Controller
         $vars = [
             'mainClass' => 'pages',
             'title' => $page['title'],
+            'description' => $page['description'],
             'page' => $page,
             'texts' => [
                 'edit' => 'Edit',
