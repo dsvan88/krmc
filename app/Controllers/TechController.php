@@ -99,7 +99,7 @@ class TechController extends Controller
         foreach ($games as $index => $game) {
             if (empty($game['manager']) || is_numeric($game['manager'])) continue;
             $game['manager'] = json_decode($game['manager'], true);
-            Games::update([ 'manager' => empty($game['manager']['id']) ? 1 : (int) $game['manager']['id'] ], $game['id']);
+            Games::update([ 'manager' => empty($game['manager']['id']) ? 1 : (int) $game['manager']['id'] ], ['id'=>$game['id']]);
         }
         Games::query("ALTER TABLE $table ALTER COLUMN manager TYPE INT");
 /* 
