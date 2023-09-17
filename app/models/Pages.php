@@ -121,7 +121,7 @@ class Pages extends Model
         $data = [
             [
                 'type' => 'page',
-                'title' => MAFCLUB_NAME,
+                'title' => CLUB_NAME,
                 'slug' => 'home',
                 'subtitle' => 'Про нас',
                 'description' => 'Наш клуб позитивних та кмітливих людей, заснований для того, аби кожен бажаючий міг провести час свого дозвілля з гарним настроєм та користью для власного розвитку!',

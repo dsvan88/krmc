@@ -5,7 +5,7 @@ namespace  app\core;
 class Noticer
 {
     private static $notices = [];
-    public static function set(mixed $data): bool
+    public static function set($data): bool
     {
         if (empty($data)) return false;
 
@@ -13,7 +13,7 @@ class Noticer
             $_SESSION['notices'] = [];
 
         if (!is_array($data)){
-            self::$notices = $_SESSION['notices'] = array_merge($_SESSION['notices'], [ ['type' => '', 'message' => $data] ]);
+            self::$notices = $_SESSION['notices'] = array_merge($_SESSION['notices'], [ ['type' => '', 'message' => Locale::phrase($data)] ]);
             return true;
         }
 
@@ -34,7 +34,7 @@ class Noticer
             $result[] = $data;
         }
 
-        self::$notices = $_SESSION['notices'] = array_merge($_SESSION['notices'], $result);
+        self::$notices = $_SESSION['notices'] = array_merge($_SESSION['notices'], Locale::apply($result));
 
         return true;
     }

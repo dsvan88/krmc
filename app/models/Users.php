@@ -542,7 +542,7 @@ class Users extends Model
         $privilege = ['status' => 'admin', 'admin' => 1, 'rank' => 0];
         self::insert([
             'login' => 'admin',
-            'password' => '$2y$10$QXBH7fo4T152f.Tfy6zBwOZF54VdfX6uGhK7DAgm/kFXLS/gtI5zK', //admin1234
+            'password' => password_hash(sha1(ROOT_PASS_DEFAULT), PASSWORD_DEFAULT), //admin1234
             'privilege' => json_encode($privilege, JSON_UNESCAPED_UNICODE)
         ], $table);
 

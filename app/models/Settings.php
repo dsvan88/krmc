@@ -176,7 +176,7 @@ class Settings extends Model
             ['contacts', 'phone', 'Contacts Phone', '+380987654321'],
             ['contacts', 'telegram', 'Telegram Group', 'https://t.me/+ymO2QrwKoQgzODhi'],
             ['contacts', 'tg-chatbot', 'Telegram Bot Username', 'KRMafiaClubBot'],
-            ['contacts', 'tg-name', 'Telegram Group Name', MAFCLUB_NAME],
+            ['contacts', 'tg-name', 'Telegram Group Name', CLUB_NAME],
             ['contacts', 'adress', 'Adress', 'Україна  Дніпропетровська обл.  м. Кривий Ріг  пр. Миру, 35'],
             ['contacts', 'gmap_link', 'Google Map Link', 'https://goo.gl/maps/ig4UybMfbdeRLDYHA'],
             ['contacts', 'gmap_widget', 'Google Map Widget Link', 'https://google.com/maps/embed?pb=!1m18!1m12!1m3!1d668.5851682189962!2d33.39026844441126!3d47.91044536621998!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x40db20bcd47525ff%3A0xf39a0145fefa1e96!2z0L_RgNC-0YHQvy4g0JzQuNGA0LAsIDM1!5e0!3m2!1sru!2sua!4v1682765272064!5m2!1sru!2sua'],

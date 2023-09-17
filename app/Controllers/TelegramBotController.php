@@ -50,7 +50,7 @@ class TelegramBotController extends Controller
 
         $text = trim($message['message']['text']);
 
-        if (!self::parseCommand($text)) exit();
+        if (!self::parseCommand($text)) View::exit();
 
         self::$message = $message;
         self::$bot = new TelegramBot();
@@ -63,7 +63,7 @@ class TelegramBotController extends Controller
 
         if (empty($userId) && !in_array(self::$command, self::$guestCommands)){
             self::$bot->sendMessage(self::$chatId, Locale::phrase('{{ Tg_Unknown_Requester }}'));
-            exit();
+            View::exit();
         }
         self::$requester = Users::getDataById($userId);
     }
@@ -73,7 +73,7 @@ class TelegramBotController extends Controller
         try {
             if (!self::execute()) {
                 if (empty(self::$resultMessage))
-                    exit();
+                    View::exit();
                 $botResult = self::$bot->sendMessage(self::$techTelegramId, json_encode([self::$message, /* self::$requester ,*/ self::parseArguments(self::$commandArguments)], JSON_UNESCAPED_UNICODE));
             }
 

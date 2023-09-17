@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="/public/css/style.css?v='<?= $_SERVER['REQUEST_TIME'] ?>" />
     <?= $scripts ?>
     <?= $styles ?>
-    <title><?= $title . ' ' . MAFCLUB_SNAME . ' v' . SCRIPT_VERSION ?></title>
+    <title><?= $title . ' ' . CLUB_SNAME . ' v' . APP_VERSION ?></title>
 </head>
 
 <body>

@@ -7,6 +7,7 @@ use app\core\PHPMailer\PHPMailer;
 use app\core\View;
 use app\libs\Db;
 use app\models\Contacts;
+use app\models\Games;
 use app\models\Pages;
 use app\models\Settings;
 use app\models\TelegramChats;
@@ -46,7 +47,7 @@ class TechController extends Controller
 
             $table = trim($_POST['table']);
             $result = TechRepository::backup($table);
-            $archiveName = MAFCLUB_SNAME . ' backup ' . date('d.m.Y', $_SERVER['REQUEST_TIME']);
+            $archiveName = CLUB_SNAME . ' backup ' . date('d.m.Y', $_SERVER['REQUEST_TIME']);
             if ($table !== 'all') {
                 $result = [$table => array_values($result)];
                 $archiveName = "$table $archiveName";
@@ -72,22 +73,9 @@ class TechController extends Controller
     {
         // View::redirect('/');
         if (!empty($_POST)) {
-            $table = substr($_FILES['data']['name'], strpos($_FILES['data']['name'], '-') + 1);
-            $table = substr($table, 0, strrpos($table, '.'));
-
-            if (!in_array($table, ['settings', 'tgchats', 'users', 'weeks', 'pages', 'games', 'contacts']))
-                View::message(['error' => true, 'message' => 'Something wrong with your datafile!']);
-
-            $data = json_decode(trim(file_get_contents($_FILES['data']['tmp_name'])), true);
-
-            if (!is_array($data))
-                View::message(['error' => true, 'message' => 'Something wrong with your datafile!']);
-
-            DB::tableTruncate($table);
-            DB::insert($data, $table);
-            DB::query("SELECT setval(pg_get_serial_sequence('$table', 'id'), coalesce(max(id)+1, 1), false) FROM $table;");
-
-            View::message('Done!');
+            if (TechRepository::migration())
+                View::message('Done!');
+            View::message(['error' => true, 'message' => 'Something wrong with your datafile!']);
         }
         $vars = [
             'title' => 'DB Migration Form',
@@ -106,10 +94,18 @@ class TechController extends Controller
     public static function dbrebuildAction()
     {
         // View::redirect('/');
-
+        $table = Games::$table;
+        $games = Games::getAll();
+        foreach ($games as $index => $game) {
+            if (empty($game['manager']) || is_numeric($game['manager'])) continue;
+            $game['manager'] = json_decode($game['manager'], true);
+            Games::update([ 'manager' => empty($game['manager']['id']) ? 1 : (int) $game['manager']['id'] ], $game['id']);
+        }
+        Games::query("ALTER TABLE $table ALTER COLUMN manager TYPE INT");
+/* 
         $table = Pages::$table;
         Pages::query("ALTER TABLE $table ADD COLUMN description CHARACTER VARYING(300) NOT NULL DEFAULT ''");
-
+ */
         /* $chatsData = TelegramChats::getChatsList();
         foreach ($chatsData as $index => $chat) {
             if (empty($chat['personal']['nickname'])) continue;

@@ -35,9 +35,9 @@ class DaysController extends Controller
         $vars = [
             'title' => '{{ Day_Set_Page_Title }}',
             'texts' => [
-                'daysBlockTitle' => '{{ Day_Block_Title }}',
-                'dayStartTime' => '{{ Day_Block_Start_Time }}',
-                'daysBlockParticipantsTitle' => '{{ Day_Block_Participants_Title }}',
+                'daysBlockTitle' => 'Event’s setup',
+                'dayStartTime' => 'Start:',
+                'daysBlockParticipantsTitle' => 'Participants',
                 'dayTournamentCheckboxLabel' => 'Tournament',
                 'daySendCheckboxLabel' => 'Send to chat',
                 'dayGameStart' => 'Booking time',
@@ -98,7 +98,7 @@ class DaysController extends Controller
         $playersCount = max(count($day['participants']), 11);
 
         $selfBooking = [];
-        
+
         if (!empty($_SESSION['id'])){
             $url = self::$route['url'];
             $selfBooking = [
@@ -140,10 +140,10 @@ class DaysController extends Controller
     public function addAction()
     {
         $vars = [
-            'title' => '{{ Day_Block_Title }}',
+            'title' => 'Event’s setup',
             'texts' => [
-                'dayStartTime' => '{{ Day_Block_Start_Time }}',
-                'daysBlockParticipantsTitle' => '{{ Day_Block_Participants_Title }}',
+                'dayStartTime' => 'Start:',
+                'daysBlockParticipantsTitle' => 'Participants',
             ]
         ];
         View::$route['vars'] = array_merge(View::$route['vars'], $vars);

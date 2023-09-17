@@ -20,7 +20,7 @@ class Db
             $pdo = new PDO('pgsql:host=' . SQL_HOST . ';port=' . SQL_PORT . ';dbname=' . SQL_DB, SQL_USER, SQL_PASS);
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         } catch (\Throwable $th) {
-            $pdo = self::initDb();
+            $pdo = self::dbInit();
         }
         self::$db = $pdo;
 
@@ -162,11 +162,30 @@ class Db
         if (empty($table)) $table = static::$table;
         return self::query("TRUNCATE ONLY $table CASCADE");
     }
+    //Удаляет таблицу/таблицы
+    public static function dbDropTables($tables = null)
+    {
+        if (empty($tables)){
+            $tables = self::getTables();
+        }
+        if (empty($tables)){
+            return false;
+        }
+
+        if (is_string($tables)){
+            return self::query("DROP TABLE IF EXISTS $tables");
+        }
+
+        foreach($tables as $table){
+            self::query("DROP TABLE IF EXISTS $table");
+        }
+        return true;
+    }
     public static function init()
     {
         return true;
     }
-    public static function initDb()
+    public static function dbInit()
     {
         $pdo = new PDO('pgsql:host=' . SQL_HOST . ';port=' . SQL_PORT, SQL_USER, SQL_PASS);
         $pdo->query('CREATE DATABASE ' . SQL_DB);

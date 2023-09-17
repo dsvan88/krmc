@@ -34,7 +34,7 @@
     <script defer="" src="/public/scripts/common.js?v=<?= $_SERVER['REQUEST_TIME'] ?>"></script>
     <script defer="" src="/public/scripts/modals.js?v=<?= $_SERVER['REQUEST_TIME'] ?>"></script>
     <link rel="icon" type="image/x-icon" href="/public/images/mafia-vintage-logo-short.svg">
-    <title><?= (isset($pageTitle) ? $pageTitle  : $title) . ' ' . MAFCLUB_SNAME . ' v' . SCRIPT_VERSION ?></title>
+    <title><?= (isset($pageTitle) ? $pageTitle  : $title) . ' ' . CLUB_SNAME . ' v' . APP_VERSION ?></title>
 </head>
 
 <body>
@@ -87,7 +87,7 @@
                             <?= $footerSocials ?>
                         </div>
                     </div>
-                    <div class="footer__copyrights">Designed for <?= MAFCLUB_NAME ?>, by <a class="fa fa-telegram" href="https://t.me/dsvan88" target="_blank"> <?= CFG_AUTHOR ?></a></div>
+                    <div class="footer__copyrights">Designed for <?= CLUB_NAME ?>, by <a class="fa fa-telegram" href="https://t.me/dsvan88" target="_blank"> <?= CFG_AUTHOR ?></a></div>
                 </div>
             </div>
         </footer>

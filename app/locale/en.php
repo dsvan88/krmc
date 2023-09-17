@@ -46,10 +46,6 @@ return [
 
     '{{ Week_Set_Block_Title }}' => 'Set week schedule',
 
-    '{{ Day_Block_Title }}' => 'Event’s setup',
-    '{{ Day_Block_Start_Time }}' => 'Start:',
-    '{{ Day_Block_Participants_Title }}' => 'Participants',
-
     'Mafia' => 'Mafia',
     // 'Poker' => 'Poker',
     'Board' => 'Board Games',

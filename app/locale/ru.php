@@ -90,10 +90,10 @@ return [
     'Weekly schedule' => 'Недельное расписание',
     '{{ Week_Set_Block_Title }}' => 'Планирование недели',
 
-    '{{ Day_Block_Title }}' => 'Настройка события',
+    'Event’s setup' => 'Настройка события',
     'Game’s type:' => 'Вид игры:',
-    '{{ Day_Block_Start_Time }}' => 'Начало:',
-    '{{ Day_Block_Participants_Title }}' => 'Участники',
+    'Start:' => 'Начало:',
+    'Participants' => 'Участники',
     'Tournament' => 'Турнир',
     'Send to chat' => 'Отправить в чат',
     'Booking time' => 'Время начала игр',

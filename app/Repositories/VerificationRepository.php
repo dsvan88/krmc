@@ -25,7 +25,7 @@ class VerificationRepository
     private static function emailVerification(array $contact){
         try {
             $mailer = new Mailer();
-            $title = Locale::phrase(['string' => '<no-reply> %s - Verify your E-mail', 'vars' => [ MAFCLUB_NAME ]]);
+            $title = Locale::phrase(['string' => '<no-reply> %s - Verify your E-mail', 'vars' => [ CLUB_NAME ]]);
 
             $message = '';
 

@@ -2,7 +2,6 @@
 
 namespace app\core;
 
-use app\models\Settings;
 use app\Repositories\TechRepository;
 
 class View
@@ -32,9 +31,10 @@ class View
     public static function render()
     {
         $styles = $scripts = '';
-        self::$route['vars'] = Locale::apply(self::$route['vars']);
 
+        self::$route['vars'] = Locale::apply(self::$route['vars']);
         extract(self::$route['vars']);
+        
         extract(self::defaultVars());
         
         if (empty($mainClass)) $mainClass = 'index';
@@ -63,7 +63,6 @@ class View
     public static function modal()
     {
         self::$route['vars'] = Locale::apply(self::$route['vars']);
-        // extract($vars);
         extract(self::$route['vars']);
 
         $response = [
@@ -201,13 +200,8 @@ class View
             echo $string;
         }
 
-        $settings = Settings::getGroup('backup');
-
-        if (empty($settings['email']['value']) || $settings['last']['value'] > $_SERVER['REQUEST_TIME'] - BACKUP_FREQ) exit();
-
-        if (TechRepository::sendBackup($settings['email']['value'])) {
-            Settings::edit($settings['last']['id'], ['value' => $_SERVER['REQUEST_TIME']]);
-        }
+        TechRepository::scheduleBackup();
+        
         exit();
     }
     public static function component(string $filename, array $vars = []){

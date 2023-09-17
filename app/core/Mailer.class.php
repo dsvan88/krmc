@@ -47,7 +47,7 @@ class Mailer
         if (isset($this->senderData['email']))
             $this->mail->setFrom($this->senderData['email'], $this->senderData['name']);
         else
-            $this->mail->setFrom($this->mail->Username, MAFCLUB_NAME);
+            $this->mail->setFrom($this->mail->Username, CLUB_NAME);
         $this->mail->isHTML(true);
     }
     public function prepMessage($array)
