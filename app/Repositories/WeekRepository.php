@@ -37,7 +37,7 @@ class WeekRepository
         $dayNames = Locale::apply([
             'Monday',
             'Tuesday',
-            'Wednesday ',
+            'Wednesday',
             'Thursday',
             'Friday',
             'Saturday',

@@ -89,6 +89,7 @@ return [
 
     'Weekly schedule' => 'Тижневий розклад',
     '{{ Week_Set_Block_Title }}' => 'Планування тиждня',
+    'Game «%s» - How to play?' => 'Гра «%s» - Як граємо?',
 
     'Event’s setup' => 'Налаштування події',
     'Game’s type:' => 'Вид гри:',
@@ -119,7 +120,7 @@ return [
 
     'Monday' => 'Понеділок',
     'Tuesday' => 'Вівторок',
-    'Wednesday ' => 'Середа',
+    'Wednesday' => 'Середа',
     'Thursday' => 'Четвер',
     'Friday' => 'П’ятниця',
     'Saturday' => 'Субота',

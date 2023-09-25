@@ -72,6 +72,7 @@ class TechRepository
         $zip->open($_FILES['data']['tmp_name']);
         $zip->setPassword(sha1(ROOT_PASS_DEFAULT.$date));
         $zip->extractTo($folder);
+
         return glob("$folder/*.json");
     }
     public static function truncateDirectory(string $folder = null, string $pattern = null): bool{
@@ -94,7 +95,7 @@ class TechRepository
         foreach($array as $table => $rows){
             $count += count($rows);
         }
-        return $rows;
+        return $count;
     }
 
     public static function scheduleBackup():void{
@@ -112,7 +113,6 @@ class TechRepository
         
         $result = self::backup();
         $archiveName = 'backup '.date('d.m.Y', $_SERVER['REQUEST_TIME']);
-        // $archive = base64_encode(self::pack($result));
         $archive = self::archive($archiveName, $result);
 
         $rowsCount = self::rowsCount($result);
@@ -122,10 +122,7 @@ class TechRepository
             'body' => "<p>Database backup.</p><p>Full DB in attached file.</p><p>Rows count: <b>$rowsCount</b></p>",
         ]);
         $mailer->attach($archive, $archiveName.'.zip');
-/*         $mailer->prepMessage([
-            'title' => Locale::phrase(['string' => '<no-reply> %s - %s', 'vars' => [ CLUB_NAME, $archiveName ]]),
-            'body' => "<p>START_BASE64_STRING:$archive:END_BASE64_STRING</p>",
-        ]); */
+
         return $mailer->send($email);
     }
     public static function migration(){
@@ -150,7 +147,6 @@ class TechRepository
         usort($files, function ($value){
             return strrpos($value, 'users') ? -1 : 1;
         });
-        DB::dbDropTables();
 
         $folderLength = mb_strrpos(str_replace('\\', '/', $files[0]), '/', 0, 'UTF-8')+1;
         $dotPlace = $folderLength - mb_strrpos($files[0], '.', 0, 'UTF-8');

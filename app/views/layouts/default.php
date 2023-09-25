@@ -14,11 +14,12 @@
     <link rel="stylesheet" href="/public/css/jquery.datetimepicker.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+Pro">
 
-    <?/*= //$styles */ ?>
+    <?/*= //$styles 
     <!--     <script defer="" src="/public/scripts/jquery.min.js"></script>
     <script defer="" src="/public/scripts/jquery-ui.min.js"></script>
     <script defer="" src="/public/scripts/jquery.datetimepicker.full.min.js"></script>
     <script defer="" src="/public/scripts/jquery-cropper.js"></script> -->
+    */ ?>
     <script defer="" src="/public/scripts/request.js?v=<?= $_SERVER['REQUEST_TIME'] ?>"></script>
     <script defer="" src="/public/scripts/action-handler.js?v=<?= $_SERVER['REQUEST_TIME'] ?>"></script>
     <script defer="" src="/public/scripts/popups.js?v=<?= $_SERVER['REQUEST_TIME'] ?>"></script>
@@ -36,20 +37,14 @@
     <script defer="" src="/public/scripts/common.js?v=<?= $_SERVER['REQUEST_TIME'] ?>"></script>
     <script defer="" src="/public/scripts/modals.js?v=<?= $_SERVER['REQUEST_TIME'] ?>"></script>
     <link rel="icon" type="image/x-icon" href="/public/images/mafia-vintage-logo-short.svg">
-    <title><?= (isset($pageTitle) ? $pageTitle  : $title) . ' ' . CLUB_SNAME . ' v' . APP_VERSION ?></title>
+    <title><?= (isset($pageTitle) ? $pageTitle  : $title) . ' | ' . CLUB_SNAME . ' v' . APP_VERSION ?></title>
 </head>
 
 <body>
     <div class="wrapper">
 
         <header class="header">
-            <div class="notices">
-                <? if (!empty($notices)) : ?>
-                    <? foreach ($notices as $num => $notice) : ?>
-                        <div class="notice <?= $notice['type'] ?>"><span class="notice__message"><?= $notice['message'] ?></span><span class="notice__close fa fa-window-close"></span></div>
-                    <? endforeach ?>
-                <? endif; ?>
-            </div>
+            <? self::component('notices', ['notices' => $notices]) ?>
             <div class="header__content">
                 <div class="header__logo"><?= $headerLogo ?></div>
                 <div class="header__menu">

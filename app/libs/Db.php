@@ -166,7 +166,10 @@ class Db
     public static function dbDropTables($tables = null)
     {
         if (empty($tables)){
-            $tables = self::getTables();
+            $_tables = self::getTables();
+            foreach($_tables as $table){
+                $tables[] = $table['tablename'];
+            }
         }
         if (empty($tables)){
             return false;
@@ -175,9 +178,8 @@ class Db
         if (is_string($tables)){
             return self::query("DROP TABLE IF EXISTS $tables");
         }
-
         foreach($tables as $table){
-            self::query("DROP TABLE IF EXISTS $table");
+            self::query("DROP TABLE IF EXISTS $table CASCADE");
         }
         return true;
     }

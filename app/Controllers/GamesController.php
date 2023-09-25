@@ -18,7 +18,7 @@ class GamesController extends Controller
     {
         extract(self::$route['vars']);
         if (!empty($_POST)) {
-            try{
+            try {
                 $gameId = Games::create($_POST);
             }
             catch(Throwable $th){

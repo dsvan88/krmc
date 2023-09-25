@@ -179,7 +179,7 @@ return  [
     ],
     'game/{game}' => [
         'controller' => 'gameTypes',
-        'action' => 'game',
+        'action' => 'show',
         'access' => ['category' => 'all'],
     ],
     'game/{game}/start' => [

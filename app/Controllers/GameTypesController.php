@@ -30,7 +30,7 @@ class GameTypesController extends Controller
     
         View::render();
     }
-    public function gameAction()
+    public function showAction()
     {
         extract(self::$route['vars']);
 
@@ -46,18 +46,19 @@ class GameTypesController extends Controller
             $page['title'] = $gameNames[$game];
         }
 
-        $vars['title'] = $gameNames[$game];
+        View::$route['vars']['title'] = Locale::phrase([
+            'string' => 'Game «%s» - How to play?',
+            'vars' => [Locale::phrase($gameNames[$game])],
+        ]);
 
         if (!empty($_SESSION['privilege']['status']) && in_array($_SESSION['privilege']['status'], ['manager', 'admin'])) {
-            $vars['dashboard'] = (empty($page['id']) ? $game : $page['id']);
+            View::$route['vars']['dashboard'] = (empty($page['id']) ? $game : $page['id']);
         }
         
-        $vars['page'] = $page;
-        $vars['mainClass'] = 'pages';
+        View::$route['vars']['page'] = $page;
+        View::$route['vars']['mainClass'] = 'pages';
         
         View::$path = 'pages/show';
-
-        View::$route['vars'] = array_merge(View::$route['vars'], $vars);
     
         View::render();
     }

@@ -12,7 +12,7 @@ class Days extends Model
     public static $days = [
         'Monday',
         'Tuesday',
-        'Wednesday ',
+        'Wednesday',
         'Thursday',
         'Friday',
         'Saturday',
