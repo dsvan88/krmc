@@ -41,10 +41,9 @@
 </head>
 
 <body>
+    <? self::component('notices', ['notices' => $notices]) ?>
     <div class="wrapper">
-
         <header class="header">
-            <? self::component('notices', ['notices' => $notices]) ?>
             <div class="header__content">
                 <div class="header__logo"><?= $headerLogo ?></div>
                 <div class="header__menu">

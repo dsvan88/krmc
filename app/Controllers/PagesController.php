@@ -7,6 +7,7 @@ use app\core\Controller;
 use app\core\Locale;
 use app\core\View;
 use app\models\Pages;
+use app\models\Users;
 use app\Repositories\PageRepository;
 
 class PagesController extends Controller
@@ -34,7 +35,7 @@ class PagesController extends Controller
                 'delete' => 'Delete',
             ]
         ];
-        if (!empty($_SESSION['privilege']['status']) && in_array($_SESSION['privilege']['status'], ['manager', 'admin'])) {
+        if (Users::checkAccess('manager')) {
             $vars['dashboard'] = (empty($page['id']) ? $game : $page['id']);
         }
 

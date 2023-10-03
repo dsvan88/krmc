@@ -77,7 +77,7 @@ class WeekRepository
         }
         $paginator = Paginator::weekly(['weeksIds' => $weeksIds, 'currentIndex' => $weekCurrentIndexInList, 'selectedIndex' => $selectedWeekIndex]);
 
-        $isManager = !empty($_SESSION['privilege']['status']) && in_array($_SESSION['privilege']['status'], ['manager', 'admin']);
+        $isManager = Users::checkAccess('manager');
 
         return compact(
             'weekId',

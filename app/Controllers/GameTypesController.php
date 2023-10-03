@@ -6,6 +6,7 @@ use app\core\Controller;
 use app\core\Locale;
 use app\core\View;
 use app\models\GameTypes;
+use app\models\Users;
 use app\Repositories\PageRepository;
 
 class GameTypesController extends Controller
@@ -14,7 +15,7 @@ class GameTypesController extends Controller
     {
         // Extract $weekId & $dayId from array self::$route['vars']
         $dashboard = '';
-        if (isset($_SESSION['privilege']) && in_array($_SESSION['privilege']['status'], ['trusted', 'manager', 'admin'])) {
+        if (Users::checkAccess('trusted')) {
             $dashboard = "<span class='page__dashboard' style='float:right'>
                 <a href='/page/add' title='Додати' class='fa fa-plus-square-o'></a>
                 ";
@@ -51,7 +52,7 @@ class GameTypesController extends Controller
             'vars' => [Locale::phrase($gameNames[$game])],
         ]);
 
-        if (!empty($_SESSION['privilege']['status']) && in_array($_SESSION['privilege']['status'], ['manager', 'admin'])) {
+        if (Users::checkAccess('manager')) {
             View::$route['vars']['dashboard'] = (empty($page['id']) ? $game : $page['id']);
         }
         

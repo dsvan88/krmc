@@ -14,7 +14,7 @@ class Users extends Model
     public static $table = SQL_TBL_USERS;
     public static $genders = ['', 'господин', 'госпожа', 'некто'];
     public static $statuses = ['Гость', 'Резидент', 'Мастер'];
-    public static $usersAccessLevels = ['', 'guest', 'user', 'manager', 'admin'];
+    public static $usersAccessLevels = ['', 'guest', 'user', 'trusted', 'manager', 'admin', 'root'];
     public static $userToken = '';
 
     public static function login($data)
@@ -429,7 +429,6 @@ class Users extends Model
             if (self::$usersAccessLevels[$x] === $level)
                 $requireLevel = $x;
         }
-
         return $userLevel >= $requireLevel;
     }
     public static function contacts(array $source): array

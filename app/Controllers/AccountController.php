@@ -31,13 +31,13 @@ class AccountController extends Controller
     public function login($data)
     {
         if (!Validator::csrfCheck() || Users::trottling()) {
-            View::notice(['error' => 403, 'message' => 'Try again later:)']);
+            View::notice(['error' => 403, 'message' => 'Try again later:)', 'time' => 2000]);
         }
         if (!Users::login($data)) {
             $_SESSION['login_fails'][] = $_SERVER['REQUEST_TIME'];
             View::notice(['error' => 403, 'message' => "User isn’t found!\nCheck your login and password!", 'time' => 2000]);
         }
-        View::notice(['message' => 'Success!', 'location' => isset($_SESSION['path']) ? $_SESSION['path'] : '/', 'time' => 500]);
+        View::notice(['message' => 'Success!', 'location' => isset($_SESSION['path']) ? $_SESSION['path'] : '/', 'time' => 700]);
     }
     public function loginFormAction()
     {
@@ -249,7 +249,7 @@ class AccountController extends Controller
         $userId = (int) trim($_POST['uid']);
         $section = trim($_POST['section']);
 
-        if (!in_array($_SESSION['privilege']['status'], ['manager', 'admin'])) {
+        if (!Users::checkAccess('manager')) {
             $userId = (int) $_SESSION['id'];
         }
         if ($section === 'contacts') {
@@ -285,7 +285,7 @@ class AccountController extends Controller
         if (empty($_POST)) {
             View::message(['error' => 1, 'message' => 'Fail!']);
         }
-        if (Users::checkAccess('admin')) {
+        if (!Users::checkAccess('admin')) {
             View::message(['error' => 1, 'message' => 'You don’t have enough rights to change information about other users!']);
         }
         extract(self::$route['vars']);
@@ -341,7 +341,7 @@ class AccountController extends Controller
     }
     public function addParticipantAction()
     {
-        if (!in_array($_SESSION['privilege']['status'], ['manager', 'admin'])) {
+        if (!Users::checkAccess('manager')) {
             return View::errorCode(403, ['message' => 'Something went wrong! How did you get here?']);
         }
 
@@ -354,7 +354,7 @@ class AccountController extends Controller
     }
     public function removeParticipantAction()
     {
-        if (!in_array($_SESSION['privilege']['status'], ['manager', 'admin'])) {
+        if (!Users::checkAccess('manager')) {
             View::errorCode(403, ['message' => 'Something went wrong! How did you get here?']);
         }
 
@@ -381,7 +381,7 @@ class AccountController extends Controller
     }
     public function dummyRenameFormAction()
     {
-        if (!in_array($_SESSION['privilege']['status'], ['manager', 'admin', 'root'])) {
+        if (!Users::checkAccess('manager')) {
             View::message(['error' => 403, 'message' => 'Something went wrong! How did you get here?']);
         }
 
@@ -410,7 +410,7 @@ class AccountController extends Controller
     }
     public function addParticipantFormAction()
     {
-        if (!in_array($_SESSION['privilege']['status'], ['manager', 'admin'])) {
+        if (!Users::checkAccess('manager')) {
             View::errorCode(403, ['message' => 'Something went wrong! How did you get here?']);
         }
 
@@ -430,7 +430,7 @@ class AccountController extends Controller
         if (!isset($_SESSION['privilege']['status'])) {
             View::errorCode(403, ['message' => 'Forbidden!']);
         }
-        if (!in_array($_SESSION['privilege']['status'], ['manager', 'admin'])) {
+        if (!Users::checkAccess('manager')) {
             $uid = (int) $_SESSION['id'];
         }
         $userData = Users::getDataById($uid);
@@ -645,8 +645,8 @@ class AccountController extends Controller
     }
     public function doublesFormAction()
     {
-        if (!in_array($_SESSION['privilege']['status'], ['admin', 'root'])) {
-            View::message(['error' => 404, 'message' => 'How do you get here?']);
+        if (!Users::checkAccess('admin')) {
+            View::message(['error' => 403, 'message' => 'Something went wrong! How did you get here?']);
         }
         if (!empty($_POST)) {
             $this->doubles($_POST);

@@ -9,6 +9,7 @@ use app\core\Paginator;
 use app\core\View;
 use app\models\News;
 use app\models\Settings;
+use app\models\Users;
 
 class NewsController extends Controller
 {
@@ -25,7 +26,7 @@ class NewsController extends Controller
         $defaultImage = Settings::getImage('news_default');
 
         $setDashBoard = false;
-        if (isset($_SESSION['privilege']['status']) && in_array($_SESSION['privilege']['status'], ['manager', 'admin'], true)) {
+        if (Users::checkAccess('manager')) {
             $setDashBoard = true;
         }
 

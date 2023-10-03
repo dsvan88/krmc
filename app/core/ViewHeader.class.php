@@ -5,6 +5,7 @@ namespace app\core;
 use app\models\GameTypes;
 use app\models\News;
 use app\models\Settings;
+use app\models\Users;
 
 class ViewHeader {
     
@@ -78,7 +79,7 @@ class ViewHeader {
             $menu = array_values($menu);
         }
 
-        if (!empty($_SESSION['privilege']['status']) && in_array($_SESSION['privilege']['status'], ['trusted', 'manager', 'admin'])) {
+        if (Users::checkAccess('trusted')) {
             $menu[] = [
                 'path' => 'game/mafia/start',
                 'label' => Locale::phrase('Play a game'),

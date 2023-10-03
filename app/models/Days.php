@@ -298,8 +298,9 @@ class Days extends Model
 
     public static function checkNextMorning(int $weekId)
     {
-        if ($_SESSION[''])
-            return Weeks::isExists(['id' => $weekId + 1]);
+        if (Users::checkAccess('manager')) return true;
+        
+        return Weeks::isExists(['id' => $weekId + 1]);
     }
     public static function checkPrevSunday(int $weekId)
     {
