@@ -29,16 +29,14 @@ class AccountController extends Controller
         View::redirect('/');
     }
     public function login($data){
-/*         error_log(json_encode($data, JSON_UNESCAPED_UNICODE));
-        error_log($_SESSION['csrf']); */
         if (!Validator::csrfCheck() || Users::trottling()){
             View::notice(['error' => 403, 'message' => 'Try again later:)']);
         }
         if (!Users::login($data)) {
             $_SESSION['login_fails'][] = $_SERVER['REQUEST_TIME'];
-            View::notice(['error' => 403, 'message' => "User isn’t found!\nCheck your login and password!"]);
+            View::notice(['error' => 403, 'message' => "User isn’t found!\nCheck your login and password!", 'time' => 2000]);
         }
-        View::location(isset($_SESSION['path']) ? $_SESSION['path'] : '/');
+        View::notice(['message' => 'Success!', 'location' => isset($_SESSION['path']) ? $_SESSION['path'] : '/', 'time' => 500]);
     }
     public function loginFormAction()
     {
@@ -68,7 +66,8 @@ class AccountController extends Controller
             'usersData' => $usersData,
             'texts' => [
                 'formTitle' => '{{ Users_List_Title }}',
-            ]
+            ],
+            // 'scripts' => 'account-list.js',
         ];
 
         View::$route['vars'] = array_merge(View::$route['vars'], $vars);
@@ -155,7 +154,7 @@ class AccountController extends Controller
                 'CancelLabel' => 'Cancel',
             ],
             'scripts' => [
-                '/public/scripts/profile.js?v=' . $_SERVER['REQUEST_TIME']
+                'profile.js',
             ],
             'userId' => $userId,
             'data' => $userData,
@@ -528,7 +527,7 @@ class AccountController extends Controller
                 'SubmitLabel' => 'Execute'
             ],
             'scripts' => [
-                '/public/scripts/forms-admin-funcs.js?v=' . $_SERVER['REQUEST_TIME'],
+                'forms-admin-funcs.js',
             ],
         ];
         View::$route['vars'] = array_merge(View::$route['vars'], $vars);
@@ -600,7 +599,7 @@ class AccountController extends Controller
                 'CancelLabel' => 'Cancel',
             ],
             'scripts' => [
-                '/public/scripts/account-register.js?v=' . $_SERVER['REQUEST_TIME'],
+                'account-register.js',
             ],
         ];
         View::$route['vars'] = array_merge(View::$route['vars'], $vars);
@@ -608,15 +607,21 @@ class AccountController extends Controller
     }
     public function deleteAction()
     {
-        extract(self::$route['vars']);
+        if (!Validator::validate('rootpass', trim($_POST['verification']))){
+            View::notice([ 'error'=> 1, 'message' => 'Something went wrong' ]);
+        }
+
+        $userId = (int) trim($_POST['userId']);
         if ($userId < 2 || $_SESSION['id'] == $userId) {
-            View::message(['message' => 'Wrong userID!']);
+            View::notice([ 'error'=> 1, 'message' => 'Something went wrong' ]);
         }
-        $result = Users::remove($userId);
-        if ($result !== true) {
-            View::message($result);
+        View::notice(['message' => 'Success!', 'location' => '/users/list']);
+        
+        if (Users::remove($userId)){
+            View::notice(['message' => 'Success!', 'location' => '/users/list']);
         }
-        View::redirect('/users/list');
+
+        View::notice([ 'error'=> 1, 'message' => 'Something went wrong' ]);
     }
     public function doubles($post){
 

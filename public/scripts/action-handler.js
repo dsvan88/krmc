@@ -43,9 +43,10 @@ let actionHandler = {
 			actionHandler.clickFunc(target, event);
 		}
 	},
-	clickFunc: function (target, event, method = 'actionClick') {
+	clickFunc: async function (target, event, method = 'actionClick') {
 		if (!(method in target.dataset)) return false;
 		event.preventDefault();
+		const self = this;
 
 		if ("mode" in target.dataset) {
 			if (target.dataset['mode'] === 'location') {
@@ -55,9 +56,9 @@ let actionHandler = {
 		}
 		const type = camelize(target.dataset[method].replace(/\//g, '-'));
 		if (debug) console.log(type);
-		if (actionHandler[type] != undefined) {
+		if (self[type] != undefined) {
 			try {
-				actionHandler[type](target, event);
+				self[type](target, event);
 			} catch (error) {
 				alert(`Не существует метода для этого action-click: ${type}... или возникла ошибка. Сообщите администратору!\r\n${error.name}: ${error.message}`);
 				console.log(error);
@@ -67,7 +68,7 @@ let actionHandler = {
 			let action = target.dataset[method];
 			let modal = false;
 			if (action.endsWith('/form')) {
-				modal = this.commonFormEventStart();
+				modal = new ModalWindow();
 			}
 
 			const formData = new FormData;
@@ -75,37 +76,23 @@ let actionHandler = {
 				if (key !== method)
 					formData.append(key, value);
 			}
+			if (target.dataset.verification){
+				let input = {type: 'text'};
+				if (target.dataset.verification.test(/(root|pass)/))
+					input = {type: 'password'};
+				const verification = await self.verification(null, target.dataset.verification, input);
+				formData.append('verification', verification);
+			}
 			request({
 				url: action,
 				data: formData,
 				success: function (result) {
-					if (result["error"] != 0) {
-						alert(result["message"]);
-						if (modal) {
-							actionHandler.commonFormEventEnd({ modal, result });
-						}
-						return false;
-					}
-					else {
-						if (result["message"]) {
-							alert(result["message"]);
-						}
-						if (result["location"]) {
-							window.location = result["location"];
-						} else if (result["modal"]) {
-							let actionModified = camelize(action.replace(/\//g, '-'));
-							actionHandler.commonFormEventEnd({ modal, data: result, formSubmitAction: actionModified + 'Submit' })
-							if (actionHandler[actionModified + "Ready"]) {
-								setTimeout(() => actionHandler[actionModified + "Ready"]({ modal, data: result }), 10);
-							}
-						}
-					}
+					if (modal)
+						self.commonModalEvent(modal, action, result);
+					self.commonResponse(result);
 				},
 			});
 		}
-	},
-	commonFormEventStart: function (event) {
-		return new ModalWindow();
 	},
 	commonFormEventEnd: function ({ modal, data, formSubmitAction, ...args }) {
 		let modalWindow;
@@ -176,23 +163,36 @@ let actionHandler = {
 		});
 		return false;
 	},
+	commonModalEvent: function (modal, action, data){
+		const self = this;
+		if (data["error"]){
+			self.commonFormEventEnd({ modal, data });
+			new Alert({ title: 'Error!', text: data["message"] });
+			return false;
+		}
+		if (data["modal"]) {
+			let actionModified = camelize(action.replace(/\//g, '-'));
+
+			if (self[actionModified + "Ready"])
+				modal.content.onload = self[actionModified + "Ready"]({ modal, data: data });
+
+			self.commonFormEventEnd({ modal, data, formSubmitAction: actionModified + 'Submit' })
+		}
+	},
 	commonResponse: function (response) {
+		const self = this;
 		if (response["error"]) {
 			new Alert({ title: 'Error!', text: response["message"] });
 			return false;
 		}
 		if (response["message"]) {
 			alert(response["message"]);
-			// new Alert({ text: response["message"] });
 		}
 		if (response["notice"] && this.noticer) {
 			this.noticer.add(response["notice"]);
-			if (response["notice"]["location"]) {
-				setTimeout(() => window.location = response["notice"]["location"], 1000);
-			}
 		}
 		if (response["location"]) {
-			window.location = response["location"];
+			setTimeout(() => window.location = response["location"], response["time"] ? response["time"] : 100);
 		}
 	},
 	autocompleteInput: function (target) {
@@ -225,9 +225,11 @@ let actionHandler = {
 			},
 		});
 	},
-	verification: async function (form, url) {
-		const formData = new FormData(form.tagName === 'FORM' ? form : undefined);
+	verification: async function (form, url, input) {
+		const formData = form ? new FormData(form.tagName === 'FORM' ? form : undefined) : undefined;
 		const verification = await request({ url: url, data: formData });
+
+		if (!verification) return false;
 
 		if (verification['result'] === false) {
 			if (verification['message']) new Alert({ text: verification['message'] });
@@ -239,6 +241,7 @@ let actionHandler = {
 				title: "Verification",
 				text: verification['message'],
 				value: '',
+				input: input,
 				action: resolve,
 			});
 		});

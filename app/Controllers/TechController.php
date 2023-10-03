@@ -31,8 +31,8 @@ class TechController extends Controller
                 'SubmitLabel' => 'Execute',
             ],
             'scripts' => [
-                '/public/scripts/plugins/ckeditor.js?v=' . $_SERVER['REQUEST_TIME'],
-                '/public/scripts/forms-admin-funcs.js?v=' . $_SERVER['REQUEST_TIME'],
+                'plugins/ckeditor.js',
+                'forms-admin-funcs.js',
             ],
         ];
         View::$route['vars'] = array_merge(View::$route['vars'], $vars);
@@ -61,8 +61,8 @@ class TechController extends Controller
                 'SubmitLabel' => 'Execute',
             ],
             'scripts' => [
-                '/public/scripts/plugins/ckeditor.js?v=' . $_SERVER['REQUEST_TIME'],
-                '/public/scripts/forms-admin-funcs.js?v=' . $_SERVER['REQUEST_TIME'],
+                'plugins/ckeditor.js',
+                'forms-admin-funcs.js',
             ],
         ];
         View::$route['vars'] = array_merge(View::$route['vars'], $vars);
@@ -83,8 +83,8 @@ class TechController extends Controller
                 'SubmitLabel' => 'Execute',
             ],
             'scripts' => [
-                '/public/scripts/plugins/ckeditor.js?v=' . $_SERVER['REQUEST_TIME'],
-                '/public/scripts/forms-admin-funcs.js?v=' . $_SERVER['REQUEST_TIME'],
+                'plugins/ckeditor.js',
+                'forms-admin-funcs.js',
             ],
         ];
         View::$route['vars'] = array_merge(View::$route['vars'], $vars);

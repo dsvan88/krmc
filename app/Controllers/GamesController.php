@@ -61,12 +61,11 @@ class GamesController extends Controller
             }
         }
 
-        $shuffled = array_map(function ($element): string {
-            return $element['name'];
-        }, $day['participants']);
-
-        $shuffled = array_filter($shuffled, function (string $name) use ($manager) {
-            return !($name === $manager || $name === '+1');
+        $shuffled = [];
+        array_walk($day['participants'], function ($element) use (&$shuffled, $manager): string {
+            if (in_array($element['name'], [$manager, '+1', '&lt; Deleted &gt;'])) return false;
+            $shuffled[] = $element['name'];
+            return true;
         });
         shuffle($shuffled);
 
@@ -109,7 +108,7 @@ class GamesController extends Controller
             'playersCount' => count($day['participants']),
             'config' => $config,
             'scripts' => [
-                '/public/scripts/manager-game-funcs.js?v=' . $_SERVER['REQUEST_TIME'],
+                'manager-game-funcs.js',
             ],
         ];
 
@@ -134,13 +133,13 @@ class GamesController extends Controller
             'title' => 'Play a game',
             'texts' => $texts,
             'scripts' => [
-                '/public/scripts/manager-game-funcs.js?v=' . $_SERVER['REQUEST_TIME'],
-                '/public/scripts/mafia/player.class.js?v=' . $_SERVER['REQUEST_TIME'],
-                '/public/scripts/mafia/game-engine.class.js?v=' . $_SERVER['REQUEST_TIME'],
-                '/public/scripts/mafia/mafia-engine.class.js?v=' . $_SERVER['REQUEST_TIME'],
-                '/public/scripts/mafia/timer.class.js?v=' . $_SERVER['REQUEST_TIME'],
-                '/public/scripts/mafia/game.js?v=' . $_SERVER['REQUEST_TIME'],
-                '/public/scripts/mafia/mafia-vote-numpad.js?v=' . $_SERVER['REQUEST_TIME'],
+                'manager-game-funcs.js',
+                'mafia/player.class.js',
+                'mafia/game-engine.class.js',
+                'mafia/mafia-engine.class.js',
+                'mafia/timer.class.js',
+                'mafia/game.js',
+                'mafia/mafia-vote-numpad.js',
             ],
         ];
         View::$route['vars'] = array_merge(View::$route['vars'], $vars);

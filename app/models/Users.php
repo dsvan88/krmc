@@ -449,7 +449,7 @@ class Users extends Model
             return $source;
         if (!empty($source['id'])){
             $userData = self::find($source['id']);
-            $source['name'] = $userData['name'];
+            $source['name'] = empty($userData) ? '&lt; Deleted &gt;' : $userData['name'];
             return $source;
         }
 
@@ -470,6 +470,11 @@ class Users extends Model
                 if ($source[$y]['id'] != $data[$x]['id']) continue;
                 $source[$y]['name'] = $data[$x]['name'];
             }
+        }
+
+        for($x=0; $x < $countSource; $x++){
+            if (empty($source[$x]['id']) || !empty($source[$x]['name'])) continue;
+            $element['name'] = '&lt; Deleted &gt;';
         }
         return $source;
     }

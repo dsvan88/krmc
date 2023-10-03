@@ -74,11 +74,6 @@ return  [
         'action' => 'list',
         'access' => ['category' => 'manager']
     ],
-    'users/delete/{userId}' => [
-        'controller' => 'account',
-        'action' => 'delete',
-        'access' => ['category' => 'admin']
-    ],
 
     'news' => [
         'controller' => 'news',
@@ -314,6 +309,12 @@ return  [
         'action' => 'dummyRenameForm',
         'access' => ['category' => 'manager']
     ],
+    'api/account/delete' => [
+        'controller' => 'account',
+        'action' => 'delete',
+        'access' => ['category' => 'admin']
+    ],
+
     'api/autocomplete/users-names' =>
     [
         'controller' => 'autocomplete',
@@ -384,6 +385,12 @@ return  [
         'controller' => 'verification',
         'action' => 'registerName',
         'access' => ['category' => 'all']
+    ],
+    'api/verification/root' =>
+    [
+        'controller' => 'verification',
+        'action' => 'root',
+        'access' => ['category' => 'admin']
     ],
 
     'api/telegram/webhook' =>

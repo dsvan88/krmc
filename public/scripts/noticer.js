@@ -39,6 +39,9 @@ class Noticer {
 		if (notice['time']){
 			noticeCloseBlock.timeOut = setTimeout((event) => self.close.call(self, noticeBlock), notice['time']);
 		}
+		if (notice["location"]){
+			setTimeout(() => window.location = notice["location"], notice['time'] ? notice['time'] + 100 : 1000);
+		}
 	}
 	close(notice) {
 		notice.style.color = '#00000000';

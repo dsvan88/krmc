@@ -13,28 +13,3 @@ actionHandler.accountRegisterFormSubmit = async function (event, modal, args) {
         success: (result) => self.commonResponse.call(self, result),
     });
 }
-
-/* actionHandler.accountRegisterSubmit(event, modal, formData){
-    request({
-        url: 'account/register',
-        data: formData,
-        success: (result) => {
-            if (result['wrong'] === 'code') {
-                new Alert({ text: 'Wrong verification code!' });
-            }
-        },
-    });
-}
- */
-/* success: (result) => {
-    if (!result) return self.commonResponse.call(self, result);
-    if (result['result'] === 'free') return self.commonSubmitFormHandler.call(self, event, modal, args);
-    new Prompt({
-        title: 'Verification',
-        text: message,
-        success: (result) => {
-            formData.append('code', result);
-            self.accountRegisterSubmit(event, modal, formData)
-        },
-    });
-}, */

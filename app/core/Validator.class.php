@@ -2,6 +2,8 @@
 
 namespace app\core;
 
+use app\models\Users;
+
 class Validator
 {
     public static function validate(string $method, mixed $value)
@@ -11,6 +13,13 @@ class Validator
     public static function csrfCheck(): bool
     {
         return !empty($_POST[CSRF_NAME]) && self::validate('csrf', $_POST[CSRF_NAME]);
+    }
+    private static function rootpass(string $value): string
+    {
+        $value = trim($value);
+        if (empty($value)) return false;
+        $rootUser = Users::find(1);
+        return password_verify(sha1($value), $rootUser['password']);
     }
     private static function csrf(string $value): string
     {

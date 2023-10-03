@@ -22,6 +22,11 @@ class VerificationController extends Controller
         return true;
     }
 
+    public static function rootAction(){
+        $message = Locale::phrase("This action requires root right!\nApprove your rights with the root password:");
+        View::message($message);
+    }
+
     public function emailVerifyHashAction()
     {
         if (!isset($_SESSION['id'])) {
@@ -127,7 +132,7 @@ class VerificationController extends Controller
                 'CancelLabel' => 'Cancel',
             ],
             'scripts' => [
-                '/public/scripts/account-register.js?v=' . $_SERVER['REQUEST_TIME'],
+                'account-register.js',
             ],
         ];
         View::$route['vars'] = array_merge(View::$route['vars'], $vars);

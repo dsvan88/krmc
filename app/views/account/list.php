@@ -24,8 +24,8 @@
                     <td title="Telegram"><?= empty($usersData[$x]['contacts']['telegramid']) ? '<i class="fa fa-square-o"></i>' : '<i class="fa fa-check-square-o"></i>' ?></td>
                     <td title="Меню">
                         <a class='fa fa-pencil-square-o' href='/account/profile/<?= $usersData[$x]['id'] ?>' title='Редагувати'></a>
-                        <span class='fa fa-users' data-action-click='/account/doubles/<?= $usersData[$x]['id'] ?>/form' title='Об’єднати дублікати'></a>
-                        <a href="/users/delete/<?= $usersData[$x]['id'] ?>" onclick="return confirm('Are you sure?')" title='Видалити' class="fa fa-trash-o"></a>
+                        <span class='fa fa-users' data-action-click='/account/doubles/<?= $usersData[$x]['id'] ?>/form' title='Об’єднати дублікати'></span>
+                        <span class='fa fa-trash-o' data-action-click='account/delete' data-user-id="<?= $usersData[$x]['id'] ?>" data-verification="verification/root" onclick="return confirm('Are you sure?')" title='Видалити'></span>
                     </td>
                 </tr>
             <? endfor; ?>

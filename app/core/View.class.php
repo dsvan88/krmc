@@ -66,7 +66,6 @@ class View
         extract(self::$route['vars']);
 
         $response = [
-            'error' => 0,
             'modal' => true,
             'html' => '',
             'title' => $title,
@@ -135,10 +134,7 @@ class View
         if (isset($data['message'])) {
             $data['message'] = Locale::phrase($data['message']);
         }
-        if (empty($data['error'])) {
-            $data['error'] = 0;
-        }
-        if ($data['error'] > 1) {
+        if (!empty($data['error']) && $data['error'] > 1) {
             http_response_code($data['error']);
         }
         self::exit(json_encode($data));
@@ -157,9 +153,7 @@ class View
             $data['message'] = '';
         }
 
-        if (empty($data['error'])) {
-            $data['error'] = 0;
-        } else {
+        if (!empty($data['error'])) {
             $data['type'] = 'error';
         }
         self::exit(json_encode(['notice' => $data]));

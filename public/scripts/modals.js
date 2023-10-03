@@ -30,7 +30,6 @@ class ModalWindow {
 	fill({ html = "", title = "", buttons = [], submit = null, context = null }) {
 		let modalContainer = null;
 		if (html) {
-			this.content = this.content || this.modal.querySelector('.modal__container');
 			this.content.innerHTML = html;
 		}
 		
@@ -71,6 +70,9 @@ class ModalWindow {
 			form.addEventListener('submit', event => this.submit(event))
 		}
 		this.attachEvents();
+
+		this.content.dispatchEvent(new Event('load'));
+
 		return this.content;
 	};
 	clear() {

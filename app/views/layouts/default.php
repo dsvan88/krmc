@@ -27,10 +27,10 @@
     <script defer="" src="/public/scripts/common-funcs.js?v=<?= $_SERVER['REQUEST_TIME'] ?>"></script>
     <? if (!empty($scripts)) : ?>
         <? if (is_string($scripts)) : ?>
-            <script defer="" src="<?= $scripts ?>"></script>
+            <script defer="" src="<?= SCRIPTS_STORAGE. $scripts .'?v=' . $_SERVER['REQUEST_TIME'] ?>"></script>
             <? else :
             for ($x = 0; $x < count($scripts); $x++) : ?>
-                <script defer="" src="<?= $scripts[$x] ?>"></script>
+                <script defer="" src="<?= SCRIPTS_STORAGE. $scripts[$x] .'?v=' . $_SERVER['REQUEST_TIME'] ?>"></script>
     <? endfor;
         endif;
     endif; ?>
