@@ -24,11 +24,11 @@ class WeekRepository
         $weekData = Weeks::weekDataById($weekId);
 
         $dayId = Days::current();
-        
+
         $prevWeek = $nextWeek = false;
 
         $selectedWeekIndex = array_search($weekId, $weeksIds);
-        
+
         if (isset($weeksIds[$selectedWeekIndex - 1]))
             $prevWeek = Weeks::weekDataById($weeksIds[$selectedWeekIndex - 1]);
         if (isset($weeksIds[$selectedWeekIndex + 1]))
@@ -47,15 +47,16 @@ class WeekRepository
         $games = GameTypes::names();
         $days = [];
 
-        for ($i = 0; $i < 7; $i++){
+        for ($i = 0; $i < 7; $i++) {
 
             $days[$i] = $weekData['data'][$i];
             $days[$i]['timestamp'] = $weekData['start'] + TIMESTAMP_DAY * $i;
             $days[$i]['date'] = date('d.m.Y', $days[$i]['timestamp']) . ' (<strong>' . $dayNames[$i] . '</strong>) ' . $days[$i]['time'];
 
-            $days[$i]['game'] = $games[$days[$i]['game']];
+            $days[$i]['gameName'] = $games[$days[$i]['game']];
 
-            
+
+
             $days[$i]['class'] = 'day-future';
             if ($selectedWeekIndex < $weekCurrentIndexInList) {
                 $days[$i]['class'] = 'day-expire';
@@ -69,7 +70,7 @@ class WeekRepository
 
             $days[$i]['participants'] = Users::addNames($days[$i]['participants']);
             $days[$i]['playersCount'] = min(count($days[$i]['participants']), 10);
-            for($x=0; $x < $days[$i]['playersCount']; $x++){
+            for ($x = 0; $x < $days[$i]['playersCount']; $x++) {
                 if (!empty($days[$i]['participants'][$x]['id'])) continue;
                 $days[$i]['participants'][$x]['name'] = '+1';
             }
@@ -93,7 +94,7 @@ class WeekRepository
             'games',
             'days',
             'isManager',
-            'paginator',
+            'paginator'
         );
     }
 }

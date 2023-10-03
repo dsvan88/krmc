@@ -53,10 +53,9 @@ class Days extends Model
         $newData['participants'] = [];
         $count = count($data['participant']);
         for ($i = 0; $i < $count; $i++) {
-            if ($data['participant'][$i] === '+1') { 
+            if ($data['participant'][$i] === '+1') {
                 $id = null;
-            }
-            else {
+            } else {
                 $name = Users::formatName($data['participant'][$i]);
 
                 if (empty($name)) continue;
@@ -115,16 +114,15 @@ class Days extends Model
         $weekData['data'][$dayId]['weekStart'] = $weekData['start'];
 
         if (empty($weekData['data'][$dayId]['participants'])) return $weekData['data'][$dayId];
-        
+
         $weekData['data'][$dayId]['participants'] = Users::addNames($weekData['data'][$dayId]['participants']);
         $count = count($weekData['data'][$dayId]['participants']);
-        for ($x=0; $x < $count; $x++) {
+        for ($x = 0; $x < $count; $x++) {
             if (!empty($weekData['data'][$dayId]['participants'][$x]['id'])) continue;
             $weekData['data'][$dayId]['participants'][$x]['name'] = '+1';
         }
 
         return $weekData['data'][$dayId];
-
     }
     public static function getFullDescription($weekData, $day)
     {
@@ -195,7 +193,7 @@ class Days extends Model
             if (!empty($participants[$x]['name'])) {
                 $userName = $participants[$x]['name'];
             }
-            
+
             if ($participants[$x]['arrive'] !== '' && $participants[$x]['arrive'] !== $weekData['data'][$day]['time']) {
                 $modsData .= $participants[$x]['arrive'];
                 if ($participants[$x]['prim'] != '') {
@@ -296,5 +294,15 @@ class Days extends Model
         $weekData['data'][$dayNum]['participants'] = [];
 
         return self::setDayData($weekId, $dayNum, $weekData['data'][$dayNum]);
+    }
+
+    public static function checkNextMorning(int $weekId)
+    {
+        if ($_SESSION[''])
+            return Weeks::isExists(['id' => $weekId + 1]);
+    }
+    public static function checkPrevSunday(int $weekId)
+    {
+        return Weeks::isExists(['id' => $weekId - 1]);
     }
 }

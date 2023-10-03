@@ -28,8 +28,9 @@ class AccountController extends Controller
         Users::logout();
         View::redirect('/');
     }
-    public function login($data){
-        if (!Validator::csrfCheck() || Users::trottling()){
+    public function login($data)
+    {
+        if (!Validator::csrfCheck() || Users::trottling()) {
             View::notice(['error' => 403, 'message' => 'Try again later:)']);
         }
         if (!Users::login($data)) {
@@ -71,7 +72,7 @@ class AccountController extends Controller
         ];
 
         View::$route['vars'] = array_merge(View::$route['vars'], $vars);
-    
+
         View::render();
     }
     public function profileEditAction()
@@ -80,7 +81,7 @@ class AccountController extends Controller
         if (empty($_POST)) {
             View::notice(['error' => 1, 'message' => 'Fail!']);
         }
-        if ($_SESSION['id'] != $userId  && $_SESSION['privilege']['status'] !== 'admin') {
+        if ($_SESSION['id'] != $userId  && !Users::checkAccess('admin')) {
             View::notice(['error' => 1, 'message' => 'You don’t have enough rights to change information about other users!']);
         }
 
@@ -124,7 +125,7 @@ class AccountController extends Controller
     public function showAction()
     {
         extract(self::$route['vars']);
-        if (!in_array($_SESSION['privilege']['status'], ['manager', 'admin'])) {
+        if (!Users::checkAccess('manager')) {
             $userId = (int) $_SESSION['id'];
             $isAdmin = false;
         } else {
@@ -161,7 +162,7 @@ class AccountController extends Controller
             'isAdmin' => $isAdmin,
         ];
         View::$route['vars'] = array_merge(View::$route['vars'], $vars);
-    
+
         View::render();
     }
     public function profileSectionAction()
@@ -169,7 +170,7 @@ class AccountController extends Controller
         $userId = (int) trim($_POST['uid']);
         $section = trim($_POST['section']);
 
-        if ($_SESSION['id'] != $userId && !in_array($_SESSION['privilege']['status'], ['manager', 'admin'])) {
+        if ($_SESSION['id'] != $userId && !Users::checkAccess('manager')) {
             View::message(['error' => 1, 'text' => 'You don’t have enough rights to change information about other users!']);
         }
         if ($section === 'contacts') {
@@ -180,7 +181,7 @@ class AccountController extends Controller
         } else {
             $data = AccountRepository::getFields($userId);
         }
-        
+
         $texts = [
             'FioLabel' => 'Name, secondary name, middle name',
             'BirthdayLabel' => 'Birthday',
@@ -208,7 +209,7 @@ class AccountController extends Controller
         extract(self::$route['vars']);
 
         $isAdmin = false;
-        if (!in_array($_SESSION['privilege']['status'], ['manager', 'admin'])) {
+        if (!Users::checkAccess('manager')) {
             $userId = (int) $_SESSION['id'];
         } else {
             $isAdmin = true;
@@ -284,13 +285,13 @@ class AccountController extends Controller
         if (empty($_POST)) {
             View::message(['error' => 1, 'message' => 'Fail!']);
         }
-        if ($_SESSION['privilege']['status'] !== 'admin') {
+        if (Users::checkAccess('admin')) {
             View::message(['error' => 1, 'message' => 'You don’t have enough rights to change information about other users!']);
         }
         extract(self::$route['vars']);
-        
+
         AccountRepository::unlinkTelegram($chatId);
-       
+
         $name = trim($_POST['name']);
         if (empty($name) || $name === '-') {
             View::message('Success!');
@@ -301,7 +302,7 @@ class AccountController extends Controller
     }
     public function setNicknameFormAction()
     {
-        if (!in_array($_SESSION['privilege']['status'], ['manager', 'admin'])) {
+        if (!Users::checkAccess('manager')) {
             View::errorCode(403, ['message' => 'Something went wrong! How did you get here?']);
         }
 
@@ -381,22 +382,22 @@ class AccountController extends Controller
     public function dummyRenameFormAction()
     {
         if (!in_array($_SESSION['privilege']['status'], ['manager', 'admin', 'root'])) {
-            View::message(['error'=> 403, 'message' => 'Something went wrong! How did you get here?']);
+            View::message(['error' => 403, 'message' => 'Something went wrong! How did you get here?']);
         }
-        
-        if (!empty($_POST)){
+
+        if (!empty($_POST)) {
 
             $name = Users::formatName(trim($_POST['name']));
 
             if (empty($name)) View::message('Fail!');
 
-            if (AccountRepository::renameDummy($name)){
-                View::message(['name'=> $name, 'message'=>'Success!']);
+            if (AccountRepository::renameDummy($name)) {
+                View::message(['name' => $name, 'message' => 'Success!']);
             }
 
             View::message('Fail!');
         }
-        
+
         $vars = [
             'title' => 'Rename Temporary Player',
             'texts' => [
@@ -460,7 +461,8 @@ class AccountController extends Controller
         $vars = ['modal' => true, 'jsFile' => '/public/scripts/avatar-get-recrop.js?v=' . $_SERVER['REQUEST_TIME']];
         View::message($vars);
     }
-    public function passwordChange($userData, $post){
+    public function passwordChange($userData, $post)
+    {
         if ($post['new_password'] != $post['new_password_confirmation']) {
             $message = [
                 'error' => 1,
@@ -531,7 +533,7 @@ class AccountController extends Controller
             ],
         ];
         View::$route['vars'] = array_merge(View::$route['vars'], $vars);
-    
+
         View::render();
     }
     public function forgetFormAction()
@@ -573,7 +575,8 @@ class AccountController extends Controller
         View::$route['vars'] = array_merge(View::$route['vars'], $vars);
         View::modal();
     }
-    public function register($data){
+    public function register($data)
+    {
         $result = Users::register($data);
         if ($result !== true) {
             View::message($result);
@@ -583,7 +586,7 @@ class AccountController extends Controller
     public function registerFormAction()
     {
         if (!empty($_POST)) {
-            if (!Validator::csrfCheck()){
+            if (!Validator::csrfCheck()) {
                 View::notice(['error' => 403, 'message' => 'Try again later:)']);
             }
             $this->register($_POST);
@@ -607,27 +610,28 @@ class AccountController extends Controller
     }
     public function deleteAction()
     {
-        if (!Validator::validate('rootpass', trim($_POST['verification']))){
-            View::notice([ 'error'=> 1, 'message' => 'Something went wrong' ]);
+        if (!Validator::validate('rootpass', trim($_POST['verification']))) {
+            View::notice(['error' => 1, 'message' => 'Something went wrong']);
         }
 
         $userId = (int) trim($_POST['userId']);
         if ($userId < 2 || $_SESSION['id'] == $userId) {
-            View::notice([ 'error'=> 1, 'message' => 'Something went wrong' ]);
+            View::notice(['error' => 1, 'message' => 'Something went wrong']);
         }
         View::notice(['message' => 'Success!', 'location' => '/users/list']);
-        
-        if (Users::remove($userId)){
+
+        if (Users::remove($userId)) {
             View::notice(['message' => 'Success!', 'location' => '/users/list']);
         }
 
-        View::notice([ 'error'=> 1, 'message' => 'Something went wrong' ]);
+        View::notice(['error' => 1, 'message' => 'Something went wrong']);
     }
-    public function doubles($post){
+    public function doubles($post)
+    {
 
         $name = Users::formatName($post['name']);
-        if (empty($name)){
-            View::message(['error'=>404, 'message' => 'Not found!']);
+        if (empty($name)) {
+            View::message(['error' => 404, 'message' => 'Not found!']);
         }
 
         extract(self::$route['vars']);
@@ -636,24 +640,24 @@ class AccountController extends Controller
 
         if ($result)
             View::message(['message' => 'Success!']);
-        
-        View::message(['error'=>404, 'message' => 'Not found!']);
+
+        View::message(['error' => 404, 'message' => 'Not found!']);
     }
     public function doublesFormAction()
     {
         if (!in_array($_SESSION['privilege']['status'], ['admin', 'root'])) {
-            View::message(['error'=>404, 'message' => 'How do you get here?']);
+            View::message(['error' => 404, 'message' => 'How do you get here?']);
         }
-        if (!empty($_POST)){
+        if (!empty($_POST)) {
             $this->doubles($_POST);
         }
         extract(self::$route['vars']);
 
-        View::message(['error'=>404, 'message' => 'Not ready yet!']);
+        View::message(['error' => 404, 'message' => 'Not ready yet!']);
         $userData = Users::find($userId);
-        
-        if (empty($userData)){
-            View::message(['error'=>404, 'message' => 'Not found!']);
+
+        if (empty($userData)) {
+            View::message(['error' => 404, 'message' => 'Not found!']);
         }
 
         $vars = [

@@ -16,31 +16,31 @@
                 <a class="week__title-link" href="/weeks/<?= $nextWeek['id'] ?>"><?= date('d.m', $nextWeek['start']) . ' - ' . date('d.m', $nextWeek['finish'] - 3600 * 5) ?></a>
             </span>
         <? else : ?>
-            <? if ($isManager) :?>
-            <span>
-                <a class="week__title-link" href="/weeks/add">&lt;&nbsp;<i class="fa fa-plus-circle"></i>&nbsp;&gt;</a>
-            </span>
-            <? else :?>
-            <span class="week__title-dummy">&lt;&nbsp;No Data&nbsp;&gt;</span>
+            <? if ($isManager) : ?>
+                <span>
+                    <a class="week__title-link" href="/weeks/add">&lt;&nbsp;<i class="fa fa-plus-circle"></i>&nbsp;&gt;</a>
+                </span>
+            <? else : ?>
+                <span class="week__title-dummy">&lt;&nbsp;No Data&nbsp;&gt;</span>
             <? endif; ?>
         <? endif; ?>
     </h2>
     <div class="week__list">
-        <? foreach($days as $dayNum=>$day) : ?>
+        <? foreach ($days as $dayNum => $day) : ?>
             <div class="week__item <?= $day['class'] ?>" data-action-click="/week/<?= $weekId ?>/day/<?= $dayNum ?>/" data-mode="location">
                 <h3 class="week__item-date"><a href="/week/<?= $weekId ?>/day/<?= $dayNum ?>/"><?= $day['date'] ?></a></h3>
-                <h4 class="week__item-game"><?= $day['game'] ?></h4>
+                <h4 class="week__item-game"><a href="/game/<?= $day['game'] ?>/"><?= $day['gameName'] ?></a></h4>
                 <div class="week__item-praticipants">
                     <div class="day-participants__list">
                         <ol class="day-participants__list-column">
-                        <?
-                        for ($x = 0; $x < $day['playersCount']; $x++) :
-                            if ($x !== 0 && $x % 5 === 0) : ?>
-                                </ol>
-                                <ol class="day-participants__list-column" start="6" >
-                            <? endif ?>
-                            <li class="day-participants__list-item"><?= $day['participants'][$x]['name'] ?></li>
-                        <? endfor ?>
+                            <?
+                            for ($x = 0; $x < $day['playersCount']; $x++) :
+                                if ($x !== 0 && $x % 5 === 0) : ?>
+                        </ol>
+                        <ol class="day-participants__list-column" start="6">
+                        <? endif ?>
+                        <li class="day-participants__list-item"><?= $day['participants'][$x]['name'] ?></li>
+                    <? endfor ?>
                         </ol>
                     </div>
                 </div>

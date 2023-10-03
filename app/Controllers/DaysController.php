@@ -9,6 +9,7 @@ use app\core\View;
 use app\models\Days;
 use app\models\GameTypes;
 use app\models\Settings;
+use app\models\Users;
 use app\models\Weeks;
 
 class DaysController extends Controller
@@ -17,12 +18,12 @@ class DaysController extends Controller
     {
         // Extract $weekId & $dayId from array self::$route['vars']
         extract(self::$route['vars']);
-        if (isset($_SESSION['privilege']['status']) && in_array($_SESSION['privilege']['status'], ['manager', 'admin', 'root'])) {
+        if (Users::checkAccess('manager')) {
             if (!empty($_POST)) {
                 $weekId = Days::edit($weekId, $dayId, $_POST);
-                if (!empty($_POST['send'])){
+                if (!empty($_POST['send'])) {
                     $weekData = Weeks::weekDataById($weekId);
-                    $result = TelegramBotController::send(Settings::getMainTelegramId(), Days::getFullDescription($weekData,$dayId));
+                    $result = TelegramBotController::send(Settings::getMainTelegramId(), Days::getFullDescription($weekData, $dayId));
                 }
                 View::message(['message' => 'Changes saved successfully!', 'url' => "/week/$weekId/day/$dayId/"]);
             }
@@ -77,14 +78,29 @@ class DaysController extends Controller
             $day['date'] = '{{ Day_Date_Not_Set }}';
         }
 
-        $yesterday = [
-            'link' => $dayId > 0 ? "/week/$weekId/day/" . ($dayId - 1).'/' : '/week/'. ($weekId-1) .'/day/6/',
-            'label' => date('d.m', $dayTimestamp - TIMESTAMP_DAY),
-        ];
-        $tomorrow = [
-            'link' => $dayId < 6 ? "/week/$weekId/day/" . ($dayId + 1).'/' : '/week/'. ($weekId+1) .'/day/0/',
-            'label' => date('d.m', $dayTimestamp + TIMESTAMP_DAY),
-        ];
+        if ($dayId == 0 && !Days::checkPrevSunday($weekId)) {
+            $yesterday = [
+                'link' => '',
+                'label' => '&lt; No Data &gt;',
+            ];
+        } else {
+            $yesterday = [
+                'link' => $dayId > 0 ? "/week/$weekId/day/" . ($dayId - 1) . '/' : '/week/' . ($weekId - 1) . '/day/6/',
+                'label' => date('d.m', $dayTimestamp - TIMESTAMP_DAY),
+            ];
+        }
+
+        if ($dayId == 6 && !Days::checkNextMorning($weekId)) {
+            $tomorrow = [
+                'link' => '',
+                'label' => '&lt; No Data &gt;',
+            ];
+        } else {
+            $tomorrow = [
+                'link' => $dayId < 6 ? "/week/$weekId/day/" . ($dayId + 1) . '/' : '/week/' . ($weekId + 1) . '/day/0/',
+                'label' => date('d.m', $dayTimestamp + TIMESTAMP_DAY),
+            ];
+        }
 
         if (!isset($day['day_prim'])) {
             $day['day_prim'] = '';
@@ -99,13 +115,13 @@ class DaysController extends Controller
 
         $selfBooking = [];
 
-        if (!empty($_SESSION['id'])){
+        if (!empty($_SESSION['id'])) {
             $url = self::$route['url'];
             $selfBooking = [
                 'link' => "/$url/booking",
                 'label' => 'Booking',
             ];
-            for ($i=0; $i < $playersCount; $i++) { 
+            for ($i = 0; $i < $playersCount; $i++) {
                 if (empty($day['participants'][$i])) break;
                 if (empty($day['participants'][$i]['id'])) continue;
                 if ($day['participants'][$i]['id'] !== $_SESSION['id']) continue;
@@ -116,26 +132,26 @@ class DaysController extends Controller
             }
         }
 
-        View::$route['vars'] = array_merge(View::$route['vars'], $vars, compact('day', 'playersCount', 'gameName', 'selfBooking', 'yesterday', 'tomorrow' ));
-    
+        View::$route['vars'] = array_merge(View::$route['vars'], $vars, compact('day', 'playersCount', 'gameName', 'selfBooking', 'yesterday', 'tomorrow'));
+
         View::render();
     }
     public function selfBookingAction()
     {
         extract(self::$route['vars']);
-    
-        if ($bookingMode === 'booking'){
+
+        if ($bookingMode === 'booking') {
             if (Days::addParticipant($weekId, $dayId, $_SESSION['id']))
                 Noticer::set('Success!');
-            else 
-                Noticer::set(['type'=>'error', 'message'=>'Fail!']);
+            else
+                Noticer::set(['type' => 'error', 'message' => 'Fail!']);
         } else {
             if (Days::removeParticipant($weekId, $dayId, $_SESSION['id']))
                 Noticer::set('Success!');
-            else 
-                Noticer::set(['type'=>'error', 'message'=>'Fail!']);
+            else
+                Noticer::set(['type' => 'error', 'message' => 'Fail!']);
         }
-        View::redirect("/week/$weekId/day/$dayId/");   
+        View::redirect("/week/$weekId/day/$dayId/");
     }
     public function addAction()
     {
@@ -147,7 +163,7 @@ class DaysController extends Controller
             ]
         ];
         View::$route['vars'] = array_merge(View::$route['vars'], $vars);
-    
+
         View::render();
     }
 }

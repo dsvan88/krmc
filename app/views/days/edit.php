@@ -2,9 +2,17 @@
     <? /*<form class="booking" action="/days<?= $dayId ?>/w<?= $weekId ?>" data-wid="<?= $weekId ?>" data-did="<?= $dayId ?>">*/ ?>
     <form class="booking" action="/week/<?= $day['weekId'] ?>/day/<?= $day['dayId'] ?>/" method="POST">
         <header class="booking__header">
-            <span class="booking__header-link"><a href="<?= $yesterday['link'] ?>"><i class="fa fa-angle-double-left"></i>&nbsp;<?= $yesterday['label'] ?></a></span>
+            <? if (empty($yesterday['link'])) : ?>
+                <span class="booking__header-link"><?= $yesterday['label'] ?></span>
+            <? else : ?>
+                <span class="booking__header-link"><a href="<?= $yesterday['link'] ?>"><i class="fa fa-angle-double-left"></i>&nbsp;<?= $yesterday['label'] ?></a></span>
+            <? endif ?>
             <h3 class="booking__title"><?= $texts['daysBlockTitle'] ?></h3>
-            <span class="booking__header-link"><a href="<?= $tomorrow['link'] ?>"><?= $tomorrow['label'] ?>&nbsp;<i class="fa fa-angle-double-right"></i></a></span>
+            <? if (empty($tomorrow['link'])) : ?>
+                <span class="booking__header-link"><?= $tomorrow['label'] ?></span>
+            <? else : ?>
+                <span class="booking__header-link"><a href="<?= $tomorrow['link'] ?>"><?= $tomorrow['label'] ?>&nbsp;<i class="fa fa-angle-double-right"></i></a></span>
+            <? endif ?>
         </header>
         <div class="booking__settings">
             <div class="booking__settings-row">
@@ -37,7 +45,7 @@
         <div class="booking__participants">
             <h2 class="booking__subtitle"><?= $texts['daysBlockParticipantsTitle'] ?>:</h2>
             <? for ($x = 0; $x < $playersCount; $x++) : ?>
-                <? self::component('participants-field', [ 'participantId'=> $x, 'participant' => empty($day['participants'][$x]) ? [] : $day['participants'][$x] ]) ?>
+                <? self::component('participants-field', ['participantId' => $x, 'participant' => empty($day['participants'][$x]) ? [] : $day['participants'][$x]]) ?>
             <? endfor ?>
 
         </div>

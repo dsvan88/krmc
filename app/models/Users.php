@@ -7,6 +7,8 @@ use app\core\Model;
 use app\core\Tech;
 use app\Repositories\ContactRepository;
 
+use function PHPSTORM_META\map;
+
 class Users extends Model
 {
     public static $table = SQL_TBL_USERS;
@@ -24,7 +26,7 @@ class Users extends Model
         $authData = self::query("SELECT * FROM $table WHERE login = ? LIMIT 1", [$login], 'Assoc');
         if (empty($authData)) return false;
         $authData =  $authData[0];
-        
+
         if (!password_verify($password, $authData['password']))
             return false;
 
@@ -44,7 +46,7 @@ class Users extends Model
     public static function logout()
     {
         if (!isset($_SESSION['id'])) return true;
-        
+
         $userId = $_SESSION['id'];
         $_SESSION = [];
         if (ini_get("session.use_cookies")) {
@@ -122,9 +124,10 @@ class Users extends Model
         self::edit($userData, ['id' => $userId]);
         return true;
     }
-    public static function trottling():bool {
+    public static function trottling(): bool
+    {
         if (empty($_SESSION['login_fails']) || ($count = count($_SESSION['login_fails'])) < PASS_FAIL_MIN) return false;
-        if ($_SESSION['login_fails'][$count-1] + PASS_FAIL_TROTTLING * ($count-3) < $_SERVER['REQUEST_TIME']) return false;
+        if ($_SESSION['login_fails'][$count - 1] + PASS_FAIL_TROTTLING * ($count - 3) < $_SERVER['REQUEST_TIME']) return false;
         return true;
     }
     public static function register($data)
@@ -158,7 +161,7 @@ class Users extends Model
                 'wrong' => 'name'
             ];
         }
-        if (empty($_SESSION['tg-code'])){
+        if (empty($_SESSION['tg-code'])) {
             $approved = ContactRepository::getApproved($uid);
             if (!empty($approved['telegramid']))
                 return [
@@ -167,7 +170,7 @@ class Users extends Model
                 ];
         }
 
-        if (!empty($_SESSION['tg-code']) && (empty($data['code']) || $data['code'] != $_SESSION['tg-code'])){
+        if (!empty($_SESSION['tg-code']) && (empty($data['code']) || $data['code'] != $_SESSION['tg-code'])) {
             return [
                 'error' => 1,
                 'message' => 'Не вірний код верифікації!',
@@ -299,7 +302,7 @@ class Users extends Model
      * @param int $count - количество
      * 
      * @return array $users
-     * */ 
+     * */
     public static function random($count = 1)
     {
         $table = self::$table;
@@ -317,8 +320,8 @@ class Users extends Model
      * @param array $players - массив игроков
      * 
      * @return array $users
-     * */ 
-    public static function getByList($players, $column='name')
+     * */
+    public static function getByList($players, $column = 'name')
     {
         $usersData = self::findGroup($column, $players, count($players));
         if (empty($usersData)) return false;
@@ -351,16 +354,17 @@ class Users extends Model
         }
         return false;
     }
-    public static function assingIds($players, $roles){
+    public static function assingIds($players, $roles)
+    {
         $users = self::getByList($players);
         $playersCount = count($players);
-        
-        if (count($users) !== $playersCount){
+
+        if (count($users) !== $playersCount) {
             die('something wrong wing players counts!');
         }
         $result = array_fill(0, $playersCount, []);
 
-        foreach($users as $user){
+        foreach ($users as $user) {
             $index = array_search($user['name'], $players, true);
             $result[$index] = [
                 'id' => $user['id'],
@@ -376,8 +380,8 @@ class Users extends Model
     }
     public static function edit($data, $where)
     {
-        if (!empty($data['contacts'])){
-            if (!empty($where['id'])){
+        if (!empty($data['contacts'])) {
+            if (!empty($where['id'])) {
                 Contacts::reLink($data['contacts'], $where['id']);
             }
             unset($data['contacts']);
@@ -393,7 +397,7 @@ class Users extends Model
     {
         $table = self::$table;
         $nickname = self::formatName($name);
-       
+
         return self::insert(['name' => $nickname], $table);
     }
     public static function remove($uid)
@@ -405,21 +409,39 @@ class Users extends Model
     {
         $arrays = ['privilege', 'personal', 'contacts', 'credo'];
         $count = count($arrays);
-        for ($i=0; $i < $count; $i++) { 
+        for ($i = 0; $i < $count; $i++) {
             if (empty($userData[$arrays[$i]])) continue;
             $userData[$arrays[$i]] = json_decode($userData[$arrays[$i]], true);
         }
         return $userData;
     }
-    public static function contacts(array $source):array{
-        if (!empty($source['id'])){
+    public static function checkAccess(string $level): bool
+    {
+        if (empty($_SESSION['privilege']['status'])) return false;
+
+        $userLevel = 0;
+        $requireLevel = 0;
+        $count  = count(self::$usersAccessLevels);
+
+        for ($x = 0; $x < $count; $x++) {
+            if (self::$usersAccessLevels[$x] === $_SESSION['privilege']['status'])
+                $userLevel = $x;
+            if (self::$usersAccessLevels[$x] === $level)
+                $requireLevel = $x;
+        }
+
+        return $userLevel >= $requireLevel;
+    }
+    public static function contacts(array $source): array
+    {
+        if (!empty($source['id'])) {
             $contacts = Contacts::findBy('user_id', $source['id']);
-            if (!$contacts){
+            if (!$contacts) {
                 $source['contacts'] = [];
                 return $source;
             }
             $count = count($contacts);
-            for($x=0; $x < $count; $x++){
+            for ($x = 0; $x < $count; $x++) {
                 $source['contacts'][$contacts[$x]['type']] = $contacts[$x]['contact'];
             }
             return $source;
@@ -427,7 +449,7 @@ class Users extends Model
 
         $countUsers = count($source);
         $ids = [];
-        for($x=0; $x < $countUsers; $x++){
+        for ($x = 0; $x < $countUsers; $x++) {
             if (empty($source[$x]['id'])) continue;
             $ids[] = $source[$x]['id'];
             $source[$x]['contacts'] = [];
@@ -435,19 +457,19 @@ class Users extends Model
 
         $contacts = Contacts::findGroup('user_id', $ids);
         $countContacts = count($contacts);
-        for($x=0; $x < $countContacts; $x++){
-            for($y=0; $y < $countUsers; $y++){
+        for ($x = 0; $x < $countContacts; $x++) {
+            for ($y = 0; $y < $countUsers; $y++) {
                 if ($contacts[$x]['user_id'] != $source[$y]['id']) continue;
                 $source[$y]['contacts'][$contacts[$x]['type']] = $contacts[$x]['contact'];
             }
         }
         return $source;
     }
-    public static function addNames(array $source):array
+    public static function addNames(array $source): array
     {
         if (empty($source))
             return $source;
-        if (!empty($source['id'])){
+        if (!empty($source['id'])) {
             $userData = self::find($source['id']);
             $source['name'] = empty($userData) ? '&lt; Deleted &gt;' : $userData['name'];
             return $source;
@@ -455,7 +477,7 @@ class Users extends Model
 
         $countSource = count($source);
         $ids = [];
-        for($x=0; $x < $countSource; $x++){
+        for ($x = 0; $x < $countSource; $x++) {
             if (empty($source[$x]['id'])) continue;
             $ids[] = $source[$x]['id'];
         }
@@ -465,14 +487,14 @@ class Users extends Model
 
         $data = self::findGroup('id', $ids);
         $countData = count($data);
-        for($x=0; $x < $countData; $x++){
-            for($y=0; $y < $countSource; $y++){
+        for ($x = 0; $x < $countData; $x++) {
+            for ($y = 0; $y < $countSource; $y++) {
                 if ($source[$y]['id'] != $data[$x]['id']) continue;
                 $source[$y]['name'] = $data[$x]['name'];
             }
         }
 
-        for($x=0; $x < $countSource; $x++){
+        for ($x = 0; $x < $countSource; $x++) {
             if (empty($source[$x]['id']) || !empty($source[$x]['name'])) continue;
             $element['name'] = '&lt; Deleted &gt;';
         }
@@ -483,9 +505,10 @@ class Users extends Model
      * 
      * @return mixed        - new, formated nickname
      */
-    public static function formatName(string $name){
+    public static function formatName(string $name)
+    {
 
-        $name = preg_replace(['/\s+/','/[^а-яА-ЯрРсСтТуУфФчЧхХШшЩщЪъЫыЬьЭэЮюЄєІіЇїҐґ.0-9 ]+/'], [' ', ''], trim($name));
+        $name = preg_replace(['/\s+/', '/[^а-яА-ЯрРсСтТуУфФчЧхХШшЩщЪъЫыЬьЭэЮюЄєІіЇїҐґ.0-9 ]+/'], [' ', ''], trim($name));
 
         if (empty($name)) return false;
 
@@ -499,7 +522,8 @@ class Users extends Model
 
         return mb_substr($nickname, 0, -1, 'UTF-8');
     }
-    public static function init(){
+    public static function init()
+    {
         $table = self::$table;
         $privilegeDefault = [
             'status' => '',
@@ -550,6 +574,5 @@ class Users extends Model
             'password' => password_hash(sha1(ROOT_PASS_DEFAULT), PASSWORD_DEFAULT), //admin1234
             'privilege' => json_encode($privilege, JSON_UNESCAPED_UNICODE)
         ], $table);
-
     }
 }

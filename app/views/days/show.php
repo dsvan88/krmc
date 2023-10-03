@@ -1,13 +1,21 @@
 <section class="section near-evening">
     <form class="booking">
         <header class="booking__header">
-            <span class="booking__header-link"><a href="<?= $yesterday['link'] ?>"><i class="fa fa-angle-double-left"></i>&nbsp;<?= $yesterday['label'] ?></a></span>
+            <? if (empty($yesterday['link'])) : ?>
+                <span class="booking__header-link"><?= $yesterday['label'] ?></span>
+            <? else : ?>
+                <span class="booking__header-link"><a href="<?= $yesterday['link'] ?>"><i class="fa fa-angle-double-left"></i>&nbsp;<?= $yesterday['label'] ?></a></span>
+            <? endif ?>
             <h3 class="booking__title"><?= $texts['daysBlockTitle'] ?></h3>
-            <span class="booking__header-link"><a href="<?= $tomorrow['link'] ?>"><?= $tomorrow['label'] ?>&nbsp;<i class="fa fa-angle-double-right"></i></a></span>
+            <? if (empty($tomorrow['link'])) : ?>
+                <span class="booking__header-link"><?= $tomorrow['label'] ?></span>
+            <? else : ?>
+                <span class="booking__header-link"><a href="<?= $tomorrow['link'] ?>"><?= $tomorrow['label'] ?>&nbsp;<i class="fa fa-angle-double-right"></i></a></span>
+            <? endif ?>
         </header>
         <div class="booking__day-settings">
             <div class="booking__day-settings-row">
-                <h2 class="booking__day-event"><?= $gameName ?></h2>
+                <h2 class="booking__day-event"><a href="/game/<?= $day['game'] ?>"><?= $gameName ?></a></h2>
             </div>
             <div class="booking__day-settings-row">
                 <h4 class="booking__day-prim"><?= $day['day_prim'] ?></h4>
@@ -35,9 +43,9 @@
                     </div>
                 </div>
             <? endfor ?>
-            <? if (!empty($selfBooking)) :?>
-                <a href="<?=$selfBooking['link']?>" class="button"><?=$selfBooking['label']?></a>
-            <?endif;?>
+            <? if (!empty($selfBooking)) : ?>
+                <a href="<?= $selfBooking['link'] ?>" class="button"><?= $selfBooking['label'] ?></a>
+            <? endif; ?>
         </div>
     </form>
 </section>
