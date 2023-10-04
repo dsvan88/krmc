@@ -618,7 +618,6 @@ class AccountController extends Controller
         if ($userId < 2 || $_SESSION['id'] == $userId) {
             View::notice(['error' => 1, 'message' => 'Something went wrong']);
         }
-        View::notice(['message' => 'Success!', 'location' => '/users/list']);
 
         if (Users::remove($userId)) {
             View::notice(['message' => 'Success!', 'location' => '/users/list']);

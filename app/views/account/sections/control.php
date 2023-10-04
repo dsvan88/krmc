@@ -22,6 +22,6 @@
         Видалення:
     </h5>
     <div class="profile__card-value">
-        <span class="text-accent">Поки не доступне</span>
+        <span class="text-accent">Доступне</span>
     </div>
 </div>

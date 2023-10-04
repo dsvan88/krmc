@@ -7,9 +7,14 @@ class ModalWindow {
 	currentOverlay = null;
 	title = null;
 	formSubmitHandler = null;
-	context = null;
+	pauseLayout = null;
+	// context = null;
 	content = null;
 	dragged = false;
+
+	get paused() {
+		return this.pauseLayout ? true : false;
+	}
 
 	constructor({ divId = "modalWindow", html = "", title = "", buttons = [], submit = null, context = null } = {}) {
 		this.commonOverlay = document.body.querySelector("#overlay");
@@ -71,7 +76,7 @@ class ModalWindow {
 		}
 		this.attachEvents();
 
-		this.content.dispatchEvent(new Event('load'));
+		// this.content.dispatchEvent(new Event('load'));
 
 		return this.content;
 	};
@@ -133,6 +138,17 @@ class ModalWindow {
 		}, 100);
 
 	};
+	pause() {
+		this.pauseLayout = document.createElement('div');
+		this.pauseLayout.classList.add('modal__pause');
+		const pauseIcon = document.createElement('i');
+		pauseIcon.classList.add('fa', 'fa-cog', 'fa-spin', 'fa-3x', 'fa-fw');
+		this.pauseLayout.append(pauseIcon);
+		this.content.append(this.pauseLayout);
+	}
+	unpause() {
+		this.pauseLayout.remove();
+	}
 	close(event) {
 		if (event && event.target){
 			if (!event.target.classList.contains("modal__close"))
@@ -152,14 +168,15 @@ class ModalWindow {
 		setTimeout(() => this.currentOverlay.remove(), 300);
 	}
 	submit(event) {
+		event.preventDefault();
+		this.pause();
 		let formData = new FormData(event.target);
 		if (this.context) {
-			this.formSubmitHandler.call(this.context, formData, event);
+			this.formSubmitHandler.call(this.context, event, formData, this);
 		}
 		else{
-			this.formSubmitHandler(formData, event);
+			this.formSubmitHandler(event, formData, this);
 		}
-		this.close();
 	}
 	attachEvents() {
         const self = this;

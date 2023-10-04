@@ -12,8 +12,8 @@ let actionHandler = {
 		try {
 			actionHandler[type](event);
 		} catch (error) {
-			alert(`Не существует метода для этого action-type: ${type}... или возникла ошибка. Сообщите администратору!\n${error.name}: ${error.message}`);
 			console.log(error);
+			alert(`Не существует метода для этого action-type: ${type}... или возникла ошибка. Сообщите администратору!\n${error.name}: ${error.message}`);
 		}
 	},
 	clickCommonHandler: function (event) {
@@ -76,13 +76,15 @@ let actionHandler = {
 				if (key !== method)
 					formData.append(key, value);
 			}
+
 			if (target.dataset.verification){
 				let input = {type: 'text'};
-				if (target.dataset.verification.test(/(root|pass)/))
+				if (/(root|pass)/.test(target.dataset.verification))
 					input = {type: 'password'};
 				const verification = await self.verification(null, target.dataset.verification, input);
 				formData.append('verification', verification);
 			}
+
 			request({
 				url: action,
 				data: formData,
@@ -94,12 +96,20 @@ let actionHandler = {
 			});
 		}
 	},
-	commonFormEventEnd: function ({ modal, data, formSubmitAction, ...args }) {
+	commonFormEventEnd: function ({ modal, data, submit = null, ...args } = {}) {
 		let modalWindow;
+		const self = this;
 
 		if (data['error']) {
 			return modalWindow = modal.fill({ html: data['html'], title: 'Error!', buttons: [{ 'text': 'Okay', 'className': 'modal__close positive' }] });
 		}
+
+		if (!submit || !self[submit])
+			submit = 'commonSubmitFormHandler';
+
+		data.context = self;
+		data.submit = self[submit];
+
 		modalWindow = modal.fill(data);
 
 		if (data["jsFile"]) {
@@ -109,57 +119,37 @@ let actionHandler = {
 		if (data["cssFile"]) {
 			addCssFile(data["cssFile"]);
 		};
-		if (data['html']) {
-			const form = modalWindow.querySelector('form');
-			if (form) {
-				form.addEventListener('submit',
-					(event) =>
-						actionHandler[formSubmitAction] ?
-							actionHandler[formSubmitAction](event, modal, args)
-							:
-							this.commonSubmitFormHandler(event, modal, args)
-				);
-			}
-		}
 
 		let fields = modalWindow.querySelectorAll('input[data-action-input]');
 		fields.forEach(field => {
-			field.addEventListener('input', (event) => actionHandler.inputCommonHandler.call(actionHandler, event))
+			field.addEventListener('input', (event) => self.inputCommonHandler.call(self, event))
 		});
 
-		return true;
+		fields = modalWindow.querySelectorAll('input[data-action-change]');
+		fields.forEach(field => {
+			field.addEventListener('change', (event) => self.changeCommonHandler.call(self, event))
+		});
+
+		return modalWindow;
 	},
 	commonFormEventReady: function ({ modal = null, result = {}, type = null }) {
-		/* $(".modal-body input.input_name").autocomplete({
-			source: "switcher.php?need=autocomplete_names",
-			minLength: 2,
-		});
-		$(".modal-body .datepick").datetimepicker({ timepicker: false, format: "d.m.Y", dayOfWeekStart: 1 });
-		$(".modal-body .timepicker").datetimepicker({ datepicker: false, format: "H:i" }); */
 		let firstInput = modal.querySelector("input");
 		if (firstInput !== null) {
 			firstInput.focus();
-		}
-		let form = modal.querySelector("form");
-		if (form !== null) {
-			form.addEventListener("submit", (submitEvent) => {
-				submitEvent.preventDefault();
-				actionHandler[type](modal);
-			});
 		}
 		if (result["javascript"]) {
 			window.eval(result["javascript"]);
 		}
 	},
-	commonSubmitFormHandler: function (event, modal = null, args = null) {
+	commonSubmitFormHandler: async function (event, formData = null, modal = null, args = null) {
 		event.preventDefault();
-		let formData = new FormData(event.target);
+		if (!formData) formData = new FormData(event.target);
 		const self = this;
-		request({
+		await request({
 			url: event.target.action.replace(window.location.origin + '/', ''),
 			data: formData,
-			success: (result) => self.commonResponse.call(self, result),
-			error: (result) => self.commonResponse.call(self, result),
+			success: (result) => self.commonResponse.call(self, result, modal),
+			error: (result) => self.commonResponse.call(self, result, modal),
 		});
 		return false;
 	},
@@ -173,13 +163,14 @@ let actionHandler = {
 		if (data["modal"]) {
 			let actionModified = camelize(action.replace(/\//g, '-'));
 
+			console.log(actionModified + "Ready");
 			if (self[actionModified + "Ready"])
 				modal.content.onload = self[actionModified + "Ready"]({ modal, data: data });
 
-			self.commonFormEventEnd({ modal, data, formSubmitAction: actionModified + 'Submit' })
+			self.commonFormEventEnd({ modal, data, submit: actionModified + 'Submit' })
 		}
 	},
-	commonResponse: function (response) {
+	commonResponse: function (response, modal=null) {
 		const self = this;
 		if (response["error"]) {
 			new Alert({ title: 'Error!', text: response["message"] });
@@ -194,11 +185,13 @@ let actionHandler = {
 		if (response["location"]) {
 			setTimeout(() => window.location = response["location"], response["time"] ? response["time"] : 100);
 		}
+		if (modal && modal.paused)
+			setTimeout(()=>modal.unpause(), 500);
 	},
 	autocompleteInput: function (target) {
 		const action = target.dataset.actionInput;
 		const type = action.replace(/autocomplete-/, '');
-		console.log(target.value);
+
 		let formData = new FormData();
 		formData.append('command', type);
 		formData.append('term', target.value);
