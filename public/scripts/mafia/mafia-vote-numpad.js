@@ -2,10 +2,11 @@ class MafiaVoteNumpad extends Prompt {
     checkboxs = [];
     values = [];
     allButton = null;
-    constructor({ title = "Mafia Vote Numpad", text = "Enter player’s numbers:", value='', action = null, cancel = null, block=[], pause = true } = {}) {
+    pause = false;
+    constructor({ title = "Mafia Vote Numpad", text = "Enter player’s numbers:", value = '', action = null, cancel = null, block = [], pause = true } = {}) {
         value = '';
         super({ title, text, value, action, cancel })
-        for(const index in block)
+        for (const index in block)
             block[index] = block[index] + '';
         this.pause = pause;
         this.modifyForNumpad(block).modifyEventsNumpad();
@@ -30,7 +31,7 @@ class MafiaVoteNumpad extends Prompt {
             this.checkboxs[x].id = `checkbox[${x}]`;
             this.checkboxs[x].value = x;
             this.checkboxs[x].classList.add('popup__checkbox', 'hidden');
-            if (block.includes(`${x}`)){
+            if (block.includes(`${x}`)) {
                 this.checkboxs[x].disabled = true;
             }
 
