@@ -163,7 +163,6 @@ let actionHandler = {
 		if (data["modal"]) {
 			let actionModified = camelize(action.replace(/\//g, '-'));
 
-			console.log(actionModified + "Ready");
 			if (self[actionModified + "Ready"])
 				modal.content.onload = self[actionModified + "Ready"]({ modal, data: data });
 

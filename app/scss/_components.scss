@@ -87,6 +87,9 @@ a.button {
 .checkbox-styled {
 	text-align: center;
 	color: $color-text-dark-blur;
+	outline: 1px solid;
+	padding: .5em 1em;
+	border-radius: 2px;
 	&__label {
 		text-transform: uppercase;
 		cursor: pointer;

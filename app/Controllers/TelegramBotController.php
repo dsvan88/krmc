@@ -66,6 +66,18 @@ class TelegramBotController extends Controller
             View::exit();
         }
         self::$requester = Users::getDataById($userId);
+
+        if (self::$command === 'booking' && Users::isBanned('booking', self::$requester['ban'])){
+            self::$bot->deleteMessage(self::$chatId, $message['message']['message_id']);
+            self::$bot->sendMessage($userTelegramId, Locale::phrase(['string' => "I’m deeply sorry, but you banned for that action:(...\nYour ban will be lifted at: <b>%s</b>", 'vars'=>[ date('d.m.Y', self::$requester['ban']['expired'] + TIME_MARGE)]]));
+            View::exit();
+        }
+
+        if (Users::isBanned('chat', self::$requester['ban'])){
+            self::$bot->deleteMessage(self::$chatId, $message['message']['message_id']);
+            self::$bot->sendMessage($userTelegramId, Locale::phrase(['string' => "I’m deeply sorry, but you banned for that action:(...\nYour ban will be lifted at: <b>%s</b>", 'vars'=>[ date('d.m.Y', self::$requester['ban']['expired'] + TIME_MARGE)]]));
+            View::exit();
+        }
     }
     public static function webhookAction()
     {

@@ -1,5 +1,5 @@
 <form class="modal__form" method="POST" action="/account/register">
-    <h1 class="modal__form-title"><?= $title ?></h1>
+    <h2 class="modal__form-title"><?= $title ?></h2>
     <div class="modal__row">
         <input class="modal__input" required type="text" name="login" placeholder="<?= $texts['LoginLabel'] ?>" autofocus />
         <input type="hidden" name="<?= CSRF_NAME ?>" value="<?= $_SESSION['csrf'] ?>" />

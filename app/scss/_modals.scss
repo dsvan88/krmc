@@ -108,6 +108,7 @@
         margin-bottom: 0.5em;
         display: flex;
         justify-content: space-around;
+		gap: 1em;
     }
 	&__links {
 		margin-top: 0.5em;
@@ -199,5 +200,8 @@
 		pointer-events: all;
 		background-color: $bg-color-light;
 		opacity: .55;
+	}
+	legend{
+		border-bottom: 1px dotted;
 	}
 }

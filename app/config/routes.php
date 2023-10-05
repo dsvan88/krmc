@@ -291,6 +291,18 @@ return  [
         'action' => 'registerForm',
         'access' => ['category' => 'all']
     ],
+    'api/account/ban/form' =>
+    [
+        'controller' => 'account',
+        'action' => 'banForm',
+        'access' => ['category' => 'admin']
+    ],
+    'api/account/ban/{userId}' =>
+    [
+        'controller' => 'account',
+        'action' => 'ban',
+        'access' => ['category' => 'admin']
+    ],
     'api/account/set/nickname/form' =>
     [
         'controller' => 'account',

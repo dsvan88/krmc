@@ -71,6 +71,11 @@ return [
     'Female' => 'Госпожа',
     'secret' => 'Некто',
 
+    'Ban time' => 'Бан до',
+    'Ban options' => 'Настройки бана',
+    'Booking' => 'Запись',
+    'Authentication' => 'Авторизация',
+    'Chat' => 'Чат',
     '{{ Account_Avatar_Form_Title }}' => 'Аватар пользователя %s',
     '{{ Account_Avatar_Form_Newcrop_Link }}' => 'Заменить',
 

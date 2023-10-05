@@ -93,7 +93,10 @@ class TechController extends Controller
     }
     public static function dbrebuildAction()
     {
-        View::redirect('/');
+        $table = Users::$table;
+        Users::query("ALTER TABLE $table ADD COLUMN ban JSON DEFAULT NULL");
+        
+/*         View::redirect('/');
         $table = Games::$table;
         $games = Games::getAll();
         Games::query("ALTER TABLE $table ALTER COLUMN manager TYPE CHARACTER VARYING(300)");
@@ -101,8 +104,7 @@ class TechController extends Controller
             if (empty($game['manager']) || is_numeric($game['manager'])) continue;
             $game['manager'] = json_decode($game['manager'], true);
             Games::update([ 'manager' => empty($game['manager']['id']) ? 1 : (int) $game['manager']['id'] ], ['id'=>$game['id']]);
-        }
-        Games::query("ALTER TABLE $table ALTER COLUMN manager TYPE INT USING manager::integer");
+        } */
 
         /* 
         $table = Pages::$table;

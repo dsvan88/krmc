@@ -24,13 +24,17 @@ class Users extends Model
 
         $table = self::$table;
         $authData = self::query("SELECT * FROM $table WHERE login = ? LIMIT 1", [$login], 'Assoc');
-        if (empty($authData)) return false;
+        if (empty($authData)) return 'failed';
         $authData =  $authData[0];
 
         if (!password_verify($password, $authData['password']))
-            return false;
+            return 'failed';
 
         $authData = self::decodeJson($authData);
+
+        if (self::isBanned('auth', $authData['ban']))
+            return 'banned';
+
         self::setSessionData($authData);
         self::setToken($authData);
 
@@ -405,9 +409,22 @@ class Users extends Model
         $table = self::$table;
         return self::delete($uid, $table);
     }
+    public static function ban(int $userId, array $banned): bool {
+        if (empty($userId)) return false;
+        return self::edit(['ban' => $banned], ['id' => $userId]);
+    }
+    public static function unban(int $userId): bool {
+        if (empty($userId)) return false;
+        return self::edit(['ban'=>null], ['id' => $userId]);
+    }
+    public static function isBanned(string $mode = 'auth', $ban = []): bool {
+        if (empty($ban) || empty($ban['expired']) || empty($ban[$mode]) || $ban['expired'] <= $_SERVER['REQUEST_TIME']) return false;
+
+        return true;
+    }
     public static function decodeJson($userData)
     {
-        $arrays = ['privilege', 'personal', 'contacts', 'credo'];
+        $arrays = ['privilege', 'personal', 'contacts', 'credo', 'ban'];
         $count = count($arrays);
         for ($i = 0; $i < $count; $i++) {
             if (empty($userData[$arrays[$i]])) continue;
@@ -560,6 +577,7 @@ class Users extends Model
                 personal JSON DEFAULT '$personalDefault',
                 contacts JSON DEFAULT '$contactsDefault',
                 credo JSON DEFAULT '$credoDefault',
+                ban JSON DEFAULT NULL,
                 created_at TIMESTAMP DEFAULT NOW(),
                 updated_at TIMESTAMP DEFAULT NOW(),
                 date_delete TIMESTAMP DEFAULT NULL
@@ -567,7 +585,7 @@ class Users extends Model
         );
         if (self::isExists(['id' => 1])) return true;
 
-        $privilege = ['status' => 'admin', 'admin' => 1, 'rank' => 0];
+        $privilege = ['status' => 'root', 'admin' => 1, 'rank' => 0];
         self::insert([
             'login' => 'admin',
             'password' => password_hash(sha1(ROOT_PASS_DEFAULT), PASSWORD_DEFAULT), //admin1234

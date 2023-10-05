@@ -71,6 +71,11 @@ return [
     'Female' => 'Пані',
     'secret' => 'Дехто',
 
+    'Ban time' => 'Бан до',
+    'Ban options' => 'Налаштування бана',
+    'Booking' => 'Запис',
+    'Authentication' => 'Авторизація',
+    'Chat' => 'Чат',
     '{{ Account_Avatar_Form_Title }}' => 'Аватар користувача %s',
     '{{ Account_Avatar_Form_Newcrop_Link }}' => 'Замінити',
 

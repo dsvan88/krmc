@@ -23,7 +23,7 @@
                     <td title="E-mail"><?= empty($usersData[$x]['contacts']['email']) ? '<i class="fa fa-square-o"></i>' : '<i class="fa fa-check-square-o"></i>' ?></td>
                     <td title="Telegram"><?= empty($usersData[$x]['contacts']['telegramid']) ? '<i class="fa fa-square-o"></i>' : '<i class="fa fa-check-square-o"></i>' ?></td>
                     <td title="Меню" class="users-list__dashboard">
-                        <span class='fa fa-ban' data-action-click='/account/ban/<?= $usersData[$x]['id'] ?>/form' title='Забанити користувача'></span>
+                        <span class='fa fa-ban' data-action-click='/account/ban/form' data-user-id="<?= $usersData[$x]['id'] ?>" title='Забанити користувача'></span>
                         <span class='fa fa-users' data-action-click='/account/doubles/<?= $usersData[$x]['id'] ?>/form' title='Об’єднати дублікати'></span>
                         <span class='fa fa-user-times' data-action-click='account/delete' data-user-id="<?= $usersData[$x]['id'] ?>" data-verification="verification/root" title='Видалити'></span>
                     </td>

@@ -33,10 +33,15 @@ class AccountController extends Controller
         if (!Validator::csrfCheck() || Users::trottling()) {
             View::notice(['error' => 403, 'message' => 'Try again later:)', 'time' => 2000]);
         }
-        if (!Users::login($data)) {
+        $result = Users::login($data);
+        if ($result === 'banned') {
+            View::notice(['error' => 403, 'message' => "User isn’t found!\nCheck your login and password!", 'time' => 2000]);
+        }
+        if ($result === 'failed') {
             $_SESSION['login_fails'][] = $_SERVER['REQUEST_TIME'];
             View::notice(['error' => 403, 'message' => "User isn’t found!\nCheck your login and password!", 'time' => 2000]);
         }
+        
         View::notice(['message' => 'Success!', 'location' => isset($_SESSION['path']) ? $_SESSION['path'] : '/', 'time' => 700]);
     }
     public function loginFormAction()
@@ -554,7 +559,6 @@ class AccountController extends Controller
             $telegramId = $contact['contact'];
             $link = "{$_SERVER['HTTP_X_FORWARDED_PROTO']}://{$_SERVER['SERVER_NAME']}/account/password-reset/$hash";
             $link = "<a href='$link'>$link</a>";
-            $bot = new TelegramBot();
             $bot->sendMessage($telegramId, Locale::phrase(['string' => '{{ Account_Forget_Check_Succes }}', 'vars' => [$link]]));
         }
         $botData = $bot->getMe();
@@ -572,6 +576,53 @@ class AccountController extends Controller
         else
             $vars['texts']['tgBotLink'] = 'https://t.me/';
 
+        View::$route['vars'] = array_merge(View::$route['vars'], $vars);
+        View::modal();
+    }
+    public function banAction(){
+        extract(self::$route['vars']);
+        $_POST['ban']['expired'] = strtotime($_POST['ban']['expired']);
+        $ban = $_POST['ban'];
+        $banOptions = [ 'booking', 'auth', 'chat' ];
+
+        $count = count($banOptions);
+        for ($i=0; $i < $count; $i++) { 
+            if (!isset($ban[$banOptions[$i]])) continue;
+            $ban[$banOptions[$i]] = true;
+        }
+        
+        $user = Users::getDataById($userId);
+        if (count($ban) === 1 || $ban['expired'] < $_SERVER['REQUEST_TIME']){
+            if (Users::unban($userId))
+                View::notice(Locale::phrase(['string' => 'User «<b>%s</b>» successfuly unbanned!', 'vars' => [ $user['name'] ]]));
+            View::notice(['error' => 1, 'message' => 'Something went wrong']);
+        }
+
+        if (Users::ban($userId, $ban))
+            View::notice(Locale::phrase(['string' => 'User «<b>%s</b>» successfuly banned to %s!', 'vars' => [ $user['name'], date('d.m.y H:i:s', $ban['expired']) ]]));
+        View::notice(['error' => 1, 'message' => 'Something went wrong']);
+    }
+    public function banFormAction(){
+        
+        $userId = (int) $_POST['userId'];
+
+        $user = Users::getDataById($userId);
+        $bannedTime = !empty($user['ban']['expired']) && $user['ban']['expired'] > $_SERVER['REQUEST_TIME'] ? date('Y-m-d', $user['ban']['expired']).'T'.date('H:i', $user['ban']['expired']) : date('Y-m-d') . 'T23:59';
+
+        $vars = [
+            'title' => ['string' => 'Ban user «<b>%s</b>»', 'vars' => [$user['name']]],
+            'texts' => [
+                'bannedTo' => 'Ban time',
+                'options' => 'Ban options',
+                'booking' => 'Booking',
+                'auth' => 'Authentication',
+                'chat' => 'Chat',
+                'SubmitLabel' => 'Execute',
+                'CancelLabel' => 'Cancel',
+            ],
+            'user' => $user,
+            'bannedTime' => $bannedTime,
+        ];
         View::$route['vars'] = array_merge(View::$route['vars'], $vars);
         View::modal();
     }
