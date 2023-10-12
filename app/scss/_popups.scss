@@ -30,6 +30,13 @@
 
     &__text {
         margin: 1em 0;
+        .positive {
+            color: $bg-color-green;
+        }
+        
+        .negative {
+            color: $bg-color-red-blur;
+        }
     }
 
     &__input {
@@ -64,7 +71,37 @@
         margin: .5em 1em
     }
 
+    &__rolepad {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        grid-gap: .1em;
+        margin: .5em 1em
+    }
+
     &__checkbox {
+        &-wrapper {
+            border: 1px solid black;
+            border-radius: 2px;
+        }
+
+        &-label {
+            font-size: 4em;
+            display: inline-block;
+            width: 100%;
+            text-align: center;
+        }
+
+        &:checked~label {
+            background-color: $bg-color-green-blur;
+            color: $color-text-accent;
+        }
+
+        &:disabled~label {
+            background-color: $bg-color-dark-blur;
+            color: $color-text-dark-blur;
+        }
+    }
+    &__radio {
         &-wrapper {
             border: 1px solid black;
             border-radius: 2px;

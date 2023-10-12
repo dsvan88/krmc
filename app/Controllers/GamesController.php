@@ -140,6 +140,7 @@ class GamesController extends Controller
                 'mafia/timer.class.js',
                 'mafia/game.js',
                 'mafia/mafia-vote-numpad.js',
+                'mafia/mafia-roles-pad.js',
             ],
         ];
         View::$route['vars'] = array_merge(View::$route['vars'], $vars);

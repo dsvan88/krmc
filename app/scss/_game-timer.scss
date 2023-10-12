@@ -2,8 +2,9 @@
 	&__caption{
 		font-size: 2em;
 		padding: 10px;
-		font-size: 2em;
-		text-align: center;
+		display: flex;
+		justify-content: center;
+		gap: 1em;
 	}
 	&__dashboard{
 		position: fixed;
@@ -20,7 +21,12 @@
 			border: 1px solid $bg-color-light;
 		}
 	}
-
+	button{
+		font-size: .6em;
+	}
+	.stopwatch{
+		font-size: 1.8em;
+	}
 	&__control {
 		font-size: 5em;
 		display: flex;

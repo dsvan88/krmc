@@ -230,6 +230,16 @@
 				text-decoration: line-through;
 			}
 
+			&.mafia {
+				background-color: $bg-color-light-red-blur;
+			}
+			&.don {
+				background-color: $bg-color-light-red-blur;
+			}
+			&.sherif {
+				background-color: $bg-color-light-red-blur;
+			}
+
 			&.shooted {
 				background-color: $bg-color-light-red-blur;
 				animation: rowShootedPlayer 1s ease-out infinite;
@@ -243,14 +253,6 @@
 			&.speaker {
 				background-color: $bg-color-green;
 				animation: activeSpeaker 1.5s ease-out infinite;
-			}
-
-			.positive {
-				color: $bg-color-green;
-			}
-
-			.negative {
-				color: #be0020;
 			}
 
 			.fail {

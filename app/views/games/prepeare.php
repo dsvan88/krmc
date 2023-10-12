@@ -123,12 +123,6 @@
                 <li>
                     <div class="game-form__row">
                         <input name="player[<?= $i ?>]" type="text" class="game-form__input" value="<?= $playerName ?>" placeholder="<?= $texts['playerPlaceholder'] ?>" data-action-change="check-player" data-action-input="autocomplete-users-names" list="users-names-list" autocomplete="off" />
-                        <select name="role[<?= $i ?>]" class="game-form__input">
-                            <option value='0'> </option>
-                            <option value='1'>Мафия</option>
-                            <option value='2'>Дон мафии</option>
-                            <option value='4'>Шериф</option>
-                        </select>
                     </div>
                 </li>
             <? endfor ?>

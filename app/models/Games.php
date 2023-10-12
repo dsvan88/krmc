@@ -24,7 +24,7 @@ class Games extends Model
             'day_id' => Days::current(),
             'manager' => $manager['id'],
             'state' => json_encode($state, JSON_UNESCAPED_UNICODE),
-            'players' => json_encode(Users::assingIds($post['player'], $post['role']), JSON_UNESCAPED_UNICODE),
+            'players' => json_encode(Users::assingIds($post['player']), JSON_UNESCAPED_UNICODE),
             'started_at' => $_SERVER['REQUEST_TIME'],
         ];
         if (!empty($post['default'])){

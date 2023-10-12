@@ -11,8 +11,10 @@
 					</header>
 					<div class="timer">
 						<div class="timer__caption">
-							<span class="stopwatch">01:00:00</span>
-						</div>
+						<button class="fa fa-low-vision" data-action-game="display-roles"></button>
+						<span class="stopwatch">01:00:00</span>
+						<button class="fa fa-gavel" data-action-game="stop-game"></button>
+					</div>
 						<div class="timer__dashboard">
 							<span class="timer__dashboard-item fa fa-history" title="Повернутись" data-timer="undo"></span>
 							<span class="timer__dashboard-item fa fa-play" title="Старт" data-timer="start"></span>

@@ -8,11 +8,12 @@ class Alert {
     dragged = false;
     keyDown = false;
 
-    constructor({ title = "Alert", text = "There is no information, yet!" } = {}) {
+    constructor({ title = "Alert", text = "There is no information, yet!", close = null } = {}) {
 
         this.dialog = this.build();
         this.fill({ title, text });
         this.dialog.show();
+        this.customClose = close;
 
         this.attachEvents();
         return this;
@@ -63,6 +64,7 @@ class Alert {
     }
     close() {
         this.dialog.close();
+        this.dialog.remove();
         this.overlay.remove();
     }
     attachEvents() {
@@ -71,7 +73,10 @@ class Alert {
         self.dialog.addEventListener('keydown', (event) => self.keyDownHandler.call(self, event));
         self.dialog.addEventListener('keyup', (event) => self.keyUpHandler.call(self, event));
 
-        self.dialog.addEventListener('close', () => self.overlay.remove())
+        self.dialog.addEventListener('close', () => self.close.call(self));
+
+        if (this.customClose)
+            self.dialog.addEventListener('close', () => self.customClose.call(self));
 
         self.dialog.ondragstart = () => false;
 

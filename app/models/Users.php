@@ -358,7 +358,7 @@ class Users extends Model
         }
         return false;
     }
-    public static function assingIds($players, $roles)
+    public static function assingIds($players)
     {
         $users = self::getByList($players);
         $playersCount = count($players);
@@ -372,8 +372,7 @@ class Users extends Model
             $index = array_search($user['name'], $players, true);
             $result[$index] = [
                 'id' => $user['id'],
-                // 'name' => $user['name'],
-                'role' => $roles[$index],
+                'role' => 'peace',
             ];
         }
         return $result;

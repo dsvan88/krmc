@@ -6,19 +6,12 @@ actionHandler.gameFormSubmit = function (event) {
 		alert('Спочатку оберіть ведучого серед учасників!')
 		return false;
 	}
-	let role = 0, roles = [0, 0, 0, 0, 0];
 	const players = document.querySelectorAll('input[name^="player"]');
 	for (const [index, player] of Object.entries(players)) {
 		if (!player.value) {
 			alert(`Когось не вистачає! (Відсутній гравець №${index + 1})`);
 			return false;
 		}
-		role = document.querySelector(`select[name="role[${index}]"]`).value;
-		roles[role]++;
-	}
-	if (roles[1] !== 2 || roles[2] !== 1 || roles[4] !== 1) {
-		alert('Невірно розподілені ролі!\n(Ролей всього: Гравців Мафії - 2, Дон - 1, Шеріф - 1, Мирні - 6)');
-		return false;
 	}
 	const formData = new FormData(event.target);
 	request({
