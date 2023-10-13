@@ -81,7 +81,7 @@ class MafiaEngine extends GameEngine {
         } catch (error) {
             this.noticer = null;
         }
-        this.config.gamePass = btoa('admin1234');
+        this.config.gamePass = btoa(this.config.gamePass);
     }
 
     get logKey() {
@@ -132,6 +132,8 @@ class MafiaEngine extends GameEngine {
                 for (const voted of this.voted) {
                     data.block = [...data.block, ...voted.voted];
                 }
+            } else {
+                data.block = this.getOutPlayers();
             }
             this.#prompt = new MafiaVoteNumpad(data);
         }
@@ -380,7 +382,7 @@ class MafiaEngine extends GameEngine {
         this.log = _log;
     }
     displayRoles(event){
-        if (this.stage === 'Start' || this.showRoles || btoa(prompt('Enter game password:')) === this.config.gamePass)
+        if (this.stage === 'Start' || this.showRoles || btoa(prompt('Enter game PIN-code:')) === this.config.gamePass)
             this.showRoles = !this.showRoles;
         this.resetView();
     }
@@ -778,7 +780,7 @@ class MafiaEngine extends GameEngine {
         alert(message);
 
         if (this.defendantCount === 1) {
-            message = 'На голосування був выставлений лише 1 гравець\n';
+            message = 'На голосування був виставлений лише 1 гравець\n';
             let playerId = this.courtRoom.pop();
             if (this.daysCount > 0) {
                 message += `Наше місто покидає гравець №${this.players[playerId].num}!`;

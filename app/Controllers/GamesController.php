@@ -80,6 +80,7 @@ class GamesController extends Controller
             "debateTime" => 3000,
             "mutedSpeakTime" => 3000,
             "wakeUpRoles" => 2000,
+            "gamePass" => '1234',
             "points" => [
                 "winner" => 1,
                 "sherifFirstStaticKill" => 0.1,
@@ -95,7 +96,8 @@ class GamesController extends Controller
         
         $settings = Settings::getGroup('mafia_config');
         if (!empty($settings)){
-            $config = $settings['mafia-config']['options'];
+            $settings['mafia-config']['options']['points'] = array_merge($config['points'], $settings['mafia-config']['options']['points']);
+            $config = array_merge($config, $settings['mafia-config']['options']);
         }
 
         $vars = [

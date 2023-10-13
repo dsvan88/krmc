@@ -8,6 +8,7 @@ class GameRepository
 {
     public static $bools = ['courtAfterFouls'];
     public static $strings = ['voteType'];
+    public static $encoded = ['gamePass'];
     public static function formConfig(array $data): array
     {
         $config = [];
@@ -21,6 +22,10 @@ class GameRepository
             }
             if (in_array($key, self::$strings)) {
                 $config[$key] = $value;
+                continue;
+            }
+            if (in_array($key, self::$encoded)) {
+                $config[$key] = base64_encode($value);
                 continue;
             }
             if (is_array($value)) {

@@ -113,7 +113,7 @@ class Settings extends Model
             if (!$id) {
                 return self::insert($data);
             }
-            self::update($data, ['id' => $data['id']]);
+            self::update($data, ['id' => $id]);
             return true;
         } catch (\Throwable $th) {
             error_log($th->__toString());

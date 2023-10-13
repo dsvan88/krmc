@@ -100,6 +100,13 @@
                 </div>
             </fieldset>
             <fieldset>
+                <legend>Безпека:</legend>
+                <div class="game-form__row">
+                    <label for="game-pass" class="game-form__label">PIN-код на гру:</label>
+                    <input type="text" name="game-pass" id="game-pass" value="<?= $config['gamePass'] ?>">
+                </div>
+            </fieldset>
+            <fieldset>
                 <legend>Налаштування за замовчуванням:</legend>
                 <div class="game-form__row">
                     <span class="checkbox-styled">
