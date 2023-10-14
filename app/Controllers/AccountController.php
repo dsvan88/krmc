@@ -73,59 +73,11 @@ class AccountController extends Controller
             'texts' => [
                 'formTitle' => '{{ Users_List_Title }}',
             ],
-            // 'scripts' => 'account-list.js',
         ];
 
         View::$route['vars'] = array_merge(View::$route['vars'], $vars);
 
         View::render();
-    }
-    public function profileEditAction()
-    {
-        extract(self::$route['vars']);
-        if (empty($_POST)) {
-            View::notice(['error' => 1, 'message' => 'Fail!']);
-        }
-        if ($_SESSION['id'] != $userId  && !Users::checkAccess('admin')) {
-            View::notice(['error' => 1, 'message' => 'You don’t have enough rights to change information about other users!']);
-        }
-
-        $userData = Users::getDataById($userId);
-        $userData = Users::contacts($userData);
-        unset($userData['id']);
-
-        if ($_POST['birthday'] !== '') {
-            $birthday = strtotime(trim($_POST['birthday']));
-
-            if ($birthday > $_SERVER['REQUEST_TIME'] - 31536000) // 31536000 = 60 * 60 * 24 * 365
-                $birthday = 0;
-        }
-
-        $userData['personal'] = [
-            'fio' => trim($_POST['fio']),
-            'birthday' => $birthday,
-            'gender' => trim($_POST['gender']),
-            'avatar' => $userData['personal']['avatar'],
-        ];
-        $userData['contacts']['email'] = trim($_POST['email']);
-
-        if (isset($_POST['status']))
-            $userData['privilege']['status'] = trim($_POST['status']);
-
-        if (isset($_POST['image'])) {
-
-            $path = $_SERVER['DOCUMENT_ROOT'] . FILE_USRGALL . $userId;
-            $filename = md5($_POST['image']) . '_3,5x4';
-            $image = ImageProcessing::saveBase64Image($_POST['image'], $filename, $path);
-            if ($image) {
-                $userData['personal']['avatar'] = $image['filename'];
-                if (isset($_POST['uid']) && $_SESSION['id'] == $_POST['uid']) {
-                    $_SESSION['avatar'] = $image['filename'];
-                }
-            }
-        }
-        Users::edit($userData, ['id' => $userId]);
-        View::notice('Success!');
     }
     public function showAction()
     {
@@ -185,6 +137,18 @@ class AccountController extends Controller
             $data = ContactRepository::checkApproved($userId);
         } else {
             $data = AccountRepository::getFields($userId);
+        }
+        if ($section === 'control' && !empty($data['ban'])){
+            if ($data['ban']['expired'] < $_SERVER['REQUEST_TIME'])
+                $data['ban'] = null;
+            else {
+                $data['ban']['expired'] = date('d.m.Y H:i', $data['ban']['expired']);
+                foreach($data['ban'] as $key => $value){
+                    if ($key === 'expired') continue;
+                    $data['ban']['options'][$key] = Locale::phrase(ucfirst($key));
+                }
+                $data['ban']['options'] = implode('</span>, <span class="text-accent">', $data['ban']['options']);
+            }
         }
 
         $texts = [

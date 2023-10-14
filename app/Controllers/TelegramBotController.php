@@ -15,6 +15,7 @@ class TelegramBotController extends Controller
 {
     private static $bot = null;
     private static $techTelegramId = null;
+    private static $mainGroupTelegramId = null;
 
     public static $requester = [];
     public static $message = [];
@@ -55,6 +56,7 @@ class TelegramBotController extends Controller
         self::$message = $message;
         self::$bot = new TelegramBot();
         self::$techTelegramId = Settings::getTechTelegramId();
+        self::$mainGroupTelegramId = Settings::getMainTelegramId();
         self::$chatId = $message['message']['chat']['id'];
 
         $userTelegramId = $message['message']['from']['id'];
@@ -73,7 +75,7 @@ class TelegramBotController extends Controller
             View::exit();
         }
 
-        if (Users::isBanned('chat', self::$requester['ban'])){
+        if (self::$chatId === self::$mainGroupTelegramId && Users::isBanned('chat', self::$requester['ban'])){
             self::$bot->deleteMessage(self::$chatId, $message['message']['message_id']);
             self::$bot->sendMessage($userTelegramId, Locale::phrase(['string' => "I’m deeply sorry, but you banned for that action:(...\nYour ban will be lifted at: <b>%s</b>", 'vars'=>[ date('d.m.Y', self::$requester['ban']['expired'] + TIME_MARGE)]]));
             View::exit();
@@ -117,7 +119,8 @@ class TelegramBotController extends Controller
     }
     public static function parseCommand(string $text): bool
     {
-        if (preg_match('/^[+-]\s{0,3}(пн|пон|вт|вів|ср|сер|чт|чет|пт|пят|п’ят|сб|суб|вс|вос|нед|нд|сг|сег|сьо|зав|mon|tue|wed|thu|fri|sat|sun|tod|tom)/', mb_strtolower(str_replace('на ', '', $text), 'UTF-8')) === 1) {
+        $_text = mb_strtolower(str_replace('на ', '', $text), 'UTF-8');
+        if (preg_match('/^[+-]\s{0,3}(пн|пон|вт|вів|ср|сер|чт|чет|пт|пят|п’ят|сб|суб|вс|вос|нед|нд|сг|сег|сьо|зав|mon|tue|wed|thu|fri|sat|sun|tod|tom)/', $_text) === 1) {
             preg_match_all('/[+-]\s{0,3}(пн|пон|вт|вів|ср|сер|чт|чет|пт|пят|п’ят|сб|суб|вс|вос|нед|нд|сг|сег|сьо|зав|mon|tue|wed|thu|fri|sat|sun|tod|tom)|([0-2]{0,1}[0-9]\:[0-5][0-9])/i', mb_strtolower(str_replace(['на ', '.'], ['', ':'], $text), 'UTF-8'), $matches);
             $arguments = $matches[0];
             if (preg_match('/\([^)]+\)/', $text, $prim) === 1) {
@@ -127,10 +130,10 @@ class TelegramBotController extends Controller
             self::$commandArguments = $arguments;
             return true;
         }
-        if (preg_match('/^[+]\s{0,3}[0-2]{0,1}[0-9]/', mb_strtolower(str_replace('на ', '', $text), 'UTF-8')) === 1) {
-            preg_match('/^(\+)\s{0,3}([0-2]{0,1}[0-9])(:[0-5][0-9]){0,1}/i', mb_strtolower(str_replace(['на ', '.'], ['', ':'], $text), 'UTF-8'), $matches);
+        if (preg_match('/^[+]\s{0,3}[0-2]{0,1}[0-9]/', $_text) === 1) {
+            preg_match('/^(\+)\s{0,3}([0-2]{0,1}[0-9])(:[0-5][0-9]){0,1}/i', mb_strtolower(str_replace('.', ':', $text), 'UTF-8'), $matches);
             
-            if ($matches[2] > 23) return false;
+            if ($matches[2] < 8 || $matches[2] > 23) return false;
             if (empty($matches[3])) $matches[3] = ':00';
 
             $arguments = [
@@ -215,7 +218,7 @@ class TelegramBotController extends Controller
             } elseif (preg_match('/^(\+|-)\d{1,2}/', $value, $match) === 1) {
                 $requestData['nonames'] = substr($match[0], 1);
             } elseif ($requestData['userId'] < 2) {
-                $value = str_ireplace(['m', 'c', 'o', 'p', 'x', 'a'], ['м', 'с', 'о', 'р', 'х', 'а',], $value);
+                $value = str_ireplace(['m', 'c', 'o', 'p', 'x', 'a'], ['м', 'с', 'о', 'р', 'х', 'а'], $value);
                 $userRegData = Users::getDataByName($value);
                 if ($userRegData) {
                     $requestData['userId'] = $userRegData['id'];

@@ -225,22 +225,10 @@ return  [
         'action' => 'doublesForm',
         'access' => ['category' => 'admin']
     ],
-/*     'api/account/profile/form' =>
-    [
-        'controller' => 'account',
-        'action' => 'profileForm',
-        'access' => ['category' => 'all']
-    ], */
     'api/account/profile/section' =>
     [
         'controller' => 'account',
         'action' => 'profileSection',
-        'access' => ['category' => 'user']
-    ],
-    'api/account/profile/{userId}' =>
-    [
-        'controller' => 'account',
-        'action' => 'profileEdit',
         'access' => ['category' => 'user']
     ],
     'api/account/profile/section/edit' =>
