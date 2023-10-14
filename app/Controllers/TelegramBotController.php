@@ -51,18 +51,18 @@ class TelegramBotController extends Controller
 
         $text = trim($message['message']['text']);
 
-        if (!self::parseCommand($text)) View::exit();
+        $command = self::parseCommand($text);
 
         self::$message = $message;
         self::$bot = new TelegramBot();
         self::$techTelegramId = Settings::getTechTelegramId();
         self::$mainGroupTelegramId = Settings::getMainTelegramId();
         self::$chatId = $message['message']['chat']['id'];
-
+        
         $userTelegramId = $message['message']['from']['id'];
-
+        
         $userId = Contacts::getUserIdByContact('telegramid', $userTelegramId);
-
+        
         if (empty($userId) && !in_array(self::$command, self::$guestCommands)){
             self::$bot->sendMessage(self::$chatId, Locale::phrase('{{ Tg_Unknown_Requester }}'));
             View::exit();
@@ -81,6 +81,8 @@ class TelegramBotController extends Controller
             self::$bot->sendMessage($userTelegramId, Locale::phrase(['string' => "I’m deeply sorry, but you banned for that action:(...\nYour ban will be lifted at: <b>%s</b>", 'vars'=>[ date('d.m.Y', self::$requester['ban']['expired'] + TIME_MARGE)]]));
             View::exit();
         }
+        
+        if (!$command) View::exit();
     }
     public static function webhookAction()
     {
