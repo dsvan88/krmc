@@ -417,7 +417,7 @@ class Users extends Model
         return self::edit(['ban'=>null], ['id' => $userId]);
     }
     public static function isBanned(string $mode = 'auth', $ban = []): bool {
-        if (empty($ban) || empty($ban['expired']) || empty($ban[$mode]) || $ban['expired'] <= $_SERVER['REQUEST_TIME']) return false;
+        if (empty($ban['expired']) || empty($ban[$mode]) || $ban['expired'] <= $_SERVER['REQUEST_TIME']) return false;
 
         return true;
     }
