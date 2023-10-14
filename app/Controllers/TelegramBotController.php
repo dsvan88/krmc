@@ -75,6 +75,7 @@ class TelegramBotController extends Controller
             View::exit();
         }
 
+        self::$bot->sendMessage(self::$techTelegramId, json_encode(['Banned' => Users::isBanned('chat', self::$requester['ban']), 'chatId' => self::$chatId, 'techChat' => self::$techTelegramId]));
         if (self::$chatId == self::$techTelegramId && Users::isBanned('chat', self::$requester['ban'])){
             self::$bot->deleteMessage(self::$chatId, $message['message']['message_id']);
             self::$bot->sendMessage($userTelegramId, Locale::phrase(['string' => "I’m deeply sorry, but you banned for that action:(...\nYour ban will be lifted at: <b>%s</b>", 'vars'=>[ date('d.m.Y', self::$requester['ban']['expired'] + TIME_MARGE)]]));
