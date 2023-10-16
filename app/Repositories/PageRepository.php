@@ -31,16 +31,22 @@ class PageRepository
     }
     public static function formPageOG(array $page = null){
         $url = "{$_SERVER['HTTP_X_FORWARDED_PROTO']}://{$_SERVER['SERVER_NAME']}";
-        $image = empty($page['logo']) ? "$url/public/images/club-logo-w-city.jpg" : $page['logo'];
+        $page['logo'] = empty($page['logo']) ? '/public/images/club-logo-w-city.jpg' : $page['logo'];
+        $imageSize = getimagesize($_SERVER['DOCUMENT_ROOT'].$page['logo']);
+        $image = "$url/{$page['logo']}";
         $result = [
             'title' => $page['title'],
             'type' => 'article',
             'url' => "$url/{$page['type']}/{$page['slug']}/",
             'image' => $image,
+            'og:image:width' => $imageSize[0],
+            'og:image:height' => $imageSize[1],
             'description' => $page['description'],
             'site_name' => $page['title'] . ' | ' . CLUB_NAME,
-            'twitter:card' => 'summary_large_image',
-            'twitter:image' => $image,
+            'twitter' => [
+                'card' => 'summary_large_image',
+                'image' => $image,
+            ],
         ];
 
         
