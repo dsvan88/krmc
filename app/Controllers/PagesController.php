@@ -41,6 +41,7 @@ class PagesController extends Controller
 
         View::$path = 'pages/show';
 
+        View::$route['vars']['og'] = PageRepository::formPageOG($page);
         View::$route['vars'] = array_merge(View::$route['vars'], $vars);
     
         View::render();

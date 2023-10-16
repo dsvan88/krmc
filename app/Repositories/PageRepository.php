@@ -29,4 +29,25 @@ class PageRepository
         }
         return $page;
     }
+    public static function formPageOG(array $page = null){
+        $url = "{$_SERVER['HTTP_X_FORWARDED_PROTO']}://{$_SERVER['SERVER_NAME']}";
+        $result = [
+            'title' => $page['title'],
+            'type' => 'article',
+            'url' => "$url/{$page['type']}/{$page['slug']}/",
+            'image' => empty($page['logo']) ? "$url/public/images/club-logo-w-city.jpg" : $page['logo'],
+            'description' => $page['description'],
+            'site_name' => $page['title'] . ' | ' . CLUB_NAME,
+        ];
+
+        
+/*     article:published_time - datetime - When the article was first published.
+    article:modified_time - datetime - When the article was last changed.
+    article:expiration_time - datetime - When the article is out of date after.
+    article:author - profile array - Writers of the article.
+    article:section - string - A high-level section name. E.g. Technology
+    article:tag - string array - Tag words associated with this article. */
+
+        return $result;
+    }
 }

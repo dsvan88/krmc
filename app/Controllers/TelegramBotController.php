@@ -88,8 +88,7 @@ class TelegramBotController extends Controller
         // exit(json_encode(['message' => self::$message], JSON_UNESCAPED_UNICODE));
         try {
             if (!self::execute()) {
-                if (empty(self::$resultMessage))
-                    View::exit();
+                if (empty(self::$resultMessage)) View::exit();
                 $botResult = self::$bot->sendMessage(self::$techTelegramId, json_encode([self::$message, /* self::$requester ,*/ self::parseArguments(self::$commandArguments)], JSON_UNESCAPED_UNICODE));
             }
 

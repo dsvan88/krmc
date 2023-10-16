@@ -56,6 +56,7 @@ class GameTypesController extends Controller
             View::$route['vars']['dashboard'] = (empty($page['id']) ? $game : $page['id']);
         }
         
+        View::$route['vars']['og'] = PageRepository::formPageOG($page);
         View::$route['vars']['page'] = $page;
         View::$route['vars']['mainClass'] = 'pages';
         
