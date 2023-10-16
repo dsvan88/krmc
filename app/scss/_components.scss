@@ -241,3 +241,9 @@ blockquote {
 		cursor: pointer;
 	}
 }
+mark {
+	&.pen-red{
+		background-color: unset;
+		color: $color-text-accent;
+	}
+}

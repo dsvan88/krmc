@@ -1,7 +1,8 @@
 actionHandler.commonFormSubmit = function (event) {
     event.preventDefault();
-    let url = event.target.action.slice(window.location.length);
-	let formData = new FormData(event.target);
+    const url = event.target.action.slice(window.location.length);
+	const formData = new FormData(event.target);
+	const self = actionHandler;
 	if (window.CKEDITOR){
 		const EditorsBlocks = event.target.querySelectorAll("div.editor-block");
 		EditorsBlocks.forEach(block => {
@@ -11,7 +12,7 @@ actionHandler.commonFormSubmit = function (event) {
     request({
         url: url,
         data: formData,
-		success: actionHandler.commonResponse,
+		success: (response) => self.commonResponse.call(self, response),
     });
 }
 

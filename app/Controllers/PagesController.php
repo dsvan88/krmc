@@ -52,8 +52,10 @@ class PagesController extends Controller
         extract(self::$route['vars']);
         if (!empty($_POST)) {
             $array = $_POST;
-            Pages::edit($array, $pageId);
-            View::message('Changes saved successfully!');
+            $result = Pages::edit($array, $pageId);
+            if ($result === true)
+                View::message('Changes saved successfully!');
+            View::notice(['error'=> 1, 'message' => $result, 'time' => 3000]);
         }
 
         if (is_numeric($pageId)) {

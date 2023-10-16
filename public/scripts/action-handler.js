@@ -176,6 +176,7 @@ let actionHandler = {
 			return false;
 		}
 		if (response["message"]) {
+			// new Alert({ text: response["message"] });
 			alert(response["message"]);
 		}
 		if (response["notice"] && this.noticer) {

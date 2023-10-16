@@ -48,7 +48,6 @@ class PageRepository
                 'image' => $image,
             ],
         ];
-
         
 /*     article:published_time - datetime - When the article was first published.
     article:modified_time - datetime - When the article was last changed.

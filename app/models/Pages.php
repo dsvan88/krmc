@@ -16,7 +16,7 @@ class Pages extends Model
         if ($all)
             return self::query($query, [$type], 'Column');
 
-        $query .= ' AND ( expired_at IS NULL OR expired_at < CURRENT_TIMESTAMP )';
+        $query .= ' AND ( expired_at IS NULL OR expired_at > CURRENT_TIMESTAMP )';
         if (CFG_SOFT_DELETE) {
             $query .= ' AND date_delete IS NULL';
         }
@@ -43,13 +43,19 @@ class Pages extends Model
     {
         $array = self::prepDbArray($data);
         $array['slug'] = preg_replace(['/[^a-z0-9]+/i', '/--/'], '-', Locale::translitization(trim($array['title'])));
-        return self::insert($array, self::$table);
+        return self::insert($array);
     }
     public static function edit($data, $id)
     {
         $array = self::prepDbArray($data);
+
+        if (!is_array($array)) return $array;
+
         $array['updated_at'] = date('Y-m-d H:i:s', $_SERVER['REQUEST_TIME']);
-        return self::update($array, ['id' => $id], static::$table);
+        if (self::update($array, ['id' => $id])){
+            return true;
+        }
+        return 'Something went wrong!';
     }
     public static function prepDbArray(&$data)
     {
@@ -63,6 +69,9 @@ class Pages extends Model
             $pattern = ['/<\/p>\s*<p>/', '/<.*?>/', "/^\"/", "/ \"/", '/ "/', "/\"/", '/"/', "/\'/", "/'/"];
             $replace = ["\n", '', '«', ' «', ' «', '»', '»', '’', '’'];
             $array['description'] = trim(preg_replace($pattern, $replace, $data['description']));
+            if (mb_strlen($array['description'], 'UTF-8') > 299){
+                return 'Description longer than 300 symbols!';
+            }
         }
         if (!empty($data['type'])) {
             $array['type'] = trim($data['type']);
