@@ -36,7 +36,7 @@ class TelegramBot
         if ($message !== '') {
             $params['text'] = $message;
             $params['parse_mode'] = 'HTML';
-            // $params['disable_web_page_preview'] = true;
+            $params['disable_web_page_preview'] = true;
         }
         if ($messageId !== -1) {
             $params['reply_to_message_id'] = $messageId;
