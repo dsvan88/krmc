@@ -10,6 +10,7 @@ use app\core\View;
 use app\models\News;
 use app\models\Settings;
 use app\models\Users;
+use app\Repositories\PageRepository;
 
 class NewsController extends Controller
 {
@@ -41,17 +42,18 @@ class NewsController extends Controller
     public function showAction()
     {
         extract(self::$route['vars']);
-        $newsData = News::find($newsId);
-        if (!empty($newsData['logo']))
-            $newsData['logo'] = ImageProcessing::inputImage(FILE_MAINGALL . 'news/' . $newsData['logo'], ['title' => $newsData['title'], 'class' => 'news__item-logo_image']);
+        $page = News::find($newsId);
+        if (!empty($page['logo']))
+            $page['logo'] = ImageProcessing::inputImage(FILE_MAINGALL . 'news/' . $page['logo'], ['title' => $page['title'], 'class' => 'news__item-logo_image']);
         else
-            $newsData['logo'] = ImageProcessing::inputImage(Settings::getImage('news_default')['value'], ['title' => Locale::phrase('{{ News_Change_Logo }}'), 'class' => 'news__item-logo_image']);
+            $page['logo'] = ImageProcessing::inputImage(Settings::getImage('news_default')['value'], ['title' => Locale::phrase('{{ News_Change_Logo }}'), 'class' => 'news__item-logo_image']);
 
         $vars = [
             'title' => '{{ News_Show_Item_Page_Title }}',
-            'newsData' => $newsData
+            'newsData' => $page
         ];
         
+        View::$route['vars']['og'] = PageRepository::formPageOG($page);
         View::$route['vars'] = array_merge(View::$route['vars'], $vars);
     
         View::render();
