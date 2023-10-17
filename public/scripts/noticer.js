@@ -13,8 +13,11 @@ class Noticer {
 		if (typeof notice === 'string'){
 			notice = { message: notice };
 		}
-		const  noticeBlock = document.createElement('div');
+		const noticeBlock = document.createElement('div');
 		noticeBlock.classList.add('notice');
+		const noticeIcon = document.createElement('div');
+		noticeIcon.classList.add('notice__icon', 'fa');
+		noticeBlock.append(noticeIcon);
 		const noticeMessageBlock = document.createElement('div');
 		noticeMessageBlock.classList.add('notice__message');
 		noticeMessageBlock.innerHTML = '<p> ' + notice['message'].replace(/\n/g, '</p><p>') + '</p>';
@@ -24,6 +27,11 @@ class Noticer {
 			const noticeTitle = document.createElement('h3');
 			noticeTitle.innerText = notice['type'].toUpperCase() + ':';
 			noticeMessageBlock.prepend(noticeTitle);
+			
+			noticeIcon.classList.add(notice['type'] === 'error' ? 'fa-times-circle' : 'fa-exclamation-triangle');
+		}
+		else{
+			noticeIcon.classList.add('fa-check-circle-o');
 		}
 
 		const noticeCloseBlock = document.createElement('span');

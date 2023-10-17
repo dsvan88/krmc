@@ -187,6 +187,30 @@ return  [
         'action' => 'play',
         'access' => ['category' => 'manager'],
     ],
+    'game/show/{game}/{gameId}' => [
+        'controller' => 'games',
+        'action' => 'show',
+        'access' => ['category' => 'all'],
+    ],
+
+    'activity/history' => [
+        'controller' => 'games',
+        'action' => 'index',
+        'access' => ['category' => 'trusted'],
+    ],
+    'activity/rating' => [
+        'controller' => 'games',
+        'action' => 'rating',
+        'access' => ['category' => 'trusted'],
+    ],
+    'activity/peek' => [
+        'controller' => 'games',
+        'action' => 'peek',
+        'access' => ['category' => 'trusted'],
+    ],
+    'activity/play' => [
+        'redirect' => 'game/mafia/start',
+    ],
 
 
     'api/account/login' =>

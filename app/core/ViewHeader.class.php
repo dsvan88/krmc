@@ -72,6 +72,38 @@ class ViewHeader {
                 'menu' => GameTypes::menu(),
                 'type' => 'game',
             ],
+            [
+                'path' => 'activity',
+                'label' => Locale::phrase('Activity'),
+                'menu' => [
+                        [
+                            'name' => 'History',
+                            'slug' => 'history',
+                            'fields' => '',
+                        ],
+                        [
+                            'name' => 'Rating',
+                            'slug' => 'rating',
+                            'fields' => '',
+                        ],
+                        [
+                            'name' => 'Play a game',
+                            'slug' => 'play',
+                            'fields' => '',
+                        ],
+                        [
+                            'name' => 'Peek on game',
+                            'slug' => 'peek',
+                            'fields' => '',
+                        ],
+                        [
+                            'name' => 'Last game',
+                            'slug' => 'show',
+                            'fields' => '',
+                        ],
+                    ],
+                'type' => 'activity',
+            ],
         ];
 
         if (News::getCount('news') < 1){

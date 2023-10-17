@@ -156,6 +156,14 @@ class Db
         if (empty($table)) $table = static::$table;
         return self::query("DELETE FROM $table WHERE id = ?", [$id]);
     }
+    // Удаляет строку по её полю ID в таблице
+    public static function last(string $table = null)
+    {
+        if (empty($table)) $table = static::$table;
+        $result = self::query("SELECT * FROM $table ORDER BY id DESC LIMIT 1", [], 'Assoc');
+        if (empty($table)) return false;
+        return $result[0];
+    }
     //Очищает таблицу
     public static function tableTruncate(string $table = null)
     {

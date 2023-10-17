@@ -165,4 +165,32 @@ class GamesController extends Controller
         $game = Games::load($gameId);
         View::response(json_encode($game, JSON_UNESCAPED_UNICODE));
     }
+    public function indexAction(){
+        $games = Games::getAll();
+        print_r($games);
+    }
+    public function showAction(){
+        extract(self::$route['vars']);
+        $game = Games::find($gameId);
+        if (!$game) {
+            View::errorCode(404, ['message' => "Game with id: $gameId is not found"]);
+        }
+        View::$route['vars']['title'] = 'Гра';
+        View::$route['vars']['state'] = json_decode($game['state'], true);
+        $state = View::$route['vars']['state'];
+        unset($state['players'], $state['config'], $state['_log']);
+        echo '<pre>';
+        var_dump($state);
+        echo '</pre>';
+        // View::$route['vars']['winner'] = $game['players'];
+        View::render();
+    }
+    public function peekAction(){
+        $games = Games::last();
+        print_r($games);
+    }
+    public function ratingAction(){
+        $games = Games::getAll();
+        print_r($games);
+    }
 }
