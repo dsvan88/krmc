@@ -29,7 +29,11 @@
 								<td><?=$player['name']?></td>
 								<td><?=$player['points']?></td>
 								<? for ($x=0; $x < $state['daysCount']; $x++) :?>
-									<td></td>
+									<td>
+										<?=$player['puted'][$x] < 0 ? '-' : $player['puted'][$x]+1?>
+										/
+										<?=$player['puted'][$x] < 0 ? '-' : $player['puted'][$x]+1?>
+									</td>
 								<? endfor ?>
 								<? for ($x=0; $x < 4; $x++) :?>
 									<td></td>

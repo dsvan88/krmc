@@ -178,9 +178,9 @@ class GamesController extends Controller
         View::$route['vars']['title'] = 'Гра';
         View::$route['vars']['state'] = json_decode($game['state'], true);
         $state = View::$route['vars']['state'];
-        unset($state['players'], $state['config'], $state['_log']);
+        // unset($state['players'], $state['config'], $state['_log']);
         echo '<pre>';
-        var_dump($state);
+        var_dump($state['players']);
         echo '</pre>';
         // View::$route['vars']['winner'] = $game['players'];
         View::render();
