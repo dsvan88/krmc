@@ -63,7 +63,7 @@ class TelegramBotController extends Controller
         
         $userId = Contacts::getUserIdByContact('telegramid', $userTelegramId);
         
-        if (!empty(self::$command) && empty($userId) && !in_array(self::$command, self::$guestCommands)){
+        if (empty($userId) && $command && !in_array(self::$command, self::$guestCommands)){
             self::$bot->sendMessage(self::$chatId, Locale::phrase('{{ Tg_Unknown_Requester }}'));
             View::exit();
         }
