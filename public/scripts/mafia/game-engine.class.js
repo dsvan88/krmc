@@ -88,8 +88,6 @@ class GameEngine {
             state[property] = this[property];
         }
         state = JSON.stringify(state);
-        this.send(state);
-
         this.prevStates.push(state);
 
         if (this.prevStates.length > this.maxStatesSave)
@@ -123,11 +121,11 @@ class GameEngine {
     loadPlayersStates(state) {
         return this.players.forEach((player, index) => player.load(state[index]));
     }
-    send(state) {
+    async send(state) {
         const data = new FormData;
         data.append('state', state);
         data.append('prevstates', JSON.stringify(this.prevStates));
-        request({
+        await request({
             url: 'game/save/' + this.gameId,
             data: data,
             success: (result) => debug && console.log(result),

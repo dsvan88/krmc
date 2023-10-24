@@ -195,7 +195,12 @@ return  [
 
     'activity/history' => [
         'controller' => 'games',
-        'action' => 'index',
+        'action' => 'history',
+        'access' => ['category' => 'trusted'],
+    ],
+    'activity/history/{weekId}' => [
+        'controller' => 'games',
+        'action' => 'history',
         'access' => ['category' => 'trusted'],
     ],
     'activity/rating' => [
@@ -210,6 +215,11 @@ return  [
     ],
     'activity/play' => [
         'redirect' => 'game/mafia/start',
+    ],
+    'activity/last' => [
+        'controller' => 'games',
+        'action' => 'last',
+        'access' => ['category' => 'all'],
     ],
 
 
@@ -381,6 +391,13 @@ return  [
         'action' => 'save',
         'access' => ['category' => 'manager']
     ],
+    'api/game/history/{gameId}' =>
+    [
+        'controller' => 'games',
+        'action' => 'historyItem',
+        'access' => ['category' => 'trusted']
+    ],
+    
     'api/settings/edit/form' => [
         'controller' => 'settings',
         'action' => 'editForm',

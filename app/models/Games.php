@@ -37,6 +37,11 @@ class Games extends Model
         }
         return self::insert($data, $table);
     }
+    public static function decodeJson(array $game): array {
+        $game['state'] = json_decode($game['state'], true);
+        $game['players'] = json_decode($game['players'], true);
+        return $game;
+    }
 
     public static function save($post, $id)
     {
@@ -45,6 +50,9 @@ class Games extends Model
             'state' => $post['state'],
             'prevStates' => $post['prevstates'],
         ];
+        if (!empty($data['state']['winners'])){
+            $data = GameRepository::formResult($data);
+        }
         self::update($data, ['id' => $id], $table);
     }
     public static function load(int $gameId){

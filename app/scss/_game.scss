@@ -143,7 +143,7 @@
 		padding: 10px;
 		margin: 10px;
 
-		&__wrapper {
+		&__wrapper.play {
 			display: flex;
 			flex-direction: row-reverse;
 			gap: 2em;

@@ -64,10 +64,10 @@ class TelegramBotController extends Controller
         $userId = Contacts::getUserIdByContact('telegramid', $userTelegramId);
         
         if (empty($userId) && $command && !in_array(self::$command, self::$guestCommands)){
-            self::$bot->sendMessage(self::$chatId, Locale::phrase('{{ Tg_Unknown_Requester }}'));
+            self::$bot->sendMessage(self::$chatId, Locale::phrase('{{ Tg_Unknown_Requester }}'), self::$message['message']['message_id']);
             View::exit();
         }
-        self::$requester = Users::getDataById($userId);
+        self::$requester = Users::getDataById($userId); 
 
         if (self::$command === 'booking' && Users::isBanned('booking', self::$requester['ban'])){
             self::$bot->deleteMessage(self::$chatId, $message['message']['message_id']);

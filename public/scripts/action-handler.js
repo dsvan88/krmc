@@ -16,6 +16,24 @@ let actionHandler = {
 			alert(`Не существует метода для этого action-type: ${type}... или возникла ошибка. Сообщите администратору!\n${error.name}: ${error.message}`);
 		}
 	},
+	commonToggleHandler: function (event) {
+		let method = '';
+		if (event.target.open && event.target.dataset.actionOpen){
+			method = camelize(event.target.dataset.actionOpen);
+		} else if (!event.target.open && event.target.dataset.actionClose){
+			method = camelize(event.target.dataset.actionClose);
+		}
+		
+		if (!method) return false;
+
+		if (debug) console.log(method);
+		try {
+			actionHandler[method](event);
+		} catch (error) {
+			console.log(error);
+			alert(`Не существует метода для этого action-type: ${method}... или возникла ошибка. Сообщите администратору!\n${error.name}: ${error.message}`);
+		}
+	},
 	clickCommonHandler: function (event) {
 		let target = event.target;
 		if (!("actionClick" in target.dataset) || !("actionDblclick" in target.dataset)) {

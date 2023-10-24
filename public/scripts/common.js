@@ -13,6 +13,9 @@ document.body.querySelectorAll('input[type="tel"]').forEach(element =>{
 	element.addEventListener('focus', (event) => actionHandler.phoneInputFocus.call(actionHandler, event));
     element.addEventListener('input', (event) => actionHandler.phoneInputFormat.call(actionHandler, event), false);
 });
+document.querySelectorAll('details[data-action-open],details[data-action-close]').forEach(element => 
+	element.addEventListener('toggle', (event) => actionHandler.commonToggleHandler.call(actionHandler, event), false)
+);
 
 let menuCheckbox = document.body.querySelector('#profile-menu-checkbox');
 if (menuCheckbox) {

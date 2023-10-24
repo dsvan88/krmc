@@ -72,8 +72,16 @@ class ViewHeader {
                 'menu' => GameTypes::menu(),
                 'type' => 'game',
             ],
-            [
-                'path' => 'activity',
+        ];
+
+        if (News::getCount('news') < 1){
+            unset($menu[1]);
+            $menu = array_values($menu);
+        }
+
+        if (Users::checkAccess('trusted')) {
+            $menu[] = [
+                // 'path' => 'activity',
                 'label' => Locale::phrase('Activity'),
                 'menu' => [
                         [
@@ -98,23 +106,11 @@ class ViewHeader {
                         ],
                         [
                             'name' => 'Last game',
-                            'slug' => 'show',
+                            'slug' => 'last',
                             'fields' => '',
                         ],
                     ],
                 'type' => 'activity',
-            ],
-        ];
-
-        if (News::getCount('news') < 1){
-            unset($menu[1]);
-            $menu = array_values($menu);
-        }
-
-        if (Users::checkAccess('trusted')) {
-            $menu[] = [
-                'path' => 'game/mafia/start',
-                'label' => Locale::phrase('Play a game'),
             ];
         }
 

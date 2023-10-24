@@ -55,6 +55,57 @@ class Paginator
         } */
         return $pagesLinks;
     }
+    public static function games($data)
+    {
+        $Indexes = $data['weeksIds'];
+        $count = count($Indexes);
+
+        $currentIndex = $data['currentIndex'];
+        $selectedIndex = $data['selectedIndex'];
+        $pagesLinks = '';
+
+        $breakBefore = false;
+        $breakAfter = false;
+
+        $contoller = 'activity/history';
+        foreach ($Indexes as $index => $wId) {
+            $active = false;
+            if ($selectedIndex !== -1 && $wId == $Indexes[$selectedIndex])
+                $active = true;
+            if ($count > 8) {
+                if ($index >= 1 && $wId < $Indexes[$selectedIndex] - 2) {
+                    if (!$breakBefore) {
+                        $breakBefore = true;
+                        $pagesLinks .= '<span>...</span>';
+                    }
+                    continue;
+                }
+                if ($index > $Indexes[$selectedIndex] + 1 && $wId <= $count - 1) {
+                    if (!$breakAfter) {
+                        $breakAfter = true;
+                        $pagesLinks .= '<span>...</span>';
+                    }
+                    continue;
+                }
+            }
+            $pagesLinks .= "<a href='/$contoller/$wId'" . ($active ? ' class="active"' : '') . '>' . ($index + 1) . '</a>';
+        }
+        if ($selectedIndex > 0) {
+            $pagesLinks = "<a href='/$contoller/{$Indexes[$selectedIndex - 1]}'><i class='fa fa-angle-left'></i></a>$pagesLinks";
+        }
+        /* 
+        if ($selectedIndex > 5) {
+            $pagesLinks = "<a href='/$contoller/1'><i class='fa fa-angle-double-left'></i></a>$pagesLinks";
+        } */
+
+        if (isset($Indexes[$selectedIndex + 1]) && $currentIndex !== -1) {
+            $pagesLinks .= "<a href='/$contoller/{$Indexes[$selectedIndex + 1]}'><i class='fa fa-angle-right'></i></a>";
+        }
+        /*         if ($count - 1 - $selectedIndex > 5) {
+            $pagesLinks .= '<a href="/' . $contoller . '/' . ($Indexes[$count - 1]) . '"><i class="fa fa-angle-double-right"></i></a>';
+        } */
+        return $pagesLinks;
+    }
     public static function news($data)
     {
         $count = $data['count'];

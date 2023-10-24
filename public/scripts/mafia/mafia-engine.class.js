@@ -237,6 +237,39 @@ class MafiaEngine extends GameEngine {
         this.load(state)
         this.timer.reset();
     };
+    dispatchNext() {
+        this.gameTable.dispatchEvent(new Event("next"));
+    }
+    addEvents(){
+        const self = this;
+        document.addEventListener("keyup", (event) => self.keyUpHandler.call(self, event));
+        self.gameTable.addEventListener("next", (event) => self.next.call(self, event));
+        const buttons = document.querySelectorAll('*[data-action-game]');
+        buttons.forEach(button => button.addEventListener('click', (event) => self[camelize(button.dataset.actionGame)].call(self, event)));
+    }
+    keyUpHandler(event) {
+        if (this.prompt) return false;
+        let num = null;
+        if (event.keyCode >= 48 && event.keyCode <= 57) {
+            num = event.keyCode - 48;
+        }
+        else if (event.keyCode >= 96 && event.keyCode <= 105) {
+            num = event.keyCode - 96;
+        }
+        if (num === null) return true;
+
+        if (--num === -1) num = 9;
+        this.putPlayer(num);
+    }
+    async send(){
+        let state = {};
+        for (let property in this) {
+            if (['prevStates', 'timer'].includes(property)) continue;
+            state[property] = this[property];
+        }
+        state = JSON.stringify(state);
+        await super.send(state);
+    }
     getNextSubStage() {
         const method = `${this.stage}SubStage`;
         return this[method]();
@@ -351,31 +384,8 @@ class MafiaEngine extends GameEngine {
             throw new Error('Something went wrong:(');
 
         this.resetView()
+        this.send();
     };
-    dispatchNext() {
-        this.gameTable.dispatchEvent(new Event("next"));
-    }
-    addEvents(){
-        const self = this;
-        document.addEventListener("keyup", (event) => self.keyUpHandler.call(self, event));
-        self.gameTable.addEventListener("next", (event) => self.next.call(self, event));
-        const buttons = document.querySelectorAll('*[data-action-game]');
-        buttons.forEach(button => button.addEventListener('click', (event) => self[camelize(button.dataset.actionGame)].call(self, event)));
-    }
-    keyUpHandler(event) {
-        if (this.prompt) return false;
-        let num = null;
-        if (event.keyCode >= 48 && event.keyCode <= 57) {
-            num = event.keyCode - 48;
-        }
-        else if (event.keyCode >= 96 && event.keyCode <= 105) {
-            num = event.keyCode - 96;
-        }
-        if (num === null) return true;
-
-        if (--num === -1) num = 9;
-        this.putPlayer(num);
-    }
     resetLog() {
         let _log = this._log;
         this._log = {};

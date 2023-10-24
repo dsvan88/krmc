@@ -24,11 +24,8 @@ class AutocompleteController extends Controller
         ];
         $texts = Locale::apply($texts);
 
-        View::$route['vars']['participantId'] = (int) $_POST['id'];
-        View::$route['vars']['texts'] = $texts;
-
         ob_start();
-        View::component('participants-field');
+        View::component('participants-field', ['participantId'=> (int) $_POST['id'], 'texts' => $texts]);
         $result = ob_get_clean();
         View::message(['html' => $result]);
     }

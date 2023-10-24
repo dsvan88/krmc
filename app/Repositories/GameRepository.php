@@ -48,4 +48,21 @@ class GameRepository
         }
         return $array;
     }
+    public static function formResult(array $state){
+        $countPlayers = count($state['players']);
+        for ($playerId=0; $playerId < $countPlayers; $playerId++) { 
+            $state['players'][$playerId]['voted'] = $state['daysCount'] > 0 ? array_fill(0, $state['daysCount'], '') : [];
+        }
+        for ($day=0; $day < $state['daysCount']; $day++) { 
+            $voting = -1;
+            while(!empty($state['courtLog'][$day][++$voting])){
+                foreach($state['courtLog'][$day][$voting] as $index=>$defendand){
+                    foreach($defendand['voted'] as $voted){
+                        $state['players'][$voted]['voted'][$day] .= ($defendand['id']+1).', ';
+                    }
+                }
+            }
+        }
+        return ['state' => $state, 'players' => $state['players']];
+    }
 }

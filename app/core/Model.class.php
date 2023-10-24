@@ -43,6 +43,14 @@ class Model extends Db
         $result = self::query($query, $data, 'Assoc');
         return empty($result) ? false : $result;
     }
+    // Находит последнюю запись в таблице
+    public static function last()
+    {
+        $table = static::$table;
+        $result = self::query("SELECT * FROM $table ORDER BY id DESC LIMIT 1", [], 'Assoc');
+        if (empty($result)) return false;
+        return $result[0];
+    }
     public static function getSimpleArray($query, $params = [])
     {
         $result = [];

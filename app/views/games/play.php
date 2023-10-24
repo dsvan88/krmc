@@ -1,6 +1,6 @@
 <section class="section game">
     <div class="game">
-			<div class="game__wrapper">
+			<div class="game__wrapper play">
 				<div class="game__description">
 					<header class="title">
 						<div class="game__stage"></div>
@@ -31,7 +31,6 @@
 							<th rowspan="2">Гравець</th>
 							<th rowspan="2">Вист.</th>
 							<th colspan="4">Фоли</th>
-							<!-- <th rowspan="2">Примітка</th> -->
 						</tr>
 						<tr>
 							<th>1</th>

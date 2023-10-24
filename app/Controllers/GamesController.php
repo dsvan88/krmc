@@ -4,6 +4,7 @@ namespace app\Controllers;
 
 use app\core\Controller;
 use app\core\Locale;
+use app\core\Paginator;
 use app\core\View;
 use app\models\Days;
 use app\models\Games;
@@ -165,9 +166,63 @@ class GamesController extends Controller
         $game = Games::load($gameId);
         View::response(json_encode($game, JSON_UNESCAPED_UNICODE));
     }
-    public function indexAction(){
-        $games = Games::getAll();
-        print_r($games);
+    public function historyAction(){
+
+        extract(self::$route['vars']);
+
+        $weekCurrentId = Weeks::currentId();
+
+        if (empty($weekId)){
+            $weekId = $weekCurrentId;
+        }
+
+        $week = Weeks::weekDataById($weekId);
+        $weeksIds = Weeks::getIds();
+        $weeksCount = count($weeksIds);
+        $weekCurrentIndexInList = array_search($weekCurrentId, $weeksIds);
+        $selectedWeekIndex = array_search($weekId, $weeksIds);
+        $paginator = Paginator::games(['weeksIds' => $weeksIds, 'currentIndex' => $weekCurrentIndexInList, 'selectedIndex' => $selectedWeekIndex]);
+
+        $games = Games::getAll(['week_id' => $weekId]);
+
+        usort($games, function ($gameA, $gameB){
+            return $gameA['id'] > $gameB['id'] ? -1 : 1;
+        });
+
+        $countGames = count($games);
+        for ($x=0; $x < $countGames; $x++) { 
+            $games[$x] = Games::decodeJson($games[$x]);
+        }
+
+        $vars = [
+            'title' => 'Games history',
+            'week' => $week,
+            'weeksCount' => $weeksCount,
+            'games' => $games,
+            'paginator' => $paginator,
+            'texts' => [
+                'BlockTitle' => 'Games history',
+            ],
+            'scripts' => 'games-history.js',
+        ];
+        
+        View::$route['vars'] = array_merge(View::$route['vars'], $vars);
+        View::render();
+    }
+    public function historyItemAction(){
+        extract(self::$route['vars']);
+        $game = Games::find($gameId);
+        if (!$game) {
+            View::errorCode(404, ['message' => "Game with id: $gameId is not found"]);
+        }
+        View::$route['vars']['title'] = 'Гра';
+        $state = json_decode($game['state'], true);
+        $players = json_decode($game['players'], true);
+        View::$route['vars']['state'] = $state;
+        View::$route['vars']['players'] = $players;
+        View::$route['vars']['path'] = 'games/show';
+
+        View::html();
     }
     public function showAction(){
         extract(self::$route['vars']);
@@ -176,21 +231,28 @@ class GamesController extends Controller
             View::errorCode(404, ['message' => "Game with id: $gameId is not found"]);
         }
         View::$route['vars']['title'] = 'Гра';
-        View::$route['vars']['state'] = json_decode($game['state'], true);
-        $state = View::$route['vars']['state'];
-        // unset($state['players'], $state['config'], $state['_log']);
-        echo '<pre>';
-        var_dump($state['players']);
-        echo '</pre>';
-        // View::$route['vars']['winner'] = $game['players'];
+        $state = json_decode($game['state'], true);
+        $players = json_decode($game['players'], true);
+        View::$route['vars']['state'] = $state;
+        View::$route['vars']['players'] = $players;
         View::render();
     }
     public function peekAction(){
-        $games = Games::last();
-        print_r($games);
+        $game = Games::last();
+        View::redirect('/game/show/mafia/'.$game['id']);
     }
     public function ratingAction(){
         $games = Games::getAll();
         print_r($games);
+    }
+    public function lastAction(){
+        $game = Games::last();
+        
+        if (empty($game)) View::redirect();
+
+        if ($game['win'] < 1 && Users::checkAccess('trusted'))
+            View::redirect('/game/mafia/'.$game['id']);
+
+        View::redirect('/game/show/mafia/'.$game['id']);
     }
 }

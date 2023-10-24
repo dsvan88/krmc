@@ -126,6 +126,19 @@ class View
             require $path;
         self::exit();
     }
+    public static function html(){
+        
+        extract(self::$route['vars']);
+        // extract($vars);
+
+        $path = $_SERVER['DOCUMENT_ROOT']. self::$viewsFolder ."/$path.php";
+        if (file_exists($path)){
+            ob_start();
+            require $path;
+            $content = ob_get_clean();
+        }
+        self::message(['html' => $content]);
+    }
     public static function message($data = '')
     {
         if (!is_array($data)) {
@@ -200,9 +213,6 @@ class View
     }
     public static function component(string $filename, array $vars = []){
         
-        self::$route['vars'] = Locale::apply(self::$route['vars']);
-        
-        extract(self::$route['vars']);
         extract($vars);
 
         return require $_SERVER['DOCUMENT_ROOT'] . self::$viewsFolder."/components/$filename.php";

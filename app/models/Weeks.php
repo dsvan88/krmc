@@ -27,10 +27,10 @@ class Weeks extends Model
     // Отримати й зберегти id поточного тижня
     public static function currentId()
     {
-        $table = self::$table;
         if (self::$currentWeekId !== -1)
-            return self::$currentWeekId;
-
+        return self::$currentWeekId;
+        
+        $table = self::$table;
         self::$currentWeekId = self::query("SELECT id FROM $table WHERE start < :time AND finish > :time LIMIT 1", ['time' => $_SERVER['REQUEST_TIME']], 'Column');
 
         if (empty(self::$currentWeekId))
