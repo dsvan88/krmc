@@ -9,9 +9,9 @@
     <menu class='header__profile-menu'>
         <li class='header__profile-menu-item'>
             <a href='/account/profile/<?= $_SESSION['id'] ?>'><?= $texts['headerMenuProfileLink'] ?></span>
-            <div class='header__profile-menu-bar'></div>
+                <div class='header__profile-menu-bar'></div>
         </li>
-        <? if (in_array($_SESSION['privilege']['status'], ['manager', 'admin'])) : ?>
+        <? if (in_array($_SESSION['privilege']['status'], ['manager', 'admin', 'root'])) : ?>
             <li class='header__profile-menu-item'>
                 <a href='/news/add'><?= $texts['headerMenuAddNewsLink'] ?></a>
                 <div class='header__profile-menu-bar'></div>
