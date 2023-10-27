@@ -46,7 +46,13 @@ class Db
     }
     public static function getTables()
     {
-        $result = self::query('SELECT tablename FROM pg_tables WHERE schemaname = ?', ['public'], 'Assoc');
+        $query = 'SELECT table_name as tablename FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = ?';
+        $vars = [SQL_DB];
+        if (SQL_TYPE === 'pgsql') {
+            $query = 'SELECT tablename FROM pg_tables WHERE schemaname = ?';
+            $vars = ['public'];
+        }
+        $result = self::query($query, $vars, 'Assoc');
         return empty($result) ? false : $result;
     }
     public static function checkQuery(string $query)
@@ -199,7 +205,7 @@ class Db
         if (empty($tables)) {
             $_tables = self::getTables();
             foreach ($_tables as $table) {
-                $tables[] = $table['tablename'];
+                $tables[] = $table[0];
             }
         }
         if (empty($tables)) {

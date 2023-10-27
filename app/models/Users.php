@@ -199,9 +199,6 @@ class Users extends Model
     {
         $table = self::$table;
         $query = "SELECT id, name, login, password, privilege, personal, contacts FROM $table WHERE login = :login OR name = :login OR contacts->'$.email' = :login LIMIT 1";
-        // if (SQL_TYPE === 'pgsql'){
-        //     $query = "SELECT id, name, login, password, privilege, personal, contacts FROM $table WHERE login = :login OR name = :login OR contacts->>'email' = :login LIMIT 1";
-        // }
         $authData = self::query($query, ['login' => $login], 'Assoc');
         return self::decodeJson($authData[0]);
     }
@@ -222,11 +219,7 @@ class Users extends Model
     public static function getForget($hash)
     {
         $table = self::$table;
-        $query = "SELECT id,personal FROM $table WHERE personal->'$.forget' = :hash LIMIT 1";
-        if (SQL_TYPE === 'pgsql') {
-            $query = "SELECT id,personal FROM $table WHERE personal->'forget' = :hash LIMIT 1";
-        }
-        $userData = self::query($query, ['hash' => $hash], 'Assoc');
+        $userData = self::query("SELECT id,personal FROM $table WHERE personal->'$.forget' = :hash LIMIT 1", ['hash' => $hash], 'Assoc');
         if (!empty($userData)) {
             $userData[0]['personal'] = json_decode($userData[0]['personal'], true);
             return $userData[0];

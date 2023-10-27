@@ -68,7 +68,7 @@ class TelegramChats extends Model
         $chatData['data'] = json_encode($chatData['data'], JSON_UNESCAPED_UNICODE);
 
         $saveData = ['personal' => $chatData['personal'], 'data' => $chatData['data']];
-        if (!empty($chatData['user_id']) && !is_null($chatData['user_id'])){
+        if (!empty($chatData['user_id']) && !is_null($chatData['user_id'])) {
             $saveData['user_id'] = $chatData['user_id'];
         }
         self::update($saveData, ['id' => $savedChatId], $table);
@@ -126,11 +126,7 @@ class TelegramChats extends Model
     public static function getDirectChats()
     {
         $table = self::$table;
-        $query = "SELECT * FROM $table WHERE data->'$.direct' = ? LIMIT 1";
-        // if (SQL_TYPE === 'pgsql'){
-        //     $query = "SELECT * FROM $table WHERE data->>'direct' = ? ORDER BY id";
-        // }
-        $result = self::query($query, ['true'], 'Assoc');
+        $result = self::query("SELECT * FROM $table WHERE data->'$.direct' = ? LIMIT 1", ['true'], 'Assoc');
         if (empty($result)) {
             return [];
         }
@@ -150,8 +146,9 @@ class TelegramChats extends Model
         }
         return $result;
     }
-    public static function nicknames(array $chatsData){
-        if (!empty($chatsData['user_id'])){
+    public static function nicknames(array $chatsData)
+    {
+        if (!empty($chatsData['user_id'])) {
             $userData = Users::findBy('id', $chatsData['user_id']);
             $chatsData['nickname'] = $userData['name'];
             return $chatsData;
@@ -159,15 +156,15 @@ class TelegramChats extends Model
 
         $countChats = count($chatsData);
         $ids = [];
-        for($x=0; $x < $countChats; $x++){
+        for ($x = 0; $x < $countChats; $x++) {
             if (empty($chatsData[$x]['user_id'])) continue;
             $ids[] = $chatsData[$x]['user_id'];
         }
 
         $usersData = Users::findGroup('id', $ids);
         $countUsers = count($usersData);
-        for($x=0; $x < $countUsers; $x++){
-            for($y=0; $y < $countChats; $y++){
+        for ($x = 0; $x < $countUsers; $x++) {
+            for ($y = 0; $y < $countChats; $y++) {
                 if ($usersData[$x]['id'] != $chatsData[$y]['user_id']) continue;
                 $chatsData[$y]['nickname'] = $usersData[$x]['name'];
             }

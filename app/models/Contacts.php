@@ -28,9 +28,9 @@ class Contacts extends Model
     {
         return self::isExists(['contact' => $contact]);
     }
-    public static function new(array $data, int $userId):void
+    public static function new(array $data, int $userId): void
     {
-        foreach($data as $column => $value){
+        foreach ($data as $column => $value) {
             if (empty($value)) continue;
             Contacts::add([
                 'user_id' => $userId,
@@ -39,7 +39,7 @@ class Contacts extends Model
             ]);
         }
     }
-    public static function reLink(array $data, int $userId):void
+    public static function reLink(array $data, int $userId): void
     {
         self::deleteByUserId($userId, array_keys($data));
         self::new($data, $userId);
@@ -64,12 +64,12 @@ class Contacts extends Model
         }
         return self::insert($data, $table);
     }
-    public static function deleteByUserId(int $userId, array $types =[])
+    public static function deleteByUserId(int $userId, array $types = [])
     {
         $contacts = self::getByUserId($userId);
         if (empty($contacts)) return true;
         $count = count($contacts);
-        for($x=0; $x < $count; $x++){
+        for ($x = 0; $x < $count; $x++) {
             if (!in_array($contacts[$x]['type'], $types)) continue;
             self::remove($contacts[$x]['id']);
         }
@@ -87,7 +87,7 @@ class Contacts extends Model
         self::query(
             "CREATE TABLE IF NOT EXISTS $table (
                 id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-                user_id INT NOT NULL,
+                user_id INT DEFAULT NULL,
                 type CHARACTER VARYING(25) NOT NULL DEFAULT '',
                 contact CHARACTER VARYING(250) NOT NULL DEFAULT '',
                 data JSON DEFAULT NULL,
