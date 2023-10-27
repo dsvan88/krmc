@@ -121,7 +121,7 @@ let actionHandler = {
 		if (data['error']) {
 			return modalWindow = modal.fill({ html: data['html'], title: 'Error!', buttons: [{ 'text': 'Okay', 'className': 'modal__close positive' }] });
 		}
-
+		
 		if (!submit || !self[submit])
 			submit = 'commonSubmitFormHandler';
 
@@ -129,14 +129,6 @@ let actionHandler = {
 		data.submit = self[submit];
 
 		modalWindow = modal.fill(data);
-
-		if (data["jsFile"]) {
-			addScriptFile(data["jsFile"]);
-		};
-
-		if (data["cssFile"]) {
-			addCssFile(data["cssFile"]);
-		};
 
 		let fields = modalWindow.querySelectorAll('input[data-action-input]');
 		fields.forEach(field => {
@@ -181,10 +173,18 @@ let actionHandler = {
 		if (data["modal"]) {
 			let actionModified = camelize(action.replace(/\//g, '-'));
 
+			if (data["jsFile"]) {
+				addScriptFile(data["jsFile"]);
+			};
+
+			if (data["cssFile"]) {
+				addCssFile(data["cssFile"]);
+			};
+
 			if (self[actionModified + "Ready"])
 				modal.content.onload = self[actionModified + "Ready"]({ modal, data: data });
 
-			self.commonFormEventEnd({ modal, data, submit: actionModified + 'Submit' })
+			setTimeout( () => self.commonFormEventEnd.call(self, { modal, data, submit: actionModified + 'Submit' }), 50);
 		}
 	},
 	commonResponse: function (response, modal=null) {
@@ -239,9 +239,9 @@ let actionHandler = {
 	verification: async function (form, url, input) {
 		const formData = form ? new FormData(form.tagName === 'FORM' ? form : undefined) : undefined;
 		const verification = await request({ url: url, data: formData });
-
+	
 		if (!verification) return false;
-
+		
 		if (verification['result'] === false) {
 			if (verification['message']) new Alert({ text: verification['message'] });
 			return false;

@@ -106,11 +106,12 @@ class Users extends Model
         $_SESSION['login'] = $userData['login'];
         $_SESSION['privilege'] = $userData['privilege'];
         $_SESSION['personal'] = $userData['personal'];
-        $_SESSION['fio'] = $_SESSION['personal']['fio'];
-        $_SESSION['gender'] = $_SESSION['personal']['gender'];
-        $_SESSION['avatar'] = $_SESSION['personal']['avatar'];
+        
+        $_SESSION['fio'] = empty($_SESSION['personal']['fio']) ? '' : $_SESSION['personal']['fio'];
+        $_SESSION['gender'] = empty($_SESSION['personal']['gender']) ? '' : $_SESSION['personal']['gender'];
+        $_SESSION['avatar'] = empty($_SESSION['personal']['avatar']) ? '' : $_SESSION['personal']['avatar'];
 
-        if ($_SESSION['privilege']['status'] === '')
+        if (empty($_SESSION['privilege']['status']))
             $_SESSION['privilege']['status'] = 'user';
 
         return true;
@@ -197,7 +198,11 @@ class Users extends Model
     public static function checkForget($login)
     {
         $table = self::$table;
-        $authData = self::query("SELECT id, name, login, password, privilege, personal, contacts FROM $table WHERE login = :login OR name = :login OR contacts->>'email' = :login LIMIT 1", ['login' => $login], 'Assoc');
+        $query = "SELECT id, name, login, password, privilege, personal, contacts FROM $table WHERE login = :login OR name = :login OR contacts->'$.email' = :login LIMIT 1";
+        // if (SQL_TYPE === 'pgsql'){
+        //     $query = "SELECT id, name, login, password, privilege, personal, contacts FROM $table WHERE login = :login OR name = :login OR contacts->>'email' = :login LIMIT 1";
+        // }
+        $authData = self::query($query, ['login' => $login], 'Assoc');
         return self::decodeJson($authData[0]);
     }
     public static function saveForget($userData, $hash)
@@ -217,7 +222,11 @@ class Users extends Model
     public static function getForget($hash)
     {
         $table = self::$table;
-        $userData = self::query("SELECT id,personal FROM $table WHERE personal->>'forget' = :hash LIMIT 1", ['hash' => $hash], 'Assoc');
+        $query = "SELECT id,personal FROM $table WHERE personal->'$.forget' = :hash LIMIT 1";
+        if (SQL_TYPE === 'pgsql'){
+            $query = "SELECT id,personal FROM $table WHERE personal->'forget' = :hash LIMIT 1";
+        }
+        $userData = self::query($query, ['hash' => $hash], 'Assoc');
         if (!empty($userData)) {
             $userData[0]['personal'] = json_decode($userData[0]['personal'], true);
             return $userData[0];
@@ -261,14 +270,18 @@ class Users extends Model
     public static function getListNames($name)
     {
         $table = self::$table;
-        $result = self::query("SELECT name FROM $table WHERE name ILIKE ? ORDER BY id", ["%$name%"], 'Num');
+        $name = mb_strtolower($name, 'UTF-8');
+        // $result = self::query("SELECT name FROM $table WHERE name ILIKE ? ORDER BY id", ["%$name%"], 'Num');
+        $result = self::query("SELECT name FROM $table WHERE LOWER( name ) LIKE ? ORDER BY id", ["%$name%"], 'Num');
         return empty($result) ? [] : $result;
     }
     // Получение ID в системе по никнейму в игре
     public static function getId($name, $free = false)
     {
         $table = self::$table;
-        $result = self::query("SELECT id FROM $table WHERE name ILIKE ? LIMIT 1", [$name], 'Column');
+        $name = mb_strtolower($name, 'UTF-8');
+        // $result = self::query("SELECT id FROM $table WHERE name ILIKE ? LIMIT 1", [$name], 'Column');
+        $result = self::query("SELECT id FROM $table WHERE LOWER( name ) = ? LIMIT 1", [$name], 'Column');
 
         return empty($result) ? 0 : $result;
     }
@@ -276,7 +289,9 @@ class Users extends Model
     public static function isNameFree($name)
     {
         $table = self::$table;
-        $result = self::query("SELECT id FROM $table WHERE name ILIKE ? AND login != ? LIMIT 1", [$name, ''], 'Column');
+        $name = mb_strtolower($name, 'UTF-8');
+        // $result = self::query("SELECT id FROM $table WHERE name ILIKE ? AND login != ? LIMIT 1", [$name, ''], 'Column');
+        $result = self::query("SELECT id FROM $table WHERE LOWER( name ) = ? AND login != ? LIMIT 1", [$name, ''], 'Column');
 
         return !empty($result);
     }
@@ -294,7 +309,8 @@ class Users extends Model
     public static function getDataByName($name)
     {
         $table = self::$table;
-        $userData = self::query("SELECT * FROM $table WHERE name ILIKE ? LIMIT 1", [$name], 'Assoc');
+        $name = mb_strtolower($name, 'UTF-8');
+        $userData = self::query("SELECT * FROM $table WHERE LOWER( name ) = ? LIMIT 1", [$name], 'Assoc');
         if (empty($userData)) return false;
 
         $userData = $userData[0];
@@ -341,7 +357,11 @@ class Users extends Model
     // public static function getDataByTelegramId($tgId)
     // {
     //     $table = self::$table;
-    //     $userData = self::query("SELECT * FROM $table WHERE contacts->>'telegramid' = ? LIMIT 1", [$tgId], 'Assoc');
+        // $query = "SELECT * FROM $table WHERE contacts->>'telegramid' = ? LIMIT 1";
+        // if (SQL_TYPE === 'pgsql'){
+        //     $query = "SELECT * FROM $table WHERE contacts->>'telegramid' = ? LIMIT 1";
+        // }
+    //     $userData = self::query($query, [$tgId], 'Assoc');
     //     if (empty($userData)) return false;
 
     //     $userData = $userData[0];
@@ -352,7 +372,11 @@ class Users extends Model
     public static function getDataByToken($token)
     {
         $table = self::$table;
-        $userData = self::query("SELECT * FROM $table WHERE personal->>'token' = ? LIMIT 1", [$token], 'Assoc');
+        $query = "SELECT * FROM $table WHERE personal->'$.token' = ? LIMIT 1";
+        // if (SQL_TYPE === 'pgsql'){
+        //     $query = "SELECT * FROM $table WHERE personal->>'token' = ? LIMIT 1";
+        // }
+        $userData = self::query($query, [$token], 'Assoc');
         if (!empty($userData)) {
             return self::decodeJson($userData[0]);
         }
@@ -540,7 +564,7 @@ class Users extends Model
     public static function init()
     {
         $table = self::$table;
-        $privilegeDefault = [
+/*         $privilegeDefault = [
             'status' => '',
             'admin' => '',
             'rank' => 0
@@ -566,16 +590,24 @@ class Users extends Model
             'signature' => '',
         ];
         $credoDefault = json_encode($credoDefault, JSON_UNESCAPED_UNICODE);
-        self::query(
-            "CREATE TABLE IF NOT EXISTS $table (
-                id INT GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
-                name CHARACTER VARYING(250) NOT NULL DEFAULT '',
-                login CHARACTER VARYING(250) NOT NULL DEFAULT '',
-                password CHARACTER VARYING(250) NOT NULL DEFAULT '',
-                privilege JSON DEFAULT '$privilegeDefault',
+                        privilege JSON DEFAULT '$privilegeDefault',
                 personal JSON DEFAULT '$personalDefault',
                 contacts JSON DEFAULT '$contactsDefault',
                 credo JSON DEFAULT '$credoDefault',
+ */
+        $id_column = 'id INT NOT NULL AUTO_INCREMENT PRIMARY KEY';
+        if (SQL_TYPE === 'pgsql') $id_column = 'id INT GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY';
+
+        self::query(
+            "CREATE TABLE IF NOT EXISTS $table (
+                $id_column,
+                name CHARACTER VARYING(250) NOT NULL DEFAULT '',
+                login CHARACTER VARYING(250) NOT NULL DEFAULT '',
+                password CHARACTER VARYING(250) NOT NULL DEFAULT '',
+                privilege JSON DEFAULT NULL,
+                personal JSON DEFAULT NULL,
+                contacts JSON DEFAULT NULL,
+                credo JSON DEFAULT NULL,
                 ban JSON DEFAULT NULL,
                 created_at TIMESTAMP DEFAULT NOW(),
                 updated_at TIMESTAMP DEFAULT NOW(),

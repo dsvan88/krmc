@@ -17,14 +17,14 @@ class Db
             return self::$db;
 
         try {
-            $pdo = new PDO('pgsql:host=' . SQL_HOST . ';port=' . SQL_PORT . ';dbname=' . SQL_DB, SQL_USER, SQL_PASS);
+            $pdo = new PDO(SQL_TYPE.':host=' . SQL_HOST . ';port=' . SQL_PORT . ';dbname=' . SQL_DB, SQL_USER, SQL_PASS);
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         } catch (\Throwable $th) {
             $pdo = self::dbInit();
         }
         self::$db = $pdo;
 
-        $check = self::isTableExists();
+        $check = empty(self::$table) || self::isTableExists();
         if (!$check) {
             self::dbFillDefaults();
         }
@@ -34,8 +34,14 @@ class Db
     public static function isTableExists(): bool
     {
         $table = static::$table;
-        $stmt = self::$db->prepare('SELECT EXISTS ( SELECT FROM pg_tables WHERE schemaname = ? AND tablename  = ? )');
-        $stmt->execute(['public', $table]);
+        $query = 'SHOW TABLES LIKE ?';
+        $args = [$table];
+        if (SQL_TYPE === 'pgsql'){
+            $query = 'SELECT EXISTS ( SELECT FROM pg_tables WHERE schemaname = ? AND tablename  = ? )';
+            array_unshift($args, 'public');
+        }
+        $stmt = self::$db->prepare($query);
+        $stmt->execute($args);
         return boolval($stmt->fetchColumn());
     }
     public static function getTables()
@@ -43,16 +49,22 @@ class Db
         $result = self::query('SELECT tablename FROM pg_tables WHERE schemaname = ?', ['public'], 'Assoc');
         return empty($result) ? false : $result;
     }
-
+    public static function checkQuery(string $query){
+        if (strpos($query, '->') == false || SQL_TYPE === 'mysql') return $query;
+        if (SQL_TYPE === 'pgsql')
+            return str_replace(["->'$.", '->$.'], "->>'", $query);
+        return $query;
+    }
     public static function query($query, $params = [], $fetchMode = 'All', $columns = 0)
     {
         // error_log($query);
         // error_log(json_encode($params, JSON_UNESCAPED_UNICODE));
+        $query = self::checkQuery($query);
         $stmt = self::connect()->prepare($query);
         try {
             $stmt->execute($params);
         } catch (\Throwable $th) {
-            $check = self::isTableExists();
+            $check = empty(self::$table) || self::isTableExists();
             if (!$check) {
                 static::init();
             }
@@ -160,7 +172,14 @@ class Db
     public static function tableTruncate(string $table = null)
     {
         if (empty($table)) $table = static::$table;
-        return self::query("TRUNCATE ONLY $table CASCADE");
+        
+        $query = "SET FOREIGN_KEY_CHECKS = 0;
+                TRUNCATE table $table;
+                SET FOREIGN_KEY_CHECKS = 1;";
+        if (SQL_TYPE === 'pgsql'){
+            $query = "TRUNCATE ONLY $table CASCADE";
+        }
+        return self::query($query);
     }
     //Удаляет таблицу/таблицы
     public static function dbDropTables($tables = null)
@@ -183,16 +202,25 @@ class Db
         }
         return true;
     }
+    public static function resetIncrement($table){
+        $maxId = self::query("SELECT id FROM $table ORDER BY id DESC LIMIT 1", [], 'Column');
+        if (empty($maxId)) return true;
+        $query = "ALTER TABLE $table AUTO_INCREMENT = $maxId";
+        if (SQL_TYPE === 'pgsql'){
+            $query = "SELECT setval(pg_get_serial_sequence('$table', 'id'), coalesce($maxId+1, 1), false) FROM $table;";
+        }
+        self::query($query);
+    }
     public static function init()
     {
         return true;
     }
     public static function dbInit()
     {
-        $pdo = new PDO('pgsql:host=' . SQL_HOST . ';port=' . SQL_PORT, SQL_USER, SQL_PASS);
+        $pdo = new PDO(SQL_TYPE.':host=' . SQL_HOST . ';port=' . SQL_PORT, SQL_USER, SQL_PASS);
         $pdo->query('CREATE DATABASE ' . SQL_DB);
         $pdo = null;
-        $pdo = new PDO('pgsql:host=' . SQL_HOST . ';port=' . SQL_PORT . ';dbname=' . SQL_DB, SQL_USER, SQL_PASS);
+        $pdo = new PDO(SQL_TYPE.':host=' . SQL_HOST . ';port=' . SQL_PORT . ';dbname=' . SQL_DB, SQL_USER, SQL_PASS);
         return $pdo;
     }
     public static function dbFillDefaults()

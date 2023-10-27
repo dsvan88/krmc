@@ -57,14 +57,14 @@ class WeekRepository
 
 
 
-            $days[$i]['class'] = 'day-future';
+            $days[$i]['class'] = 'future';
             if ($selectedWeekIndex < $weekCurrentIndexInList) {
-                $days[$i]['class'] = 'day-expire';
+                $days[$i]['class'] = 'expire';
             } elseif ($selectedWeekIndex === $weekCurrentIndexInList) {
                 if ($dayId > $i) {
-                    $days[$i]['class'] = 'day-expire';
+                    $days[$i]['class'] = 'expire';
                 } elseif ($dayId === $i) {
-                    $days[$i]['class'] = 'day-current';
+                    $days[$i]['class'] = 'current';
                 }
             }
 

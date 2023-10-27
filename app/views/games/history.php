@@ -2,35 +2,29 @@
     <h1 class="games__title section__title">
         <?= $texts['BlockTitle'] ?>
     </h1>
-    <h2 class="games__title section__subtitle">
-        <? /*if ($prevgames) : ?>
+    <h2 class="schelude__title section__subtitle">
+        <? if ($prevWeek) : ?>
             <span>
-                <a class="games__title-link" href="/games/<?= $prevgames['id'] ?>"><?= date('d.m', $prevgames['start']) . ' - ' . date('d.m', $prevgames['finish'] - 3600 * 5) ?></a>
+                <a class="schelude__title-link" href="/activity/history/<?= $prevWeek['id'] ?>"><?= date('d.m', $prevWeek['start']) . ' - ' . date('d.m', $prevWeek['finish'] - 3600 * 5) ?></a>
             </span>
         <? else : ?>
-            <span class="games__title-dummy">&lt;&nbsp;No Data&nbsp;&gt;</span>
-        <? endif; */?>
+            <span class="schelude__title-dummy">&lt;&nbsp;No Data&nbsp;&gt;</span>
+        <? endif;?>
         <span><?= date('d.m', $week['start']) . ' - ' . date('d.m', $week['finish'] - 3600 * 5) ?></span>
-        <? /*if ($nextWeek) : ?>
+        <? if ($nextWeek) : ?>
             <span>
-                <a class="games__title-link" href="/weeks/<?= $nextWeek['id'] ?>"><?= date('d.m', $nextWeek['start']) . ' - ' . date('d.m', $nextWeek['finish'] - 3600 * 5) ?></a>
+                <a class="schelude__title-link" href="/activity/history/<?= $nextWeek['id'] ?>"><?= date('d.m', $nextWeek['start']) . ' - ' . date('d.m', $nextWeek['finish'] - 3600 * 5) ?></a>
             </span>
         <? else : ?>
-            <? if ($isManager) : ?>
-                <span>
-                    <a class="games__title-link" href="/weeks/add">&lt;&nbsp;<i class="fa fa-plus-circle"></i>&nbsp;&gt;</a>
-                </span>
-            <? else : ?>
-                <span class="games__title-dummy">&lt;&nbsp;No Data&nbsp;&gt;</span>
-            <? endif; ?>
-        <? endif; */?>
+            <span class="schelude__title-dummy">&lt;&nbsp;No Data&nbsp;&gt;</span>
+        <? endif ?>
     </h2>
     <div class="games__list">
         <? foreach ($games as $game) : ?>
-            <? self::component('game-history-item',['game' => $game]) ?>
+            <? self::component('game-history-item',['game' => $game, 'week' => $week]) ?>
         <? endforeach; ?>
     </div>
     <? if ($weeksCount > 1) : ?>
-        <div class="games__links"><?= $paginator ?></div>
+        <div class="paginator__links"><?= $paginator ?></div>
     <? endif; ?>
 </section>

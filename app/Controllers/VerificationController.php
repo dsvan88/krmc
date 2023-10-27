@@ -69,7 +69,6 @@ class VerificationController extends Controller
     public function registerNameAction()
     {
         $userData = Users::getDataByName(trim($_POST['name']));
-
         if (empty($userData)) {
             View::message([
                 'result' => false,
@@ -132,7 +131,7 @@ class VerificationController extends Controller
                 'CancelLabel' => 'Cancel',
             ],
             'scripts' => [
-                'account-register.js',
+                '/public/scripts/account-register.js',
             ],
         ];
         View::$route['vars'] = array_merge(View::$route['vars'], $vars);

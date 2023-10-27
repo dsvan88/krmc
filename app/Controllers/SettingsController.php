@@ -24,6 +24,9 @@ class SettingsController extends Controller
             'title' => '{{ Settings_List_Page_Title }}',
             'section' => $section,
             'settings' => $settings,
+            'texts' => [
+                'edit' => 'Edit',
+            ],
         ];
         View::$route['vars'] = array_merge(View::$route['vars'], $vars);
     

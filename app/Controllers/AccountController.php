@@ -90,13 +90,10 @@ class AccountController extends Controller
         }
         $userData = Users::getDataById($userId);
 
-        if ($userData['personal']['avatar'] !== '') {
-            $avatar = FILE_USRGALL . "{$userData['id']}/{$userData['personal']['avatar']}";
-        } else {
-            $avatar = Settings::getImage('empty_avatar')['value'];
-        }
+        $avatar = empty($userData['personal']['avatar']) ? Settings::getImage('empty_avatar')['value'] : FILE_USRGALL . "{$userData['id']}/{$userData['personal']['avatar']}";
+        
         $userData['avatar'] = ImageProcessing::inputImage($avatar, ['title' => Locale::phrase(['string' => '{{ Account_Profile_Form_User_Avatar }}', 'vars' => [$userData['name']]])]);
-        $userData['personal']['genderName'] = Locale::phrase(ucfirst($userData['personal']['gender']));
+        $userData['personal']['genderName'] = empty($userData['personal']['gender']) ? '' : Locale::phrase(ucfirst($userData['personal']['gender']));
 
         $vars = [
             'title' => [
@@ -617,7 +614,7 @@ class AccountController extends Controller
                 'CancelLabel' => 'Cancel',
             ],
             'scripts' => [
-                'account-register.js',
+                '/public/scripts/account-register.js',
             ],
         ];
         View::$route['vars'] = array_merge(View::$route['vars'], $vars);

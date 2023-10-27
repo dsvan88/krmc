@@ -192,6 +192,16 @@ class GamesController extends Controller
         $countGames = count($games);
         for ($x=0; $x < $countGames; $x++) { 
             $games[$x] = Games::decodeJson($games[$x]);
+            $games[$x]['class'] = '';
+            if ($games[$x]['win'] === 1){
+                $games[$x]['class'] = 'peace';
+            }
+            else if ($games[$x]['win'] === 2){
+                $games[$x]['class'] = 'mafia';
+            }
+            elseif ($games[$x]['win'] === 3){
+                $games[$x]['class'] = 'even';
+            }
         }
 
         $vars = [
@@ -206,6 +216,14 @@ class GamesController extends Controller
             'scripts' => 'games-history.js',
         ];
         
+        View::$route['vars']['prevWeek'] = false;
+        View::$route['vars']['nextWeek'] = false;
+
+        if (isset($weeksIds[$selectedWeekIndex - 1]))
+            View::$route['vars']['prevWeek'] = Weeks::weekDataById($weeksIds[$selectedWeekIndex - 1]);
+        if (isset($weeksIds[$selectedWeekIndex + 1]))
+            View::$route['vars']['nextWeek'] = Weeks::weekDataById($weeksIds[$selectedWeekIndex + 1]);
+
         View::$route['vars'] = array_merge(View::$route['vars'], $vars);
         View::render();
     }
@@ -215,13 +233,9 @@ class GamesController extends Controller
         if (!$game) {
             View::errorCode(404, ['message' => "Game with id: $gameId is not found"]);
         }
-        View::$route['vars']['title'] = 'Гра';
-        $state = json_decode($game['state'], true);
-        $players = json_decode($game['players'], true);
-        View::$route['vars']['state'] = $state;
-        View::$route['vars']['players'] = $players;
-        View::$route['vars']['path'] = 'games/show';
 
+        View::$route['vars']['game'] = json_decode($game['state'], true);
+        View::$route['vars']['path'] = 'components/game-card';
         View::html();
     }
     public function showAction(){
@@ -231,10 +245,8 @@ class GamesController extends Controller
             View::errorCode(404, ['message' => "Game with id: $gameId is not found"]);
         }
         View::$route['vars']['title'] = 'Гра';
-        $state = json_decode($game['state'], true);
-        $players = json_decode($game['players'], true);
-        View::$route['vars']['state'] = $state;
-        View::$route['vars']['players'] = $players;
+        View::$route['vars']['state'] = json_decode($game['state'], true);
+        View::$route['vars']['players'] = json_decode($game['players'], true);
         View::render();
     }
     public function peekAction(){

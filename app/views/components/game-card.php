@@ -10,9 +10,9 @@
                 <th>#</th>
                 <th>Гравець</th>
                 <th>Бали</th>
-                <th colspan="<?=$game['daysCount']?>">Вист./Голос</th>
+                <th colspan="<?=$game['daysCount']?>">Вист./Гол.</th>
                 <th>Фоли</th>
-                <th>Примітка</th>
+                <th>Прим</th>
             </tr>
         </thead>
         <tbody class="game__table-body">

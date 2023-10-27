@@ -162,13 +162,14 @@ class TechRepository
         if (!in_array($table, [SQL_TBL_GAMES, SQL_TBL_USERS, SQL_TBL_WEEKS, SQL_TBL_SETTINGS, SQL_TBL_PAGES, SQL_TBL_CONTACTS, SQL_TBL_TG_CHATS]))
             return false;
 
-        $data = json_decode(trim(file_get_contents($path)), true);
+        $content = str_replace('1970-01-01 00:00:00', '1970-01-02 00:00:00', trim(file_get_contents($path)));
+        $data = json_decode($content, true);
 
         if (!is_array($data))
             return false;
 
         DB::tableTruncate($table);
         DB::insert($data, $table);
-        DB::query("SELECT setval(pg_get_serial_sequence('$table', 'id'), coalesce(max(id)+1, 1), false) FROM $table;");
+        DB::resetIncrement($table);
     }
 }

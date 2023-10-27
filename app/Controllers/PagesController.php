@@ -33,15 +33,14 @@ class PagesController extends Controller
             'texts' => [
                 'edit' => 'Edit',
                 'delete' => 'Delete',
-            ]
+            ],
+            'og' => PageRepository::formPageOG($page),
         ];
         if (Users::checkAccess('manager')) {
             $vars['dashboard'] = (empty($page['id']) ? $game : $page['id']);
         }
 
         View::$path = 'pages/show';
-
-        View::$route['vars']['og'] = PageRepository::formPageOG($page);
         View::$route['vars'] = array_merge(View::$route['vars'], $vars);
     
         View::render();

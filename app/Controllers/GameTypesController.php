@@ -25,6 +25,7 @@ class GameTypesController extends Controller
             'title' => 'Games',
             'dashboard' => $dashboard,
             'games' => Locale::apply(GameTypes::names()),
+            
         ];
         
         View::$route['vars'] = array_merge(View::$route['vars'], $vars);

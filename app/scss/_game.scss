@@ -310,6 +310,49 @@
 			}
 		}
 	}
+	&-history{
+		&__card{
+			// outline: 1px solid $color-text-dark-blur;
+			font-size: .7em;
+			margin-bottom: .5em;
+			&-title{
+				border-radius: 3px;
+				box-shadow: 0px 0px .5em .3em $bg-color-green-blur inset;
+				font-size: 2em;
+				padding: .3em .5em;
+				outline: none;
+				display: flex;
+				justify-content: space-between;
+				&.peace{
+					box-shadow: 0px 0px .5em .3em $bg-color-light-red-blur inset;
+				}
+				&.mafia{
+					box-shadow: 0px 0px .5em .3em $bg-color-dark-blur inset;
+				}
+				&.even{
+					box-shadow: 0px 0px .5em .3em $bg-color-blue-blur inset;
+				}
+			}
+			.game{
+				padding: 0;
+				margin: 0;
+				&__wrapper{
+					display: flex;
+					flex-direction: column;
+					align-items: center;
+				}
+				&__description{
+					padding-top: 0;
+				}
+			}
+		}
+		
+	}
+}
+.games{
+	&__list{
+		padding: .5em 1em;
+	}
 }
 .pointlog{
 	position: absolute;

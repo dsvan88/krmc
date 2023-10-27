@@ -247,3 +247,86 @@ mark {
 		color: $color-text-accent;
 	}
 }
+
+.schelude{
+	&__title {
+		margin-top: 20px;
+		margin-bottom: 15px;
+		font-size: 3em;
+		display: flex;
+		justify-content: space-between;
+		text-align: justify;
+
+		&-link,
+		&-dummy {
+			color: $color-text-dark-blur;
+			font-size: 0.7em;
+			align-self: flex-end;
+		}
+
+		&-dummy {
+			color: $color-text-dark-blur;
+			font-size: 0.7em;
+			align-self: center;
+		}
+
+		&>span {
+			text-align: center;
+			line-height: 1em;
+		}
+
+	}
+}
+.paginator{
+	&__links {
+		display: flex;
+		justify-content: center;
+		padding: 10px 0;
+
+		>span {
+			margin: 0 .6em;
+			align-self: flex-end;
+			cursor: default;
+		}
+
+		>a {
+			margin: 0px .1em;
+			padding: 3px 5px;
+			border: 1px solid $color-text-main;
+			text-decoration: none;
+			color: $color-text-main;
+			transition: all $animation-fast ease-in;
+
+			&:hover {
+				background-color: $color-text-main;
+				color: $bg-color-dark;
+			}
+
+			&.active {
+				margin: 0px 10px;
+				border: 1px solid $bg-color-dark;
+			}
+
+			&:not([href]) {
+				cursor: not-allowed;
+
+				&:hover {
+					background-color: $color-text-menu;
+					color: $color-text-dark-blur;
+				}
+			}
+		}
+	}
+}
+.read-more {
+	position: absolute;
+	bottom: 20px;
+	width: 88%;
+	font-size: 0.7em;
+
+	&__link {
+		float: right;
+		color: $color-text-main;
+		cursor: pointer;
+	}
+}

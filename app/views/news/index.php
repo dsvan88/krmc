@@ -47,6 +47,6 @@ use app\core\ImageProcessing;
         <? endfor; ?>
     </div>
     <? if ($newsCount > CFG_NEWS_PER_PAGE) : ?>
-        <div class="news-preview__links"><?= $paginator ?></div>
+        <div class="paginator__links"><?= $paginator ?></div>
     <? endif; ?>
 </section>

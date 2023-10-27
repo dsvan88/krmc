@@ -22,10 +22,10 @@ class AutocompleteController extends Controller
             'RemarkPlaceHolder' => 'Remark',
             'clearLabel' => 'Clear',
         ];
-        $texts = Locale::apply($texts);
+        View::$route['vars']['texts'] = Locale::apply($texts);
 
         ob_start();
-        View::component('participants-field', ['participantId'=> (int) $_POST['id'], 'texts' => $texts]);
+        View::component('participants-field', [ 'participantId'=> (int) $_POST['id'] ]);
         $result = ob_get_clean();
         View::message(['html' => $result]);
     }

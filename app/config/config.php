@@ -3,7 +3,9 @@ if (!session_id()) {
     session_start();
     $_SESSION['csrf'] = sha1(session_id());
 }
+
 if (!defined('SQL_HOST')) {
+    define('SQL_TYPE',     empty($_ENV['SQL_TYPE'])       ? 'pgsql' :     $_ENV['SQL_TYPE']);
     if (isset($_ENV['DATABASE_URL'])) {
         preg_match('/\/\/(.*?)\:(.*?)\@(.*?)\:(\d{1,5})\/(.*)/', $_ENV['DATABASE_URL'], $match);
         define('SQL_USER', $match[1]);

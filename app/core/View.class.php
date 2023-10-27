@@ -160,11 +160,8 @@ class View
                 'message' => $data
             ];
         }
-        if (isset($data['message'])) {
-            $data['message'] = Locale::phrase($data['message']);
-        } else {
-            $data['message'] = '';
-        }
+        
+        $data['message'] = empty($data['message']) ? '' : Locale::phrase($data['message']);
 
         if (!empty($data['error'])) {
             $data['type'] = 'error';
@@ -206,15 +203,13 @@ class View
         if (!empty($string)) {
             echo $string;
         }
-
         TechRepository::scheduleBackup();
-        
         exit();
     }
     public static function component(string $filename, array $vars = []){
-        
         extract($vars);
-
+        $texts = [];
+        if (!empty(self::$route['vars']['texts'])) $texts = self::$route['vars']['texts'];
         return require $_SERVER['DOCUMENT_ROOT'] . self::$viewsFolder."/components/$filename.php";
     }
 }

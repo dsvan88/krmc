@@ -6,7 +6,7 @@
         <?= $texts['FioLabel'] ?>:
     </h5>
     <div class="profile__card-value">
-        <?= $data['personal']['fio'] ?>
+        <?= empty($data['personal']['fio']) ? '' : $data['personal']['fio'] ?>
     </div>
 </div>
 <div class="profile__card-row">
@@ -14,7 +14,7 @@
         <?= $texts['BirthdayLabel'] ?>:
     </h5>
     <div class="profile__card-value">
-        <?= date('d.m.Y', $data['personal']['birthday']) ?>
+        <?= empty($data['personal']['birthday']) ? '' : date('d.m.Y', $data['personal']['birthday']) ?>
     </div>
 </div>
 <div class="profile__card-row">

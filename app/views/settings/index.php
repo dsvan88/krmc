@@ -16,15 +16,8 @@
                 </tr>
             </thead>
             <tbody>
-                <? foreach ($settings as $slug=>$data) : ?>
-                    <tr>
-                        <td title="Назва"><?= $data['name'] ?></td>
-                        <td title="Значення" class="settings__value"><?= $data['value'] ?></td>
-                        <td title="Меню" class="settings__dasboard">
-                            <span class="fa fa-pencil-square-o" data-action-click="settings/edit/form" data-setting-id="<?= $data['id'] ?>" title='Редагувати'></a>
-                            <?/*<!-- <a href="/settings/delete/<?= $data['id'] ?>" onclick="return confirm('Are you sure?')" title='Видалити'><i class='fa fa-trash-o news-dashboard__button'></i></a>*/?>
-                        </td>
-                    </tr>
+                <? foreach ($settings as $slug=>$setting) : ?>
+                    <? self::component('setting-row', ['setting' => $setting])?>
                 <? endforeach; ?>
             </tbody>
         </table>

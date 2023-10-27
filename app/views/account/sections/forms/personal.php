@@ -7,7 +7,7 @@
             <?= $texts['FioLabel'] ?>:
         </h4>
         <div class="profile__card-value">
-            <input type="text" name='fio' value="<?= $data['personal']['fio'] ?>">
+            <input type="text" name='fio' value="<?= empty($data['personal']['fio']) ? '' : $data['personal']['fio'] ?>">
         </div>
     </div>
     <div class="profile__card-row">
@@ -15,7 +15,7 @@
             <?= $texts['BirthdayLabel'] ?>:
         </h4>
         <div class="profile__card-value">
-            <input type="date" name='birthday' value="<?= date('Y-m-d', $data['personal']['birthday']) ?>">
+            <input type="date" name='birthday' value="<?= empty($data['personal']['birthday']) ? '' : date('Y-m-d', $data['personal']['birthday']) ?>">
         </div>
     </div>
     <div class="profile__card-row">

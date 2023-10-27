@@ -18,8 +18,8 @@ class ViewHeader {
             'headerMenu' => self::menu(),
         ];
         if (isset($_SESSION['id'])) {
-            if ($_SESSION['avatar'] == '') {
-                $profileImage = $_SESSION['gender'] === '' ? $images['profile']['value'] : $images[$_SESSION['gender']]['value'];
+            if (empty($_SESSION['avatar'])) {
+                $profileImage = empty($_SESSION['gender']) ? $images['profile']['value'] : $images[$_SESSION['gender']]['value'];
             } else {
                 $profileImage = FILE_USRGALL . "{$_SESSION['id']}/{$_SESSION['avatar']}";
             }

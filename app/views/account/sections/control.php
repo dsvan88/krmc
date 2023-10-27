@@ -18,7 +18,7 @@
         Статус:
     </h5>
     <div class="profile__card-value">
-        <span class="text-accent"><?=$data['privilege']['status']?></span>
+        <span class="text-accent"><?= empty($data['privilege']['status']) ? '' : $data['privilege']['status']?></span>
     </div>
 </div>
 <div class="profile__card-row">
