@@ -1070,10 +1070,10 @@ class MafiaEngine extends GameEngine {
         
         let check = '';
         if (this.subStage === 'WakeUpDon'){
-            check = this.players[playerId].role === 'sherif' ? '<b class="positive">Шериф</b>' : '<b class="negative">не Шериф</b>';
+            check = this.players[playerId].role === 'sherif' ? '<b class="positive">Шериф</b>👌' : '<b class="negative">не Шериф</b>🤞';
         }
         else if (this.subStage === 'WakeUpSherif'){
-            check = this.players[playerId].role === 'mafia' || this.players[playerId].role === 'don' ? 'команда <b class="negative">Мафії</b>' : 'команда <b class="positive">Мирних</b>';
+            check = this.players[playerId].role === 'mafia' || this.players[playerId].role === 'don' ? 'команда <b class="negative">Мафії</b>👎' : 'команда <b class="positive">Мирних</b>👍';
         }
         this.alert = {
             title: `Перевірка ролі гравця №${this.players[playerId].num} (${this.players[playerId].name}).`,
