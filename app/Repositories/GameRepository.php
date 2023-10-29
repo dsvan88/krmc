@@ -3,6 +3,7 @@
 namespace app\Repositories;
 
 use app\core\Locale;
+use app\models\Games;
 
 class GameRepository
 {
@@ -49,8 +50,12 @@ class GameRepository
         return $array;
     }
     public static function formResult(array $state){
+        $game = Games::find($state['gameId']);
+        $game['players'] = json_decode($game['players'], true);
         $countPlayers = count($state['players']);
         for ($playerId=0; $playerId < $countPlayers; $playerId++) { 
+            $state['players'][$playerId]['index'] = $playerId;
+            $state['players'][$playerId]['id'] = $game['players'][$playerId]['id'];
             $state['players'][$playerId]['voted'] = $state['daysCount'] > 0 ? array_fill(0, $state['daysCount'], '') : [];
         }
         for ($day=0; $day < $state['daysCount']; $day++) { 
@@ -63,6 +68,6 @@ class GameRepository
                 }
             }
         }
-        return ['state' => $state, 'players' => $state['players']];
+        return [json_encode($state, JSON_UNESCAPED_UNICODE), json_encode($state['players'], JSON_UNESCAPED_UNICODE)];
     }
 }

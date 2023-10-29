@@ -71,14 +71,10 @@ class DaysController extends Controller
             break;
         }
 
-        if (isset($day['weekStart'])) {
-            $dayTimestamp = $day['weekStart'] + TIMESTAMP_DAY * $dayId;
-            $day['date'] = date('d.m.Y', $dayTimestamp) . ' (<strong>' . Locale::phrase(date('l', $dayTimestamp)) . '</strong>) ' . $day['time'];
-        } else {
-            $day['date'] = '{{ Day_Date_Not_Set }}';
-        }
+        $dayTimestamp = $day['weekStart'] + TIMESTAMP_DAY * $dayId;
+        $day['date'] = empty($day['weekStart']) ? '{{ Day_Date_Not_Set }}' : date('d.m.Y', $dayTimestamp) . ' (<strong>' . Locale::phrase(date('l', $dayTimestamp)) . '</strong>) ' . $day['time'];
 
-        if ($dayId == 0 && !Days::checkPrevSunday($weekId)) {
+        if ($dayId == 0 && !Weeks::checkPrevWeek($weekId)) {
             $yesterday = [
                 'link' => '',
                 'label' => '&lt; No Data &gt;',
@@ -90,7 +86,7 @@ class DaysController extends Controller
             ];
         }
 
-        if ($dayId == 6 && !Days::checkNextMorning($weekId)) {
+        if ($dayId == 6 && !Weeks::checkNextWeek($weekId)) {
             $tomorrow = [
                 'link' => '',
                 'label' => '&lt; No Data &gt;',
@@ -102,9 +98,7 @@ class DaysController extends Controller
             ];
         }
 
-        if (!isset($day['day_prim'])) {
-            $day['day_prim'] = '';
-        }
+       $day['day_prim'] = empty($day['day_prim']) ? '' : $day['day_prim'];
 
         $day['tournament'] = '';
         if (isset($day['mods']) && in_array('tournament', $day['mods'])) {
@@ -115,7 +109,7 @@ class DaysController extends Controller
 
         $selfBooking = [];
 
-        if (!empty($_SESSION['id'])) {
+        if (!empty($_SESSION['id']) && !Days::isExpired($dayTimestamp)) {
             $url = self::$route['url'];
             $selfBooking = [
                 'link' => "/$url/booking",
@@ -124,7 +118,7 @@ class DaysController extends Controller
             for ($i = 0; $i < $playersCount; $i++) {
                 if (empty($day['participants'][$i])) break;
                 if (empty($day['participants'][$i]['id'])) continue;
-                if ($day['participants'][$i]['id'] !== $_SESSION['id']) continue;
+                if ($day['participants'][$i]['id'] != $_SESSION['id']) continue;
                 $selfBooking = [
                     'link' => "/$url/unbooking",
                     'label' => 'Unbooking',

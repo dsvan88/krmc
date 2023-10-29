@@ -48,10 +48,12 @@ class Games extends Model
         $table = self::$table;
         $data = [
             'state' => $post['state'],
-            'prevStates' => $post['prevstates'],
+            'prevStates' => $post['prevStates'],
         ];
-        if (!empty($data['state']['winners'])){
-            $data = GameRepository::formResult($data);
+        $state = json_decode($data['state'], true);
+        if (!empty($state['winners'])){
+            [$data['state'], $data['players']] = GameRepository::formResult($state);
+            $data['win'] = $state['winners'];
         }
         self::update($data, ['id' => $id], $table);
     }

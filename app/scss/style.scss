@@ -495,6 +495,7 @@ body {
 		background-color: $bg-color-red-blur;
 		display: none;
 		box-shadow: 0 0 10px 3px #1515158a;
+		z-index: 3;
 	}
 
 	&:hover {

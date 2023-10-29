@@ -44,7 +44,9 @@
                 </div>
             <? endfor ?>
             <? if (!empty($selfBooking)) : ?>
-                <a href="<?= $selfBooking['link'] ?>" class="button"><?= $selfBooking['label'] ?></a>
+                <div class="booking__self">
+                    <a href="<?= $selfBooking['link'] ?>" class="button"><?= $selfBooking['label'] ?></a>
+                </div>
             <? endif; ?>
         </div>
     </form>

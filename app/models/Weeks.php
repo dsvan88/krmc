@@ -18,9 +18,7 @@ class Weeks extends Model
             $time = $_SERVER['REQUEST_TIME'];
         $result = self::query("SELECT id,data,start,finish FROM $table WHERE start < :time AND finish > :time LIMIT 1", ['time' => $time], 'Assoc');
         if (!empty($result)) {
-            $result = $result[0];
-            $result['data'] = json_decode($result['data'], true);
-            return $result;
+            return self::decodeJson($result[0]);
         }
         return false;
     }
@@ -48,12 +46,9 @@ class Weeks extends Model
     {
         if ($id < 1) return false;
 
-        $table = self::$table;
-        $result = self::query("SELECT * FROM $table WHERE id = ? LIMIT 1", [$id], 'Assoc');
+        $result = self::find($id);
         if (!empty($result)) {
-            $result = $result[0];
-            $result['data'] = json_decode($result['data'], true);
-            return $result;
+            return self::decodeJson($result);
         }
         $id = self::create();
 
@@ -65,9 +60,7 @@ class Weeks extends Model
         $table = self::$table;
         $result = self::query("SELECT * FROM $table ORDER BY id DESC LIMIT 1", [], 'Assoc');
         if (!empty($result)) {
-            $result = $result[0];
-            $result['data'] = json_decode($result['data'], true);
-            return $result;
+            return self::decodeJson($result[0]);
         }
         return false;
     }
@@ -79,7 +72,7 @@ class Weeks extends Model
         $result = self::query("SELECT id,data,start,finish FROM $table WHERE finish > ? ORDER BY id ASC", [$time], 'Assoc');
         if (!empty($result)) {
             for ($i = 0; $i < count($result); $i++) {
-                $result[$i]['data'] = json_decode($result[$i]['data'], true);
+                $result[$i] = self::decodeJson($result[$i]);
             }
             return $result;
         }
@@ -109,7 +102,7 @@ class Weeks extends Model
         $weekData = $result;
         $weekData['id'] = 0;
         if (is_string($weekData['data'])) {
-            $weekData['data'] = json_decode($weekData['data'], true);
+            $weekData['data'] = self::decodeJson($weekData['data']);
         }
         for ($i = 0; $i < 7; $i++) {
             $weekData['data'][$i]['participants'] = [];
@@ -153,6 +146,20 @@ class Weeks extends Model
             error_log(__METHOD__ . $th->__toString());
             return false;
         }
+    }
+    public static function checkNextWeek(int $weekId)
+    {
+        if (Users::checkAccess('manager')) return true;
+        
+        return self::isExists(['id' => $weekId + 1]);
+    }
+    public static function checkPrevWeek(int $weekId)
+    {
+        return self::isExists(['id' => $weekId - 1]);
+    }
+    public static function decodeJson(array &$data): array{
+        $data['data'] = json_decode($data['data'], true);
+        return $data;
     }
     public static function init()
     {

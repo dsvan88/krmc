@@ -208,6 +208,11 @@ return  [
         'action' => 'rating',
         'access' => ['category' => 'trusted'],
     ],
+    'activity/rating/{weekId}' => [
+        'controller' => 'games',
+        'action' => 'rating',
+        'access' => ['category' => 'trusted'],
+    ],
     'activity/peek' => [
         'controller' => 'games',
         'action' => 'peek',

@@ -8,7 +8,7 @@
         </span>
         
         <span class="game-history__card-result">
-            Winner: <?= empty($game['win']) ? 'In progress' : $game['win'] ?>
+            Winner: <?= $teams[$game['win']] ?>
         </span>
     </summary>
     <div class="game-history__card">

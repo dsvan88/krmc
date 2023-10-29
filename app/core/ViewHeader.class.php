@@ -50,15 +50,15 @@ class ViewHeader {
         $menu = [
             [
                 'path' => '',
-                'label' => Locale::phrase('Home')
+                'label' => 'Home'
             ],
             [
                 'path' => 'news',
-                'label' => Locale::phrase('{{ HEADER_MENU_NEWS }}')
+                'label' => 'News',
             ],
             [
                 'path' => 'weeks',
-                'label' => Locale::phrase('{{ HEADER_MENU_WEEKS }}')
+                'label' => 'Weeks',
             ],
             // [
             //     'path' => '',
@@ -68,7 +68,7 @@ class ViewHeader {
             // ],
             [
                 'path' => 'game',
-                'label' => Locale::phrase('Games'),
+                'label' => 'Games',
                 'menu' => GameTypes::menu(),
                 'type' => 'game',
             ],
@@ -81,9 +81,13 @@ class ViewHeader {
 
         if (Users::checkAccess('trusted')) {
             $menu[] = [
-                // 'path' => 'activity',
-                'label' => Locale::phrase('Activity'),
+                'label' => 'Activity',
                 'menu' => [
+                        [
+                            'name' => 'Play a game',
+                            'slug' => 'play',
+                            'fields' => '',
+                        ],
                         [
                             'name' => 'History',
                             'slug' => 'history',
@@ -92,11 +96,6 @@ class ViewHeader {
                         [
                             'name' => 'Rating',
                             'slug' => 'rating',
-                            'fields' => '',
-                        ],
-                        [
-                            'name' => 'Play a game',
-                            'slug' => 'play',
                             'fields' => '',
                         ],
                         [
@@ -113,41 +112,6 @@ class ViewHeader {
                 'type' => 'activity',
             ];
         }
-
-        $headerMenu = '';
-
-        for ($x = 0; $x < count($menu); $x++){
-            if (!empty($menu[$x]['path'])){
-                $menu[$x]['path'] .= '/';
-            }
-            if (!isset($menu[$x]['menu'])) {
-                $headerMenu .= "
-                <div class='header__navigation-item'>
-                    <a href='/{$menu[$x]['path']}'>{$menu[$x]['label']}</a>
-                    <div class='bar'></div>
-                </div>";
-            } else {
-                $headerMenu .= '
-                <div class="header__navigation-item dropdown">
-                    <label class="dropdown__label">' . (empty($menu[$x]['path']) ? $menu[$x]['label'] : "<a href='/{$menu[$x]['path']}'>{$menu[$x]['label']}</a>") .'</label>
-                    <div class="bar"></div>
-                    <menu class="dropdown__menu">';
-                        for ($i = 0; $i < count($menu[$x]['menu']); $i++){
-                            $path = '';
-                            if ($menu[$x]['menu'][$i]['slug'] !== 'index') {
-                                $path = $menu[$x]['type'] . '/' . $menu[$x]['menu'][$i]['slug'];
-                            }
-                            $headerMenu .= "
-                            <li class='dropdown__item'>
-                                <a href='/$path/'>{$menu[$x]['menu'][$i]['name']}</a>
-                                <div class='dropdown__bar'></div>
-                            </li>";
-                        }
-                $headerMenu .= "
-                    </menu>
-                </div>";
-            }
-        }
-        return $headerMenu;
+        return Locale::apply($menu);
     }
 }

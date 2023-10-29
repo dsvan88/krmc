@@ -271,14 +271,12 @@ class MafiaEngine extends GameEngine {
         await super.send(state);
     }
     getNextSubStage() {
+        if (this.stage !== 'Start' && this.theEnd()) return 'Finish';
         const method = `${this.stage}SubStage`;
         return this[method]();
     }
     getNextStage() {
-        if (this.theEnd() || this.stage === 'Finish')
-            return 'Finish';
-
-        if (this.stage === 'Start' || this.stage === 'Night') {
+        if (this.stage === 'Night' || this.stage === 'Start') {
             return 'Day';
         }
         if (this.stage === 'Day') {
@@ -361,9 +359,6 @@ class MafiaEngine extends GameEngine {
         }
         return false;
     }
-    FinishSubStage(){
-        return 'Finish';
-    }
     next() {
         if (this.prompt && this.prompt.pause) return false;
 
@@ -377,14 +372,17 @@ class MafiaEngine extends GameEngine {
             this.stage = this.getNextStage();
             this.subStage = this.getNextSubStage();
         }
-        if (this[this.subStage]) {
+
+        try {
             this[this.subStage]();
         }
-        else
-            throw new Error('Something went wrong:(');
-
-        this.resetView()
-        this.send();
+        catch(error) {
+            throw new Error(`Something went wrong:(\nStage: ${this.stage}\nSubStage: ${this.subStage}\nError: ${error.message}`);
+        }
+        finally{
+            this.resetView()
+            this.send();
+        }         
     };
     resetLog() {
         let _log = this._log;
@@ -397,7 +395,13 @@ class MafiaEngine extends GameEngine {
         this.resetView();
     }
     stopGame(){
-        return true;
+        const winner = prompt("Stop game?\nSet Winner's Team:\n0 - Cancel;\n1 - Peace;\n2 - Mafia;\n3 - Even.", '0');
+        if (winner){
+            this.theEnd(winner);
+            this[this.subStage]();
+            return false;
+        }
+        return false;
     }
     resetView() {
         this.clearView();
@@ -1161,8 +1165,8 @@ class MafiaEngine extends GameEngine {
         return 'Finish';
     }
     assignPoints() {
-        let red = this.getActivePlayersCount(1),
-            mafs = this.getActivePlayersCount(2),
+        let red = this.getActivePlayersCount('peace'),
+            mafs = this.getActivePlayersCount('mafia'),
             bestMove = this.compareBestMove(),
             firstKill = this.checkFirstKillSheriff(),
             votedInSheriff = this.checkVotedInSheriffFirst(),
@@ -1210,7 +1214,7 @@ class MafiaEngine extends GameEngine {
                         player.pointsLog.push({ 'AliveMafia': this.config.points.aliveMafs[mafs] });
                     }
                 }
-                if (this.players[firstKill].role == 'sherif') {
+                if (firstKill && this.players[firstKill].role == 'sherif') {
                     if (this.dynamicOrder) {
                         player.points += this.config.points.sherifFirstDynamicKill;
                         player.pointsLog.push({ 'FirstKillSherifDynamic': this.config.points.sherifFirstDynamicKill });
@@ -1224,20 +1228,23 @@ class MafiaEngine extends GameEngine {
         })
     }
     theEnd(winner) {
+        if (this.winners)
+            return true;
         let message = '',
             red = this.getActivePlayersCount('peace'),
             mafs = this.getActivePlayersCount('mafia');
-        if (mafs === 0 || winner === 1) {
+        if (mafs === 0 || winner === '1') {
             this.winners = 1;
             message = 'Мирне місто!\nВідтепер Ваші діти можуть спати спокійно!';
         }
-        else if (mafs >= red || winner === 2) {
+        else if (mafs >= red || winner === '2') {
             this.winners = 2;
             message = "Мафію!\nВідтепер Ваші діти можуть спати сито й спокійно!";
         }
         if (this.winners) {
             this.stageDescr = `Вітаємо з перемогою: ${message}`;
-            this.stage = 'finish';
+            this.stage = 'Finish';
+            this.subStage = 'Finish';
             return true;
         }
         return false;

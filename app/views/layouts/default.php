@@ -53,7 +53,9 @@
                     <input type="checkbox" name="toggle-navigation" id="header__navigation-checkbox" class="navigation-for-small-display-chechbox">
                     <nav class="header__navigation" id="header__navigation">
                         <label for="header__navigation-checkbox" class="navigation-for-small-display menu-hide"><i class="fa fa-times"></i></label>
-                        <?= $headerMenu ?>
+                        <? foreach($headerMenu as $headerMenuItem):?>
+                            <? self::component('header-menu-item', ['menuItem' => $headerMenuItem]) ?>
+                        <? endforeach ?>
                     </nav>
                 </div>
                 <div class="header__profile"><?= $headerProfileButton ?></div>

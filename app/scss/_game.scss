@@ -353,6 +353,16 @@
 	&__list{
 		padding: .5em 1em;
 	}
+	&__rating{
+		font-size: .35em;
+		.game{
+			&__table{
+				td{
+					text-align: center;
+				}
+			}
+		}
+	}
 }
 .pointlog{
 	position: absolute;

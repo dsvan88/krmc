@@ -30,9 +30,9 @@ class WeekRepository
         $selectedWeekIndex = array_search($weekId, $weeksIds);
 
         if (isset($weeksIds[$selectedWeekIndex - 1]))
-            $prevWeek = Weeks::weekDataById($weeksIds[$selectedWeekIndex - 1]);
+            $prevWeek = Weeks::find($weeksIds[$selectedWeekIndex - 1]);
         if (isset($weeksIds[$selectedWeekIndex + 1]))
-            $nextWeek = Weeks::weekDataById($weeksIds[$selectedWeekIndex + 1]);
+            $nextWeek = Weeks::find($weeksIds[$selectedWeekIndex + 1]);
 
         $dayNames = Locale::apply([
             'Monday',

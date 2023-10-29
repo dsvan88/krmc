@@ -5,15 +5,15 @@
     <h2 class="schelude__title section__subtitle">
         <? if ($prevWeek) : ?>
             <span>
-                <a class="schelude__title-link" href="/weeks/<?= $prevWeek['id'] ?>"><?= date('d.m', $prevWeek['start']) . ' - ' . date('d.m', $prevWeek['finish'] - 3600 * 5) ?></a>
+                <a class="schelude__title-link" href="/weeks/<?= $prevWeek['id'] ?>"><?= date('d.m', $prevWeek['start']) . ' - ' . date('d.m', $prevWeek['finish'] - 18000) ?></a>
             </span>
         <? else : ?>
             <span class="schelude__title-dummy">&lt;&nbsp;No Data&nbsp;&gt;</span>
         <? endif ?>
-        <span><?= date('d.m', $weekData['start']) . ' - ' . date('d.m', $weekData['finish'] - 3600 * 5) ?></span>
+        <span><?= date('d.m', $weekData['start']) . ' - ' . date('d.m', $weekData['finish'] - 18000) ?></span>
         <? if ($nextWeek) : ?>
             <span>
-                <a class="schelude__title-link" href="/weeks/<?= $nextWeek['id'] ?>"><?= date('d.m', $nextWeek['start']) . ' - ' . date('d.m', $nextWeek['finish'] - 3600 * 5) ?></a>
+                <a class="schelude__title-link" href="/weeks/<?= $nextWeek['id'] ?>"><?= date('d.m', $nextWeek['start']) . ' - ' . date('d.m', $nextWeek['finish'] - 18000) ?></a>
             </span>
         <? else : ?>
             <? if ($isManager) : ?>

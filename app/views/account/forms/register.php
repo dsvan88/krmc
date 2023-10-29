@@ -1,17 +1,17 @@
 <form class="modal__form" method="POST" action="/account/register">
     <h2 class="modal__form-title"><?= $title ?></h2>
     <div class="modal__row">
-        <input class="modal__input" required type="text" name="login" placeholder="<?= $texts['LoginLabel'] ?>" autofocus value="demon" />
+        <input class="modal__input" required type="text" name="login" placeholder="<?= $texts['LoginLabel'] ?>" autofocus />
         <input type="hidden" name="<?= CSRF_NAME ?>" value="<?= $_SESSION['csrf'] ?>" />
     </div>
     <div class="modal__row">
-        <input class="modal__input" required type="text" name="name" placeholder="<?= $texts['NameLabel'] ?>" data-autocomplete="user-name" value="Джокер" />
+        <input class="modal__input" required type="text" name="name" placeholder="<?= $texts['NameLabel'] ?>" data-autocomplete="user-name" />
     </div>
     <div class="modal__row">
-        <input class="modal__input" required type="password" name="password" placeholder="<?= $texts['PasswordLabel'] ?>" value="Demon1988" />
+        <input class="modal__input" required type="password" name="password" placeholder="<?= $texts['PasswordLabel'] ?>" />
     </div>
     <div class="modal__row">
-        <input class="modal__input" required type="password" name="chk_password" placeholder="<?= $texts['PasswordAgainLabel'] ?>"  value="Demon1988"/>
+        <input class="modal__input" required type="password" name="chk_password" placeholder="<?= $texts['PasswordAgainLabel'] ?>" />
     </div>
     <div class="modal__buttons">
         <button type="submit" class="positive"><?= $texts['RegisterSubmit'] ?></button>

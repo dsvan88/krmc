@@ -21,7 +21,7 @@
     </h2>
     <div class="games__list">
         <? foreach ($games as $game) : ?>
-            <? self::component('game-history-item',['game' => $game, 'week' => $week]) ?>
+            <? self::component('game-history-item',['game' => $game, 'week' => $week, 'teams' => $teams]) ?>
         <? endforeach; ?>
     </div>
     <? if ($weeksCount > 1) : ?>

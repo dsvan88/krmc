@@ -75,8 +75,8 @@ class GameEngine {
         }
         if (result.state) {
             this.load(result.state);
-            if (result.prevstates)
-                this.prevStates = JSON.parse(result.prevstates);
+            if (result.prevStates)
+                this.prevStates = JSON.parse(result.prevStates);
         }
         this.gameTable.dispatchEvent(new Event('ready'));
         return true;        
@@ -124,7 +124,7 @@ class GameEngine {
     async send(state) {
         const data = new FormData;
         data.append('state', state);
-        data.append('prevstates', JSON.stringify(this.prevStates));
+        data.append('prevStates', JSON.stringify(this.prevStates));
         await request({
             url: 'game/save/' + this.gameId,
             data: data,

@@ -193,13 +193,13 @@ class GamesController extends Controller
         for ($x=0; $x < $countGames; $x++) { 
             $games[$x] = Games::decodeJson($games[$x]);
             $games[$x]['class'] = '';
-            if ($games[$x]['win'] === 1){
+            if ($games[$x]['win'] === '1'){
                 $games[$x]['class'] = 'peace';
             }
-            else if ($games[$x]['win'] === 2){
+            else if ($games[$x]['win'] === '2'){
                 $games[$x]['class'] = 'mafia';
             }
-            elseif ($games[$x]['win'] === 3){
+            elseif ($games[$x]['win'] === '3'){
                 $games[$x]['class'] = 'even';
             }
         }
@@ -214,6 +214,7 @@ class GamesController extends Controller
                 'BlockTitle' => 'Games history',
             ],
             'scripts' => 'games-history.js',
+            'teams' => ['In progress', 'Peace', 'Mafia', 'Even'],
         ];
         
         View::$route['vars']['prevWeek'] = false;
@@ -254,8 +255,105 @@ class GamesController extends Controller
         View::redirect('/game/show/mafia/'.$game['id']);
     }
     public function ratingAction(){
-        $games = Games::getAll();
-        print_r($games);
+        extract(self::$route['vars']);
+
+        $weekCurrentId = Weeks::currentId();
+
+        if (empty($weekId)){
+            $weekId = $weekCurrentId;
+        }
+
+        $week = Weeks::weekDataById($weekId);
+        $weeksIds = Weeks::getIds();
+        $weeksCount = count($weeksIds);
+        $weekCurrentIndexInList = array_search($weekCurrentId, $weeksIds);
+        $selectedWeekIndex = array_search($weekId, $weeksIds);
+        $paginator = Paginator::games(['weeksIds' => $weeksIds, 'currentIndex' => $weekCurrentIndexInList, 'selectedIndex' => $selectedWeekIndex]);
+
+        $games = Games::getAll(['week_id' => $weekId]);
+
+        $rating = [];
+        $ratingDefault = [
+            'points' => 0,
+            'pointsLog' => [],
+            'win' => [
+                'don' => 0,
+                'sherif' => 0,
+                'mafia' => 0,
+                'peace' => 0,
+                'all' => 0,
+            ],
+            'pointTypes' => [
+                'Winners' => 0,
+                'BestMove' => 0,
+                'positive' => 0,
+                'negative' => 0,
+            ],
+            'games' => 0,
+        ];
+        $countGames = count($games);
+        for ($x=0; $x < $countGames; $x++) { 
+            $games[$x] = Games::decodeJson($games[$x]);
+            foreach($games[$x]['players'] as $player){
+                if (empty($games[$x]['win'])) continue;
+                if (empty($rating[$player['id']]))
+                    $rating[$player['id']] = $ratingDefault;
+
+                $rating[$player['id']]['name'] = $player['name'];
+                $rating[$player['id']]['games']++;
+                $points = $player['points'] + $player['adds'];
+                $rating[$player['id']]['points'] += $points;
+                $rating[$player['id']]['pointsLog'][] = $player['pointsLog'];
+                if ($games[$x]['win'] === '1' && in_array($player['role'], ['peace', 'sherif'], true) || $games[$x]['win'] === '2' && in_array($player['role'], ['mafia', 'don'], true)){
+                    $rating[$player['id']]['win'][$player['role']]++;
+                    $rating[$player['id']]['win']['all']++;
+                }
+                $countLogs = count($player['pointsLog']);
+                for ($y=0; $y < $countLogs; $y++) { 
+                    foreach($player['pointsLog'][$y] as $index=>$value){
+                        if (in_array($index, ['Winners', 'BestMove'])){
+                            $rating[$player['id']]['pointTypes'][$index] += $value;
+                            continue;
+                        }
+                        if (in_array($index, ['AliveMafia', 'AliveRed', 'FirstKillSherifDynamic', 'FirstKillSherifStatic'], true)){
+                            $rating[$player['id']]['pointTypes']['positive'] += $value;
+                            continue;
+                        }
+                        if (in_array($index, ['Disqualification', 'FourFouls', 'VotedInSherif'])){
+                            $rating[$player['id']]['pointTypes']['negative'] += $value;
+                            continue;
+                        }
+                    }
+                }
+                
+            }
+        }
+
+        usort($rating, function ($playerA, $playerB){
+            return $playerA['points'] > $playerB['points'] ? -1 : 1;
+        });
+
+        $vars = [
+            'title' => 'Games rating',
+            'week' => $week,
+            'weeksCount' => $weeksCount,
+            'rating' => $rating,
+            'paginator' => $paginator,
+            'texts' => [
+                'BlockTitle' => 'Games rating',
+            ],
+        ];
+        
+        View::$route['vars']['prevWeek'] = false;
+        View::$route['vars']['nextWeek'] = false;
+
+        if (isset($weeksIds[$selectedWeekIndex - 1]))
+            View::$route['vars']['prevWeek'] = Weeks::weekDataById($weeksIds[$selectedWeekIndex - 1]);
+        if (isset($weeksIds[$selectedWeekIndex + 1]))
+            View::$route['vars']['nextWeek'] = Weeks::weekDataById($weeksIds[$selectedWeekIndex + 1]);
+
+        View::$route['vars'] = array_merge(View::$route['vars'], $vars);
+        View::render();
     }
     public function lastAction(){
         $game = Games::last();

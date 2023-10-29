@@ -319,7 +319,9 @@ class Users extends Model
     public static function random($count = 1)
     {
         $table = self::$table;
-        $userData = self::query("SELECT * FROM $table WHERE name != ? ORDER BY random() LIMIT $count", [''], 'Assoc');
+        
+        // $query = "SELECT * FROM tbl AS t1 JOIN (SELECT id FROM tbl ORDER BY RAND() LIMIT $count) as t2 ON t1.id=t2.id"; query for Big tables
+        $userData = self::query("SELECT * FROM $table WHERE name != ? ORDER BY RAND() LIMIT $count", [''], 'Assoc');
         if (empty($userData)) return false;
 
         for ($i = 0; $i < count($userData); $i++) {

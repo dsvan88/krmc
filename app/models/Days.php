@@ -39,6 +39,9 @@ class Days extends Model
 
         return self::$currentDay;
     }
+    public static function isExpired(int $timestamp): bool{
+        return $timestamp + TIMESTAMP_DAY < $_SERVER['REQUEST_TIME'];
+    }
     public static function edit($weekId, $dayId, $data)
     {
         $newData = [
@@ -294,16 +297,5 @@ class Days extends Model
         $weekData['data'][$dayNum]['participants'] = [];
 
         return self::setDayData($weekId, $dayNum, $weekData['data'][$dayNum]);
-    }
-
-    public static function checkNextMorning(int $weekId)
-    {
-        if (Users::checkAccess('manager')) return true;
-        
-        return Weeks::isExists(['id' => $weekId + 1]);
-    }
-    public static function checkPrevSunday(int $weekId)
-    {
-        return Weeks::isExists(['id' => $weekId - 1]);
     }
 }

@@ -1,6 +1,5 @@
 <?php
 return [
-    '{{ Account_Register_Page_Title }}' => 'Register',
     '{{ Main_Home_Page_Title }}' => 'Home page',
     '{{ Week_Set_Page_Title }}' => 'Set week schedule',
     '{{ Day_Show_Page_Title }}' => 'Event',
