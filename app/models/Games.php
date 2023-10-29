@@ -48,7 +48,7 @@ class Games extends Model
         $table = self::$table;
         $data = [
             'state' => $post['state'],
-            'prevStates' => $post['prevStates'],
+            'prevstates' => $post['prevstates'],
         ];
         $state = json_decode($data['state'], true);
         if (!empty($state['winners'])){
@@ -81,7 +81,7 @@ class Games extends Model
                 manager INT NOT NULL DEFAULT '1',
                 players JSON DEFAULT NULL,
                 state JSON DEFAULT NULL,
-                prevStates JSON DEFAULT NULL,
+                prevstates JSON DEFAULT NULL,
                 started_at INT NOT NULL DEFAULT '0',
                 CONSTRAINT fk_user
                     FOREIGN KEY(manager) 
