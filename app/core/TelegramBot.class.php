@@ -36,7 +36,7 @@ class TelegramBot
         if ($message !== '') {
             $params['text'] = $message;
             $params['parse_mode'] = 'HTML';
-            $params['disable_web_page_preview'] = false;
+            // $params['disable_web_page_preview'] = false;
         }
         if ($messageId !== -1) {
             $params['reply_to_message_id'] = $messageId;
@@ -50,7 +50,7 @@ class TelegramBot
 
         curl_setopt_array($curl, $options);
 
-        if (is_array($userId) && isset($userId[1])) {
+        if (is_array($userId) && !empty($userId)) {
             for ($x = 1; $x < count($userId); $x++) {
                 usleep(750000);
                 $params['chat_id'] = $userId[$x];

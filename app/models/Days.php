@@ -47,7 +47,7 @@ class Days extends Model
         $newData = [
             'time' => trim($data['day_time']),
             'game' => trim($data['game']),
-            'day_prim' => trim($data['day_prim']),
+            'day_prim' => str_replace('  ', "\n", trim($data['day_prim'])),
             'status' => 'set'
         ];
         if (isset($data['mods'])) {

@@ -98,7 +98,7 @@ class DaysController extends Controller
             ];
         }
 
-       $day['day_prim'] = empty($day['day_prim']) ? '' : $day['day_prim'];
+       $day['day_prim'] = empty($day['day_prim']) ? '' : str_replace("\n", '  ', $day['day_prim']);
 
         $day['tournament'] = '';
         if (isset($day['mods']) && in_array('tournament', $day['mods'])) {
