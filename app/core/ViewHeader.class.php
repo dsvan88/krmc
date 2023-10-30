@@ -98,11 +98,11 @@ class ViewHeader {
                             'slug' => 'rating',
                             'fields' => '',
                         ],
-                        [
-                            'name' => 'Peek on game',
-                            'slug' => 'peek',
-                            'fields' => '',
-                        ],
+                        // [
+                        //     'name' => 'Peek on game',
+                        //     'slug' => 'peek',
+                        //     'fields' => '',
+                        // ],
                         [
                             'name' => 'Last game',
                             'slug' => 'last',

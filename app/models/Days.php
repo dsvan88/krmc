@@ -153,8 +153,8 @@ class Days extends Model
             $gameNames = GameTypes::names();
         }
 
-        $result = "$date - {$gameNames[$weekData['data'][$day]['game']]}\n";
-        // $result = "$date - <a href='{$_SERVER['HTTP_X_FORWARDED_PROTO']}://{$_SERVER['SERVER_NAME']}/game/{$weekData['data'][$day]['game']}/'>{$gameNames[$weekData['data'][$day]['game']]}</a>\n";
+        // $result = "$date - {$gameNames[$weekData['data'][$day]['game']]}\n";
+        $result = "$date - <a href='{$_SERVER['HTTP_X_FORWARDED_PROTO']}://{$_SERVER['SERVER_NAME']}/game/{$weekData['data'][$day]['game']}/'>{$gameNames[$weekData['data'][$day]['game']]}</a>\n";
 
         if (isset($weekData['data'][$day]['mods'])) {
             if (in_array('fans', $weekData['data'][$day]['mods'], true))
