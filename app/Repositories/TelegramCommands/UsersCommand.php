@@ -24,7 +24,7 @@ class UsersCommand extends ChatCommand
             if ($usersList[$i]['contacts']['telegram'] !== '') {
                 $message .= " (@{$usersList[$i]['contacts']['telegram']})";
             }
-            if ($usersList[$i]['contacts']['telegramid'] !== '') {
+            if (!empty($usersList[$i]['contacts']['telegramid'])) {
                 $message .= ' ✅';
             }
             $message .= "\n";
