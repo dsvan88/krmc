@@ -11,6 +11,7 @@ use app\models\GameTypes;
 use app\models\Settings;
 use app\models\Users;
 use app\models\Weeks;
+use app\Repositories\DayRepository;
 
 class DaysController extends Controller
 {
@@ -67,7 +68,7 @@ class DaysController extends Controller
         $gamesCount = count($gameTypes);
         for ($i = 0; $i < $gamesCount; $i++) {
             if ($gameTypes[$i]['slug'] !== $day['game']) continue;
-            $gameName = Locale::phrase($gameTypes[$i]['name']);
+            $day['gameName'] = Locale::phrase($gameTypes[$i]['name']);
             break;
         }
 
@@ -105,6 +106,7 @@ class DaysController extends Controller
             $day['tournament'] = 'checked';
         }
 
+        $description = DayRepository::dayDescription($day);
         $playersCount = max(count($day['participants']), 11);
 
         $selfBooking = [];
@@ -126,7 +128,7 @@ class DaysController extends Controller
             }
         }
 
-        View::$route['vars'] = array_merge(View::$route['vars'], $vars, compact('day', 'playersCount', 'gameName', 'selfBooking', 'yesterday', 'tomorrow'));
+        View::$route['vars'] = array_merge(View::$route['vars'], $vars, compact('day', 'playersCount', 'description','selfBooking', 'yesterday', 'tomorrow'));
 
         View::render();
     }

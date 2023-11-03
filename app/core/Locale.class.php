@@ -5,6 +5,7 @@ namespace app\core;
 class Locale
 {
     public static $langCode = 'uk';
+    public static $langCodes = ['uk', 'ru', 'en'];
     public static $dictionary = [];
     public static function apply($vars)
     {

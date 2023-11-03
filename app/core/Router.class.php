@@ -28,7 +28,8 @@ class Router
     }
     public static function isMatch()
     {
-        $url = trim($_SERVER['REQUEST_URI'], '/');
+        $offset = strpos($_SERVER['REQUEST_URI'], '?');
+        $url = trim(empty($offset) ? $_SERVER['REQUEST_URI'] : substr($_SERVER['REQUEST_URI'], 0, $offset), '/');
         foreach (self::$routes as $route => $params) {
             if (!preg_match($route, $url, $match)) continue;
 
@@ -46,7 +47,8 @@ class Router
 
             $params['url'] = $url;
             $params['vars'] = [];
-            for ($i = 1; $i < count($match); $i++) {
+            $count = count($match);
+            for ($i = 1; $i < $count; $i++) {
                 $params['vars'][$params['varNames'][$i - 1]] = $match[$i];
             }
             self::$params = $params;
@@ -58,7 +60,7 @@ class Router
     public static function run()
     {
         self::before();
-        if (!isset($_SESION['id']) && strpos($_SERVER['REQUEST_URI'], 'api/') == false) {
+        if (empty($_SESION['id']) && strpos($_SERVER['REQUEST_URI'], 'api/') === false) {
             self::savePath();
         }
 
@@ -81,7 +83,7 @@ class Router
     }
     public static function checkAccessLevel($params)
     {
-        if (!isset($_SESSION['privilege'])) return false;
+        if (empty($_SESSION['privilege'])) return false;
 
         if (self::$accessLevels[$params['access']['category']] > self::$accessLevels[$_SESSION['privilege']['status']]) {
             return false;

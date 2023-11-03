@@ -15,7 +15,7 @@
         </header>
         <div class="booking__day-settings">
             <div class="booking__day-settings-row">
-                <h2 class="booking__day-event"><a href="/game/<?= $day['game'] ?>"><?= $gameName ?></a></h2>
+                <h2 class="booking__day-event"><a href="/game/<?= $day['game'] ?>"><?= $day['gameName'] ?></a></h2>
             </div>
             <div class="booking__day-settings-row">
                 <h4 class="booking__day-prim"><?= $day['day_prim'] ?></h4>

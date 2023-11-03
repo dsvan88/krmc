@@ -55,8 +55,6 @@ class WeekRepository
 
             $days[$i]['gameName'] = $games[$days[$i]['game']];
 
-
-
             $days[$i]['class'] = 'future';
             if ($selectedWeekIndex < $weekCurrentIndexInList) {
                 $days[$i]['class'] = 'expire';
@@ -75,6 +73,8 @@ class WeekRepository
                 $days[$i]['participants'][$x]['name'] = '+1';
             }
         }
+        $description = self::scheludeDescription($days);
+
         $paginator = Paginator::weekly(['weeksIds' => $weeksIds, 'currentIndex' => $weekCurrentIndexInList, 'selectedIndex' => $selectedWeekIndex]);
 
         $isManager = Users::checkAccess('manager');
@@ -94,7 +94,17 @@ class WeekRepository
             'games',
             'days',
             'isManager',
-            'paginator'
+            'paginator',
+            'description',
         );
+    }
+    public static function scheludeDescription(array $days):string{
+        if (empty($days)) return false;
+        $result = Locale::phrase("Our schelude").':'.PHP_EOL;
+        foreach($days as $index=>$day){
+            $result .= $day['date'] . ' - ' .  $day['gameName'] .';'.PHP_EOL;
+        }
+        $result .= Locale::phrase("Welcome to our club").'!';
+        return preg_replace('/<.*?>/', '', $result);
     }
 }

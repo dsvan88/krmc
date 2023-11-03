@@ -1,7 +1,7 @@
 <div class="day <?= $day['class'] ?>" data-action-click="/week/<?= $weekId ?>/day/<?= $dayNum ?>/" data-mode="location">
     <h3 class="day__date"><a href="/week/<?= $weekId ?>/day/<?= $dayNum ?>/"><?= $day['date'] ?></a></h3>
     <h4 class="day__game"><a href="/game/<?= $day['game'] ?>/"><?= $day['gameName'] ?></a></h4>
-    <div class="day__praticipants">
+    <div class="day__participants">
         <!-- <div class="day__list"> -->
             <ol class="day__list-column">
                 <?

@@ -100,6 +100,9 @@ return [
     'Weekly schedule' => 'Недельное расписание',
     '{{ Week_Set_Block_Title }}' => 'Планирование недели',
     'Game «%s» - How to play?' => 'Игра «%s» - Как играем?',
+    'Our schelude' => 'Наше расписание',
+    'Welcome to our club' => 'Добро пожаловать в наш клуб',
+    'Already registered players' => 'Уже записано игроков',
 
     'Event’s setup' => 'Настройка события',
     'Game’s type:' => 'Вид игры:',

@@ -2,6 +2,7 @@
 
 namespace app\Repositories;
 
+use app\core\Locale;
 use app\models\Weeks;
 
 class DayRepository
@@ -20,5 +21,10 @@ class DayRepository
             }
             Weeks::setWeekData($week['id'], ['data' => $days]);
         }
+    }
+    public static function dayDescription(array $day):string{
+        if (empty($day)) return false;
+        $result = $day['date'] . ' - ' .  $day['gameName']."\n".Locale::phrase('Already registered players').': '.count($day['participants']).PHP_EOL;
+        return preg_replace('/<.*?>/', '', $result);
     }
 }

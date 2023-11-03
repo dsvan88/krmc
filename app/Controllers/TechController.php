@@ -174,14 +174,15 @@ class TechController extends Controller
                     'first_name' => 'Dmytro',
                     'last_name' => 'Vankevych',
                     'username' => 'dsvan88',
-                    'type' => 'group',
+                    'type' => 'private',
+                    // 'type' => 'group',
                 ],
                 'date' => 1652025484,
-                'text' => '+ на 18',
+                // 'text' => '+ на 18',
                 // 'text' => '/nick Думатель',
                 // 'text' => '/day',
                 // 'text' => '+tod 18:15',
-                // 'text' => '/users',
+                'text' => '/users',
                 // 'text' => '/?',
             ]
         ];
