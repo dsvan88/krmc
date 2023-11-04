@@ -37,6 +37,7 @@
     <script defer="" src="/public/scripts/common.js?v=<?= $_SERVER['REQUEST_TIME'] ?>"></script>
     <script defer="" src="/public/scripts/modals.js?v=<?= $_SERVER['REQUEST_TIME'] ?>"></script>
     <link rel="icon" type="image/x-icon" href="/public/images/mafia-vintage-logo-short.svg">
+    <?=$locales ?>
     <title><?= (isset($pageTitle) ? $pageTitle  : $title) . ' | ' . CLUB_SNAME . ' v' . APP_VERSION ?></title>
     <? if (!empty($og)) self::component('open-graph', ['og' => $og]) ?>
 
@@ -48,15 +49,25 @@
         <header class="header">
             <div class="header__content">
                 <div class="header__logo"><?= $headerLogo ?></div>
-                <div class="header__menu">
-                    <label for="header__navigation-checkbox" class="navigation-for-small-display menu-show"><i class="fa fa-bars"></i></label>
-                    <input type="checkbox" name="toggle-navigation" id="header__navigation-checkbox" class="navigation-for-small-display-chechbox">
-                    <nav class="header__navigation" id="header__navigation">
-                        <label for="header__navigation-checkbox" class="navigation-for-small-display menu-hide"><i class="fa fa-times"></i></label>
-                        <? foreach($headerMenu as $headerMenuItem):?>
-                            <? self::component('header-menu-item', ['menuItem' => $headerMenuItem]) ?>
-                        <? endforeach ?>
-                    </nav>
+                <div class="header__options">
+                    <div class="header__langs">
+                        <input type="radio" class="header__lang-radio" name="lang" id="lang-uk" value='uk' <?=$_COOKIE['lang'] === 'uk' ? 'checked' : ''?>>
+                        <label for="lang-uk" class="header__lang">🇺🇦</label>
+                        <input type="radio" class="header__lang-radio" name="lang" id="lang-en" value='en' <?=$_COOKIE['lang'] === 'en' ? 'checked' : ''?>>
+                        <label for="lang-en" class="header__lang">🇬🇧</label>
+                        <input type="radio" class="header__lang-radio" name="lang" id="lang-ru" value='ru' <?=$_COOKIE['lang'] === 'ru' ? 'checked' : ''?>>
+                        <label for="lang-ru" class="header__lang">🇷🇺</label>
+                    </div>
+                    <div class="header__menu">
+                        <label for="header__navigation-checkbox" class="navigation-for-small-display menu-show"><i class="fa fa-bars"></i></label>
+                        <input type="checkbox" name="toggle-navigation" id="header__navigation-checkbox" class="navigation-for-small-display-chechbox">
+                        <nav class="header__navigation" id="header__navigation">
+                            <label for="header__navigation-checkbox" class="navigation-for-small-display menu-hide"><i class="fa fa-times"></i></label>
+                            <? foreach($headerMenu as $headerMenuItem):?>
+                                <? self::component('header-menu-item', ['menuItem' => $headerMenuItem]) ?>
+                            <? endforeach ?>
+                        </nav>
+                    </div>
                 </div>
                 <div class="header__profile"><?= $headerProfileButton ?></div>
             </div>

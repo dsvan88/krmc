@@ -53,11 +53,11 @@ class ViewHeader {
                 'label' => 'Home'
             ],
             [
-                'path' => 'news',
+                'path' => 'news/',
                 'label' => 'News',
             ],
             [
-                'path' => 'weeks',
+                'path' => 'weeks/',
                 'label' => 'Weeks',
             ],
             // [
@@ -67,7 +67,7 @@ class ViewHeader {
             //     'type' => 'page'
             // ],
             [
-                'path' => 'game',
+                'path' => 'game/',
                 'label' => 'Games',
                 'menu' => GameTypes::menu(),
                 'type' => 'game',

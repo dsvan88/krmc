@@ -5,9 +5,7 @@
     </div>
 <? else: ?>
     <div class="header__navigation-item dropdown">
-        <label class="dropdown__label"><?= empty($menuItem['path']) ? 
-            $menuItem['label'] : 
-            "<a href='/{$menuItem['path']}'>{$menuItem['label']}</a>" ?>
+        <label class="dropdown__label"><?= empty($menuItem['path']) ? $menuItem['label'] : "<a href='/{$menuItem['path']}'>{$menuItem['label']}</a>" ?>
         </label>
         <div class="bar"></div>
         <menu class="dropdown__menu">

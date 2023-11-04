@@ -16,6 +16,9 @@ document.body.querySelectorAll('input[type="tel"]').forEach(element =>{
 document.querySelectorAll('details[data-action-open],details[data-action-close]').forEach(element => 
 	element.addEventListener('toggle', (event) => actionHandler.commonToggleHandler.call(actionHandler, event), false)
 );
+document.querySelectorAll('input[name=lang]').forEach(element => 
+	element.addEventListener('change', (event) => actionHandler.setLocale.call(actionHandler, event), false)
+);
 
 let menuCheckbox = document.body.querySelector('#profile-menu-checkbox');
 if (menuCheckbox) {

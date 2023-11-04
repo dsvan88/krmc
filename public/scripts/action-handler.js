@@ -313,5 +313,8 @@ let actionHandler = {
 			}
 			input.setSelectionRange(pos, pos);
 		}
+	},
+	setLocale: function (event){
+		window.location = '?lang='+event.target.value;
 	}
 };

@@ -43,6 +43,7 @@ class Pages extends Model
     {
         $array = self::prepDbArray($data);
         $array['slug'] = preg_replace(['/[^a-z0-9]+/i', '/--/'], '-', Locale::translitization(trim($array['title'])));
+        $array['lang'] = Locale::$langCode;
         return self::insert($array);
     }
     public static function edit($data, $id)
@@ -109,6 +110,7 @@ class Pages extends Model
                 id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
                 user_id INT NOT NULL DEFAULT '1',
                 type CHARACTER VARYING(25) NOT NULL DEFAULT 'news',
+                lang CHARACTER VARYING(5) DEFAULT NULL,
                 title CHARACTER VARYING(250) NOT NULL DEFAULT '',
                 slug CHARACTER VARYING(250) NOT NULL DEFAULT '',
                 subtitle CHARACTER VARYING(250) NOT NULL DEFAULT '',

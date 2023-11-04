@@ -9,7 +9,6 @@ if (!isset($_SESSION['id']) && isset($_COOKIE[CFG_TOKEN_NAME])) {
     Users::sessionReturn($_COOKIE[CFG_TOKEN_NAME]);
 }
 
-if (!empty($_GET['lang']) && in_array($_GET['lang'], Locale::$langCodes, true))
-    Locale::$langCode = $_GET['lang'];
-// Locale::$langCode = 'en';
+Locale::setLocale();
+
 Router::run();
