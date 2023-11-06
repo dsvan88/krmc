@@ -56,6 +56,7 @@ class View
         $notices = Noticer::get();
         Noticer::clear();
 
+        $lang = Locale::$langCode;
         $locales = Locale::getLocaledLinks();
 
         require $_SERVER['DOCUMENT_ROOT']. self::$viewsFolder . '/layouts/' . self::$layout . '.php';

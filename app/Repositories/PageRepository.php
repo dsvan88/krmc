@@ -2,6 +2,7 @@
 
 namespace app\Repositories;
 
+use app\core\Locale;
 use app\models\Pages;
 
 class PageRepository
@@ -15,10 +16,23 @@ class PageRepository
 
     public static function getPage(string $slug)
     {
-        $page = Pages::findBy('slug', $slug);
-        if ($page) {
-            $page = empty($page[0]['date_delete']) ? $page = $page[0] : false;
-        }
+        $page = Pages::getBySlug($slug);
+        // $page = [];
+        // if (!empty($pages)) {
+        //     $count = count($pages);
+        //     $default = [];
+        //     for ($x=0; $x < $count; $x++) { 
+        //         if (!empty($page[$x]['date_delete'])) continue;
+        //         if (empty($pages[$x]['lang'])){
+        //             $default = $pages[$x];
+        //             continue;
+        //         }
+        //         if ($pages[$x]['lang'] !== Locale::$langCode) continue;
+        //         $page = $pages[$x];
+        //         break;
+        //     }
+        //     if (empty($page) && !empty($default)) $page = $default;
+        // }
 
         if (empty($page)) {
 
@@ -26,6 +40,9 @@ class PageRepository
 
             $page = self::$defaultData;
             $page['id'] = 'home';
+            $page['slug'] = $slug;
+            $page['description'] = '';
+            $page['type'] = 'page';
         }
         return $page;
     }

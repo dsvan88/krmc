@@ -29,7 +29,7 @@ return  [
         'action' => 'show',
         'access' => ['category' => 'all']
     ],
-    'page/edit/{pageId}' => [
+    'page/edit/{slug}' => [
         'controller' => 'pages',
         'action' => 'edit',
         'access' => ['category' => 'manager']

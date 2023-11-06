@@ -54,7 +54,8 @@ class GameTypesController extends Controller
         ]);
 
         if (Users::checkAccess('manager')) {
-            View::$route['vars']['dashboard'] = (empty($page['id']) ? $game : $page['id']);
+            View::$route['vars']['dashboard']['slug'] = $game;
+            View::$route['vars']['dashboard']['id'] = $page['id'];
         }
         
         View::$route['vars']['og'] = PageRepository::formPageOG($page);

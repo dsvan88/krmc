@@ -9,6 +9,28 @@ class Pages extends Model
 {
     public static $table = SQL_TBL_PAGES;
 
+    public static $default = [
+        'title' => 'Empty page',
+        'type' => 'page',
+        'subtitle' => '',
+        'description' => '',
+        'html' => '',
+        'expired_at' => '',
+    ];
+
+    public static function getBySlug(string $slug){
+        $table = static::$table;
+
+        $query = "SELECT * FROM $table WHERE slug = ? AND ( lang IS NULL OR lang = ? )";
+        $values = [$slug, Locale::$langCode];
+        if (CFG_SOFT_DELETE) {
+            $query .= ' AND date_delete IS NULL';
+        }
+        $query .= ' ORDER BY id DESC LIMIT 2';
+        $pages = self::query($query, $values, 'Assoc');
+        if (empty($pages)) return false;
+        return $pages[0];
+    }
     public static function getCount(string $type = 'page', bool $all = false)
     {
         $table = static::$table;
@@ -43,20 +65,26 @@ class Pages extends Model
     {
         $array = self::prepDbArray($data);
         $array['slug'] = preg_replace(['/[^a-z0-9]+/i', '/--/'], '-', Locale::translitization(trim($array['title'])));
-        $array['lang'] = Locale::$langCode;
         return self::insert($array);
     }
-    public static function edit($data, $id)
+    public static function edit($data, string $slug)
     {
         $array = self::prepDbArray($data);
 
         if (!is_array($array)) return $array;
 
         $array['updated_at'] = date('Y-m-d H:i:s', $_SERVER['REQUEST_TIME']);
-        if (self::update($array, ['id' => $id])){
-            return true;
+        $page = self::getBySlug($slug);
+        if (empty($page)){
+            $array['slug'] = $slug;
+            return (bool) self::insert($array);
         }
-        return 'Something went wrong!';
+        if ($page['lang'] !== $array['lang']){
+            $array['slug'] = $page['slug'];
+            $array['type'] = $page['type'];
+            return (bool) self::insert($array);
+        }
+        return self::update($array, ['id' => $page['id']]);
     }
     public static function prepDbArray(&$data)
     {
@@ -92,6 +120,7 @@ class Pages extends Model
         if (!empty($array['data'])) {
             $array['data'] = json_encode($array['data'], JSON_UNESCAPED_UNICODE);
         }
+        $array['lang'] = Locale::$langCode;
         return $array;
     }
     public static function remove(int $id)
@@ -109,7 +138,7 @@ class Pages extends Model
             "CREATE TABLE IF NOT EXISTS $table (
                 id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
                 user_id INT NOT NULL DEFAULT '1',
-                type CHARACTER VARYING(25) NOT NULL DEFAULT 'news',
+                type CHARACTER VARYING(25) NOT NULL DEFAULT 'page',
                 lang CHARACTER VARYING(5) DEFAULT NULL,
                 title CHARACTER VARYING(250) NOT NULL DEFAULT '',
                 slug CHARACTER VARYING(250) NOT NULL DEFAULT '',

@@ -51,11 +51,11 @@
                 <div class="header__logo"><?= $headerLogo ?></div>
                 <div class="header__options">
                     <div class="header__langs">
-                        <input type="radio" class="header__lang-radio" name="lang" id="lang-uk" value='uk' <?=$_COOKIE['lang'] === 'uk' ? 'checked' : ''?>>
+                        <input type="radio" class="header__lang-radio" name="lang" id="lang-uk" value='uk' <?=$lang === 'uk' ? 'checked' : ''?>>
                         <label for="lang-uk" class="header__lang">🇺🇦</label>
-                        <input type="radio" class="header__lang-radio" name="lang" id="lang-en" value='en' <?=$_COOKIE['lang'] === 'en' ? 'checked' : ''?>>
+                        <input type="radio" class="header__lang-radio" name="lang" id="lang-en" value='en' <?=$lang === 'en' ? 'checked' : ''?>>
                         <label for="lang-en" class="header__lang">🇬🇧</label>
-                        <input type="radio" class="header__lang-radio" name="lang" id="lang-ru" value='ru' <?=$_COOKIE['lang'] === 'ru' ? 'checked' : ''?>>
+                        <input type="radio" class="header__lang-radio" name="lang" id="lang-ru" value='ru' <?=$lang === 'ru' ? 'checked' : ''?>>
                         <label for="lang-ru" class="header__lang">🇷🇺</label>
                     </div>
                     <div class="header__menu">

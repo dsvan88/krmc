@@ -16,6 +16,7 @@ class MafiaEngine extends GameEngine {
     dynamicOrder = true;
 
     speakers = [];
+    speakersList = [];
     shooting = [];
     killed = [];
     bestMove = [];
@@ -681,6 +682,7 @@ class MafiaEngine extends GameEngine {
 
         this.prevSpeaker = null;
         this.speakers = this.getSpeakers();
+        this.speakersList = [...this.speakers];
         this.debate = false;
         this.courtBlock = false;
         this.leaveThisRound.length = 0;
@@ -713,17 +715,17 @@ class MafiaEngine extends GameEngine {
     getSpeakers() {
         let speakers = [];
         let shifted = [];
-        let speakerOffset = this.daysCount >= this.maxPlayers ? this.daysCount - this.maxPlayers : this.daysCount;
+        let speakerOffset = this.daysCount >= this.maxPlayers ? this.daysCount%this.maxPlayers : this.daysCount;
 
         this.players.forEach((player, index) => {
             if (player.out > 0) return;
-            if (index < speakerOffset)
+            if (index < speakerOffset || index <= this.speakersList[0])
                 shifted.push(player.id);
             else
                 speakers.push(player.id);
         })
         if (shifted.length > 0) {
-            shifted.forEach(playerId => speakers.push(playerId));
+            return speakers.concat(shifted);
         }
         return speakers;
     }
@@ -1040,9 +1042,8 @@ class MafiaEngine extends GameEngine {
         this.addLog(message);
     }
     rebuildCourtroom() {
-        const speakers = this.getSpeakers();
         const courtroom = [];
-        speakers.forEach(playerId => {
+        this.speakersList.forEach(playerId => {
             if (this.players[playerId].puted[this.daysCount] < 0) return false;
             courtroom.push(this.players[playerId].puted[this.daysCount]);
         })

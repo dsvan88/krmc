@@ -37,7 +37,8 @@ class PagesController extends Controller
             'og' => PageRepository::formPageOG($page),
         ];
         if (Users::checkAccess('manager')) {
-            $vars['dashboard'] = (empty($page['id']) ? $game : $page['id']);
+            $vars['dashboard']['slug'] = $slug;
+            $vars['dashboard']['id'] = $page['id'];
         }
 
         View::$path = 'pages/show';
@@ -51,47 +52,35 @@ class PagesController extends Controller
         extract(self::$route['vars']);
         if (!empty($_POST)) {
             $array = $_POST;
-            $result = Pages::edit($array, $pageId);
+            $result = Pages::edit($array, $slug);
             if ($result === true)
                 View::message('Changes saved successfully!');
             View::notice(['error'=> 1, 'message' => $result, 'time' => 3000]);
         }
 
-        if (is_numeric($pageId)) {
-            $page = Pages::find($pageId);
-            $page['description'] = '<p>'.str_replace("\n", '</p><p>', $page['description']).'</p>';
+        $page = Pages::getBySlug($slug);
+        
+        if (empty($page)) $page = Pages::$default;
 
-            $page['keywords'] = '';
-            if (!empty($page['data'])) {
-                $page['data'] = json_decode($page['data'], true);
-                if (isset($page['data']['keywords']) && !empty($page['data']['keywords'])) {
-                    if (is_array($page['data']['keywords']))
-                        $page['keywords'] = implode(', ', $page['data']['keywords']);
-                    else
-                        $page['keywords'] = $page['data']['keywords'];
-                }
-            }
-            $page['published_at'] = strtotime($page['published_at']);
-            $page['published_at'] = date('Y-m-d', $page['published_at']) . 'T' . date('H:i', $page['published_at']);
+        $page['description'] = '<p>'.str_replace("\n", '</p><p>', $page['description']).'</p>';
 
-            if (!empty($page['expired_at'])) {
-                $page['expired_at'] = strtotime($page['expired_at']);
-                $page['expired_at'] = date('Y-m-d', $page['expired_at']) . 'T' . date('H:i', $page['expired_at']);
+        $page['keywords'] = '';
+        if (!empty($page['data'])) {
+            $page['data'] = json_decode($page['data'], true);
+            if (!empty($page['data']['keywords'])) {
+                if (is_array($page['data']['keywords']))
+                    $page['keywords'] = implode(', ', $page['data']['keywords']);
+                else
+                    $page['keywords'] = $page['data']['keywords'];
             }
-        } else {
-            $dummyPage = [
-                'title' => $pageId,
-                'type' => 'game',
-                'subtitle' => '',
-                'description' => '',
-                'html' => '',
-                'published_at' => $_SERVER['REQUEST_TIME'],
-                'expired_at' => '',
-            ];
-            $pageId = Pages::create($dummyPage);
-            View::redirect("/page/edit/$pageId");
         }
+        $page['published_at'] = strtotime($page['published_at']);
+        $page['published_at'] = date('Y-m-d', $page['published_at']) . 'T' . date('H:i', $page['published_at']);
 
+        if (!empty($page['expired_at'])) {
+            $page['expired_at'] = strtotime($page['expired_at']);
+            $page['expired_at'] = date('Y-m-d', $page['expired_at']) . 'T' . date('H:i', $page['expired_at']);
+        }
         $vars = [
             'title' => Locale::phrase('Page edit form'),
             'texts' => [
