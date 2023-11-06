@@ -9,15 +9,12 @@ document.body.querySelectorAll('input[data-action-change]').forEach(element =>
 document.body.querySelectorAll('form[data-action-submit]').forEach(element =>
 	element.addEventListener('submit', (event) => actionHandler.commonSubmitFormHandler.call(actionHandler, event))
 );
-document.body.querySelectorAll('input[type="tel"]').forEach(element =>{
+document.body.querySelectorAll('input[type="tel"]').forEach(element => {
 	element.addEventListener('focus', (event) => actionHandler.phoneInputFocus.call(actionHandler, event));
-    element.addEventListener('input', (event) => actionHandler.phoneInputFormat.call(actionHandler, event), false);
+	element.addEventListener('input', (event) => actionHandler.phoneInputFormat.call(actionHandler, event), false);
 });
-document.querySelectorAll('details[data-action-open],details[data-action-close]').forEach(element => 
+document.querySelectorAll('details[data-action-open],details[data-action-close]').forEach(element =>
 	element.addEventListener('toggle', (event) => actionHandler.commonToggleHandler.call(actionHandler, event), false)
-);
-document.querySelectorAll('input[name=lang]').forEach(element => 
-	element.addEventListener('change', (event) => actionHandler.setLocale.call(actionHandler, event), false)
 );
 
 let menuCheckbox = document.body.querySelector('#profile-menu-checkbox');

@@ -92,16 +92,10 @@ body {
 			margin-right: .4em;
 			line-height: .85em;
 			cursor: pointer;
-
-			&-radio {
-				display: none;
-
-				&:checked {
-					+label {
-						border-radius: 2px;
-						box-shadow: 0 0 .3em .3em $color-text-light-blur inset, 0 0 .1em .1em $color-text-light-blur;
-					}
-				}
+			text-decoration: none;
+			&.selected{
+				border-radius: 2px;
+				box-shadow: 0 0 .3em .3em $color-text-light-blur inset, 0 0 .1em .1em $color-text-light-blur;
 			}
 		}
 
