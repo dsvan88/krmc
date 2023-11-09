@@ -162,13 +162,12 @@ class AccountController extends Controller
             'SaveLabel' => 'Save',
             'CancelLabel' => 'Cancel',
         ];
-        $texts = Locale::apply($texts);
 
-        ob_start();
-        require $_SERVER['DOCUMENT_ROOT'] . "/app/views/account/sections/$section.php";
-        $result = ob_get_clean();
-
-        View::message(['html' => $result]);
+        View::$route['vars']['userId'] = $userId;
+        View::$route['vars']['data'] = $data;
+        View::$route['vars']['texts'] = Locale::apply($texts);
+        View::$route['vars']['path'] = 'account/sections/'.$section;
+        View::html();
     }
     public function profileSectionEditAction()
     {
@@ -240,11 +239,11 @@ class AccountController extends Controller
         ];
         $texts = Locale::apply($texts);
 
-        ob_start();
-        require $_SERVER['DOCUMENT_ROOT'] . "/app/views/account/sections/forms/$section.php";
-        $result = ob_get_clean();
-
-        View::message(['html' => $result]);
+        View::$route['vars']['userId'] = $userId;
+        View::$route['vars']['data'] = $data;
+        View::$route['vars']['texts'] = Locale::apply($texts);
+        View::$route['vars']['path'] = 'account/sections/forms/'.$section;
+        View::html();
     }
     public function setNicknameAction()
     {

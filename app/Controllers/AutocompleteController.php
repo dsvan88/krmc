@@ -23,10 +23,9 @@ class AutocompleteController extends Controller
             'clearLabel' => 'Clear',
         ];
         View::$route['vars']['texts'] = Locale::apply($texts);
+        View::$route['vars']['participantId'] = (int) $_POST['id'];
+        View::$route['vars']['path'] = 'components/participants-field';
 
-        ob_start();
-        View::component('participants-field', [ 'participantId'=> (int) $_POST['id'] ]);
-        $result = ob_get_clean();
-        View::message(['html' => $result]);
+        View::html();
     }
 }
