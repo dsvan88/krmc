@@ -25,7 +25,10 @@ class GameTypesController extends Controller
             'title' => 'Games',
             'dashboard' => $dashboard,
             'games' => Locale::apply(GameTypes::names()),
-            
+            'texts' => [
+                'BlockTitle' => 'Games of our club',
+                'BlockSubTitle' => 'Our leisure club is going to participate in the following games',
+            ],
         ];
         
         View::$route['vars'] = array_merge(View::$route['vars'], $vars);

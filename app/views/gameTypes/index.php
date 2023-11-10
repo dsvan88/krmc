@@ -1,7 +1,7 @@
 <section class="section">
     <header>
-        <h1 class="title">Ігри нашого клуба:<?=$dashboard?></h1>
-        <h2 class="subtitle">Наш клуб дозвілля збирається для ігор у такі ігри:</h3>
+        <h1 class="title"><?=$texts['BlockTitle']?>:<?=$dashboard?></h1>
+        <h2 class="subtitle"><?=$texts['BlockSubTitle']?></h3>
     </header>
     <ol>
         <?foreach($games as $game=>$name):?>

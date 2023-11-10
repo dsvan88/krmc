@@ -103,6 +103,9 @@ return [
     'Our schelude' => 'Наше расписание',
     'Welcome to our club' => 'Добро пожаловать в наш клуб',
     'Already registered players' => 'Уже записано игроков',
+    'Games of our club' => 'Игры нашего клуба',
+    'Our leisure club is going to participate in the following games' => 'Наш клуб досуга собирается для участия в следующих играх',
+                
 
     'Event’s setup' => 'Настройка события',
     'Game’s type:' => 'Вид игры:',

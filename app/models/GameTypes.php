@@ -42,9 +42,10 @@ class GameTypes extends Pages
 
         $count = count($games);
         $names = [];
-
+        $lang = Locale::$langCode;
         for ($i = 0; $i < $count; $i++) {
             if (!empty($games[$i]['date_delete'])) continue;
+            if (!empty($games[$i]['lang']) && $games[$i]['lang'] !== $lang) continue;
             $names[$games[$i]['slug']] = $games[$i]['title'];
         }
         self::$gameNames = array_merge(self::$defaultGames, $names);
