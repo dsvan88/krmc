@@ -2,6 +2,9 @@
 
 namespace app\core;
 
+use app\models\Settings;
+use Throwable;
+
 class Router
 {
     protected static $routes = [];
@@ -69,8 +72,13 @@ class Router
             if (class_exists($path)) {
                 $action = self::$params['action'] . 'Action';
                 if (method_exists($path, $action)) {
-                    $controller = new $path(self::$params);
-                    $controller->$action();
+                    try {
+                        $controller = new $path(self::$params);
+                        $controller->$action();
+                    }
+                    catch(Throwable $error) {
+                        Sender::message(Settings::getTechTelegramId(), json_encode($error->__toString()));
+                    }
                 } else {
                     View::errorCode(404, ['message' => "Action $action isn’t found in Controller $path!"]);
                 }

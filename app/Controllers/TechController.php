@@ -6,13 +6,8 @@ use app\core\Controller;
 use app\core\PHPMailer\PHPMailer;
 use app\core\View;
 use app\libs\Db;
-use app\models\Contacts;
-use app\models\Games;
 use app\models\Pages;
-use app\models\Settings;
-use app\models\TelegramChats;
 use app\models\Users;
-use app\models\Weeks;
 use app\Repositories\TechRepository;
 
 class TechController extends Controller
@@ -93,6 +88,7 @@ class TechController extends Controller
     }
     public static function dbrebuildAction()
     {
+        View::redirect('/');
         $table = Pages::$table;
         Users::query("ALTER TABLE $table ADD COLUMN lang CHARACTER VARYING(5) DEFAULT NULL");
         
