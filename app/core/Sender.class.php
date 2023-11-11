@@ -6,7 +6,7 @@ class Sender
 {
     public static $bot = null;
     public static function init(string $method = 'telegram'){
-        $class = ucfirst($method).'Bot';
+        $class = ucfirst($method).'Bot.class';
         self::$bot = new $class();
         return self::$bot;
     }
