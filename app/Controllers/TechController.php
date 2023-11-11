@@ -94,7 +94,7 @@ class TechController extends Controller
     public static function dbrebuildAction()
     {
         $table = Pages::$table;
-        Users::query("ALTER TABLE $table ADD COLUMN lang TYPE CHARACTER VARYING(5) DEFAULT NULL");
+        Users::query("ALTER TABLE $table ADD COLUMN lang CHARACTER VARYING(5) DEFAULT NULL");
         
 /*         View::redirect('/');
         $table = Games::$table;
