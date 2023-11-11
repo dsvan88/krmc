@@ -77,7 +77,10 @@ class Router
                         $controller->$action();
                     }
                     catch(Throwable $error) {
-                        Sender::message(Settings::getTechTelegramId(), json_encode($error->__toString()));
+                        $techTgId = Settings::getTechTelegramId();
+                        if (!empty($techTgId)){
+                            Sender::message(Settings::getTechTelegramId(), json_encode($error->__toString()));
+                        }
                     }
                 } else {
                     View::errorCode(404, ['message' => "Action $action isn’t found in Controller $path!"]);
