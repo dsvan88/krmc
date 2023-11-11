@@ -6,6 +6,7 @@ use app\core\Controller;
 use app\core\ImageProcessing;
 use app\core\View;
 use app\core\Locale;
+use app\core\Sender;
 use app\core\TelegramBot;
 use app\core\Validator;
 use app\models\Weeks;
@@ -503,7 +504,6 @@ class AccountController extends Controller
     }
     public function forgetFormAction()
     {
-        $bot = new TelegramBot();
         if (!empty($_POST)) {
             $userData = Users::checkForget(trim($_POST['auth']));
             if (empty($userData)) {
@@ -519,9 +519,9 @@ class AccountController extends Controller
             $telegramId = $contact['contact'];
             $link = "{$_SERVER['HTTP_X_FORWARDED_PROTO']}://{$_SERVER['SERVER_NAME']}/account/password-reset/$hash";
             $link = "<a href='$link'>$link</a>";
-            $bot->sendMessage($telegramId, Locale::phrase(['string' => '{{ Account_Forget_Check_Succes }}', 'vars' => [$link]]));
+            Sender::message($telegramId, Locale::phrase(['string' => '{{ Account_Forget_Check_Succes }}', 'vars' => [$link]]));
         }
-        $botData = $bot->getMe();
+        $botData = Sender::getMe();
         $vars = [
             'title' => '{{ Account_Forget_Form_Title }}',
             'texts' => [

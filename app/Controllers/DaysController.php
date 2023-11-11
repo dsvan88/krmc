@@ -5,6 +5,7 @@ namespace app\Controllers;
 use app\core\Controller;
 use app\core\Locale;
 use app\core\Noticer;
+use app\core\Sender;
 use app\core\View;
 use app\models\Days;
 use app\models\GameTypes;
@@ -24,7 +25,7 @@ class DaysController extends Controller
                 $weekId = Days::edit($weekId, $dayId, $_POST);
                 if (!empty($_POST['send'])) {
                     $weekData = Weeks::weekDataById($weekId);
-                    $result = TelegramBotController::send(Settings::getMainTelegramId(), Days::getFullDescription($weekData, $dayId));
+                    $result = Sender::message(Settings::getMainTelegramId(), Days::getFullDescription($weekData, $dayId));
                 }
                 View::message(['message' => 'Changes saved successfully!', 'url' => "/week/$weekId/day/$dayId/"]);
             }

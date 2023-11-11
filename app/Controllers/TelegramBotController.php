@@ -4,6 +4,7 @@ namespace app\Controllers;
 
 use app\core\Controller;
 use app\core\Locale;
+use app\core\Sender;
 use app\core\TelegramBot;
 use app\core\View;
 use app\models\Contacts;
@@ -13,7 +14,6 @@ use app\models\Users;
 
 class TelegramBotController extends Controller
 {
-    private static $bot = null;
     private static $techTelegramId = null;
     private static $mainGroupTelegramId = null;
 
@@ -54,7 +54,6 @@ class TelegramBotController extends Controller
         $command = self::parseCommand($text);
 
         self::$message = $message;
-        self::$bot = new TelegramBot();
         self::$techTelegramId = Settings::getTechTelegramId();
         self::$mainGroupTelegramId = Settings::getMainTelegramId();
         self::$chatId = $message['message']['chat']['id'];
@@ -64,20 +63,20 @@ class TelegramBotController extends Controller
         $userId = Contacts::getUserIdByContact('telegramid', $userTelegramId);
         
         if (empty($userId) && $command && !in_array(self::$command, self::$guestCommands)){
-            self::$bot->sendMessage(self::$chatId, Locale::phrase('{{ Tg_Unknown_Requester }}'), self::$message['message']['message_id']);
+            Sender::message(self::$chatId, Locale::phrase('{{ Tg_Unknown_Requester }}'), self::$message['message']['message_id']);
             View::exit();
         }
         self::$requester = Users::getDataById($userId); 
 
         if (self::$command === 'booking' && Users::isBanned('booking', self::$requester['ban'])){
-            self::$bot->deleteMessage(self::$chatId, $message['message']['message_id']);
-            self::$bot->sendMessage($userTelegramId, Locale::phrase(['string' => "I’m deeply sorry, but you banned for that action:(...\nYour ban will be lifted at: <b>%s</b>", 'vars'=>[ date('d.m.Y', self::$requester['ban']['expired'] + TIME_MARGE)]]));
+            Sender::delete(self::$chatId, $message['message']['message_id']);
+            Sender::message($userTelegramId, Locale::phrase(['string' => "I’m deeply sorry, but you banned for that action:(...\nYour ban will be lifted at: <b>%s</b>", 'vars'=>[ date('d.m.Y', self::$requester['ban']['expired'] + TIME_MARGE)]]));
             View::exit();
         }
 
         if (self::$chatId == self::$mainGroupTelegramId && Users::isBanned('chat', self::$requester['ban'])){
-            self::$bot->deleteMessage(self::$chatId, $message['message']['message_id']);
-            self::$bot->sendMessage($userTelegramId, Locale::phrase(['string' => "I’m deeply sorry, but you banned for that action:(...\nYour ban will be lifted at: <b>%s</b>", 'vars'=>[ date('d.m.Y', self::$requester['ban']['expired'] + TIME_MARGE)]]));
+            Sender::delete(self::$chatId, $message['message']['message_id']);
+            Sender::message($userTelegramId, Locale::phrase(['string' => "I’m deeply sorry, but you banned for that action:(...\nYour ban will be lifted at: <b>%s</b>", 'vars'=>[ date('d.m.Y', self::$requester['ban']['expired'] + TIME_MARGE)]]));
             View::exit();
         }
 
@@ -89,21 +88,21 @@ class TelegramBotController extends Controller
         try {
             if (!self::execute()) {
                 if (empty(self::$resultMessage)) View::exit();
-                $botResult = self::$bot->sendMessage(self::$techTelegramId, json_encode([self::$message, /* self::$requester ,*/ self::parseArguments(self::$commandArguments)], JSON_UNESCAPED_UNICODE));
+                $botResult = Sender::message(self::$techTelegramId, json_encode([self::$message, /* self::$requester ,*/ self::parseArguments(self::$commandArguments)], JSON_UNESCAPED_UNICODE));
             }
 
             if (!empty(self::$resultPreMessage)) {
-                self::$bot->sendMessage(self::$chatId, self::$resultPreMessage, self::$message['message']['message_id']);
+                Sender::message(self::$chatId, self::$resultPreMessage, self::$message['message']['message_id']);
             }
 
-            $botResult = self::$bot->sendMessage(self::$chatId, Locale::phrase(self::$resultMessage));
+            $botResult = Sender::message(self::$chatId, Locale::phrase(self::$resultMessage));
 
             if ($botResult[0]['ok']) {
                 if (self::$command === 'week') {
                     self::pinMessage($botResult[0]['result']['message_id']);
                 }
                 /*                 if (in_array($command, ['reg', 'set', 'week', 'recall', 'today', 'day', 'promo'], true) && self::$chatId !== self::$techTelegramId) {
-                    $bot->deleteMessage(self::$chatId, self::$message['message']['message_id']);
+                    Sender::delete(self::$chatId, self::$message['message']['message_id']);
                 } */
                 if (in_array(self::$command, ['booking', 'reg', 'set', 'recall', 'promo'], true)) {
                     self::updateWeekMessages();
@@ -114,8 +113,8 @@ class TelegramBotController extends Controller
                 'commonError' => $th->__toString(),
                 'messageData' => self::$message,
             ];
-            self::$bot->sendMessage(self::$techTelegramId, json_encode($debugMessage, JSON_UNESCAPED_UNICODE));
-            self::$bot->sendMessage(self::$chatId, Locale::phrase("Something went wrong😱!\nWe are deeply sorry for that😢\nI’ve informed our administrators about your situation, and they are fixing it right now!\nThank you for understanding!"));
+            Sender::message(self::$techTelegramId, json_encode($debugMessage, JSON_UNESCAPED_UNICODE));
+            Sender::message(self::$chatId, Locale::phrase("Something went wrong😱!\nWe are deeply sorry for that😢\nI’ve informed our administrators about your situation, and they are fixing it right now!\nThank you for understanding!"));
         }
     }
     public static function parseCommand(string $text): bool
@@ -271,7 +270,6 @@ class TelegramBotController extends Controller
         $class = str_replace('/', '\\', self::$CommandNamespace . '\\' . $class);
 
         if (!class_exists($class)) {
-            // self::$resultMessage = $class . ' Telegram command isn`t found!';
             return false;
         }
 
@@ -302,9 +300,6 @@ class TelegramBotController extends Controller
     {
         if (!empty($_POST)) {
 
-            if (!self::$bot)
-                self::$bot = new TelegramBot();
-
             $message =  preg_replace('/(<((?!b|u|s|strong|em|i|\/b|\/u|\/s|\/strong|\/em|\/i)[^>]+)>)/i', '', str_replace(['<br />', '<br/>', '<br>', '</p>'], "\n", trim($_POST['html'])));
             if (is_numeric($_POST['target'])) {
                 $targets = $_POST['target'];
@@ -330,9 +325,9 @@ class TelegramBotController extends Controller
                 }
             }
             if ($_FILES['logo']['size'] > 0 && $_FILES['logo']['size'] < 10485760) { // 10 Мб = 10 * 1024 *1024
-                $result = self::$bot->sendPhoto($targets, $message, $_FILES['logo']['tmp_name']);
+                $result = Sender::photo($targets, $message, $_FILES['logo']['tmp_name']);
             } else {
-                $result = self::$bot->sendMessage($targets, $message);
+                $result = Sender::message($targets, $message);
             }
             $message = 'Success!';
             if (!$result[0]['ok']) {
@@ -368,27 +363,12 @@ class TelegramBotController extends Controller
         if (empty($target) || empty($message))
             return false;
 
-        if (!self::$bot)
-            self::$bot = new TelegramBot();
-
-        $result = self::$bot->sendMessage($target, $message);
+        $result = Sender::message($target, $message);
 
         if (!$result[0]['ok']) {
             return false;
         }
         return true;
-    }
-    public static function getMe()
-    {
-        if (!self::$bot)
-            self::$bot = new TelegramBot();
-
-        $botData['ok'] = self::$bot->getMe();
-
-        if (!$botData['ok']) {
-            return false;
-        }
-        return $botData['ok'];
     }
     public static function checkAccess(string $level = 'guest')
     {
@@ -413,7 +393,7 @@ class TelegramBotController extends Controller
 
         $chatData = TelegramChats::getChatsWithPinned();
         foreach ($chatData as $chatId => $pinned) {
-            $result[] = self::$bot->editMessage($chatId, $pinned, self::$resultMessage);
+            $result[] = Sender::edit($chatId, $pinned, self::$resultMessage);
         }
 
         return $result;
@@ -422,7 +402,7 @@ class TelegramBotController extends Controller
     {
         if (empty($messageId)) return false;
 
-        self::$bot->pinMessage(self::$chatId, $messageId);
+        Sender::pin(self::$chatId, $messageId);
         TelegramChats::savePinned(self::$message, $messageId);
 
         return true;

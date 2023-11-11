@@ -6,6 +6,7 @@ use app\core\Controller;
 use app\core\Locale;
 use app\core\View;
 use app\core\Mailer;
+use app\core\Sender;
 use app\core\Tech;
 use app\models\Contacts;
 use app\models\Settings;
@@ -99,8 +100,8 @@ class VerificationController extends Controller
             'vars' => [ $_SESSION['tg-code'] ],
         ]);
         
-        TelegramBotController::send($approved['telegramid'], $message);
-        $botData = TelegramBotController::getMe();
+        Sender::message($approved['telegramid'], $message);
+        $botData = Sender::getMe();
 
         $message = Locale::phrase([
             'string' => "This account has a Telegram Account connected to it!\nYour verification code has been sent to your Telegram.\nPlease, start a dialog with our <a href='https://t.me/%s' target='_blank'>Telegram bot</a> to get a verification code!",

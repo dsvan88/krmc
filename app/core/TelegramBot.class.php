@@ -78,8 +78,7 @@ class TelegramBot
             $params['text'] = "<a href='$image'>&#8205;</a>" . $params['text'];
             $params['disable_web_page_preview'] = false;
         }
-        /*         var_dump($params);
-        echo PHP_EOL; */
+
         $options = self::$options;
         $options[CURLOPT_URL] = "https://api.telegram.org/bot$botToken/sendMessage"; // адрес api телеграмм-бота
         $options[CURLOPT_POSTFIELDS] = $params; // адрес api телеграмм-бота
@@ -100,19 +99,19 @@ class TelegramBot
         } else
             return [json_decode(curl_exec($curl), true)];
     }
-    public static function sendPhoto($userId, $caption = '', $image = '', $type = 'image/jpeg', $messageId = -1)
+    public static function sendPhoto($userId, string $caption = null, string $image = null, $type = 'image/jpeg', $messageId = -1)
     {
         $botToken = self::$botToken;
         $params = self::$params;
         $params['chat_id'] = is_array($userId) ? $userId[0] : $userId; // id получателя сообщения
-        if ($caption !== '') {
+        if (empty($caption)) {
             $params['caption'] = $caption;
             $params['parse_mode'] = 'HTML';
         }
         if ($messageId !== -1) {
             $params['reply_to_message_id'] = $messageId;
         }
-        if ($image !== '') {
+        if (empty($image)) {
             $params['photo'] = curl_file_create($image, $type, 'image');
         }
         $options = self::$options;
