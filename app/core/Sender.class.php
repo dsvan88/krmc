@@ -2,12 +2,17 @@
 
 namespace  app\core;
 
+use app\core\PHPMailer\PHPMailer;
+
 class Sender
 {
     public static $bot = null;
     public static function init(string $method = 'telegram'){
-        $class = ucfirst($method).'Bot.class';
-        self::$bot = new $class();
+        $operators = [
+            'telegram' => 'TelegramBot',
+            'email' => 'PHPMailer',
+        ];
+        self::$bot = new $operators[$method]();
         return self::$bot;
     }
     public static function message($chatId, string $message, int $replyOn = null){
