@@ -8,11 +8,9 @@ class Sender
 {
     public static $bot = null;
     public static function init(string $method = 'telegram'){
-        $operators = [
-            'telegram' => 'TelegramBot',
-            'email' => 'PHPMailer',
-        ];
-        self::$bot = new $operators[$method]();
+        if ($method === 'telegram'){
+            self::$bot = new TelegramBot();
+        }
         return self::$bot;
     }
     public static function message($chatId, string $message, int $replyOn = null){
