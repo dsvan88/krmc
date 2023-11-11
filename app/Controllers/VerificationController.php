@@ -5,13 +5,9 @@ namespace app\Controllers;
 use app\core\Controller;
 use app\core\Locale;
 use app\core\View;
-use app\core\Mailer;
 use app\core\Sender;
 use app\core\Tech;
-use app\models\Contacts;
-use app\models\Settings;
 use app\models\Users;
-use app\Repositories\AccountRepository;
 use app\Repositories\ContactRepository;
 use app\Repositories\VerificationRepository;
 
@@ -27,7 +23,6 @@ class VerificationController extends Controller
         $message = Locale::phrase("This action requires root right!\nApprove your rights with the root password:");
         View::message($message);
     }
-
     public function emailVerifyHashAction()
     {
         if (!isset($_SESSION['id'])) {
