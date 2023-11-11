@@ -3,7 +3,6 @@
 namespace app\Controllers;
 
 use app\core\Controller;
-use app\core\PHPMailer\PHPMailer;
 use app\core\View;
 use app\libs\Db;
 use app\models\Pages;
@@ -204,42 +203,10 @@ class TechController extends Controller
     }
     public static function testAction()
     {
-
         $directory = 'testDir';
         mkdir($directory);
 
         var_dump(file_exists($directory) ? 'Exists' : 'Error');
         View::errorCode(404, ['message' => 'Result is Ok']);
-    }
-    public static function sendMailAction()
-    {
-        $mailer = new PHPMailer();
-
-        $mailer->isSMTP();
-        $mailer->CharSet = "UTF-8";
-        $mailer->SMTPAuth   = true;
-        // $mailer->SMTPDebug = 4;
-        // $mailer->Debugoutput = function ($str, $level) {
-        //     $GLOBALS['status'][] = $str;
-        // };
-
-        $mailer->Host       = 'smtp.gmail.com';
-        $mailer->Username   = '';
-        $mailer->Password   = '';
-        $mailer->SMTPSecure = 'ssl';
-        $mailer->Port       = 465;
-
-        $mailer->Subject    = 'Test mail';
-        $mailer->Body       = "That's my second try to send simple email";
-
-        // if (isset($this->senderData['email']))
-        //     $mailer->setFrom($this->senderData['email'], $this->senderData['name']);
-        // else
-        //     $mailer->setFrom($authData['email'], $authData['name']);
-        // // $mailer->addAddress('yourMainEmail@gmail.com'); // If you need send message from your main tech email to your main email - you can change it here
-        $mailer->isHTML(true);
-
-        $mailer->addAddress('');
-        $mailer->send();
     }
 }

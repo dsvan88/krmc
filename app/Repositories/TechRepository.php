@@ -6,7 +6,6 @@ use app\core\Locale;
 use app\core\Mailer;
 use app\libs\Db;
 use app\models\Settings;
-use PDO;
 use ZipArchive;
 
 class TechRepository
