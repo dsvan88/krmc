@@ -93,8 +93,8 @@ class TechController extends Controller
     }
     public static function dbrebuildAction()
     {
-        $table = Users::$table;
-        Users::query("ALTER TABLE $table ADD COLUMN ban JSON DEFAULT NULL");
+        $table = Pages::$table;
+        Users::query("ALTER TABLE $table ADD COLUMN lang TYPE CHARACTER VARYING(5) DEFAULT NULL");
         
 /*         View::redirect('/');
         $table = Games::$table;
