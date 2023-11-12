@@ -120,9 +120,9 @@ class Locale
         $count = count($codes);
         $result = '';
         for ($x=0; $x < $count; $x++) { 
-            $result .="<link rel='alternate' href='$url?lang={$codes[$x]}' hreflang='{$codes[$x]}' />" . PHP_EOL;
+            $result .="<link rel='alternate' href='$url?lang={$codes[$x]}' hreflang='{$codes[$x]}'>" . PHP_EOL;
         }
-        $result .="<link rel='alternate' href='$url' hreflang='x-default' />" . PHP_EOL;
+        $result .="<link rel='alternate' href='$url' hreflang='x-default'>" . PHP_EOL;
         return $result;
     }
     public static function decamelize(string $string)
