@@ -34,7 +34,7 @@ class TelegramBotController extends Controller
         $contentType = isset($_SERVER['CONTENT_TYPE']) ? strtolower(trim($_SERVER['CONTENT_TYPE'])) : '';
         if (strpos($contentType, 'application/json') ===  false) View::exit();
 
-        $ip = substr($_SERVER['REMOTE_ADDR'], 0, 5) === substr($_SERVER['SERVER_ADDR'], 0, 5) ? $_SERVER['HTTP_X_REAL_IP'] : $_SERVER['REMOTE_ADDR'];
+        $ip = substr($_SERVER['REMOTE_ADDR'], 0, 4) === substr($_SERVER['SERVER_ADDR'], 0, 4) ? $_SERVER['HTTP_X_REAL_IP'] : $_SERVER['REMOTE_ADDR'];
         if (!Validator::validate('telegramIp', $ip)){
             Sender::message(Settings::getTechTelegramId(), json_encode([
                 'REMOTE_ADDR' => $_SERVER['REMOTE_ADDR'],
