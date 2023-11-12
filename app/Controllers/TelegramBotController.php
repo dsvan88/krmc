@@ -31,11 +31,18 @@ class TelegramBotController extends Controller
 
     public static function before()
     {
-        error_log(json_encode($_SERVER, JSON_UNESCAPED_UNICODE));
         $contentType = isset($_SERVER['CONTENT_TYPE']) ? strtolower(trim($_SERVER['CONTENT_TYPE'])) : '';
-        if (strpos($contentType, 'application/json') ===  false) return true;
+        if (strpos($contentType, 'application/json') ===  false) View::exit();
 
-        if (!Validator::validate('telegramIp', '149.154.160.0')) return true;
+        $ip = substr($_SERVER['REMOTE_ADDR'], 0, 5) === substr($_SERVER['SERVER_ADDR'], 0, 5) ? $_SERVER['HTTP_X_REAL_IP'] : $_SERVER['REMOTE_ADDR'];
+        if (!Validator::validate('telegramIp', $ip)){
+            Sender::message(Settings::getTechTelegramId(), json_encode([
+                'REMOTE_ADDR' => $_SERVER['REMOTE_ADDR'],
+                'SERVER_ADDR' => $_SERVER['SERVER_ADDR'],
+                'HTTP_X_REAL_IP' => $_SERVER['HTTP_X_REAL_IP'],
+            ]));
+            View::exit();
+        }
 
         $data = trim(file_get_contents('php://input'));
         $message = json_decode($data, true);
