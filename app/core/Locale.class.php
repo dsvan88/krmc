@@ -114,7 +114,7 @@ class Locale
 
         $offset = strpos($_SERVER['REQUEST_URI'], '?');
         $url = trim(empty($offset) ? $_SERVER['REQUEST_URI'] : substr($_SERVER['REQUEST_URI'], 0, $offset), '/').'/';
-        $url = "{$_SERVER['HTTP_X_FORWARDED_PROTO']}://{$_SERVER['SERVER_NAME']}/$url";
+        $url = "{$_SERVER['HTTP_X_FORWARDED_PROTO']}://{$_SERVER['SERVER_NAME']}/".(empty($url) ? '' : $url);
 
         $codes = self::$langCodes;
         $count = count($codes);
