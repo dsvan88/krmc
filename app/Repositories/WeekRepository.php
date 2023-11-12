@@ -107,4 +107,26 @@ class WeekRepository
         $result .= Locale::phrase("Welcome to our club").'!';
         return preg_replace('/<.*?>/', '', $result);
     }
+    public static function formWeekOG(array $data = null){
+        $url = "{$_SERVER['HTTP_X_FORWARDED_PROTO']}://{$_SERVER['SERVER_NAME']}";
+        $logo = empty($data['logo']) ? '/public/images/club-logo-w-city.jpg' : $data['logo'];
+        $imageSize = getimagesize($_SERVER['DOCUMENT_ROOT'].$logo);
+        $image = "$url/$logo";
+        $data['title'] = Locale::phrase($data['title']);
+        $result = [
+            'title' => $data['title'],
+            'type' => 'article',
+            'url' => "$url/weeks/{$data['weekId']}",
+            'image' => $image,
+            'og:image:width' => $imageSize[0],
+            'og:image:height' => $imageSize[1],
+            'description' => $data['description'],
+            'site_name' => $data['title'] . ' | ' . CLUB_NAME,
+            'twitter' => [
+                'card' => 'summary_large_image',
+                'image' => $image,
+            ],
+        ];
+        return $result;
+    }
 }

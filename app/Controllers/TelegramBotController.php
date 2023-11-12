@@ -6,6 +6,7 @@ use app\core\Controller;
 use app\core\Locale;
 use app\core\Sender;
 use app\core\TelegramBot;
+use app\core\Validator;
 use app\core\View;
 use app\models\Contacts;
 use app\models\Settings;
@@ -30,8 +31,12 @@ class TelegramBotController extends Controller
 
     public static function before()
     {
+        error_log(json_encode($_SERVER, JSON_UNESCAPED_UNICODE));
         $contentType = isset($_SERVER['CONTENT_TYPE']) ? strtolower(trim($_SERVER['CONTENT_TYPE'])) : '';
         if (strpos($contentType, 'application/json') ===  false) return true;
+
+        if (!Validator::validate('telegramIp', '149.154.160.0')) return true;
+
         $data = trim(file_get_contents('php://input'));
         $message = json_decode($data, true);
 

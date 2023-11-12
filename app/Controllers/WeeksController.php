@@ -3,6 +3,7 @@
 namespace app\Controllers;
 
 use app\core\Controller;
+use app\core\Locale;
 use app\core\View;
 use app\models\Weeks;
 use app\Repositories\WeekRepository;
@@ -23,6 +24,7 @@ class WeeksController extends Controller
         $vars['title'] = 'Weekly schedule';
 
         View::$route['vars'] = array_merge(View::$route['vars'], $vars);
+        View::$route['vars']['og'] = WeekRepository::formWeekOG($vars);
 
         View::render();
     }

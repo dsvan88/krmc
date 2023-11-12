@@ -56,4 +56,22 @@ class Validator
         if (empty($value)) return '';
         return in_array($value, ['male', 'female', 'secret'], true) ? $value : '';
     }
+    private static function telegramIp(string $ip): string
+    {
+        $ranges = [
+            [
+                'min' => 1533805568, //ip2long('91.108.4.0'),
+                'max' => 1533806591, //ip2long('91.108.7.255'),
+            ],
+            [
+                'min' => 2509938688, //ip2long('149.154.160.0')
+                'max' => 2509942783, //ip2long('149.154.175.255'),
+            ],
+        ];
+        $ip = ip2long($ip);
+        foreach ($ranges as $index => $range){
+            if ($ip >= $range['min'] && $ip <= $range['max']) return true;
+        }
+        return false;
+    }
 }
