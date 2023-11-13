@@ -2,7 +2,6 @@
 
 namespace app\Repositories;
 
-use app\core\Locale;
 use app\models\Pages;
 
 class PageRepository
@@ -17,22 +16,6 @@ class PageRepository
     public static function getPage(string $slug)
     {
         $page = Pages::getBySlug($slug);
-        // $page = [];
-        // if (!empty($pages)) {
-        //     $count = count($pages);
-        //     $default = [];
-        //     for ($x=0; $x < $count; $x++) { 
-        //         if (!empty($page[$x]['date_delete'])) continue;
-        //         if (empty($pages[$x]['lang'])){
-        //             $default = $pages[$x];
-        //             continue;
-        //         }
-        //         if ($pages[$x]['lang'] !== Locale::$langCode) continue;
-        //         $page = $pages[$x];
-        //         break;
-        //     }
-        //     if (empty($page) && !empty($default)) $page = $default;
-        // }
 
         if (empty($page)) {
 
@@ -51,10 +34,11 @@ class PageRepository
         $page['logo'] = empty($page['logo']) ? '/public/images/club-logo-w-city.jpg' : $page['logo'];
         $imageSize = getimagesize($_SERVER['DOCUMENT_ROOT'].$page['logo']);
         $image = "$url/{$page['logo']}";
+        $uri = $page['slug'] === 'home' && $page['type'] === 'page' ? '' : "{$page['type']}/{$page['slug']}/";
         $result = [
             'title' => $page['title'],
             'type' => 'article',
-            'url' => "$url/{$page['type']}/{$page['slug']}/",
+            'url' =>  "$url/$uri",
             'image' => $image,
             'og:image:width' => $imageSize[0],
             'og:image:height' => $imageSize[1],
