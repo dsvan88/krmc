@@ -68,6 +68,11 @@ class GamesController extends Controller
             $shuffled[] = $element['name'];
             return true;
         });
+
+        usort($day['participants'], function ($participantA, $participantB){
+            return $participantA['name'] > $participantB['name'] ? 1 : -1;
+        });
+
         shuffle($shuffled);
 
         $config = [
