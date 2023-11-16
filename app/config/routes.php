@@ -39,7 +39,7 @@ return  [
         'action' => 'delete',
         'access' => ['category' => 'manager']
     ],
-/*    'account' => [
+    /*    'account' => [
         'redirect' => 'account/login'
     ],
      'account/login' => [
@@ -157,12 +157,12 @@ return  [
         'access' => ['category' => 'admin']
     ],
     'chat/send' => [
-        'controller' => 'telegramBot',
+        'controller' => 'telegramChat',
         'action' => 'send',
         'access' => ['category' => 'admin'],
     ],
     'chat/index' => [
-        'controller' => 'telegramBot',
+        'controller' => 'telegramChat',
         'action' => 'index',
         'access' => ['category' => 'admin'],
     ],
@@ -402,7 +402,7 @@ return  [
         'action' => 'historyItem',
         'access' => ['category' => 'trusted']
     ],
-    
+
     'api/settings/edit/form' => [
         'controller' => 'settings',
         'action' => 'editForm',

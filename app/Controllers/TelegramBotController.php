@@ -5,7 +5,6 @@ namespace app\Controllers;
 use app\core\Controller;
 use app\core\Locale;
 use app\core\Sender;
-use app\core\TelegramBot;
 use app\core\Validator;
 use app\core\View;
 use app\models\Contacts;
@@ -35,7 +34,7 @@ class TelegramBotController extends Controller
         if (strpos($contentType, 'application/json') ===  false) View::exit();
 
         $ip = substr($_SERVER['REMOTE_ADDR'], 0, 4) === substr($_SERVER['SERVER_ADDR'], 0, 4) ? $_SERVER['HTTP_X_REAL_IP'] : $_SERVER['REMOTE_ADDR'];
-        if (!Validator::validate('telegramIp', $ip)){
+        if (!Validator::validate('telegramIp', $ip)) {
             Sender::message(Settings::getTechTelegramId(), json_encode([
                 'REMOTE_ADDR' => $_SERVER['REMOTE_ADDR'],
                 'SERVER_ADDR' => $_SERVER['SERVER_ADDR'],
@@ -69,26 +68,26 @@ class TelegramBotController extends Controller
         self::$techTelegramId = Settings::getTechTelegramId();
         self::$mainGroupTelegramId = Settings::getMainTelegramId();
         self::$chatId = $message['message']['chat']['id'];
-        
+
         $userTelegramId = $message['message']['from']['id'];
-        
+
         $userId = Contacts::getUserIdByContact('telegramid', $userTelegramId);
-        
-        if (empty($userId) && $command && !in_array(self::$command, self::$guestCommands)){
+
+        if (empty($userId) && $command && !in_array(self::$command, self::$guestCommands)) {
             Sender::message(self::$chatId, Locale::phrase('{{ Tg_Unknown_Requester }}'), self::$message['message']['message_id']);
             View::exit();
         }
-        self::$requester = Users::getDataById($userId); 
+        self::$requester = Users::getDataById($userId);
 
-        if (self::$command === 'booking' && Users::isBanned('booking', self::$requester['ban'])){
+        if (self::$command === 'booking' && Users::isBanned('booking', self::$requester['ban'])) {
             Sender::delete(self::$chatId, $message['message']['message_id']);
-            Sender::message($userTelegramId, Locale::phrase(['string' => "I’m deeply sorry, but you banned for that action:(...\nYour ban will be lifted at: <b>%s</b>", 'vars'=>[ date('d.m.Y', self::$requester['ban']['expired'] + TIME_MARGE)]]));
+            Sender::message($userTelegramId, Locale::phrase(['string' => "I’m deeply sorry, but you banned for that action:(...\nYour ban will be lifted at: <b>%s</b>", 'vars' => [date('d.m.Y', self::$requester['ban']['expired'] + TIME_MARGE)]]));
             View::exit();
         }
 
-        if (self::$chatId == self::$mainGroupTelegramId && Users::isBanned('chat', self::$requester['ban'])){
+        if (self::$chatId == self::$mainGroupTelegramId && Users::isBanned('chat', self::$requester['ban'])) {
             Sender::delete(self::$chatId, $message['message']['message_id']);
-            Sender::message($userTelegramId, Locale::phrase(['string' => "I’m deeply sorry, but you banned for that action:(...\nYour ban will be lifted at: <b>%s</b>", 'vars'=>[ date('d.m.Y', self::$requester['ban']['expired'] + TIME_MARGE)]]));
+            Sender::message($userTelegramId, Locale::phrase(['string' => "I’m deeply sorry, but you banned for that action:(...\nYour ban will be lifted at: <b>%s</b>", 'vars' => [date('d.m.Y', self::$requester['ban']['expired'] + TIME_MARGE)]]));
             View::exit();
         }
 
@@ -144,7 +143,7 @@ class TelegramBotController extends Controller
         }
         if (preg_match('/^[+]\s{0,3}[0-2]{0,1}[0-9]/', $_text) === 1) {
             preg_match('/^(\+)\s{0,3}([0-2]{0,1}[0-9])(:[0-5][0-9]){0,1}/i', mb_strtolower(str_replace('.', ':', $text), 'UTF-8'), $matches);
-            
+
             if ($matches[2] < 8 || $matches[2] > 23) return false;
             if (empty($matches[3])) $matches[3] = ':00';
 
@@ -295,96 +294,18 @@ class TelegramBotController extends Controller
 
         return $class::execute(self::$commandArguments);
     }
-    public static function indexAction()
-    {
-        $chatsData = TelegramChats::getChatsList();
-        $chatsData = TelegramChats::nicknames($chatsData);
-        $vars = [
-            'title' => '{{ Chats_List_Title }}',
-            'chatsData' => $chatsData,
-        ];
-        View::$route['vars'] = array_merge(View::$route['vars'], $vars);
-    
-        View::render();
-    }
-
-    public static function sendAction()
-    {
-        if (!empty($_POST)) {
-
-            $message =  preg_replace('/(<((?!b|u|s|strong|em|i|\/b|\/u|\/s|\/strong|\/em|\/i)[^>]+)>)/i', '', str_replace(['<br />', '<br/>', '<br>', '</p>'], "\n", trim($_POST['html'])));
-            if (is_numeric($_POST['target'])) {
-                $targets = $_POST['target'];
-            } else {
-                switch ($_POST['target']) {
-                    case 'main':
-                        $targets = Settings::getMainTelegramId();
-                        break;
-                    case 'groups':
-                        $chats = TelegramChats::getGroupChatsList();
-                        $count = count($chats);
-                        for ($i = 0; $i < $count; $i++) {
-                            $targets[] = $chats[$i]['uid'];
-                        }
-                        break;
-                    default:
-                        $chats = TelegramChats::getChatsList();
-                        $count = count($chats);
-                        for ($i = 0; $i < $count; $i++) {
-                            $targets[] = $chats[$i]['uid'];
-                        }
-                        break;
-                }
-            }
-            if ($_FILES['logo']['size'] > 0 && $_FILES['logo']['size'] < 10485760) { // 10 Мб = 10 * 1024 *1024
-                $result = Sender::photo($targets, $message, $_FILES['logo']['tmp_name']);
-            } else {
-                $result = Sender::message($targets, $message);
-            }
-            $message = 'Success!';
-            if (!$result[0]['ok']) {
-                $message = 'Fail!';
-            }
-
-            View::message(['error' => 0, 'message' => $message]);
-        }
-        $groupChats = TelegramChats::getGroupChatsList();
-        $directChats = TelegramChats::getDirectChats();
-        $chats = array_merge($groupChats, $directChats);
-        $vars = [
-            'title' => '{{ HEADER_ASIDE_MENU_CHAT_SEND }}',
-            'texts' => [
-                'blockTitle' => '{{ HEADER_ASIDE_MENU_CHAT_SEND }}',
-                'submitTitle' => 'Send',
-                'sendAll' => '{{ Send_To_All }}',
-                'sendGroups' => '{{ Send_To_Groups }}',
-                'sendMain' => '{{ Send_To_Main }}',
-            ],
-            'chats' => $chats,
-            'scripts' => [
-                'plugins/ckeditor.js',
-                'forms-admin-funcs.js',
-            ],
-        ];
-        View::$route['vars'] = array_merge(View::$route['vars'], $vars);
-    
-        View::render();
-    }
-    public static function send(string $target = null, string $message = ''): bool
+    /*     public static function send(string $target = null, string $message = ''): bool
     {
         if (empty($target) || empty($message))
             return false;
 
         $result = Sender::message($target, $message);
 
-        if (!$result[0]['ok']) {
-            return false;
-        }
-        return true;
-    }
+        return !$result[0]['ok'] ? true : false;
+    } */
     public static function checkAccess(string $level = 'guest')
     {
-        $levels = ['guest' => 0, 'user' => 1, 'trusted' => 2,'manager' => 3, 'admin' => 4, 'root' => 5];
+        $levels = ['guest' => 0, 'user' => 1, 'trusted' => 2, 'manager' => 3, 'admin' => 4, 'root' => 5];
         $status = 'guest';
 
         if (!empty(self::$requester['privilege']['status']))
