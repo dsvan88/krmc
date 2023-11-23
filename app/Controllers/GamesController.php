@@ -128,18 +128,16 @@ class GamesController extends Controller
     {
         extract(self::$route['vars']);
 
-        $texts = [
-            'title' => 'Title',
-            'subtitle' => 'Subtitle',
-            'content' => 'Content',
-            'managerPlaceholder' => 'Manager',
-            'playerPlaceholder' => 'Nickname',
-            'Start' => 'Start',
-        ];
-
         $vars = [
             'title' => 'Play a game',
-            'texts' => $texts,
+            'texts' => [
+                'title' => 'Title',
+                'subtitle' => 'Subtitle',
+                'content' => 'Content',
+                'managerPlaceholder' => 'Manager',
+                'playerPlaceholder' => 'Nickname',
+                'Start' => 'Start',
+            ],
             'scripts' => [
                 'manager-game-funcs.js',
                 'mafia/player.class.js',
