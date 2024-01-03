@@ -32,7 +32,7 @@
         <div>
             <label for="news-logo-input-file">
                 Зображення
-                <input type="file" name="logo" value="<?= $newsData['logo'] ?>" placeholder="Logo" class="common-form__input logo" id="news-logo-input-file">
+                <input type="file" name="logo" value="" placeholder="Logo" class="common-form__input logo" id="news-logo-input-file">
             </label>
         </div>
         <div class="editor-block" data-field="html">

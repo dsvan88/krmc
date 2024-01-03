@@ -11,36 +11,6 @@
             <a href='/account/profile/<?= $_SESSION['id'] ?>'><?= $texts['headerMenuProfileLink'] ?></span>
                 <div class='header__profile-menu-bar'></div>
         </li>
-        <? if (in_array($_SESSION['privilege']['status'], ['manager', 'admin', 'root'])) : ?>
-            <li class='header__profile-menu-item'>
-                <a href='/news/add'><?= $texts['headerMenuAddNewsLink'] ?></a>
-                <div class='header__profile-menu-bar'></div>
-            </li>
-            <li class='header__profile-menu-item'>
-                <a href='/news/edit/promo'><?= $texts['headerMenuChangePromoLink'] ?></a>
-                <div class='header__profile-menu-bar'></div>
-            </li>
-            <li class='header__profile-menu-item'>
-                <a href='/page/add'><?= $texts['headerMenuAddPageLink'] ?></a>
-                <div class='header__profile-menu-bar'></div>
-            </li>
-            <li class='header__profile-menu-item'>
-                <a href='/users/list'><?= $texts['headerMenuUsersListLink'] ?></a>
-                <div class='header__profile-menu-bar'></div>
-            </li>
-            <li class='header__profile-menu-item'>
-                <a href='/chat/index'><?= $texts['headerMenuUsersChatsLink'] ?></a>
-                <div class='header__profile-menu-bar'></div>
-            </li>
-            <li class='header__profile-menu-item'>
-                <a href='/chat/send'><?= $texts['headerMenuChatSendLink'] ?></a>
-                <div class='header__profile-menu-bar'></div>
-            </li>
-            <li class='header__profile-menu-item'>
-                <a href='/settings/index'><?= $texts['headerMenuSettingsListLink'] ?></a>
-                <div class='header__profile-menu-bar'></div>
-            </li>
-        <? endif; ?>
         <li class='header__profile-menu-item'>
             <a href='/account/logout'><?= $texts['headerMenuLogoutLink'] ?></a>
             <div class='header__profile-menu-bar'></div>

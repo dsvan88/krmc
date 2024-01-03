@@ -230,6 +230,7 @@ class View
             'headerLogo' => "<a href='/'>" . ImageProcessing::inputImage($images['MainLogo']['value']) . '</a>',
             'headerProfileButton' => '<a class="header__profile-button" data-action-click="account/login/form">' . Locale::phrase('Log In') . '</a>',
             'headerMenu' => self::menu(),
+            'headerDashboard' => false,
         ];
         if (isset($_SESSION['id'])) {
             if (empty($_SESSION['avatar'])) {
@@ -240,16 +241,10 @@ class View
 
             $profileImage = ImageProcessing::inputImage($profileImage, ['title' => $_SESSION['name']]);
 
+            $vars['headerDashboard'] = self::dashboard();
             $texts = [
-                'headerMenuProfileLink' => '{{ HEADER_ASIDE_MENU_PROFILE }}',
-                'headerMenuAddNewsLink' => '{{ HEADER_ASIDE_MENU_ADD_NEWS }}',
-                'headerMenuChangePromoLink' => '{{ HEADER_ASIDE_MENU_CHANGE_PROMO }}',
-                'headerMenuAddPageLink' => '{{ HEADER_ASIDE_MENU_ADD_PAGE }}',
-                'headerMenuUsersListLink' => '{{ HEADER_ASIDE_MENU_USERS_LISTS }}',
-                'headerMenuUsersChatsLink' => '{{ HEADER_ASIDE_MENU_USERS_CHATS }}',
-                'headerMenuChatSendLink' => '{{ HEADER_ASIDE_MENU_CHAT_SEND }}',
-                'headerMenuSettingsListLink' => '{{ HEADER_ASIDE_MENU_SETTINGS_LIST }}',
-                'headerMenuLogoutLink' => '{{ HEADER_ASIDE_MENU_LOGOUT }}',
+                'headerMenuProfileLink' => 'Profile',
+                'headerMenuLogoutLink' => 'Log Out',
             ];
 
             $texts = Locale::apply($texts);
@@ -337,13 +332,13 @@ class View
         $footerAdress = '<p>' . str_replace('  ', '</p><p>', $contacts['adress']['value']) . '</p>';
 
         $footerContacts = '';
-        if (isset($contacts['telegram']) && !empty($contacts['telegram']['value'])) {
+        if (!empty($contacts['telegram']['value'])) {
             $footerContacts .= "<p><a class='fa fa-telegram' href='{$contacts['telegram']['value']}' target='_blank'> {$contacts['tg-name']['value']}</a></p>";
         }
-        if (isset($contacts['email']) && !empty($contacts['email']['value'])) {
+        if (!empty($contacts['email']['value'])) {
             $footerContacts .= "<p><a class='fa fa-envelope' href='mailto:{$contacts['email']['value']}' target='_blank'> {$contacts['email']['value']}</a></p>";
         }
-        if (isset($contacts['phone']) && !empty($contacts['phone']['value'])) {
+        if (!empty($contacts['phone']['value'])) {
             $phone = preg_replace('/[^0-9]/', '', $contacts['phone']['value']);
             if (strlen($phone) === 10) {
                 $phone = '38' . $phone;
@@ -360,16 +355,69 @@ class View
 
         $socials = Settings::getGroup('socials');
         $footerSocials = '';
-        if (isset($socials['facebook']) && !empty($socials['facebook']['value'])) {
+        if (!empty($socials['facebook']['value'])) {
             $footerSocials .= "<a class='fa fa-facebook-square' href='{$socials['facebook']['value']}' target='_blank'></a>";
         }
-        if (isset($socials['youtube']) && !empty($socials['youtube']['value'])) {
+        if (!empty($socials['youtube']['value'])) {
             $footerSocials .= "<a class='fa fa-youtube-square' href='{$socials['youtube']['value']}' target='_blank'></a>";
         }
-        if (isset($socials['instagram']) && !empty($socials['instagram']['value'])) {
+        if (!empty($socials['instagram']['value'])) {
             $footerSocials .= "<a class='fa fa-instagram' href='{$socials['instagram']['value']}' target='_blank'></a>";
         }
 
         return compact('footerGmapLink', 'footerAdress', 'footerContacts', 'footerGmapWidget', 'footerSocials');
+    }
+    public static function dashboard(): array
+    {
+
+        if (!Users::checkAccess('trusted')) return false;
+
+        $links = [
+            [
+                'link' => 'news/add',
+                'icon' => 'newspaper-o',
+                'label' => 'Add News',
+            ],
+            [
+                'link' => 'news/edit/promo',
+                'icon' => 'bullhorn',
+                'label' => 'Change Promo',
+            ],
+            [
+                'link' => 'page/add',
+                'icon' => 'file-text-o',
+                'label' => 'Add Page',
+            ],
+            [
+                'link' => 'users/list',
+                'icon' => 'users',
+                'label' => 'Users List',
+            ],
+            [
+                'link' => 'chat/index',
+                'icon' => 'comments-o',
+                'label' => 'Chats List',
+            ],
+            [
+                'link' => 'chat/send',
+                'icon' => 'paper-plane-o',
+                'label' => 'Send message',
+            ],
+            [
+                'link' => 'settings/index',
+                'icon' => 'cogs',
+                'label' => 'Settings List',
+            ],
+        ];
+
+        $routes = require $_SERVER['DOCUMENT_ROOT'] . '/app/config/routes/http.php';
+        $result = [];
+        foreach ($links as $item) {
+            if (empty($routes[$item['link']]) || !Users::checkAccess($routes[$item['link']]['access']['category'])) continue;
+            $result[] = $item;
+        }
+        if (empty($result)) return false;
+
+        return Locale::apply($result);
     }
 }

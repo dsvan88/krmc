@@ -61,6 +61,71 @@ body {
 			justify-content: space-between;
 		}
 
+		.dashboard {
+			padding: 0 3vw 0 0;
+			font-size: 1.45em;
+			position: relative;
+			background-color: $bg-color-light;
+
+			&__list {
+				display: none;
+				gap: .3em;
+			}
+
+			&__item {
+				list-style: none;
+				padding: .1em 0;
+
+				a {
+					padding: 0.1em;
+					text-decoration: none;
+					border: 1px solid $color-text-light-blur;
+					border-radius: 2px;
+					color: $color-text-dark-blur;
+					transition: color $animation-normal, border-color $animation-normal, background-color $animation-normal;
+
+					&:hover {
+						color: $color-text-dark;
+						border-color: $color-text-dark;
+						background-color: $body-bg-color;
+					}
+				}
+			}
+
+			&__hide,
+			&__show {
+				font-size: 0.8em;
+				position: absolute;
+				right: 0;
+				background-color: $bg-color-light-odd;
+				border: 1px solid $color-text-light-blur;
+				border-top: none;
+				border-radius: 0 0 5px 5px;
+				padding: .05em .1em;
+				cursor: pointer;
+			}
+
+			&__hide {
+				display: none;
+			}
+
+			#dashboard-control {
+				&:checked {
+					~.dashboard__list {
+						display: flex;
+					}
+
+					~.dashboard__hide {
+						display: block;
+					}
+
+					~.dashboard__show {
+						display: none;
+					}
+				}
+			}
+		}
+
 		&__logo {
 			order: 2;
 			height: 80%;
@@ -93,7 +158,8 @@ body {
 			line-height: .85em;
 			cursor: pointer;
 			text-decoration: none;
-			&.selected{
+
+			&.selected {
 				border-radius: 2px;
 				box-shadow: 0 0 .3em .3em $color-text-light-blur inset, 0 0 .1em .1em $color-text-light-blur;
 			}
@@ -105,6 +171,7 @@ body {
 			display: flex;
 			position: relative;
 			align-items: center;
+			z-index: 5;
 
 			&-button {
 				// background-color: #9fc0ff33;
@@ -430,6 +497,10 @@ body {
 			display: none;
 		}
 
+		&__dashboard {
+			padding: 0 10vw !important;
+		}
+
 		&__logo {
 			order: 1;
 			margin-right: 2vw;
@@ -474,8 +545,13 @@ body {
 	}
 
 	.header {
+
 		&__content {
 			padding: .8rem 15vw !important;
+		}
+
+		&__dashboard {
+			padding: 0 15vw !important;
 		}
 
 		&__logo {
@@ -497,6 +573,10 @@ body {
 	.header__content,
 	.footer {
 		padding: 1rem 20vw !important;
+	}
+
+	.header__dashboard {
+		padding: 0 20vw !important;
 	}
 
 	.section:not(.news-preview) {

@@ -26,7 +26,7 @@ class RegCommand extends ChatCommand
         $requestData = self::$operatorClass::parseArguments($arguments);
 
         if (!isset($requestData['nonames']) && $requestData['userId'] < 2) {
-            self::$operatorClass::$resultMessage = self::locale('{{ Tg_Command_User_Not_Found }}');
+            self::$operatorClass::$resultMessage = self::locale(['string' => 'No users found with nickname: <b>%s</b>!', 'vars' => [$requestData['userName']]]);
             return false;
         }
 

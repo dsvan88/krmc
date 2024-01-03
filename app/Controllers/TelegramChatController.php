@@ -66,9 +66,9 @@ class telegramChatController extends Controller
         $directChats = TelegramChats::getDirectChats();
         $chats = array_merge($groupChats, $directChats);
         $vars = [
-            'title' => '{{ HEADER_ASIDE_MENU_CHAT_SEND }}',
+            'title' => 'Send message',
             'texts' => [
-                'blockTitle' => '{{ HEADER_ASIDE_MENU_CHAT_SEND }}',
+                'blockTitle' => 'Send message',
                 'submitTitle' => 'Send',
                 'sendAll' => '{{ Send_To_All }}',
                 'sendGroups' => '{{ Send_To_Groups }}',

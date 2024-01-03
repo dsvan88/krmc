@@ -68,6 +68,11 @@
                 </div>
                 <div class="header__profile"><?= $headerProfileButton ?></div>
             </div>
+            <div class="header__dashboard">
+                <? if (!empty($headerDashboard)) : ?>
+                    <? self::component('header-dashboard', ['dashboard' => $headerDashboard]) ?>
+                <? endif ?>
+            </div>
         </header>
         <div class="header-for-auto-scroll" id="start-page"></div>
         <main class="main <?= $mainClass ?>">
