@@ -22,7 +22,7 @@
 	}
 
 	&__players-list {
-		width: clamp(50vw, 250px, 80vw);
+		width: clamp(40vw, 220px, 60vw);
 	}
 
 	&__title {
@@ -41,73 +41,6 @@
 		text-align: center;
 		font-size: 1.6em;
 		text-transform: uppercase;
-	}
-
-	&__pool {
-		display: flex;
-		flex-wrap: wrap;
-		font-size: 1.3em;
-		&-unit {
-			display: flex;
-			margin: 0.1em 0.2em;
-
-			&.add {
-				display: inline-block;
-				border: 1px solid $bg-color-green-blur;
-				border-radius: 5px;
-				padding: 0.2em 0.3em;
-				cursor: pointer;
-				transition: all $animation-fast ease-in-out;
-				width: max-content;
-				flex-grow: 0;
-				color: $color-text-menu;
-
-				&:hover {
-					background-color: $bg-color-green;
-				}
-			}
-		}
-
-		&-name {
-			display: inline-block;
-			border: 1px solid $bg-color-green-blur;
-			border-radius: 5px 0 0 5px;
-			padding: 0.2em 0.3em;
-			cursor: pointer;
-			transition: all $animation-fast ease-in-out;
-			width: max-content;
-			flex-grow: 0;
-			color: $color-text-dark-blur;
-
-			&:hover {
-				background-color: $bg-color-green; //#0a494d;
-			}
-
-			&.selected,
-			&.manager {
-				background-color: $bg-color-light-red-blur;
-				border-color: $bg-color-light-red-blur;
-				text-decoration: line-through;
-
-				&:hover {
-					background-color: $bg-color-light-red;
-				}
-			}
-		}
-
-		&-remove {
-			border: 1px solid $bg-color-green-blur;
-			border-radius: 0 5px 5px 0;
-			padding: 0.2em 0.3em;
-			flex-grow: 0;
-			cursor: pointer;
-			transition: all $animation-fast ease-in-out;
-
-			&:hover {
-				border-color: $button-remove-color-hover;
-				color: $button-remove-color-hover;
-			}
-		}
 	}
 
 	&__button {
@@ -129,6 +62,90 @@
 		option {
 			color: $bg-color-input;
 		}
+	}
+}
+
+.pool {
+	display: flex;
+	flex-wrap: wrap;
+	font-size: 1.3em;
+
+	&__unit {
+		display: flex;
+		margin: 0.1em 0.2em;
+
+		&.add {
+			display: inline-block;
+			border: 1px solid $bg-color-green-blur;
+			border-radius: 5px;
+			padding: 0.2em 0.3em;
+			cursor: pointer;
+			transition: all $animation-fast ease-in-out;
+			width: max-content;
+			flex-grow: 0;
+			color: $color-text-menu;
+
+			&:hover {
+				background-color: $bg-color-green;
+			}
+		}
+	}
+
+	&__name {
+		display: inline-block;
+		border: 1px solid $bg-color-green-blur;
+		border-radius: 5px 0 0 5px;
+		padding: 0.2em 0.3em;
+		cursor: pointer;
+		transition: all $animation-fast ease-in-out;
+		width: max-content;
+		flex-grow: 0;
+		color: $color-text-dark-blur;
+
+		&:hover {
+			background-color: $bg-color-green; //#0a494d;
+		}
+
+		&.selected,
+		&.manager {
+			background-color: $bg-color-light-red-blur;
+			border-color: $bg-color-light-red-blur;
+			text-decoration: line-through;
+
+			&:hover {
+				background-color: $bg-color-light-red;
+			}
+		}
+	}
+
+	&__remove {
+		border: 1px solid $bg-color-green-blur;
+		border-radius: 0 5px 5px 0;
+		padding: 0.2em 0.3em;
+		flex-grow: 0;
+		cursor: pointer;
+		transition: all $animation-fast ease-in-out;
+
+		&:hover {
+			border-color: $button-remove-color-hover;
+			color: $button-remove-color-hover;
+		}
+	}
+}
+
+@include md {
+	.game {
+		&__prep {
+			display: flex;
+			justify-content: space-between;
+			align-items: baseline;
+			gap: 1em;
+		}
+	}
+
+	.pool {
+		flex-direction: column;
+		align-items: end;
 	}
 }
 
@@ -233,9 +250,11 @@
 			&.mafia {
 				background-color: $bg-color-light-red-blur;
 			}
+
 			&.don {
 				background-color: $bg-color-light-red-blur;
 			}
+
 			&.sherif {
 				background-color: $bg-color-light-red-blur;
 			}
@@ -310,12 +329,14 @@
 			}
 		}
 	}
-	&-history{
-		&__card{
+
+	&-history {
+		&__card {
 			// outline: 1px solid $color-text-dark-blur;
 			font-size: .7em;
 			margin-bottom: .5em;
-			&-title{
+
+			&-title {
 				border-radius: 3px;
 				box-shadow: 0px 0px .5em .3em $bg-color-green-blur inset;
 				font-size: 2em;
@@ -323,48 +344,58 @@
 				outline: none;
 				display: flex;
 				justify-content: space-between;
-				&.peace{
+
+				&.peace {
 					box-shadow: 0px 0px .5em .3em $bg-color-light-red-blur inset;
 				}
-				&.mafia{
+
+				&.mafia {
 					box-shadow: 0px 0px .5em .3em $bg-color-dark-blur inset;
 				}
-				&.even{
+
+				&.even {
 					box-shadow: 0px 0px .5em .3em $bg-color-blue-blur inset;
 				}
 			}
-			.game{
+
+			.game {
 				padding: 0;
 				margin: 0;
-				&__wrapper{
+
+				&__wrapper {
 					display: flex;
 					flex-direction: column;
 					align-items: center;
 				}
-				&__description{
+
+				&__description {
 					padding-top: 0;
 				}
 			}
 		}
-		
+
 	}
 }
-.games{
-	&__list{
+
+.games {
+	&__list {
 		padding: .5em 1em;
 	}
-	&__rating{
+
+	&__rating {
 		font-size: .35em;
-		.game{
-			&__table{
-				td{
+
+		.game {
+			&__table {
+				td {
 					text-align: center;
 				}
 			}
 		}
 	}
 }
-.pointlog{
+
+.pointlog {
 	position: absolute;
 	z-index: 2;
 	background-color: $bg-color-light-odd;
@@ -373,19 +404,23 @@
 	padding: .5em 1em;
 	border-radius: 5px;
 	border: 2px solid $bg-color-red;
-	&__title{
+
+	&__title {
 		margin-bottom: .5em;
 	}
-	&__row{
+
+	&__row {
 		display: flex;
 		justify-content: space-between;
 		margin-bottom: .3em;
 		border-bottom: 1px dotted $bg-color-red;
 	}
-	&__label{
+
+	&__label {
 		margin-right: 1em;
 	}
-	&__result{
+
+	&__result {
 		display: flex;
 		justify-content: space-between;
 		padding-top: .2em;

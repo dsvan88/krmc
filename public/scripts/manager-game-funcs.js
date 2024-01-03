@@ -128,8 +128,8 @@ actionHandler.resetSelectedPoolUnits = function () {
 
 actionHandler.removeParticipant = function (target) {
 	const self = this;
-	const button = target.closest('.game-form__pool-unit');
-	const name = button.querySelector('.game-form__pool-name').innerText;
+	const button = target.closest('.pool__unit');
+	const name = button.querySelector('.pool__name').innerText;
 	const answer = prompt(`Are you sure?\nIt will remove ${name}'s progress for today?\nEnter 'Y' or 'Yes' below:`, 'No') || 'No';
 
 	if (answer.toLowerCase().trim()[0] !== 'y') return false;
@@ -178,12 +178,12 @@ actionHandler.addParticipant = function (name, target = null) {
 				target.value = result['name'];
 			}
 
-			const poolUniExpample = document.querySelector('span.game-form__pool-unit');
+			const poolUniExpample = document.querySelector('span.pool__unit');
 			if (poolUniExpample) {
 				const poolUnitNew = poolUniExpample.cloneNode(true);
-				poolUnitNew.querySelector('span.game-form__pool-name').innerText = result['name'];
-				const parentElement = poolUniExpample.closest('div.game-form__pool');
-				parentElement.insertBefore(poolUnitNew, document.querySelector('span.game-form__pool-unit.add'));
+				poolUnitNew.querySelector('span.pool__name').innerText = result['name'];
+				const parentElement = poolUniExpample.closest('div.pool');
+				parentElement.insertBefore(poolUnitNew, document.querySelector('span.pool__unit.add'));
 
 			}
 			self.resetSelectedPoolUnits();
