@@ -2,6 +2,10 @@
 
 namespace app\core;
 
+use app\models\GameTypes;
+use app\models\News;
+use app\models\Settings;
+use app\models\Users;
 use app\Repositories\TechRepository;
 
 class View
@@ -34,16 +38,16 @@ class View
 
         self::$route['vars'] = Locale::apply(self::$route['vars']);
         extract(self::$route['vars']);
-        
+
         extract(self::defaultVars());
-        
+
         if (empty($mainClass)) $mainClass = 'index';
 
         $pageTitle = preg_replace('/<.*?>/', '', $title);
 
         $filename = self::$path;
-        $path = $_SERVER['DOCUMENT_ROOT']. self::$viewsFolder ."/$filename.php";
-        if (file_exists($path)){
+        $path = $_SERVER['DOCUMENT_ROOT'] . self::$viewsFolder . "/$filename.php";
+        if (file_exists($path)) {
             ob_start();
             require $path;
             $content = ob_get_clean();
@@ -59,7 +63,7 @@ class View
         $lang = Locale::$langCode;
         $locales = Locale::getLocaledLinks();
 
-        require $_SERVER['DOCUMENT_ROOT']. self::$viewsFolder . '/layouts/' . self::$layout . '.php';
+        require $_SERVER['DOCUMENT_ROOT'] . self::$viewsFolder . '/layouts/' . self::$layout . '.php';
 
         self::exit();
     }
@@ -123,19 +127,20 @@ class View
     public static function errorCode($code, $data = [])
     {
         extract($data);
-        $path = $_SERVER['DOCUMENT_ROOT'] . self::$viewsFolder."/errors/$code.php";
+        $path = $_SERVER['DOCUMENT_ROOT'] . self::$viewsFolder . "/errors/$code.php";
         http_response_code($code);
         if (file_exists($path))
             require $path;
         self::exit();
     }
-    public static function html(){
-        
+    public static function html()
+    {
+
         extract(self::$route['vars']);
         // extract($vars);
 
-        $path = $_SERVER['DOCUMENT_ROOT']. self::$viewsFolder ."/$path.php";
-        if (file_exists($path)){
+        $path = $_SERVER['DOCUMENT_ROOT'] . self::$viewsFolder . "/$path.php";
+        if (file_exists($path)) {
             ob_start();
             require $path;
             $content = ob_get_clean();
@@ -163,7 +168,7 @@ class View
                 'message' => $data
             ];
         }
-        
+
         $data['message'] = empty($data['message']) ? '' : Locale::phrase($data['message']);
 
         if (!empty($data['error'])) {
@@ -180,8 +185,8 @@ class View
     }
     public static function defaultVars()
     {
-        $header = ViewHeader::get();
-        $footer = ViewFooter::get();
+        $header = self::headerData();
+        $footer = self::footerData();
         return array_merge($header, $footer);
     }
 
@@ -209,10 +214,162 @@ class View
         TechRepository::scheduleBackup();
         exit();
     }
-    public static function component(string $filename, array $vars = []){
+    public static function component(string $filename, array $vars = [])
+    {
         extract($vars);
         $texts = [];
         if (!empty(self::$route['vars']['texts'])) $texts = self::$route['vars']['texts'];
-        return require $_SERVER['DOCUMENT_ROOT'] . self::$viewsFolder."/components/$filename.php";
+        return require $_SERVER['DOCUMENT_ROOT'] . self::$viewsFolder . "/components/$filename.php";
+    }
+
+    public static function headerData()
+    {
+        $images = Settings::getGroup('img');
+        $images = Locale::apply($images);
+        $vars = [
+            'headerLogo' => "<a href='/'>" . ImageProcessing::inputImage($images['MainLogo']['value']) . '</a>',
+            'headerProfileButton' => '<a class="header__profile-button" data-action-click="account/login/form">' . Locale::phrase('Log In') . '</a>',
+            'headerMenu' => self::menu(),
+        ];
+        if (isset($_SESSION['id'])) {
+            if (empty($_SESSION['avatar'])) {
+                $profileImage = empty($_SESSION['gender']) ? $images['profile']['value'] : $images[$_SESSION['gender']]['value'];
+            } else {
+                $profileImage = FILE_USRGALL . "{$_SESSION['id']}/{$_SESSION['avatar']}";
+            }
+
+            $profileImage = ImageProcessing::inputImage($profileImage, ['title' => $_SESSION['name']]);
+
+            $texts = [
+                'headerMenuProfileLink' => '{{ HEADER_ASIDE_MENU_PROFILE }}',
+                'headerMenuAddNewsLink' => '{{ HEADER_ASIDE_MENU_ADD_NEWS }}',
+                'headerMenuChangePromoLink' => '{{ HEADER_ASIDE_MENU_CHANGE_PROMO }}',
+                'headerMenuAddPageLink' => '{{ HEADER_ASIDE_MENU_ADD_PAGE }}',
+                'headerMenuUsersListLink' => '{{ HEADER_ASIDE_MENU_USERS_LISTS }}',
+                'headerMenuUsersChatsLink' => '{{ HEADER_ASIDE_MENU_USERS_CHATS }}',
+                'headerMenuChatSendLink' => '{{ HEADER_ASIDE_MENU_CHAT_SEND }}',
+                'headerMenuSettingsListLink' => '{{ HEADER_ASIDE_MENU_SETTINGS_LIST }}',
+                'headerMenuLogoutLink' => '{{ HEADER_ASIDE_MENU_LOGOUT }}',
+            ];
+
+            $texts = Locale::apply($texts);
+
+            ob_start();
+            require $_SERVER['DOCUMENT_ROOT'] . '/app/views/main/header-menu.php';
+            $vars['headerProfileButton'] = ob_get_clean();
+        }
+        return $vars;
+    }
+    public static function menu()
+    {
+        $menu = [
+            [
+                'path' => '',
+                'label' => 'Home'
+            ],
+            [
+                'path' => 'news/',
+                'label' => 'News',
+            ],
+            [
+                'path' => 'weeks/',
+                'label' => 'Weeks',
+            ],
+            // [
+            //     'path' => '',
+            //     'label' => Locale::phrase('{{ HEADER_MENU_INFORMATION }}'),
+            //     'menu' => Pages::getList(),
+            //     'type' => 'page'
+            // ],
+            [
+                'path' => 'game/',
+                'label' => 'Games',
+                'menu' => GameTypes::menu(),
+                'type' => 'game',
+            ],
+        ];
+
+        if (News::getCount('news') < 1) {
+            unset($menu[1]);
+            $menu = array_values($menu);
+        }
+
+        if (Users::checkAccess('trusted')) {
+            $menu[] = [
+                'label' => 'Activity',
+                'menu' => [
+                    [
+                        'name' => 'Play a game',
+                        'slug' => 'play',
+                        'fields' => '',
+                    ],
+                    [
+                        'name' => 'History',
+                        'slug' => 'history',
+                        'fields' => '',
+                    ],
+                    [
+                        'name' => 'Rating',
+                        'slug' => 'rating',
+                        'fields' => '',
+                    ],
+                    // [
+                    //     'name' => 'Peek on game',
+                    //     'slug' => 'peek',
+                    //     'fields' => '',
+                    // ],
+                    [
+                        'name' => 'Last game',
+                        'slug' => 'last',
+                        'fields' => '',
+                    ],
+                ],
+                'type' => 'activity',
+            ];
+        }
+        return Locale::apply($menu);
+    }
+    public static function footerData()
+    {
+        $contacts = Settings::getGroup('contacts');
+
+        $footerGmapLink = $contacts['gmap_link']['value'];
+        $footerAdress = '<p>' . str_replace('  ', '</p><p>', $contacts['adress']['value']) . '</p>';
+
+        $footerContacts = '';
+        if (isset($contacts['telegram']) && !empty($contacts['telegram']['value'])) {
+            $footerContacts .= "<p><a class='fa fa-telegram' href='{$contacts['telegram']['value']}' target='_blank'> {$contacts['tg-name']['value']}</a></p>";
+        }
+        if (isset($contacts['email']) && !empty($contacts['email']['value'])) {
+            $footerContacts .= "<p><a class='fa fa-envelope' href='mailto:{$contacts['email']['value']}' target='_blank'> {$contacts['email']['value']}</a></p>";
+        }
+        if (isset($contacts['phone']) && !empty($contacts['phone']['value'])) {
+            $phone = preg_replace('/[^0-9]/', '', $contacts['phone']['value']);
+            if (strlen($phone) === 10) {
+                $phone = '38' . $phone;
+            } elseif (strlen($phone) === 11) {
+                $phone = '3' . $phone;
+            }
+            if (strlen($phone) === 12) {
+                preg_match('/(\d{2})(\d{3})(\d{3})(\d{2})(\d{2})/', $phone, $phoneParts);
+                $phoneFormatted = sprintf('+%s (%s) %s-%s-%s', $phoneParts[1], $phoneParts[2], $phoneParts[3], $phoneParts[4], $phoneParts[5]);
+                $footerContacts .= "<p><a class='fa fa-phone' href='tel:+$phone' target='_blank'></a> $phoneFormatted</p>";
+            }
+        }
+        $footerGmapWidget = $contacts['gmap_widget']['value'];
+
+        $socials = Settings::getGroup('socials');
+        $footerSocials = '';
+        if (isset($socials['facebook']) && !empty($socials['facebook']['value'])) {
+            $footerSocials .= "<a class='fa fa-facebook-square' href='{$socials['facebook']['value']}' target='_blank'></a>";
+        }
+        if (isset($socials['youtube']) && !empty($socials['youtube']['value'])) {
+            $footerSocials .= "<a class='fa fa-youtube-square' href='{$socials['youtube']['value']}' target='_blank'></a>";
+        }
+        if (isset($socials['instagram']) && !empty($socials['instagram']['value'])) {
+            $footerSocials .= "<a class='fa fa-instagram' href='{$socials['instagram']['value']}' target='_blank'></a>";
+        }
+
+        return compact('footerGmapLink', 'footerAdress', 'footerContacts', 'footerGmapWidget', 'footerSocials');
     }
 }

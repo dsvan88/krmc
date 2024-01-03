@@ -16,7 +16,9 @@ class Router
             error_log('$routes is not empty');
             return true;
         }
-        $arr = require 'app/config/routes.php';
+        $path = self::getRoutesPath();
+
+        $arr = require $path;
         foreach ($arr as $key => $val) {
             self::add($key, $val);
         }
@@ -55,7 +57,7 @@ class Router
                 $params['vars'][$params['varNames'][$i - 1]] = $match[$i];
             }
             self::$params = $params;
-            
+
             return true;
         }
         return false;
@@ -75,10 +77,9 @@ class Router
                     try {
                         $controller = new $path(self::$params);
                         $controller->$action();
-                    }
-                    catch(Throwable $error) {
+                    } catch (Throwable $error) {
                         $techTgId = Settings::getTechTelegramId();
-                        if (!empty($techTgId)){
+                        if (!empty($techTgId)) {
                             Sender::message(Settings::getTechTelegramId(), json_encode($error->__toString()));
                         }
                     }
@@ -107,5 +108,24 @@ class Router
         if (empty($url)) return;
 
         $_SESSION['path'] = '/' . $url;
+    }
+    public static function getRoutesPath(): string
+    {
+        $default = 'app/config/routes/http.php';
+        $uri = $_SERVER['REQUEST_URI'];
+
+        if ($uri[0] === '/')
+            $uri = mb_substr($uri, 1, null, 'UTF-8');
+
+        if (empty($uri) || strlen($uri) < 3)
+            return $default;
+
+        $end = mb_strpos($uri, '/', 1, 'UTF-8');
+
+        $method = mb_substr($uri, 0, $end, 'UTF-8');
+
+        $path = "app/config/routes/$method.php";
+
+        return file_exists("{$_SERVER['DOCUMENT_ROOT']}/$path") ? $path : $default;
     }
 }
