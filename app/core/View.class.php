@@ -2,11 +2,8 @@
 
 namespace app\core;
 
-use app\models\GameTypes;
-use app\models\News;
-use app\models\Settings;
-use app\models\Users;
 use app\Repositories\TechRepository;
+use app\Repositories\ViewRepository;
 
 class View
 {
@@ -39,7 +36,7 @@ class View
         self::$route['vars'] = Locale::apply(self::$route['vars']);
         extract(self::$route['vars']);
 
-        extract(self::defaultVars());
+        extract(ViewRepository::defaultVars());
 
         if (empty($mainClass)) $mainClass = 'index';
 
@@ -135,7 +132,6 @@ class View
     }
     public static function html()
     {
-
         extract(self::$route['vars']);
         // extract($vars);
 
@@ -183,13 +179,6 @@ class View
         }
         self::exit($data);
     }
-    public static function defaultVars()
-    {
-        $header = self::headerData();
-        $footer = self::footerData();
-        return array_merge($header, $footer);
-    }
-
     public static function file($file, $name = 'backup.txt')
     {
         if (empty($file) || !file_exists($file)) {
@@ -220,204 +209,5 @@ class View
         $texts = [];
         if (!empty(self::$route['vars']['texts'])) $texts = self::$route['vars']['texts'];
         return require $_SERVER['DOCUMENT_ROOT'] . self::$viewsFolder . "/components/$filename.php";
-    }
-
-    public static function headerData()
-    {
-        $images = Settings::getGroup('img');
-        $images = Locale::apply($images);
-        $vars = [
-            'headerLogo' => "<a href='/'>" . ImageProcessing::inputImage($images['MainLogo']['value']) . '</a>',
-            'headerProfileButton' => '<a class="header__profile-button" data-action-click="account/login/form">' . Locale::phrase('Log In') . '</a>',
-            'headerMenu' => self::menu(),
-            'headerDashboard' => false,
-        ];
-        if (isset($_SESSION['id'])) {
-            if (empty($_SESSION['avatar'])) {
-                $profileImage = empty($_SESSION['gender']) ? $images['profile']['value'] : $images[$_SESSION['gender']]['value'];
-            } else {
-                $profileImage = FILE_USRGALL . "{$_SESSION['id']}/{$_SESSION['avatar']}";
-            }
-
-            $profileImage = ImageProcessing::inputImage($profileImage, ['title' => $_SESSION['name']]);
-
-            $vars['headerDashboard'] = self::dashboard();
-            $texts = [
-                'headerMenuProfileLink' => 'Profile',
-                'headerMenuLogoutLink' => 'Log Out',
-            ];
-
-            $texts = Locale::apply($texts);
-
-            ob_start();
-            require $_SERVER['DOCUMENT_ROOT'] . '/app/views/main/header-menu.php';
-            $vars['headerProfileButton'] = ob_get_clean();
-        }
-        return $vars;
-    }
-    public static function menu()
-    {
-        $menu = [
-            [
-                'path' => '',
-                'label' => 'Home'
-            ],
-            [
-                'path' => 'news/',
-                'label' => 'News',
-            ],
-            [
-                'path' => 'weeks/',
-                'label' => 'Weeks',
-            ],
-            // [
-            //     'path' => '',
-            //     'label' => Locale::phrase('{{ HEADER_MENU_INFORMATION }}'),
-            //     'menu' => Pages::getList(),
-            //     'type' => 'page'
-            // ],
-            [
-                'path' => 'game/',
-                'label' => 'Games',
-                'menu' => GameTypes::menu(),
-                'type' => 'game',
-            ],
-        ];
-
-        if (News::getCount('news') < 1) {
-            unset($menu[1]);
-            $menu = array_values($menu);
-        }
-
-        if (Users::checkAccess('trusted')) {
-            $menu[] = [
-                'label' => 'Activity',
-                'menu' => [
-                    [
-                        'name' => 'Play a game',
-                        'slug' => 'play',
-                        'fields' => '',
-                    ],
-                    [
-                        'name' => 'History',
-                        'slug' => 'history',
-                        'fields' => '',
-                    ],
-                    [
-                        'name' => 'Rating',
-                        'slug' => 'rating',
-                        'fields' => '',
-                    ],
-                    // [
-                    //     'name' => 'Peek on game',
-                    //     'slug' => 'peek',
-                    //     'fields' => '',
-                    // ],
-                    [
-                        'name' => 'Last game',
-                        'slug' => 'last',
-                        'fields' => '',
-                    ],
-                ],
-                'type' => 'activity',
-            ];
-        }
-        return Locale::apply($menu);
-    }
-    public static function footerData()
-    {
-        $contacts = Settings::getGroup('contacts');
-
-        $footerGmapLink = $contacts['gmap_link']['value'];
-        $footerAdress = '<p>' . str_replace('  ', '</p><p>', $contacts['adress']['value']) . '</p>';
-
-        $footerContacts = '';
-        if (!empty($contacts['telegram']['value'])) {
-            $footerContacts .= "<p><a class='fa fa-telegram' href='{$contacts['telegram']['value']}' target='_blank'> {$contacts['tg-name']['value']}</a></p>";
-        }
-        if (!empty($contacts['email']['value'])) {
-            $footerContacts .= "<p><a class='fa fa-envelope' href='mailto:{$contacts['email']['value']}' target='_blank'> {$contacts['email']['value']}</a></p>";
-        }
-        if (!empty($contacts['phone']['value'])) {
-            $phone = preg_replace('/[^0-9]/', '', $contacts['phone']['value']);
-            if (strlen($phone) === 10) {
-                $phone = '38' . $phone;
-            } elseif (strlen($phone) === 11) {
-                $phone = '3' . $phone;
-            }
-            if (strlen($phone) === 12) {
-                preg_match('/(\d{2})(\d{3})(\d{3})(\d{2})(\d{2})/', $phone, $phoneParts);
-                $phoneFormatted = sprintf('+%s (%s) %s-%s-%s', $phoneParts[1], $phoneParts[2], $phoneParts[3], $phoneParts[4], $phoneParts[5]);
-                $footerContacts .= "<p><a class='fa fa-phone' href='tel:+$phone' target='_blank'></a> $phoneFormatted</p>";
-            }
-        }
-        $footerGmapWidget = $contacts['gmap_widget']['value'];
-
-        $socials = Settings::getGroup('socials');
-        $footerSocials = '';
-        if (!empty($socials['facebook']['value'])) {
-            $footerSocials .= "<a class='fa fa-facebook-square' href='{$socials['facebook']['value']}' target='_blank'></a>";
-        }
-        if (!empty($socials['youtube']['value'])) {
-            $footerSocials .= "<a class='fa fa-youtube-square' href='{$socials['youtube']['value']}' target='_blank'></a>";
-        }
-        if (!empty($socials['instagram']['value'])) {
-            $footerSocials .= "<a class='fa fa-instagram' href='{$socials['instagram']['value']}' target='_blank'></a>";
-        }
-
-        return compact('footerGmapLink', 'footerAdress', 'footerContacts', 'footerGmapWidget', 'footerSocials');
-    }
-    public static function dashboard(): array
-    {
-
-        if (!Users::checkAccess('trusted')) return false;
-
-        $links = [
-            [
-                'link' => 'news/add',
-                'icon' => 'newspaper-o',
-                'label' => 'Add News',
-            ],
-            [
-                'link' => 'news/edit/promo',
-                'icon' => 'bullhorn',
-                'label' => 'Change Promo',
-            ],
-            [
-                'link' => 'page/add',
-                'icon' => 'file-text-o',
-                'label' => 'Add Page',
-            ],
-            [
-                'link' => 'users/list',
-                'icon' => 'users',
-                'label' => 'Users List',
-            ],
-            [
-                'link' => 'chat/index',
-                'icon' => 'comments-o',
-                'label' => 'Chats List',
-            ],
-            [
-                'link' => 'chat/send',
-                'icon' => 'paper-plane-o',
-                'label' => 'Send message',
-            ],
-            [
-                'link' => 'settings/index',
-                'icon' => 'cogs',
-                'label' => 'Settings List',
-            ],
-        ];
-
-        $routes = require $_SERVER['DOCUMENT_ROOT'] . '/app/config/routes/http.php';
-        $result = [];
-        foreach ($links as $item) {
-            if (empty($routes[$item['link']]) || !Users::checkAccess($routes[$item['link']]['access']['category'])) continue;
-            $result[] = $item;
-        }
-        if (empty($result)) return false;
-
-        return Locale::apply($result);
     }
 }

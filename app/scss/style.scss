@@ -196,8 +196,18 @@ body {
 
 			&-caret {
 				margin-left: 10px;
-				font-size: 1.3em !important;
+				font-size: 1.1em !important;
 				cursor: pointer;
+
+				a,
+				i {
+					color: $color-text-light-blur;
+					transition: color $animation-fast;
+
+					&:hover {
+						color: $color-text-light;
+					}
+				}
 			}
 
 			&-checkbox {

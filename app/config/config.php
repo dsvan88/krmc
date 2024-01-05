@@ -1,7 +1,7 @@
 <?php
 if (!session_id()) {
     session_start();
-    $_SESSION['csrf'] = sha1(session_id());
+    $_SESSION['csrf'] = sha1($_SERVER['HTTP_USER_AGENT'] . session_id());
 }
 
 if (!defined('SQL_HOST')) {
@@ -20,7 +20,7 @@ if (!defined('SQL_HOST')) {
         define('SQL_PASS',  empty($_ENV['SQL_PASS'])    ? '' :             $_ENV['SQL_PASS']);
         define('SQL_DB',    empty($_ENV['SQL_DB'])      ? 'krmc_mvc' :     $_ENV['SQL_DB']);
     }
-    
+
     define('SQL_TBL_GAMES', 'games');
     define('SQL_TBL_USERS', 'users');
     define('SQL_TBL_WEEKS', 'weeks');
@@ -36,19 +36,19 @@ if (!defined('SQL_HOST')) {
     define('TIMESTAMP_DAY', 86400);
     define('TIMESTAMP_WEEK', 604800);
     define('MAX_WEEKS_AHEAD', 6);
-    
+
     define('CFG_DEBUG', true);
     define('CFG_SOFT_DELETE', true);
     define('CFG_NEWS_PER_PAGE', 6);
     define('CFG_MAX_SESSION_AGE', TIMESTAMP_WEEK); // 60*60*24*7 == 1 week
-    
-    define('ROOT_PASS_DEFAULT',empty($_ENV['ROOT_PASS_DEFAULT'])  ? 'admin1234' : $_ENV['ROOT_PASS_DEFAULT']);
-    define('BACKUP_FREQ',   empty($_ENV['BACKUP_FREQ']) ? TIMESTAMP_DAY*2 : $_ENV['BACKUP_FREQ']);
+
+    define('ROOT_PASS_DEFAULT', empty($_ENV['ROOT_PASS_DEFAULT'])  ? 'admin1234' : $_ENV['ROOT_PASS_DEFAULT']);
+    define('BACKUP_FREQ',   empty($_ENV['BACKUP_FREQ']) ? TIMESTAMP_DAY * 2 : $_ENV['BACKUP_FREQ']);
     define('APP_VERSION',   empty($_ENV['APP_VERSION'])     ? '0.16b' :     $_ENV['APP_VERSION']);
     define('CLUB_NAME',     empty($_ENV['CLUB_NAME'])       ? 'Mafia Club Kryvyi Rih' :     $_ENV['CLUB_NAME']);
     define('CLUB_SNAME',    empty($_ENV['CLUB_SNAME'])      ? 'KRMC' :      $_ENV['CLUB_SNAME']);
-    define('CFG_TOKEN_NAME',empty($_ENV['CFG_TOKEN_NAME'])  ? 'KRMCtoken' : $_ENV['CFG_TOKEN_NAME']);
-    
+    define('CFG_TOKEN_NAME', empty($_ENV['CFG_TOKEN_NAME'])  ? 'KRMCtoken' : $_ENV['CFG_TOKEN_NAME']);
+
     define('FILE_USRGALL', '/public/gallery/users/');
     define('FILE_MAINGALL', '/public/gallery/site/');
     define('SCRIPTS_STORAGE', '/public/scripts/');

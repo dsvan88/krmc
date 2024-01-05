@@ -66,7 +66,18 @@
                         </nav>
                     </div>
                 </div>
-                <div class="header__profile"><?= $headerProfileButton ?></div>
+                <div class="header__profile">
+                    <? if (empty($_SESSION['id'])) : ?>
+                        <? self::component('login-button', ['headerLoginLabel' => $headerLoginLabel]) ?>
+                    <? else : ?>
+                        <? self::component('profile-button', ['profileImage' => $profileImage, 'profile' => $profileMenu[0]]) ?>
+                        <? if (count($profileMenu) > 2) : ?>
+                            <? self::component('profile-menu', ['profileMenu' => $profileMenu]) ?>
+                        <? else : ?>
+                            <? self::component('logout-button', ['headerLogoutLabel' => $headerLogoutLabel]) ?>
+                        <? endif ?>
+                    <? endif; ?>
+                </div>
             </div>
             <div class="header__dashboard">
                 <? if (!empty($headerDashboard)) : ?>
