@@ -235,6 +235,8 @@ class TelegramBotController extends Controller
                     $requestData['userId'] = $userRegData['id'];
                     $requestData['userName'] = $userRegData['name'];
                 }
+                else 
+                    $requestData['probableUserName'] = $value;
             }
         }
         return $requestData;
