@@ -10,6 +10,7 @@ class Games extends Model
 {
 
     public static $table = SQL_TBL_GAMES;
+    public static $jsonFields = ['players', 'state', 'prevstates'];
 
     public static function create($post)
     {

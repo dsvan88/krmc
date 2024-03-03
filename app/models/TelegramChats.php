@@ -7,6 +7,8 @@ use app\core\Model;
 class TelegramChats extends Model
 {
     public static $table = SQL_TBL_TG_CHATS;
+    public static $jsonFields = ['personal', 'data'];
+    
     public static function save($messageArray)
     {
         $table = self::$table;
@@ -96,7 +98,7 @@ class TelegramChats extends Model
         if (empty($result)) {
             return false;
         }
-        $result = self::jsonDecodeData($result[0]);
+        $result = self::decodeJson($result[0]);
         return $result;
     }
     public static function getChatsList()
@@ -107,7 +109,7 @@ class TelegramChats extends Model
             return false;
         }
         for ($i = 0; $i < count($result); $i++) {
-            $result[$i] = self::jsonDecodeData($result[$i]);
+            $result[$i] = self::decodeJson($result[$i]);
         }
         return $result;
     }
@@ -119,7 +121,7 @@ class TelegramChats extends Model
             return [];
         }
         for ($i = 0; $i < count($result); $i++) {
-            $result[$i] = self::jsonDecodeData($result[$i]);
+            $result[$i] = self::decodeJson($result[$i]);
         }
         return $result;
     }
@@ -131,7 +133,7 @@ class TelegramChats extends Model
             return [];
         }
         for ($i = 0; $i < count($result); $i++) {
-            $result[$i] = self::jsonDecodeData($result[$i]);
+            $result[$i] = self::decodeJson($result[$i]);
         }
         return $result;
     }
@@ -203,12 +205,6 @@ class TelegramChats extends Model
         }
         self::update($data, ['id' => $id], $table);
         return true;
-    }
-    public static function jsonDecodeData($chatData)
-    {
-        $chatData['personal'] = json_decode($chatData['personal'], true);
-        $chatData['data'] = json_decode($chatData['data'], true);
-        return $chatData;
     }
     public static function init()
     {

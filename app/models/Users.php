@@ -7,8 +7,6 @@ use app\core\Model;
 use app\core\Tech;
 use app\Repositories\ContactRepository;
 
-use function PHPSTORM_META\map;
-
 class Users extends Model
 {
     public static $table = SQL_TBL_USERS;
@@ -16,21 +14,19 @@ class Users extends Model
     public static $statuses = ['Гость', 'Резидент', 'Мастер'];
     public static $usersAccessLevels = ['', 'guest', 'user', 'trusted', 'manager', 'admin', 'root'];
     public static $userToken = '';
+    public static $jsonFields = ['privilege', 'personal', 'contacts', 'credo', 'ban'];
 
     public static function login($data)
     {
         $login = strtolower(trim($data['login']));
         $password = sha1(trim($data['password']));
 
-        $table = self::$table;
-        $authData = self::query("SELECT * FROM $table WHERE login = ? LIMIT 1", [$login], 'Assoc');
+        $authData = self::findBy('login', $login, 1);
         if (empty($authData)) return 'failed';
         $authData =  $authData[0];
 
         if (!password_verify($password, $authData['password']))
             return 'failed';
-
-        $authData = self::decodeJson($authData);
 
         if (self::isBanned('auth', $authData['ban']))
             return 'banned';

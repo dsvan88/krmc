@@ -63,16 +63,16 @@ class TechController extends Controller
     
         View::render();
     }
-    public static function migrationAction()
+    public static function restoreAction()
     {
         // View::redirect('/');
         if (!empty($_POST)) {
-            if (TechRepository::migration())
+            if (TechRepository::restore())
                 View::message('Done!');
             View::message(['error' => true, 'message' => 'Something wrong with your datafile!']);
         }
         $vars = [
-            'title' => 'DB Migration Form',
+            'title' => 'DB Restore Form',
             'texts' => [
                 'SubmitLabel' => 'Execute',
             ],

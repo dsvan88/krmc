@@ -21,10 +21,10 @@ return  [
         'action' => 'backup',
         'access' => ['category' => 'admin']
     ],
-    'tech/migration' =>
+    'tech/restore' =>
     [
         'controller' => 'tech',
-        'action' => 'migration',
+        'action' => 'restore',
         'access' => ['category' => 'admin']
     ],
     'tech/dbrebuild' =>

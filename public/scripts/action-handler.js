@@ -18,12 +18,12 @@ let actionHandler = {
 	},
 	commonToggleHandler: function (event) {
 		let method = '';
-		if (event.target.open && event.target.dataset.actionOpen){
+		if (event.target.open && event.target.dataset.actionOpen) {
 			method = camelize(event.target.dataset.actionOpen);
-		} else if (!event.target.open && event.target.dataset.actionClose){
+		} else if (!event.target.open && event.target.dataset.actionClose) {
 			method = camelize(event.target.dataset.actionClose);
 		}
-		
+
 		if (!method) return false;
 
 		if (debug) console.log(method);
@@ -36,7 +36,7 @@ let actionHandler = {
 	},
 	clickCommonHandler: function (event) {
 		let target = event.target;
-		if (!("actionClick" in target.dataset) || !("actionDblclick" in target.dataset)) {
+		if (!("actionClick" in target.dataset) && !("actionDblclick" in target.dataset)) {
 			target = target.closest(['*[data-action-click],*[data-action-dblclick]']);
 		}
 		if (!target) return false;
@@ -72,47 +72,55 @@ let actionHandler = {
 				return true;
 			}
 		}
-		const type = camelize(target.dataset[method].replace(/\//g, '-'));
+		let type = camelize(target.dataset[method].replace(/\//g, '-'));
 		if (debug) console.log(type);
-		if (self[type] != undefined) {
-			try {
-				self[type](target, event);
-			} catch (error) {
-				alert(`Не существует метода для этого action-click: ${type}... или возникла ошибка. Сообщите администратору!\r\n${error.name}: ${error.message}`);
-				console.log(error);
-			}
+
+		type = self[type] ? type : 'apiTalk';
+
+		try {
+			self[type](target, event, method);
+		} catch (error) {
+			alert(`Не существует метода для этого action-click: ${type}... или возникла ошибка. Сообщите администратору!\r\n${error.name}: ${error.message}`);
+			console.log(error);
 		}
-		else {
-			let action = target.dataset[method];
-			let modal = false;
-			if (action.endsWith('/form')) {
-				modal = new ModalWindow();
-			}
-
-			const formData = new FormData;
-			for (let [key, value] of Object.entries(target.dataset)) {
-				if (key !== method)
-					formData.append(key, value);
-			}
-
-			if (target.dataset.verification){
-				let input = {type: 'text'};
-				if (/(root|pass)/.test(target.dataset.verification))
-					input = {type: 'password'};
-				const verification = await self.verification(null, target.dataset.verification, input);
-				formData.append('verification', verification);
-			}
-
-			request({
-				url: action,
-				data: formData,
-				success: function (result) {
-					if (modal)
-						self.commonModalEvent(modal, action, result);
-					self.commonResponse(result);
-				},
-			});
+	},
+	apiTalk: async function (target, event, method, formData = null) {
+		let action = target.dataset[method];
+		let modal = false;
+		const self = this;
+		if (action.endsWith('/form')) {
+			modal = new ModalWindow();
 		}
+
+		if (!formData)
+			formData = new FormData;
+
+		if (target.value) {
+			formData.append('value', target.value);
+		}
+		for (const [key, value] of Object.entries(target.dataset)) {
+			if (key !== method)
+				formData.append(key, value);
+		}
+
+		if (target.dataset.verification) {
+			let input = { type: 'text' };
+			if (/(root|pass)/.test(target.dataset.verification))
+				input = { type: 'password' };
+			const verification = await self.verification(null, target.dataset.verification, input);
+			formData.append('verification', verification);
+		}
+
+		const result = await request({
+			url: action,
+			data: formData,
+		});
+
+		if (modal) self.commonModalEvent(modal, action, result);
+
+		self.commonResponse(result);
+
+		return result;
 	},
 	commonFormEventEnd: function ({ modal, data, submit = null, ...args } = {}) {
 		let modalWindow;
@@ -121,7 +129,7 @@ let actionHandler = {
 		if (data['error']) {
 			return modalWindow = modal.fill({ html: data['html'], title: 'Error!', buttons: [{ 'text': 'Okay', 'className': 'modal__close positive' }] });
 		}
-		
+
 		if (!submit || !self[submit])
 			submit = 'commonSubmitFormHandler';
 
@@ -130,15 +138,7 @@ let actionHandler = {
 
 		modalWindow = modal.fill(data);
 
-		let fields = modalWindow.querySelectorAll('input[data-action-input]');
-		fields.forEach(field => {
-			field.addEventListener('input', (event) => self.inputCommonHandler.call(self, event))
-		});
-
-		fields = modalWindow.querySelectorAll('input[data-action-change]');
-		fields.forEach(field => {
-			field.addEventListener('change', (event) => self.changeCommonHandler.call(self, event))
-		});
+		self.handleEvents(modalWindow);
 
 		return modalWindow;
 	},
@@ -155,39 +155,44 @@ let actionHandler = {
 		event.preventDefault();
 		if (!formData) formData = new FormData(event.target);
 		const self = this;
+		let submitResult = false;
 		await request({
 			url: event.target.action.replace(window.location.origin + '/', ''),
 			data: formData,
-			success: (result) => self.commonResponse.call(self, result, modal),
+			success: (result) => {
+				submitResult = result;
+				self.commonResponse.call(self, result, modal)
+			},
 			error: (result) => self.commonResponse.call(self, result, modal),
 		});
-		return false;
+		return submitResult;
 	},
-	commonModalEvent: function (modal, action, data){
+	commonModalEvent: function (modal, action, data) {
 		const self = this;
-		if (data["error"]){
+		if (data["error"]) {
 			self.commonFormEventEnd({ modal, data });
 			new Alert({ title: 'Error!', text: data["message"] });
 			return false;
 		}
-		if (data["modal"]) {
-			let actionModified = camelize(action.replace(/\//g, '-'));
 
-			if (data["jsFile"]) {
-				addScriptFile(data["jsFile"]);
-			};
+		if (!data["modal"]) return false;
 
-			if (data["cssFile"]) {
-				addCssFile(data["cssFile"]);
-			};
+		let actionModified = camelize(action.replace(/\//g, '-'));
 
-			if (self[actionModified + "Ready"])
-				modal.content.onload = self[actionModified + "Ready"]({ modal, data: data });
+		if (data["jsFile"]) {
+			addScriptFile(data["jsFile"]);
+		};
 
-			setTimeout( () => self.commonFormEventEnd.call(self, { modal, data, submit: actionModified + 'Submit' }), 50);
-		}
+		if (data["cssFile"]) {
+			addCssFile(data["cssFile"]);
+		};
+
+		if (self[actionModified + "Ready"])
+			modal.content.onload = self[actionModified + "Ready"]({ modal, data: data });
+
+		setTimeout(() => self.commonFormEventEnd.call(self, { modal, data, submit: actionModified + 'Submit' }), 50);
 	},
-	commonResponse: function (response, modal=null) {
+	commonResponse: function (response, modal = null) {
 		const self = this;
 		if (response["error"]) {
 			new Alert({ title: 'Error!', text: response["message"] });
@@ -204,15 +209,33 @@ let actionHandler = {
 			setTimeout(() => window.location = response["location"], response["time"] ? response["time"] : 100);
 		}
 		if (modal && modal.paused)
-			setTimeout(()=>modal.unpause(), 500);
+			setTimeout(() => modal.unpause(), 500);
 	},
 	autocompleteInput: function (target) {
 		const action = target.dataset.actionInput;
 		const type = action.replace(/autocomplete-/, '');
 
-		let formData = new FormData();
-		formData.append('command', type);
+		const formData = new FormData();
 		formData.append('term', target.value);
+		if (target.dataset.dependence) {
+			const form = target.closest('form');
+			if (target.dataset.dependence.includes(',')) {
+				const names = target.dataset.dependence.split(',');
+				const values = {};
+				for (const name of names) {
+					const dependenceInput = form.querySelector(`*[name="${name}"]`);
+					if (dependenceInput)
+						values[dependenceInput.name] = dependenceInput.value;
+				}
+				formData.append('dependence', JSON.stringify(values));
+			}
+			else {
+				const dependenceInput = form.querySelector(`*[name="${target.dataset.dependence}"]`);
+				if (dependenceInput)
+					formData.append('dependence', dependenceInput.value);
+			}
+
+		}
 		request({
 			url: 'autocomplete/' + type,
 			data: formData,
@@ -232,16 +255,20 @@ let actionHandler = {
 					option.value = item;
 					target.list.appendChild(option);
 				});
-				deleteOptions.forEach(index => target.list.options[index].remove());
+				if (!deleteOptions.length) return false;
+				deleteOptions.forEach(index => {
+					if (!target.list.options[index]) return;
+					target.list.options[index].remove()
+				});
 			},
 		});
 	},
 	verification: async function (form, url, input) {
 		const formData = form ? new FormData(form.tagName === 'FORM' ? form : undefined) : undefined;
 		const verification = await request({ url: url, data: formData });
-	
+
 		if (!verification) return false;
-		
+
 		if (verification['result'] === false) {
 			if (verification['message']) new Alert({ text: verification['message'] });
 			return false;
@@ -259,30 +286,30 @@ let actionHandler = {
 
 		return promise.then();
 	},
-	phoneInputFocus: function (event){
+	phoneInputFocus: function (event) {
 		const input = event.target,
-        	inputNumbersValue = input.value.replace(/\D/g, '');
+			inputNumbersValue = input.value.replace(/\D/g, '');
 
 		if (!inputNumbersValue)
 			input.value = this.phoneMask;
 
-		let pos = input.value.indexOf('_');
+		const pos = input.value.indexOf('_');
 		if (pos) {
 			input.setSelectionRange(pos, pos);
 		}
 	},
-	phoneInputFormat: function (event){
-		let input = event.target,
-			inputNumbersValue = input.value.replace(/\D/g, '');
+	phoneInputFormat: function (event) {
+		const input = event.target;
+		let inputNumbersValue = input.value.replace(/\D/g, '');
 
 		if (!inputNumbersValue) {
 			return input.value = "";
 		}
-		let maskLength = phoneMask.replace(/[^0-9_]/g, '').length;
+		let maskLength = this.phoneMask.replace(/[^0-9_]/g, '').length;
 
 		if (inputNumbersValue.length < maskLength)
-		inputNumbersValue = inputNumbersValue.padEnd(maskLength, '_');
-		
+			inputNumbersValue = inputNumbersValue.padEnd(maskLength, '_');
+
 		let result = '';
 		let index = -1;
 		for (let char of inputNumbersValue) {
@@ -295,7 +322,7 @@ let actionHandler = {
 				char = ` (${char}`;
 			else if (index === 4)
 				char = `${char}) `;
-			else if (index === 8 || index=== 10)
+			else if (index === 8 || index === 10)
 				char = `-${char}`;
 			result += char;
 		}
@@ -303,8 +330,8 @@ let actionHandler = {
 
 		let pos = input.value.indexOf('_');
 		if (pos) {
-			if (!event.data){
-				if (input.value[pos-1] === '-'){
+			if (!event.data) {
+				if (input.value[pos - 1] === '-') {
 					--pos;
 				}
 				else if ([' ', '('].indexOf(input.value[pos - 1]) !== -1) {
@@ -314,7 +341,26 @@ let actionHandler = {
 			input.setSelectionRange(pos, pos);
 		}
 	},
-	setLocale: function (event){
-		window.location = '?lang='+event.target.value;
+	setLocale: function (event) {
+		window.location = '?lang=' + event.target.value;
+	},
+	handleEvents: function (target) {
+		const self = this;
+		target.querySelectorAll('input[data-action-input]').forEach(element =>
+			element.addEventListener('input', (event) => self.inputCommonHandler.call(self, event))
+		);
+		target.querySelectorAll('input[data-action-change]').forEach(element =>
+			element.addEventListener('change', (event) => self.changeCommonHandler.call(self, event))
+		);
+		target.querySelectorAll('form[data-action-submit]').forEach(element =>
+			element.addEventListener('submit', (event) => self.commonSubmitFormHandler.call(self, event))
+		);
+		target.querySelectorAll('input[type="tel"]').forEach(element => {
+			element.addEventListener('focus', (event) => self.phoneInputFocus.call(self, event));
+			element.addEventListener('input', (event) => self.phoneInputFormat.call(self, event), false);
+		});
+		target.querySelectorAll('details[data-action-open],details[data-action-close]').forEach(element =>
+			element.addEventListener('toggle', (event) => self.commonToggleHandler.call(self, event), false)
+		);
 	}
 };

@@ -9,6 +9,7 @@ class Weeks extends Model
     public static $currentWeek;
     public static $currentWeekId = -1;
     public static $table = SQL_TBL_WEEKS;
+    public static $jsonFields = ['data'];
 
     // Получить настройки недели по времени
     public static function weekDataByTime($time = 0)
@@ -36,11 +37,6 @@ class Weeks extends Model
 
         return self::$currentWeekId;
     }
-    public static function getIds()
-    {
-        $table = self::$table;
-        return self::getRawArray("SELECT id FROM $table ORDER BY id", []);
-    }
     // Получить настройки недели по id недели
     public static function weekDataById(int $id = 0)
     {
@@ -48,7 +44,7 @@ class Weeks extends Model
 
         $result = self::find($id);
         if (!empty($result)) {
-            return self::decodeJson($result);
+            return $result;
         }
         $id = self::create();
 
@@ -102,7 +98,7 @@ class Weeks extends Model
         $weekData = $result;
         $weekData['id'] = 0;
         if (is_string($weekData['data'])) {
-            $weekData['data'] = self::decodeJson($weekData['data']);
+            $weekData = self::decodeJson($weekData);
         }
         for ($i = 0; $i < 7; $i++) {
             $weekData['data'][$i]['participants'] = [];
@@ -156,10 +152,6 @@ class Weeks extends Model
     public static function checkPrevWeek(int $weekId)
     {
         return self::isExists(['id' => $weekId - 1]);
-    }
-    public static function decodeJson(array &$data): array{
-        $data['data'] = json_decode($data['data'], true);
-        return $data;
     }
     public static function init()
     {

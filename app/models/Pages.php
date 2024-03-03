@@ -17,6 +17,7 @@ class Pages extends Model
         'html' => '',
         'expired_at' => '',
     ];
+    public static $jsonFields = ['data'];
 
     public static function getBySlug(string $slug){
         $table = static::$table;

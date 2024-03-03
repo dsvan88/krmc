@@ -113,6 +113,8 @@ class ContactRepository
     public static function checkApproved($userId)
     {
         $contacts = Contacts::getByUserId($userId);
+        if (empty($contacts)) return [];
+
         $approved = [];
         foreach ($contacts as $num => $data) {
             if ($data['type'] === 'telegramid') {

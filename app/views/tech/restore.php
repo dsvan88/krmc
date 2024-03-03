@@ -1,5 +1,5 @@
 <section class='section common-form'>
-    <form action="/tech/migration" method="post" enctype="multipart/form-data" class="common-form__form">
+    <form action="/tech/restore" method="post" enctype="multipart/form-data" class="common-form__form">
         <h2 class="common-form__title"><?= $title ?></h2>
         <input type="file" name="data" style="display:block">
         <input type="input" name="table">

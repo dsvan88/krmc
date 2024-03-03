@@ -26,6 +26,7 @@ class Days extends Model
         'participants' => [],
         'day_prim' => ''
     ];
+
     public static function current()
     {
         if (!empty(self::$currentDay)) {

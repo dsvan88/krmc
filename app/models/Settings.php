@@ -8,6 +8,7 @@ class Settings extends Model
 {
     public static $table = SQL_TBL_SETTINGS;
     public static $settings = [];
+    public static $jsonFields = ['options', 'approve'];
 
     public static function load(string $type)
     {

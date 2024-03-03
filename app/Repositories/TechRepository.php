@@ -131,7 +131,7 @@ class TechRepository
 
         return $mailer->send($email);
     }
-    public static function migration()
+    public static function restore()
     {
 
         $dotPlace = mb_strrpos($_FILES['data']['name'], '.', 0, 'UTF-8');

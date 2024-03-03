@@ -7,6 +7,7 @@ use app\core\Model;
 class Contacts extends Model
 {
     public static $table = SQL_TBL_CONTACTS;
+    public static $jsonFields = ['data'];
 
     public static function getByUserId(int $userId)
     {
@@ -46,23 +47,21 @@ class Contacts extends Model
     }
     public static function edit($data, $where)
     {
-        $table = self::$table;
         foreach ($data as $key => $value) {
             if (is_array($value)) {
                 $data[$key] = json_encode($value, JSON_UNESCAPED_UNICODE);
             }
         }
-        return self::update($data, $where, $table);
+        return self::update($data, $where);
     }
     public static function add($data)
     {
-        $table = self::$table;
         foreach ($data as $key => $value) {
             if (is_array($value)) {
                 $data[$key] = json_encode($value, JSON_UNESCAPED_UNICODE);
             }
         }
-        return self::insert($data, $table);
+        return self::insert($data);
     }
     public static function deleteByUserId(int $userId, array $types = [])
     {
@@ -77,8 +76,7 @@ class Contacts extends Model
     }
     public static function remove($cid)
     {
-        $table = self::$table;
-        return self::delete($cid, $table);
+        return self::delete($cid);
     }
     public static function init()
     {
