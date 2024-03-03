@@ -182,7 +182,7 @@ class Db
     // $data - ассоциативный массив со значениями записи: array('column_name'=>'column_value',...)
     // $where - ассоциативный массив со значенниями по которым искать запись для обновления ('key'=>'value') ('id'=>1)
     // $table - таблица в которую будет добавлена запись
-    public static function update($data, $where, $method = 'AND ', $table = null)
+    public static function update($data, $where, $table = null, $method = 'AND ')
     {
         if (empty($table)) $table = static::$table;
 

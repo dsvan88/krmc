@@ -94,12 +94,11 @@ class Settings extends Model
     }
     public static function edit(int $settingId, array $array)
     {
-        $table = self::$table;
         foreach ($array as $column => $value) {
             if (!is_array($value)) continue;
             $array[$column] = json_encode($value, JSON_UNESCAPED_UNICODE);
         }
-        return self::update($array, ['id' => $settingId], $table);
+        return self::update($array, ['id' => $settingId]);
     }
     public static function save($data)
     {

@@ -403,7 +403,7 @@ class Users extends Model
                 $data[$key] = json_encode($value, JSON_UNESCAPED_UNICODE);
             }
         }
-        return self::update($data, $where, self::$table);
+        return self::update($data, $where);
     }
     public static function add($name)
     {

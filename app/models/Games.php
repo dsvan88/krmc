@@ -41,7 +41,6 @@ class Games extends Model
 
     public static function save($post, $id)
     {
-        $table = self::$table;
         $data = [
             'state' => $post['state'],
             'prevstates' => $post['prevstates'],
@@ -51,7 +50,7 @@ class Games extends Model
             [$data['state'], $data['players']] = GameRepository::formResult($state);
             $data['win'] = $state['winners'];
         }
-        self::update($data, ['id' => $id], $table);
+        self::update($data, ['id' => $id]);
     }
     public static function load(int $gameId){
         $gameData = Games::find($gameId);

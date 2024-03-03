@@ -1,7 +1,8 @@
 <?php
 if (!session_id()) {
     session_start();
-    $_SESSION['csrf'] = sha1($_SERVER['HTTP_USER_AGENT'] . session_id());
+    if (!empty($_SERVER['HTTP_USER_AGENT']))
+        $_SESSION['csrf'] = sha1($_SERVER['HTTP_USER_AGENT'] . session_id());
 }
 
 if (!defined('SQL_HOST')) {

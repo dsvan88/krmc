@@ -11,8 +11,6 @@ class TelegramChats extends Model
     
     public static function save($messageArray)
     {
-        $table = self::$table;
-
         $chatId = $messageArray['message']['from']['id'];
 
         $result = self::getChat($chatId);
@@ -40,7 +38,7 @@ class TelegramChats extends Model
             $chatData['personal'] = json_encode($chatData['personal'], JSON_UNESCAPED_UNICODE);
             $chatData['data'] = json_encode($chatData['data'], JSON_UNESCAPED_UNICODE);
 
-            return self::insert($chatData, $table);
+            return self::insert($chatData);
         }
         $savedChatId = $result['id'];
 
@@ -73,7 +71,7 @@ class TelegramChats extends Model
         if (!empty($chatData['user_id']) && !is_null($chatData['user_id'])) {
             $saveData['user_id'] = $chatData['user_id'];
         }
-        self::update($saveData, ['id' => $savedChatId], $table);
+        self::update($saveData, ['id' => $savedChatId]);
         return true;
     }
     public static function savePinned($messageArray, $messageId)
@@ -197,13 +195,12 @@ class TelegramChats extends Model
     }
     public static function edit($data, $id)
     {
-        $table = self::$table;
         foreach ($data as $key => $value) {
             if (is_array($value)) {
                 $data[$key] = json_encode($value, JSON_UNESCAPED_UNICODE);
             }
         }
-        self::update($data, ['id' => $id], $table);
+        self::update($data, ['id' => $id]);
         return true;
     }
     public static function init()
