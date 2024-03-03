@@ -38,11 +38,6 @@ class Games extends Model
         }
         return self::insert($data, $table);
     }
-    public static function decodeJson(array $game): array {
-        $game['state'] = json_decode($game['state'], true);
-        $game['players'] = json_decode($game['players'], true);
-        return $game;
-    }
 
     public static function save($post, $id)
     {

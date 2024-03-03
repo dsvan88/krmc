@@ -433,16 +433,6 @@ class Users extends Model
 
         return true;
     }
-    public static function decodeJson($userData)
-    {
-        $arrays = ['privilege', 'personal', 'contacts', 'credo', 'ban'];
-        $count = count($arrays);
-        for ($i = 0; $i < $count; $i++) {
-            if (empty($userData[$arrays[$i]])) continue;
-            $userData[$arrays[$i]] = json_decode($userData[$arrays[$i]], true);
-        }
-        return $userData;
-    }
     public static function checkAccess(string $level): bool
     {
         if (empty($_SESSION['privilege']['status'])) return false;
