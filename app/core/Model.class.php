@@ -95,7 +95,7 @@ class Model extends Db
             return $array;
 
         foreach (static::$jsonFields as $field) {
-            if (empty($field)) continue;
+            if (empty($array[$field])) continue;
             $array[$field] = json_decode($array[$field], true);
         }
         return $array;
