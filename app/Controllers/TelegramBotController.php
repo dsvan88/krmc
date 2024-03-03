@@ -77,7 +77,7 @@ class TelegramBotController extends Controller
             Sender::message(self::$chatId, Locale::phrase('{{ Tg_Unknown_Requester }}'), self::$message['message']['message_id']);
             View::exit();
         }
-        self::$requester = Users::getDataById($userId);
+        self::$requester = Users::find($userId);
 
         if (self::$command === 'booking' && Users::isBanned('booking', self::$requester['ban'])) {
             Sender::delete(self::$chatId, $message['message']['message_id']);

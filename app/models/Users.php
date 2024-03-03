@@ -71,7 +71,7 @@ class Users extends Model
             $params["httponly"]
         );
         session_destroy();
-        $userData = self::getDataById($userId);
+        $userData = self::find($userId);
         unset($userData['id']);
         $userData['personal']['token'] = '';
         self::edit($userData, ['id' => $userId]);
@@ -285,14 +285,14 @@ class Users extends Model
         return !empty($result);
     }
     // Получить всю информацию об игроке по его ID
-    public static function getDataById(int $id)
+    public static function find(int $id)
     {
-        $userData = self::find($id);
+        $userData = parent::find($id);
         if (empty($userData)) return false;
 
         unset($userData['password']);
 
-        return self::decodeJson($userData);
+        return $userData;
     }
     // Получить всю информацию об игроке по его никнейму
     public static function getDataByName($name)

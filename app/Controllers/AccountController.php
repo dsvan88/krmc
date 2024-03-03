@@ -89,7 +89,7 @@ class AccountController extends Controller
         } else {
             $isAdmin = true;
         }
-        $userData = Users::getDataById($userId);
+        $userData = Users::find($userId);
 
         $avatar = empty($userData['personal']['avatar']) ? Settings::getImage('empty_avatar')['value'] : FILE_USRGALL . "{$userData['id']}/{$userData['personal']['avatar']}";
         
@@ -191,7 +191,7 @@ class AccountController extends Controller
         } else if ($section === 'control' && $isAdmin) {
             $name = trim($_POST['name']);
             $status = trim($_POST['status']);
-            $userData = Users::getDataById($userId);
+            $userData = Users::find($userId);
             if ($userData['name'] !== $name) {
                 $result = AccountRepository::rename($userId, $name);
                 if (!$result['result']) {
@@ -399,7 +399,7 @@ class AccountController extends Controller
         if (!Users::checkAccess('manager')) {
             $uid = (int) $_SESSION['id'];
         }
-        $userData = Users::getDataById($uid);
+        $userData = Users::find($uid);
 
         if ($userData['personal']['avatar'] === '') {
             $vars = ['error' => 0, 'modal' => true, 'jsFile' => '/public/scripts/avatar-get-new.js?v=' . $_SERVER['REQUEST_TIME']];
@@ -551,7 +551,7 @@ class AccountController extends Controller
             $ban[$banOptions[$i]] = true;
         }
         
-        $user = Users::getDataById($userId);
+        $user = Users::find($userId);
         if (count($ban) === 1 || $ban['expired'] < $_SERVER['REQUEST_TIME']){
             if (Users::unban($userId))
                 View::notice(Locale::phrase(['string' => 'User «<b>%s</b>» successfuly unbanned!', 'vars' => [ $user['name'] ]]));
@@ -566,7 +566,7 @@ class AccountController extends Controller
         
         $userId = (int) $_POST['userId'];
 
-        $user = Users::getDataById($userId);
+        $user = Users::find($userId);
         $bannedTime = !empty($user['ban']['expired']) && $user['ban']['expired'] > $_SERVER['REQUEST_TIME'] ? date('Y-m-d', $user['ban']['expired']).'T'.date('H:i', $user['ban']['expired']) : date('Y-m-d') . 'T23:59';
 
         $vars = [

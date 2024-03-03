@@ -15,7 +15,7 @@ class AccountRepository
 {
     public static function getFields(int $userId): array
     {
-        $data = Users::getDataById($userId);
+        $data = Users::find($userId);
         $data['personal']['gender'] = '';
         $data['personal']['genderName'] = '';
         if (empty($data['personal']['gender'])){
@@ -26,7 +26,7 @@ class AccountRepository
     }
     public static function edit(int $userId, array $data)
     {
-        $userData = Users::getDataById($userId);
+        $userData = Users::find($userId);
         unset($userData['id']);
 
         if (isset($data['fio']))
@@ -62,7 +62,7 @@ class AccountRepository
         $userData = Users::getDataByName($name);
         if (empty($userData)) {
             $userId = Users::add($name);
-            $userData = Users::getDataById($userId);
+            $userData = Users::find($userId);
         }
         $weekId = Weeks::currentId();
         $weekData = Weeks::weekDataById($weekId);
@@ -100,7 +100,7 @@ class AccountRepository
         if (empty($chatData['user_id']))
             return false;
         
-        $userData = Users::getDataById($chatData['user_id']);
+        $userData = Users::find($chatData['user_id']);
         
         if (!empty($userData['contacts']['telegram'])){
             unset($userData['contacts']['telegram']);
@@ -128,7 +128,7 @@ class AccountRepository
         $userData = Users::getDataByName($name);
         if (!$userData) {
             $userId = Users::add($name);
-            $userData = Users::getDataById($userId);
+            $userData = Users::find($userId);
         } else {
             $userId = (int) $userData['id'];
         }
