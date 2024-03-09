@@ -63,7 +63,6 @@ class GameTypes extends Pages
         $count = count($games);
         for ($i = 0; $i < $count; $i++) {
             if (empty($games[$i]['data'])) continue;
-            $games[$i]['data'] = json_decode($games[$i]['data'], true);
             $keywords[$games[$i]['slug']] = $games[$i]['data']['keywords'];
         }
         return empty($keywords) ? false : $keywords;
