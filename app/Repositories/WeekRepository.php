@@ -18,6 +18,7 @@ class WeekRepository
             $weekId = $weekCurrentId;
 
         $weeksIds = Weeks::getIds();
+        var_dump($weeksIds);
         $weeksCount = count($weeksIds);
         $weekCurrentIndexInList = array_search($weekCurrentId, $weeksIds);
 
