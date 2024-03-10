@@ -15,7 +15,7 @@ class Model extends Db
         if (!empty($condition)) {
             $where =  'WHERE ' . self::modifyWhere($condition, $andOr);
         }
-        $result = self::query("SELECT * FROM $table $where", $condition, 'Assoc');
+        $result = self::query("SELECT * FROM $table $where ORDER BY id", $condition, 'Assoc');
 
         if (empty($result)) return [];
 
@@ -31,7 +31,7 @@ class Model extends Db
         if (!empty($condition)) {
             $where = 'WHERE ' . self::modifyWhere($condition);
         }
-        $queryResult = self::query("SELECT id FROM $table $where", $condition, 'Num');
+        $queryResult = self::query("SELECT id FROM $table $where ORDER BY id", $condition, 'Num');
         if (empty($queryResult)) return [];
 
         $result = [];

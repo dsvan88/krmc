@@ -12,22 +12,19 @@ class Settings extends Model
 
     public static function load(string $type)
     {
-        $table = self::$table;
-        $result = self::query("SELECT * FROM $table WHERE type = ? ORDER by id", [$type], 'Assoc');
+        $result = self::getAll(['type' => $type]);
         if (!$result || empty($result)) return false;
 
         self::$settings[$type] = [];
-        foreach ($result as $num => $setting) {
+        foreach ($result as $setting) {
             self::$settings[$type][$setting['slug']] = [
                 'id' => $setting['id'],
                 'type' => $setting['type'],
                 'slug' => $setting['slug'],
                 'name' => $setting['name'],
                 'value' => $setting['value'],
+                'options' => $setting['options'],
             ];
-            if (!empty($setting['options'])){
-                self::$settings[$type][$setting['slug']]['options'] = json_decode($setting['options'], true);
-            }
         }
         return self::$settings[$type];
     }

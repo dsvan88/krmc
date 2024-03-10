@@ -482,7 +482,7 @@ class Users extends Model
         }
         return $source;
     }
-    public static function addNames(array $source): array
+    public static function addNames(array &$source): array
     {
         if (empty($source))
             return $source;

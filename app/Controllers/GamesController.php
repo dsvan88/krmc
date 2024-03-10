@@ -238,7 +238,7 @@ class GamesController extends Controller
             View::errorCode(404, ['message' => "Game with id: $gameId is not found"]);
         }
 
-        View::$route['vars']['game'] = json_decode($game['state'], true);
+        View::$route['vars']['game'] = $game['state'];
         View::$route['vars']['path'] = 'components/game-card';
         View::html();
     }
@@ -249,8 +249,8 @@ class GamesController extends Controller
             View::errorCode(404, ['message' => "Game with id: $gameId is not found"]);
         }
         View::$route['vars']['title'] = 'Гра';
-        View::$route['vars']['state'] = json_decode($game['state'], true);
-        View::$route['vars']['players'] = json_decode($game['players'], true);
+        View::$route['vars']['state'] = $game['state'];
+        View::$route['vars']['players'] = $game['players'];
         View::render();
     }
     public function peekAction(){

@@ -66,7 +66,6 @@ class PagesController extends Controller
 
         $page['keywords'] = '';
         if (!empty($page['data'])) {
-            $page['data'] = json_decode($page['data'], true);
             if (!empty($page['data']['keywords'])) {
                 if (is_array($page['data']['keywords']))
                     $page['keywords'] = implode(', ', $page['data']['keywords']);
