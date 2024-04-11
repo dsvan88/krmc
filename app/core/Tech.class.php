@@ -14,6 +14,12 @@ class Tech
         }
         return '';
     }
+    public static function dump($data)
+    {
+        echo '<pre>';
+        var_dump($data);
+        echo '</pre>';
+    }
     public static function getCode(string $seed): string
     {
         $code = '';
