@@ -79,11 +79,11 @@
                     <? endif; ?>
                 </div>
             </div>
-            <div class="header__dashboard">
-                <? if (!empty($headerDashboard)) : ?>
+            <? if (!empty($headerDashboard)) : ?>
+                <div class="header__dashboard">
                     <? self::component('header-dashboard', ['dashboard' => $headerDashboard]) ?>
-                <? endif ?>
-            </div>
+                </div>
+            <? endif ?>
         </header>
         <div class="header-for-auto-scroll" id="start-page"></div>
         <main class="main <?= $mainClass ?>">
