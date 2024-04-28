@@ -87,7 +87,7 @@ class Model extends Db
         $table = static::$table;
         $result = self::query("SELECT * FROM $table ORDER BY id DESC LIMIT 1", [], 'Assoc');
         if (empty($result)) return false;
-        return $result[0];
+        return static::decodeJson($result[0]);
     }
     public static function decodeJson(array $array)
     {
@@ -99,34 +99,6 @@ class Model extends Db
             $array[$field] = json_decode($array[$field], true);
         }
         return $array;
-    }
-    public static function getSimpleArray($query, $params = [])
-    {
-        $result = [];
-        $data = self::query($query, $params, 'Num');
-        for ($i = 0; $i < count($data); $i++) {
-            $result[$data[$i][0]] = $data[$i][1];
-        }
-        return $result;
-    }
-    public static function getRawArray($query, $params): array
-    {
-        $result = [];
-        $data = self::query($query, $params, 'Num');
-        if (empty($data)) return [];
-        for ($i = 0; $i < count($data); $i++) {
-            $result[] = $data[$i][0];
-        }
-        return $result;
-    }
-    public static function getSimpleString($query, $params, $sep = ',')
-    {
-        $result = '';
-        $data = self::query($query, $params, 'Num');
-        for ($i = 0; $i < count($data); $i++) {
-            $result .= $data[$i][0] . $sep;
-        }
-        return $result;
     }
     public static function modifyWhere(array &$condition = [], string $andOr = 'AND ')
     {

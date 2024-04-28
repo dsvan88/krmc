@@ -14,6 +14,12 @@ class Tech
         }
         return '';
     }
+    public static function dump($data)
+    {
+        echo '<pre>';
+        var_dump($data);
+        echo '</pre>';
+    }
     public static function getCode(string $seed): string
     {
         $code = '';
@@ -28,5 +34,16 @@ class Tech
             $code = substr($code, 0, 8);
 
         return $code;
+    }
+    public static function modifyAssocArray(array &$array): void
+    {
+        if (empty($array)) return;
+
+        $result = [];
+        array_walk($array, function ($element) use (&$result) {
+            if (empty($element['id'])) return false;
+            $result[$element['id']] = $element;
+        });
+        $array = $result;
     }
 }

@@ -285,12 +285,13 @@ class Users extends Model
         return !empty($result);
     }
     // Получить всю информацию об игроке по его ID
-    public static function find(int $id)
+    public static function find(int $id, bool $full = false)
     {
         $userData = parent::find($id);
         if (empty($userData)) return false;
 
-        unset($userData['password']);
+        if (!$full)
+            unset($userData['password']);
 
         return $userData;
     }
