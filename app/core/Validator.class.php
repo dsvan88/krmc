@@ -18,7 +18,7 @@ class Validator
     {
         $value = trim($value);
         if (empty($value)) return false;
-        $rootUser = Users::find(1);
+        $rootUser = Users::find(1, true);
         return password_verify(sha1($value), $rootUser['password']);
     }
     private static function csrf(string $value): string

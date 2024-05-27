@@ -35,4 +35,15 @@ class Tech
 
         return $code;
     }
+    public static function modifyAssocArray(array &$array): void
+    {
+        if (empty($array)) return;
+
+        $result = [];
+        array_walk($array, function ($element) use (&$result) {
+            if (empty($element['id'])) return false;
+            $result[$element['id']] = $element;
+        });
+        $array = $result;
+    }
 }
