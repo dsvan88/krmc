@@ -224,7 +224,7 @@ class TelegramBotController extends Controller
                 $dayName = mb_strtolower(mb_substr($withoutMethod, 0, 3, 'UTF-8'), 'UTF-8');
 
                 $requestData['dayNum'] = self::parseDayNum($dayName, $requestData['currentDay']);
-            } elseif (strpos($value, ':') !== false) {
+            } elseif (strpos($value, ':') !== false && empty($requestData['arrive'])) {
                 $requestData['arrive'] = $value;
             } elseif (preg_match('/^(\+|-)\d{1,2}/', $value, $match) === 1) {
                 $requestData['nonames'] = substr($match[0], 1);
