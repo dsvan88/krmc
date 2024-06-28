@@ -9,10 +9,10 @@ admin = level 2 admin  (admins only)
 root = root level admin (root only)
 */
 return  [
-    'telegram/app' =>
+    'telegram/auth' =>
     [
         'controller' => 'telegramApp',
-        'action' => 'home',
+        'action' => 'auth',
         'access' => ['category' => 'all']
     ],
 ];

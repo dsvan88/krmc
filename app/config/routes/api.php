@@ -214,6 +214,12 @@ return  [
         'action' => 'root',
         'access' => ['category' => 'admin']
     ],
+    'api/verification/telegram/hmac' =>
+    [
+        'controller' => 'verification',
+        'action' => 'hmac',
+        'access' => ['category' => 'admin']
+    ],
 
     'api/telegram/webhook' =>
     [
