@@ -1,11 +1,11 @@
 let tg = window.Telegram.WebApp;
 tg.expand();
 
-const tgDataField = document.querySelector('#userdata');
-const tgData = tg.initDataUnsafe();
+try {
+    const tgDataField = document.querySelector('#userdata');
+    const tgData = tg.initDataUnsafe();
 
-/* let html = '';
-for (const [key, value] of Object.entries(tgData)) {
-    html += `<div>${key}:</div><p>${value}</p>`;
-} */
-tgDataField.innerHTML = JSON.stringify(tgData);
+    tgDataField.innerHTML = JSON.stringify(tgData);
+} catch (throwed) {
+    tgDataField.innerText = JSON.stringify(throwed);
+}
