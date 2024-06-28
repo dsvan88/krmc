@@ -8,19 +8,25 @@
     <div>
         <h3>SERVER:</h3>
         <p>
-            <? var_dump($_SERVER) ?>
+        <pre>
+                <? var_dump($_SERVER) ?>
+            </pre>
         </p>
     </div>
     <div>
         <h3>POST:</h3>
         <p>
+        <pre>
             <? var_dump($_POST) ?>
+            </pre>
         </p>
     </div>
     <div>
         <h3>GET:</h3>
         <p>
+        <pre>
             <? var_dump($_GET) ?>
+        </pre>
         </p>
     </div>
     <div>
