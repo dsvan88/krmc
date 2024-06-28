@@ -9,3 +9,4 @@ try {
 } catch (throwed) {
     tgDataField.innerText = JSON.stringify(throwed);
 }
+tgDataField.innerText += 'Done!';
