@@ -1,26 +1,25 @@
-async function telegramAuth(string) {
+actionHandler.telegramAuth = async function (string) {
     try {
         const formData = new FormData();
         formData.append('data', string)
-        result = await request({
+        const result = await request({
             url: 'verification/telegram/hmac',
             data: formData,
         });
 
-        if (!result['result'])
-            return actionHandler.noticer.add({ type: 'error', message: 'Auth error!' });
+        if (result['notice']['type'])
+            return this.noticer.add(result['notice']);
 
-        actionHandler.noticer.add({ message: 'Auth complete!' });
+        // window.location = result["location"];
+
     } catch (error) {
-        actionHandler.noticer.add({ type: 'error', message: error.message });
+        this.noticer.add({ type: 'error', message: error.message });
     }
 }
 
-actionHandler.noticer.add({ message: 'Loaded.' });
+actionHandler.telegramAuth(window.Telegram.WebApp.initData);
 
-telegramAuth(window.Telegram.WebApp.initData);
-
-
+/* 
 const tgDataField = document.querySelector('#userdata');
 try {
 
@@ -48,4 +47,4 @@ try {
             <p>${error.stack}</p>
         </p>
     </div>`;
-}
+} */

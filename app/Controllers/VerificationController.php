@@ -7,6 +7,8 @@ use app\core\Locale;
 use app\core\View;
 use app\core\Sender;
 use app\core\Tech;
+use app\core\Validator;
+use app\models\Contacts;
 use app\models\Users;
 use app\Repositories\ContactRepository;
 use app\Repositories\VerificationRepository;
@@ -19,7 +21,8 @@ class VerificationController extends Controller
         return true;
     }
 
-    public static function rootAction(){
+    public static function rootAction()
+    {
         $message = Locale::phrase("This action requires root right!\nApprove your rights with the root password:");
         View::message($message);
     }
@@ -30,13 +33,13 @@ class VerificationController extends Controller
         }
         extract(self::$route['vars']);
 
-        if (empty($hash)){
+        if (empty($hash)) {
             View::errorCode(404, ['message' => '<p>We can’t find your request</p><p>Or</p><p>Link has been expired!</p>']);
         }
 
         $result = VerificationRepository::setApproved('email', $hash);
-        if (is_string($result)){
-            View::errorCode(404, ['message' => $result ]);
+        if (is_string($result)) {
+            View::errorCode(404, ['message' => $result]);
         }
         View::redirect('/account/profile/' . $_SESSION['id']);
     }
@@ -45,15 +48,15 @@ class VerificationController extends Controller
         if (!isset($_SESSION['id'])) {
             View::errorCode(404, ['message' => '<p>Your aren’t authorized yet!</p><p>Please - use browser, where you made your request!</p>']);
         }
-        if (!empty($_POST) && VerificationRepository::check2FAVerification(trim($_POST['approval_code']))){
+        if (!empty($_POST) && VerificationRepository::check2FAVerification(trim($_POST['approval_code']))) {
             $result = VerificationRepository::setApproved('email');
-            if (is_string($result)){
+            if (is_string($result)) {
                 View::notice(['type' => 'error', 'message' => $result, 'location' => "/account/profile/{$_SESSION['id']}/"]);
             }
             View::notice(['message' => 'Success!', 'location' => "/account/profile/{$_SESSION['id']}/"]);
         }
 
-        if (!VerificationRepository::send2FAVerification('email')){
+        if (!VerificationRepository::send2FAVerification('email')) {
             View::message([
                 'result' => false,
                 'message' => 'Something went wrong!',
@@ -86,15 +89,15 @@ class VerificationController extends Controller
             View::message(['result' => true]);
         }
 
-        if (empty($_SESSION['tg-code'])){
+        if (empty($_SESSION['tg-code'])) {
             $_SESSION['tg-code'] = Tech::getCode($_SERVER['HTTP_USER_AGENT'] . Tech::getClientIP() . date('W.F.Y'));
         }
 
         $message = Locale::phrase([
             'string' => "Your verification code:\n<b>%s</b>",
-            'vars' => [ $_SESSION['tg-code'] ],
+            'vars' => [$_SESSION['tg-code']],
         ]);
-        
+
         Sender::message($approved['telegramid'], $message);
         $botData = Sender::getMe();
 
@@ -144,5 +147,17 @@ class VerificationController extends Controller
             View::message($result);
         }
         View::redirect('/users/list');
+    }
+    public function hmacAction()
+    {
+        if (!Validator::validate('telegramHMAC', $_POST['data']))
+            View::notice(['type' => 'error', 'message' => 'Auth error!']);
+
+        $string = urldecode($_POST['data']);
+        parse_str($string, $array);
+
+        $tgUserData = json_decode($array['user'], true);
+        Contacts::getUserIdByContact('telegramid', $tgUserData['id']);
+        View::location();
     }
 }

@@ -218,7 +218,7 @@ return  [
     [
         'controller' => 'verification',
         'action' => 'hmac',
-        'access' => ['category' => 'admin']
+        'access' => ['category' => 'all']
     ],
 
     'api/telegram/webhook' =>

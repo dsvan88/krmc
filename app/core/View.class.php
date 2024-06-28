@@ -112,7 +112,7 @@ class View
      * 
      * @return json string with
      */
-    public static function location(string $url, int $error = 0): void
+    public static function location(string $url = '/', int $error = 0): void
     {
         if ($url[strlen($url) - 1] !== '/')
             $url .= '/';
