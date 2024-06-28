@@ -1,7 +1,7 @@
-actionHandler.telegramAuth = async function () {
+async function telegramAuth(string) {
     try {
         const formData = new FormData();
-        formData.append('data', window.Telegram.WebApp.initData)
+        formData.append('data', string)
         result = await request({
             url: 'verification/telegram/hmac',
             data: formData,
@@ -15,3 +15,5 @@ actionHandler.telegramAuth = async function () {
         this.noticer.add({ type: 'error', message: error.message });
     }
 }
+
+telegramAuth(window.Telegram.WebApp.initData);
