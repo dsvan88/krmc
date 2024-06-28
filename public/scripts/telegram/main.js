@@ -4,8 +4,8 @@ tg.expand();
 const tgDataField = document.querySelector('#userdata');
 const tgData = tg.initDataUnsafe();
 
-let html = '';
+/* let html = '';
 for (const [key, value] of Object.entries(tgData)) {
     html += `<div>${key}:</div><p>${value}</p>`;
-}
-tgDataField.innerHTML = html;
+} */
+tgDataField.innerHTML = JSON.stringify(tgData);
