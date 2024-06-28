@@ -8,12 +8,14 @@ async function telegramAuth(string) {
         });
 
         if (!result['result'])
-            return this.noticer.add({ type: 'error', message: 'Auth error!' });
+            return actionHandler.noticer.add({ type: 'error', message: 'Auth error!' });
 
-        this.noticer.add({ message: 'Auth complete!' });
+        actionHandler.noticer.add({ message: 'Auth complete!' });
     } catch (error) {
-        this.noticer.add({ type: 'error', message: error.message });
+        actionHandler.noticer.add({ type: 'error', message: error.message });
     }
 }
+
+actionHandler.noticer.add({ message: 'Loaded.' });
 
 telegramAuth(window.Telegram.WebApp.initData);
