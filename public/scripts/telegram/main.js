@@ -16,7 +16,7 @@ try {
     tgDataField.innerHTML += '<br>Safe is done!';
 
 } catch (error) {
-    tgDataField.innerHTML = `
+    tgDataField.innerHTML += `
     <div>
         <h3>Error:</h3>
         <p>

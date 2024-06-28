@@ -2,6 +2,7 @@
 
 namespace app\core;
 
+use app\models\Settings;
 use app\models\Users;
 
 class Validator
@@ -73,5 +74,23 @@ class Validator
             if ($ip >= $range['min'] && $ip <= $range['max']) return true;
         }
         return false;
+    }
+    private static function telegramHMAC(string $string): bool
+    {
+        $string = urldecode($string);
+
+        $array = explode('&', $string);
+        $size = count($array);
+        for ($i = 0; $i < $size; $i++) {
+            if (strpos($array[$i], 'hash=') === false) continue;
+            $hash = substr(array_splice($array, $i, 1)[0], 5);
+            break;
+        }
+
+        sort($array);
+        $check_string = implode("\n", $array);
+
+        $hmac = hash_hmac('sha256', Settings::getBotToken(), 'WebAppData', true);
+        return hash_hmac('sha256', $check_string, $hmac) !== $hash;
     }
 }
