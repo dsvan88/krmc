@@ -20,6 +20,8 @@
     <script defer="" src="/public/scripts/popups.js?v=<?= $_SERVER['REQUEST_TIME'] ?>"></script>
     <script defer="" src="/public/scripts/noticer.js?v=<?= $_SERVER['REQUEST_TIME'] ?>"></script>
     <script defer="" src="/public/scripts/common-funcs.js?v=<?= $_SERVER['REQUEST_TIME'] ?>"></script>
+    <script defer="" src="/public/scripts/common.js?v=<?= $_SERVER['REQUEST_TIME'] ?>"></script>
+    <script defer="" src="/public/scripts/modals.js?v=<?= $_SERVER['REQUEST_TIME'] ?>"></script>
     <? if (!empty($scripts)) : ?>
         <? if (is_string($scripts)) : ?>
             <script defer="" src="<?= SCRIPTS_STORAGE . $scripts . '?v=' . $_SERVER['REQUEST_TIME'] ?>"></script>
@@ -29,8 +31,6 @@
     <? endfor;
         endif;
     endif; ?>
-    <script defer="" src="/public/scripts/common.js?v=<?= $_SERVER['REQUEST_TIME'] ?>"></script>
-    <script defer="" src="/public/scripts/modals.js?v=<?= $_SERVER['REQUEST_TIME'] ?>"></script>
 
     <link rel="icon" type="image/x-icon" href="/public/images/mafia-vintage-logo-short.svg">
     <?= $locales ?>
