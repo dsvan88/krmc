@@ -1,2 +1,1 @@
-Wait a little...
-<div class="userdata" id="userdata"></div>
+<div class="penging__big fa-spin fa fa-spinner"></div>

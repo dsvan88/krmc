@@ -15,4 +15,10 @@ return  [
         'action' => 'auth',
         'access' => ['category' => 'all']
     ],
+    'telegram/account/register' =>
+    [
+        'controller' => 'telegramApp',
+        'action' => 'register',
+        'access' => ['category' => 'all']
+    ],
 ];

@@ -22,7 +22,7 @@ class ViewRepository
         $images = Settings::getGroup('img');
         $images = Locale::apply($images);
         $vars = [
-            'headerLogo' => "<a href='/'>" . ImageProcessing::inputImage($images['MainLogo']['value']) . '</a>',
+            'headerLogo' => ImageProcessing::inputImage($images['MainLogo']['value']),
             'headerLoginLabel' => Locale::phrase('Log In'),
             'headerLogoutLabel' => Locale::phrase('Log Out'),
             'headerMenu' => self::menu(),

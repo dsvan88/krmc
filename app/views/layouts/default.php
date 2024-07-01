@@ -48,7 +48,9 @@
     <div class="wrapper">
         <header class="header">
             <div class="header__content">
-                <div class="header__logo"><?= $headerLogo ?></div>
+                <div class="header__logo">
+                    <a href="/"><?= $headerLogo ?></a>
+                </div>
                 <div class="header__options">
                     <div class="header__langs">
                         <a href='?lang=uk' class="header__lang<?= $lang === 'uk' ? ' selected' : '' ?>">🇺🇦</a>

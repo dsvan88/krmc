@@ -237,8 +237,6 @@ class AccountRepository
 
         if (!$userId) return false;
 
-        $userData = Users::auth($userId);
-
-        return false;
+        return Users::auth($userId);
     }
 }

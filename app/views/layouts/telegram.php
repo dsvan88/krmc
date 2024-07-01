@@ -8,7 +8,7 @@
         <meta name="description" content="<?= $description ?>">
     <? endif ?>
     <meta name="author" content="<?= CFG_AUTHOR ?>">
-    <link rel="stylesheet" href="/public/css/style.css?v=<?= $_SERVER['REQUEST_TIME'] ?>">
+    <link rel="stylesheet" href="/public/css/style-tg.css?v=<?= $_SERVER['REQUEST_TIME'] ?>">
     <link rel="stylesheet" href="/public/css/jquery-ui.min.css">
     <link rel="stylesheet" href="/public/css/cropper.css">
     <link rel="stylesheet" href="/public/css/jquery.datetimepicker.min.css">
@@ -44,13 +44,18 @@
     <div class="wrapper">
         <header class="header">
             <div class="header__content">
-                <div class="header__logo"><?= $headerLogo ?></div>
+                <? if (!empty($_SESSION['id'])) : ?>
+                    <div class="header__profile">
+                        <a href="/telegram/account/<?= $_SESSION['id'] ?>"><? $_SESSION['name'] ?></a>
+                    </div>
+                <? endif ?>
                 <div class="header__options">
+                    <?/* 
                     <div class="header__langs">
                         <a href='?lang=uk' class="header__lang<?= $lang === 'uk' ? ' selected' : '' ?>">🇺🇦</a>
                         <a href='?lang=en' class="header__lang<?= $lang === 'en' ? ' selected' : '' ?>">🇬🇧</a>
                         <a href='?lang=ru' class="header__lang<?= $lang === 'ru' ? ' selected' : '' ?>">🇷🇺</a>
-                    </div>
+                    </div> */ ?>
                     <div class="header__menu">
                         <label for="header__navigation-checkbox" class="navigation-for-small-display menu-show"><i class="fa fa-bars"></i></label>
                         <input type="checkbox" name="toggle-navigation" id="header__navigation-checkbox" class="navigation-for-small-display-chechbox">
