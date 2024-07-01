@@ -94,15 +94,15 @@ class Users extends Model
     }
     public static function sessionReturn($token)
     {
-        $userData = self::getDataByToken($token);
+        self::$current = self::getDataByToken($token);
 
-        if (!$userData) return false;
+        if (!self::$current) return false;
 
-        if ($_COOKIE[CFG_TOKEN_NAME] !== self::prepeareToken($userData['login'])) {
+        if ($_COOKIE[CFG_TOKEN_NAME] !== self::prepeareToken(self::$current['login'])) {
             self::logout();
             return false;
         }
-        return self::setSessionData($userData);
+        return self::setSessionData();
     }
     public static function prepeareToken(string $login): string
     {
