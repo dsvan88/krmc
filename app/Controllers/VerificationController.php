@@ -10,6 +10,7 @@ use app\core\Tech;
 use app\core\Validator;
 use app\models\Contacts;
 use app\models\Users;
+use app\Repositories\AccountRepository;
 use app\Repositories\ContactRepository;
 use app\Repositories\VerificationRepository;
 
@@ -150,14 +151,12 @@ class VerificationController extends Controller
     }
     public function hmacAction()
     {
-        if (!Validator::validate('telegramHMAC', $_POST['data']))
+        // if (!Validator::validate('telegramHMAC', $_POST['data']))
+        if (Validator::validate('telegramHMAC', $_POST['data']))
             View::notice(['type' => 'error', 'message' => 'Auth error!']);
 
-        $string = urldecode($_POST['data']);
-        parse_str($string, $array);
+        AccountRepository::telegramAuth($_POST['data']);
 
-        $tgUserData = json_decode($array['user'], true);
-        Contacts::getUserIdByContact('telegramid', $tgUserData['id']);
         View::location();
     }
 }

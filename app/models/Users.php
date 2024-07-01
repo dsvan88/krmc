@@ -15,13 +15,26 @@ class Users extends Model
     public static $usersAccessLevels = ['', 'guest', 'user', 'trusted', 'manager', 'admin', 'root'];
     public static $userToken = '';
     public static $jsonFields = ['privilege', 'personal', 'contacts', 'credo', 'ban'];
+    public static $current = null;
 
+    public static function auth(int $userId): bool
+    {
+        self::$current = self::find($userId);
+
+        if (!self::$current) return false;
+
+        self::setSessionData();
+        self::setToken();
+
+        return true;
+    }
     public static function login($data)
     {
         $login = strtolower(trim($data['login']));
         $password = sha1(trim($data['password']));
 
         $authData = self::findBy('login', $login, 1);
+
         if (empty($authData)) return 'failed';
         $authData =  $authData[0];
 
@@ -31,8 +44,9 @@ class Users extends Model
         if (self::isBanned('auth', $authData['ban']))
             return 'banned';
 
-        self::setSessionData($authData);
-        self::setToken($authData);
+        self::$current = $authData;
+        self::setSessionData();
+        self::setToken();
 
         if (isset($_SESSION['personal']['forget'])) {
             self::deleteForget($_SESSION['id'], $_SESSION['personal']);
@@ -95,13 +109,13 @@ class Users extends Model
         self::$userToken = sha1($login . $_SERVER['HTTP_USER_AGENT'] . Tech::getClientIP() . date('W.F.Y'));
         return self::$userToken;
     }
-    public static function setSessionData($userData)
+    public static function setSessionData()
     {
-        $_SESSION['id'] = $userData['id'];
-        $_SESSION['name'] = $userData['name'];
-        $_SESSION['login'] = $userData['login'];
-        $_SESSION['privilege'] = $userData['privilege'];
-        $_SESSION['personal'] = $userData['personal'];
+        $_SESSION['id'] = self::$current['id'];
+        $_SESSION['name'] = self::$current['name'];
+        $_SESSION['login'] = self::$current['login'];
+        $_SESSION['privilege'] = self::$current['privilege'];
+        $_SESSION['personal'] = self::$current['personal'];
 
         $_SESSION['fio'] = empty($_SESSION['personal']['fio']) ? '' : $_SESSION['personal']['fio'];
         $_SESSION['gender'] = empty($_SESSION['personal']['gender']) ? '' : $_SESSION['personal']['gender'];
@@ -112,17 +126,17 @@ class Users extends Model
 
         return true;
     }
-    public static function setToken($userData)
+    public static function setToken()
     {
         if (empty(self::$userToken)) {
-            self::$userToken = self::prepeareToken($userData['login']);
+            self::$userToken = self::prepeareToken(self::$current['login']);
         }
         setcookie(CFG_TOKEN_NAME, self::$userToken, $_SERVER['REQUEST_TIME'] + CFG_MAX_SESSION_AGE, '/');
 
-        $userId = $userData['id'];
-        unset($userData['id']);
-        $userData['personal']['token'] = self::$userToken;
-        self::edit($userData, ['id' => $userId]);
+        $userId = self::$current['id'];
+        unset(self::$current['id']);
+        self::$current['personal']['token'] = self::$userToken;
+        self::edit(self::$current, ['id' => $userId]);
         return true;
     }
     public static function trottling(): bool
@@ -316,7 +330,7 @@ class Users extends Model
     public static function random($count = 1)
     {
         $table = self::$table;
-        
+
         // $query = "SELECT * FROM tbl AS t1 JOIN (SELECT id FROM tbl ORDER BY RAND() LIMIT $count) as t2 ON t1.id=t2.id"; query for Big tables
         $userData = self::query("SELECT * FROM $table WHERE name != ? ORDER BY RAND() LIMIT $count", [''], 'Assoc');
         if (empty($userData)) return false;

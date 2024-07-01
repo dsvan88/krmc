@@ -18,7 +18,7 @@ class AccountRepository
         $data = Users::find($userId);
         $data['personal']['gender'] = '';
         $data['personal']['genderName'] = '';
-        if (empty($data['personal']['gender'])){
+        if (empty($data['personal']['gender'])) {
             $data['personal']['gender'] = $data['personal']['gender'];
             $data['personal']['genderName'] = Locale::phrase(ucfirst($data['personal']['gender']));
         }
@@ -91,7 +91,8 @@ class AccountRepository
 
         return ['result' => true, 'name' => $userData['userName']];
     }
-    public static function unlinkTelegram(int $chatId){
+    public static function unlinkTelegram(int $chatId)
+    {
 
         $chatData =  TelegramChats::getChat($chatId);
         $chatId = (int) $chatData['id'];
@@ -99,19 +100,19 @@ class AccountRepository
 
         if (empty($chatData['user_id']))
             return false;
-        
+
         $userData = Users::find($chatData['user_id']);
-        
-        if (!empty($userData['contacts']['telegram'])){
+
+        if (!empty($userData['contacts']['telegram'])) {
             unset($userData['contacts']['telegram']);
         }
-        if (!empty($userData['personal']['fio']) && $userData['personal']['fio'] === self::formFioFromChatData($chatData)){
+        if (!empty($userData['personal']['fio']) && $userData['personal']['fio'] === self::formFioFromChatData($chatData)) {
             unset($userData['personal']['fio']);
         }
-        
+
         $userId = (int) $userData['id'];
         unset($userData['id']);
-        
+
         Users::edit($userData, ['id' => $userId]);
         Contacts::deleteByUserId($userId, ['telegram', 'telegramid']);
 
@@ -119,7 +120,8 @@ class AccountRepository
         TelegramChats::edit($chatData, $chatId);
         return true;
     }
-    public static function linkTelegram(int $chatId, string $name){
+    public static function linkTelegram(int $chatId, string $name)
+    {
 
         $chatData =  TelegramChats::getChat($chatId);
         $chatId = (int) $chatData['id'];
@@ -132,7 +134,7 @@ class AccountRepository
         } else {
             $userId = (int) $userData['id'];
         }
-        
+
         unset($userData['id']);
 
         $userData['personal']['fio'] = self::formFioFromChatData($chatData);
@@ -143,16 +145,16 @@ class AccountRepository
         $chatData['personal'] = json_encode($chatData['personal'], JSON_UNESCAPED_UNICODE);
         Users::edit($userData, ['id' => $userId]);
         TelegramChats::edit($chatData, $chatId);
-        
-        $contacts = ['telegramid'=>$chatData['uid']];
-        if (!empty($telegram)){
+
+        $contacts = ['telegramid' => $chatData['uid']];
+        if (!empty($telegram)) {
             $contacts['telegram'] = $telegram;
         }
-        Contacts::reLink($contacts,$userId);
+        Contacts::reLink($contacts, $userId);
 
         return true;
     }
-    public static function formFioFromChatData(array $chatData):string
+    public static function formFioFromChatData(array $chatData): string
     {
         $fio = '';
         if (!empty($chatData['personal']['first_name'])) {
@@ -163,16 +165,17 @@ class AccountRepository
         }
         return trim($fio);
     }
-    public static function mergeUsersData($main, $merged){
+    public static function mergeUsersData($main, $merged)
+    {
         $new = [];
-        foreach($main as $key=>$value){
-            if (in_array($key, ['created_at','updated_at','date_delete'])) continue;
+        foreach ($main as $key => $value) {
+            if (in_array($key, ['created_at', 'updated_at', 'date_delete'])) continue;
 
-            if (in_array($key, ['id','name'])){
+            if (in_array($key, ['id', 'name'])) {
                 $new[$key] = $value;
                 continue;
             }
-            if (is_array($value) && !empty($merged[$key])){
+            if (is_array($value) && !empty($merged[$key])) {
                 $new[$key] = self::mergeUsersData($value, $merged[$key]);
                 continue;
             }
@@ -180,20 +183,21 @@ class AccountRepository
         }
         return $new;
     }
-    public static function mergeAccounts($userId, $name){
+    public static function mergeAccounts($userId, $name)
+    {
         $mainUserData = Users::decodeJson(Users::find($userId));
         $mergedUserData = Users::decodeJson(Users::findBy('name', $name)[0]);
-        
-        if (empty($mainUserData) || empty($mergedUserData)){
+
+        if (empty($mainUserData) || empty($mergedUserData)) {
             return false;
         }
-                
+
         $mainUserData = Users::contacts($mainUserData);
         $mergedUserData = Users::contacts($mergedUserData);
-        
+
         $newUserData = self::mergeUsersData($mainUserData, $mergedUserData);
         DayRepository::renamePlayer($mergedUserData['id'], $newUserData['name']);
-        
+
         Users::edit($newUserData, ['id' => $newUserData['id']]);
     }
     public static function renameDummy(string $name): bool
@@ -209,7 +213,7 @@ class AccountRepository
         $countParticipants = count($weekData['data'][$dayId]['participants']);
         $firstSlot = null;
 
-        for ($x=0; $x < $countParticipants; $x++) { 
+        for ($x = 0; $x < $countParticipants; $x++) {
             if ($weekData['data'][$dayId]['participants'][$x]['id'] === $id) return false;
             if (!empty($weekData['data'][$dayId]['participants'][$x]['id'])) continue;
             if (!empty($firstSlot)) continue;
@@ -221,5 +225,20 @@ class AccountRepository
         unset($weekData['id']);
 
         return Weeks::setWeekData($weekId, $weekData);
+    }
+
+    public static function telegramAuth(string $string): bool
+    {
+        $string = urldecode($_POST['data']);
+        parse_str($string, $array);
+
+        $tgUserData = json_decode($array['user'], true);
+        $userId = Contacts::getUserIdByContact('telegramid', $tgUserData['id']);
+
+        if (!$userId) return false;
+
+        $userData = Users::auth($userId);
+
+        return false;
     }
 }

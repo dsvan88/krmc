@@ -91,6 +91,6 @@ class Validator
         $check_string = implode("\n", $array);
 
         $hmac = hash_hmac('sha256', Settings::getBotToken(), 'WebAppData', true);
-        return hash_hmac('sha256', $check_string, $hmac) !== $hash;
+        return hash_hmac('sha256', $check_string, $hmac) === $hash;
     }
 }
