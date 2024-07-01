@@ -7,10 +7,10 @@ actionHandler.telegramAuth = async function (string) {
             data: formData,
         });
 
-        if (result['notice']['type'])
+        if (result['notice'] && result['notice']['type'])
             return this.noticer.add(result['notice']);
 
-        // window.location = result["location"];
+        window.location = result["location"];
 
     } catch (error) {
         this.noticer.add({ type: 'error', message: error.message });
