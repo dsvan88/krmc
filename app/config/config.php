@@ -46,6 +46,7 @@ if (!defined('SQL_HOST')) {
     define('ROOT_PASS_DEFAULT', empty($_ENV['ROOT_PASS_DEFAULT'])  ? 'admin1234' : $_ENV['ROOT_PASS_DEFAULT']);
     define('BACKUP_FREQ',   empty($_ENV['BACKUP_FREQ']) ? TIMESTAMP_DAY * 2 : $_ENV['BACKUP_FREQ']);
     define('APP_VERSION',   empty($_ENV['APP_VERSION'])     ? '0.17b' :     $_ENV['APP_VERSION']);
+    define('APP_LOC', empty($_ENV['APP_LOC'])  ? 'product' : $_ENV['APP_LOC']);
     define('CLUB_NAME',     empty($_ENV['CLUB_NAME'])       ? 'Mafia Club Kryvyi Rih' :     $_ENV['CLUB_NAME']);
     define('CLUB_SNAME',    empty($_ENV['CLUB_SNAME'])      ? 'KRMC' :      $_ENV['CLUB_SNAME']);
     define('CFG_TOKEN_NAME', empty($_ENV['CFG_TOKEN_NAME'])  ? 'KRMCtoken' : $_ENV['CFG_TOKEN_NAME']);

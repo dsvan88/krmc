@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="/public/css/jquery.datetimepicker.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+Pro">
 
-    <script defer="" src="https://telegram.org/js/telegram-web-app.js"></script>
+    <!-- <script defer="" src="https://telegram.org/js/telegram-web-app.js"></script> -->
     <script defer="" src="/public/scripts/request.js?v=<?= $_SERVER['REQUEST_TIME'] ?>"></script>
     <script defer="" src="/public/scripts/action-handler.js?v=<?= $_SERVER['REQUEST_TIME'] ?>"></script>
     <script defer="" src="/public/scripts/popups.js?v=<?= $_SERVER['REQUEST_TIME'] ?>"></script>
@@ -45,8 +45,11 @@
         <header class="header">
             <div class="header__content">
                 <? if (!empty($_SESSION['id'])) : ?>
-                    <div class="header__profile">
-                        <a href="/telegram/account/<?= $_SESSION['id'] ?>"><? $_SESSION['name'] ?></a>
+                    <div class="header__line">
+                        <div class="header__profile">
+                            <a href="/telegram/account/<?= $_SESSION['id'] ?>/"><?= $_SESSION['name'] ?></a>
+                            <? self::component('logout-button', ['headerLogoutLabel' => $headerLogoutLabel]) ?>
+                        </div>
                     </div>
                 <? endif ?>
                 <div class="header__options">

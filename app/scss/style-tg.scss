@@ -49,14 +49,7 @@ body {
         &__content {
             background: $main-header-bg-dark;
             color: $color-text-light;
-            height: 10vh;
-            min-height: 1.5rem;
-            max-height: 3.5rem;
-            align-items: center;
             font-size: 1.3em;
-            padding: .4rem 5vw .4rem 0;
-            display: flex;
-            justify-content: space-between;
         }
 
         .dashboard {

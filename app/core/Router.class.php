@@ -78,10 +78,14 @@ class Router
                         $controller = new $path(self::$params);
                         $controller->$action();
                     } catch (Throwable $error) {
-                        $techTgId = Settings::getTechTelegramId();
-                        if (!empty($techTgId)) {
-                            Sender::message(Settings::getTechTelegramId(), json_encode($error->__toString()));
+                        if (APP_LOC === 'local') {
+                            error_log($error->__toString());
+                            return false;
                         }
+                        $techTgId = Settings::getTechTelegramId();
+                        if (empty($techTgId)) return false;
+
+                        Sender::message(Settings::getTechTelegramId(), json_encode($error->__toString()));
                     }
                 } else {
                     View::errorCode(404, ['message' => "Action $action isn’t found in Controller $path!"]);
