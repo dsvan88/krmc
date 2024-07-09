@@ -53,7 +53,7 @@ class AccountRepository
         if (Users::getDataByName($name) !== false)
             return ['result' => false, 'message' => "This new name already exists in the base.\nPlease, select another!"];
 
-        DayRepository::renamePlayer($userId, $name);
+        // DayRepository::renamePlayer($userId, $name);
         Users::edit(['name' => $name], ['id' => $userId]);
         return ['result' => true, 'message' => 'Success!'];
     }
@@ -196,7 +196,7 @@ class AccountRepository
         $mergedUserData = Users::contacts($mergedUserData);
 
         $newUserData = self::mergeUsersData($mainUserData, $mergedUserData);
-        DayRepository::renamePlayer($mergedUserData['id'], $newUserData['name']);
+        // DayRepository::renamePlayer($mergedUserData['id'], $newUserData['name']);
 
         Users::edit($newUserData, ['id' => $newUserData['id']]);
     }
