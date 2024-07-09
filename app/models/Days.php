@@ -40,7 +40,8 @@ class Days extends Model
 
         return self::$currentDay;
     }
-    public static function isExpired(int $timestamp): bool{
+    public static function isExpired(int $timestamp): bool
+    {
         return $timestamp + TIMESTAMP_DAY < $_SERVER['REQUEST_TIME'];
     }
     public static function edit($weekId, $dayId, $data)
@@ -60,13 +61,17 @@ class Days extends Model
             if ($data['participant'][$i] === '+1') {
                 $id = null;
             } else {
-                $name = Users::formatName($data['participant'][$i]);
-
-                if (empty($name)) continue;
-
+                $name = $data['participant'][$i];
                 $id = Users::getId($name);
                 if ($id < 2) {
-                    $id = Users::add($name);
+                    $name = Users::formatName($name);
+
+                    if (empty($name)) continue;
+
+                    $id = Users::getId($name);
+                    if ($id < 2) {
+                        $id = Users::add($name);
+                    }
                 }
             }
             $newData['participants'][] = [
