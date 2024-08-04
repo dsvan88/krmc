@@ -151,8 +151,8 @@ class VerificationController extends Controller
     }
     public function hmacAction()
     {
-        // if (!Validator::validate('telegramHMAC', $_POST['data']))
-        if (Validator::validate('telegramHMAC', $_POST['data']))
+        if (!Validator::validate('telegramHMAC', $_POST['data']))
+        // if (Validator::validate('telegramHMAC', $_POST['data']))
             View::notice(['type' => 'error', 'message' => 'Auth error!']);
 
         if (!AccountRepository::telegramAuth($_POST['data']))
