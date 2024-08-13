@@ -18,7 +18,6 @@ class VerificationController extends Controller
 {
     public static function before()
     {
-        // View::$layout = 'custom';
         return true;
     }
 
@@ -151,8 +150,9 @@ class VerificationController extends Controller
     }
     public function hmacAction()
     {
+        $_SESSION['TelegramApp'] = 1;
         if (!Validator::validate('telegramHMAC', $_POST['data']))
-        // if (Validator::validate('telegramHMAC', $_POST['data']))
+            // if (Validator::validate('telegramHMAC', $_POST['data']))
             View::notice(['type' => 'error', 'message' => 'Auth error!']);
 
         if (!AccountRepository::telegramAuth($_POST['data']))

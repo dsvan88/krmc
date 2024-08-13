@@ -50,6 +50,7 @@ if (!defined('SQL_HOST')) {
     define('CLUB_NAME',     empty($_ENV['CLUB_NAME'])       ? 'Mafia Club Kryvyi Rih' :     $_ENV['CLUB_NAME']);
     define('CLUB_SNAME',    empty($_ENV['CLUB_SNAME'])      ? 'KRMC' :      $_ENV['CLUB_SNAME']);
     define('CFG_TOKEN_NAME', empty($_ENV['CFG_TOKEN_NAME'])  ? 'KRMCtoken' : $_ENV['CFG_TOKEN_NAME']);
+    define('TELEGRAM_APP_COOKIE', empty($_ENV['TELEGRAM_APP_COOKIE'])  ? CLUB_SNAME . '.TgApp' : $_ENV['TELEGRAM_APP_COOKIE']);
 
     define('FILE_USRGALL', '/public/gallery/users/');
     define('FILE_MAINGALL', '/public/gallery/site/');

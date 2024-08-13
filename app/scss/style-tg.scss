@@ -33,6 +33,7 @@ body {
     display: grid;
     grid-template-rows: auto 1fr auto;
     grid-template-columns: auto;
+    padding-right: 1em;
 
     @include md {
         display: flex;
@@ -52,9 +53,28 @@ body {
             font-size: 1.3em;
         }
 
+        &__profile {
+            padding: .5em 1em;
+
+            a {
+                color: $color-text-light;
+                text-decoration: none;
+            }
+        }
+
+        &__menu {
+            display: flex;
+            gap: .3em;
+
+            &-item {
+                flex: 1 1 19vh;
+                
+            }
+        }
+
         .dashboard {
             padding: 0 3vw 0 0;
-            font-size: 1.45em;
+            font-size: 2em;
             position: relative;
             background-color: $bg-color-light;
 
@@ -153,114 +173,6 @@ body {
             &.selected {
                 border-radius: 2px;
                 box-shadow: 0 0 .3em .3em $color-text-light-blur inset, 0 0 .1em .1em $color-text-light-blur;
-            }
-        }
-
-        &__profile {
-            order: 3;
-            // margin-left: auto;
-            display: flex;
-            position: relative;
-            align-items: center;
-            z-index: 5;
-
-            &-button {
-                // background-color: #9fc0ff33;
-                background-color: $bg-profile-button;
-                border: 1px solid $color-text-main;
-                border-radius: 5px;
-                padding: 5px 10px;
-                max-height: 40px;
-                cursor: pointer;
-                transition: all $animation-fast ease-in;
-
-                &:hover {
-                    background-color: $color-text-main;
-                    color: $color-text-accent;
-                }
-
-                img {
-                    max-height: 40px;
-                    border-radius: 3px;
-                }
-            }
-
-            &-caret {
-                margin-left: 10px;
-                font-size: 1.1em !important;
-                cursor: pointer;
-
-                a,
-                i {
-                    color: $color-text-light-blur;
-                    transition: color $animation-fast;
-
-                    &:hover {
-                        color: $color-text-light;
-                    }
-                }
-            }
-
-            &-checkbox {
-                display: none;
-
-                &:checked {
-                    &~.header__profile-menu {
-                        display: block;
-                    }
-                }
-            }
-
-            &-menu {
-                order: 1;
-                display: none;
-                position: absolute;
-                top: 30px;
-                right: 0;
-                background-color: $bg-color-red-blur;
-                list-style: none;
-                border-radius: 5px;
-
-                &-item {
-                    margin: 5px;
-                    padding: 3px 10px;
-                    display: flex;
-                    flex-direction: column;
-                    justify-content: center;
-                    align-items: center;
-                    font-size: 1rem;
-                    color: $color-text-menu;
-                    white-space: nowrap;
-                    cursor: pointer;
-
-                    a {
-                        color: $color-text-menu;
-                        display: block;
-                        width: 100%;
-                        text-align: center;
-                        text-decoration: none;
-                    }
-
-                    &:last-of-type {
-                        margin-top: 15px;
-                    }
-
-                    &:hover {
-                        & .header__profile-menu-bar {
-                            width: 100%;
-                            border-radius: 0 0 25px 25px;
-                            opacity: 1;
-                        }
-                    }
-                }
-
-                &-bar {
-                    width: 0px;
-                    height: 2px;
-                    opacity: 0;
-                    background-color: $color-text-menu;
-                    transition: all $animation-fast ease-in;
-                }
             }
         }
 

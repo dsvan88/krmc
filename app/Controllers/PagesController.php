@@ -5,6 +5,7 @@ namespace app\Controllers;
 
 use app\core\Controller;
 use app\core\Locale;
+use app\core\Noticer;
 use app\core\View;
 use app\models\Pages;
 use app\models\Users;
@@ -36,6 +37,9 @@ class PagesController extends Controller
             ],
             'og' => PageRepository::formPageOG($page),
         ];
+
+        // Noticer::set(['type' => 'info', 'message' => empty($_SESSION['TelegramApp']) ? 'Non-TelegramApp' : 'TelegramApp']);
+
         if (Users::checkAccess('manager')) {
             $vars['dashboard']['slug'] = $slug;
             $vars['dashboard']['id'] = $page['id'];
@@ -43,7 +47,7 @@ class PagesController extends Controller
 
         View::$path = 'pages/show';
         View::$route['vars'] = array_merge(View::$route['vars'], $vars);
-    
+
         View::render();
         exit();
     }
@@ -55,14 +59,14 @@ class PagesController extends Controller
             $result = Pages::edit($array, $slug);
             if ($result === true)
                 View::message('Changes saved successfully!');
-            View::notice(['error'=> 1, 'message' => $result, 'time' => 3000]);
+            View::notice(['error' => 1, 'message' => $result, 'time' => 3000]);
         }
 
         $page = Pages::getBySlug($slug);
-        
+
         if (empty($page)) $page = Pages::$default;
 
-        $page['description'] = '<p>'.str_replace("\n", '</p><p>', $page['description']).'</p>';
+        $page['description'] = '<p>' . str_replace("\n", '</p><p>', $page['description']) . '</p>';
 
         $page['keywords'] = '';
         if (!empty($page['data'])) {
@@ -92,7 +96,7 @@ class PagesController extends Controller
             'page' => $page,
         ];
         View::$route['vars'] = array_merge(View::$route['vars'], $vars);
-    
+
         View::render();
     }
     public function deleteAction()
@@ -123,7 +127,7 @@ class PagesController extends Controller
             ],
         ];
         View::$route['vars'] = array_merge(View::$route['vars'], $vars);
-    
+
         View::render();
     }
 }

@@ -47,41 +47,18 @@
                 <? if (!empty($_SESSION['id'])) : ?>
                     <div class="header__line">
                         <div class="header__profile">
-                            <a href="/telegram/account/<?= $_SESSION['id'] ?>/"><?= $_SESSION['name'] ?></a>
-                            <? self::component('logout-button', ['headerLogoutLabel' => $headerLogoutLabel]) ?>
+                            <a href="/account/profile/<?= $_SESSION['id'] ?>/" alt="<?= $_SESSION['name'] ?>" title="<?= $_SESSION['name'] ?>"><?= $_SESSION['name'] ?></a>
                         </div>
                     </div>
-                <? endif ?>
-                <div class="header__options">
-                    <?/* 
-                    <div class="header__langs">
-                        <a href='?lang=uk' class="header__lang<?= $lang === 'uk' ? ' selected' : '' ?>">🇺🇦</a>
-                        <a href='?lang=en' class="header__lang<?= $lang === 'en' ? ' selected' : '' ?>">🇬🇧</a>
-                        <a href='?lang=ru' class="header__lang<?= $lang === 'ru' ? ' selected' : '' ?>">🇷🇺</a>
-                    </div> */ ?>
-                    <div class="header__menu">
-                        <label for="header__navigation-checkbox" class="navigation-for-small-display menu-show"><i class="fa fa-bars"></i></label>
-                        <input type="checkbox" name="toggle-navigation" id="header__navigation-checkbox" class="navigation-for-small-display-chechbox">
-                        <nav class="header__navigation" id="header__navigation">
-                            <label for="header__navigation-checkbox" class="navigation-for-small-display menu-hide"><i class="fa fa-times"></i></label>
-                            <? foreach ($headerMenu as $headerMenuItem) : ?>
-                                <? self::component('header-menu-item', ['menuItem' => $headerMenuItem]) ?>
-                            <? endforeach ?>
-                        </nav>
-                    </div>
-                </div>
-                <div class="header__profile">
-                    <? if (empty($_SESSION['id'])) : ?>
-                        <? self::component('login-button', ['headerLoginLabel' => $headerLoginLabel]) ?>
-                    <? else : ?>
-                        <? self::component('profile-button', ['profileImage' => $profileImage, 'profile' => $profileMenu[0]]) ?>
-                        <? if (count($profileMenu) > 2) : ?>
-                            <? self::component('profile-menu', ['profileMenu' => $profileMenu]) ?>
-                        <? else : ?>
-                            <? self::component('logout-button', ['headerLogoutLabel' => $headerLogoutLabel]) ?>
+                    <menu class="header__menu">
+                        <li class="header__menu-item"><a href="/weeks/"><img src="" alt="Booking"><span>Booking</span></a></li>
+                        <li class="header__menu-item"><a href="/weeks/"><img src="" alt="Schelude"><span>Schelude</span></a></li>
+                        <li class="header__menu-item"><a href="/game/"><img src="" alt="Games"><span>Games</span></a></li>
+                        <? if ($isAdmin) : ?>
+                            <li class="header__menu-item"><a href="/game/mafia/start/"><img src="" alt="Play"><span>Play</span></a></li>
                         <? endif ?>
-                    <? endif; ?>
-                </div>
+                    </menu>
+                <? endif ?>
             </div>
             <? if (!empty($headerDashboard)) : ?>
                 <div class="header__dashboard">

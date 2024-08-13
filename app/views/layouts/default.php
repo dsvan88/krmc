@@ -70,13 +70,13 @@
                 </div>
                 <div class="header__profile">
                     <? if (empty($_SESSION['id'])) : ?>
-                        <? self::component('login-button', ['headerLoginLabel' => $headerLoginLabel]) ?>
+                        <? self::component('profile/login', ['headerLoginLabel' => $headerLoginLabel]) ?>
                     <? else : ?>
-                        <? self::component('profile-button', ['profileImage' => $profileImage, 'profile' => $profileMenu[0]]) ?>
+                        <? self::component('profile/profile', ['profileImage' => $profileImage, 'profile' => $profileMenu[0]]) ?>
                         <? if (count($profileMenu) > 2) : ?>
-                            <? self::component('profile-menu', ['profileMenu' => $profileMenu]) ?>
+                            <? self::component('profile/menu', ['profileMenu' => $profileMenu]) ?>
                         <? else : ?>
-                            <? self::component('logout-button', ['headerLogoutLabel' => $headerLogoutLabel]) ?>
+                            <? self::component('profile/logout', ['headerLogoutLabel' => $headerLogoutLabel]) ?>
                         <? endif ?>
                     <? endif; ?>
                 </div>

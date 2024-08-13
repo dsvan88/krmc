@@ -60,7 +60,6 @@ class Users extends Model
     public static function logout()
     {
         if (!isset($_SESSION['id'])) return true;
-
         $userId = $_SESSION['id'];
         $_SESSION = [];
         if (ini_get("session.use_cookies")) {

@@ -28,6 +28,7 @@ class ViewRepository
             'headerMenu' => self::menu(),
             'headerDashboard' => false,
             'profileImage' => false,
+            'isAdmin' => Users::checkAccess('manager'),
         ];
         if (isset($_SESSION['id'])) {
             if (empty($_SESSION['avatar'])) {

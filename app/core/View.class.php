@@ -19,6 +19,8 @@ class View
     }
     public static function set($route)
     {
+        if (!empty($_SESSION['TelegramApp'])) self::$layout = 'telegram';
+
         self::$route = $route;
         if (strpos($route['action'], 'Form') === false) {
             self::$path = $route['controller'] . '/' . $route['action'];

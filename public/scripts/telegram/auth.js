@@ -1,3 +1,6 @@
+const tg = window.Telegram.WebApp;
+tg.expand();
+
 actionHandler.telegramAuth = async function (string) {
     try {
         const formData = new FormData();
@@ -16,5 +19,4 @@ actionHandler.telegramAuth = async function (string) {
         this.noticer.add({ type: 'error', message: error.message });
     }
 }
-
-actionHandler.telegramAuth(window.Telegram.WebApp.initData);
+actionHandler.telegramAuth(tg.initData);
