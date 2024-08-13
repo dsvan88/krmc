@@ -51,9 +51,11 @@
                         </div>
                     </div>
                     <menu class="header__menu">
-                        <li class="header__menu-item"><a href="/weeks/"><img src="" alt="Booking"><span>Booking</span></a></li>
-                        <li class="header__menu-item"><a href="/weeks/"><img src="" alt="Schelude"><span>Schelude</span></a></li>
-                        <li class="header__menu-item"><a href="/game/"><img src="" alt="Games"><span>Games</span></a></li>
+                        <li class="header__menu-item"><a href="/weeks/">
+                            <? self::component('icons/booking') ?>
+                            <span>Booking</span></a></li>
+                        <li class="header__menu-item"><a href="/weeks/"><img src="/public/images/schelude.svg" alt="Schelude"><span>Schelude</span></a></li>
+                        <li class="header__menu-item"><a href="/game/" class="test"><span>Games</span></a></li>
                         <? if ($isAdmin) : ?>
                             <li class="header__menu-item"><a href="/game/mafia/start/"><img src="" alt="Play"><span>Play</span></a></li>
                         <? endif ?>

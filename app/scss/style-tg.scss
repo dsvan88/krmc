@@ -17,7 +17,6 @@ body {
     place-items: center;
     color: $color-text-main;
     overflow-x: hidden;
-    // font-family: "Roboto", sans-serif;
     font-family: "Ubuntu", sans-serif;
     font-size: clamp($font-size-main-sm, 1.4vw, $font-size-main-xl);
 }
@@ -68,7 +67,24 @@ body {
 
             &-item {
                 flex: 1 1 19vh;
-                
+                height: 5em;
+                list-style: none;
+                display: flex;
+                justify-content: center;
+                a {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    height: 100%;
+                    background: linear-gradient(180deg, rgba(47,177,193,1) 0%, rgb(19, 145, 135) 47%, rgba(0,212,255,1) 100%);
+                    img, svg {
+                        height: 100%;
+                        filter: invert(60%) sepia(60%) saturate(4296%) hue-rotate(159deg) brightness(91%) contrast(101%);
+                    }
+                    &.test{
+                        background-image: linear-gradient(180deg, rgba(47,177,193,1) 0%, rgb(19, 145, 135) 47%, rgba(0,212,255,1) 100%), url(/public/images/booking.svg);
+                    }
+                }
             }
         }
 
