@@ -51,13 +51,32 @@
                         </div>
                     </div>
                     <menu class="header__menu">
-                        <li class="header__menu-item"><a href="/weeks/">
-                            <? self::component('icons/booking') ?>
-                            <span>Booking</span></a></li>
-                        <li class="header__menu-item"><a href="/weeks/"><img src="/public/images/schelude.svg" alt="Schelude"><span>Schelude</span></a></li>
-                        <li class="header__menu-item"><a href="/game/" class="test"><span>Games</span></a></li>
+                        <? self::component('icons/gradient') ?>
+                        <li class="header__menu-item">
+                            <a href="/weeks/">
+                                <? self::component('icons/booking') ?>
+                                <span>Booking</span>
+                            </a>
+                        </li>
+                        <li class="header__menu-item">
+                            <a href="/weeks/">
+                                <? self::component('icons/schelude') ?>
+                                <span>Schelude</span>
+                            </a>
+                        </li>
+                        <li class="header__menu-item">
+                            <a href="/game/" class="test">
+                                <? self::component('icons/games') ?>
+                                <span>Games</span>
+                            </a>
+                        </li>
                         <? if ($isAdmin) : ?>
-                            <li class="header__menu-item"><a href="/game/mafia/start/"><img src="" alt="Play"><span>Play</span></a></li>
+                            <li class="header__menu-item">
+                                <a href="/game/mafia/start/">
+                                    <? self::component('icons/play') ?>
+                                    <span>Play</span>
+                                </a>
+                            </li>
                         <? endif ?>
                     </menu>
                 <? endif ?>

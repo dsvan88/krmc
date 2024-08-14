@@ -42,6 +42,7 @@ body {
 
     .header {
         position: sticky;
+        padding-right: 20px;
         top: 0px;
         box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.5);
         z-index: 1;
@@ -71,21 +72,35 @@ body {
                 list-style: none;
                 display: flex;
                 justify-content: center;
+
                 a {
                     display: flex;
                     flex-direction: column;
                     align-items: center;
                     height: 100%;
-                    background: linear-gradient(180deg, rgba(47,177,193,1) 0%, rgb(19, 145, 135) 47%, rgba(0,212,255,1) 100%);
-                    img, svg {
-                        height: 100%;
-                        filter: invert(60%) sepia(60%) saturate(4296%) hue-rotate(159deg) brightness(91%) contrast(101%);
+                    border-radius: 1em;
+                    padding: .2em .4em;
+                    box-sizing: border-box;
+                    text-decoration: none;
+                    border-top: 2px solid $color-text-light;
+                    border-bottom: 1px solid $color-text-light;
+                    background-color: transparent;
+                    color: $color-text-light;
+                    transition: color $animation-fast, border-color $animation-fast;
+
+                    &:hover {
+                        border-color: $color-text-menu;
+                        color: $color-text-menu;
                     }
-                    &.test{
-                        background-image: linear-gradient(180deg, rgba(47,177,193,1) 0%, rgb(19, 145, 135) 47%, rgba(0,212,255,1) 100%), url(/public/images/booking.svg);
+
+                    img,
+                    svg {
+                        height: 100%;
                     }
                 }
             }
+
+            @import "icons";
         }
 
         .dashboard {

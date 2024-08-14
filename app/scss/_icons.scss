@@ -1,0 +1,42 @@
+svg.icons {
+    fill: url(#icon-gradient) #fff;
+    transform: rotate3d(0, 0, 0, -15deg);
+    animation: iconsFlip $animation-very-slow infinite;
+}
+
+a:hover svg.icons {
+    fill: url(#icon-gradient-hover) #fff;
+    transform: rotate3d(0, 0, 0, 0);
+}
+
+
+#icons_gradient {
+    position: absolute;
+    pointer-events: none;
+    width: 0;
+    height: 0;
+}
+
+#icon-gradient,
+#icon-gradient-hover {
+    --color-start: #FFFFFF;
+    --offset-start: 0%;
+    --color-mid: #43f733;
+    --offset-mid: 60%;
+    --color-finish: #af1fa8;
+    --offset-finish: 100%;
+}
+
+@keyframes iconsFlip {
+    0% {
+        transform: rotate3d(0.1, 1, 0, -15deg);
+    }
+
+    50% {
+        transform: rotate3d(0.5, 0.5, 0.5, 15deg);
+    }
+
+    100% {
+        transform: rotate3d(0.1, 1, 0, -15deg);
+    }
+}
