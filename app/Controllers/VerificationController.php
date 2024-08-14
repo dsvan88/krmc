@@ -152,12 +152,11 @@ class VerificationController extends Controller
     {
         $_SESSION['TelegramApp'] = 1;
         if (!Validator::validate('telegramHMAC', $_POST['data']))
-            // if (Validator::validate('telegramHMAC', $_POST['data']))
             View::notice(['type' => 'error', 'message' => 'Auth error!']);
 
         if (!AccountRepository::telegramAuth($_POST['data']))
             View::location('/telegram/account/register');
 
-        View::location();
+        View::location('/near/');
     }
 }

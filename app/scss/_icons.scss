@@ -1,11 +1,12 @@
 #icon-gradient,
 #icon-gradient-hover {
     --color-start: #{$bg-color-light-odd};
-    --color-mid: #{$bg-color-red};
+    --color-mid: #{$bg-color-red-blur};
     --color-finish: #{$bg-color-light-red-blur};
 }
 
 svg.icons {
+    height: 100%;
     fill: url(#icon-gradient) #fff;
     transform: rotate3d(0, 0, 0, -15deg);
     animation: iconsFlip $animation-very-slow infinite;

@@ -2,7 +2,7 @@ class MafiaEngine extends GameEngine {
     stage = 'Start';
     subStage = 'DistributeRoles';
     _stageDescr = '';
-    
+
     finish = false;
     daysCount = -1;
     prevStage = null;
@@ -157,7 +157,7 @@ class MafiaEngine extends GameEngine {
         this.#alert = new Alert(data);
         return true;
     }
-    
+
     get rolePrompt() {
         return this.#prompt;
     }
@@ -241,7 +241,7 @@ class MafiaEngine extends GameEngine {
     dispatchNext() {
         this.gameTable.dispatchEvent(new Event("next"));
     }
-    addEvents(){
+    addEvents() {
         const self = this;
         document.addEventListener("keyup", (event) => self.keyUpHandler.call(self, event));
         self.gameTable.addEventListener("next", (event) => self.next.call(self, event));
@@ -262,7 +262,7 @@ class MafiaEngine extends GameEngine {
         if (--num === -1) num = 9;
         this.putPlayer(num);
     }
-    async send(){
+    async send() {
         let state = {};
         for (let property in this) {
             if (['prevStates', 'timer'].includes(property)) continue;
@@ -289,73 +289,76 @@ class MafiaEngine extends GameEngine {
             return 'Night';
         }
     }
-    StartSubStage(){
-        if (this.prevStage !== this.stage){
+    StartSubStage() {
+        if (this.prevStage !== this.stage) {
             return 'DistributeRoles';
         }
-        if (this.subStage === 'DistributeRoles'){
+        if (this.subStage === 'DistributeRoles') {
             return this.checkRoles() ? 'WakeUpDon' : 'DistributeRoles';
         }
-        if (this.subStage === 'WakeUpDon'){
+        if (this.subStage === 'WakeUpDon') {
             return 'WakeUpMafia';
         }
-        if (this.subStage === 'WakeUpMafia'){
+        if (this.subStage === 'WakeUpMafia') {
             return 'WakeUpSherif';
+        }
+        if (this.subStage === 'WakeUpSherif') {
+            return 'ComfortSit';
         }
         return false;
     }
-    DaySubStage(){
-        if (this.prevStage !== this.stage){
+    DaySubStage() {
+        if (this.prevStage !== this.stage) {
             return this.prevStage !== 'Start' && this.shootingCheck() ? 'LastWill' : 'Morning';
         }
-        if (this.lastWill.length){
+        if (this.lastWill.length) {
             return 'LastWill';
         }
-        if (this.subStage === 'LastWill'){
+        if (this.subStage === 'LastWill') {
             return 'Morning';
         }
-        if (this.speakers.length){
+        if (this.speakers.length) {
             return 'Speaker';
         }
         return false;
     }
-    CourtSubStage(){
-        if (!this.checkLeaveThisRound()){
+    CourtSubStage() {
+        if (!this.checkLeaveThisRound()) {
             return false;
         }
-        if (this.prevStage !== this.stage){
+        if (this.prevStage !== this.stage) {
             if (!this.debate && !confirm((this.courtRoom.length > 0 ? `На голосування обрані гравці з номерами: ${this.courtList(this.courtRoom)}.` : 'Ніхто не був виставлений.') + `\nУсе вірно?`)) {
                 return 'FixCourtroom';
             }
             return 'CourtStart';
         }
-        if (this.debaters.length){
+        if (this.debaters.length) {
             return 'CourtDebating';
         }
-        if (this.subStage === 'FixCourtroom' || this.subStage === 'CourtDebating'){
+        if (this.subStage === 'FixCourtroom' || this.subStage === 'CourtDebating') {
             return 'CourtStart';
         }
-        if (this.courtRoom.length){
+        if (this.courtRoom.length) {
             return 'CourtVoting';
         }
-        if (this.subStage === 'CourtStart' && !this.courtRoom.length){
+        if (this.subStage === 'CourtStart' && !this.courtRoom.length) {
             return false;
         }
-        if (this.subStage === 'CourtResult' || this.subStage === 'LastWill'){
+        if (this.subStage === 'CourtResult' || this.subStage === 'LastWill') {
             if (this.lastWill.length)
                 return 'LastWill';
             return false;
         }
         return 'CourtResult';
     }
-    NightSubStage(){
-        if (this.prevStage !== this.stage){
+    NightSubStage() {
+        if (this.prevStage !== this.stage) {
             return 'MafiaShooting';
         }
-        if (this.subStage === 'MafiaShooting'){
+        if (this.subStage === 'MafiaShooting') {
             return 'WakeUpDon';
         }
-        if (this.subStage === 'WakeUpDon'){
+        if (this.subStage === 'WakeUpDon') {
             return 'WakeUpSherif';
         }
         return false;
@@ -369,7 +372,7 @@ class MafiaEngine extends GameEngine {
         this.prevSubStage = this.subStage;
 
         this.subStage = this.getNextSubStage();
-        if (!this.subStage){
+        if (!this.subStage) {
             this.stage = this.getNextStage();
             this.subStage = this.getNextSubStage();
         }
@@ -377,27 +380,27 @@ class MafiaEngine extends GameEngine {
         try {
             this[this.subStage]();
         }
-        catch(error) {
+        catch (error) {
             throw new Error(`Something went wrong:(\nStage: ${this.stage}\nSubStage: ${this.subStage}\nError: ${error.message}`);
         }
-        finally{
+        finally {
             this.resetView()
             this.send();
-        }         
+        }
     };
     resetLog() {
         let _log = this._log;
         this._log = {};
         this.log = _log;
     }
-    displayRoles(event){
+    displayRoles(event) {
         if (this.stage === 'Start' || this.showRoles || btoa(prompt('Enter game PIN-code:')) === this.config.gamePass)
             this.showRoles = !this.showRoles;
         this.resetView();
     }
-    stopGame(){
+    stopGame() {
         const winner = prompt("Stop game?\nSet Winner's Team:\n0 - Cancel;\n1 - Peace;\n2 - Mafia;\n3 - Even.", '0');
-        if (winner){
+        if (winner) {
             this.theEnd(winner);
             this[this.subStage]();
             return false;
@@ -671,7 +674,7 @@ class MafiaEngine extends GameEngine {
         this.addLog(message, true);
         return false;
     }
-    DistributeRoles(){
+    DistributeRoles() {
         this.stageDescr = 'Початок гри.\nРоздача ролей на гру.';
         return true;
     }
@@ -715,7 +718,7 @@ class MafiaEngine extends GameEngine {
     getSpeakers() {
         let speakers = [];
         let shifted = [];
-        let speakerOffset = this.daysCount >= this.maxPlayers ? this.daysCount%this.maxPlayers : this.daysCount;
+        let speakerOffset = this.daysCount >= this.maxPlayers ? this.daysCount % this.maxPlayers : this.daysCount;
 
         this.players.forEach((player, index) => {
             if (player.out > 0) return;
@@ -967,14 +970,14 @@ class MafiaEngine extends GameEngine {
         breakers.split(',').forEach(breaker => this.breakers.push(this.config.voteType === 'enum' ? +breaker : --breaker));
         this.addLog('Злам на голосуванні! ' + (this.breakers.length > 1 ? 'Відповідальні, гравці під номерами: ' : 'Відповідальний, гравець № ') + this.courtList(this.breakers));
     }
-    MafiaShooting(){
+    MafiaShooting() {
         this.activeSpeaker = null;
         const message = 'Мафія підіймає свою зброю та стріляє по гравцям.\nЗробіть Ваш вибір!'
         this.stageDescr = `Ніч №${this.daysCount}.\n${message}`;
         this.addLog(message);
     }
     WakeUpDon() {
-        if (this.stage==='Start'){
+        if (this.stage === 'Start') {
             this.timer.left = Math.floor(this.config.wakeUpRoles / 2);
             this.stageDescr = `Прокидається Дон.\nВи маєте до ${this.config.wakeUpRoles / 200} секунд, аби подивитись на місто.`;
             return true;
@@ -987,12 +990,18 @@ class MafiaEngine extends GameEngine {
         this.stageDescr = 'Прокидаються гравці мафії.\nУ вас є хвилина на узгодження дій.';
         return true;
     };
-    WakeUpSherif() {        
+    WakeUpSherif() {
         this.timer.left = this.config.wakeUpRoles;
-        this.stageDescr = 
-            this.stage==='Start' ? 
-            `Прокидається Шериф.\nВи маєте ${this.config.wakeUpRoles / 100} секунд, аби подивитись на місто.` : 
-            `Прокидається Шериф та шукає мафію.\nШериф може перевірити належність гравця до однієї з команд.`;
+        this.stageDescr =
+            this.stage === 'Start' ?
+                `Прокидається Шериф.\nВи маєте ${this.config.wakeUpRoles / 100} секунд, аби подивитись на місто.` :
+                `Прокидається Шериф та шукає мафію.\nШериф може перевірити належність гравця до однієї з команд.`;
+        return true;
+    };
+    ComfortSit() {
+        this.timer.left = this.config.wakeUpRoles;
+        this.stageDescr =
+            this.stage === 'Оголошується час зручної посадки.\nУ гравців є до 20 секунд на те, аби прийняти зручну позу сидіння.';
         return true;
     };
     Speaker() {
@@ -1066,14 +1075,14 @@ class MafiaEngine extends GameEngine {
     closeCourtroom() {
         this.courtRoomList.innerText = '';
     }
-    checkPlayerRole(playerId){
+    checkPlayerRole(playerId) {
         if (this.alert) return false;
-        
+
         let check = '';
-        if (this.subStage === 'WakeUpDon'){
+        if (this.subStage === 'WakeUpDon') {
             check = this.players[playerId].role === 'sherif' ? '<b class="positive">Шериф</b>👌' : '<b class="negative">не Шериф</b>🤞';
         }
-        else if (this.subStage === 'WakeUpSherif'){
+        else if (this.subStage === 'WakeUpSherif') {
             check = this.players[playerId].role === 'mafia' || this.players[playerId].role === 'don' ? 'команда <b class="negative">Мафії</b>👎' : 'команда <b class="positive">Мирних</b>👍';
         }
         this.alert = {
@@ -1140,19 +1149,19 @@ class MafiaEngine extends GameEngine {
             alert(message);
         }
     }
-    checkRoles(){
+    checkRoles() {
         const roles = {
-            'peace' : 0,
-            'sherif' : 0,
-            'mafia' : 0,
-            'don' : 0
+            'peace': 0,
+            'sherif': 0,
+            'mafia': 0,
+            'don': 0
         }
         this.players.forEach(player => {
             roles[player.role]++;
         });
 
         if (roles['mafia'] !== 2 || roles['don'] !== 1 || roles['sherif'] !== 1) {
-            this.noticer.add({type: 'info', message:'Невірно розподілені ролі!\nРолей всього:\nМафії - 2\nДон - 1\nШеріф - 1\nМирні - 6', time: 5000});
+            this.noticer.add({ type: 'info', message: 'Невірно розподілені ролі!\nРолей всього:\nМафії - 2\nДон - 1\nШеріф - 1\nМирні - 6', time: 5000 });
             return false;
         }
         return true;

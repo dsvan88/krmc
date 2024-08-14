@@ -48,7 +48,7 @@ body {
 
         &__content {
             padding-right: 20px;
-            padding-bottom: .3em;
+            padding-bottom: .4em;
             background: $main-header-bg-dark;
             color: $color-text-light;
             font-size: 1.3em;
@@ -85,18 +85,15 @@ body {
                     text-decoration: none;
                     border-top: 2px solid $color-text-light;
                     border-bottom: 1px solid $color-text-light;
-                    background-color: transparent;
                     color: $color-text-light;
+                    box-shadow: .1em .1em .1em .1em $bg-color-light;
                     transition: color $animation-fast, border-color $animation-fast;
 
                     &:hover {
+                        box-shadow: .1em .1em .2em .2em $bg-color-light;
+                        background-image: linear-gradient(45deg, $bg-color-dark-blur 5%, transparent 20%, transparent 70%, $bg-color-dark-blur 100%);
                         border-color: $color-text-menu;
                         color: $color-text-menu;
-                    }
-
-                    img,
-                    svg {
-                        height: 100%;
                     }
                 }
             }
