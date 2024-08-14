@@ -42,12 +42,13 @@ body {
 
     .header {
         position: sticky;
-        padding-right: 20px;
         top: 0px;
         box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.5);
         z-index: 1;
 
         &__content {
+            padding-right: 20px;
+            padding-bottom: .3em;
             background: $main-header-bg-dark;
             color: $color-text-light;
             font-size: 1.3em;
@@ -138,7 +139,7 @@ body {
             &__show {
                 font-size: 0.8em;
                 position: absolute;
-                right: 0;
+                right: 1.5em;
                 background-color: $bg-color-light-odd;
                 border: 1px solid $color-text-light-blur;
                 border-top: none;

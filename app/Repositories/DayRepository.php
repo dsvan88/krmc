@@ -3,6 +3,7 @@
 namespace app\Repositories;
 
 use app\core\Locale;
+use app\models\Days;
 use app\models\Weeks;
 
 class DayRepository
@@ -25,5 +26,20 @@ class DayRepository
         if (empty($day)) return false;
         $result = $day['date'] . ' - ' .  $day['gameName'] . "\n" . Locale::phrase('Already registered players') . ': ' . count($day['participants']) . PHP_EOL;
         return preg_replace('/<.*?>/', '', $result);
+    }
+    public static function findNearSetDay(int $weekId, int $dayId)
+    {
+        $dayData = [];
+        do {
+            ++$dayId;
+            if ($dayId > 6) {
+                if (!Weeks::checkNextWeek($weekId, true)) return [$weekId, false];
+                $dayId = 0;
+                ++$weekId;
+            }
+            $dayData = Days::weekDayData($weekId, $dayId);
+        } while ($dayData['status'] !== 'set');
+
+        return [$weekId, $dayId];
     }
 }

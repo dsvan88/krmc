@@ -4,6 +4,7 @@ namespace app\models;
 
 use app\core\Model;
 use app\core\Locale;
+use app\Repositories\DayRepository;
 
 class Days extends Model
 {
@@ -39,6 +40,16 @@ class Days extends Model
             self::$currentDay = 6;
 
         return self::$currentDay;
+    }
+    public static function near()
+    {
+        $weekId = Weeks::currentId();
+        $dayId = self::current();
+        $dayData = self::weekDayData($weekId, $dayId);
+
+        if ($dayData['status'] === 'set') return [$weekId, $dayId];
+
+        return DayRepository::findNearSetDay($weekId, $dayId);
     }
     public static function isExpired(int $timestamp): bool
     {

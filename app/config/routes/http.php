@@ -117,6 +117,11 @@ return  [
         'access' => ['category' => 'manager']
     ],
 
+    'near' => [
+        'controller' => 'days',
+        'action' => 'near',
+        'access' => ['category' => 'user']
+    ],
     'week/{weekId}/day/{dayId}' => [
         'controller' => 'days',
         'action' => 'show',

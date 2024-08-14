@@ -53,7 +53,7 @@
                     <menu class="header__menu">
                         <? self::component('icons/gradient') ?>
                         <li class="header__menu-item">
-                            <a href="/weeks/">
+                            <a href="/near/">
                                 <? self::component('icons/booking') ?>
                                 <span>Booking</span>
                             </a>

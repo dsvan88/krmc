@@ -100,7 +100,7 @@ class DaysController extends Controller
             ];
         }
 
-       $day['day_prim'] = empty($day['day_prim']) ? '' : str_replace("\n", '  ', $day['day_prim']);
+        $day['day_prim'] = empty($day['day_prim']) ? '' : str_replace("\n", '  ', $day['day_prim']);
 
         $day['tournament'] = '';
         if (isset($day['mods']) && in_array('tournament', $day['mods'])) {
@@ -129,9 +129,14 @@ class DaysController extends Controller
             }
         }
 
-        View::$route['vars'] = array_merge(View::$route['vars'], $vars, compact('day', 'playersCount', 'description','selfBooking', 'yesterday', 'tomorrow'));
+        View::$route['vars'] = array_merge(View::$route['vars'], $vars, compact('day', 'playersCount', 'description', 'selfBooking', 'yesterday', 'tomorrow'));
 
         View::render();
+    }
+    public function nearAction()
+    {
+        [$weekId, $dayId] = Days::near();
+        View::redirect(empty($dayId) ? "/weeks/$weekId/" : "/week/$weekId/day/$dayId/");
     }
     public function selfBookingAction()
     {
