@@ -163,7 +163,7 @@ class View
         if (!is_array($data)) {
             $data = [
                 'type' => '',
-                'message' => $data
+                'message' => $data,
             ];
         }
 
@@ -208,8 +208,13 @@ class View
     public static function component(string $filename, array $vars = [])
     {
         extract($vars);
-        $texts = [];
-        if (!empty(self::$route['vars']['texts'])) $texts = self::$route['vars']['texts'];
+
+        $texts = empty(self::$route['vars']['texts']) ? [] : self::$route['vars']['texts'] ;
+
         return require $_SERVER['DOCUMENT_ROOT'] . self::$viewsFolder . "/components/$filename.php";
+    }
+    public static function icon(string $filename, string $filetype = 'svg')
+    {
+        return require $_SERVER['DOCUMENT_ROOT'] . self::$viewsFolder . "/components/icons/$filename.$filetype";
     }
 }

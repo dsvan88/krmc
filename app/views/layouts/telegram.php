@@ -51,33 +51,15 @@
                         </div>
                     </div>
                     <menu class="header__menu">
-                        <? self::component('icons/gradient') ?>
-                        <li class="header__menu-item">
-                            <a href="/near/">
-                                <? self::component('icons/booking') ?>
-                                <span>Booking</span>
-                            </a>
-                        </li>
-                        <li class="header__menu-item">
-                            <a href="/weeks/">
-                                <? self::component('icons/schelude') ?>
-                                <span>Schelude</span>
-                            </a>
-                        </li>
-                        <li class="header__menu-item">
-                            <a href="/game/" class="test">
-                                <? self::component('icons/games') ?>
-                                <span>Games</span>
-                            </a>
-                        </li>
-                        <? if ($isAdmin) : ?>
+                        <? self::icon('gradient') ?>
+                        <? foreach ($headerMenu as $item) :?>
                             <li class="header__menu-item">
-                                <a href="/game/mafia/start/">
-                                    <? self::component('icons/play') ?>
-                                    <span>Play</span>
+                                <a href="/<?=$item['path']?>/" <?=empty($item['active']) ? '' : 'class="active"'?>>
+                                    <? self::icon($item['icon']) ?>
+                                    <span><?=$item['label']?></span>
                                 </a>
                             </li>
-                        <? endif ?>
+                        <? endforeach ?>
                     </menu>
                 <? endif ?>
             </div>
@@ -88,7 +70,7 @@
             <? endif ?>
         </header>
         <div class="header-for-auto-scroll" id="start-page"></div>
-        <main class="main <?= $mainClass ?>">
+        <main class="main <?= $mainClass ?>">        
             <?= $content ?>
         </main>
         <footer class="footer">

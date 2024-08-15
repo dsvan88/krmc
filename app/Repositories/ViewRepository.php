@@ -25,7 +25,7 @@ class ViewRepository
             'headerLogo' => ImageProcessing::inputImage($images['MainLogo']['value']),
             'headerLoginLabel' => Locale::phrase('Log In'),
             'headerLogoutLabel' => Locale::phrase('Log Out'),
-            'headerMenu' => self::menu(),
+            'headerMenu' => self::headerMenu(),
             'headerDashboard' => false,
             'profileImage' => false,
             'isAdmin' => Users::checkAccess('manager'),
@@ -44,7 +44,45 @@ class ViewRepository
         }
         return $vars;
     }
-    public static function menu()
+    public static function headerMenu(){
+        return empty($_SESSION['TelegramApp']) ? self::webMenu() : self::tgAppMenu();
+    }
+    public static function tgAppMenu(){
+        $menu = [
+            [
+                'path' => 'near',
+                'label' => 'Booking',
+                'icon' => 'booking',
+            ],
+            [
+                'path' => 'weeks',
+                'label' => 'Weeks',
+                'icon' => 'schelude',
+            ],
+            [
+                'path' => 'game',
+                'label' => 'Games',
+                'icon' => 'games',
+            ],
+        ];
+        if (Users::checkAccess('trusted')) {
+            $menu[] = [
+                'path' => 'game/mafia/start',
+                'label' => 'Play a game',
+                'icon' => 'play',
+            ];
+        }
+
+        $uri = trim($_SERVER['REQUEST_URI'],'/');
+        foreach($menu as $index=>$item) {
+            if ($uri !== $item['path']) continue;
+            // if (strpos($uri, $item['path']) === false) continue;
+            $menu[$index]['active'] = true;
+            break; 
+        }
+        return Locale::apply($menu);
+    }
+    public static function webMenu()
     {
         $menu = [
             [

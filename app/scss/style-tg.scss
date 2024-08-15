@@ -89,6 +89,10 @@ body {
                     box-shadow: .1em .1em .1em .1em $bg-color-light;
                     transition: color $animation-fast, border-color $animation-fast;
 
+                    &.active{
+                        border-color: $bg-color-light-red;
+                        box-shadow: .1em .1em .1em .1em $bg-color-light-red-blur;
+                    }
                     &:hover {
                         box-shadow: .1em .1em .2em .2em $bg-color-light;
                         background-image: linear-gradient(45deg, $bg-color-dark-blur 5%, transparent 20%, transparent 70%, $bg-color-dark-blur 100%);
