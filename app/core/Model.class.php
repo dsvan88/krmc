@@ -7,6 +7,7 @@ use app\libs\Db;
 class Model extends Db
 {
     public static $jsonFields = [];
+    public static $foreign = [];
 
     public static function getAll(array $condition = [], string $andOr = 'AND '): array
     {

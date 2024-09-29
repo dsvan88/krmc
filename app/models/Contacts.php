@@ -7,6 +7,7 @@ use app\core\Model;
 class Contacts extends Model
 {
     public static $table = SQL_TBL_CONTACTS;
+    public static $foreign = [ 'users' => Users::class ];
     public static $jsonFields = ['data'];
 
     public static function getByUserId(int $userId)
@@ -81,6 +82,9 @@ class Contacts extends Model
     public static function init()
     {
         $table = self::$table;
+        foreach(self::$foreign as $key=>$class){
+            $$key = $class::$table;
+        }
 
         self::query(
             "CREATE TABLE IF NOT EXISTS $table (
@@ -91,9 +95,9 @@ class Contacts extends Model
                 data JSON DEFAULT NULL,
                 created_at TIMESTAMP DEFAULT NOW(),
                 updated_at TIMESTAMP DEFAULT NOW(),
-                CONSTRAINT fk_user_0
+                CONSTRAINT fk_contact_user
                     FOREIGN KEY(user_id) 
-                    REFERENCES users(id)
+                    REFERENCES $users(id)
                     ON DELETE CASCADE
             );"
         );

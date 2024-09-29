@@ -10,6 +10,7 @@ class Games extends Model
 {
 
     public static $table = SQL_TBL_GAMES;
+    public static $foreign = [ 'users' => Users::class];
     public static $jsonFields = ['players', 'state', 'prevstates'];
 
     public static function create($post)
@@ -63,7 +64,9 @@ class Games extends Model
     public static function init()
     {
         $table = self::$table;
-        $usersTable = SQL_TBL_USERS;
+        foreach(self::$foreign as $key=>$class){
+            $$key = $class::$table;
+        }
 
         self::query(
             "CREATE TABLE IF NOT EXISTS $table (
@@ -77,9 +80,9 @@ class Games extends Model
                 state JSON DEFAULT NULL,
                 prevstates JSON DEFAULT NULL,
                 started_at INT NOT NULL DEFAULT '0',
-                CONSTRAINT fk_user
+                CONSTRAINT fk_game_manager
                     FOREIGN KEY(manager) 
-                    REFERENCES $usersTable(id)
+                    REFERENCES $users(id)
                     ON DELETE SET DEFAULT
             );"
         );

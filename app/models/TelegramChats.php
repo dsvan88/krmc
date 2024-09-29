@@ -7,6 +7,7 @@ use app\core\Model;
 class TelegramChats extends Model
 {
     public static $table = SQL_TBL_TG_CHATS;
+    public static $foreign = [ 'users' => Users::class ];
     public static $jsonFields = ['personal', 'data'];
     
     public static function save($messageArray)
@@ -206,6 +207,9 @@ class TelegramChats extends Model
     public static function init()
     {
         $table = self::$table;
+        foreach(self::$foreign as $key=>$class){
+            $$key = $class::$table;
+        }
 
         self::query(
             "CREATE TABLE IF NOT EXISTS $table (
@@ -214,9 +218,9 @@ class TelegramChats extends Model
                 uid CHARACTER VARYING(250) NOT NULL DEFAULT '',
                 personal JSON DEFAULT NULL,
                 data JSON DEFAULT NULL,
-                CONSTRAINT fk_user_3
+                CONSTRAINT fk_user_chat
                     FOREIGN KEY(user_id) 
-                    REFERENCES users(id)
+                    REFERENCES $users(id)
                     ON DELETE CASCADE
             );"
         );

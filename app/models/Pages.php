@@ -8,6 +8,7 @@ use app\core\Model;
 class Pages extends Model
 {
     public static $table = SQL_TBL_PAGES;
+    public static $foreign = [ 'users' => Users::class ];
 
     public static $default = [
         'title' => 'Empty page',
@@ -134,6 +135,9 @@ class Pages extends Model
     public static function init()
     {
         $table = static::$table;
+        foreach(self::$foreign as $key=>$class){
+            $$key = $class::$table;
+        }
 
         self::query(
             "CREATE TABLE IF NOT EXISTS $table (
@@ -152,9 +156,9 @@ class Pages extends Model
                 updated_at TIMESTAMP DEFAULT NOW(),
                 expired_at TIMESTAMP DEFAULT NULL,
                 date_delete TIMESTAMP DEFAULT NULL,
-                CONSTRAINT fk_user_1
+                CONSTRAINT fk_page_author
                     FOREIGN KEY(user_id) 
-                    REFERENCES users(id)
+                    REFERENCES $users(id)
                     ON DELETE SET DEFAULT
             );"
         );

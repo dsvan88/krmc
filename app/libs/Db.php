@@ -292,13 +292,22 @@ class Db
         $modelsFiles = scandir(realpath($modelsDir));
 
         Users::init();
+        $done = [Users::$table];
 
         foreach ($modelsFiles as $model) {
-            if ($model === '.' || $model === '..' || is_dir($model) || $model === 'Users.php')
+            if ($model === '.' || $model === '..' || is_dir($model))
                 continue;
 
             $class = str_replace('/', '\\', $path . '/' . substr($model, 0, strpos($model, '.')));
-            if (method_exists($class, 'init')) {
+            if (!empty($class::$foreign)){
+                foreach($class::$foreign as $foreign){
+                    if (method_exists($foreign, 'init') && !in_array($foreign::$table, $done, true)){
+                        $foreign::init();
+                        $done[] = $foreign::$table;
+                    }
+                }
+            }
+            if (method_exists($class, 'init') && !in_array($class::$table, $done, true)) {
                 $class::init();
             }
         }

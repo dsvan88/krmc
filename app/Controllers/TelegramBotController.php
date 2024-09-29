@@ -35,11 +35,16 @@ class TelegramBotController extends Controller
 
         $ip = substr($_SERVER['REMOTE_ADDR'], 0, 4) === substr($_SERVER['SERVER_ADDR'], 0, 4) ? $_SERVER['HTTP_X_REAL_IP'] : $_SERVER['REMOTE_ADDR'];
         if (!Validator::validate('telegramIp', $ip)) {
-            Sender::message(Settings::getTechTelegramId(), json_encode([
+            self::$techTelegramId = Settings::getTechTelegramId();
+            $message = json_encode([
                 'REMOTE_ADDR' => $_SERVER['REMOTE_ADDR'],
                 'SERVER_ADDR' => $_SERVER['SERVER_ADDR'],
                 'HTTP_X_REAL_IP' => $_SERVER['HTTP_X_REAL_IP'],
-            ]));
+            ]);
+            if (empty(self::$techTelegramId))
+                error_log($message);
+            else 
+                Sender::message(self::$techTelegramId, $message);
             View::exit();
         }
 
@@ -224,7 +229,8 @@ class TelegramBotController extends Controller
                 $dayName = mb_strtolower(mb_substr($withoutMethod, 0, 3, 'UTF-8'), 'UTF-8');
 
                 $requestData['dayNum'] = self::parseDayNum($dayName, $requestData['currentDay']);
-            } elseif (strpos($value, ':') !== false && empty($requestData['arrive'])) {
+            // } elseif (strpos($value, ':') !== false && strlen($value) === 5 && empty($requestData['arrive'])) {
+            } elseif (preg_match('/^\d{2}:\d{2}$/', $value) === 1 && empty($requestData['arrive'])) {
                 $requestData['arrive'] = $value;
             } elseif (preg_match('/^(\+|-)\d{1,2}/', $value, $match) === 1) {
                 $requestData['nonames'] = substr($match[0], 1);
