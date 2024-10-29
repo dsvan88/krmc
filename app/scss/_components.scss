@@ -1,14 +1,14 @@
-
-
 %nonDeleteTextForInput {
 	position: relative;
 	display: flex;
+
 	.non-delete-text {
 		pointer-events: none;
 		position: absolute;
 		right: 2%;
 		top: 2px;
 		color: #455ace8a;
+
 		&.left {
 			left: 2px;
 		}
@@ -30,14 +30,17 @@
 	cursor: pointer;
 	text-decoration: none;
 	transition: all $animation-fast ease-in;
+
 	&:hover {
 		background-color: $bg-color-red;
 		color: $color-text-light;
 	}
+
 	&.negative {
 		.fa {
 			pointer-events: none;
 		}
+
 		&:hover {
 			color: $button-color-negative;
 			background-color: $button-bg-color-negative-hover;
@@ -45,20 +48,24 @@
 			// background-color: #ffcfdc;
 		}
 	}
+
 	&.positive {
 		.fa {
 			pointer-events: none;
 		}
+
 		&:hover {
 			color: $button-color-positive;
 			background-color: $button-bg-color-positive-hover;
 			border-color: $button-bg-color-positive-hover;
 		}
 	}
+
 	&.neutral {
 		.fa {
 			pointer-events: none;
 		}
+
 		&:hover {
 			background-color: #7e80ff;
 			border-color: #583966;
@@ -66,18 +73,23 @@
 		}
 	}
 }
+
 button {
 	@extend %buttonStyle;
 }
+
 a.button {
 	@extend %buttonStyle;
 }
+
 .setting-text-dashboard {
 	font-size: 2rem;
 	text-align: right;
+
 	&__button {
 		cursor: pointer;
 		transition: all $animation-fast ease-in-out;
+
 		&:hover {
 			color: $color-text-menu;
 		}
@@ -90,64 +102,77 @@ a.button {
 	outline: 1px solid;
 	padding: .5em 1em;
 	border-radius: 2px;
+
 	&__label {
 		text-transform: uppercase;
 		cursor: pointer;
 	}
+
 	&-checkbox {
 		display: none;
 	}
-	&-checkbox:checked + &__label {
+
+	&-checkbox:checked+&__label {
 		color: $color-text-accent;
 		filter: drop-shadow(0px 0px 0.5rem $color-text-accent) drop-shadow(0px 0px 0.5rem $color-text-accent);
 	}
 }
+
 blockquote {
 	margin: 0;
 	padding: 10px 10px 10px 30px;
 	position: relative;
 	font-family: 'Lato', sans-serif;
 	font-weight: 300;
-	&::before{
+
+	&::before {
 		content: "\201c";
 		float: left;
 	}
 }
-.common-form{
+
+.common-form {
 	label {
 		cursor: pointer;
+
 		&:hover {
 			color: $color-text-section-title
 		}
 	}
+
 	input[type='file'] {
 		display: none;
 	}
-	&__columns{
+
+	&__columns {
 		display: flex;
 		flex-direction: column;
 		padding: 1em 2em;
-		
+
 		@include md {
 			flex-direction: row;
-			gap:1em;
+			gap: 1em;
 			padding: 0;
 		}
 	}
-	&__column{
+
+	&__column {
 		flex-grow: 1;
 		flex-shrink: 1;
 	}
-	&__row{
+
+	&__row {
 		display: flex;
 		align-items: baseline;
 	}
-	&__label{
+
+	&__label {
 		font-size: 0.8em;
 		white-space: nowrap;
 		flex: 0 0 10vw;
 		min-width: 75px;
 	}
+
 	&__input {
 		flex-grow: 1;
 		margin: 5px 0px;
@@ -158,6 +183,7 @@ blockquote {
 		outline: none;
 		padding: 2px 5px 0px 5px;
 		width: 100%;
+
 		&.logo {
 			color: transparent;
 		}
@@ -168,7 +194,8 @@ blockquote {
 		}
 
 	}
-	&__textarea{
+
+	&__textarea {
 		width: 100%;
 		margin: 5px 0px;
 		background-color: #bc6cff4a;
@@ -178,8 +205,10 @@ blockquote {
 		padding: 2px 5px 0px 5px;
 		resize: vertical;
 	}
+
 	&__button {
-			@extend %buttonStyle;
+		@extend %buttonStyle;
+
 		&-place {
 			margin-top: 10px;
 			display: flex;
@@ -205,14 +234,16 @@ blockquote {
 		}
 	}
 }
-%asideMenu{
+
+%asideMenu {
 	flex: 0 0 15vw;
 	border: 1px solid white;
 	padding: .5em .3em;
 	background-color: $bg-color-red;
 	color: $color-text-light;
 }
-%asideMenuItem{
+
+%asideMenuItem {
 	list-style: none;
 	font-size: 1.3em;
 	line-height: 1.2em;
@@ -224,31 +255,36 @@ blockquote {
 	transition: background-color $animation-fast linear;
 	display: flex;
 	justify-content: space-between;
-	.section-label{
+
+	.section-label {
 		display: none;
 		margin-left: 1em;
 		margin-right: auto;
+
 		@include md {
 			display: block;
 		}
 	}
-	&.active{
+
+	&.active {
 		background-color: $bg-color-dark;
 		color: $color-text-light;
 	}
-	&:not(.active):hover{
+
+	&:not(.active):hover {
 		background-color: $bg-color-red-blur;
 		cursor: pointer;
 	}
 }
+
 mark {
-	&.pen-red{
+	&.pen-red {
 		background-color: unset;
 		color: $color-text-accent;
 	}
 }
 
-.schelude{
+.schelude {
 	&__title {
 		margin-top: 20px;
 		margin-bottom: 15px;
@@ -277,11 +313,12 @@ mark {
 
 	}
 }
-.paginator{
+
+.paginator {
 	&__links {
 		display: flex;
 		justify-content: center;
-		padding: 10px 0;
+		padding: 1.3em 10px;
 
 		>span {
 			margin: 0 .6em;
@@ -318,6 +355,7 @@ mark {
 		}
 	}
 }
+
 .read-more {
 	position: absolute;
 	bottom: 20px;
@@ -328,5 +366,123 @@ mark {
 		float: right;
 		color: $color-text-main;
 		cursor: pointer;
+	}
+}
+
+
+.dropdown {
+	position: relative;
+
+	&__menu {
+		position: absolute;
+		background-color: $bg-color-red-blur;
+		display: none;
+		box-shadow: 0 0 10px 3px #1515158a;
+		z-index: 3;
+	}
+
+	&:hover {
+		>.dropdown__menu {
+			display: block;
+		}
+	}
+
+	&__item {
+
+		margin: 5px;
+		padding: 3px 10px;
+		display: flex;
+		flex-direction: column;
+		// justify-content: center;
+		// align-items: center;
+		font-size: 1.3rem;
+		color: $color-text-menu;
+		white-space: nowrap;
+		cursor: pointer;
+
+		&:hover {
+			>.dropdown__bar {
+				width: 100%;
+				opacity: 1;
+			}
+		}
+	}
+
+	&__bar {
+		width: 0px;
+		height: 2px;
+		opacity: 0;
+		border-radius: 0 0 25px 25px;
+		background-color: $color-text-menu;
+		transition: width $animation-fast ease-in;
+	}
+}
+
+.header__dropdown-menu {
+	&-label {
+		cursor: pointer;
+	}
+
+	&-list {
+		display: none;
+	}
+
+	&-checkbox {
+		display: none;
+
+		&:checked {
+			&~.header__dropdown-menu-list {
+				display: block;
+			}
+		}
+	}
+
+	&-list {
+		display: none;
+		position: absolute;
+		top: 30px;
+		left: 0;
+		background-color: $bg-color-red-blur;
+		list-style: none;
+		border-radius: 5px;
+
+		&-item {
+			margin: 5px;
+			padding: 3px 10px;
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+			font-size: 1.3rem;
+			color: $color-text-menu;
+			white-space: nowrap;
+			cursor: pointer;
+
+			a {
+				color: $color-text-menu;
+				text-decoration: none;
+				text-align: left;
+			}
+
+			&:last-of-type {
+				margin-top: 15px;
+			}
+
+			&:hover {
+				& .header__dropdown-menu-list-item-bar {
+					width: 100%;
+					opacity: 1;
+				}
+			}
+
+			&-bar {
+				width: 0px;
+				height: 2px;
+				opacity: 0;
+				border-radius: 0 0 25px 25px;
+				background-color: $color-text-menu;
+				transition: all $animation-fast ease-in;
+			}
+		}
 	}
 }

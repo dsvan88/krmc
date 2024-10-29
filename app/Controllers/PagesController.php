@@ -38,8 +38,6 @@ class PagesController extends Controller
             'og' => PageRepository::formPageOG($page),
         ];
 
-        // Noticer::set(['type' => 'info', 'message' => empty($_SESSION['TelegramApp']) ? 'Non-TelegramApp' : 'TelegramApp']);
-
         if (Users::checkAccess('manager')) {
             $vars['dashboard']['slug'] = $slug;
             $vars['dashboard']['id'] = $page['id'];

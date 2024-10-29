@@ -35,6 +35,7 @@ body {
 	display: grid;
 	grid-template-rows: auto 1fr auto;
 	grid-template-columns: auto;
+	background: linear-gradient(90deg, $bg-color-dark-blur 0%, $bg-color-dark 100%);
 
 	@include md {
 		display: flex;
@@ -357,28 +358,44 @@ body {
 
 	.main {
 		flex: 1 0 auto;
+		// margin: 1.2em .7em;
+		margin: 0 .7em;
 
 		.section {
-			padding: 1.2em .7em;
 			text-align: justify;
 			color: $color-text-dark;
+
+			header {
+				background-color: $bg-color-light-odd;
+				border-radius: 15px 15px 0 0;
+				padding: .5em 1em;
+			}
 
 			&.game {
 				padding: 0;
 			}
 
 			.title {
-				font-size: 2.5em;
-				letter-spacing: .05em;
+				font-size: 2em;
+				letter-spacing: .02em;
 				line-height: 1.3em;
 				font-weight: bolder;
+				border-bottom: 1px dotted;
 				margin-bottom: .3em;
 			}
 
 			.subtitle {
-				font-size: 1.7em;
+				font-size: .6em;
 				line-height: 1.3em;
 				margin-bottom: .5em;
+			}
+
+			.content {
+				font-size: .8em;
+				padding: 2em 1em;
+				background-color: $bg-color-light;
+				border-radius: 0 0 15px 15px;
+				text-indent: 1em;
 			}
 
 			&:nth-child(even) {
@@ -536,8 +553,8 @@ body {
 		}
 	}
 
-	.section {
-		padding: 20px 10vw !important;
+	.main {
+		// margin: 20px 5vw !important;
 
 		.booking {
 			&__participant {
@@ -569,7 +586,7 @@ body {
 		}
 	}
 
-	.section:not(.news-preview) {
+	.main {
 		padding: .7rem 15vw !important;
 	}
 
@@ -582,15 +599,15 @@ body {
 
 	.header__content,
 	.footer {
-		padding: 1rem 20vw !important;
+		padding: 1rem 10vw !important;
 	}
 
 	.header__dashboard {
-		padding: 0 20vw !important;
+		padding: 0 10vw !important;
 	}
 
-	.section:not(.news-preview) {
-		padding: 40px 20vw !important;
+	.main {
+		padding: 40px 10vw !important;
 	}
 
 	.setting-text-dashboard {
@@ -609,120 +626,3 @@ body {
 @import "settings";
 @import "noticer";
 @import "popups";
-
-.dropdown {
-	position: relative;
-
-	&__menu {
-		position: absolute;
-		background-color: $bg-color-red-blur;
-		display: none;
-		box-shadow: 0 0 10px 3px #1515158a;
-		z-index: 3;
-	}
-
-	&:hover {
-		>.dropdown__menu {
-			display: block;
-		}
-	}
-
-	&__item {
-
-		margin: 5px;
-		padding: 3px 10px;
-		display: flex;
-		flex-direction: column;
-		// justify-content: center;
-		// align-items: center;
-		font-size: 1.3rem;
-		color: $color-text-menu;
-		white-space: nowrap;
-		cursor: pointer;
-
-		&:hover {
-			>.dropdown__bar {
-				width: 100%;
-				opacity: 1;
-			}
-		}
-	}
-
-	&__bar {
-		width: 0px;
-		height: 2px;
-		opacity: 0;
-		border-radius: 0 0 25px 25px;
-		background-color: $color-text-menu;
-		transition: width $animation-fast ease-in;
-	}
-}
-
-.header__dropdown-menu {
-	&-label {
-		cursor: pointer;
-	}
-
-	&-list {
-		display: none;
-	}
-
-	&-checkbox {
-		display: none;
-
-		&:checked {
-			&~.header__dropdown-menu-list {
-				display: block;
-			}
-		}
-	}
-
-	&-list {
-		display: none;
-		position: absolute;
-		top: 30px;
-		left: 0;
-		background-color: $bg-color-red-blur;
-		list-style: none;
-		border-radius: 5px;
-
-		&-item {
-			margin: 5px;
-			padding: 3px 10px;
-			display: flex;
-			flex-direction: column;
-			justify-content: center;
-			align-items: center;
-			font-size: 1.3rem;
-			color: $color-text-menu;
-			white-space: nowrap;
-			cursor: pointer;
-
-			a {
-				color: $color-text-menu;
-				text-decoration: none;
-				text-align: left;
-			}
-
-			&:last-of-type {
-				margin-top: 15px;
-			}
-
-			&:hover {
-				& .header__dropdown-menu-list-item-bar {
-					width: 100%;
-					opacity: 1;
-				}
-			}
-
-			&-bar {
-				width: 0px;
-				height: 2px;
-				opacity: 0;
-				border-radius: 0 0 25px 25px;
-				background-color: $color-text-menu;
-				transition: all $animation-fast ease-in;
-			}
-		}
-	}
-}
