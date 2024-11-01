@@ -1,0 +1,67 @@
+@import "../tech/vars";
+@import "../tech/mixins_adapt";
+
+.dashboard {
+    padding: 0 3vw 0 0;
+    font-size: 1.45em;
+    position: relative;
+    background-color: $bg-color-light-odd;
+
+    &__list {
+        display: none;
+        gap: .3em;
+    }
+
+    &__item {
+        list-style: none;
+        padding: .1em 0;
+
+        a {
+            padding: 0.1em;
+            text-decoration: none;
+            border: 1px solid $color-text-light-blur;
+            border-radius: 2px;
+            color: $color-text-dark-blur;
+            transition: color $animation-normal, border-color $animation-normal, background-color $animation-normal;
+
+            &:hover {
+                color: $color-text-dark;
+                border-color: $color-text-dark;
+                background-color: $body-bg-color;
+            }
+        }
+    }
+
+    &__hide,
+    &__show {
+        font-size: 0.8em;
+        position: absolute;
+        right: 0;
+        background-color: $bg-color-light-odd;
+        border: 1px solid $color-text-light-blur;
+        border-top: none;
+        border-radius: 0 0 5px 5px;
+        padding: .05em .1em;
+        cursor: pointer;
+    }
+
+    &__hide {
+        display: none;
+    }
+
+    #dashboard-control {
+        &:checked {
+            ~.dashboard__list {
+                display: flex;
+            }
+
+            ~.dashboard__hide {
+                display: block;
+            }
+
+            ~.dashboard__show {
+                display: none;
+            }
+        }
+    }
+}

@@ -1,0 +1,1 @@
+<a class="profile__button" data-action-click="account/login/form"><?= $headerLoginLabel ?></a>

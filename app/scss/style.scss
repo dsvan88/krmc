@@ -1,8 +1,8 @@
-@import "normalize";
-@import "mixins_adapt";
-@import "font-awesome";
-@import "vars";
-@import "components";
+@import "tech/normalize";
+@import "tech/mixins_adapt";
+@import "tech/font-awesome";
+@import "tech/vars";
+@import "tech/components";
 
 // @import url("https://fonts.googleapis.com/css2?family=Underdog&display=swap");
 
@@ -14,6 +14,11 @@ body {
 	min-height: 100vh;
 	margin: 0;
 	background-color: $body-bg-color;
+	background-image: url(/public/images/background.jfif), linear-gradient(90deg, $bg-color-red 0, $bg-color-light 40%, $bg-color-dark 100%);
+	background-repeat: no-repeat;
+	background-size: cover;
+	background-attachment: fixed, fixed;
+	background-blend-mode: multiply;
 	padding: 0;
 	display: grid;
 	place-items: center;
@@ -35,476 +40,85 @@ body {
 	display: grid;
 	grid-template-rows: auto 1fr auto;
 	grid-template-columns: auto;
-	background: linear-gradient(90deg, $bg-color-dark-blur 0%, $bg-color-dark 100%);
+	// background: linear-gradient(90deg, $bg-color-dark-blur 0%, $bg-color-dark 100%);
 
 	@include md {
 		display: flex;
 		flex-direction: column;
 		height: 100%;
 	}
-
-	.header {
-		position: sticky;
-		top: 0px;
-		box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.5);
-		z-index: 1;
-
-		&__content {
-			background: $main-header-bg-dark;
-			color: $color-text-light;
-			height: 10vh;
-			min-height: 1.5rem;
-			max-height: 3.5rem;
-			align-items: center;
-			font-size: 1.3em;
-			padding: .4rem 3vw .4rem 0;
-			display: flex;
-			justify-content: space-between;
-		}
-
-		.dashboard {
-			padding: 0 3vw 0 0;
-			font-size: 1.45em;
-			position: relative;
-			background-color: $bg-color-light;
-
-			&__list {
-				display: none;
-				gap: .3em;
-			}
-
-			&__item {
-				list-style: none;
-				padding: .1em 0;
-
-				a {
-					padding: 0.1em;
-					text-decoration: none;
-					border: 1px solid $color-text-light-blur;
-					border-radius: 2px;
-					color: $color-text-dark-blur;
-					transition: color $animation-normal, border-color $animation-normal, background-color $animation-normal;
-
-					&:hover {
-						color: $color-text-dark;
-						border-color: $color-text-dark;
-						background-color: $body-bg-color;
-					}
-				}
-			}
-
-			&__hide,
-			&__show {
-				font-size: 0.8em;
-				position: absolute;
-				right: 0;
-				background-color: $bg-color-light-odd;
-				border: 1px solid $color-text-light-blur;
-				border-top: none;
-				border-radius: 0 0 5px 5px;
-				padding: .05em .1em;
-				cursor: pointer;
-			}
-
-			&__hide {
-				display: none;
-			}
-
-			#dashboard-control {
-				&:checked {
-					~.dashboard__list {
-						display: flex;
-					}
-
-					~.dashboard__hide {
-						display: block;
-					}
-
-					~.dashboard__show {
-						display: none;
-					}
-				}
-			}
-		}
-
-		&__logo {
-			order: 2;
-			height: 80%;
-			border: 1px solid #f6f4f3;
-			border-radius: 7px;
-			padding: 0 0.3rem;
-			overflow: hidden;
-			-o-object-fit: cover;
-			object-fit: cover;
-
-			img {
-				height: 100%;
-			}
-		}
-
-		&__options {
-			display: flex;
-			flex-direction: column;
-			align-items: center;
-		}
-
-		&__langs {
-			display: flex;
-			margin: .2em 0 .2em 1em;
-		}
-
-		&__lang {
-			font-size: 1.5em;
-			margin-right: .4em;
-			line-height: .85em;
-			cursor: pointer;
-			text-decoration: none;
-
-			&.selected {
-				border-radius: 2px;
-				box-shadow: 0 0 .3em .3em $color-text-light-blur inset, 0 0 .1em .1em $color-text-light-blur;
-			}
-		}
-
-		&__profile {
-			order: 3;
-			// margin-left: auto;
-			display: flex;
-			position: relative;
-			align-items: center;
-			z-index: 5;
-
-			&-button {
-				// background-color: #9fc0ff33;
-				background-color: $bg-profile-button;
-				border: 1px solid $color-text-main;
-				border-radius: 5px;
-				padding: 5px 10px;
-				max-height: 40px;
-				cursor: pointer;
-				transition: all $animation-fast ease-in;
-
-				&:hover {
-					background-color: $color-text-main;
-					color: $color-text-accent;
-				}
-
-				img {
-					max-height: 40px;
-					border-radius: 3px;
-				}
-			}
-
-			&-caret {
-				margin-left: 10px;
-				font-size: 1.1em !important;
-				cursor: pointer;
-
-				a,
-				i {
-					color: $color-text-light-blur;
-					transition: color $animation-fast;
-
-					&:hover {
-						color: $color-text-light;
-					}
-				}
-			}
-
-			&-checkbox {
-				display: none;
-
-				&:checked {
-					&~.header__profile-menu {
-						display: block;
-					}
-				}
-			}
-
-			&-menu {
-				order: 1;
-				display: none;
-				position: absolute;
-				top: 30px;
-				right: 0;
-				background-color: $bg-color-red-blur;
-				list-style: none;
-				border-radius: 5px;
-
-				&-item {
-					margin: 5px;
-					padding: 3px 10px;
-					display: flex;
-					flex-direction: column;
-					justify-content: center;
-					align-items: center;
-					font-size: 1rem;
-					color: $color-text-menu;
-					white-space: nowrap;
-					cursor: pointer;
-
-					a {
-						color: $color-text-menu;
-						display: block;
-						width: 100%;
-						text-align: center;
-						text-decoration: none;
-					}
-
-					&:last-of-type {
-						margin-top: 15px;
-					}
-
-					&:hover {
-						& .header__profile-menu-bar {
-							width: 100%;
-							border-radius: 0 0 25px 25px;
-							opacity: 1;
-						}
-					}
-				}
-
-				&-bar {
-					width: 0px;
-					height: 2px;
-					opacity: 0;
-					background-color: $color-text-menu;
-					transition: all $animation-fast ease-in;
-				}
-			}
-		}
-
-		&__navigation {
-			list-style: none;
-			display: flex;
-			justify-content: space-between;
-			color: $color-text-menu;
-			gap: .8em;
-
-			&-item {
-				cursor: pointer;
-				color: $color-text-menu;
-				font-family: 'Crimson Pro', serif;
-				white-space: nowrap;
-
-				a {
-					color: $color-text-menu;
-					text-decoration: none;
-				}
-
-				&:hover {
-					.bar {
-						width: 100%;
-						opacity: 1;
-					}
-				}
-
-				.bar {
-					height: 5px;
-					width: 0px;
-					border-radius: 0 0 10px 0px;
-					opacity: 0;
-					background: linear-gradient($color-text-menu, transparent);
-					transition: all $animation-fast ease-in;
-				}
-			}
-		}
-
-		.navigation-for-small-display {
-			cursor: pointer;
-			font-size: 2em;
-
-			&-chechbox {
-				display: none;
-			}
-
-			&.menu-hide {
-				position: absolute;
-				top: 1em;
-				left: 1em;
-			}
-
-			&.menu-show {
-				margin: 0 1em;
-			}
-
-		}
-
-		@include sm {
-			&__navigation {
-				flex-direction: column;
-				justify-content: center;
-				height: 100vh;
-				position: fixed;
-				top: 0;
-				left: -100%;
-				background-color: $bg-color-dark;
-				z-index: 1;
-				transition: left $animation-fast ease-in-out;
-
-				&-item {
-					margin: 5px 20px;
-					font-size: 1.5em;
-				}
-			}
-
-			#header__navigation-checkbox:checked {
-				~#header__navigation {
-					left: 0px;
-				}
-			}
-		}
-	}
-
-	.main {
-		flex: 1 0 auto;
-		// margin: 1.2em .7em;
-		margin: 0 .7em;
-
-		.section {
-			text-align: justify;
-			color: $color-text-dark;
-
-			header {
-				background-color: $bg-color-light-odd;
-				border-radius: 15px 15px 0 0;
-				padding: .5em 1em;
-			}
-
-			&.game {
-				padding: 0;
-			}
-
-			.title {
-				font-size: 2em;
-				letter-spacing: .02em;
-				line-height: 1.3em;
-				font-weight: bolder;
-				border-bottom: 1px dotted;
-				margin-bottom: .3em;
-			}
-
-			.subtitle {
-				font-size: .6em;
-				line-height: 1.3em;
-				margin-bottom: .5em;
-			}
-
-			.content {
-				font-size: .8em;
-				padding: 2em 1em;
-				background-color: $bg-color-light;
-				border-radius: 0 0 15px 15px;
-				text-indent: 1em;
-			}
-
-			&:nth-child(even) {
-				background-color: $bg-color-light;
-			}
-
-			&.about-game {
-				padding: 30px 8vw 40px 5vw;
-			}
-		}
-	}
 }
 
-.footer {
-	background: $main-footer-bg-dark;
-	margin-top: 5em;
-	padding: .4rem 3vw !important;
-	flex: 0 0 auto;
+.header {
+	position: sticky;
+	top: 0px;
 	box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.5);
-	font-size: 0.7em;
-	color: $color-text-light-blur;
-
-	&__copyrights {
-		margin: 5px 0px 5px 0px;
-		font-size: 0.7em;
-	}
-
-	.setting-text-dashboard {
-		width: 80vw;
-	}
+	z-index: 1;
 
 	&__content {
-		box-sizing: border-box;
+		background: $main-header-bg-dark;
+		color: $color-text-light;
+		height: 10vh;
+		min-height: 1.5rem;
+		max-height: 3.5rem;
+		align-items: center;
+		font-size: 1.3em;
+		padding: .4rem 3vw .4rem 0;
 		display: flex;
 		justify-content: space-between;
-		gap: 1em
-	}
-
-	&__block {
-		box-sizing: border-box;
-
-		&.contacts {
-			display: flex;
-			flex-direction: column;
-		}
-	}
-
-	&__gmap {
-		display: none;
-
-		iframe {
-			width: 100%;
-		}
-	}
-
-	&__adress {
-		display: flex;
-		flex-direction: column;
-		font-size: 1.1em;
-		line-height: 1.3em;
-
-		&-link {
-			font-size: 1.3em;
-			line-height: 2em;
-		}
-	}
-
-	&__contacts {
-		display: flex;
-		flex-direction: column;
-		font-size: 1.1em;
-		line-height: 1.2em;
-		letter-spacing: 0.05em;
-		flex-grow: 1;
-
-		&-link {
-			font-size: 1.3rem;
-			line-height: 1.7em;
-		}
-	}
-
-	&__socials {
-		font-size: 2em;
-		line-height: 1.3em;
-
-		* {
-			margin-right: 1em;
-		}
 	}
 
 	&__logo {
-		// filter: drop-shadow(10px -5px 5px #d90000);
-		height: 4em;
+		order: 2;
+		height: 80%;
 		border: 1px solid #f6f4f3;
 		border-radius: 7px;
-		padding: 0.1rem 0.3rem;
-		text-align: center;
+		padding: 0 0.3rem;
+		overflow: hidden;
+		-o-object-fit: cover;
+		object-fit: cover;
 
 		img {
 			height: 100%;
 		}
 	}
 
-	a {
-		text-decoration: none;
-		color: $color-text-menu;
-		white-space: nowrap;
+	&__options {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
 	}
+
+	&__langs {
+		display: flex;
+		margin: .2em 0 .2em 1em;
+	}
+
+	&__lang {
+		font-size: 1.5em;
+		margin-right: .4em;
+		line-height: .85em;
+		cursor: pointer;
+		text-decoration: none;
+
+		&.selected {
+			border-radius: 2px;
+			box-shadow: 0 0 .3em .3em $color-text-light-blur inset, 0 0 .1em .1em $color-text-light-blur;
+		}
+	}
+
+	@import 'header/navigation';
+	@import 'header/profile';
+	@import 'header/dashboard';
 }
+
+.main {
+	flex: 1 0 auto;
+	margin: 0 .7em;
+	@import 'main/section';
+}
+
+@import 'main/footer';
 
 @include md {
 
@@ -547,7 +161,7 @@ body {
 			margin-right: .8em !important;
 		}
 
-		&__profile {
+		.profile {
 			order: 3;
 			margin-left: auto;
 		}

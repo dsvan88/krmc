@@ -58,32 +58,33 @@
                         <a href='?lang=ru' class="header__lang<?= $lang === 'ru' ? ' selected' : '' ?>">🇷🇺</a>
                     </div>
                     <div class="header__menu">
-                        <label for="header__navigation-checkbox" class="navigation-for-small-display menu-show"><i class="fa fa-bars"></i></label>
-                        <input type="checkbox" name="toggle-navigation" id="header__navigation-checkbox" class="navigation-for-small-display-chechbox">
-                        <nav class="header__navigation" id="header__navigation">
-                            <label for="header__navigation-checkbox" class="navigation-for-small-display menu-hide"><i class="fa fa-times"></i></label>
+                        <!-- <label for="header__navigation-checkbox" class="navigation-for-small-display menu-show"><i class="fa fa-bars"></i></label> -->
+                        <label for="navigation__checkbox" class="navigation-for-small-display menu-show fa fa-bars"></label>
+                        <input type="checkbox" name="toggle-navigation" id="navigation-checkbox" class="navigation-for-small-display-chechbox">
+                        <nav class="navigation" id="navigation">
+                            <label for="navigation-checkbox" class="navigation-for-small-display menu-hide"><i class="fa fa-times"></i></label>
                             <? foreach ($headerMenu as $headerMenuItem) : ?>
-                                <? self::component('header-menu-item', ['menuItem' => $headerMenuItem]) ?>
+                                <? self::component('header/menu-item', ['menuItem' => $headerMenuItem]) ?>
                             <? endforeach ?>
                         </nav>
                     </div>
                 </div>
-                <div class="header__profile">
+                <div class="profile">
                     <? if (empty($_SESSION['id'])) : ?>
-                        <? self::component('profile/login', ['headerLoginLabel' => $headerLoginLabel]) ?>
+                        <? self::component('header/profile/login', ['headerLoginLabel' => $headerLoginLabel]) ?>
                     <? else : ?>
-                        <? self::component('profile/profile', ['profileImage' => $profileImage, 'profile' => $profileMenu[0]]) ?>
+                        <? self::component('header/profile/profile', ['profileImage' => $profileImage, 'profile' => $profileMenu[0]]) ?>
                         <? if (count($profileMenu) > 2) : ?>
-                            <? self::component('profile/menu', ['profileMenu' => $profileMenu]) ?>
+                            <? self::component('header/profile/menu', ['profileMenu' => $profileMenu]) ?>
                         <? else : ?>
-                            <? self::component('profile/logout', ['headerLogoutLabel' => $headerLogoutLabel]) ?>
+                            <? self::component('header/profile/logout', ['headerLogoutLabel' => $headerLogoutLabel]) ?>
                         <? endif ?>
                     <? endif; ?>
                 </div>
             </div>
             <? if (!empty($headerDashboard)) : ?>
                 <div class="header__dashboard">
-                    <? self::component('header-dashboard', ['dashboard' => $headerDashboard]) ?>
+                    <? self::component('header/dashboard', ['dashboard' => $headerDashboard]) ?>
                 </div>
             <? endif ?>
         </header>

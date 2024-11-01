@@ -1,27 +1,38 @@
-.section-users-list{
+.section-users-list {
     padding: 1.5em 2em !important;
+    background-color: $bg-color-light;
 }
-.users-list{
+
+.users-list {
     border-collapse: collapse;
+
+    thead {
+        background-color: $bg-color-light-odd;
+    }
+
     tr {
         transition: color $animation-normal ease-in, transform $animation-fast;
         border-bottom: 1px dashed $color-text-dark-blur;
         line-height: 1.5em;
+
         &:hover {
             transform: translateY(-1px);
             color: $color-text-menu;
         }
     }
-    &__dashboard{
+
+    &__dashboard {
         padding-top: .15em;
         display: flex;
         justify-content: space-evenly;
         font-size: 1.5em;
-        span{
+
+        span {
             cursor: pointer;
             transition: color $animation-fast ease-in;
-            &:hover{
-                color:$color-text-accent;
+
+            &:hover {
+                color: $color-text-accent;
             }
         }
     }

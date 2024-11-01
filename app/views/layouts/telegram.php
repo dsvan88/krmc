@@ -46,17 +46,17 @@
             <div class="header__content">
                 <? if (!empty($_SESSION['id'])) : ?>
                     <div class="header__line">
-                        <div class="header__profile">
+                        <div class="profile">
                             <a href="/account/profile/<?= $_SESSION['id'] ?>/" alt="<?= $_SESSION['name'] ?>" title="<?= $_SESSION['name'] ?>"><?= $_SESSION['name'] ?></a>
                         </div>
                     </div>
                     <menu class="header__menu">
                         <? self::icon('gradient') ?>
-                        <? foreach ($headerMenu as $item) :?>
+                        <? foreach ($headerMenu as $item) : ?>
                             <li class="header__menu-item">
-                                <a href="/<?=$item['path']?>/" <?=empty($item['active']) ? '' : 'class="active"'?>>
+                                <a href="/<?= $item['path'] ?>/" <?= empty($item['active']) ? '' : 'class="active"' ?>>
                                     <? self::icon($item['icon']) ?>
-                                    <span><?=$item['label']?></span>
+                                    <span><?= $item['label'] ?></span>
                                 </a>
                             </li>
                         <? endforeach ?>
@@ -65,12 +65,12 @@
             </div>
             <? if (!empty($headerDashboard)) : ?>
                 <div class="header__dashboard">
-                    <? self::component('header-dashboard', ['dashboard' => $headerDashboard]) ?>
+                    <? self::component('header/dashboard', ['dashboard' => $headerDashboard]) ?>
                 </div>
             <? endif ?>
         </header>
         <div class="header-for-auto-scroll" id="start-page"></div>
-        <main class="main <?= $mainClass ?>">        
+        <main class="main <?= $mainClass ?>">
             <?= $content ?>
         </main>
         <footer class="footer">

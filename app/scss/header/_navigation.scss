@@ -1,0 +1,83 @@
+@import "../tech/vars";
+@import "../tech/mixins_adapt";
+
+.navigation {
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    color: $color-text-menu;
+    gap: .8em;
+
+    &__item {
+        cursor: pointer;
+        color: $color-text-menu;
+        font-family: 'Crimson Pro', serif;
+        white-space: nowrap;
+
+        a {
+            color: $color-text-menu;
+            text-decoration: none;
+        }
+
+        &:hover {
+            .bar {
+                width: 100%;
+                opacity: 1;
+            }
+        }
+
+        .bar {
+            height: 5px;
+            width: 0px;
+            border-radius: 0 0 10px 0px;
+            opacity: 0;
+            background: linear-gradient($color-text-menu, transparent);
+            transition: all $animation-fast ease-in;
+        }
+    }
+}
+
+.navigation-for-small-display {
+    cursor: pointer;
+    font-size: 2em;
+
+    &-chechbox {
+        display: none;
+    }
+
+    &.menu-hide {
+        position: absolute;
+        top: 1em;
+        left: 1em;
+    }
+
+    &.menu-show {
+        margin: 0 1em;
+    }
+
+}
+
+@include sm {
+    .navigation {
+        flex-direction: column;
+        justify-content: center;
+        height: 100vh;
+        position: fixed;
+        top: 0;
+        left: -100%;
+        background-color: $bg-color-dark;
+        z-index: 1;
+        transition: left $animation-fast ease-in-out;
+
+        &__item {
+            margin: 5px 20px;
+            font-size: 1.5em;
+        }
+    }
+
+    #navigation-checkbox:checked {
+        ~#navigation {
+            left: 0px;
+        }
+    }
+}

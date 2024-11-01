@@ -1,0 +1,49 @@
+@import "../tech/vars";
+@import "../tech/mixins_adapt";
+
+.section {
+    text-align: justify;
+    color: $color-text-dark;
+    opacity: .95;
+
+    header {
+        background-color: $bg-color-light-odd;
+        border-radius: 15px 15px 0 0;
+        padding: .5em 2em;
+    }
+
+    .title {
+        font-size: 2em;
+        letter-spacing: .02em;
+        line-height: 1.3em;
+        font-weight: bolder;
+        border-bottom: 1px dotted;
+        margin-bottom: .3em;
+    }
+
+    .subtitle {
+        font-size: .6em;
+        line-height: 1.3em;
+        margin-bottom: .5em;
+    }
+
+    .content {
+        font-size: .8em;
+        padding: 2em 2vw 1em 4vw;
+        background-color: $bg-color-light;
+        border-radius: 0 0 15px 15px;
+        text-indent: 1em;
+    }
+
+    &:nth-child(even) {
+        background-color: $bg-color-light;
+    }
+
+    &.about-game {
+        padding: 30px 8vw 40px 5vw;
+    }
+
+    &.game {
+        padding: 0;
+    }
+}
