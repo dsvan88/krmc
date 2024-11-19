@@ -21,6 +21,12 @@ return  [
         'action' => 'backup',
         'access' => ['category' => 'admin']
     ],
+    'tech/backup/save' =>
+    [
+        'controller' => 'tech',
+        'action' => 'backupSave',
+        'access' => ['category' => 'all']
+    ],
     'tech/restore' =>
     [
         'controller' => 'tech',

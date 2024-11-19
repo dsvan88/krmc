@@ -104,14 +104,18 @@ class TechRepository
 
     public static function scheduleBackup(): void
     {
-        error_reporting(0);
-        $settings = Settings::getGroup('backup');
 
-        if (empty($settings['email']['value']) || $settings['last']['value'] > $_SERVER['REQUEST_TIME'] - BACKUP_FREQ) exit();
+        $url = "{$_SERVER['HTTP_X_FORWARDED_PROTO']}://{$_SERVER['SERVER_NAME']}/tech/backup/save";
+        $options = [
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_TIMEOUT_MS => 100,      // максимальное время выполнения запроса
+            CURLOPT_FAILONERROR => true,
+            CURLOPT_URL => $url,
+        ];
+        $curl = curl_init();
 
-        if (self::sendBackup($settings['email']['value'])) {
-            Settings::edit($settings['last']['id'], ['value' => $_SERVER['REQUEST_TIME']]);
-        }
+        curl_setopt_array($curl, $options);
+        curl_exec($curl);
     }
 
     public static function sendBackup(string $email)

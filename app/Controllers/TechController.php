@@ -6,6 +6,7 @@ use app\core\Controller;
 use app\core\View;
 use app\libs\Db;
 use app\models\Pages;
+use app\models\Settings;
 use app\models\Users;
 use app\Repositories\TechRepository;
 
@@ -30,7 +31,7 @@ class TechController extends Controller
             ],
         ];
         View::$route['vars'] = array_merge(View::$route['vars'], $vars);
-    
+
         View::render();
     }
     public static function backupAction()
@@ -60,8 +61,24 @@ class TechController extends Controller
             ],
         ];
         View::$route['vars'] = array_merge(View::$route['vars'], $vars);
-    
+
         View::render();
+    }
+    public static function backupSaveAction()
+    {
+        error_reporting(0);
+        ignore_user_abort(true);
+        set_time_limit(90);
+
+        $settings = Settings::getGroup('backup');
+
+        if (empty($settings['email']['value']) || $settings['last']['value'] > $_SERVER['REQUEST_TIME'] - BACKUP_FREQ) exit();
+
+        if (TechRepository::sendBackup($settings['email']['value'])) {
+            Settings::edit($settings['last']['id'], ['value' => $_SERVER['REQUEST_TIME']]);
+        }
+
+        exit();
     }
     public static function restoreAction()
     {
@@ -82,7 +99,7 @@ class TechController extends Controller
             ],
         ];
         View::$route['vars'] = array_merge(View::$route['vars'], $vars);
-    
+
         View::render();
     }
     public static function dbrebuildAction()
@@ -90,8 +107,8 @@ class TechController extends Controller
         View::redirect('/');
         $table = Pages::$table;
         Users::query("ALTER TABLE $table ADD COLUMN lang CHARACTER VARYING(5) DEFAULT NULL");
-        
-/*         View::redirect('/');
+
+        /*         View::redirect('/');
         $table = Games::$table;
         $games = Games::getAll();
         Games::query("ALTER TABLE $table ALTER COLUMN manager TYPE CHARACTER VARYING(300)");
