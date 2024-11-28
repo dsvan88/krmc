@@ -3,6 +3,7 @@
 namespace app\core;
 
 use app\models\Settings;
+use app\Repositories\TechRepository;
 use Throwable;
 
 class Router
@@ -77,6 +78,7 @@ class Router
                     try {
                         $controller = new $path(self::$params);
                         $controller->$action();
+                        TechRepository::scheduleBackup();
                     } catch (Throwable $error) {
                         if (APP_LOC === 'local') {
                             error_log($error->__toString());

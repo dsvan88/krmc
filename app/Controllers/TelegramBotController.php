@@ -31,7 +31,7 @@ class TelegramBotController extends Controller
     public static function before()
     {
         $contentType = isset($_SERVER['CONTENT_TYPE']) ? strtolower(trim($_SERVER['CONTENT_TYPE'])) : '';
-        if (strpos($contentType, 'application/json') ===  false) View::exit();
+        if (strpos($contentType, 'application/json') ===  false) exit();
 
         $ip = substr($_SERVER['REMOTE_ADDR'], 0, 4) === substr($_SERVER['SERVER_ADDR'], 0, 4) ? $_SERVER['HTTP_X_REAL_IP'] : $_SERVER['REMOTE_ADDR'];
         if (!Validator::validate('telegramIp', $ip)) {
@@ -43,9 +43,9 @@ class TelegramBotController extends Controller
             ]);
             if (empty(self::$techTelegramId))
                 error_log($message);
-            else 
+            else
                 Sender::message(self::$techTelegramId, $message);
-            View::exit();
+            exit();
         }
 
         $data = trim(file_get_contents('php://input'));
@@ -80,30 +80,30 @@ class TelegramBotController extends Controller
 
         if (empty($userId) && $command && !in_array(self::$command, self::$guestCommands)) {
             Sender::message(self::$chatId, Locale::phrase('{{ Tg_Unknown_Requester }}'), self::$message['message']['message_id']);
-            View::exit();
+            return false;
         }
         self::$requester = Users::find($userId);
 
         if (self::$command === 'booking' && Users::isBanned('booking', self::$requester['ban'])) {
             Sender::delete(self::$chatId, $message['message']['message_id']);
             Sender::message($userTelegramId, Locale::phrase(['string' => "I’m deeply sorry, but you banned for that action:(...\nYour ban will be lifted at: <b>%s</b>", 'vars' => [date('d.m.Y', self::$requester['ban']['expired'] + TIME_MARGE)]]));
-            View::exit();
+            return false;
         }
 
         if (self::$chatId == self::$mainGroupTelegramId && Users::isBanned('chat', self::$requester['ban'])) {
             Sender::delete(self::$chatId, $message['message']['message_id']);
             Sender::message($userTelegramId, Locale::phrase(['string' => "I’m deeply sorry, but you banned for that action:(...\nYour ban will be lifted at: <b>%s</b>", 'vars' => [date('d.m.Y', self::$requester['ban']['expired'] + TIME_MARGE)]]));
-            View::exit();
+            return false;
         }
 
-        if (!$command) View::exit();
+        if (!$command) return false;
     }
     public static function webhookAction()
     {
         // exit(json_encode(['message' => self::$message], JSON_UNESCAPED_UNICODE));
         try {
             if (!self::execute()) {
-                if (empty(self::$resultMessage)) View::exit();
+                if (empty(self::$resultMessage)) return false;
                 $botResult = Sender::message(self::$techTelegramId, json_encode([self::$message, /* self::$requester ,*/ self::parseArguments(self::$commandArguments)], JSON_UNESCAPED_UNICODE));
             }
 
@@ -229,7 +229,7 @@ class TelegramBotController extends Controller
                 $dayName = mb_strtolower(mb_substr($withoutMethod, 0, 3, 'UTF-8'), 'UTF-8');
 
                 $requestData['dayNum'] = self::parseDayNum($dayName, $requestData['currentDay']);
-            // } elseif (strpos($value, ':') !== false && strlen($value) === 5 && empty($requestData['arrive'])) {
+                // } elseif (strpos($value, ':') !== false && strlen($value) === 5 && empty($requestData['arrive'])) {
             } elseif (preg_match('/^\d{2}:\d{2}$/', $value) === 1 && empty($requestData['arrive'])) {
                 $requestData['arrive'] = $value;
             } elseif (preg_match('/^(\+|-)\d{1,2}/', $value, $match) === 1) {

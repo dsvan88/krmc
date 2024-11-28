@@ -64,7 +64,7 @@ class View
 
         require $_SERVER['DOCUMENT_ROOT'] . self::$viewsFolder . '/layouts/' . self::$layout . '.php';
 
-        self::exit();
+        return true;
     }
     public static function modal()
     {
@@ -88,10 +88,10 @@ class View
             require $path;
             $response['html'] = ob_get_clean();
 
-            self::exit(json_encode($response));
-        } else {
-            self::errorCode('404', ['message' => 'View ' . self::$path . ' isn’t found!']);
+            echo json_encode($response);
+            return true;
         }
+        self::errorCode('404', ['message' => 'View ' . self::$path . ' isn’t found!']);
     }
     /**
      * Use for hard redirect from server
@@ -105,7 +105,6 @@ class View
         if ($url[strlen($url) - 1] !== '/')
             $url .= '/';
         header('Location: ' . $url);
-        self::exit();
     }
     /**
      * Use for soft redirect for js handler
@@ -121,7 +120,8 @@ class View
         $message = ['location' => $url];
         if ($error > 0)
             $message['error'] = $error;
-        self::exit(json_encode($message));
+
+        echo json_encode($message);
     }
     public static function errorCode($code, $data = [])
     {
@@ -130,7 +130,6 @@ class View
         http_response_code($code);
         if (file_exists($path))
             require $path;
-        self::exit();
     }
     public static function html()
     {
@@ -156,7 +155,7 @@ class View
         if (!empty($data['error']) && $data['error'] > 1) {
             http_response_code($data['error']);
         }
-        self::exit(json_encode($data));
+        echo json_encode($data);
     }
     public static function notice($data = '')
     {
@@ -172,14 +171,14 @@ class View
         if (!empty($data['error'])) {
             $data['type'] = 'error';
         }
-        self::exit(json_encode(['notice' => $data]));
+        echo json_encode(['notice' => $data]);
     }
     public static function response($data)
     {
         if (is_array($data)) {
             $data = json_encode($data, JSON_UNESCAPED_UNICODE);
         }
-        self::exit($data);
+        return $data;
     }
     public static function file($file, $name = 'backup.txt')
     {
@@ -197,19 +196,11 @@ class View
         readfile($file);
         exit();
     }
-    public static function exit(string $string = null): void
-    {
-        if (!empty($string)) {
-            echo $string;
-        }
-        TechRepository::scheduleBackup();
-        exit();
-    }
     public static function component(string $filename, array $vars = [])
     {
         extract($vars);
 
-        $texts = empty(self::$route['vars']['texts']) ? [] : self::$route['vars']['texts'] ;
+        $texts = empty(self::$route['vars']['texts']) ? [] : self::$route['vars']['texts'];
 
         return require $_SERVER['DOCUMENT_ROOT'] . self::$viewsFolder . "/components/$filename.php";
     }
