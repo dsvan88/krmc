@@ -52,11 +52,9 @@
                     </div>
                     <menu class="header__menu">
                         <? self::icon('gradient') ?>
-                        <? $_SESSION['debug'][] = json_encode($headerMenu) ?>
                         <? foreach ($headerMenu as $index => $item) : ?>
                             <li class="header__menu-item">
                                 <a href="/<?= $item['path'] ?>/" <?= empty($item['active']) ? '' : 'class="active"' ?>>
-                                    <? $_SESSION['debug'][] = $index . '. ' . $item['path'] . ' -> ' . $item['icon'] ?>
                                     <? self::icon($item['icon']) ?>
                                     <span><?= $item['label'] ?></span>
                                 </a>

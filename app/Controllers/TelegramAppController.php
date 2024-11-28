@@ -16,6 +16,7 @@ class TelegramAppController extends Controller
     }
     public static function authAction()
     {
+        View::$layout = 'empty';
         $vars = [
             'title' => 'Telegram App',
             'scripts' => [
