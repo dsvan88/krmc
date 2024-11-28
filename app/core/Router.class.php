@@ -85,7 +85,14 @@ class Router
                         $techTgId = Settings::getTechTelegramId();
                         if (empty($techTgId)) return false;
 
-                        Sender::message(Settings::getTechTelegramId(), json_encode($error->__toString()));
+                        // $message = json_encode($error->__toString());
+                        $message = $error->__toString();
+
+                        if (!empty($_SESSION['debug'])) {
+                            $message .= PHP_EOL . implode(PHP_EOL, $_SESSION['debug']);
+                            unset($_SESSION['debug']);
+                        }
+                        Sender::message(Settings::getTechTelegramId(), $message);
                     }
                 } else {
                     View::errorCode(404, ['message' => "Action $action isn’t found in Controller $path!"]);

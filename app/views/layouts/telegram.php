@@ -51,11 +51,11 @@
                         </div>
                     </div>
                     <menu class="header__menu">
-                        <!-- <? var_dump($headerMenu) ?> -->
                         <? self::icon('gradient') ?>
                         <? foreach ($headerMenu as $item) : ?>
                             <li class="header__menu-item">
                                 <a href="/<?= $item['path'] ?>/" <?= empty($item['active']) ? '' : 'class="active"' ?>>
+                                    <? $_SESSION['debug'][] = $item['path'] . ' -> ' . $item['icon'] ?>
                                     <? self::icon($item['icon']) ?>
                                     <span><?= $item['label'] ?></span>
                                 </a>
