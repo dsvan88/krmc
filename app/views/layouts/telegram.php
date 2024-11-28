@@ -51,6 +51,7 @@
                         </div>
                     </div>
                     <menu class="header__menu">
+                        <!-- <? var_dump($headerMenu) ?> -->
                         <? self::icon('gradient') ?>
                         <? foreach ($headerMenu as $item) : ?>
                             <li class="header__menu-item">

@@ -66,13 +66,18 @@ class TechController extends Controller
     }
     public static function backupSaveAction()
     {
-        error_reporting(0);
         ignore_user_abort(true);
+        error_reporting(0);
         set_time_limit(90);
 
         $settings = Settings::getGroup('backup');
 
         if (empty($settings['email']['value']) || $settings['last']['value'] > $_SERVER['REQUEST_TIME'] - BACKUP_FREQ) exit();
+
+        header("Connection: close", true);
+        header("Content-Encoding: none" . PHP_EOL);
+        header("Content-Length: 0", true);
+        flush();
 
         if (TechRepository::sendBackup($settings['email']['value'])) {
             Settings::edit($settings['last']['id'], ['value' => $_SERVER['REQUEST_TIME']]);
