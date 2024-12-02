@@ -16,7 +16,7 @@ class PagesController extends Controller
     public function homeAction()
     {
         self::$route['vars'] = ['slug' => 'home'];
-        $this->showAction();
+        return $this->showAction();
     }
     public function showAction()
     {

@@ -48,7 +48,7 @@ class AccountController extends Controller
     public function loginFormAction()
     {
         if (!empty($_POST)) {
-            $this->login($_POST);
+            return $this->login($_POST);
         }
         $vars = [
             'title' => 'Authorization form',
@@ -458,7 +458,7 @@ class AccountController extends Controller
         }
 
         if (!empty($_POST)) {
-            $this->passwordChange($userData, $_POST);
+            return $this->passwordChange($userData, $_POST);
         }
 
         $vars = [
@@ -602,7 +602,7 @@ class AccountController extends Controller
             if (!Validator::csrfCheck()) {
                 return View::notice(['error' => 403, 'message' => 'Try again later:)']);
             }
-            $this->register($_POST);
+            return $this->register($_POST);
         }
         $vars = [
             'title' => 'Registration form',
@@ -661,7 +661,7 @@ class AccountController extends Controller
             return View::message(['error' => 403, 'message' => 'Something went wrong! How did you get here?']);
         }
         if (!empty($_POST)) {
-            $this->doubles($_POST);
+            return $this->doubles($_POST);
         }
         extract(self::$route['vars']);
 
