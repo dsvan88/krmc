@@ -30,7 +30,7 @@ class SettingsController extends Controller
         ];
         View::$route['vars'] = array_merge(View::$route['vars'], $vars);
     
-        View::render();
+        return View::render();
     }
     public function addAction()
     {
@@ -38,7 +38,7 @@ class SettingsController extends Controller
             $array = $_POST;
             $array['slug'] = Locale::translitization($array['name']);
             Settings::save($array);
-            View::message(['error' => 0, 'message' => 'Changes saved successfully!', 'location' => '/settings/list']);
+            return View::message(['error' => 0, 'message' => 'Changes saved successfully!', 'location' => '/settings/list']);
         }
         $vars = [
             'title' => '{{ Settings_Add_Title }}',
@@ -49,7 +49,7 @@ class SettingsController extends Controller
         ];
         View::$route['vars'] = array_merge(View::$route['vars'], $vars);
     
-        View::render();
+        return View::render();
     }
     public function editAction(){
 
@@ -59,7 +59,7 @@ class SettingsController extends Controller
 
         Settings::edit($settingId, ['value' => trim($_POST['value'])]);
 
-        View::message(['message'=>'Success!', 'location' => '/settings/section/index/'.$setting['type']]);
+        return View::message(['message'=>'Success!', 'location' => '/settings/section/index/'.$setting['type']]);
     }
     public function editFormAction()
     {
@@ -74,7 +74,7 @@ class SettingsController extends Controller
             'setting' => $setting,
         ];
         View::$route['vars'] = array_merge(View::$route['vars'], $vars);
-        View::modal();
+        return View::modal();
     }
     public function deleteAction()
     {
@@ -82,6 +82,6 @@ class SettingsController extends Controller
         if (isset($settingId)) {
             Settings::remove($settingId);
         }
-        View::redirect('/settings/list');
+        return View::redirect('/settings/list');
     }
 }

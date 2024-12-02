@@ -37,7 +37,7 @@ class NewsController extends Controller
         ];
         $paginator = Paginator::news(['page' => $page, 'count' => $newsCount]);
         View::$route['vars'] = array_merge(View::$route['vars'], compact('title', 'texts', 'newsAll', 'newsCount', 'page', 'setDashBoard', 'paginator', 'defaultImage'));
-        View::render();
+        return View::render();
     }
     public function showAction()
     {
@@ -56,7 +56,7 @@ class NewsController extends Controller
         View::$route['vars']['og'] = PageRepository::formPageOG($page);
         View::$route['vars'] = array_merge(View::$route['vars'], $vars);
     
-        View::render();
+        return View::render();
     }
     public function editAction()
     {
@@ -72,7 +72,7 @@ class NewsController extends Controller
                 }
             }
             News::edit($array, $newsId);
-            View::message('Changes saved successfully!');
+            return View::message('Changes saved successfully!');
         }
 
         $newsData = News::find($newsId);
@@ -104,13 +104,13 @@ class NewsController extends Controller
         ];
         View::$route['vars'] = array_merge(View::$route['vars'], $vars);
     
-        View::render();
+        return View::render();
     }
     public function editPromoAction()
     {
         if (!empty($_POST)) {
             News::edit($_POST, 'promo');
-            View::message(['error' => 0, 'message' => 'Changes saved successfully!']);
+            return View::message(['error' => 0, 'message' => 'Changes saved successfully!']);
         }
         $newsData = News::getPromo();
         $vars = [
@@ -128,7 +128,7 @@ class NewsController extends Controller
 
         View::$route['vars'] = array_merge(View::$route['vars'], $vars);
     
-        View::render();
+        return View::render();
     }
     public function addAction()
     {
@@ -143,7 +143,7 @@ class NewsController extends Controller
                 }
             }
             News::create($array);
-            View::message(['error' => 0, 'message' => 'Changes saved successfully!']);
+            return View::message(['error' => 0, 'message' => 'Changes saved successfully!']);
         }
         $vars = [
             'title' => '{{ News_Add_Page_Title }}',
@@ -159,12 +159,12 @@ class NewsController extends Controller
 
         View::$route['vars'] = array_merge(View::$route['vars'], $vars);
     
-        View::render();
+        return View::render();
     }
     public function deleteAction()
     {
         extract(self::$route['vars']);
         News::remove($newsId);
-        View::redirect('/news');
+        return View::redirect('/news');
     }
 }

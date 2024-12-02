@@ -134,8 +134,6 @@ class View
     public static function html()
     {
         extract(self::$route['vars']);
-        // extract($vars);
-
         $path = $_SERVER['DOCUMENT_ROOT'] . self::$viewsFolder . "/$path.php";
         if (file_exists($path)) {
             ob_start();

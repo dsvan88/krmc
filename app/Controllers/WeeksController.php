@@ -26,10 +26,10 @@ class WeeksController extends Controller
         View::$route['vars'] = array_merge(View::$route['vars'], $vars);
         View::$route['vars']['og'] = WeekRepository::formWeekOG($vars);
 
-        View::render();
+        return View::render();
     }
     public function addAction()
     {
-        View::redirect('/weeks/' . Weeks::create());
+        return View::redirect('/weeks/' . Weeks::create());
     }
 }

@@ -23,9 +23,9 @@ class GamesController extends Controller
                 $gameId = Games::create($_POST);
             }
             catch(Throwable $th){
-                View::message('Fail!');
+                return View::message('Fail!');
             }
-            View::location('/game/mafia/' . $gameId);
+            return View::location('/game/mafia/' . $gameId);
         }
 
         $weekId = Weeks::currentId();
@@ -122,7 +122,7 @@ class GamesController extends Controller
 
         View::$route['vars'] = array_merge(View::$route['vars'], $vars);
     
-        View::render();
+        return View::render();
     }
     public function playAction()
     {
@@ -151,23 +151,23 @@ class GamesController extends Controller
         ];
         View::$route['vars'] = array_merge(View::$route['vars'], $vars);
     
-        View::render();
+        return View::render();
     }
     public function saveAction()
     {
         extract(self::$route['vars']);
         $game = Games::find($gameId);
         if (!$game) {
-            View::message("Game with id: $gameId is not found");
+            return View::message("Game with id: $gameId is not found");
         }
         Games::save($_POST, $gameId);
-        View::response(json_encode($game, JSON_UNESCAPED_UNICODE));
+        return View::response(json_encode($game, JSON_UNESCAPED_UNICODE));
     }
     public function loadAction()
     {
         extract(self::$route['vars']);
         $game = Games::load($gameId);
-        View::response(json_encode($game, JSON_UNESCAPED_UNICODE));
+        return View::response(json_encode($game, JSON_UNESCAPED_UNICODE));
     }
     public function historyAction(){
 
@@ -229,33 +229,33 @@ class GamesController extends Controller
             View::$route['vars']['nextWeek'] = Weeks::weekDataById($weeksIds[$selectedWeekIndex + 1]);
 
         View::$route['vars'] = array_merge(View::$route['vars'], $vars);
-        View::render();
+        return View::render();
     }
     public function historyItemAction(){
         extract(self::$route['vars']);
         $game = Games::find($gameId);
         if (!$game) {
-            View::errorCode(404, ['message' => "Game with id: $gameId is not found"]);
+            return View::errorCode(404, ['message' => "Game with id: $gameId is not found"]);
         }
 
         View::$route['vars']['game'] = $game['state'];
         View::$route['vars']['path'] = 'components/game-card';
-        View::html();
+        return View::html();
     }
     public function showAction(){
         extract(self::$route['vars']);
         $game = Games::find($gameId);
         if (!$game) {
-            View::errorCode(404, ['message' => "Game with id: $gameId is not found"]);
+            return View::errorCode(404, ['message' => "Game with id: $gameId is not found"]);
         }
         View::$route['vars']['title'] = 'Гра';
         View::$route['vars']['state'] = $game['state'];
         View::$route['vars']['players'] = $game['players'];
-        View::render();
+        return View::render();
     }
     public function peekAction(){
         $game = Games::last();
-        View::redirect('/game/show/mafia/'.$game['id']);
+        return View::redirect('/game/show/mafia/'.$game['id']);
     }
     public function ratingAction(){
         extract(self::$route['vars']);
@@ -356,7 +356,7 @@ class GamesController extends Controller
             View::$route['vars']['nextWeek'] = Weeks::weekDataById($weeksIds[$selectedWeekIndex + 1]);
 
         View::$route['vars'] = array_merge(View::$route['vars'], $vars);
-        View::render();
+        return View::render();
     }
     public function lastAction(){
         $game = Games::last();
@@ -364,8 +364,8 @@ class GamesController extends Controller
         if (empty($game)) View::redirect();
 
         if ($game['win'] < 1 && Users::checkAccess('trusted'))
-            View::redirect('/game/mafia/'.$game['id']);
+            return View::redirect('/game/mafia/'.$game['id']);
 
-        View::redirect('/game/show/mafia/'.$game['id']);
+        return View::redirect('/game/show/mafia/'.$game['id']);
     }
 }

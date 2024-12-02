@@ -24,7 +24,7 @@ class PagesController extends Controller
         $page = PageRepository::getPage($slug);
 
         if (empty($page))
-            View::errorCode(404, ['message' => "Page $slug isn't found!"]);
+            return View::errorCode(404, ['message' => "Page $slug isn't found!"]);
 
         $vars = [
             'mainClass' => 'pages',
@@ -46,7 +46,7 @@ class PagesController extends Controller
         View::$path = 'pages/show';
         View::$route['vars'] = array_merge(View::$route['vars'], $vars);
 
-        View::render();
+        return View::render();
         exit();
     }
     public function editAction()
@@ -56,8 +56,8 @@ class PagesController extends Controller
             $array = $_POST;
             $result = Pages::edit($array, $slug);
             if ($result === true)
-                View::message('Changes saved successfully!');
-            View::notice(['error' => 1, 'message' => $result, 'time' => 3000]);
+                return View::message('Changes saved successfully!');
+            return View::notice(['error' => 1, 'message' => $result, 'time' => 3000]);
         }
 
         $page = Pages::getBySlug($slug);
@@ -95,7 +95,7 @@ class PagesController extends Controller
         ];
         View::$route['vars'] = array_merge(View::$route['vars'], $vars);
 
-        View::render();
+        return View::render();
     }
     public function deleteAction()
     {
@@ -105,14 +105,14 @@ class PagesController extends Controller
             return View::redirect('/');
 
         Pages::remove($pageId);
-        View::redirect('/');
+        return View::redirect('/');
     }
     public function addAction()
     {
         if (!empty($_POST)) {
             $array = $_POST;
             Pages::create($array);
-            View::message(['error' => 0, 'message' => 'Changes saved successfully!']);
+            return View::message(['error' => 0, 'message' => 'Changes saved successfully!']);
         }
         $vars = [
             'title' => 'Add page form',
@@ -126,6 +126,6 @@ class PagesController extends Controller
         ];
         View::$route['vars'] = array_merge(View::$route['vars'], $vars);
 
-        View::render();
+        return View::render();
     }
 }

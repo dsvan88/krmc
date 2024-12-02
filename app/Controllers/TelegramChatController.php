@@ -20,7 +20,7 @@ class telegramChatController extends Controller
         ];
         View::$route['vars'] = array_merge(View::$route['vars'], $vars);
 
-        View::render();
+        return View::render();
     }
     public static function sendAction()
     {
@@ -60,7 +60,7 @@ class telegramChatController extends Controller
                 $message = 'Fail!';
             }
 
-            View::message(['error' => 0, 'message' => $message]);
+            return View::message(['error' => 0, 'message' => $message]);
         }
         $groupChats = TelegramChats::getGroupChatsList();
         $directChats = TelegramChats::getDirectChats();
@@ -82,6 +82,6 @@ class telegramChatController extends Controller
         ];
         View::$route['vars'] = array_merge(View::$route['vars'], $vars);
 
-        View::render();
+        return View::render();
     }
 }

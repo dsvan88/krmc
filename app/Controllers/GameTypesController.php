@@ -33,7 +33,7 @@ class GameTypesController extends Controller
         
         View::$route['vars'] = array_merge(View::$route['vars'], $vars);
     
-        View::render();
+        return View::render();
     }
     public function showAction()
     {
@@ -42,7 +42,7 @@ class GameTypesController extends Controller
         $gameNames = GameTypes::names();
 
         if (empty($gameNames[$game]))
-            View::errorCode(404, ['message' => "Game $game isn't found!"]);
+            return View::errorCode(404, ['message' => "Game $game isn't found!"]);
 
         $page = PageRepository::getPage($game);
 
@@ -69,6 +69,6 @@ class GameTypesController extends Controller
         
         View::$path = 'pages/show';
     
-        View::render();
+        return View::render();
     }
 }

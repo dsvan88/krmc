@@ -40,14 +40,14 @@ class Router
             if (!preg_match($route, $url, $match)) continue;
 
             if (isset($params['redirect'])) {
-                View::redirect('/' . $params['redirect']);
+                return View::redirect('/' . $params['redirect']);
             }
             if ($params['access']['category'] !== 'all') {
                 if (!self::checkAccessLevel($params)) {
                     if (isset($params['access']['redirect'])) {
-                        View::redirect('/' . $params['access']['redirect']);
+                        return View::redirect('/' . $params['access']['redirect']);
                     }
-                    View::redirect('/');
+                    return View::redirect('/');
                 }
             }
 
@@ -97,13 +97,13 @@ class Router
                         Sender::message(Settings::getTechTelegramId(), $message);
                     }
                 } else {
-                    View::errorCode(404, ['message' => "Action $action isn’t found in Controller $path!"]);
+                    return View::errorCode(404, ['message' => "Action $action isn’t found in Controller $path!"]);
                 }
             } else {
-                View::errorCode(404, ['message' => "Controller $path isn't found!"]);
+                return View::errorCode(404, ['message' => "Controller $path isn't found!"]);
             }
         } else {
-            View::errorCode(404, ['message' => 'Route isn’t found!']);
+            return View::errorCode(404, ['message' => 'Route isn’t found!']);
         }
     }
     public static function checkAccessLevel($params)

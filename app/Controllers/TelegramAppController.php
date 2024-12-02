@@ -24,6 +24,6 @@ class TelegramAppController extends Controller
             ],
         ];
         View::$route['vars'] = array_merge(View::$route['vars'], $vars);
-        View::render();
+        return View::render();
     }
 }

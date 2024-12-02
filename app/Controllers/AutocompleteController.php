@@ -12,7 +12,7 @@ class AutocompleteController extends Controller
     public function usersAction()
     {
         $result = Users::getListNames($_POST['term']);
-        View::message(['error' => 0, 'result' => $result]);
+        return View::message(['error' => 0, 'result' => $result]);
     }
     public function participantFieldAction()
     {
@@ -26,6 +26,6 @@ class AutocompleteController extends Controller
         View::$route['vars']['participantId'] = (int) $_POST['id'];
         View::$route['vars']['path'] = 'components/participants-field';
 
-        View::html();
+        return View::html();
     }
 }

@@ -27,7 +27,7 @@ class DaysController extends Controller
                     $weekData = Weeks::weekDataById($weekId);
                     $result = Sender::message(Settings::getMainTelegramId(), Days::getFullDescription($weekData, $dayId));
                 }
-                View::message(['message' => 'Changes saved successfully!', 'url' => "/week/$weekId/day/$dayId/"]);
+                return View::message(['message' => 'Changes saved successfully!', 'url' => "/week/$weekId/day/$dayId/"]);
             }
             self::$route['action'] = 'edit';
             View::set(self::$route);
@@ -131,12 +131,12 @@ class DaysController extends Controller
 
         View::$route['vars'] = array_merge(View::$route['vars'], $vars, compact('day', 'playersCount', 'description', 'selfBooking', 'yesterday', 'tomorrow'));
 
-        View::render();
+        return View::render();
     }
     public function nearAction()
     {
         [$weekId, $dayId] = Days::near();
-        View::redirect(empty($dayId) ? "/weeks/$weekId/" : "/week/$weekId/day/$dayId/");
+        return View::redirect(empty($dayId) ? "/weeks/$weekId/" : "/week/$weekId/day/$dayId/");
     }
     public function selfBookingAction()
     {
@@ -153,7 +153,7 @@ class DaysController extends Controller
             else
                 Noticer::set(['type' => 'error', 'message' => 'Fail!']);
         }
-        View::redirect("/week/$weekId/day/$dayId/");
+        return View::redirect("/week/$weekId/day/$dayId/");
     }
     public function addAction()
     {
@@ -166,6 +166,6 @@ class DaysController extends Controller
         ];
         View::$route['vars'] = array_merge(View::$route['vars'], $vars);
 
-        View::render();
+        return View::render();
     }
 }

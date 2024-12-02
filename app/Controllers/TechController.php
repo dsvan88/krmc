@@ -17,7 +17,7 @@ class TechController extends Controller
         if (!empty($_POST)) {
             if (isset($_POST['sql_query'])) {
                 $result = Db::query($_POST['sql_query'], [], 'Assoc');
-                View::message(['error' => 0, 'sql-result' => $result]);
+                return View::message(['error' => 0, 'sql-result' => $result]);
             }
         }
         $vars = [
@@ -32,13 +32,13 @@ class TechController extends Controller
         ];
         View::$route['vars'] = array_merge(View::$route['vars'], $vars);
 
-        View::render();
+        return View::render();
     }
     public static function backupAction()
     {
         if (!empty($_POST)) {
             if (empty($_POST['table']))
-                View::message(['error' => 1, 'message' => 'Something wrong with your query!']);
+                return View::message(['error' => 1, 'message' => 'Something wrong with your query!']);
 
             $table = trim($_POST['table']);
             $result = TechRepository::backup($table);
@@ -48,7 +48,7 @@ class TechController extends Controller
                 $archiveName = "$table $archiveName";
             }
             $archive = TechRepository::archive($archiveName, $result);
-            View::file($archive, basename($archive));
+            return View::file($archive, basename($archive));
         }
         $vars = [
             'title' => 'DB Backup form',
@@ -62,7 +62,7 @@ class TechController extends Controller
         ];
         View::$route['vars'] = array_merge(View::$route['vars'], $vars);
 
-        View::render();
+        return View::render();
     }
     public static function backupSaveAction()
     {
@@ -90,8 +90,8 @@ class TechController extends Controller
         // View::redirect('/');
         if (!empty($_POST)) {
             if (TechRepository::restore())
-                View::message('Done!');
-            View::message(['error' => true, 'message' => 'Something wrong with your datafile!']);
+                return View::message('Done!');
+            return View::message(['error' => true, 'message' => 'Something wrong with your datafile!']);
         }
         $vars = [
             'title' => 'DB Restore Form',
@@ -105,15 +105,15 @@ class TechController extends Controller
         ];
         View::$route['vars'] = array_merge(View::$route['vars'], $vars);
 
-        View::render();
+        return View::render();
     }
     public static function dbrebuildAction()
     {
-        View::redirect('/');
+        return View::redirect('/');
         $table = Pages::$table;
         Users::query("ALTER TABLE $table ADD COLUMN lang CHARACTER VARYING(5) DEFAULT NULL");
 
-        /*         View::redirect('/');
+        /*         return View::redirect('/');
         $table = Games::$table;
         $games = Games::getAll();
         Games::query("ALTER TABLE $table ALTER COLUMN manager TYPE CHARACTER VARYING(300)");
@@ -229,6 +229,6 @@ class TechController extends Controller
         mkdir($directory);
 
         var_dump(file_exists($directory) ? 'Exists' : 'Error');
-        View::errorCode(404, ['message' => 'Result is Ok']);
+        return View::errorCode(404, ['message' => 'Result is Ok']);
     }
 }
