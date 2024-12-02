@@ -23,6 +23,7 @@ class RegCommand extends ChatCommand
             return false;
         }
 
+        $_SESSION['debug'] = 'Reg Test.';
         $requestData = self::$operatorClass::parseArguments($arguments);
 
         if (!isset($requestData['nonames']) && $requestData['userId'] < 2) {
