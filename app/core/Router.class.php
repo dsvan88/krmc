@@ -87,10 +87,10 @@ class Router
                         $techTgId = Settings::getTechTelegramId();
                         if (empty($techTgId)) return false;
 
-                        // $message = json_encode($error->__toString());
                         $message = $error->__toString();
 
                         if (!empty($_SESSION['debug'])) {
+                            $message .= PHP_EOL . 'DEBUG:' . PHP_EOL;
                             $message .= PHP_EOL . implode(PHP_EOL, $_SESSION['debug']);
                             unset($_SESSION['debug']);
                         }

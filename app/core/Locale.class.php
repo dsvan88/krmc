@@ -12,8 +12,8 @@ class Locale
         self::loadDictionary();
         foreach ($vars as $key => $value) {
             if (is_array($value)) {
-                if (isset($value['string']) && isset($value['vars'])){
-                    if (empty(self::$dictionary[$value['string']])){
+                if (isset($value['string']) && isset($value['vars'])) {
+                    if (empty(self::$dictionary[$value['string']])) {
                         $vars[$key] = sprintf($value['string'], ...$value['vars']);
                         continue;
                     }
@@ -42,7 +42,7 @@ class Locale
         self::loadDictionary();
 
         if (is_array($key)) {
-            if (isset($key['string']) && isset($key['vars'])){
+            if (isset($key['string']) && isset($key['vars'])) {
                 if (empty(self::$dictionary[$key['string']]))
                     return sprintf($key['string'], ...$key['vars']);
                 return sprintf(self::$dictionary[$key['string']], ...$key['vars']);
@@ -91,42 +91,46 @@ class Locale
 
         return $result;
     }
-    public static function setLocale(){
+    public static function setLocale()
+    {
         $langCode = '';
 
         if (!empty($_COOKIE['lang']))
             $langCode = $_COOKIE['lang'];
-            
+
         if (!empty($_GET['lang']))
             $langCode = $_GET['lang'];
-            
+
         if (!in_array($langCode, self::$langCodes, true)) return false;
-        
+
         self::$langCode = $langCode;
 
-        if (empty($_COOKIE['lang']) || $_COOKIE['lang'] !== self::$langCode){
+        if (empty($_COOKIE['lang']) || $_COOKIE['lang'] !== self::$langCode) {
             setcookie('lang', $langCode, $_SERVER['REQUEST_TIME'] + CFG_MAX_SESSION_AGE, '/');
             $_COOKIE['lang'] = $langCode;
         }
         return true;
     }
-    public static function getLocaledLinks(){
+    public static function getLocaledLinks()
+    {
 
         $offset = strpos($_SERVER['REQUEST_URI'], '?');
-        $url = trim(empty($offset) ? $_SERVER['REQUEST_URI'] : substr($_SERVER['REQUEST_URI'], 0, $offset), '/').'/';
-        $url = "{$_SERVER['HTTP_X_FORWARDED_PROTO']}://{$_SERVER['SERVER_NAME']}/".($url === '/' ? '' : $url);
+        $url = trim(empty($offset) ? $_SERVER['REQUEST_URI'] : substr($_SERVER['REQUEST_URI'], 0, $offset), '/') . '/';
+
+        $https = empty($_SERVER['HTTP_X_FORWARDED_PROTO']) ? 'https' : $_SERVER['HTTP_X_FORWARDED_PROTO'];
+        $url = "$https://{$_SERVER['SERVER_NAME']}/" . ($url === '/' ? '' : $url);
 
         $codes = self::$langCodes;
         $count = count($codes);
         $result = '';
-        for ($x=0; $x < $count; $x++) { 
-            $result .="<link rel='alternate' href='$url?lang={$codes[$x]}' hreflang='{$codes[$x]}'>" . PHP_EOL;
+        for ($x = 0; $x < $count; $x++) {
+            $result .= "<link rel='alternate' href='$url?lang={$codes[$x]}' hreflang='{$codes[$x]}'>" . PHP_EOL;
         }
-        $result .="<link rel='alternate' href='$url' hreflang='x-default'>" . PHP_EOL;
+        $result .= "<link rel='alternate' href='$url' hreflang='x-default'>" . PHP_EOL;
         return $result;
     }
     public static function decamelize(string $string)
     {
-        return strtolower(preg_replace('/([A-Z])/', ' $1',$string));
+        return strtolower(preg_replace('/([A-Z])/', ' $1', $string));
     }
 }

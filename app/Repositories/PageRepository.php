@@ -29,10 +29,12 @@ class PageRepository
         }
         return $page;
     }
-    public static function formPageOG(array $page = null){
-        $url = "{$_SERVER['HTTP_X_FORWARDED_PROTO']}://{$_SERVER['SERVER_NAME']}";
+    public static function formPageOG(array $page = null)
+    {
+        $https = empty($_SERVER['HTTP_X_FORWARDED_PROTO']) ? 'https' : $_SERVER['HTTP_X_FORWARDED_PROTO'];
+        $url = "$https://{$_SERVER['SERVER_NAME']}";
         $page['logo'] = empty($page['logo']) ? '/public/images/club-logo-w-city.jpg' : $page['logo'];
-        $imageSize = getimagesize($_SERVER['DOCUMENT_ROOT'].$page['logo']);
+        $imageSize = getimagesize($_SERVER['DOCUMENT_ROOT'] . $page['logo']);
         $image = "$url/{$page['logo']}";
         $uri = $page['slug'] === 'home' && $page['type'] === 'page' ? '' : "{$page['type']}/{$page['slug']}/";
         $result = [
@@ -49,8 +51,8 @@ class PageRepository
                 'image' => $image,
             ],
         ];
-        
-/*     article:published_time - datetime - When the article was first published.
+
+        /*     article:published_time - datetime - When the article was first published.
     article:modified_time - datetime - When the article was last changed.
     article:expiration_time - datetime - When the article is out of date after.
     article:author - profile array - Writers of the article.
