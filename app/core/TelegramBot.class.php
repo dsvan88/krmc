@@ -175,9 +175,8 @@ class TelegramBot
         $curl = curl_init();
         curl_setopt_array($curl, $options);
         $result = json_decode(curl_exec($curl), true);
-        if ($result['ok'])
-            return true;
-        return false;
+
+        return !empty($result['ok']);
     }
     public static function webhookSet($botToken)
     {
@@ -214,9 +213,7 @@ class TelegramBot
         curl_setopt_array($curl, $options);
         $result = json_decode(curl_exec($curl), true);
 
-        if ($result['ok'])
-            return true;
-        return false;
+        return !empty($result['ok']);
     }
     public static function unpinMessage($chatId, $messageId)
     {
@@ -234,9 +231,7 @@ class TelegramBot
         curl_setopt_array($curl, $options);
         $result = json_decode(curl_exec($curl), true);
 
-        if ($result['ok'])
-            return true;
-        return false;
+        return !empty($result['ok']);
     }
     public static function pinMessageAndSaveItsData($chatId, $messageId)
     {
@@ -283,8 +278,6 @@ class TelegramBot
         curl_setopt_array($curl, $options);
         $result = json_decode(curl_exec($curl), true);
 
-        if ($result['ok'])
-            return true;
-        return false;
+        return !empty($result['ok']);
     }
 }

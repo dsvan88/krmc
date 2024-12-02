@@ -74,6 +74,7 @@ class Router
             $path = 'app\Controllers\\' . ucfirst(self::$params['controller']) . 'Controller';
             if (class_exists($path)) {
                 $action = self::$params['action'] . 'Action';
+                $message = '';
                 if (method_exists($path, $action)) {
                     try {
                         $controller = new $path(self::$params);
@@ -85,17 +86,16 @@ class Router
                             return false;
                         }
                         $techTgId = Settings::getTechTelegramId();
+                        
                         if (empty($techTgId)) return false;
-
                         $message = $error->__toString();
-
-                        if (!empty($_SESSION['debug'])) {
-                            $message .= PHP_EOL . 'DEBUG:' . PHP_EOL;
-                            $message .= PHP_EOL . implode(PHP_EOL, $_SESSION['debug']);
-                            unset($_SESSION['debug']);
-                        }
-                        Sender::message(Settings::getTechTelegramId(), $message);
                     }
+                    if (!empty($_SESSION['debug'])) {
+                        $message .= PHP_EOL . 'DEBUG:' . PHP_EOL;
+                        $message .= PHP_EOL . implode(PHP_EOL, $_SESSION['debug']);
+                        unset($_SESSION['debug']);
+                    }
+                    Sender::message(Settings::getTechTelegramId(), $message);
                 } else {
                     return View::errorCode(404, ['message' => "Action $action isn’t found in Controller $path!"]);
                 }
