@@ -81,14 +81,11 @@ class Router
                         $controller->$action();
                         TechRepository::scheduleBackup();
                     } catch (Throwable $error) {
+                        $message = $error->__toString();
                         if (APP_LOC === 'local') {
-                            error_log($error->__toString());
+                            error_log($message);
                             return false;
                         }
-                        $techTgId = Settings::getTechTelegramId();
-
-                        if (empty($techTgId)) return false;
-                        $message = $error->__toString();
                     }
                     if (!empty($_SESSION['debug'])) {
                         $message .= PHP_EOL . 'DEBUG:' . PHP_EOL;
