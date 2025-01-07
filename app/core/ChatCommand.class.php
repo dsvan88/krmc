@@ -18,7 +18,7 @@ class ChatCommand implements Command
         }
         return true;
     }
-    public static function getAccessLevel($data)
+    public static function getAccessLevel()
     {
         return static::$accessLevel;
     }
