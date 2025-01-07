@@ -79,7 +79,6 @@ class Router
                     try {
                         $controller = new $path(self::$params);
                         $controller->$action();
-                        TechRepository::scheduleBackup();
                     } catch (Throwable $error) {
                         $message = $error->__toString();
                         if (APP_LOC === 'local') {
@@ -87,6 +86,7 @@ class Router
                             return false;
                         }
                     }
+                    TechRepository::scheduleBackup();
                     if (!empty($_SESSION['debug'])) {
                         $message .= PHP_EOL . 'DEBUG:' . PHP_EOL;
                         $message .= PHP_EOL . implode(PHP_EOL, $_SESSION['debug']);

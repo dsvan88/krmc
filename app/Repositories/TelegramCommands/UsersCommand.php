@@ -18,6 +18,7 @@ class UsersCommand extends ChatCommand
         $usersList = Users::contacts($usersList);
         $message = '';
         $x = 0;
+        $count = min(count($usersList), 100);
         for ($i = 0; $i < count($usersList); $i++) {
             if (empty($usersList[$i]['name'])) continue;
             $message .= (++$x) . ". <b>{$usersList[$i]['name']}</b>";

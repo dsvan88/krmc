@@ -51,7 +51,7 @@ class TelegramBotController extends Controller
         $data = trim(file_get_contents('php://input'));
         $message = json_decode($data, true);
 
-        if (!is_array($message) || empty($message['message'])) {
+        if (!is_array($message) || empty($message['message']) || empty($message['message']['text'])) {
             die('{"error":"1","title":"Error!","text":"Error: Nothing to get."}');
         }
 
@@ -229,7 +229,6 @@ class TelegramBotController extends Controller
                 $dayName = mb_strtolower(mb_substr($withoutMethod, 0, 3, 'UTF-8'), 'UTF-8');
 
                 $requestData['dayNum'] = self::parseDayNum($dayName, $requestData['currentDay']);
-                // } elseif (strpos($value, ':') !== false && strlen($value) === 5 && empty($requestData['arrive'])) {
             } elseif (preg_match('/^\d{2}:\d{2}$/', $value) === 1 && empty($requestData['arrive'])) {
                 $requestData['arrive'] = $value;
             } elseif (preg_match('/^(\+|-)\d{1,2}/', $value, $match) === 1) {
@@ -276,6 +275,7 @@ class TelegramBotController extends Controller
                 }
             }
         }
+        return false;
     }
     public static function execute($command = null)
     {

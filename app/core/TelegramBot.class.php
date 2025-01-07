@@ -3,6 +3,8 @@
 namespace app\core;
 
 use app\models\Settings;
+use Exception;
+use LDAP\Result;
 
 class TelegramBot
 {
@@ -58,8 +60,13 @@ class TelegramBot
                 $result[] = json_decode(curl_exec($curl), true);
             }
             return $result;
-        } else
-            return [json_decode(curl_exec($curl), true)];
+        }
+        $result = json_decode(curl_exec($curl), true);
+        if ($result['ok']) {
+            self::$botToken = $botToken;
+            return true;
+        }
+        throw new Exception(json_encode($result, JSON_UNESCAPED_UNICODE));
     }
     public static function sendMessageWithImage($userId, $message = '', $image = '', $messageId = -1)
     {
