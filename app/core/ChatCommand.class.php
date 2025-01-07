@@ -11,13 +11,24 @@ class ChatCommand implements Command
     public static $operatorClass;
     public static $accessLevel = 'guest';
 
+    public static function set($data)
+    {
+        foreach ($data as $k => $v) {
+            static::$$k = $v;
+        }
+        return true;
+    }
+    public static function getAccessLevel($data)
+    {
+        return static::$accessLevel;
+    }
     public static function description()
     {
-        return ClassName::class . ' - ' . self::locale('Here isn’t description yet');
+        return static::class . ' - ' . self::locale('Here isn’t description yet');
     }
     public static function execute(array $arguments = [])
     {
-        return ClassName::class . ' - ' . self::locale('Action is done!');
+        return static::class . ' - ' . self::locale('Action is done!');
     }
     public static function locale($phrase)
     {

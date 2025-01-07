@@ -291,11 +291,17 @@ class TelegramBotController extends Controller
             return false;
         }
 
-        $class::$operatorClass = self::class;
-        $class::$requester = self::$requester;
-        $class::$message = self::$message;
+        $ready = $class::set([
+            'operatorClass' => self::class,
+            'requester' => self::$requester,
+            'message' => self::$message
+        ]);
 
-        if (!self::checkAccess($class::$accessLevel)) {
+        if (!$ready) return false;
+
+        $accessLevel = $class::getAccessLevel();
+
+        if (!self::checkAccess($accessLevel)) {
             return false;
         }
 
