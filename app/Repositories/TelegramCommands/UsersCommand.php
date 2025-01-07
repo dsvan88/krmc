@@ -19,7 +19,7 @@ class UsersCommand extends ChatCommand
         $message = '';
         $x = 0;
         $count = min(count($usersList), 100);
-        for ($i = 0; $i < count($usersList); $i++) {
+        for ($i = 0; $i < $count; $i++) {
             if (empty($usersList[$i]['name'])) continue;
             $message .= (++$x) . ". <b>{$usersList[$i]['name']}</b>";
             if (!empty($usersList[$i]['contacts']['telegram'])) {
