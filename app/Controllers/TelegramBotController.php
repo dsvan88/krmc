@@ -137,7 +137,7 @@ class TelegramBotController extends Controller
     {
         $_text = mb_strtolower(str_replace('на ', '', $text), 'UTF-8');
         if (preg_match('/^[+-]\s{0,3}(пн|пон|вт|вів|ср|сер|чт|чет|пт|пят|п’ят|сб|суб|вс|вос|нед|нд|сг|сег|сьо|зав|mon|tue|wed|thu|fri|sat|sun|tod|tom)/', $_text) === 1) {
-            preg_match_all('/[+-]\s{0,3}(пн|пон|вт|вів|ср|сер|чт|чет|пт|пят|п’ят|сб|суб|вс|вос|нед|нд|сг|сег|сьо|зав|mon|tue|wed|thu|fri|sat|sun|tod|tom)|([0-2]{0,1}[0-9]\:[0-5][0-9])/i', mb_strtolower(str_replace(['на ', '.'], ['', ':'], $text), 'UTF-8'), $matches);
+            preg_match_all('/[+-]\s{0,3}(пн|пон|вт|вів|ср|сер|чт|чет|пт|пят|п’ят|сб|суб|вс|вос|нед|нд|сг|сег|сьо|зав|mon|tue|wed|thu|fri|sat|sun|tod|tom)/i', mb_strtolower(str_replace('.', ':', $text), 'UTF-8'), $matches);
             $arguments = $matches[0];
             if (preg_match('/\([^)]+\)/', $text, $prim) === 1) {
                 $arguments['prim'] = mb_substr($prim[0], 1, -1, 'UTF-8');
@@ -147,7 +147,7 @@ class TelegramBotController extends Controller
             return true;
         }
         if (preg_match('/^[+]\s{0,3}[0-2]{0,1}[0-9]/', $_text) === 1) {
-            preg_match('/^(\+)\s{0,3}([0-2]{0,1}[0-9])(:[0-5][0-9]){0,1}/i', mb_strtolower(str_replace('.', ':', $text), 'UTF-8'), $matches);
+            preg_match('/^(\+)\s{0,3}([0-2]{0,1}[0-9])(:[0-5][0-9]){0,1}/i', mb_strtolower(str_replace('.', ':', $_text), 'UTF-8'), $matches);
 
             if ($matches[2] < 8 || $matches[2] > 23) return false;
             if (empty($matches[3])) $matches[3] = ':00';
@@ -307,15 +307,6 @@ class TelegramBotController extends Controller
 
         return $class::execute(self::$commandArguments);
     }
-    /*     public static function send(string $target = null, string $message = ''): bool
-    {
-        if (empty($target) || empty($message))
-            return false;
-
-        $result = Sender::message($target, $message);
-
-        return !$result[0]['ok'] ? true : false;
-    } */
     public static function checkAccess(string $level = 'guest')
     {
         $levels = ['guest' => 0, 'user' => 1, 'trusted' => 2, 'manager' => 3, 'admin' => 4, 'root' => 5];

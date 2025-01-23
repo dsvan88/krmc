@@ -11,14 +11,14 @@ class ChatCommand implements Command
     public static $operatorClass;
     public static $accessLevel = 'guest';
 
-    public static function set($data)
+    public static function set(array $arguments = []): bool
     {
-        foreach ($data as $k => $v) {
+        foreach ($arguments as $k => $v) {
             static::$$k = $v;
         }
         return true;
     }
-    public static function getAccessLevel()
+    public static function getAccessLevel(): string
     {
         return static::$accessLevel;
     }
