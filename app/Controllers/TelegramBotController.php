@@ -96,7 +96,7 @@ class TelegramBotController extends Controller
             return false;
         }
 
-        Sender::message(900669168, $data);
+        Sender::message(900669168, $command);
         if (!$command) return false;
     }
     public static function webhookAction()
