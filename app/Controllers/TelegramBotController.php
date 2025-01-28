@@ -77,7 +77,7 @@ class TelegramBotController extends Controller
 
         $userId = Contacts::getUserIdByContact('telegramid', $userTelegramId);
 
-        if (empty($userId) && self::$command && !in_array(self::$command, self::$guestCommands)) {
+        if (empty($userId) && $command && !in_array(self::$command, self::$guestCommands)) {
             Sender::message(self::$chatId, Locale::phrase('{{ Tg_Unknown_Requester }}'), self::$message['message']['message_id']);
             return false;
         }
@@ -94,7 +94,7 @@ class TelegramBotController extends Controller
             Sender::message($userTelegramId, Locale::phrase(['string' => "I’m deeply sorry, but you banned for that action:(...\nYour ban will be lifted at: <b>%s</b>", 'vars' => [date('d.m.Y', self::$requester['ban']['expired'] + TIME_MARGE)]]));
             return false;
         }
-        if (!$command) return false;
+        return $command;
     }
     public static function webhookAction()
     {
@@ -282,8 +282,6 @@ class TelegramBotController extends Controller
         if (empty($command)) {
             $command = self::$command;
         }
-
-        Sender::message(900669168, self::$command);
 
         $class = ucfirst($command) . 'Command';
         $class = str_replace('/', '\\', self::$CommandNamespace . '\\' . $class);
