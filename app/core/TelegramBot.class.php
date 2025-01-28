@@ -64,7 +64,7 @@ class TelegramBot
         $result = json_decode(curl_exec($curl), true);
         if ($result['ok']) {
             self::$botToken = $botToken;
-            return true;
+            return [$result];
         }
         throw new Exception(json_encode($result, JSON_UNESCAPED_UNICODE));
     }
