@@ -67,7 +67,7 @@ class TelegramBotController extends Controller
 
         $text = trim($message['message']['text']);
 
-        self::parseCommand($text);
+        $command = self::parseCommand($text);
         self::$message = $message;
         self::$techTelegramId = Settings::getTechTelegramId();
         self::$mainGroupTelegramId = Settings::getMainTelegramId();
@@ -94,9 +94,7 @@ class TelegramBotController extends Controller
             Sender::message($userTelegramId, Locale::phrase(['string' => "I’m deeply sorry, but you banned for that action:(...\nYour ban will be lifted at: <b>%s</b>", 'vars' => [date('d.m.Y', self::$requester['ban']['expired'] + TIME_MARGE)]]));
             return false;
         }
-
-        Sender::message(900669168, self::$command);
-        if (!self::$command) return false;
+        if (!$command) return false;
     }
     public static function webhookAction()
     {
@@ -284,6 +282,8 @@ class TelegramBotController extends Controller
         if (empty($command)) {
             $command = self::$command;
         }
+
+        Sender::message(900669168, self::$command);
 
         $class = ucfirst($command) . 'Command';
         $class = str_replace('/', '\\', self::$CommandNamespace . '\\' . $class);
