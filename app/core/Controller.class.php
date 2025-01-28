@@ -8,6 +8,8 @@ class Controller
     public static $route;
     public static $view;
     public static $model;
+    public static $ready;
+
     public function __construct($route)
     {
         self::set($route);
@@ -17,11 +19,11 @@ class Controller
         self::$route = $route;
         View::set($route);
         self::$model = self::loadModel($route['controller']);
-        static::before();
+        self::$ready = static::before();
     }
     public static function before()
     {
-        return false;
+        return true;
     }
     public static function loadModel($name)
     {

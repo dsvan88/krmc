@@ -16,11 +16,6 @@ use app\Repositories\VerificationRepository;
 
 class VerificationController extends Controller
 {
-    public static function before()
-    {
-        return true;
-    }
-
     public static function rootAction()
     {
         $message = Locale::phrase("This action requires root right!\nApprove your rights with the root password:");

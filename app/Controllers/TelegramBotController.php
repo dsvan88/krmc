@@ -31,7 +31,7 @@ class TelegramBotController extends Controller
     public static function before()
     {
         $contentType = isset($_SERVER['CONTENT_TYPE']) ? strtolower(trim($_SERVER['CONTENT_TYPE'])) : '';
-        if (strpos($contentType, 'application/json') ===  false) exit();
+        if (strpos($contentType, 'application/json') ===  false) return false;
 
         $ip = substr($_SERVER['REMOTE_ADDR'], 0, 4) === substr($_SERVER['SERVER_ADDR'], 0, 4) ? $_SERVER['HTTP_X_REAL_IP'] : $_SERVER['REMOTE_ADDR'];
         if (!Validator::validate('telegramIp', $ip)) {
@@ -45,7 +45,7 @@ class TelegramBotController extends Controller
                 error_log($message);
             else
                 Sender::message(self::$techTelegramId, $message);
-            exit();
+            return false;
         }
 
         $data = trim(file_get_contents('php://input'));
@@ -137,7 +137,7 @@ class TelegramBotController extends Controller
     {
         $_text = mb_strtolower(str_replace('на ', '', $text), 'UTF-8');
         if (preg_match('/^[+-]\s{0,3}(пн|пон|вт|вів|ср|сер|чт|чет|пт|пят|п’ят|сб|суб|вс|вос|нед|нд|сг|сег|сьо|зав|mon|tue|wed|thu|fri|sat|sun|tod|tom)/', $_text) === 1) {
-            preg_match_all('/[+-]\s{0,3}(пн|пон|вт|вів|ср|сер|чт|чет|пт|пят|п’ят|сб|суб|вс|вос|нед|нд|сг|сег|сьо|зав|mon|tue|wed|thu|fri|sat|sun|tod|tom)/i', mb_strtolower(str_replace('.', ':', $text), 'UTF-8'), $matches);
+            preg_match_all('/[+-]\s{0,3}(пн|пон|вт|вів|ср|сер|чт|чет|пт|пят|п’ят|сб|суб|вс|вос|нед|нд|сг|сег|сьо|зав|mon|tue|wed|thu|fri|sat|sun|tod|tom)/i', str_replace('.', ':', $_text), $matches);
             $arguments = $matches[0];
             if (preg_match('/\([^)]+\)/', $text, $prim) === 1) {
                 $arguments['prim'] = mb_substr($prim[0], 1, -1, 'UTF-8');

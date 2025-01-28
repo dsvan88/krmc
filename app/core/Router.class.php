@@ -78,7 +78,9 @@ class Router
                 if (method_exists($path, $action)) {
                     try {
                         $controller = new $path(self::$params);
-                        $controller->$action();
+                        if ($controller::$ready) {
+                            $controller->$action();
+                        }
                     } catch (Throwable $error) {
                         $message = $error->__toString();
                         if (APP_LOC === 'local') {
