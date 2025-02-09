@@ -25,7 +25,7 @@ class NewuserCommand extends ChatCommand
             self::$operatorClass::$resultMessage = self::locale('{{ Tg_Command_Name_Too_Short }}');
             return false;
         }
-        if (preg_match('/([^а-яА-ЯрРсСтТуУфФчЧхХШшЩщЪъЫыЬьЭэЮюЄєІіЇїҐґ .0-9])/', $username) === 1) {
+        if (preg_match('/([^а-я .0-9])/ui', $username) === 1) {
             self::$operatorClass::$resultMessage = self::locale('{{ Tg_Command_Name_Wrong_Format }}');
             return false;
         }

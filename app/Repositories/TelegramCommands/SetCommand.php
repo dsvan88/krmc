@@ -60,9 +60,9 @@ class SetCommand extends ChatCommand
 
         foreach ($arguments as $value) {
             $value = trim($value);
-            if ($gameName === '' && preg_match("/^($pattern)/", mb_strtolower($value, 'UTF-8'), $gamesPattern) > 0) {
+            if ($gameName === '' && preg_match("/^($pattern)/ui", mb_strtolower($value, 'UTF-8'), $gamesPattern) > 0) {
                 $gameName = $gamesPattern[0];
-                if ($tournament === false && preg_match('/(тур|tour)/', mb_strtolower($value, 'UTF-8')) > 0) {
+                if ($tournament === false && preg_match('/(тур|tour)/ui', mb_strtolower($value, 'UTF-8')) > 0) {
                     $tournament = true;
                 }
                 continue;
@@ -71,7 +71,7 @@ class SetCommand extends ChatCommand
                 $time = $timesPattern[0];
                 continue;
             }
-            if ($dayName === '' && preg_match('/^[+-]{0,1}(пн|пон|вт|ср|чт|чет|пт|пят|сб|суб|вс|вос|сг|сег|зав)/', mb_strtolower($value, 'UTF-8'), $daysPattern) > 0) {
+            if ($dayName === '' && preg_match('/^[+-]{0,1}(пн|пон|вт|ср|чт|чет|пт|пят|сб|суб|вс|вос|сг|сег|зав)/ui', mb_strtolower($value, 'UTF-8'), $daysPattern) > 0) {
                 $dayName = $daysPattern[0];
                 continue;
             }

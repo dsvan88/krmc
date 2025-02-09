@@ -20,7 +20,7 @@ class RecallCommand extends ChatCommand
         $currentDayNum = Days::current();
 
         if (!empty($arguments)) {
-            if (preg_match('/^(пн|пон|вт|ср|чт|чет|пт|пят|сб|суб|вс|вос|сг|сег|зав)/', mb_strtolower($arguments[0], 'UTF-8'), $daysPattern) === 1) {
+            if (preg_match('/^(пн|пон|вт|ср|чт|чет|пт|пят|сб|суб|вс|вос|сг|сег|зав)/ui', mb_strtolower($arguments[0], 'UTF-8'), $daysPattern) === 1) {
                 $dayName = $daysPattern[0];
             }
         }

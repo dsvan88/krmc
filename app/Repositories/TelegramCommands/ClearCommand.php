@@ -22,7 +22,7 @@ class ClearCommand extends ChatCommand
         self::$operatorClass::$resultMessage = self::locale("Can't clear this day.\nIt's still \"set\". I can only clear \"recalled\"!");
 
         if (!empty($arguments)) {
-            if (preg_match('/^(пн|пон|вт|ср|чт|чет|пт|пят|сб|суб|вс|вос|сг|сег|сьо|зав)/', mb_strtolower($arguments[0], 'UTF-8'), $daysPattern) === 1) {
+            if (preg_match('/^(пн|пон|вт|ср|чт|чет|пт|пят|сб|суб|вс|вос|сг|сег|сьо|зав)/ui', mb_strtolower($arguments[0], 'UTF-8'), $daysPattern) === 1) {
                 $dayName = $daysPattern[0];
             }
         }
