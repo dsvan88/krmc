@@ -351,11 +351,6 @@ class Users extends Model
         $usersData = self::findGroup($column, $players, count($players));
         if (empty($usersData)) return false;
 
-        for ($i = 0; $i < count($usersData); $i++) {
-            $usersData[$i]['password'] = '***';
-            $usersData[$i] = self::decodeJson($usersData[$i]);
-        }
-
         return $usersData;
     }
     // // Получить всю информацию об игроке по его TelegramID

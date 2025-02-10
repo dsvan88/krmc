@@ -1,5 +1,11 @@
+@import "tech/vars";
+@import "tech/mixins_adapt";
+@import "tech/components";
+
 .settings{
     display: flex;
+    background-color: $bg-color-light-odd;
+    min-height: 70vh;
     &__categories{
         @extend %asideMenu;
     }

@@ -5,6 +5,7 @@ namespace app\Controllers;
 use app\core\Controller;
 use app\core\Locale;
 use app\core\Paginator;
+use app\core\Tech;
 use app\core\View;
 use app\models\Days;
 use app\models\Games;
@@ -15,6 +16,11 @@ use Throwable;
 
 class GamesController extends Controller
 {
+    public static function before(): bool
+    {
+        View::$route['vars']['styles'][] = 'games';
+        return true;
+    }
     public function prepeareAction()
     {
         extract(self::$route['vars']);
@@ -23,6 +29,7 @@ class GamesController extends Controller
                 $gameId = Games::create($_POST);
             }
             catch(Throwable $th){
+                Tech::dump($th->__toString());
                 return View::message('Fail!');
             }
             return View::location('/game/mafia/' . $gameId);
@@ -127,6 +134,7 @@ class GamesController extends Controller
     public function playAction()
     {
         extract(self::$route['vars']);
+        View::$route['vars']['styles'][] = 'game-timer';
 
         $vars = [
             'title' => 'Play a game',

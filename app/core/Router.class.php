@@ -69,7 +69,6 @@ class Router
         if (empty($_SESION['id']) && strpos($_SERVER['REQUEST_URI'], 'api/') === false) {
             self::savePath();
         }
-
         if (self::isMatch()) {
             $path = 'app\Controllers\\' . ucfirst(self::$params['controller']) . 'Controller';
             if (class_exists($path)) {

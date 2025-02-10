@@ -13,6 +13,11 @@ use app\Repositories\PageRepository;
 
 class PagesController extends Controller
 {
+    public static function before(): bool
+    {
+        View::$route['vars']['styles'][] = 'pages';
+        return true;
+    }
     public function homeAction()
     {
         self::$route['vars'] = ['slug' => 'home'];

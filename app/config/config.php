@@ -54,6 +54,7 @@ if (!defined('SQL_HOST')) {
     define('FILE_USRGALL', '/public/gallery/users/');
     define('FILE_MAINGALL', '/public/gallery/site/');
     define('SCRIPTS_STORAGE', '/public/scripts/');
+    define('STYLES_STORAGE', '/public/css/');
     define('CFG_AUTHOR', 'DSVan');
     define('CSRF_NAME', '_token');
 }

@@ -10,6 +10,11 @@ use app\core\Locale;
 
 class SettingsController extends Controller
 {
+    public static function before(): bool
+    {
+        View::$route['vars']['styles'][] = 'settings';
+        return true;
+    }
     public function indexAction()
     {
         extract(self::$route['vars']);

@@ -8,6 +8,15 @@
         <meta name="description" content="<?= $description ?>">
     <? endif ?>
     <meta name="author" content="<?= CFG_AUTHOR ?>">
+    <? if (!empty($styles)) : ?>
+        <? if (is_string($styles)) : ?>
+            <link rel="stylesheet" href="<?= STYLES_STORAGE . "$styles.css?v={$_SERVER['REQUEST_TIME']}"?>">
+            <? else :?>
+                <? for ($x = 0; $x < count($styles); $x++) : ?>
+                    <link rel="stylesheet" href="<?= STYLES_STORAGE . "{$styles[$x]}.css?v={$_SERVER['REQUEST_TIME']}"?>">
+                <? endfor ?>
+        <? endif ?>
+    <? endif ?>
     <link rel="stylesheet" href="/public/css/style.css?v=<?= $_SERVER['REQUEST_TIME'] ?>">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+Pro">
 

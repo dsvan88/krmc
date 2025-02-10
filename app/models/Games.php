@@ -4,6 +4,7 @@ namespace app\models;
 
 use app\core\Model;
 use app\core\Locale;
+use app\core\Tech;
 use app\Repositories\GameRepository;
 
 class Games extends Model
@@ -15,8 +16,6 @@ class Games extends Model
 
     public static function create($post)
     {
-        $table = self::$table;
-
         $manager = Users::getDataByName(Users::formatName($post['manager']));
         $state = [
             'config' => GameRepository::formConfig($post)
@@ -29,6 +28,7 @@ class Games extends Model
             'players' => json_encode(Users::assingIds($post['player']), JSON_UNESCAPED_UNICODE),
             'started_at' => $_SERVER['REQUEST_TIME'],
         ];
+        
         if (!empty($post['default'])){
             $setting = [
                 'type' => 'mafia_config',
@@ -37,7 +37,7 @@ class Games extends Model
             ];
             Settings::save($setting);
         }
-        return self::insert($data, $table);
+        return self::insert($data);
     }
 
     public static function save($post, $id)

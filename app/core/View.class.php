@@ -33,13 +33,13 @@ class View
     }
     public static function render()
     {
-        $styles = $scripts = '';
-
         self::$route['vars'] = Locale::apply(self::$route['vars']);
         extract(self::$route['vars']);
 
         extract(ViewRepository::defaultVars());
 
+        if (empty($styles)) $styles = [];
+        if (!empty($css)) $styles = array_merge($styles, $css);
         if (empty($mainClass)) $mainClass = 'index';
 
         $pageTitle = preg_replace('/<.*?>/', '', $title);
@@ -105,6 +105,7 @@ class View
         if ($url[strlen($url) - 1] !== '/')
             $url .= '/';
         header('Location: ' . $url);
+        echo 'Redirect to: ' . $url;
     }
     /**
      * Use for soft redirect for js handler

@@ -8,6 +8,15 @@
         <meta name="description" content="<?= $description ?>">
     <? endif ?>
     <meta name="author" content="<?= CFG_AUTHOR ?>">
+    <? if (!empty($styles)) : ?>
+        <? if (is_string($styles)) : ?>
+            <link rel="stylesheet" href="<?= STYLES_STORAGE . "$styles.css?v={$_SERVER['REQUEST_TIME']}"?>">
+            <? else :?>
+                <? for ($x = 0; $x < count($styles); $x++) : ?>
+                    <link rel="stylesheet" href="<?= STYLES_STORAGE . "{$styles[$x]}.css?v={$_SERVER['REQUEST_TIME']}"?>">
+                <? endfor ?>
+        <? endif ?>
+    <? endif ?>
     <link rel="stylesheet" href="/public/css/style.css?v=<?= $_SERVER['REQUEST_TIME'] ?>">
     <link rel="stylesheet" href="/public/css/jquery-ui.min.css">
     <link rel="stylesheet" href="/public/css/cropper.css">
@@ -31,9 +40,9 @@
             <? else :
             for ($x = 0; $x < count($scripts); $x++) : ?>
                 <script defer="" src="<?= SCRIPTS_STORAGE . $scripts[$x] . '?v=' . $_SERVER['REQUEST_TIME'] ?>"></script>
-    <? endfor;
-        endif;
-    endif; ?>
+            <? endfor ?>
+        <? endif ?>
+    <? endif ?>
     <script defer="" src="/public/scripts/common.js?v=<?= $_SERVER['REQUEST_TIME'] ?>"></script>
     <script defer="" src="/public/scripts/modals.js?v=<?= $_SERVER['REQUEST_TIME'] ?>"></script>
     <link rel="icon" type="image/x-icon" href="/public/images/mafia-vintage-logo-short.svg">
@@ -60,9 +69,9 @@
                     <div class="header__menu">
                         <!-- <label for="header__navigation-checkbox" class="navigation-for-small-display menu-show"><i class="fa fa-bars"></i></label> -->
                         <label for="navigation__checkbox" class="navigation-for-small-display menu-show fa fa-bars"></label>
-                        <input type="checkbox" name="toggle-navigation" id="navigation-checkbox" class="navigation-for-small-display-chechbox">
+                        <input type="checkbox" name="toggle-navigation" id="navigation__checkbox" class="navigation-for-small-display-chechbox">
                         <nav class="navigation" id="navigation">
-                            <label for="navigation-checkbox" class="navigation-for-small-display menu-hide"><i class="fa fa-times"></i></label>
+                            <label for="navigation__checkbox" class="navigation-for-small-display menu-hide"><i class="fa fa-times"></i></label>
                             <? foreach ($headerMenu as $headerMenuItem) : ?>
                                 <? self::component('header/menu-item', ['menuItem' => $headerMenuItem]) ?>
                             <? endforeach ?>
