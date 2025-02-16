@@ -6,6 +6,7 @@ use app\libs\Db;
 
 class Model extends Db
 {
+    public static $encryptedFields = [];
     public static $jsonFields = [];
     public static $foreign = [];
 
@@ -92,6 +93,8 @@ class Model extends Db
     }
     public static function decodeJson(array $array)
     {
+        static::decryptFields($array);
+
         if (empty(static::$jsonFields))
             return $array;
 
@@ -100,6 +103,15 @@ class Model extends Db
             $array[$field] = json_decode($array[$field], true);
         }
         return $array;
+    }
+    public static function decryptFields(array &$array):void
+    {
+        if (empty(static::$encryptedFields))    return;
+        
+        foreach (static::$jsonFields as $field) {
+            if (empty($array[$field])) continue;
+            $array[$field] = Tech::decrypt($array[$field], true);
+        }
     }
     public static function modifyWhere(array &$condition = [], string $andOr = 'AND ')
     {

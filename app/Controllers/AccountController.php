@@ -7,6 +7,7 @@ use app\core\ImageProcessing;
 use app\core\View;
 use app\core\Locale;
 use app\core\Sender;
+use app\core\Tech;
 use app\core\TelegramBot;
 use app\core\Validator;
 use app\models\Weeks;

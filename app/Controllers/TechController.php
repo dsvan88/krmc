@@ -3,6 +3,7 @@
 namespace app\Controllers;
 
 use app\core\Controller;
+use app\core\Tech;
 use app\core\View;
 use app\libs\Db;
 use app\models\Pages;
@@ -110,8 +111,25 @@ class TechController extends Controller
     public static function dbrebuildAction()
     {
         return View::redirect('/');
-        $table = Pages::$table;
-        Users::query("ALTER TABLE $table ADD COLUMN lang CHARACTER VARYING(5) DEFAULT NULL");
+        
+        $settings = [
+            ['gdrive', 'credentials', 'Credentials JSON',  ''],
+        ];
+
+        $array = [];
+        $keys = ['type', 'slug', 'name', 'value', 'default_value'];
+        for ($i = 0; $i < count($settings); $i++) {
+            foreach ($settings[$i] as $num => $setting) {
+                if (!is_array($setting)) continue;
+                $settings[$i][$num] = json_encode($setting, JSON_UNESCAPED_UNICODE);
+            }
+            $settings[$i][] = $settings[$i][3];
+            $array[] = array_combine($keys, $settings[$i]);
+        }
+        Settings::insert($array);
+
+        // $table = Pages::$table;
+        // Users::query("ALTER TABLE $table ADD COLUMN lang CHARACTER VARYING(5) DEFAULT NULL");
 
         /*         return View::redirect('/');
         $table = Games::$table;
@@ -225,10 +243,6 @@ class TechController extends Controller
     }
     public static function testAction()
     {
-        $directory = 'testDir';
-        mkdir($directory);
-
-        var_dump(file_exists($directory) ? 'Exists' : 'Error');
-        return View::errorCode(404, ['message' => 'Result is Ok']);
+        TechRepository::GoogleFS();
     }
 }

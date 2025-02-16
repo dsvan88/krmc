@@ -3,6 +3,7 @@
 namespace app\models;
 
 use app\core\Model;
+use app\core\Tech;
 
 class Settings extends Model
 {
@@ -25,6 +26,8 @@ class Settings extends Model
                 'value' => $setting['value'],
                 'options' => $setting['options'],
             ];
+            if (empty($setting['options']) || !empty($setting['value'])) continue;
+            self::$settings[$type][$setting['slug']]['value'] = json_encode($setting['options'], JSON_UNESCAPED_UNICODE);
         }
         return self::$settings[$type];
     }
@@ -91,26 +94,37 @@ class Settings extends Model
     }
     public static function edit(int $settingId, array $array)
     {
+        $setting = [];
         foreach ($array as $column => $value) {
-            if (!is_array($value)) continue;
-            $array[$column] = json_encode($value, JSON_UNESCAPED_UNICODE);
+            if (is_array($value)){
+                $setting[$column] = json_encode($value, JSON_UNESCAPED_UNICODE);
+            }
+            if (Tech::json_validate($value) && mb_strlen($value, 'UTF-8') > 499){
+                $setting['options'] = $value;
+            }
         }
-        return self::update($array, ['id' => $settingId]);
+        return self::update($setting, ['id' => $settingId]);
     }
     public static function save($data)
     {
         $table = self::$table;
+        $setting = [];
         try {
             $queryCond = ['type' => $data['type'], 'slug' => $data['slug']];
             foreach ($data as $column => $value) {
-                if (!is_array($value)) continue;
-                $data[$column] = json_encode($value, JSON_UNESCAPED_UNICODE);
+                if (is_array($value)){
+                    $setting[$column] = json_encode($value, JSON_UNESCAPED_UNICODE);
+                }
+                if (Tech::json_validate($value) && mb_strlen($value, 'UTF-8') > 499){
+                    $setting['options'] = $value;
+                }
             }
             $id = self::query("SELECT id FROM $table WHERE type = :type AND slug = :slug", $queryCond, 'Column');
             if (!$id) {
-                return self::insert($data);
+                return self::insert($setting);
             }
-            self::update($data, ['id' => $id]);
+            Tech::dump($setting);
+            self::update($setting, ['id' => $id]);
             return true;
         } catch (\Throwable $th) {
             error_log($th->__toString());
@@ -170,6 +184,11 @@ class Settings extends Model
             ['email', 'password', 'Email Password', ''],
             ['email', 'secure', 'Email Secure Type', 'ssl'],
             ['email', 'port', 'Email SMTP Port', '465'],
+            ['gdrive', 'project_id', 'Project ID',  ''],
+            ['gdrive', 'private_key_id', 'Private Key ID', ''],
+            ['gdrive', 'private_key', 'Private Key', ''],
+            ['gdrive', 'client_email', 'Service Account E-Mail', ''],
+            ['gdrive', 'client_id', 'Service Account Client ID', ''],
             ['contacts', 'email', 'Contacts Email', 'kr.mafia.club@gmail.com'],
             ['contacts', 'phone', 'Contacts Phone', '+380987654321'],
             ['contacts', 'telegram', 'Telegram Group', 'https://t.me/+ymO2QrwKoQgzODhi'],

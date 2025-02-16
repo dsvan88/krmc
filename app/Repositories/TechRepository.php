@@ -4,9 +4,13 @@ namespace app\Repositories;
 
 use app\core\Locale;
 use app\core\Mailer;
+use app\core\Tech;
 use app\libs\Db;
 use app\models\Settings;
-use ZipArchive;
+use Google\Client as Google_Client;
+use Google\Service\Drive  as Google_Drive;
+use Google\Service\Drive\DriveFile as Google_Drive_File;
+use Google\Service\Drive\Permission as Google_Drive_Permission;
 
 class TechRepository
 {
@@ -32,14 +36,14 @@ class TechRepository
     public static function archive(string $filename = 'backup', array $dataArray = [])
     {
 
-        $zip = new ZipArchive();
+        $zip = new \ZipArchive();
 
         $folder = sys_get_temp_dir();
 
         $extension = 'zip';
         $fullpath = "$folder/$filename.$extension";
 
-        if ($zip->open($fullpath, ZipArchive::CREATE) !== TRUE) {
+        if ($zip->open($fullpath, \ZipArchive::CREATE) !== TRUE) {
             exit("Невозможно открыть <$fullpath>\n");
         }
 
@@ -48,7 +52,7 @@ class TechRepository
         foreach ($dataArray as $name => $data) {
             $filename = "$name.json";
             $zip->addFromString($filename, json_encode($data, JSON_UNESCAPED_UNICODE));
-            $zip->setEncryptionName($filename, ZipArchive::EM_AES_256);
+            $zip->setEncryptionName($filename, \ZipArchive::EM_AES_256);
         }
 
         $zip->close();
@@ -70,7 +74,7 @@ class TechRepository
 
         preg_match("/\d{2}.\d{2}.\d{4}/", $backupName, $matched);
         $date = $matched[count($matched) - 1];
-        $zip = new ZipArchive();
+        $zip = new \ZipArchive();
         $zip->open($_FILES['data']['tmp_name']);
         $zip->setPassword(sha1(ROOT_PASS_DEFAULT . $date));
         $zip->extractTo($folder);
@@ -187,5 +191,82 @@ class TechRepository
         DB::tableTruncate($table);
         DB::insert($data, $table);
         DB::resetIncrement($table);
+    }
+    public static function GoogleFS(){
+        // $setting = Settings::load('gdrive');
+        $jsonKey = json_decode(Settings::load('gdrive')['credentials']['value'], true);
+        try {
+            $client = new Google_Client();
+            $client->setAuthConfig($jsonKey);
+            $client->addScope(Google_Drive::DRIVE);
+ 
+            $service = new Google_Drive($client);
+
+            // Создание объекта файла
+            // $file = new Google_Drive_File();
+            // $file->setName('background.jfif');
+
+            // $filePath = 'D:\OSPanel\domains\krmc\public\images\background.jfif';
+            // Загрузка файла
+            // $content = file_get_contents($filePath);
+
+            // try {
+            //     // Загружаем файл в корневую папку Google Drive
+            //     $uploadedFile = $service->files->create($file, [
+            //         'data' => $content,
+            //         'mimeType' =>  mime_content_type($filePath),
+            //         'uploadType' => 'multipart'
+            //     ]);
+            //     echo 'File uploaded successfully: ' . $uploadedFile->getId();
+            // } catch (\Exception $e) {
+            //     echo 'Error uploading file: ' . $e->getMessage();
+            // }
+           
+            try {
+                $results = $service->files->listFiles([
+                    'pageSize' => 10,
+                    'fields' => 'nextPageToken, files(id, name)',
+                ]);
+        
+                if (count($results->files) == 0) {
+                    echo "No files found.<br>";
+                } else {
+                    echo "Files:<br>";
+                    foreach ($results->files as $file) {
+                        // Tech::dump($file);
+                        echo $file->name . " (" . $file->id . ")<br>";
+                        $permission = new Google_Drive_Permission();
+                        $permission->setType('anyone');
+                        $permission->setRole('reader');
+
+                        // Применяем разрешение к файлу
+                        $service->permissions->create($file->id, $permission);
+
+                        echo "<br>File is now public and accessible.";
+                        echo '<img src="https://lh3.googleusercontent.com/d/' . $file->id .'" alt="Описание изображения">';
+                    }
+                }
+                
+                // echo '<img src="https://drive.google.com/uc?id=1mDmeJffenU_fnxQDFkWUfarDJ8DLdeHE" loading="lazy" alt="...">';
+            } catch (\Exception $e) {
+                echo 'Error fetching files: ' . $e->getMessage();
+            }
+
+            // $results = $service->files->listFiles();
+
+            // if (count($results->files) == 0) {
+            //     echo "Нет файлов в Google Drive.";
+            // } else {
+            //     echo "Файлы:<br>";
+            //     foreach ($results->files as $file) {
+            //         printf("%s (%s)<br>", $file->name, $file->id);
+            //     }
+            // }
+        } catch(\Throwable $error){
+            var_dump($error);
+        }
+        
+        
+        // return View::errorCode(404, ['message' => 'Result is Ok']);
     }
 }

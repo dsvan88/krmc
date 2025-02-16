@@ -1,12 +1,5 @@
 {
-    "name": "dsvan88/krmc",
-    "description": "Kriviy Rih Mafia Club website",
-    "version":"0.17b",
-    "license": "MIT",
     "require": {
-        "php": ">=7.2.0",
-        "ext-mbstring": "*",
-        "ext-exif": "*",
-        "ext-gd": "*"
+        "google/apiclient": "^2.18"
     }
 }
