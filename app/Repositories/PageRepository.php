@@ -2,6 +2,7 @@
 
 namespace app\Repositories;
 
+use app\core\Tech;
 use app\models\Pages;
 
 class PageRepository
@@ -31,8 +32,7 @@ class PageRepository
     }
     public static function formPageOG(array $page = null)
     {
-        $https = empty($_SERVER['HTTP_X_FORWARDED_PROTO']) ? 'https' : $_SERVER['HTTP_X_FORWARDED_PROTO'];
-        $url = "$https://{$_SERVER['SERVER_NAME']}";
+        $url = Tech::getRequestProtocol() . "://{$_SERVER['SERVER_NAME']}";
         $page['logo'] = empty($page['logo']) ? '/public/images/club-logo-w-city.jpg' : $page['logo'];
         $imageSize = getimagesize($_SERVER['DOCUMENT_ROOT'] . $page['logo']);
         $image = "$url/{$page['logo']}";

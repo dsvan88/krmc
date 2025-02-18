@@ -8,3 +8,4 @@ tg-message.txt
 .env.dev
 /vendor/*
 /public/backups/*
+composer.phar

@@ -110,8 +110,8 @@ class TechController extends Controller
     }
     public static function dbrebuildAction()
     {
-        return View::redirect('/');
-        
+        // return View::redirect('/');
+
         $settings = [
             ['gdrive', 'credentials', 'Credentials JSON',  ''],
         ];

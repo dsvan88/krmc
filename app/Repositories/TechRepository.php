@@ -112,7 +112,7 @@ class TechRepository
 
         if (empty($settings['email']['value']) || $settings['last']['value'] > $_SERVER['REQUEST_TIME'] - BACKUP_FREQ) exit();
 
-        $url = "{$_SERVER['HTTP_X_FORWARDED_PROTO']}://{$_SERVER['SERVER_NAME']}/tech/backup/save";
+        $url = Tech::getRequestProtocol() . "://{$_SERVER['SERVER_NAME']}/tech/backup/save";
         $options = [
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_TIMEOUT_MS => 100,      // максимальное время выполнения запроса
@@ -192,14 +192,15 @@ class TechRepository
         DB::insert($data, $table);
         DB::resetIncrement($table);
     }
-    public static function GoogleFS(){
+    public static function GoogleFS()
+    {
         // $setting = Settings::load('gdrive');
         $jsonKey = json_decode(Settings::load('gdrive')['credentials']['value'], true);
         try {
             $client = new Google_Client();
             $client->setAuthConfig($jsonKey);
             $client->addScope(Google_Drive::DRIVE);
- 
+
             $service = new Google_Drive($client);
 
             // Создание объекта файла
@@ -221,13 +222,13 @@ class TechRepository
             // } catch (\Exception $e) {
             //     echo 'Error uploading file: ' . $e->getMessage();
             // }
-           
+
             try {
                 $results = $service->files->listFiles([
                     'pageSize' => 10,
                     'fields' => 'nextPageToken, files(id, name)',
                 ]);
-        
+
                 if (count($results->files) == 0) {
                     echo "No files found.<br>";
                 } else {
@@ -243,10 +244,10 @@ class TechRepository
                         $service->permissions->create($file->id, $permission);
 
                         echo "<br>File is now public and accessible.";
-                        echo '<img src="https://lh3.googleusercontent.com/d/' . $file->id .'" alt="Описание изображения">';
+                        echo '<img src="https://lh3.googleusercontent.com/d/' . $file->id . '" alt="Описание изображения">';
                     }
                 }
-                
+
                 // echo '<img src="https://drive.google.com/uc?id=1mDmeJffenU_fnxQDFkWUfarDJ8DLdeHE" loading="lazy" alt="...">';
             } catch (\Exception $e) {
                 echo 'Error fetching files: ' . $e->getMessage();
@@ -262,11 +263,11 @@ class TechRepository
             //         printf("%s (%s)<br>", $file->name, $file->id);
             //     }
             // }
-        } catch(\Throwable $error){
+        } catch (\Throwable $error) {
             var_dump($error);
         }
-        
-        
+
+
         // return View::errorCode(404, ['message' => 'Result is Ok']);
     }
 }

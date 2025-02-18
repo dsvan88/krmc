@@ -81,7 +81,7 @@ class TelegramBot
             $params['reply_to_message_id'] = $messageId;
         }
         if ($image !== '') {
-            $image = "{$_SERVER['HTTP_X_FORWARDED_PROTO']}://{$_SERVER['SERVER_NAME']}$image";
+            $image = Tech::getRequestProtocol() . "://{$_SERVER['SERVER_NAME']}$image";
             $params['text'] = "<a href='$image'>&#8205;</a>" . $params['text'];
             $params['disable_web_page_preview'] = false;
         }

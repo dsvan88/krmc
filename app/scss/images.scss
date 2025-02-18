@@ -1,0 +1,32 @@
+@import "tech/vars";
+
+.images {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5em;
+
+    .image {
+        flex: 0 1 10em;
+        height: 10em;
+        background-color: $bg-color-light;
+        padding: .5em .5em 2em .5em;
+
+        &__img {
+            height: 100%;
+        }
+
+        &__description {
+            display: none;
+            max-height: 0;
+            transition: max-height $animation-slow;
+            overflow: hidden;
+        }
+
+        &:hover {
+            .image__description {
+                display: block;
+                max-height: 5em;
+            }
+        }
+    }
+}

@@ -178,6 +178,12 @@ return  [
         'access' => ['category' => 'admin'],
     ],
 
+    'images/index' => [
+        'controller' => 'images',
+        'action' => 'index',
+        'access' => ['category' => 'manager'],
+    ],
+
     'game' => [
         'controller' => 'gameTypes',
         'action' => 'index',

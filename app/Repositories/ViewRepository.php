@@ -44,10 +44,12 @@ class ViewRepository
         }
         return $vars;
     }
-    public static function headerMenu(){
+    public static function headerMenu()
+    {
         return empty($_SESSION['TelegramApp']) ? self::webMenu() : self::tgAppMenu();
     }
-    public static function tgAppMenu(){
+    public static function tgAppMenu()
+    {
         $menu = [
             [
                 'path' => 'near',
@@ -73,12 +75,12 @@ class ViewRepository
             ];
         }
 
-        $uri = trim($_SERVER['REQUEST_URI'],'/');
-        foreach($menu as $index=>$item) {
+        $uri = trim($_SERVER['REQUEST_URI'], '/');
+        foreach ($menu as $index => $item) {
             if ($uri !== $item['path']) continue;
             // if (strpos($uri, $item['path']) === false) continue;
             $menu[$index]['active'] = true;
-            break; 
+            break;
         }
         return Locale::apply($menu);
     }
@@ -229,6 +231,11 @@ class ViewRepository
                 'link' => 'chat/send',
                 'icon' => 'paper-plane-o',
                 'label' => 'Send message',
+            ],
+            [
+                'link' => 'images/index',
+                'icon' => 'picture-o',
+                'label' => 'Images',
             ],
             [
                 'link' => 'settings/index',

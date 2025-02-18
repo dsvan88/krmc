@@ -4,6 +4,7 @@ namespace app\Repositories;
 
 use app\core\Locale;
 use app\core\Paginator;
+use app\core\Tech;
 use app\models\Days;
 use app\models\GameTypes;
 use app\models\Users;
@@ -98,19 +99,21 @@ class WeekRepository
             'description',
         );
     }
-    public static function scheludeDescription(array $days):string{
+    public static function scheludeDescription(array $days): string
+    {
         if (empty($days)) return false;
-        $result = Locale::phrase("Our schelude").':'.PHP_EOL;
-        foreach($days as $index=>$day){
-            $result .= $day['date'] . ' - ' .  $day['gameName'] .';'.PHP_EOL;
+        $result = Locale::phrase("Our schelude") . ':' . PHP_EOL;
+        foreach ($days as $index => $day) {
+            $result .= $day['date'] . ' - ' .  $day['gameName'] . ';' . PHP_EOL;
         }
-        $result .= Locale::phrase("Welcome to our club").'!';
+        $result .= Locale::phrase("Welcome to our club") . '!';
         return preg_replace('/<.*?>/', '', $result);
     }
-    public static function formWeekOG(array $data = null){
-        $url = "{$_SERVER['HTTP_X_FORWARDED_PROTO']}://{$_SERVER['SERVER_NAME']}";
+    public static function formWeekOG(array $data = null)
+    {
+        $url = Tech::getRequestProtocol() . "://{$_SERVER['SERVER_NAME']}";
         $logo = empty($data['logo']) ? '/public/images/club-logo-w-city.jpg' : $data['logo'];
-        $imageSize = getimagesize($_SERVER['DOCUMENT_ROOT'].$logo);
+        $imageSize = getimagesize($_SERVER['DOCUMENT_ROOT'] . $logo);
         $image = "$url/$logo";
         $data['title'] = Locale::phrase($data['title']);
         $result = [

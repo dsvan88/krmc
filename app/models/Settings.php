@@ -96,10 +96,10 @@ class Settings extends Model
     {
         $setting = [];
         foreach ($array as $column => $value) {
-            if (is_array($value)){
+            if (is_array($value)) {
                 $setting[$column] = json_encode($value, JSON_UNESCAPED_UNICODE);
             }
-            if (Tech::json_validate($value) && mb_strlen($value, 'UTF-8') > 499){
+            if (Tech::json_validate($value) && mb_strlen($value, 'UTF-8') > 499) {
                 $setting['options'] = $value;
             }
         }
@@ -112,10 +112,10 @@ class Settings extends Model
         try {
             $queryCond = ['type' => $data['type'], 'slug' => $data['slug']];
             foreach ($data as $column => $value) {
-                if (is_array($value)){
+                if (is_array($value)) {
                     $setting[$column] = json_encode($value, JSON_UNESCAPED_UNICODE);
                 }
-                if (Tech::json_validate($value) && mb_strlen($value, 'UTF-8') > 499){
+                if (Tech::json_validate($value) && mb_strlen($value, 'UTF-8') > 499) {
                     $setting['options'] = $value;
                 }
             }
@@ -147,7 +147,7 @@ class Settings extends Model
     public static function init()
     {
         $table = self::$table;
-    
+
         self::query(
             "CREATE TABLE IF NOT EXISTS $table (
                 id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -184,11 +184,7 @@ class Settings extends Model
             ['email', 'password', 'Email Password', ''],
             ['email', 'secure', 'Email Secure Type', 'ssl'],
             ['email', 'port', 'Email SMTP Port', '465'],
-            ['gdrive', 'project_id', 'Project ID',  ''],
-            ['gdrive', 'private_key_id', 'Private Key ID', ''],
-            ['gdrive', 'private_key', 'Private Key', ''],
-            ['gdrive', 'client_email', 'Service Account E-Mail', ''],
-            ['gdrive', 'client_id', 'Service Account Client ID', ''],
+            ['gdrive', 'credentials', 'Credentials JSON',  ''],
             ['contacts', 'email', 'Contacts Email', 'kr.mafia.club@gmail.com'],
             ['contacts', 'phone', 'Contacts Phone', '+380987654321'],
             ['contacts', 'telegram', 'Telegram Group', 'https://t.me/+ymO2QrwKoQgzODhi'],
@@ -242,6 +238,6 @@ class Settings extends Model
             ],
         ]);
 
-        self::insert(['type'=>'mafia_config', 'slug'=>'mafia-config', 'options'=>$mafiaConfig], $table);
+        self::insert(['type' => 'mafia_config', 'slug' => 'mafia-config', 'options' => $mafiaConfig], $table);
     }
 }

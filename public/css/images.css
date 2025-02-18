@@ -1,0 +1,1 @@
+.images{display:flex;flex-wrap:wrap;gap:.5em}.images .image{flex:0 1 10em;height:10em;background-color:#f7f7f7;padding:.5em .5em 2em .5em}.images .image__img{height:100%}.images .image__description{display:none;max-height:0;transition:max-height 1.5s;overflow:hidden}.images .image:hover .image__description{display:block;max-height:5em}

@@ -4,6 +4,7 @@ namespace app\models;
 
 use app\core\Model;
 use app\core\Locale;
+use app\core\Tech;
 use app\Repositories\DayRepository;
 
 class Days extends Model
@@ -172,7 +173,8 @@ class Days extends Model
 
         // $result = "$date - {$gameNames[$weekData['data'][$day]['game']]}\n";
         $lang = Locale::$langCode;
-        $result = "$date - <a href='{$_SERVER['HTTP_X_FORWARDED_PROTO']}://{$_SERVER['SERVER_NAME']}/game/{$weekData['data'][$day]['game']}/?lang=$lang'>{$gameNames[$weekData['data'][$day]['game']]}</a>\n";
+        $proto = Tech::getRequestProtocol();
+        $result = "$date - <a href='$proto://{$_SERVER['SERVER_NAME']}/game/{$weekData['data'][$day]['game']}/?lang=$lang'>{$gameNames[$weekData['data'][$day]['game']]}</a>\n";
 
         if (isset($weekData['data'][$day]['mods'])) {
             if (in_array('fans', $weekData['data'][$day]['mods'], true))

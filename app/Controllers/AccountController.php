@@ -518,7 +518,7 @@ class AccountController extends Controller
             Users::saveForget($userData, $hash);
             $contact = Contacts::getUserContact($userData['id'], 'telegramid');
             $telegramId = $contact['contact'];
-            $link = "{$_SERVER['HTTP_X_FORWARDED_PROTO']}://{$_SERVER['SERVER_NAME']}/account/password-reset/$hash";
+            $link = Tech::getRequestProtocol() . "://{$_SERVER['SERVER_NAME']}/account/password-reset/$hash";
             $link = "<a href='$link'>$link</a>";
             Sender::message($telegramId, Locale::phrase(['string' => '{{ Account_Forget_Check_Succes }}', 'vars' => [$link]]));
         }

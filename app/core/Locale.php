@@ -118,8 +118,7 @@ class Locale
         $offset = strpos($_SERVER['REQUEST_URI'], '?');
         $url = trim(empty($offset) ? $_SERVER['REQUEST_URI'] : substr($_SERVER['REQUEST_URI'], 0, $offset), '/') . '/';
 
-        $https = empty($_SERVER['HTTP_X_FORWARDED_PROTO']) ? 'https' : $_SERVER['HTTP_X_FORWARDED_PROTO'];
-        $url = "$https://{$_SERVER['SERVER_NAME']}/" . ($url === '/' ? '' : $url);
+        $url = Tech::getRequestProtocol() . "://{$_SERVER['SERVER_NAME']}/" . ($url === '/' ? '' : $url);
 
         $codes = self::$langCodes;
         $count = count($codes);

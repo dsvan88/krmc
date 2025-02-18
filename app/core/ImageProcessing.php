@@ -47,9 +47,8 @@ class ImageProcessing
 
         $output = '<picture>';
 
-        if (empty(self::$path)){
-            $protocol = empty($_SERVER['HTTP_X_FORWARDED_PROTO']) ? 'https' : $_SERVER['HTTP_X_FORWARDED_PROTO'];
-            self::$path = "$protocol://{$_SERVER['SERVER_NAME']}";
+        if (empty(self::$path)) {
+            self::$path = Tech::getRequestProtocol() . "://{$_SERVER['SERVER_NAME']}";
         }
 
         $source = self::$path . $source;

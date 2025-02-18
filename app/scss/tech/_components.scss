@@ -74,6 +74,10 @@
 	}
 }
 
+.hidden {
+	display: none;
+}
+
 button {
 	@extend %buttonStyle;
 }

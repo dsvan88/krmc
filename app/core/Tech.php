@@ -14,6 +14,12 @@ class Tech
         }
         return '';
     }
+    public static function getRequestProtocol()
+    {
+        if (empty($_SERVER['HTTP_X_FORWARDED_PROTO']))
+            return empty($_SERVER['HTTPS']) ? "http" : "https";
+        return strtolower($_SERVER['HTTP_X_FORWARDED_PROTO']);
+    }
     public static function dump($data)
     {
         echo '<pre>';
@@ -46,19 +52,20 @@ class Tech
         });
         $array = $result;
     }
-    public static function json_validate(string $string): bool {
+    public static function json_validate(string $string): bool
+    {
         json_decode($string);
-    
+
         return json_last_error() === JSON_ERROR_NONE;
     }
-    
+
     public static function encrypt(string $string): string
     {
         if (empty($string)) return '';
 
         $cipher = "AES-256-CBC";
         $key = md5(ROOT_PASS_DEFAULT);
-        
+
         $compressed = gzcompress($string, 9);
         $ivLength = openssl_cipher_iv_length($cipher);
         $iv = openssl_random_pseudo_bytes($ivLength);
@@ -78,7 +85,7 @@ class Tech
         $encryptedText = substr($decoded, $ivLength);
 
         $decryptedCompressed = openssl_decrypt($encryptedText, $cipher, $key, 0, $extractedIV);
-        
+
         return gzuncompress($decryptedCompressed);
     }
 }
