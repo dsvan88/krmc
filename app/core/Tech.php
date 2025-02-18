@@ -58,7 +58,6 @@ class Tech
 
         return json_last_error() === JSON_ERROR_NONE;
     }
-
     public static function encrypt(string $string): string
     {
         if (empty($string)) return '';

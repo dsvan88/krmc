@@ -71,7 +71,7 @@ class GoogleDrive
                 return $result;
 
             foreach ($results->files as $file) {
-                $_result = (array) $file;
+                $_result = get_object_vars($file);
                 $_result['realLink'] = static::getLink($file->id);
                 $result[] = $_result;
             }
