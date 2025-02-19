@@ -4,7 +4,9 @@ namespace app\Repositories\TelegramCommands;
 
 use app\core\ChatCommand;
 use app\core\Locale;
+use app\core\Sender;
 use app\models\Contacts;
+use app\models\Settings;
 use app\models\TelegramChats;
 use app\models\Users;
 use app\Repositories\ContactRepository;
@@ -22,7 +24,7 @@ class NickCommand extends ChatCommand
             return false;
         }
 
-        $username = Users::formatName(implode(' ',$arguments));
+        $username = Users::formatName(implode(' ', $arguments));
 
         if (empty($username)) {
             self::$operatorClass::$resultMessage = self::locale('{{ Tg_Command_Name_Wrong_Format }}');
@@ -43,7 +45,7 @@ class NickCommand extends ChatCommand
         if (empty($userExistsData['id'])) {
             $userId = Users::add($username);
 
-            Contacts::new(['telegramid'=> $telegramId, 'telegram' => $telegram], $userId);
+            Contacts::new(['telegramid' => $telegramId, 'telegram' => $telegram], $userId);
             TelegramChats::save(self::$message);
 
             self::$operatorClass::$resultMessage = self::locale(['string' => '{{ Tg_Command_Name_Save_Success }}', 'vars' => [$username]]);
@@ -53,18 +55,18 @@ class NickCommand extends ChatCommand
         $userContacts = Contacts::getByUserId($userExistsData['id']);
         TelegramChats::save(self::$message);
 
-        if (empty($userContacts)){
-            Contacts::new(['telegramid'=> $telegramId, 'telegram' => $telegram], $userExistsData['id']);
+        if (empty($userContacts)) {
+            Contacts::new(['telegramid' => $telegramId, 'telegram' => $telegram], $userExistsData['id']);
             self::$operatorClass::$resultMessage = self::locale(['string' => '{{ Tg_Command_Name_Save_Success }}', 'vars' => [$username]]);
             return true;
         }
 
         $userContacts = ContactRepository::formatUserContacts($userContacts);
-        if ($userContacts['telegramid'] !== $telegramId){
+        if ($userContacts['telegramid'] !== $telegramId) {
             self::$operatorClass::$resultMessage = self::locale(['string' => '{{ Tg_Command_Name_Already_Set_By_Other }}', 'vars' => [$username]]);
             return false;
         }
-        
+
         self::$operatorClass::$resultMessage = self::locale('{{ Tg_Command_Name_You_Have_One }}');
         return false;
     }

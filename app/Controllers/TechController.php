@@ -214,15 +214,15 @@ class TechController extends Controller
                 ],
                 'date' => 1652025484,
                 // 'text' => '+ на 18',
-                // 'text' => '/nick Думатель',
+                'text' => '/nick РСТУФЧХШЩЪЫЬЭЮЄІЇҐ',
                 // 'text' => '/day',
                 // 'text' => '+tod 18:15',
-                'text' => '+ на четвер, десь на 18:45, звісно, що підстрахую, але поки що (під ?)',
+                // 'text' => '+ на четвер, десь на 18:45, звісно, що підстрахую, але поки що (під ?)',
                 // 'text' => '/?',
             ]
         ];
 
-        $url = strtolower($_SERVER['HTTP_X_FORWARDED_PROTO']) . '://' . $_SERVER['HTTP_HOST'] . '/api/telegram/webhook';
+        $url = strtolower(Tech::getRequestProtocol()) . '://' . $_SERVER['HTTP_HOST'] . '/api/telegram/webhook';
         $options = [
             CURLOPT_RETURNTRANSFER => false,
             // CURLOPT_RETURNTRANSFER => true,

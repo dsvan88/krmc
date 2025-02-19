@@ -33,20 +33,22 @@ class TelegramBotController extends Controller
         $contentType = isset($_SERVER['CONTENT_TYPE']) ? strtolower(trim($_SERVER['CONTENT_TYPE'])) : '';
         if (strpos($contentType, 'application/json') ===  false) return false;
 
-        $ip = substr($_SERVER['REMOTE_ADDR'], 0, 4) === substr($_SERVER['SERVER_ADDR'], 0, 4) ? $_SERVER['HTTP_X_REAL_IP'] : $_SERVER['REMOTE_ADDR'];
-        // if (!Validator::validate('telegramIp', $ip) && $ip !== '127.0.0.1') {
-        if (!Validator::validate('telegramIp', $ip)) {
-            self::$techTelegramId = Settings::getTechTelegramId();
-            $message = json_encode([
-                'REMOTE_ADDR' => $_SERVER['REMOTE_ADDR'],
-                'SERVER_ADDR' => $_SERVER['SERVER_ADDR'],
-                'HTTP_X_REAL_IP' => $_SERVER['HTTP_X_REAL_IP'],
-            ]);
-            if (empty(self::$techTelegramId))
-                error_log($message);
-            else
-                Sender::message(self::$techTelegramId, $message);
-            return false;
+        if (APP_LOC !== 'local') {
+            $ip = substr($_SERVER['REMOTE_ADDR'], 0, 4) === substr($_SERVER['SERVER_ADDR'], 0, 4) ? $_SERVER['HTTP_X_REAL_IP'] : $_SERVER['REMOTE_ADDR'];
+            // if (!Validator::validate('telegramIp', $ip) && $ip !== '127.0.0.1') {
+            if (!Validator::validate('telegramIp', $ip)) {
+                self::$techTelegramId = Settings::getTechTelegramId();
+                $message = json_encode([
+                    'REMOTE_ADDR' => $_SERVER['REMOTE_ADDR'],
+                    'SERVER_ADDR' => $_SERVER['SERVER_ADDR'],
+                    'HTTP_X_REAL_IP' => $_SERVER['HTTP_X_REAL_IP'],
+                ]);
+                if (empty(self::$techTelegramId))
+                    error_log($message);
+                else
+                    Sender::message(self::$techTelegramId, $message);
+                return false;
+            }
         }
 
         $data = trim(file_get_contents('php://input'));
@@ -193,7 +195,7 @@ class TelegramBotController extends Controller
                 return true;
             }
             // preg_match_all('/([a-zA-Zа-яА-ЯрРсСтТуУфФчЧхХШшЩщЪъЫыЬьЭэЮюЄєІіЇїҐґ.0-9]+)/', trim(mb_substr($text, $commandLen + 1, NULL, 'UTF-8')), $matches);
-            preg_match_all('/([a-zа-я.0-9]+)/ui', trim(mb_substr($text, $commandLen + 1, NULL, 'UTF-8')), $matches);
+            preg_match_all('/([a-zа-яєіїґ.0-9]+)/ui', trim(mb_substr($text, $commandLen + 1, NULL, 'UTF-8')), $matches);
 
             self::$command = $command;
             self::$commandArguments = $matches[0];
