@@ -26,7 +26,13 @@ class ImagesController extends Controller
         $gDrive = new GoogleDrive();
         $title = 'Images';
         $files = $gDrive->listFiles();
-        View::$route['vars'] = array_merge(View::$route['vars'], compact('title', 'files'));
+
+        $scripts = [
+            // 'plugins/ckeditor.js',
+            // 'forms-admin-funcs.js',
+            'images.js',
+        ];
+        View::$route['vars'] = array_merge(View::$route['vars'], compact('title', 'files', 'scripts'));
         return View::render();
     }
     public function showAction()
@@ -130,8 +136,8 @@ class ImagesController extends Controller
                 'SubmitLabel' => 'Create'
             ],
             'scripts' => [
-                'plugins/ckeditor.js',
-                'forms-admin-funcs.js',
+                // 'plugins/ckeditor.js',
+                // 'forms-admin-funcs.js',
             ],
         ];
         View::$route['vars'] = array_merge(View::$route['vars'], $vars);
