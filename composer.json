@@ -1,5 +1,13 @@
 {
+    "name": "dsvan88/todo",
+    "description": "DSVan's Todo List",
+    "version": "0.1b",
+    "license": "MIT",
     "require": {
-        "google/apiclient": "^2.18"
+        "php": ">=8.2.0",
+        "google/apiclient": "^2.18",
+        "ext-mbstring": "*",
+        "ext-exif": "*",
+        "ext-gd": "*"
     }
 }
