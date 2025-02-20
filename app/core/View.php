@@ -102,10 +102,13 @@ class View
      */
     public static function redirect(string $url = '/'): void
     {
+        if (headers_sent()) {
+            var_dump(headers_list());
+        }
         if ($url[strlen($url) - 1] !== '/')
             $url .= '/';
         header('Location: ' . $url);
-        echo 'Redirect to: ' . $url;
+        exit;
     }
     /**
      * Use for soft redirect for js handler
