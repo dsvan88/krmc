@@ -5,6 +5,7 @@ namespace app\Controllers;
 
 use app\core\Controller;
 use app\core\GoogleDrive;
+use app\core\ImageProcessing;
 use app\core\Locale;
 use app\core\Noticer;
 use app\core\Tech;
@@ -65,6 +66,25 @@ class ImagesController extends Controller
 
         return View::render();
     }
+    public function addAction()
+    {
+        $filename = preg_replace('/([^a-zа-яєіїґ.,;0-9_-]+)/ui', '', trim($_POST['filename']));
+
+        if (ImageProcessing::saveBase64Image($_POST['image'], $filename) === false) return View::notice('Fail!');
+
+        
+        $gDrive = new GoogleDrive();
+        $fileId = $gDrive->create($_SERVER['DOCUMENT_ROOT'].FILE_MAINGALL.$filename);
+
+        $file = [
+            'id' => $fileId,
+            'realLink' => $gDrive->getLink($fileId),
+            'name' => $filename,
+        ];
+        $path = '/components/list/image/item';
+        View::$route['vars'] = array_merge(View::$route['vars'], compact('file', 'path'));
+        View::html();
+    }
     public function editAction()
     {
         extract(self::$route['vars']);
@@ -123,25 +143,25 @@ class ImagesController extends Controller
         Pages::remove($pageId);
         return View::redirect('/');
     }
-    public function addAction()
-    {
-        if (!empty($_POST)) {
-            $array = $_POST;
-            // Pages::create($array);
-            return View::message(['error' => 0, 'message' => 'Changes saved successfully!']);
-        }
-        $vars = [
-            'title' => 'Add page form',
-            'texts' => [
-                'SubmitLabel' => 'Create'
-            ],
-            'scripts' => [
-                // 'plugins/ckeditor.js',
-                // 'forms-admin-funcs.js',
-            ],
-        ];
-        View::$route['vars'] = array_merge(View::$route['vars'], $vars);
+    // public function addAction()
+    // {
+    //     if (!empty($_POST)) {
+    //         $array = $_POST;
+    //         // Pages::create($array);
+    //         return View::message(['error' => 0, 'message' => 'Changes saved successfully!']);
+    //     }
+    //     $vars = [
+    //         'title' => 'Add page form',
+    //         'texts' => [
+    //             'SubmitLabel' => 'Create'
+    //         ],
+    //         'scripts' => [
+    //             // 'plugins/ckeditor.js',
+    //             // 'forms-admin-funcs.js',
+    //         ],
+    //     ];
+    //     View::$route['vars'] = array_merge(View::$route['vars'], $vars);
 
-        return View::render();
-    }
+    //     return View::render();
+    // }
 }

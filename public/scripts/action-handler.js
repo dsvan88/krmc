@@ -72,7 +72,7 @@ let actionHandler = {
 				return true;
 			}
 		}
-		let type = camelize(target.dataset[method].replace(/\//g, '-'));
+		let type = camelize(target.dataset[method]);
 		if (debug) console.log(type);
 
 		type = self[type] ? type : 'apiTalk';

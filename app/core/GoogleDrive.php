@@ -56,7 +56,7 @@ class GoogleDrive
             error_log('Error uploading file: ' . $error->getMessage());
             return false;
         }
-        return true;
+        return $uploadedFile->getId();
     }
     public static function listFiles()
     {

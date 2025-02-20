@@ -540,7 +540,6 @@ class Users extends Model
         if (empty($name)) return false;
 
         $nickname = '';
-
         $_name = explode(' ', $name);
 
         foreach ($_name as $slug) {

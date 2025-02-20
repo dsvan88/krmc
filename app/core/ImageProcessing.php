@@ -76,17 +76,17 @@ class ImageProcessing
             "<img $attrs src='$source' loading='lazy'>
 		 </picture>");
     }
-    public static function saveBase64Image($base64Image, $filename, $path)
+    public static function saveBase64Image(string $base64Image, string $filename, string $path = FILE_MAINGALL)
     {
         try {
             $uri = substr($base64Image, strpos($base64Image, ",") + 1);
-            preg_match('/data:image\/([^;]+)/', $base64Image, $matches);
-            $extension = $matches[1];
+            // preg_match('/data:image\/([^;]+)/', $base64Image, $matches);
+            // $extension = $matches[1];
 
             if (!file_exists($path)) {
                 mkdir($path, 0777, true);
             }
-            $filename .= ".$extension";
+            // $filename .= ".$extension";
 
             $data = base64_decode($uri);
 
@@ -102,7 +102,7 @@ class ImageProcessing
                 // $data = ob_get_contents();
                 // ob_end_clean();
             }
-            file_put_contents("$path/$filename", $data);
+            file_put_contents($_SERVER['DOCUMENT_ROOT']."$path/$filename", $data);
             return ['filename' => $filename, 'data' => $data];
         } catch (\Throwable $th) {
             error_log($th->__toString());

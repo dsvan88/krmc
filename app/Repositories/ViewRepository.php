@@ -272,19 +272,15 @@ class ViewRepository
     }
     public static function compressScripts(array $scripts): string
     {
-        $name = md5(implode(' ', $scripts));
+        $name = md5(implode(' ', $scripts)) . '.js';
         $filePath = $_SERVER['DOCUMENT_ROOT'] . SCRIPTS_STORAGE . $name;
-        if (!file_exists($filePath)) {
-            $content = self::concatsSripts($scripts);
-            file_put_contents($filePath, $content);
-            return $name;
-        }
 
-        if (filemtime($filePath) < self::checkLastModify($scripts)) {
-            $content = self::concatsSripts($scripts);
-            file_put_contents($filePath, $content);
-            View::$refresh = true;
-        }
+        if (file_exists($filePath) && filemtime($filePath) > self::checkLastModify($scripts)) return $name;
+
+        $content = self::concatsSripts($scripts);
+        file_put_contents($filePath, $content);
+            
+        View::$refresh = true;
         return $name;
     }
     public static function concatsSripts(array $scripts): string
