@@ -121,7 +121,7 @@ class ImagesController extends Controller
     {
         if (!empty($_POST)) {
             $array = $_POST;
-            Pages::create($array);
+            // Pages::create($array);
             return View::message(['error' => 0, 'message' => 'Changes saved successfully!']);
         }
         $vars = [

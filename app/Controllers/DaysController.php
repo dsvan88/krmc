@@ -31,7 +31,7 @@ class DaysController extends Controller
             }
             self::$route['action'] = 'edit';
             View::set(self::$route);
-            View::$route['vars']['scripts'] = 'day-edit-funcs.js';
+            View::$route['vars']['scripts'] = ['day-edit-funcs.js'];
         }
         $gameTypes = GameTypes::menu();
 

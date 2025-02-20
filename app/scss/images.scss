@@ -60,7 +60,7 @@ $size: 7em;
             overflow: hidden;
         }
 
-        &:hover {
+        &:hover:not(.new) {
             padding-bottom: 3em;
             scale: 1.2;
 
@@ -71,6 +71,27 @@ $size: 7em;
             .image__description {
                 max-height: 10em;
             }
+        }
+
+        &.new {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+
+            .label {
+                font-size: 5em;
+                transition: font-size $animation-fast;
+            }
+
+
+            &:hover {
+                .label {
+                    font-size: 7em;
+                }
+            }
+
+
         }
     }
 }

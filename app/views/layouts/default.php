@@ -10,11 +10,11 @@
     <meta name="author" content="<?= CFG_AUTHOR ?>">
     <? if (!empty($styles)) : ?>
         <? if (is_string($styles)) : ?>
-            <link rel="stylesheet" href="<?= STYLES_STORAGE . "$styles.css?v={$_SERVER['REQUEST_TIME']}"?>">
-            <? else :?>
-                <? for ($x = 0; $x < count($styles); $x++) : ?>
-                    <link rel="stylesheet" href="<?= STYLES_STORAGE . "{$styles[$x]}.css?v={$_SERVER['REQUEST_TIME']}"?>">
-                <? endfor ?>
+            <link rel="stylesheet" href="<?= STYLES_STORAGE . "$styles.css?v={$_SERVER['REQUEST_TIME']}" ?>">
+        <? else : ?>
+            <? for ($x = 0; $x < count($styles); $x++) : ?>
+                <link rel="stylesheet" href="<?= STYLES_STORAGE . "{$styles[$x]}.css?v={$_SERVER['REQUEST_TIME']}" ?>">
+            <? endfor ?>
         <? endif ?>
     <? endif ?>
     <link rel="stylesheet" href="/public/css/style.css?v=<?= $_SERVER['REQUEST_TIME'] ?>">
@@ -29,6 +29,8 @@
     <script defer="" src="/public/scripts/jquery.datetimepicker.full.min.js"></script>
     <script defer="" src="/public/scripts/jquery-cropper.js"></script> -->
     */ ?>
+
+    <? /*
     <script defer="" src="/public/scripts/request.js?v=<?= $_SERVER['REQUEST_TIME'] ?>"></script>
     <script defer="" src="/public/scripts/action-handler.js?v=<?= $_SERVER['REQUEST_TIME'] ?>"></script>
     <script defer="" src="/public/scripts/popups.js?v=<?= $_SERVER['REQUEST_TIME'] ?>"></script>
@@ -44,8 +46,10 @@
         <? endif ?>
     <? endif ?>
     <script defer="" src="/public/scripts/common.js?v=<?= $_SERVER['REQUEST_TIME'] ?>"></script>
-    <script defer="" src="/public/scripts/modals.js?v=<?= $_SERVER['REQUEST_TIME'] ?>"></script>
-    <link rel="icon" type="image/x-icon" href="/public/images/mafia-vintage-logo-short.svg">
+    <script defer="" src="/public/scripts/modals.js?v=<?= $_SERVER['REQUEST_TIME'] ?>"></script> */
+    ?>
+    <script defer="" src="<?= SCRIPTS_STORAGE . $scripts . (self::$refresh ? '?v=' . $_SERVER['REQUEST_TIME'] : '') ?>"></script>
+    <link rel=" icon" type="image/x-icon" href="/public/images/mafia-vintage-logo-short.svg">
     <?= $locales ?>
     <title><?= (isset($pageTitle) ? $pageTitle  : $title) . ' | ' . CLUB_SNAME . ' v' . APP_VERSION ?></title>
     <? if (!empty($og)) self::component('open-graph', ['og' => $og]) ?>

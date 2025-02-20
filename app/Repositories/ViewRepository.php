@@ -4,6 +4,7 @@ namespace app\Repositories;
 
 use app\core\ImageProcessing;
 use app\core\Locale;
+use app\core\View;
 use app\models\GameTypes;
 use app\models\News;
 use app\models\Settings;
@@ -268,5 +269,41 @@ class ViewRepository
             ],
         ];
         return Locale::apply($menu);
+    }
+    public static function compressScripts(array $scripts): string
+    {
+        $name = md5(implode(' ', $scripts));
+        $filePath = $_SERVER['DOCUMENT_ROOT'] . SCRIPTS_STORAGE . $name;
+        if (!file_exists($filePath)) {
+            $content = self::concatsSripts($scripts);
+            file_put_contents($filePath, $content);
+            return $name;
+        }
+
+        if (filemtime($filePath) < self::checkLastModify($scripts)) {
+            $content = self::concatsSripts($scripts);
+            file_put_contents($filePath, $content);
+            View::$refresh = true;
+        }
+        return $name;
+    }
+    public static function concatsSripts(array $scripts): string
+    {
+        $result = '';
+        $scripts = array_merge(View::$defaultScripts, $scripts);
+        foreach ($scripts as $script) {
+            $result .= file_get_contents($_SERVER['DOCUMENT_ROOT'] . SCRIPTS_STORAGE . $script) . PHP_EOL;
+        }
+        return $result;
+    }
+    public static function checkLastModify(array $scripts): int
+    {
+        $result = 0;
+        $scripts = array_merge(View::$defaultScripts, $scripts);
+        foreach ($scripts as $script) {
+            $mTime = filemtime($_SERVER['DOCUMENT_ROOT'] . SCRIPTS_STORAGE . $script);
+            $result = $mTime > $result ? $mTime : $result;
+        }
+        return $result;
     }
 }

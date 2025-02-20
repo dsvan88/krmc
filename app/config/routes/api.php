@@ -227,4 +227,12 @@ return  [
         'action' => 'webhook',
         'access' => ['category' => 'all']
     ],
+
+
+    'api/image/new/form' =>
+    [
+        'controller' => 'image',
+        'action' => 'add',
+        'access' => ['category' => 'manager']
+    ],
 ];

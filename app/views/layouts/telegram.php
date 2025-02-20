@@ -10,11 +10,11 @@
     <meta name="author" content="<?= CFG_AUTHOR ?>">
     <? if (!empty($styles)) : ?>
         <? if (is_string($styles)) : ?>
-            <link rel="stylesheet" href="<?= STYLES_STORAGE . "$styles.css?v={$_SERVER['REQUEST_TIME']}"?>">
-            <? else :?>
-                <? for ($x = 0; $x < count($styles); $x++) : ?>
-                    <link rel="stylesheet" href="<?= STYLES_STORAGE . "{$styles[$x]}.css?v={$_SERVER['REQUEST_TIME']}"?>">
-                <? endfor ?>
+            <link rel="stylesheet" href="<?= STYLES_STORAGE . "$styles.css?v={$_SERVER['REQUEST_TIME']}" ?>">
+        <? else : ?>
+            <? for ($x = 0; $x < count($styles); $x++) : ?>
+                <link rel="stylesheet" href="<?= STYLES_STORAGE . "{$styles[$x]}.css?v={$_SERVER['REQUEST_TIME']}" ?>">
+            <? endfor ?>
         <? endif ?>
     <? endif ?>
     <link rel="stylesheet" href="/public/css/style-tg.css?v=<?= $_SERVER['REQUEST_TIME'] ?>">
@@ -24,6 +24,8 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+Pro">
 
     <script defer="" src="https://telegram.org/js/telegram-web-app.js"></script>
+    <?
+    /*
     <script defer="" src="/public/scripts/request.js?v=<?= $_SERVER['REQUEST_TIME'] ?>"></script>
     <script defer="" src="/public/scripts/action-handler.js?v=<?= $_SERVER['REQUEST_TIME'] ?>"></script>
     <script defer="" src="/public/scripts/popups.js?v=<?= $_SERVER['REQUEST_TIME'] ?>"></script>
@@ -40,7 +42,9 @@
             <? endfor ?>
         <? endif ?>
     <? endif ?>
-
+*/
+    ?>
+    <script defer="" src="<?= SCRIPTS_STORAGE . $scripts . (self::$refresh ? '' : '?v=' . $_SERVER['REQUEST_TIME']) ?>"></script>
     <link rel="icon" type="image/x-icon" href="/public/images/mafia-vintage-logo-short.svg">
     <?= $locales ?>
     <title><?= (isset($pageTitle) ? $pageTitle  : $title) . ' | ' . CLUB_SNAME . ' v' . APP_VERSION ?></title>

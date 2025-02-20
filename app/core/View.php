@@ -2,7 +2,6 @@
 
 namespace app\core;
 
-use app\Repositories\TechRepository;
 use app\Repositories\ViewRepository;
 
 class View
@@ -11,6 +10,16 @@ class View
     public static $route;
     public static $layout = 'default';
     public static $viewsFolder = '/app/views';
+    public static $defaultScripts = [
+        'request.js',
+        'action-handler.js',
+        'popups.js',
+        'noticer.js',
+        'common-funcs.js',
+        'modals.js',
+        'common.js',
+    ];
+    public static $refresh = false;
 
     public function __construct($route)
     {
@@ -39,8 +48,11 @@ class View
         extract(ViewRepository::defaultVars());
 
         if (empty($styles)) $styles = [];
+        if (empty($scripts)) $scripts = [];
         if (!empty($css)) $styles = array_merge($styles, $css);
         if (empty($mainClass)) $mainClass = 'index';
+
+        $scripts = ViewRepository::compressScripts($scripts);
 
         $pageTitle = preg_replace('/<.*?>/', '', $title);
 
