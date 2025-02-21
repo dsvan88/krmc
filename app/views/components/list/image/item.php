@@ -1,11 +1,15 @@
 <div class="image">
     <div class="image__dashboard">
-        <a href="/image/edit/<?= $file['id'] ?>" class="fa fa-pencil-square-o"></a>
-        <a href="/image/delete/<?= $file['id'] ?>" onclick="return confirm('Are you sure?')" class="fa fa-trash"></a>
+        <span class="dashboard__item delete fa fa-trash" data-action-click="image/delete" data-image-id="<?= $file['id'] ?>" data-verification="confirm"></span>
     </div>
-    <img class="image__img" src="<?= $file['realLink'] ?>" loading="lazy" alt="<?= $file['name'] ?>" title="<?= $file['name'] ?>">
-    <div class="image__description">
-        <div><?= $file['name'] ?></div>
-        <div><a href="<?= $file['realLink'] ?>" target="_blank">&lt;Link&gt;</a></div>
+    <div class="image__place">
+        <img class="image__img" src="<?= $file['realLink'] ?>" loading="lazy" alt="<?= $file['name'] ?>" title="<?= $file['name'] ?>">
+    </div>
+    <div class="dropdown fa fa-ellipsis-v">
+        <ul class="image__menu dropdown__menu">
+            <li class="dropdown__item"><a href="<?= $file['realLink'] ?>" target="_blank">&lt;Link&gt;</a></li>
+            <li class="dropdown__item"><a href="<?= $file['realLink'] ?>" target="_blank">&lt;Link&gt;</a></li>
+            <li class="dropdown__item"><a href="<?= $file['realLink'] ?>" target="_blank">&lt;Link&gt;</a></li>
+        </ul>
     </div>
 </div>

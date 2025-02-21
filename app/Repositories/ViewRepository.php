@@ -273,7 +273,7 @@ class ViewRepository
     public static function compressScripts(array $scripts): string
     {
         $name = md5(implode(' ', $scripts)) . '.js';
-        $filePath = $_SERVER['DOCUMENT_ROOT'] . SCRIPTS_STORAGE . $name;
+        $filePath = $_SERVER['DOCUMENT_ROOT'] . SCRIPTS_PUBLIC . $name;
 
         if (file_exists($filePath) && filemtime($filePath) > self::checkLastModify($scripts)) return $name;
 

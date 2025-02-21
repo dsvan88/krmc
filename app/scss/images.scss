@@ -1,5 +1,5 @@
 @import "tech/vars";
-$size: 7em;
+$size: 8em;
 
 .images {
     min-height: 40vh;
@@ -15,10 +15,13 @@ $size: 7em;
         position: relative;
         flex: 0 1 $size;
         height: $size;
-        max-width: 10vw;
+        max-width: $size+3em;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
         background-color: $bg-color-light;
         padding: .5em .5em 2em .5em;
-        text-align: center;
         transition: scale $animation-fast, padding $animation-fast;
 
         &__dashboard {
@@ -35,18 +38,26 @@ $size: 7em;
             opacity: 0;
             transition: opacity $animation-very-fast;
 
-            a {
-                color: $bg-color-light-blue;
-                transition: color $animation-fast;
+            .dashboard {
+                &__item {
+                    color: $bg-color-light-blue;
+                    transition: color $animation-fast;
+                    cursor: pointer;
 
-                &:hover {
-                    color: $bg-color-blue;
+                    &:hover {
+                        color: $bg-color-blue;
 
-                    &[onclick] {
-                        color: $bg-color-red-blur;
+                        &.delete {
+                            color: $bg-color-red-blur;
+                        }
                     }
                 }
             }
+        }
+
+        &__place {
+            height: 100%;
+            // max-width: 100%;
         }
 
         &__img {
@@ -63,8 +74,9 @@ $size: 7em;
         }
 
         &:hover:not(.new) {
-            padding-bottom: 3em;
-            scale: 1.2;
+            position: relative;
+            z-index: 5;
+            scale: 1.1;
 
             .image__dashboard {
                 opacity: .85;
@@ -82,10 +94,14 @@ $size: 7em;
             cursor: pointer;
 
             .label {
+                display: flex;
+                justify-content: center;
+                align-items: center;
                 font-size: 5em;
                 transition: font-size $animation-fast;
                 height: 100%;
                 max-width: 100%;
+                cursor: pointer;
             }
 
             &:hover {
@@ -93,8 +109,11 @@ $size: 7em;
                     font-size: 7em;
                 }
             }
+        }
 
-
+        .dropdown {
+            width: 3em;
+            align-self: baseline;
         }
     }
 }

@@ -34,8 +34,7 @@ class GoogleDrive
     }
     public static function create(string $filePath): bool
     {
-        $offset = mb_strrpos($filePath, '\\', 0, 'UTF-8');
-        $filename = mb_substr($filePath, $offset + 1, null, 'UTF-8');
+        $filename = basename($filePath);
 
         $driveFile = new Google_Drive_File();
         $driveFile->setName($filename);
@@ -57,6 +56,16 @@ class GoogleDrive
             return false;
         }
         return $uploadedFile->getId();
+    }
+    public static function delete(string $fileId): bool
+    {
+        try {
+            $uploadedFile = static::$service->files->delete($fileId);
+        } catch (\Throwable $error) {
+            error_log('Error uploading file: ' . $error->getMessage());
+            return false;
+        }
+        return true;
     }
     public static function listFiles()
     {

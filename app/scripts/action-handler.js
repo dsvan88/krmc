@@ -104,11 +104,19 @@ let actionHandler = {
 		}
 
 		if (target.dataset.verification) {
-			let input = { type: 'text' };
-			if (/(root|pass)/.test(target.dataset.verification))
-				input = { type: 'password' };
-			const verification = await self.verification(null, target.dataset.verification, input);
-			formData.append('verification', verification);
+			if (target.dataset.verification === 'confirm') {
+				if (!confirm('Are you sure?')) {
+					if (modal) modal.close();
+					return false;
+				}
+			}
+			else {
+				let input = { type: 'text' };
+				if (/(root|pass)/.test(target.dataset.verification))
+					input = { type: 'password' };
+				const verification = await self.verification(null, target.dataset.verification, input);
+				formData.append('verification', verification);
+			}
 		}
 
 		const result = await request({

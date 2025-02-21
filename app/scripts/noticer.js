@@ -10,7 +10,7 @@ class Noticer {
 		});
 	};
 	add(notice) {
-		if (typeof notice === 'string'){
+		if (typeof notice === 'string') {
 			notice = { message: notice };
 		}
 		const noticeBlock = document.createElement('div');
@@ -21,16 +21,16 @@ class Noticer {
 		const noticeMessageBlock = document.createElement('div');
 		noticeMessageBlock.classList.add('notice__message');
 		noticeMessageBlock.innerHTML = '<p> ' + notice['message'].replace(/\n/g, '</p><p>') + '</p>';
-		
+
 		if (notice['type']) {
 			noticeBlock.classList.add(notice['type']);
 			const noticeTitle = document.createElement('h3');
 			noticeTitle.innerText = notice['type'].toUpperCase() + ':';
 			noticeMessageBlock.prepend(noticeTitle);
-			
+
 			noticeIcon.classList.add(notice['type'] === 'error' ? 'fa-times-circle' : 'fa-exclamation-triangle');
 		}
-		else{
+		else {
 			noticeIcon.classList.add('fa-check-circle-o');
 		}
 
@@ -44,11 +44,11 @@ class Noticer {
 
 		const self = this;
 		noticeCloseBlock.addEventListener('click', (event) => self.close.call(self, noticeBlock))
-		if (notice['time']){
+		if (notice['time']) {
 			noticeCloseBlock.timeOut = setTimeout((event) => self.close.call(self, noticeBlock), notice['time']);
 		}
-		if (notice["location"]){
-			setTimeout(() => window.location = notice["location"], notice['time'] ? notice['time'] + 100 : 1000);
+		if (notice["location"]) {
+			setTimeout(() => notice["location"] === 'reload' ? window.location.reload() : window.location = notice["location"], notice['time'] ? notice['time'] + 100 : 1000);
 		}
 	}
 	close(notice) {
@@ -58,9 +58,9 @@ class Noticer {
 		notice.style.paddingTop = '0px';
 		notice.style.paddingBottom = '0px';
 		notice.style.marginBottom = '0px';
-		if (notice.timeOut){
+		if (notice.timeOut) {
 			clearTimeout(noticeCloseBlock.timeOut);
 		}
-		setTimeout(()=> notice.remove(), 300);
+		setTimeout(() => notice.remove(), 300);
 	}
 }

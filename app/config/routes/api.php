@@ -235,5 +235,11 @@ return  [
         'action' => 'add',
         'access' => ['category' => 'manager']
     ],
+    'api/image/delete' =>
+    [
+        'controller' => 'images',
+        'action' => 'delete',
+        'access' => ['category' => 'manager']
+    ],
 
 ];

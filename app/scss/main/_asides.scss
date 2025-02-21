@@ -1,0 +1,47 @@
+aside.images {
+    position: fixed;
+    z-index: -1;
+    flex-direction: column;
+    display: none;
+    padding-top: 15vh;
+
+    &.left {
+        left: 0;
+    }
+
+    .image {
+        max-height: 25vh;
+        width: auto;
+        background-color: #f6f4f3;
+        padding: 1em 1em 2em 1em;
+        box-sizing: border-box;
+        position: relative;
+        top: -2vh;
+
+        &:nth-of-type(even) {
+            rotate: 5deg;
+        }
+
+        &:nth-of-type(odd) {
+            rotate: -20deg;
+        }
+    }
+
+    &.right {
+        right: 0;
+
+        .image {
+            &:nth-of-type(odd) {
+                rotate: 5deg;
+            }
+
+            &:nth-of-type(even) {
+                rotate: -20deg;
+            }
+        }
+    }
+
+    @include md {
+        display: flex;
+    }
+}

@@ -48,7 +48,7 @@
     <script defer="" src="/public/scripts/common.js?v=<?= $_SERVER['REQUEST_TIME'] ?>"></script>
     <script defer="" src="/public/scripts/modals.js?v=<?= $_SERVER['REQUEST_TIME'] ?>"></script> */
     ?>
-    <script defer="" src="<?= SCRIPTS_STORAGE . $scripts . (self::$refresh ? '?v=' . $_SERVER['REQUEST_TIME'] : '') ?>"></script>
+    <script defer="" src="<?= SCRIPTS_PUBLIC . $scripts . (self::$refresh ? '?v=' . $_SERVER['REQUEST_TIME'] : '') ?>"></script>
     <link rel=" icon" type="image/x-icon" href="/public/images/mafia-vintage-logo-short.svg">
     <?= $locales ?>
     <title><?= (isset($pageTitle) ? $pageTitle  : $title) . ' | ' . CLUB_SNAME . ' v' . APP_VERSION ?></title>
@@ -102,6 +102,16 @@
             <? endif ?>
         </header>
         <div class="header-for-auto-scroll" id="start-page"></div>
+        <aside class="images">
+            <img class="image" src="https://lh3.googleusercontent.com/d/1qUwDHa7YTjpOI4AZ-tfbc1ada0qNr9gf" loading="lazy">
+            <img class="image" src="https://lh3.googleusercontent.com/d/1oSt-Ch5jpPj8yaOce-gCED9tcZyjkVq0" loading="lazy">
+            <img class="image" src="https://lh3.googleusercontent.com/d/1c9bAK-BT5JZHcaYXycJ6sgcGOHEn7gNQ" loading="lazy">
+        </aside>
+        <aside class="images right">
+            <img class="image" src="https://lh3.googleusercontent.com/d/1qUwDHa7YTjpOI4AZ-tfbc1ada0qNr9gf" loading="lazy">
+            <img class="image" src="https://lh3.googleusercontent.com/d/1oSt-Ch5jpPj8yaOce-gCED9tcZyjkVq0" loading="lazy">
+            <img class="image" src="https://lh3.googleusercontent.com/d/1c9bAK-BT5JZHcaYXycJ6sgcGOHEn7gNQ" loading="lazy">
+        </aside>
         <main class="main <?= $mainClass ?>">
             <?= $content ?>
         </main>
