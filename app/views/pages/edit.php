@@ -3,10 +3,10 @@
         <h2 class="common-form__title"><?= $title ?></h2>
         <div class="common-form__row">
             <input type="hidden" name="type" value="<?= $page['type'] ?>">
-            <input type="text" name="title" value="<?= $page['title'] ?>" class="common-form__input title" placeholder="Title">
+            <input type="text" name="title" value="<?= $page['title'] ?>" class="common-form__input" placeholder="Title">
         </div>
         <div class="common-form__row">
-            <input type="text" name="subtitle" value="<?= $page['subtitle'] ?>" class="common-form__input subtitle" placeholder="Subtitle">
+            <input type="text" name="subtitle" value="<?= $page['subtitle'] ?>" class="common-form__input" placeholder="Subtitle">
         </div>
         <details>
             <summary>Додаткові параметри:</summary>

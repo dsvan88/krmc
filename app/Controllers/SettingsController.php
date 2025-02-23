@@ -7,6 +7,7 @@ use app\models\Settings;
 use app\core\Controller;
 use app\core\View;
 use app\core\Locale;
+use app\core\Tech;
 
 class SettingsController extends Controller
 {
@@ -23,7 +24,7 @@ class SettingsController extends Controller
             $section = 'email';
         }
         
-        $settings = Settings::getGroup($section);
+        $settings = Settings::get($section);
         
         $vars = [
             'title' => '{{ Settings_List_Page_Title }}',
@@ -37,45 +38,49 @@ class SettingsController extends Controller
     
         return View::render();
     }
-    public function addAction()
+    public function editAction()
     {
-        if (!empty($_POST)) {
-            $array = $_POST;
-            $array['slug'] = Locale::translitization($array['name']);
-            Settings::save($array);
-            return View::message(['error' => 0, 'message' => 'Changes saved successfully!', 'location' => '/settings/list']);
+        $type = trim($_POST['type']);
+        $slug = trim($_POST['slug']);
+
+        $setting = Settings::findBy('type', $type, 1)[0];
+
+        foreach($setting['setting'] as $index => $set){
+            if ($set['slug'] !== $slug) continue;
+            $setting['setting'][$index]['value'] = str_replace('\\n', "\n", trim($_POST['value']));
+            break;
         }
-        $vars = [
-            'title' => '{{ Settings_Add_Title }}',
-            'texts' => [
-                'BlockTitle' => '{{ Settings_Add_Title }}',
-                'SubmitLabel' => 'Save',
-            ]
-        ];
-        View::$route['vars'] = array_merge(View::$route['vars'], $vars);
-    
-        return View::render();
-    }
-    public function editAction(){
 
-        extract(self::$route['vars']);
-        
-        $setting = Settings::find($settingId);
+        $result = Settings::edit($setting['id'], ['setting' => $setting['setting']]);
 
-        Settings::edit($settingId, ['value' => trim($_POST['value'])]);
-
-        return View::message(['message'=>'Success!', 'location' => '/settings/section/index/'.$setting['type']]);
+        return $result ? 
+            View::message(['message'=>'Success!', 'location' => '/settings/section/index/'.$type]):
+            View::notice(['type' => 'error', 'message' => 'Fail!']);
     }
     public function editFormAction()
     {
-        $settingId = (int) trim($_POST['settingId']);
-        $setting = Settings::find($settingId);
+        $type = trim($_POST['type']);
+        $slug = trim($_POST['slug']);
+
+        $settings = Settings::get($type);
+
+        $setting = [];
+        foreach($settings as $_slug=>$set){
+            if ($_slug !== $slug) continue;
+            $setting = $set;
+            break;
+        }
+
+        if (empty($setting))
+            return View::notice(['type' => 'error', 'message' => 'Fail!']);
 
         $vars = [
             'title' => '{{ Settings_Edit_Title }}',
             'texts' => [
                 'SubmitLabel' => 'Save',
             ],
+            'type' => $type,
+            'slug' => $slug,
             'setting' => $setting,
         ];
         View::$route['vars'] = array_merge(View::$route['vars'], $vars);

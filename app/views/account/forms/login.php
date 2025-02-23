@@ -5,7 +5,7 @@
     </div>
     <div class="modal__row">
         <input class="modal__input" required type="password" name="password" placeholder="<?= $texts['PasswordInputPlaceholder'] ?>" />
-        <input type="hidden" name="<?= CSRF_NAME ?>" value="<?= $_SESSION['csrf'] ?>" />
+        <? self::component('csrf') ?>
     </div>
     <div class="modal__buttons">
         <button type="submit" class="positive"><?= $texts['SubmitLabel'] ?></button>

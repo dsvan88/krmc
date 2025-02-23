@@ -36,7 +36,7 @@ class Mailer
             $GLOBALS['status'][] = $str;
         };
 
-        $settings = Settings::load('email');
+        $settings = Settings::get('email');
 
         $this->mail->Host       = $settings['host']['value'];
         $this->mail->Username   = $settings['username']['value'];

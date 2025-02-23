@@ -20,7 +20,7 @@ class ViewRepository
     }
     public static function headerData()
     {
-        $images = Settings::getGroup('img');
+        $images = Settings::get('img');
         $images = Locale::apply($images);
         $vars = [
             'headerLogo' => ImageProcessing::inputImage($images['MainLogo']['value']),
@@ -156,7 +156,7 @@ class ViewRepository
     }
     public static function footerData()
     {
-        $contacts = Settings::getGroup('contacts');
+        $contacts = Settings::get('contacts');
 
         $footerGmapLink = $contacts['gmap_link']['value'];
         $footerAdress = '<p>' . str_replace('  ', '</p><p>', $contacts['adress']['value']) . '</p>';
@@ -183,7 +183,7 @@ class ViewRepository
         }
         $footerGmapWidget = $contacts['gmap_widget']['value'];
 
-        $socials = Settings::getGroup('socials');
+        $socials = Settings::get('socials');
         $footerSocials = '';
         if (!empty($socials['facebook']['value'])) {
             $footerSocials .= "<a class='fa fa-facebook-square' href='{$socials['facebook']['value']}' title='Facebook' target='_blank'></a>";
@@ -277,6 +277,10 @@ class ViewRepository
 
         if (file_exists($filePath) && filemtime($filePath) > self::checkLastModify($scripts)) return $name;
 
+        if (!file_exists($_SERVER['DOCUMENT_ROOT'] . SCRIPTS_PUBLIC)){
+            mkdir($_SERVER['DOCUMENT_ROOT'] . SCRIPTS_PUBLIC, 0777, false);
+        }
+        
         $content = self::concatsSripts($scripts);
         file_put_contents($filePath, $content);
             

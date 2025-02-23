@@ -21,7 +21,10 @@ class GoogleDrive
     public static function init()
     {
         try {
-            static::$credentials = json_decode(Settings::load('gdrive')['credentials']['value'], true);
+            $_credentials = Settings::get('gdrive');
+            foreach($_credentials as $key => $value){
+                static::$credentials[$key] = $value['value'];
+            }
             static::$client = new Google_Client();
             static::$client->setAuthConfig(static::$credentials);
             static::$client->addScope(Google_Drive::DRIVE);
@@ -32,7 +35,7 @@ class GoogleDrive
             return false;
         }
     }
-    public static function create(string $filePath): bool
+    public static function create(string $filePath)
     {
         $filename = basename($filePath);
 
@@ -55,7 +58,7 @@ class GoogleDrive
             error_log('Error uploading file: ' . $error->getMessage());
             return false;
         }
-        return $uploadedFile->getId();
+        return $uploadedFile['id'];
     }
     public static function delete(string $fileId): bool
     {
@@ -67,14 +70,17 @@ class GoogleDrive
         }
         return true;
     }
-    public static function listFiles()
+    public static function listFiles(string $pageToken = null)
     {
         $result = [];
         try {
             $results = static::$service->files->listFiles([
-                'pageSize' => 10,
-                'fields' => 'nextPageToken, files(id, name)',
+                'pageSize' => 50,
+                'pageToken' => $pageToken,
+                'fields' => 'nextPageToken, files(id, name, size, thumbnailLink)',
             ]);
+
+            $_SESSION['nextPageToken'] = $results->nextPageToken;
 
             if (count($results->files) === 0)
                 return $result;

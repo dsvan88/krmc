@@ -107,7 +107,7 @@ class GamesController extends Controller
             ],
         ];
         
-        $settings = Settings::getGroup('mafia_config');
+        $settings = Settings::get('mafia_config');
         if (!empty($settings)){
             $settings['mafia-config']['options']['points'] = array_merge($config['points'], $settings['mafia-config']['options']['points']);
             $config = array_merge($config, $settings['mafia-config']['options']);

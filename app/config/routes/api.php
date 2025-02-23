@@ -189,7 +189,7 @@ return  [
         'action' => 'editForm',
         'access' => ['category' => 'admin']
     ],
-    'api/settings/edit/{settingId}' => [
+    'api/settings/edit' => [
         'controller' => 'settings',
         'action' => 'edit',
         'access' => ['category' => 'admin']
@@ -239,6 +239,31 @@ return  [
     [
         'controller' => 'images',
         'action' => 'delete',
+        'access' => ['category' => 'manager']
+    ],
+
+    'api/image/background/set' =>
+    [
+        'controller' => 'images',
+        'action' => 'backgroundSet',
+        'access' => ['category' => 'manager']
+    ],
+    'api/image/background/remove' =>
+    [
+        'controller' => 'images',
+        'action' => 'backgroundRemove',
+        'access' => ['category' => 'manager']
+    ],
+    'api/image/background/group' =>
+    [
+        'controller' => 'images',
+        'action' => 'backgroundGroup',
+        'access' => ['category' => 'manager']
+    ],
+    'api/image/delete/group' =>
+    [
+        'controller' => 'images',
+        'action' => 'deleteGroup',
         'access' => ['category' => 'manager']
     ],
 

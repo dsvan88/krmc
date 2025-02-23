@@ -2,6 +2,7 @@
 
 namespace app\core;
 
+use app\models\Settings;
 use app\Repositories\ViewRepository;
 
 class View
@@ -56,6 +57,7 @@ class View
 
         $pageTitle = preg_replace('/<.*?>/', '', $title);
 
+
         $filename = self::$path;
         $path = $_SERVER['DOCUMENT_ROOT'] . self::$viewsFolder . "/$filename.php";
         if (file_exists($path)) {
@@ -73,6 +75,7 @@ class View
 
         $lang = Locale::$langCode;
         $locales = Locale::getLocaledLinks();
+        $backdroundImages = array_slice(Settings::get('img')['background']['value'], 0, 8, true);
 
         require $_SERVER['DOCUMENT_ROOT'] . self::$viewsFolder . '/layouts/' . self::$layout . '.php';
 

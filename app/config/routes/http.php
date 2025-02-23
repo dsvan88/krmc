@@ -183,6 +183,11 @@ return  [
         'action' => 'index',
         'access' => ['category' => 'manager'],
     ],
+    'images/index/{pageToken}' => [
+        'controller' => 'images',
+        'action' => 'index',
+        'access' => ['category' => 'manager'],
+    ],
 
     'game' => [
         'controller' => 'gameTypes',

@@ -64,7 +64,8 @@ class PagesController extends Controller
                 return View::message('Changes saved successfully!');
             return View::notice(['error' => 1, 'message' => $result, 'time' => 3000]);
         }
-
+        
+        View::$route['vars']['styles'][] = 'forms';
         $page = Pages::getBySlug($slug);
 
         if (empty($page)) $page = Pages::$default;

@@ -3,7 +3,7 @@ aside.images {
     z-index: -1;
     flex-direction: column;
     display: none;
-    padding-top: 15vh;
+    padding-top: 10vh;
 
     &.left {
         left: 0;
@@ -11,24 +11,25 @@ aside.images {
 
     .image {
         max-height: 25vh;
-        width: auto;
+        width: max-content;
         background-color: #f6f4f3;
-        padding: 1em 1em 2em 1em;
+        padding: .5em .5em 2em .5em;
         box-sizing: border-box;
-        position: relative;
-        top: -2vh;
+        margin-bottom: -5vh;
+        box-shadow: 2px 2px 5px 0px $bg-color-dark-blur;
 
         &:nth-of-type(even) {
             rotate: 5deg;
         }
 
         &:nth-of-type(odd) {
-            rotate: -20deg;
+            rotate: -10deg;
         }
     }
 
     &.right {
         right: 0;
+        align-items: end;
 
         .image {
             &:nth-of-type(odd) {
@@ -36,7 +37,7 @@ aside.images {
             }
 
             &:nth-of-type(even) {
-                rotate: -20deg;
+                rotate: -15deg;
             }
         }
     }

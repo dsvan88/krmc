@@ -71,18 +71,19 @@ class TechController extends Controller
         error_reporting(0);
         set_time_limit(90);
 
-        $settings = Settings::getGroup('backup');
+        $backup = Settings::findBy('type', 'backup');
 
-        if (empty($settings['email']['value']) || $settings['last']['value'] > $_SERVER['REQUEST_TIME'] - BACKUP_FREQ) exit();
+        if (empty($backup['setting']['email']['value']) || $backup['setting']['last']['value'] > $_SERVER['REQUEST_TIME'] - BACKUP_FREQ) exit();
 
-        Settings::edit($settings['last']['id'], ['value' => $_SERVER['REQUEST_TIME']]);
+        $backup['setting']['last']['value'] = $_SERVER['REQUEST_TIME'];
+        Settings::edit($backup['id'], ['setting' => $backup['setting']]);
 
         header("Connection: close", true);
         header("Content-Encoding: none" . PHP_EOL);
         header("Content-Length: 0", true);
         flush();
 
-        TechRepository::sendBackup($settings['email']['value']);
+        TechRepository::sendBackup($backup['email']['value']);
 
         exit();
     }
@@ -243,6 +244,6 @@ class TechController extends Controller
     }
     public static function testAction()
     {
-        TechRepository::GoogleFS();
+        // TechRepository::GoogleFS();
     }
 }

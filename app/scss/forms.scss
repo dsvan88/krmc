@@ -1,0 +1,109 @@
+@import "tech/vars";
+@import "tech/mixins_adapt";
+@import "tech/components";
+
+.common-form {
+    background-color: $body-bg-color;
+    padding: 2em 1em 1em 2em;
+	label {
+		cursor: pointer;
+
+		&:hover {
+			color: $color-text-section-title
+		}
+	}
+
+	input[type='file'] {
+		display: none;
+	}
+
+	&__columns {
+		display: flex;
+		flex-direction: column;
+		padding: 1em 2em;
+
+		@include md {
+			flex-direction: row;
+			gap: 1em;
+			padding: 0;
+		}
+	}
+
+	&__column {
+		flex-grow: 1;
+		flex-shrink: 1;
+	}
+
+	&__row {
+		display: flex;
+		align-items: baseline;
+	}
+
+	&__label {
+		// font-size: 0.8em;
+		white-space: nowrap;
+		flex: 0 0 10vw;
+		min-width: 75px;
+	}
+
+	&__input {
+		flex-grow: 1;
+		margin: 5px 0px;
+		background-color: $bg-color-light-odd;
+		color: $color-text-dark;
+		border: none;
+		border-bottom: 1px solid $color-text-dark-blur;
+		outline: none;
+		padding: 2px 5px 0px 5px;
+		width: 100%;
+
+		&.logo {
+			color: transparent;
+		}
+
+		&:active,
+		&:focus {
+			border-color: $color-text-accent;
+		}
+
+	}
+
+	&__textarea {
+		width: 100%;
+		margin: 5px 0px;
+		background-color: #bc6cff4a;
+		color: $color-text-main;
+		border: none;
+		outline: none;
+		padding: 2px 5px 0px 5px;
+		resize: vertical;
+	}
+
+	&__button {
+		@extend %buttonStyle;
+
+		&-place {
+			margin-top: 10px;
+			display: flex;
+			justify-content: space-around;
+		}
+	}
+
+	.editor-block {
+		width: 100%;
+		margin-top: 5px;
+
+		.content-container {
+			height: 50vh;
+			border-left: 1px solid $color-text-dark-blur;
+			border-right: 1px solid $color-text-dark-blur;
+			border-bottom: 2px solid $color-text-dark-blur;
+			font-size: 1.1em;
+			overflow-y: auto;
+
+			.editor {
+				min-height: 50vh;
+			}
+		}
+	}
+}

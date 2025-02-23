@@ -102,16 +102,22 @@
             <? endif ?>
         </header>
         <div class="header-for-auto-scroll" id="start-page"></div>
-        <aside class="images">
-            <img class="image" src="https://lh3.googleusercontent.com/d/1qUwDHa7YTjpOI4AZ-tfbc1ada0qNr9gf" loading="lazy">
-            <img class="image" src="https://lh3.googleusercontent.com/d/1oSt-Ch5jpPj8yaOce-gCED9tcZyjkVq0" loading="lazy">
-            <img class="image" src="https://lh3.googleusercontent.com/d/1c9bAK-BT5JZHcaYXycJ6sgcGOHEn7gNQ" loading="lazy">
-        </aside>
-        <aside class="images right">
-            <img class="image" src="https://lh3.googleusercontent.com/d/1qUwDHa7YTjpOI4AZ-tfbc1ada0qNr9gf" loading="lazy">
-            <img class="image" src="https://lh3.googleusercontent.com/d/1oSt-Ch5jpPj8yaOce-gCED9tcZyjkVq0" loading="lazy">
-            <img class="image" src="https://lh3.googleusercontent.com/d/1c9bAK-BT5JZHcaYXycJ6sgcGOHEn7gNQ" loading="lazy">
-        </aside>
+        <? if (!empty($backdroundImages)) :?>
+            <aside class="images">
+            <?foreach($backdroundImages as $index => $imageId):?>
+                <? if ($index === 4): ?>
+                    </aside>
+                    <aside class="images right">
+                <?endif?>
+                <img class="image" src="https://lh3.googleusercontent.com/d/<?=$imageId?>" loading="lazy">
+            <?endforeach?>
+            </aside>
+        <? endif?>
+        <!-- <aside class="images right">
+            <img class="image" src="https://lh3.googleusercontent.com/d/1aPppDLYj5UAGE7kD5sjff5VCMpBLJRvr" loading="lazy">
+            <img class="image" src="https://lh3.googleusercontent.com/d/1e8IhXeHBOD_bc12ut1AOznuRSl3SByvm" loading="lazy">
+            <img class="image" src="https://lh3.googleusercontent.com/d/1f2Hza-PnbSiOGAA9ls6wtg8nsXnioEaN" loading="lazy">
+        </aside> -->
         <main class="main <?= $mainClass ?>">
             <?= $content ?>
         </main>
