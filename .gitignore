@@ -9,4 +9,5 @@ tg-message.txt
 /vendor/*
 /public/scripts/*
 /public/backups/*
+/public/gallery/site/*
 composer.phar
