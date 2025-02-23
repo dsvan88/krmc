@@ -51,7 +51,7 @@ actionHandler.mainImageChange = function (event) {
 	let file = event.target.files[0];
 	let img = createNewElement({
 		tag: 'img',
-		style: 'height:40vh;width:auto',
+		style: 'height:10vh;width:auto',
 		src: URL.createObjectURL(file)
 	});
 	let imgPlace = document.body.querySelector('#main-image-place');

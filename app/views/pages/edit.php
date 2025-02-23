@@ -1,12 +1,23 @@
 <section class='section common-form'>
     <form action="/page/edit/<?= $page['slug'] ?>" method="post" enctype="multipart/form-data" class="common-form__form">
         <h2 class="common-form__title"><?= $title ?></h2>
-        <div class="common-form__row">
-            <input type="hidden" name="type" value="<?= $page['type'] ?>">
-            <input type="text" name="title" value="<?= $page['title'] ?>" class="common-form__input" placeholder="Title">
-        </div>
-        <div class="common-form__row">
-            <input type="text" name="subtitle" value="<?= $page['subtitle'] ?>" class="common-form__input" placeholder="Subtitle">
+        <div class="common-form__columns">
+            <div class="common-form__column">
+                <div class="common-form__row">
+                    <input type="hidden" name="type" value="<?= $page['type'] ?>">
+                    <input type="text" name="title" value="<?= $page['title'] ?>" class="common-form__input" placeholder="Title">
+                </div>
+                <div class="common-form__row">
+                    <input type="text" name="subtitle" value="<?= $page['subtitle'] ?>" class="common-form__input" placeholder="Subtitle">
+                </div>
+            </div>
+            <div class="common-form__column">
+                <label for="news-logo-input-file" id="main-image-place">
+                    Додати головне зображення
+                </label>
+                <input type="file" name="logo" value="" placeholder="Logo" class="common-form__input logo" id="news-logo-input-file" data-action-change="main-image-change" accept='image/*'>
+                <input type="hidden" name="main-image">
+            </div>
         </div>
         <details>
             <summary>Додаткові параметри:</summary>
