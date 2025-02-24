@@ -7,7 +7,7 @@ composer.phar
 tg-message.txt
 .env.dev
 /vendor/*
-/public/scripts/!.gitignore
-/public/backups/!.gitignore
-/public/gallery/site/!.gitignore
+/public/scripts/*
+/public/backups/*
+/public/gallery/site/*
 composer.phar
