@@ -275,10 +275,14 @@ class ViewRepository
         $name = md5(implode(' ', $scripts)) . '.js';
 
         if (!file_exists($_SERVER['DOCUMENT_ROOT'] . View::$scriptsPath)) {
-            mkdir($_SERVER['DOCUMENT_ROOT'] . View::$scriptsPath, 0777, false);
+            try {
+                mkdir($_SERVER['DOCUMENT_ROOT'] . View::$scriptsPath, 0777, false);
+            } catch (\Throwable $error) {
+                View::$scriptsPath = sys_get_temp_dir();
+            }
         }
 
-        $filePath = $_SERVER['DOCUMENT_ROOT'] . View::$scriptsPath . $name;
+        $filePath = $_SERVER['DOCUMENT_ROOT'] . View::$scriptsPath . '/' . $name;
 
         if (file_exists($filePath) && filemtime($filePath) > self::checkLastModify($scripts)) return $name;
 
