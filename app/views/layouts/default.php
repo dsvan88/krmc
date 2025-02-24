@@ -109,15 +109,10 @@
             </aside>
             <aside class="images right">
             <? endif ?>
-            <img class="image" src="https://lh3.googleusercontent.com/d/<?= $imageId ?>" loading="lazy">
+            <img class="image" src="https://lh3.googleusercontent.com/d/<?= $imageId ?>" loading="lazy" alt="Background Image #<?= $index ?>">
         <? endforeach ?>
             </aside>
         <? endif ?>
-        <!-- <aside class="images right">
-            <img class="image" src="https://lh3.googleusercontent.com/d/1aPppDLYj5UAGE7kD5sjff5VCMpBLJRvr" loading="lazy">
-            <img class="image" src="https://lh3.googleusercontent.com/d/1e8IhXeHBOD_bc12ut1AOznuRSl3SByvm" loading="lazy">
-            <img class="image" src="https://lh3.googleusercontent.com/d/1f2Hza-PnbSiOGAA9ls6wtg8nsXnioEaN" loading="lazy">
-        </aside> -->
         <main class="main <?= $mainClass ?>">
             <?= $content ?>
         </main>

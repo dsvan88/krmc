@@ -33,7 +33,6 @@ class PageRepository
     }
     public static function formPageOG(array $page = null)
     {
-        // Tech::dump($page);
         $url = Tech::getRequestProtocol() . "://{$_SERVER['SERVER_NAME']}";
         if (empty($page['data']['logo'])){
             $page['logo'] =  '/public/images/club-logo-w-city.jpg';
