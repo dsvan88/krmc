@@ -2,6 +2,7 @@
 
 namespace app\Repositories;
 
+use app\core\GoogleDrive;
 use app\core\Tech;
 use app\models\Pages;
 
@@ -32,10 +33,19 @@ class PageRepository
     }
     public static function formPageOG(array $page = null)
     {
+        // Tech::dump($page);
         $url = Tech::getRequestProtocol() . "://{$_SERVER['SERVER_NAME']}";
-        $page['logo'] = empty($page['logo']) ? '/public/images/club-logo-w-city.jpg' : $page['logo'];
-        $imageSize = getimagesize($_SERVER['DOCUMENT_ROOT'] . $page['logo']);
-        $image = "$url/{$page['logo']}";
+        if (empty($page['data']['logo'])){
+            $page['logo'] =  '/public/images/club-logo-w-city.jpg';
+            $image = "$url/{$page['logo']}";
+            $imageSize = getimagesize($_SERVER['DOCUMENT_ROOT'] . $page['logo']);
+        }
+        else {
+            $image = GoogleDrive::getLink($page['data']['logo']);
+            $imageSize = getimagesize($image);
+        }
+        
+        
         $uri = $page['slug'] === 'home' && $page['type'] === 'page' ? '' : "{$page['type']}/{$page['slug']}/";
         $result = [
             'title' => $page['title'],
