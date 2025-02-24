@@ -1,1 +1,1 @@
-web: mkdir /app/storage && chmod 777 /app/storage && vendor/bin/heroku-php-apache2
+web: mkdir /app/public/scripts && chmod 777 /app/public/scripts && mkdir /app/app/public/gallery && chmod 777 /app/app/public/gallery && mkdir /app/app/public/gallery/site && chmod 777 /app/app/public/gallery/site && vendor/bin/heroku-php-apache2
