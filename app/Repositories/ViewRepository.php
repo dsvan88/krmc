@@ -9,6 +9,7 @@ use app\models\GameTypes;
 use app\models\News;
 use app\models\Settings;
 use app\models\Users;
+use Throwable;
 
 class ViewRepository
 {
@@ -273,17 +274,22 @@ class ViewRepository
     public static function compressScripts(array $scripts): string
     {
         $name = md5(implode(' ', $scripts)) . '.js';
-        $filePath = $_SERVER['DOCUMENT_ROOT'] . SCRIPTS_PUBLIC . $name;
+
+        if (!file_exists($_SERVER['DOCUMENT_ROOT'] . View::$scriptsPath)) {
+            try {
+                mkdir($_SERVER['DOCUMENT_ROOT'] . View::$scriptsPath, 0777, false);
+            } catch (Throwable $error) {
+                View::$scriptsPath = sys_get_temp_dir();
+            }
+        }
+
+        $filePath = $_SERVER['DOCUMENT_ROOT'] . View::$scriptsPath . '/' . $name;
 
         if (file_exists($filePath) && filemtime($filePath) > self::checkLastModify($scripts)) return $name;
 
-        if (!file_exists($_SERVER['DOCUMENT_ROOT'] . SCRIPTS_PUBLIC)){
-            mkdir($_SERVER['DOCUMENT_ROOT'] . SCRIPTS_PUBLIC, 0777, false);
-        }
-        
         $content = self::concatsSripts($scripts);
         file_put_contents($filePath, $content);
-            
+
         View::$refresh = true;
         return $name;
     }

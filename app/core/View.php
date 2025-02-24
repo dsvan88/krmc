@@ -9,6 +9,7 @@ class View
 {
     public static $path;
     public static $route;
+    public static $scriptsPath = '';
     public static $layout = 'default';
     public static $viewsFolder = '/app/views';
     public static $defaultScripts = [
@@ -53,6 +54,7 @@ class View
         if (!empty($css)) $styles = array_merge($styles, $css);
         if (empty($mainClass)) $mainClass = 'index';
 
+        static::$scriptsPath = SCRIPTS_PUBLIC;
         $scripts = ViewRepository::compressScripts($scripts);
 
         $pageTitle = preg_replace('/<.*?>/', '', $title);

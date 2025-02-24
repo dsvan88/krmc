@@ -48,7 +48,7 @@
     <script defer="" src="/public/scripts/common.js?v=<?= $_SERVER['REQUEST_TIME'] ?>"></script>
     <script defer="" src="/public/scripts/modals.js?v=<?= $_SERVER['REQUEST_TIME'] ?>"></script> */
     ?>
-    <script defer="" src="<?= SCRIPTS_PUBLIC . $scripts . (self::$refresh ? '?v=' . $_SERVER['REQUEST_TIME'] : '') ?>"></script>
+    <script defer="" src="<?= static::$scriptsPath .'/'. $scripts . (self::$refresh ? '?v=' . $_SERVER['REQUEST_TIME'] : '') ?>"></script>
     <link rel=" icon" type="image/x-icon" href="/public/images/mafia-vintage-logo-short.svg">
     <?= $locales ?>
     <title><?= (isset($pageTitle) ? $pageTitle  : $title) . ' | ' . CLUB_SNAME . ' v' . APP_VERSION ?></title>
@@ -102,17 +102,17 @@
             <? endif ?>
         </header>
         <div class="header-for-auto-scroll" id="start-page"></div>
-        <? if (!empty($backdroundImages)) :?>
+        <? if (!empty($backdroundImages)) : ?>
             <aside class="images">
-            <?foreach($backdroundImages as $index => $imageId):?>
-                <? if ($index === 4): ?>
-                    </aside>
-                    <aside class="images right">
-                <?endif?>
-                <img class="image" src="https://lh3.googleusercontent.com/d/<?=$imageId?>" loading="lazy">
-            <?endforeach?>
+                <? foreach ($backdroundImages as $index => $imageId): ?>
+                    <? if ($index === 4): ?>
             </aside>
-        <? endif?>
+            <aside class="images right">
+            <? endif ?>
+            <img class="image" src="https://lh3.googleusercontent.com/d/<?= $imageId ?>" loading="lazy">
+        <? endforeach ?>
+            </aside>
+        <? endif ?>
         <!-- <aside class="images right">
             <img class="image" src="https://lh3.googleusercontent.com/d/1aPppDLYj5UAGE7kD5sjff5VCMpBLJRvr" loading="lazy">
             <img class="image" src="https://lh3.googleusercontent.com/d/1e8IhXeHBOD_bc12ut1AOznuRSl3SByvm" loading="lazy">

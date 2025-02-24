@@ -2,6 +2,8 @@
 
 namespace app\core;
 
+use Throwable;
+
 class ImageProcessing
 {
     public static $path = '';
@@ -82,7 +84,11 @@ class ImageProcessing
             $uri = substr($base64Image, strpos($base64Image, ",") + 1);
 
             if (!file_exists($path)) {
-                mkdir($path, 0777, true);
+                try {
+                    mkdir($path, 0777, true);
+                } catch (Throwable $error) {
+                    $path = sys_get_temp_dir();
+                }
             }
 
             $data = base64_decode($uri);
@@ -99,7 +105,7 @@ class ImageProcessing
                 // $data = ob_get_contents();
                 // ob_end_clean();
             }
-            file_put_contents($_SERVER['DOCUMENT_ROOT']."$path/$filename", $data);
+            file_put_contents($_SERVER['DOCUMENT_ROOT'] . "$path/$filename", $data);
             return ['filename' => $filename, 'data' => $data];
         } catch (\Throwable $th) {
             error_log($th->__toString());
