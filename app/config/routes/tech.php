@@ -49,6 +49,6 @@ return  [
     [
         'controller' => 'tech',
         'action' => 'test',
-        'access' => ['category' => 'guest']
+        'access' => ['category' => 'all']
     ],
 ];

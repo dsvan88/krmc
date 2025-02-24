@@ -247,7 +247,8 @@ class TechController extends Controller
         try{
             $folder = $_SERVER['DOCUMENT_ROOT'].SCRIPTS_PUBLIC;
             echo 'Try to create folder: '. $folder.'</br>';
-            mkdir($folder);
+            // chmod(string $filename, int $permissions)
+            mkdir($folder, 0777, true);
         }
         catch(\Throwable $error){
             Tech::dump($error);
