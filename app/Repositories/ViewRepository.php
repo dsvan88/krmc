@@ -276,7 +276,7 @@ class ViewRepository
 
         if (!file_exists($_SERVER['DOCUMENT_ROOT'] . View::$scriptsPath)) {
             try {
-                mkdir($_SERVER['DOCUMENT_ROOT'] . View::$scriptsPath, 0777, false);
+                @mkdir($_SERVER['DOCUMENT_ROOT'] . View::$scriptsPath, 0777, false);
             } catch (\Throwable $error) {
                 View::$scriptsPath = sys_get_temp_dir() . '/';
             }
@@ -287,7 +287,7 @@ class ViewRepository
         if (file_exists($filePath) && filemtime($filePath) > self::checkLastModify($scripts)) return $name;
 
         $content = self::concatsSripts($scripts);
-        file_put_contents($filePath, $content);
+        @file_put_contents($filePath, $content);
 
         View::$refresh = true;
         return $name;
