@@ -15,10 +15,11 @@ class Db
     protected static $port = SQL_PORT;
     protected static $db = SQL_DB;
     protected static $user = SQL_USER;
-    protected static $password = SQL_PASS;    
+    protected static $password = SQL_PASS;
 
-    public function __construct($options){
-        foreach($options as $option=>$value){
+    public function __construct($options)
+    {
+        foreach ($options as $option => $value) {
             self::$$option = $value;
         }
     }
@@ -299,9 +300,9 @@ class Db
                 continue;
 
             $class = str_replace('/', '\\', $path . '/' . substr($model, 0, strpos($model, '.')));
-            if (!empty($class::$foreign)){
-                foreach($class::$foreign as $foreign){
-                    if (method_exists($foreign, 'init') && !in_array($foreign::$table, $done, true)){
+            if (!empty($class::$foreign)) {
+                foreach ($class::$foreign  as $foreign) {
+                    if (method_exists($foreign, 'init') && !in_array($foreign::$table, $done, true)) {
                         $foreign::init();
                         $done[] = $foreign::$table;
                     }
