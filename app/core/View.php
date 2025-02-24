@@ -54,7 +54,7 @@ class View
         if (!empty($css)) $styles = array_merge($styles, $css);
         if (empty($mainClass)) $mainClass = 'index';
 
-        static::$scriptsPath = SCRIPTS_PUBLIC;
+        static::$scriptsPath = APP_LOC === 'local' ? SCRIPTS_PUBLIC : sys_get_temp_dir() . '/';
         $scripts = ViewRepository::compressScripts($scripts);
 
         $pageTitle = preg_replace('/<.*?>/', '', $title);

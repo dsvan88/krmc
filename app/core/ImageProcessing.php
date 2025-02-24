@@ -81,12 +81,9 @@ class ImageProcessing
         try {
             $uri = substr($base64Image, strpos($base64Image, ",") + 1);
 
+            $path = APP_LOC === 'local' ? $path : sys_get_temp_dir() . '/';
             if (!file_exists($path)) {
-                try {
-                    mkdir($path, 0777, true);
-                } catch (\Throwable $error) {
-                    $path = sys_get_temp_dir() . '/';
-                }
+                mkdir($path, 0777, true);
             }
 
             $data = base64_decode($uri);
