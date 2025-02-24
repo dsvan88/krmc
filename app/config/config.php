@@ -51,10 +51,10 @@ if (!defined('SQL_HOST')) {
     define('CLUB_SNAME',    empty($_ENV['CLUB_SNAME'])      ? 'KRMC' :      $_ENV['CLUB_SNAME']);
     define('CFG_TOKEN_NAME', empty($_ENV['CFG_TOKEN_NAME'])  ? 'KRMCtoken' : $_ENV['CFG_TOKEN_NAME']);
     
-    define('FILE_USRGALL', '/public/gallery/users/');
-    define('FILE_MAINGALL', '/public/gallery/site/');
+    define('FILE_USRGALL', '/storage/');
+    define('FILE_MAINGALL', '/storage/');
     define('SCRIPTS_STORAGE', '/app/scripts/');
-    define('SCRIPTS_PUBLIC', '/public/scripts/');
+    define('SCRIPTS_PUBLIC', '/storage/');
     define('STYLES_STORAGE', '/public/css/');
     define('CFG_AUTHOR', 'DSVan');
     define('CSRF_NAME', '_token');
