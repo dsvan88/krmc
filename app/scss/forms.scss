@@ -3,8 +3,9 @@
 @import "tech/components";
 
 .common-form {
-    background-color: $body-bg-color;
-    padding: 2em 1em 1em 2em;
+	background-color: $body-bg-color;
+	padding: 2em 1em 1em 2em;
+
 	label {
 		cursor: pointer;
 
@@ -15,6 +16,11 @@
 
 	input[type='file'] {
 		display: none;
+	}
+
+	&__image {
+		height: 10vh;
+		width: auto;
 	}
 
 	&__columns {
@@ -37,6 +43,13 @@
 	&__row {
 		display: flex;
 		align-items: baseline;
+
+		&.image {
+			&__place {
+				justify-content: center;
+				align-items: center;
+			}
+		}
 	}
 
 	&__label {

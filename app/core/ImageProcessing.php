@@ -80,13 +80,10 @@ class ImageProcessing
     {
         try {
             $uri = substr($base64Image, strpos($base64Image, ",") + 1);
-            // preg_match('/data:image\/([^;]+)/', $base64Image, $matches);
-            // $extension = $matches[1];
 
             if (!file_exists($path)) {
                 mkdir($path, 0777, true);
             }
-            // $filename .= ".$extension";
 
             $data = base64_decode($uri);
 

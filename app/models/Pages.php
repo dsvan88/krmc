@@ -2,13 +2,16 @@
 
 namespace app\models;
 
+use app\core\GoogleDrive;
+use app\core\ImageProcessing;
 use app\core\Locale;
 use app\core\Model;
+use app\core\Tech;
 
 class Pages extends Model
 {
     public static $table = SQL_TBL_PAGES;
-    public static $foreign = [ 'users' => Users::class ];
+    public static $foreign = ['users' => Users::class];
 
     public static $default = [
         'title' => 'Empty page',
@@ -20,7 +23,8 @@ class Pages extends Model
     ];
     public static $jsonFields = ['data'];
 
-    public static function getBySlug(string $slug){
+    public static function getBySlug(string $slug)
+    {
         $table = static::$table;
 
         $query = "SELECT * FROM $table WHERE slug = ? AND ( lang IS NULL OR lang = ? )";
@@ -31,7 +35,8 @@ class Pages extends Model
         $query .= ' ORDER BY id DESC LIMIT 2';
         $pages = self::query($query, $values, 'Assoc');
         if (empty($pages)) return false;
-        return $pages[0];
+
+        return static::decodeJson($pages[0]);
     }
     public static function getCount(string $type = 'page', bool $all = false)
     {
@@ -69,27 +74,31 @@ class Pages extends Model
         $array['slug'] = preg_replace(['/[^a-z0-9]+/i', '/--/'], '-', Locale::translitization(trim($array['title'])));
         return self::insert($array);
     }
-    public static function edit($data, string $slug)
+    public static function edit(array $data = [], string $slug = '')
     {
-        $array = self::prepDbArray($data);
+        if (empty($data) || empty($slug)) return false;
+
+        $array = self::prepDbArray($data, $slug);
 
         if (!is_array($array)) return $array;
 
         $array['updated_at'] = date('Y-m-d H:i:s', $_SERVER['REQUEST_TIME']);
         $page = self::getBySlug($slug);
-        if (empty($page)){
+        if (empty($page)) {
             $array['slug'] = $slug;
             return (bool) self::insert($array);
         }
-        if ($page['lang'] !== $array['lang']){
+        if ($page['lang'] !== $array['lang']) {
             $array['slug'] = $page['slug'];
             $array['type'] = $page['type'];
             return (bool) self::insert($array);
         }
         return self::update($array, ['id' => $page['id']]);
     }
-    public static function prepDbArray(&$data)
+    public static function prepDbArray(array &$data, string $slug = '')
     {
+        if (empty($data) || empty($slug)) return false;
+
         $array = [
             'title' => trim($data['title']),
             'subtitle' => trim($data['subtitle']),
@@ -100,7 +109,7 @@ class Pages extends Model
             $pattern = ['/<\/p>\s*<p>/', '/<.*?>/', "/^\"/", "/ \"/", '/ "/', "/\"/", '/"/', "/\'/", "/'/"];
             $replace = ["\n", '', '«', ' «', ' «', '»', '»', '’', '’'];
             $array['description'] = trim(preg_replace($pattern, $replace, $data['description']));
-            if (mb_strlen($array['description'], 'UTF-8') > 299){
+            if (mb_strlen($array['description'], 'UTF-8') > 299) {
                 return 'Description longer than 300 symbols!';
             }
         }
@@ -110,8 +119,23 @@ class Pages extends Model
         if (!empty($data['expired_at'])) {
             $array['expired_at'] = date('Y-m-d H:i:s', strtotime($data['expired_at']));
         }
-        if (!empty($data['logo'])) {
-            $array['data']['logo'] = $data['logo'];
+
+        if (!empty($data['main-image'])) {
+            $filename = $slug . '-logo.';
+            preg_match('/data:image\/([^;]+)/', $data['main-image'], $matches);
+            $extension = $matches[1];
+            $filename .= $extension;
+
+            ImageProcessing::saveBase64Image($data['main-image'], $filename);
+
+            $filePath = $_SERVER['DOCUMENT_ROOT'] . FILE_MAINGALL . $filename;
+            $gDrive = new GoogleDrive();
+            $fileId = $gDrive->create($_SERVER['DOCUMENT_ROOT'] . FILE_MAINGALL . $filename);
+
+            unlink($filePath);
+            $array['data']['logo'] = $fileId;
+        } elseif (!empty($data['logo-link'])) {
+            $array['data']['logo'] = basename($data['logo-link']);
         }
         if (!empty($data['keywords'])) {
             $array['data']['keywords'] = explode(',', $data['keywords']);
@@ -135,7 +159,7 @@ class Pages extends Model
     public static function init()
     {
         $table = static::$table;
-        foreach(self::$foreign as $key=>$class){
+        foreach (self::$foreign as $key => $class) {
             $$key = $class::$table;
         }
 

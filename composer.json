@@ -11,6 +11,7 @@
         "ext-mbstring": "*",
         "ext-exif": "*",
         "ext-gd": "*",
+        "ext-zip": "*",
         "google/apiclient": "^2.18"
     },
     "minimum-stability": "dev",

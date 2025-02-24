@@ -4,6 +4,7 @@
 namespace app\Controllers;
 
 use app\core\Controller;
+use app\core\GoogleDrive;
 use app\core\Locale;
 use app\core\Noticer;
 use app\core\View;
@@ -58,13 +59,12 @@ class PagesController extends Controller
     {
         extract(self::$route['vars']);
         if (!empty($_POST)) {
-            $array = $_POST;
-            $result = Pages::edit($array, $slug);
+            $result = Pages::edit($_POST, $slug);
             if ($result === true)
-                return View::message('Changes saved successfully!');
+                return View::notice(['message' => 'Changes saved successfully!', 'location' => 'reload']);
             return View::notice(['error' => 1, 'message' => $result, 'time' => 3000]);
         }
-        
+
         View::$route['vars']['styles'][] = 'forms';
         $page = Pages::getBySlug($slug);
 
@@ -80,6 +80,10 @@ class PagesController extends Controller
                 else
                     $page['keywords'] = $page['data']['keywords'];
             }
+        }
+        $page['logo-link'] = '';
+        if (!empty($page['data']['logo'])) {
+            $page['logo-link'] = GoogleDrive::getLink($page['data']['logo']);
         }
         $page['published_at'] = strtotime($page['published_at']);
         $page['published_at'] = date('Y-m-d', $page['published_at']) . 'T' . date('H:i', $page['published_at']);
