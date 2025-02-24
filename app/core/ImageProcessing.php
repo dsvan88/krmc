@@ -85,7 +85,7 @@ class ImageProcessing
                 try {
                     mkdir($path, 0777, true);
                 } catch (\Throwable $error) {
-                    $path = sys_get_temp_dir();
+                    $path = sys_get_temp_dir() . '/';
                 }
             }
 
