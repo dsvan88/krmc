@@ -244,6 +244,13 @@ class TechController extends Controller
     }
     public static function testAction()
     {
-        // TechRepository::GoogleFS();
+        try{
+            $folder = $_SERVER['DOCUMENT_ROOT'].SCRIPTS_PUBLIC;
+            echo 'Try to create folder: '. $folder.'</br>';
+            mkdir($folder);
+        }
+        catch(\Throwable $error){
+            Tech::dump($error);
+        }
     }
 }
