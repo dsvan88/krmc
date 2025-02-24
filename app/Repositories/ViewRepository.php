@@ -9,7 +9,6 @@ use app\models\GameTypes;
 use app\models\News;
 use app\models\Settings;
 use app\models\Users;
-use Throwable;
 
 class ViewRepository
 {
@@ -278,7 +277,7 @@ class ViewRepository
         if (!file_exists($_SERVER['DOCUMENT_ROOT'] . View::$scriptsPath)) {
             try {
                 mkdir($_SERVER['DOCUMENT_ROOT'] . View::$scriptsPath, 0777, false);
-            } catch (Throwable $error) {
+            } catch (\Throwable $error) {
                 View::$scriptsPath = sys_get_temp_dir();
             }
         }

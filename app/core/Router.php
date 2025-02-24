@@ -4,7 +4,6 @@ namespace app\core;
 
 use app\models\Settings;
 use app\Repositories\TechRepository;
-use Throwable;
 
 class Router
 {
@@ -80,7 +79,7 @@ class Router
                         if ($controller::$ready) {
                             $controller->$action();
                         }
-                    } catch (Throwable $error) {
+                    } catch (\Throwable $error) {
                         $message = $error->__toString();
                         if (APP_LOC === 'local') {
                             error_log($message);

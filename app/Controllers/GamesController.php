@@ -12,7 +12,6 @@ use app\models\Games;
 use app\models\Settings;
 use app\models\Users;
 use app\models\Weeks;
-use Throwable;
 
 class GamesController extends Controller
 {
@@ -28,7 +27,7 @@ class GamesController extends Controller
             try {
                 $gameId = Games::create($_POST);
             }
-            catch(Throwable $th){
+            catch(\Throwable $th){
                 Tech::dump($th->__toString());
                 return View::message('Fail!');
             }

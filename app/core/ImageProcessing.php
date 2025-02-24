@@ -2,8 +2,6 @@
 
 namespace app\core;
 
-use Throwable;
-
 class ImageProcessing
 {
     public static $path = '';
@@ -86,7 +84,7 @@ class ImageProcessing
             if (!file_exists($path)) {
                 try {
                     mkdir($path, 0777, true);
-                } catch (Throwable $error) {
+                } catch (\Throwable $error) {
                     $path = sys_get_temp_dir();
                 }
             }
