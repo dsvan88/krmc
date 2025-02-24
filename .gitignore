@@ -10,4 +10,7 @@ tg-message.txt
 /public/scripts/*.js
 /public/backups/*
 /public/gallery/site/*.jpg
+/public/gallery/site/*.jpeg
+/public/gallery/site/*.png
+/public/gallery/site/*.webp
 composer.phar
