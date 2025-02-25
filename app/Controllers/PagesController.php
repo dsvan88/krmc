@@ -64,8 +64,6 @@ class PagesController extends Controller
                 return View::notice(['message' => 'Changes saved successfully!', 'location' => 'reload']);
             return View::notice(['error' => 1, 'message' => $result, 'time' => 3000]);
         }
-
-        View::$route['vars']['styles'][] = 'forms';
         $page = Pages::getBySlug($slug);
 
         if (empty($page)) $page = Pages::$default;
@@ -96,6 +94,9 @@ class PagesController extends Controller
             'title' => Locale::phrase('Page edit form'),
             'texts' => [
                 'SubmitLabel' => 'Save'
+            ],
+            'styles' => [
+                'forms',
             ],
             'scripts' => [
                 'plugins/ckeditor.js',
@@ -128,6 +129,9 @@ class PagesController extends Controller
             'title' => 'Add page form',
             'texts' => [
                 'SubmitLabel' => 'Create'
+            ],
+            'styles' => [
+                'forms',
             ],
             'scripts' => [
                 'plugins/ckeditor.js',
