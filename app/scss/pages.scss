@@ -1,17 +1,24 @@
+@import "tech/vars";
+
 .pages {
 	font-size: 1.15em;
 	padding: 1vh 5vw;
+	line-height: 1.15em;
 
 	ol,
 	ul {
-		// padding-left: 2.5em;
 		margin-bottom: 1.2em;
+		margin-left: 2em;
+	}
+
+	ul {
+		list-style-type: "👉";
+		// list-style-type: "\1F44D";
 	}
 
 	h3,
 	h4 {
 		margin: 1.5em 0 .5em 0;
-		// padding-left: 1em;
 		font-weight: bolder;
 		letter-spacing: .15em;
 	}
@@ -22,5 +29,26 @@
 
 	.text-big {
 		font-size: 1.5em;
+	}
+}
+
+.page {
+	&__image {
+		&-place {
+			float: left;
+			max-width: 30vw;
+			border: 1px solid $bg-color-dark;
+			text-indent: 0;
+			box-sizing: border-box;
+			margin: 0 1em 2em 0;
+		}
+
+		width: 100%;
+		height: auto;
+		outline: 1px solid $bg-color-dark-blur;
+		position: relative;
+		top: -1em;
+		left: -1em;
+		box-shadow: .3em .3em .4em .4em $bg-color-dark-blur;
 	}
 }

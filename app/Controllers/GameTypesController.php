@@ -3,6 +3,7 @@
 namespace app\Controllers;
 
 use app\core\Controller;
+use app\core\GoogleDrive;
 use app\core\Locale;
 use app\core\View;
 use app\models\GameTypes;
@@ -11,6 +12,11 @@ use app\Repositories\PageRepository;
 
 class GameTypesController extends Controller
 {
+    public static function before(): bool
+    {
+        View::$route['vars']['styles'][] = 'pages';
+        return true;
+    }
     public function indexAction()
     {
         // Extract $weekId & $dayId from array self::$route['vars']
@@ -30,9 +36,9 @@ class GameTypesController extends Controller
                 'BlockSubTitle' => 'Our leisure club is going to participate in the following games',
             ],
         ];
-        
+
         View::$route['vars'] = array_merge(View::$route['vars'], $vars);
-    
+
         return View::render();
     }
     public function showAction()
@@ -46,29 +52,38 @@ class GameTypesController extends Controller
 
         $page = PageRepository::getPage($game);
 
+        $page['logoLink'] = empty($page['data']['logo']) ? '' : GoogleDrive::getLink($page['data']['logo']);
+
         if (empty($page)) {
             $page = PageRepository::$defaultData;
             $page['title'] = $gameNames[$game];
         }
 
-        View::$route['vars']['title'] = Locale::phrase([
-            'string' => 'Game «%s» - How to play?',
-            'vars' => [Locale::phrase($gameNames[$game])],
-        ]);
+        $vars = [
+            'mainClass' => 'pages',
+            'title' => Locale::phrase([
+                'string' => 'Game «%s» - How to play?',
+                'vars' => [Locale::phrase($gameNames[$game])],
+            ]),
+            'description' => $page['description'],
+            'page' => $page,
+            'texts' => [
+                'edit' => 'Edit',
+                'delete' => 'Delete',
+            ],
+            'og' => PageRepository::formPageOG($page),
+        ];
 
         if (Users::checkAccess('manager')) {
-            View::$route['vars']['dashboard'] = [
+            $vars['dashboard'] = [
                 'id' => $page['id'],
                 'slug' => $game,
             ];
         }
-        
-        View::$route['vars']['og'] = PageRepository::formPageOG($page);
-        View::$route['vars']['page'] = $page;
-        View::$route['vars']['mainClass'] = 'pages';
-        
+
         View::$path = 'pages/show';
-    
+        View::$route['vars'] = array_merge(View::$route['vars'], $vars);
+
         return View::render();
     }
 }
