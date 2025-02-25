@@ -67,16 +67,22 @@ class TechController extends Controller
     }
     public static function backupSaveAction()
     {
-        ignore_user_abort(true);
-        error_reporting(0);
-        set_time_limit(90);
+        // ignore_user_abort(true);
+        // error_reporting(0);
+        // set_time_limit(90);
 
-        $backup = Settings::findBy('type', 'backup');
+        $settings = Settings::findBy('type', 'backup')[0];
 
-        if (empty($backup['setting']['email']['value']) || $backup['setting']['last']['value'] > $_SERVER['REQUEST_TIME'] - BACKUP_FREQ) exit();
+        foreach ($settings['setting'] as $index => $setting) {
+            $backup[$setting['slug']] = [
+                'index' => $index,
+                'value' => $setting['value']
+            ];
+        }
+        if (empty($backup['email']['value']) || $backup['last']['value'] > $_SERVER['REQUEST_TIME'] - BACKUP_FREQ) exit();
 
-        $backup['setting']['last']['value'] = $_SERVER['REQUEST_TIME'];
-        Settings::edit($backup['id'], ['setting' => $backup['setting']]);
+        $settings['setting'][$backup['last']['index']]['value'] = $_SERVER['REQUEST_TIME'];
+        Settings::edit($settings['id'], ['setting' => $settings['setting']]);
 
         header("Connection: close", true);
         header("Content-Encoding: none" . PHP_EOL);
@@ -244,10 +250,10 @@ class TechController extends Controller
     }
     public static function testAction()
     {
-        try {
-            TechRepository::scheduleBackup();
-        } catch (\Throwable $error) {
-            Tech::dump($error);
-        }
+        // try {
+        static::backupSaveAction();
+        // } catch (\Throwable $error) {
+        //     Tech::dump($error);
+        // }
     }
 }

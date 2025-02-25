@@ -14,12 +14,12 @@ class Settings extends Model
     public static function load(string $type = ''): array
     {
         $result = empty($type) ? self::getAll() : self::getAll(['type' => $type]);
-        
+
         if (empty($result)) return false;
 
         foreach ($result as $setting) {
             $_setting = [];
-            foreach($setting['setting'] as $set){
+            foreach ($setting['setting'] as $set) {
                 $_setting[$set['slug']] = $set;
             }
             self::$settings[$setting['type']] = $_setting;
@@ -38,7 +38,8 @@ class Settings extends Model
 
         return false;
     }
-    public static function get(string $slug){
+    public static function get(string $slug)
+    {
 
         if (empty($slug)) return false;
 
@@ -107,7 +108,7 @@ class Settings extends Model
             $queryCond = ['type' => $data['type'], 'slug' => $data['slug']];
             foreach ($data as $column => $value) {
                 if (empty($value)) continue;
-                
+
                 if (is_array($value)) {
                     $value = json_encode($value, JSON_UNESCAPED_UNICODE);
                 }
@@ -145,9 +146,10 @@ class Settings extends Model
         );
         if (self::isExists(['id' => 1])) return true;
 
-        
+
         $settings = [
-            ['img',
+            [
+                'img',
                 [
                     ['slug' => 'MainLogo', 'name' => 'Основний логотип', 'value' => '/public/images/club_logo.png'],
                     ['slug' => 'MainFullLogo', 'name' => 'Основний логотип', 'value' => '/public/images/club_logo-full.png'],
@@ -160,14 +162,16 @@ class Settings extends Model
                     ['slug' => 'background', 'name' => 'Загальний фон', 'value' => []],
                 ]
             ],
-            ['telegram', 
+            [
+                'telegram',
                 [
                     ['slug' => 'bot_token', 'name' => 'Токен Бота', 'value' => ''],
                     ['slug' => 'tech_chat', 'name' => 'Технический чат (лог ошибок)', 'value' => ''],
                     ['slug' => 'main_group_chat', 'name' => 'Основной груповой чат', 'value' => ''],
                 ]
             ],
-            ['email', 
+            [
+                'email',
                 [
                     ['slug' => 'host', 'name' => 'Email SMTP Server',  'value' => 'smtp.gmail.com'],
                     ['slug' => 'username', 'name' => 'Email Login', 'value' => ''],
@@ -176,7 +180,8 @@ class Settings extends Model
                     ['slug' => 'port', 'name' => 'Email SMTP Port', 'value' => '465'],
                 ]
             ],
-            ['gdrive', 
+            [
+                'gdrive',
                 [
                     ['slug' => 'type', 'name' => 'Type', 'value' => 'service_account'],
                     ['slug' => 'project_id', 'name' => 'Project ID', 'value' => ''],
@@ -191,7 +196,8 @@ class Settings extends Model
                     ['slug' => 'universe_domain', 'name' => 'Universe Domain', 'value' => 'googleapis.com'],
                 ]
             ],
-            ['contacts', 
+            [
+                'contacts',
                 [
                     ['slug' => 'email', 'name' => 'Contacts Email', 'value' => 'kr.mafia.club@gmail.com'],
                     ['slug' => 'phone', 'name' => 'Contacts Phone', 'value' => '+380987654321'],
@@ -203,7 +209,8 @@ class Settings extends Model
                     ['slug' => 'gmap_widget', 'name' => 'Google Map Widget Link', 'value' => 'https://google.com/maps/embed?pb=!1m18!1m12!1m3!1d668.5851682189962!2d33.39026844441126!3d47.91044536621998!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x40db20bcd47525ff%3A0xf39a0145fefa1e96!2z0L_RgNC-0YHQvy4g0JzQuNGA0LAsIDM1!5e0!3m2!1sru!2sua!4v1682765272064!5m2!1sru!2sua'],
                 ]
             ],
-            ['socials', 
+            [
+                'socials',
                 [
                     ['slug' => 'youtube', 'name' => 'Youtube Channel', 'value' => ''],
                     ['slug' => 'instagram', 'name' => 'Instagram', 'value' => ''],
@@ -211,7 +218,8 @@ class Settings extends Model
                     // ['tiktok', 'Tik-Tok Channel',  ''],
                 ]
             ],
-            ['backup', 
+            [
+                'backup',
                 [
                     ['slug' => 'email', 'name' => 'Backup Email', 'value' => ''],
                     ['slug' => 'last', 'name' => 'Last backup', 'value' => ''],
@@ -256,7 +264,7 @@ class Settings extends Model
 
         self::insert([
             'type' => 'config',
-            'setting' => json_encode([ 
+            'setting' => json_encode([
                 ['slug' => 'mafia', 'name' => 'Mafia Game config', 'value' => $mafiaConfig]
             ], JSON_UNESCAPED_UNICODE)
         ]);
