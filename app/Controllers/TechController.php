@@ -244,13 +244,9 @@ class TechController extends Controller
     }
     public static function testAction()
     {
-        try{
-            $folder = $_SERVER['DOCUMENT_ROOT'].SCRIPTS_PUBLIC;
-            echo 'Try to create folder: '. $folder.'</br>';
-            // chmod(string $filename, int $permissions)
-            mkdir($folder, 0777, true);
-        }
-        catch(\Throwable $error){
+        try {
+            TechRepository::scheduleBackup();
+        } catch (\Throwable $error) {
             Tech::dump($error);
         }
     }
