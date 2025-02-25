@@ -127,6 +127,9 @@ class NewsController extends Controller
                 'plugins/ckeditor.js',
                 'forms-admin-funcs.js',
             ],
+            'styles' => [
+                'forms',
+            ],
         ];
 
         View::$route['vars'] = array_merge(View::$route['vars'], $vars);
