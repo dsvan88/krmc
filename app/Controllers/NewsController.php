@@ -52,10 +52,10 @@ class NewsController extends Controller
             'title' => '{{ News_Show_Item_Page_Title }}',
             'newsData' => $page
         ];
-        
+
         View::$route['vars']['og'] = PageRepository::formPageOG($page);
         View::$route['vars'] = array_merge(View::$route['vars'], $vars);
-    
+
         return View::render();
     }
     public function editAction()
@@ -81,15 +81,15 @@ class NewsController extends Controller
         else
             $newsData['logo'] = ImageProcessing::inputImage(Settings::getImage('news_default')['value'], ['title' => Locale::phrase('{{ News_Change_Logo }}'), 'class' => 'news__item-logo_image']);
 
-        
-        $newsData['published_at'] = strtotime($newsData['published_at']);
-        $newsData['published_at'] = date('Y-m-d', $newsData['published_at']).'T'.date('H:i', $newsData['published_at']);
 
-        if (!empty($newsData['expired_at'])){                
+        $newsData['published_at'] = strtotime($newsData['published_at']);
+        $newsData['published_at'] = date('Y-m-d', $newsData['published_at']) . 'T' . date('H:i', $newsData['published_at']);
+
+        if (!empty($newsData['expired_at'])) {
             $newsData['expired_at'] = strtotime($newsData['expired_at']);
-            $newsData['expired_at'] = date('Y-m-d', $newsData['expired_at']).'T'.date('H:i', $newsData['expired_at']);
+            $newsData['expired_at'] = date('Y-m-d', $newsData['expired_at']) . 'T' . date('H:i', $newsData['expired_at']);
         }
-        
+
         $vars = [
             'title' => '{{ News_Edit_Page_Title }}',
             'texts' => [
@@ -101,9 +101,12 @@ class NewsController extends Controller
                 'plugins/ckeditor.js',
                 'forms-admin-funcs.js',
             ],
+            'styles' => [
+                'forms',
+            ],
         ];
         View::$route['vars'] = array_merge(View::$route['vars'], $vars);
-    
+
         return View::render();
     }
     public function editPromoAction()
@@ -127,7 +130,7 @@ class NewsController extends Controller
         ];
 
         View::$route['vars'] = array_merge(View::$route['vars'], $vars);
-    
+
         return View::render();
     }
     public function addAction()
@@ -155,10 +158,13 @@ class NewsController extends Controller
                 'plugins/ckeditor.js',
                 'forms-admin-funcs.js',
             ],
+            'styles' => [
+                'forms',
+            ],
         ];
 
         View::$route['vars'] = array_merge(View::$route['vars'], $vars);
-    
+
         return View::render();
     }
     public function deleteAction()
