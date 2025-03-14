@@ -254,10 +254,17 @@ class Users extends Model
         return true;
     }
 
-    public static function getList()
+    public static function getList(int $offset = 0, int $limit = 0)
     {
         $table = self::$table;
-        $result = self::query("SELECT * FROM $table ORDER BY id", [], 'Assoc');
+        $range = '';
+        if (!empty($limit)) {
+            $range .= ' LIMIT ' . $limit;
+        }
+        if (!empty($offset)) {
+            $range .= ' OFFSET ' . $offset;
+        }
+        $result = self::query("SELECT * FROM $table ORDER BY id $range", [], 'Assoc');
 
         if (!$result) return $result;
 

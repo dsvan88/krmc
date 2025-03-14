@@ -67,9 +67,9 @@ class TechController extends Controller
     }
     public static function backupSaveAction()
     {
-        // ignore_user_abort(true);
-        // error_reporting(0);
-        // set_time_limit(90);
+        ignore_user_abort(true);
+        error_reporting(0);
+        set_time_limit(90);
 
         $settings = Settings::findBy('type', 'backup')[0];
 
@@ -221,7 +221,8 @@ class TechController extends Controller
                 ],
                 'date' => 1652025484,
                 // 'text' => '+ на 18',
-                'text' => '/nick РСТУФЧХШЩЪЫЬЭЮЄІЇҐ',
+                'text' => '/users дж',
+                // 'text' => '/nick РСТУФЧХШЩЪЫЬЭЮЄІЇҐ',
                 // 'text' => '/day',
                 // 'text' => '+tod 18:15',
                 // 'text' => '+ на четвер, десь на 18:45, звісно, що підстрахую, але поки що (під ?)',
@@ -251,7 +252,7 @@ class TechController extends Controller
     public static function testAction()
     {
         // try {
-        static::backupSaveAction();
+        // static::backupSaveAction();
         // } catch (\Throwable $error) {
         //     Tech::dump($error);
         // }

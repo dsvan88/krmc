@@ -7,9 +7,9 @@ use app\core\Model;
 class TelegramChats extends Model
 {
     public static $table = SQL_TBL_TG_CHATS;
-    public static $foreign = [ 'users' => Users::class ];
+    public static $foreign = ['users' => Users::class];
     public static $jsonFields = ['personal', 'data'];
-    
+
     public static function save($messageArray)
     {
         $chatId = $messageArray['message']['from']['id'];
@@ -75,6 +75,14 @@ class TelegramChats extends Model
         self::update($saveData, ['id' => $savedChatId]);
         return true;
     }
+    public static function getPinnedMessage(int $chatId = 0): int
+    {
+        if (empty($chatId)) return false;
+
+        $chatData = self::getChat($chatId);
+
+        return empty($chatData['data']['pinned']) ? false : $chatData['data']['pinned'];
+    }
     public static function savePinned($messageArray, $messageId)
     {
         $chatId = $messageArray['message']['chat']['id'];
@@ -92,13 +100,8 @@ class TelegramChats extends Model
     }
     public static function getChat($uid)
     {
-        $table = self::$table;
-        $result = self::query("SELECT * FROM $table WHERE uid = ?", [$uid], 'Assoc');
-        if (empty($result)) {
-            return false;
-        }
-        $result = self::decodeJson($result[0]);
-        return $result;
+        $result = self::findBy('uid', $uid);
+        return empty($result) ? false : $result[0];
     }
     public static function getChatsList()
     {
@@ -207,7 +210,7 @@ class TelegramChats extends Model
     public static function init()
     {
         $table = self::$table;
-        foreach(self::$foreign as $key=>$class){
+        foreach (self::$foreign as $key => $class) {
             $$key = $class::$table;
         }
 

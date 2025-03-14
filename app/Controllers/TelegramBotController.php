@@ -116,6 +116,7 @@ class TelegramBotController extends Controller
 
             if ($botResult[0]['ok']) {
                 if (self::$command === 'week') {
+                    self::unpinWeekMessage();
                     self::pinMessage($botResult[0]['result']['message_id']);
                 }
                 /*                 if (in_array($command, ['reg', 'set', 'week', 'recall', 'today', 'day', 'promo'], true) && self::$chatId !== self::$techTelegramId) {
@@ -195,7 +196,7 @@ class TelegramBotController extends Controller
                 return true;
             }
             // preg_match_all('/([a-zA-Zа-яА-ЯрРсСтТуУфФчЧхХШшЩщЪъЫыЬьЭэЮюЄєІіЇїҐґ.0-9]+)/', trim(mb_substr($text, $commandLen + 1, NULL, 'UTF-8')), $matches);
-            preg_match_all('/([a-zа-яєіїґ.0-9]+)/ui', trim(mb_substr($text, $commandLen + 1, NULL, 'UTF-8')), $matches);
+            preg_match_all('/([a-zа-яєіїґ.0-9#-]+)/ui', trim(mb_substr($text, $commandLen + 1, NULL, 'UTF-8')), $matches);
 
             self::$command = $command;
             self::$commandArguments = $matches[0];
@@ -337,12 +338,22 @@ class TelegramBotController extends Controller
 
         return $result;
     }
-    public static function pinMessage($messageId = null)
+    public static function pinMessage(int $messageId = 0)
     {
         if (empty($messageId)) return false;
 
         Sender::pin(self::$chatId, $messageId);
         TelegramChats::savePinned(self::$message, $messageId);
+
+        return true;
+    }
+    public static function unpinWeekMessage()
+    {
+        $pinned = TelegramChats::getPinnedMessage(self::$chatId);
+
+        if (empty($pinned)) return false;
+
+        Sender::unpin(self::$chatId, $pinned);
 
         return true;
     }

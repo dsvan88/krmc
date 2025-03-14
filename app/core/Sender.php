@@ -44,6 +44,12 @@ class Sender
 
         return self::$operator->pinMessage($chatId, $messageId);
     }
+    public static function unpin($chatId, $messageId){
+        if (empty($chatId)) return false;
+        if (empty(self::$operator)) self::init();
+
+        return self::$operator->unpinMessage($chatId, $messageId);
+    }
     public static function getMe(){
         if (empty(self::$operator)) self::init();
 

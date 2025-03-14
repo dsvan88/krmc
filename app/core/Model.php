@@ -46,7 +46,6 @@ class Model extends Db
     }
     public static function find(int $id)
     {
-        // error_log(__METHOD__ . ': ' . $id);
         $table = static::$table;
         $result = self::query("SELECT * FROM $table WHERE id = ? LIMIT 1", [$id], 'Assoc');
         if (empty($result)) return [];
@@ -83,13 +82,25 @@ class Model extends Db
 
         return $result;
     }
+    public static function ilike(string $column = '', string $pattern = '')
+    {
+        $table = static::$table;
+        $pattern = mb_strtolower($pattern, 'UTF-8');
+        $result = self::query("SELECT * FROM $table WHERE LOWER( $column ) LIKE ? ORDER BY id", ["%$pattern%"], 'Assoc');
+
+        $count = count($result);
+        for ($i = 0; $i < $count; $i++) {
+            $result[$i] = self::decodeJson($result[$i]);
+        }
+
+        return empty($result) ? [] : $result;
+    }
     // Находит последнюю запись в таблице
     public static function last()
     {
         $table = static::$table;
         $result = self::query("SELECT * FROM $table ORDER BY id DESC LIMIT 1", [], 'Assoc');
-        if (empty($result)) return false;
-        return static::decodeJson($result[0]);
+        return empty($result) ? false : static::decodeJson($result[0]);
     }
     public static function decodeJson(array $array)
     {
@@ -104,10 +115,10 @@ class Model extends Db
         }
         return $array;
     }
-    public static function decryptFields(array &$array):void
+    public static function decryptFields(array &$array): void
     {
         if (empty(static::$encryptedFields))    return;
-        
+
         foreach (static::$jsonFields as $field) {
             if (empty($array[$field])) continue;
             $array[$field] = Tech::decrypt($array[$field], true);

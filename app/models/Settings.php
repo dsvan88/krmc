@@ -15,7 +15,7 @@ class Settings extends Model
     {
         $result = empty($type) ? self::getAll() : self::getAll(['type' => $type]);
 
-        if (empty($result)) return false;
+        if (empty($result)) return [];
 
         foreach ($result as $setting) {
             $_setting = [];
