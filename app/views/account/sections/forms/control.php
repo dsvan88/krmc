@@ -8,11 +8,11 @@
         </h4>
         <div class="profile__card-value">
             <select name="status">
-                <option value="" <?= empty($data['privilege']['status']) ? 'selected' : '' ?>></option>
-                <option value="user" <?= $data['privilege']['status'] === 'user' ? 'selected' : '' ?>>Користувач</option>
-                <option value="trusted" <?= $data['privilege']['status'] === 'trusted' ? 'selected' : '' ?>>Довірений користувач</option>
-                <option value="manager" <?= $data['privilege']['status'] === 'manager' ? 'selected' : '' ?>>Менеджер</option>
-                <option value="admin" <?= $data['privilege']['status'] === 'admin' ? 'selected' : '' ?>>Адмін</option>
+                <option value="" <?= empty($userStatus) ? 'selected' : '' ?>></option>
+                <option value="user" <?= $userStatus === 'user' ? 'selected' : '' ?>>Користувач</option>
+                <option value="trusted" <?= $userStatus === 'trusted' ? 'selected' : '' ?>>Довірений користувач</option>
+                <option value="manager" <?= $userStatus === 'manager' ? 'selected' : '' ?>>Менеджер</option>
+                <option value="admin" <?= $userStatus === 'admin' ? 'selected' : '' ?>>Адмін</option>
             </select>
         </div>
     </div>
@@ -21,7 +21,7 @@
             Новий псевдонім:
         </h4>
         <div class="profile__card-value">
-            <input type="text" name='name' value="<?= $data['name']?>">
+            <input type="text" name='name' value="<?= $data['name'] ?>">
         </div>
     </div>
     <div class="profile__card-row">
@@ -33,7 +33,7 @@
         </div>
     </div>
     <div class="profile__card-row buttons">
-        <button type='submit' class="positive button"><span class="button__label"><?=$texts['SaveLabel']?></span><i class="fa fa-check button__icon"></i></button>
-        <button type='button' class="negative button"><span class="button__label"><?=$texts['CancelLabel']?></span><i class="fa fa-ban button__icon"></i></button>
+        <button type='submit' class="positive button"><span class="button__label"><?= $texts['SaveLabel'] ?></span><i class="fa fa-check button__icon"></i></button>
+        <button type='button' class="negative button"><span class="button__label"><?= $texts['CancelLabel'] ?></span><i class="fa fa-ban button__icon"></i></button>
     </div>
 </form>
