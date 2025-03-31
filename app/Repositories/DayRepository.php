@@ -8,6 +8,16 @@ use app\models\Weeks;
 
 class DayRepository
 {
+    public static $daysArray = [
+        ['пн', 'пон', 'mon'],
+        ['вт', 'вто', 'вів', 'tue'],
+        ['ср', 'сре', 'сер', 'wed'],
+        ['чт', 'чтв', 'чет', 'thu'],
+        ['пт', 'пят', 'п’ят', 'fri'],
+        ['сб', 'суб', 'sat'],
+        ['вс', 'вос', 'нед', 'нд', 'sun']
+    ];
+
     public static function renamePlayer(int $userId, string $name): void
     {
         $weeks = Weeks::getAll();
@@ -41,5 +51,13 @@ class DayRepository
         } while ($dayData['status'] !== 'set');
 
         return [$weekId, $dayId];
+    }
+    public static function getDayNamesForCommand(): string
+    {
+        $days = [];
+        foreach (static::$daysArray as $dayNames) {
+            $days = array_merge($days, $dayNames);
+        }
+        return implode('|', $days);
     }
 }

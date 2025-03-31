@@ -5,12 +5,14 @@ namespace app\Controllers;
 use app\core\Controller;
 use app\core\Locale;
 use app\core\Sender;
+use app\core\Tech;
 use app\core\Validator;
 use app\core\View;
 use app\models\Contacts;
 use app\models\Settings;
 use app\models\TelegramChats;
 use app\models\Users;
+use app\Repositories\DayRepository;
 
 class TelegramBotController extends Controller
 {
@@ -138,16 +140,35 @@ class TelegramBotController extends Controller
     public static function parseCommand(string $text): bool
     {
         $_text = mb_strtolower(str_replace('на ', '', $text), 'UTF-8');
-        if (preg_match('/^[+-]\s{0,3}(пн|пон|вт|вів|ср|сер|чт|чет|пт|пят|п’ят|сб|суб|вс|вос|нед|нд|сг|сег|сьо|зав|mon|tue|wed|thu|fri|sat|sun|tod|tom)/ui', $_text) === 1) {
-            preg_match_all('/[+-]\s{0,3}(пн|пон|вт|вів|ср|сер|чт|чет|пт|пят|п’ят|сб|суб|вс|вос|нед|нд|сг|сег|сьо|зав|mon|tue|wed|thu|fri|sat|sun|tod|tom)/ui', str_replace('.', ':', $_text), $matches);
-            $arguments = $matches[0];
+        $days = DayRepository::getDayNamesForCommand();
+        if (preg_match("/^([+-])\s{0,3}($days)/ui", $_text, $match) === 1) {
+            $arguments['method'] = $match[1];
+            $arguments['dayName'] = $match[2];
+            if (preg_match('/([0-2]{0,1}[0-9])(:[0-5][0-9]){0,1}/', str_replace('.', ':', $_text), $match) === 1) {
+                $arguments['arrive'] = $match[0];
+                if (strlen($arguments['arrive']) < 3) {
+                    $arguments['arrive'] .= ':00';
+                }
+            }
             if (preg_match('/\([^)]+\)/', $text, $prim) === 1) {
                 $arguments['prim'] = mb_substr($prim[0], 1, -1, 'UTF-8');
+            } elseif (preg_match('/\?/', $_text) === 1) {
+                $arguments['prim'] = '?';
             }
             self::$command = 'booking';
             self::$commandArguments = $arguments;
             return true;
         }
+        // if (preg_match('/^[+-]\s{0,3}(пн|пон|вт|вів|ср|сер|чт|чет|пт|пят|п’ят|сб|суб|вс|вос|нед|нд|сг|сег|сьо|зав|mon|tue|wed|thu|fri|sat|sun|tod|tom)/ui', $_text) === 1) {
+        //     preg_match_all('/[+-]\s{0,3}(пн|пон|вт|вів|ср|сер|чт|чет|пт|пят|п’ят|сб|суб|вс|вос|нед|нд|сг|сег|сьо|зав|mon|tue|wed|thu|fri|sat|sun|tod|tom)/ui', str_replace('.', ':', $_text), $matches);
+        //     $arguments = $matches[0];
+        //     if (preg_match('/\([^)]+\)/', $text, $prim) === 1) {
+        //         $arguments['prim'] = mb_substr($prim[0], 1, -1, 'UTF-8');
+        //     }
+        //     self::$command = 'booking';
+        //     self::$commandArguments = $arguments;
+        //     return true;
+        // }
         if (preg_match('/^[+]\s{0,3}[0-2]{0,1}[0-9]/', $_text) === 1) {
             preg_match('/^(\+)\s{0,3}([0-2]{0,1}[0-9])(:[0-5][0-9]){0,1}/i', mb_strtolower(str_replace('.', ':', $_text), 'UTF-8'), $matches);
 

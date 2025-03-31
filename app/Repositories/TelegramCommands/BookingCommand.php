@@ -3,6 +3,7 @@
 namespace app\Repositories\TelegramCommands;
 
 use app\core\ChatCommand;
+use app\core\Tech;
 use app\models\Days;
 use app\models\Weeks;
 
