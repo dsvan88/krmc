@@ -3,7 +3,6 @@
 namespace app\Repositories\TelegramCommands;
 
 use app\core\ChatCommand;
-use app\core\Tech;
 use app\models\Days;
 use app\models\Weeks;
 
@@ -27,8 +26,6 @@ class BookingCommand extends ChatCommand
         if ($requestData['currentDay'] > $requestData['dayNum']) {
             ++$weekId;
         }
-
-        Tech::dump($requestData);
 
         $weekData = Weeks::weekDataById($weekId);
 
