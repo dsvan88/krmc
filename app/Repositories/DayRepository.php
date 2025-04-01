@@ -18,6 +18,11 @@ class DayRepository
         ['вс', 'вос', 'нед', 'нд', 'sun']
     ];
 
+    public static $techDaysArray = [
+        ['сг', 'сег', 'сьо', 'tod', 'td'],
+        ['зав', 'tom', 'tm'],
+    ];
+
     public static function renamePlayer(int $userId, string $name): void
     {
         $weeks = Weeks::getAll();
@@ -56,6 +61,9 @@ class DayRepository
     {
         $days = [];
         foreach (static::$daysArray as $dayNames) {
+            $days = array_merge($days, $dayNames);
+        }
+        foreach (static::$techDaysArray as $dayNames) {
             $days = array_merge($days, $dayNames);
         }
         return implode('|', $days);

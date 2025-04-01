@@ -16,7 +16,9 @@ class BookingCommand extends ChatCommand
     }
     public static function execute(array $arguments = [])
     {
-        $requestData = self::$operatorClass::parseArguments($arguments);
+        $requestData = $arguments;
+        self::$operatorClass::parseDayNum($requestData['dayName'], $requestData);
+        // $requestData = self::$operatorClass::parseArguments($arguments);
         $requestData['userId'] = self::$requester['id'];
         $requestData['userName'] = self::$requester['name'];
         $requestData['userStatus'] = self::$requester['privilege']['status'];
@@ -25,6 +27,8 @@ class BookingCommand extends ChatCommand
         if ($requestData['currentDay'] > $requestData['dayNum']) {
             ++$weekId;
         }
+
+        Tech::dump($requestData);
 
         $weekData = Weeks::weekDataById($weekId);
 

@@ -239,11 +239,6 @@ class TelegramBotController extends Controller
             unset($arguments['prim']);
         }
 
-        $requestData['currentDay'] = getdate()['wday'] - 1;
-
-        if ($requestData['currentDay'] === -1)
-            $requestData['currentDay'] = 6;
-
         foreach ($arguments as $value) {
             $value = trim($value);
             if (preg_match('/^(\+|-)[^0-9]/', $value)) {
@@ -252,7 +247,7 @@ class TelegramBotController extends Controller
                 $withoutMethod = trim(mb_substr($value, 1, 6, 'UTF-8'));
                 $dayName = mb_strtolower(mb_substr($withoutMethod, 0, 3, 'UTF-8'), 'UTF-8');
 
-                $requestData['dayNum'] = self::parseDayNum($dayName, $requestData['currentDay']);
+                self::parseDayNum($dayName, $requestData);
             } elseif (preg_match('/^\d{2}:\d{2}$/', $value) === 1 && empty($requestData['arrive'])) {
                 $requestData['arrive'] = $value;
             } elseif (preg_match('/^(\+|-)\d{1,2}/', $value, $match) === 1) {
@@ -269,33 +264,42 @@ class TelegramBotController extends Controller
         }
         return $requestData;
     }
-    public static function parseDayNum($dayName, $today)
+    public static function parseDayNum(string $dayName, array &$requestData): bool
     {
+
+        $requestData['currentDay'] = getdate()['wday'] - 1;
+
+        if ($requestData['currentDay'] === -1)
+            $requestData['currentDay'] = 6;
+
         $dayName = mb_strtolower($dayName, 'UTF-8');
         if (mb_strlen($dayName, 'UTF-8') > 3) {
             $dayName = mb_substr($dayName, 0, 3);
         }
         if (in_array($dayName, ['сг', 'сег', 'сьо', 'tod'], true)) {
-            return $today;
+            $requestData['dayNum'] = $requestData['currentDay'];
+            return true;
         } elseif (in_array($dayName, ['зав', 'tom'], true)) {
-            $dayNum = $today + 1;
+            $dayNum = $requestData['currentDay'] + 1;
             if ($dayNum === 7)
                 $dayNum = 0;
-            return $dayNum;
+            $requestData['dayNum'] = $dayNum;
+            return true;
         } else {
-            $daysArray = [
-                ['пн', 'пон', 'mon'],
-                ['вт', 'вто', 'вів', 'tue'],
-                ['ср', 'сре', 'сер', 'wed'],
-                ['чт', 'чтв', 'чет', 'thu'],
-                ['пт', 'пят', 'п’ят', 'fri'],
-                ['сб', 'суб', 'sat'],
-                ['вс', 'вос', 'нед', 'нд', 'sun']
-            ];
+            // $daysArray = [
+            //     ['пн', 'пон', 'mon'],
+            //     ['вт', 'вто', 'вів', 'tue'],
+            //     ['ср', 'сре', 'сер', 'wed'],
+            //     ['чт', 'чтв', 'чет', 'thu'],
+            //     ['пт', 'пят', 'п’ят', 'fri'],
+            //     ['сб', 'суб', 'sat'],
+            //     ['вс', 'вос', 'нед', 'нд', 'sun']
+            // ];
 
-            foreach ($daysArray as $num => $daysNames) {
+            foreach (DayRepository::$daysArray as $num => $daysNames) {
                 if (in_array($dayName, $daysNames, true)) {
-                    return $num;
+                    $requestData['dayNum'] = $num;
+                    return true;
                 }
             }
         }
