@@ -249,7 +249,7 @@ return [
 
     "<u>/clear (week day)</u> <i>// Clear patricipant’s list of a specific day.\n\tWithout specifying the day - for today.\n\tWorking on recalled day only!</i>" => "<u>/clear (день недели)</u> <i>// Очистить список учасников на конкретный день.\n\tБез уточнения дня - очищает список на сегодня.\n\tРаботает толька на днях, по которым случился \"отбой\".</i>",
     '<u>/newuser Player’s nickname</u> (in Cyrillic) <i>// Register a new nickname in the system.</i>' => '<u>/newuser Псевдоним Игрока</u> (кириллицей) <i>// Зарегистрировать в системе новый псевдоним игрока.</i>',
-    "<u>/users range|#userId|nickname</u> <i>// Users list, registered in system (first 100).</i>. Examples:</i>\n/users 0-100\n/users #14\n/users Example" => "<u>/users диапазон|#ИД_пользователя|псевдоним</u> <i>// Список пользователей, зарегистрированных в системе (первые 100). Примеры:</i>\n/users 0-100\n/users #14\n/users Пример",
+    "<u>/users range|#userId|nickname</u> <i>// Users list, registered in system (first 100).</i>. Examples:</i>\n\t/users 0-100\n\t/users #14\n\t/users Example" => "<u>/users диапазон|#ИД_пользователя|псевдоним</u> <i>// Список пользователей, зарегистрированных в системе (первые 100). Примеры:</i>\n\t/users 0-100\n\t/users #14\n\t/users Пример",
 
     "<u>/set</u> <i>// Set data for a specific day. Example:</i>\n\t\t/set sun, mafia, 18:00, (Good luck, have fun!)\n" => "<u>/set</u> <i>// Вказати дані дня. Зразок:</i>\n\t\t/set вс, mafia, 18:00, (Разважтесь!)\n",
     '<u>/reg</u> <i>// Booking/unbooking players for a specific day. Examples:</i>

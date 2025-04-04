@@ -29,7 +29,7 @@
             Видалення:
         </h4>
         <div class="profile__card-value">
-            <button type="button" class="negative" data-action-click='account/delete' data-user-id="<?= $usersData[$x]['id'] ?>" data-verification="verification/root">Видалити</button>
+            <button type="button" class="negative" data-action-click='account/delete' data-user-id="<?= $userId ?>" data-verification="verification/root">Видалити</button>
         </div>
     </div>
     <div class="profile__card-row buttons">

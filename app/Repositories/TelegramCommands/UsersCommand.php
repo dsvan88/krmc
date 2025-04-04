@@ -10,7 +10,7 @@ class UsersCommand extends ChatCommand
     public static $accessLevel = 'manager';
     public static function description()
     {
-        return self::locale("<u>/users range|#userId|nickname</u> <i>// Users list, registered in system (first 100).</i>. Examples:</i>\n/users 0-100\n/users #14\n/users Example");
+        return self::locale("<u>/users range|#userId|nickname</u> <i>// Users list, registered in system (first 100).</i>. Examples:</i>\n\t/users 0-100\n\t/users #14\n\t/users Example");
     }
     public static function execute(array $arguments = [])
     {
