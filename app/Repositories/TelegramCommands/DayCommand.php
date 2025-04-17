@@ -15,18 +15,19 @@ class DayCommand extends ChatCommand
     public static function execute(array $arguments = [])
     {
         $weekId = Weeks::currentId();
-        $currentDayNum = Days::current();
+        $requestData = $arguments;
 
-        if (isset($arguments[0])) {
-            $dayNum = self::$operatorClass::parseDayNum($arguments[0], $currentDayNum);
-            if ($dayNum < $currentDayNum)
+        if (isset($requestData[0])) {
+            self::$operatorClass::parseDayNum($requestData[0], $requestData);
+            if ($requestData['dayNum'] < $requestData['currentDay'])
                 $weekId++;
         } else {
-            $dayNum = $currentDayNum;
+            self::$operatorClass::parseDayNum('сг', $requestData);
+            $requestData['currentDay'];
         }
 
         $weekData = Weeks::weekDataById($weekId);
-        $message = Days::getFullDescription($weekData, $dayNum);
+        $message = Days::getFullDescription($weekData, $requestData['dayNum']);
 
         if (empty($message)) {
             self::$operatorClass::$resultMessage = self::locale('{{ Tg_Command_Games_Not_Set }}');

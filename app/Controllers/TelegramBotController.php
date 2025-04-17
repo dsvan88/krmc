@@ -9,6 +9,7 @@ use app\core\Tech;
 use app\core\Validator;
 use app\core\View;
 use app\models\Contacts;
+use app\models\Days;
 use app\models\Settings;
 use app\models\TelegramChats;
 use app\models\Users;
@@ -267,10 +268,7 @@ class TelegramBotController extends Controller
     public static function parseDayNum(string $dayName, array &$requestData): bool
     {
 
-        $requestData['currentDay'] = getdate()['wday'] - 1;
-
-        if ($requestData['currentDay'] === -1)
-            $requestData['currentDay'] = 6;
+        $requestData['currentDay'] = Days::current();
 
         $dayName = mb_strtolower($dayName, 'UTF-8');
         if (mb_strlen($dayName, 'UTF-8') > 3) {

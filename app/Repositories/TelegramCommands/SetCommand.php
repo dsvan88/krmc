@@ -6,6 +6,7 @@ use app\core\ChatCommand;
 use app\models\Days;
 use app\models\GameTypes;
 use app\models\Weeks;
+use app\Repositories\DayRepository;
 
 class SetCommand extends ChatCommand
 {
@@ -21,9 +22,8 @@ class SetCommand extends ChatCommand
             return false;
         }
 
-        $dayName = '';
-        $dayNum = -1;
-        $currentDayNum = Days::current();
+        $requestData = $arguments;
+        $days = DayRepository::getDayNamesForCommand();
 
         $gameName = $dayName = $time = '';
         $tournament = false;
@@ -71,7 +71,7 @@ class SetCommand extends ChatCommand
                 $time = $timesPattern[0];
                 continue;
             }
-            if ($dayName === '' && preg_match('/^[+-]{0,1}(пн|пон|вт|ср|чт|чет|пт|пят|сб|суб|вс|вос|сг|сег|зав)/ui', mb_strtolower($value, 'UTF-8'), $daysPattern) > 0) {
+            if ($dayName === '' && preg_match("/^[+-]{0,1}($days)/ui", mb_strtolower($value, 'UTF-8'), $daysPattern) > 0) {
                 $dayName = $daysPattern[0];
                 continue;
             }
@@ -85,7 +85,8 @@ class SetCommand extends ChatCommand
             $method = $dayName[0];
             $dayName = mb_substr($dayName, 1, null, 'UTF-8');
         }
-        $dayNum = self::$operatorClass::parseDayNum($dayName, $currentDayNum);
+
+        self::$operatorClass::parseDayNum($dayName, $requestData);
 
         if ($gameName !== '') {
             foreach ($gamesArray as $name => $gameNames) {
@@ -97,8 +98,9 @@ class SetCommand extends ChatCommand
         }
 
         $weekId = Weeks::currentId();
+        $dayNum = $requestData['dayNum'];
 
-        if ($dayNum < $currentDayNum) {
+        if ($requestData['dayNum'] < $requestData['currentDay']) {
             ++$weekId;
         }
         $weekData = Weeks::weekDataById($weekId);
