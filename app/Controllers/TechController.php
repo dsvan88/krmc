@@ -223,7 +223,7 @@ class TechController extends Controller
                 // 'text' => '+ на 18',
                 // 'text' => '/users дж',
                 // 'text' => '/day',
-                'text' => '+сг на 18 поки під ?',
+                'text' => '-чт',
                 // 'text' => '+ на четвер, десь на 18:45, звісно, що підстрахую, але поки що (під ?)',
                 // 'text' => '/?',
             ]

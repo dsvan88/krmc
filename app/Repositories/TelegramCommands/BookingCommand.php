@@ -48,7 +48,7 @@ class BookingCommand extends ChatCommand
         foreach ($weekData['data'][$requestData['dayNum']]['participants'] as $index => $userData) {
             if ($userData['id'] !== $requestData['userId']) continue;
 
-            if ($requestData['arrive'] !== '' && $requestData['arrive'] !== $userData['arrive']) {
+            if (!empty($requestData['arrive']) && $requestData['arrive'] !== $userData['arrive']) {
                 $slot = $index;
                 break;
             }

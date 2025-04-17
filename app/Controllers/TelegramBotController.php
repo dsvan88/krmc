@@ -111,7 +111,7 @@ class TelegramBotController extends Controller
             }
 
             if (!empty(self::$resultPreMessage)) {
-                Sender::message(self::$chatId, self::$resultPreMessage, self::$message['message']['message_id']);
+                // Sender::message(self::$chatId, self::$resultPreMessage, self::$message['message']['message_id']);
             }
 
             $botResult = Sender::message(self::$chatId, Locale::phrase(self::$resultMessage));
