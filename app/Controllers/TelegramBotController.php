@@ -185,10 +185,10 @@ class TelegramBotController extends Controller
             if ($matches[2] < 8 || $matches[2] > 23) return false;
             if (empty($matches[3])) $matches[3] = ':00';
 
-            $arguments = [
-                '+tod',
-                $matches[2] . $matches[3],
-            ];
+            $arguments['method'] = '+';
+            $arguments['dayName'] = 'tod';
+            $arguments['arrive'] = $matches[2] . $matches[3];
+
             if (preg_match('/\([^)]+\)/', $text, $prim) === 1) {
                 $arguments['prim'] = mb_substr($prim[0], 1, -1, 'UTF-8');
             }
