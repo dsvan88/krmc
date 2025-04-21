@@ -23,7 +23,7 @@ class DayCommand extends ChatCommand
                 $weekId++;
         } else {
             self::$operatorClass::parseDayNum('сг', $requestData);
-            $requestData['currentDay'];
+            $requestData['dayNum'] = $requestData['currentDay'];
         }
 
         $weekData = Weeks::weekDataById($weekId);
