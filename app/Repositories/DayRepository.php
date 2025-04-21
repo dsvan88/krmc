@@ -19,8 +19,8 @@ class DayRepository
     ];
 
     public static $techDaysArray = [
-        ['сг', 'сег', 'сьо', 'tod', 'td'],
-        ['зав', 'tom', 'tm'],
+        ['tod', 'td', 'сг', 'сег', 'сьо'],
+        ['tom', 'tm', 'зав'],
     ];
 
     public static function renamePlayer(int $userId, string $name): void

@@ -17,14 +17,10 @@ class DayCommand extends ChatCommand
         $weekId = Weeks::currentId();
         $requestData = $arguments;
 
-        if (isset($requestData[0])) {
-            self::$operatorClass::parseDayNum($requestData[0], $requestData);
-            if ($requestData['dayNum'] < $requestData['currentDay'])
-                $weekId++;
-        } else {
-            self::$operatorClass::parseDayNum('сг', $requestData);
-            $requestData['dayNum'] = $requestData['currentDay'];
-        }
+        $daySlug = isset($requestData[0]) ? $requestData[0] : 'tod';
+        self::$operatorClass::parseDayNum($daySlug, $requestData);
+        if ($requestData['dayNum'] < $requestData['currentDay'])
+            $weekId++;
 
         $weekData = Weeks::weekDataById($weekId);
         $message = Days::getFullDescription($weekData, $requestData['dayNum']);

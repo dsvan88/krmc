@@ -265,19 +265,21 @@ class TelegramBotController extends Controller
         }
         return $requestData;
     }
-    public static function parseDayNum(string $dayName, array &$requestData): bool
+    public static function parseDayNum(string $daySlug, array &$requestData): bool
     {
 
         $requestData['currentDay'] = Days::current();
 
-        $dayName = mb_strtolower($dayName, 'UTF-8');
-        if (mb_strlen($dayName, 'UTF-8') > 3) {
-            $dayName = mb_substr($dayName, 0, 3);
+        $daySlug = mb_strtolower($daySlug, 'UTF-8');
+        if (mb_strlen($daySlug, 'UTF-8') > 3) {
+            $daySlug = mb_substr($daySlug, 0, 3);
         }
-        if (in_array($dayName, ['сг', 'сег', 'сьо', 'tod'], true)) {
+
+        $today = ['tod', 'сг', 'сег', 'сьо'];
+        if (in_array($daySlug, $today, true)) {
             $requestData['dayNum'] = $requestData['currentDay'];
             return true;
-        } elseif (in_array($dayName, ['зав', 'tom'], true)) {
+        } elseif (in_array($daySlug, ['зав', 'tom'], true)) {
             $dayNum = $requestData['currentDay'] + 1;
             if ($dayNum === 7)
                 $dayNum = 0;
@@ -295,7 +297,7 @@ class TelegramBotController extends Controller
             // ];
 
             foreach (DayRepository::$daysArray as $num => $daysNames) {
-                if (in_array($dayName, $daysNames, true)) {
+                if (in_array($daySlug, $daysNames, true)) {
                     $requestData['dayNum'] = $num;
                     return true;
                 }
