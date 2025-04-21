@@ -20,8 +20,10 @@ class DayCommand extends ChatCommand
         $daySlug = isset($requestData[0]) ? $requestData[0] : 'tod';
         self::$operatorClass::parseDayNum($daySlug, $requestData);
         if ($requestData['dayNum'] < $requestData['currentDay'])
-            $weekId++;
-
+        $weekId++;
+    
+        $_SESSION['debug'] = json_encode($requestData);
+        
         $weekData = Weeks::weekDataById($weekId);
         $message = Days::getFullDescription($weekData, $requestData['dayNum']);
 

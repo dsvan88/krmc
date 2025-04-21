@@ -274,9 +274,7 @@ class TelegramBotController extends Controller
         if (mb_strlen($daySlug, 'UTF-8') > 3) {
             $daySlug = mb_substr($daySlug, 0, 3);
         }
-
-        $today = ['tod', 'сг', 'сег', 'сьо'];
-        if (in_array($daySlug, $today, true)) {
+        if (in_array($daySlug, DayRepository::$techDaysArray[0], true)) {
             $requestData['dayNum'] = $requestData['currentDay'];
             return true;
         } elseif (in_array($daySlug, ['зав', 'tom'], true)) {
@@ -286,16 +284,6 @@ class TelegramBotController extends Controller
             $requestData['dayNum'] = $dayNum;
             return true;
         } else {
-            // $daysArray = [
-            //     ['пн', 'пон', 'mon'],
-            //     ['вт', 'вто', 'вів', 'tue'],
-            //     ['ср', 'сре', 'сер', 'wed'],
-            //     ['чт', 'чтв', 'чет', 'thu'],
-            //     ['пт', 'пят', 'п’ят', 'fri'],
-            //     ['сб', 'суб', 'sat'],
-            //     ['вс', 'вос', 'нед', 'нд', 'sun']
-            // ];
-
             foreach (DayRepository::$daysArray as $num => $daysNames) {
                 if (in_array($daySlug, $daysNames, true)) {
                     $requestData['dayNum'] = $num;
