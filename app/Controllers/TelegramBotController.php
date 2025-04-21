@@ -112,7 +112,7 @@ class TelegramBotController extends Controller
             }
 
             if (!empty(self::$resultPreMessage)) {
-                Sender::message(self::$chatId, self::$resultPreMessage, self::$message['message']['message_id']);
+                // Sender::message(self::$chatId, self::$resultPreMessage, self::$message['message']['message_id']);
             }
 
             $botResult = Sender::message(self::$chatId, Locale::phrase(self::$resultMessage));
@@ -134,6 +134,11 @@ class TelegramBotController extends Controller
                 'commonError' => $th->__toString(),
                 'messageData' => self::$message,
             ];
+            if (!empty($_SESSION['debug'])) {
+                $debugMessage .= PHP_EOL . 'DEBUG:' . PHP_EOL;
+                $debugMessage .= PHP_EOL . implode(PHP_EOL, $_SESSION['debug']);
+                unset($_SESSION['debug']);
+            }
             Sender::message(self::$techTelegramId, json_encode($debugMessage, JSON_UNESCAPED_UNICODE));
             Sender::message(self::$chatId, Locale::phrase("Something went wrong😱!\nWe are deeply sorry for that😢\nI’ve informed our administrators about your situation, and they are fixing it right now!\nThank you for understanding!"));
         }
