@@ -154,7 +154,7 @@ class TelegramBotController extends Controller
         if (preg_match("/^([+-])\s{0,3}($days)/ui", $_text, $match) === 1) {
             $arguments['method'] = $match[1];
             $arguments['dayName'] = $match[2];
-            if (preg_match('/([0-2]{0,1}[0-9])(:[0-5][0-9]){0,1}/', str_replace('.', ':', $_text), $match) === 1) {
+            if (preg_match('/([0-2][0-9])(:[0-5][0-9]){0,1}/', str_replace('.', ':', $_text), $match) === 1) {
                 $arguments['arrive'] = $match[0];
                 if (strlen($arguments['arrive']) < 3) {
                     $arguments['arrive'] .= ':00';
