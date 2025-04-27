@@ -38,7 +38,7 @@ class BookingCommand extends ChatCommand
             if (!isset($weekData['data'][$requestData['dayNum']]['game']))
                 $weekData['data'][$requestData['dayNum']] = Days::$dayDataDefault;
 
-            if ($requestData['arrive'] !== '')
+            if (!empty($requestData['arrive']))
                 $weekData['data'][$requestData['dayNum']]['time'] = $requestData['arrive'];
 
             $requestData['arrive'] = '';
