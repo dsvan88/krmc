@@ -63,7 +63,6 @@ class TelegramBot
         }
         $result = json_decode(curl_exec($curl), true);
         if ($result['ok']) {
-            self::$botToken = $botToken;
             return [$result];
         }
         throw new Exception(json_encode($result, JSON_UNESCAPED_UNICODE));
@@ -106,7 +105,7 @@ class TelegramBot
         } else
             return [json_decode(curl_exec($curl), true)];
     }
-    public static function sendPhoto($userId, string $caption = null, string $image = null, $type = 'image/jpeg', $messageId = -1)
+    public static function sendPhoto($userId, string $caption = '', string $image = '', $type = 'image/jpeg', $messageId = -1)
     {
         $botToken = self::$botToken;
         $params = self::$params;
@@ -143,29 +142,34 @@ class TelegramBot
     }
     public static function deleteMessage($chatId, $messageId)
     {
-        $botToken = self::$botToken;
+        // $botToken = self::$botToken;
 
         $params['chat_id'] = $chatId; // id получателя сообщения
         $params['message_id'] = $messageId;
 
-        $options = self::$options;
-        $options[CURLOPT_URL] = "https://api.telegram.org/bot$botToken/deleteMessage"; // адрес api телеграмм-бота
-        $options[CURLOPT_POSTFIELDS] = $params; // адрес api телеграмм-бота
+        return self::send('deleteMessage', $params);
 
-        $curl = curl_init();
+        // $options = self::$options;
+        // $options[CURLOPT_URL] = "https://api.telegram.org/bot$botToken/deleteMessage"; // адрес api телеграмм-бота
+        // $options[CURLOPT_POSTFIELDS] = $params; // адрес api телеграмм-бота
 
-        curl_setopt_array($curl, $options);
-        return [json_decode(curl_exec($curl), true)];
+        // $curl = curl_init();
+
+        // curl_setopt_array($curl, $options);
+        // return [json_decode(curl_exec($curl), true)];
     }
     public static function getMe()
     {
-        $botToken = self::$botToken;
+        self::send('getMe', [], $data);
+        return $data;
 
-        $options = self::$options;
-        $options[CURLOPT_URL] = "https://api.telegram.org/bot$botToken/getMe"; // адрес api телеграмм-бота
-        $curl = curl_init();
-        curl_setopt_array($curl, $options);
-        return json_decode(curl_exec($curl), true);
+        // $botToken = self::$botToken;
+
+        // $options = self::$options;
+        // $options[CURLOPT_URL] = "https://api.telegram.org/bot$botToken/getMe"; // адрес api телеграмм-бота
+        // $curl = curl_init();
+        // curl_setopt_array($curl, $options);
+        // return json_decode(curl_exec($curl), true);
     }
     private static function getAuthData()
     {
@@ -175,15 +179,17 @@ class TelegramBot
     }
     public static function webhookDelete()
     {
-        $botToken = self::$botToken;
-        $options = self::$options;
-        $options[CURLOPT_URL] = "https://api.telegram.org/bot$botToken/deleteWebhook";
+        return self::send('deleteWebhook');
 
-        $curl = curl_init();
-        curl_setopt_array($curl, $options);
-        $result = json_decode(curl_exec($curl), true);
+        // $botToken = self::$botToken;
+        // $options = self::$options;
+        // $options[CURLOPT_URL] = "https://api.telegram.org/bot$botToken/deleteWebhook";
 
-        return !empty($result['ok']);
+        // $curl = curl_init();
+        // curl_setopt_array($curl, $options);
+        // $result = json_decode(curl_exec($curl), true);
+
+        // return !empty($result['ok']);
     }
     public static function webhookSet($botToken)
     {
@@ -204,72 +210,47 @@ class TelegramBot
     }
     public static function pinMessage($chatId, $messageId)
     {
-        $botToken = self::$botToken;
-
+        // $botToken = self::$botToken;
         $params = [
             'chat_id' => $chatId, // id чата
             'message_id' => $messageId, // id закрепляемого сообщения
             'disable_notification' => true, // "Тихий" метод закрепления, без оповещения
         ];
 
-        $options = self::$options;
-        $options[CURLOPT_URL] = "https://api.telegram.org/bot$botToken/pinChatMessage";
-        $options[CURLOPT_POSTFIELDS] = $params;
+        return self::send('pinChatMessage', $params);
 
-        $curl = curl_init();
-        curl_setopt_array($curl, $options);
-        $result = json_decode(curl_exec($curl), true);
+        // $options = self::$options;
+        // $options[CURLOPT_URL] = "https://api.telegram.org/bot$botToken/pinChatMessage";
+        // $options[CURLOPT_POSTFIELDS] = $params;
 
-        return !empty($result['ok']);
+        // $curl = curl_init();
+        // curl_setopt_array($curl, $options);
+        // $result = json_decode(curl_exec($curl), true);
+
+        // return !empty($result['ok']);
     }
     public static function unpinMessage($chatId, $messageId)
     {
-        $botToken = self::$botToken;
+        // $botToken = self::$botToken;
         $params = [
             'chat_id' => $chatId, // id чата
             'message_id' => $messageId
         ];
 
-        $options = self::$options;
-        $options[CURLOPT_URL] = "https://api.telegram.org/bot$botToken/unpinChatMessage";
-        $options[CURLOPT_POSTFIELDS] = $params;
+        return self::send('unpinChatMessage', $params);
+        // $options = self::$options;
+        // $options[CURLOPT_URL] = "https://api.telegram.org/bot$botToken/unpinChatMessage";
+        // $options[CURLOPT_POSTFIELDS] = $params;
 
-        $curl = curl_init();
-        curl_setopt_array($curl, $options);
-        $result = json_decode(curl_exec($curl), true);
+        // $curl = curl_init();
+        // curl_setopt_array($curl, $options);
+        // $result = json_decode(curl_exec($curl), true);
 
-        return !empty($result['ok']);
-    }
-    public static function pinMessageAndSaveItsData($chatId, $messageId)
-    {
-
-        // $chatData = Settings::getChat($chatId);
-
-        self::pinMessage($chatId, $messageId);
-        // if (!isset($chatData['value']['pinned']) || $messageId !== $chatData['value']['pinned']) {
-        //     self::unpinMessage($chatId, $chatData['value']['pinned']);
-        //     $data = [
-        //         'type' => 'tg-chat',
-        //         'short_name' => $chatId,
-        //         'name' => 'Чат з користувачем',
-        //     ];
-
-        //     if (isset($chatData['name'])) {
-        //         $data['name'] = $chatData['name'];
-        //     }
-
-        //     if (isset($chatData['value'])) {
-        //         $data['value'] = $chatData['value'];
-        //     }
-
-        //     $data['value']['pinned'] = $messageId;
-        //     $data['value'] = json_encode($data['value'], JSON_UNESCAPED_UNICODE);
-        //     Settings::save($data);
-        // }
+        // return !empty($result['ok']);
     }
     public static function editMessage($chatId, $messageId, $message)
     {
-        $botToken = self::$botToken;
+        // $botToken = self::$botToken;
         $params = [
             'chat_id' => $chatId, // id чата
             'message_id' => $messageId, // id сообщения
@@ -277,9 +258,47 @@ class TelegramBot
             'parse_mode' => 'HTML', // режим отображения сообщения, не обязательный параметр
         ];
 
+        return self::send('editMessageText', $params);
+        // $options = self::$options;
+        // $options[CURLOPT_URL] = "https://api.telegram.org/bot$botToken/editMessageText";
+        // $options[CURLOPT_POSTFIELDS] = $params;
+
+        // $curl = curl_init();
+        // curl_setopt_array($curl, $options);
+        // $result = json_decode(curl_exec($curl), true);
+
+        // return !empty($result['ok']);
+    }
+    /** 
+     * ReactionTypeEmoji:
+     *  type 	String 	Type of the reaction, always “emoji”
+     *  emoji     String Reaction emoji. Currently, it can be one of "👍", "👎", "❤", "🔥", "🥰", "👏", "😁", "🤔", "🤯", "😱", "🤬", "😢", "🎉", "🤩", "🤮", "💩", "🙏", "👌", "🕊", "🤡", "🥱", "🥴", "😍", "🐳", "❤‍🔥", "🌚", "🌭", "💯", "🤣", "⚡", "🍌", "🏆", "💔", "🤨", "😐", "🍓", "🍾", "💋", "🖕", "😈", "😴", "😭", "🤓", "👻", "👨‍💻", "👀", "🎃", "🙈", "😇", "😨", "🤝", "✍", "🤗", "🫡", "🎅", "🎄", "☃", "💅", "🤪", "🗿", "🆒", "💘", "🙉", "🦄", "😘", "💊", "🙊", "😎", "👾", "🤷‍♂", "🤷", "🤷‍♀", "😡"
+     *  */
+    public static function setMessageReaction($chatId, $messageId, $reaction)
+    {
+        $params = [
+            'chat_id' => $chatId, // id чата
+            'message_id' => $messageId, // id сообщения
+            'reaction' => [
+                'type' => 'emoji',
+                'emoji' => $reaction
+            ],
+        ];
+
+        return self::send('setMessageReaction', $params);
+    }
+
+    public static function send(string $method = '', $params = [], array &$result = [])
+    {
+        if (empty($method)) return false;
+
+        $botToken = self::$botToken;
         $options = self::$options;
-        $options[CURLOPT_URL] = "https://api.telegram.org/bot$botToken/editMessageText";
-        $options[CURLOPT_POSTFIELDS] = $params;
+
+        if (!empty($params)) {
+            $options[CURLOPT_POSTFIELDS] = $params;
+        }
+        $options[CURLOPT_URL] = "https://api.telegram.org/bot$botToken/$method";
 
         $curl = curl_init();
         curl_setopt_array($curl, $options);

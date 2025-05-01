@@ -66,9 +66,18 @@ class BookingCommand extends ChatCommand
             $newDayData = Days::addParticipantToDayData($newDayData, $requestData, $slot);
             $reactions = [
                 '🤩',
+                '🔥',
+                '❤',
+                '❤‍🔥',
+                '💘',
+                '🆒',
+                '🎉',
+                '👏',
                 '🥰',
-                '🥳',
-                '😻',
+                '😍',
+                '🤗',
+                '🤩',
+                '😘',
             ];
         } else {
             if ($participantId === -1) {
@@ -78,10 +87,16 @@ class BookingCommand extends ChatCommand
             unset($newDayData['participants'][$participantId]);
             $newDayData['participants'] = array_values($newDayData['participants']);
             $reactions = [
-                '😥',
+                '🤨',
+                '😐',
+                '😢',
+                '👎',
                 '😭',
                 '😱',
-                '😿',
+                '😨',
+                '🤯',
+                '🤬',
+                '😡',
             ];
         }
 
@@ -95,7 +110,7 @@ class BookingCommand extends ChatCommand
         $weekData['data'][$requestData['dayNum']] = $newDayData;
 
         self::$operatorClass::$resultMessage = Days::getFullDescription($weekData, $requestData['dayNum']);
-        self::$operatorClass::$resultPreMessage = $botReaction;
+        self::$operatorClass::$reaction = $botReaction;
         return true;
     }
 }

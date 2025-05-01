@@ -29,7 +29,7 @@ class TelegramBotController extends Controller
     public static $CommandNamespace = '\\app\\Repositories\\TelegramCommands';
 
     public static $resultMessage = '';
-    public static $resultPreMessage = '';
+    public static $reaction = '';
 
     public static function before()
     {
@@ -115,8 +115,11 @@ class TelegramBotController extends Controller
                 $botResult = Sender::message(self::$techTelegramId, json_encode([self::$message, /* self::$requester ,*/ self::parseArguments(self::$commandArguments)], JSON_UNESCAPED_UNICODE));
             }
 
-            if (!empty(self::$resultPreMessage)) {
-                Sender::message(self::$chatId, self::$resultPreMessage, self::$message['message']['message_id']);
+            if (!empty(self::$reaction)) {
+                // https://core.telegram.org/bots/api#setmessagereaction
+                // https://core.telegram.org/bots/api#reactiontype
+                // Sender::message(self::$chatId, self::$reaction, self::$message['message']['message_id']);
+                Sender::setMessageReaction(self::$chatId, self::$message['message']['message_id'], self::$reaction);
             }
 
             $botResult = Sender::message(self::$chatId, Locale::phrase(self::$resultMessage));
