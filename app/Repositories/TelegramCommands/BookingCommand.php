@@ -20,7 +20,7 @@ class BookingCommand extends ChatCommand
         // $requestData = self::$operatorClass::parseArguments($arguments);
         $requestData['userId'] = self::$requester['id'];
         $requestData['userName'] = self::$requester['name'];
-        $requestData['userStatus'] = self::$requester['privilege']['status'];
+        $requestData['userStatus'] = empty(self::$requester['privilege']['status']) ? 'user' : self::$requester['privilege']['status'];
 
         $weekId = Weeks::currentId();
         if ($requestData['currentDay'] > $requestData['dayNum']) {

@@ -275,6 +275,9 @@ class TelegramBotController extends Controller
                     $requestData['probableUserName'] = $value;
             }
         }
+
+        if (empty($requestData['currentDay']))  self::parseDayNum('tod', $requestData);
+
         return $requestData;
     }
     public static function parseDayNum(string $daySlug, array &$requestData): bool
@@ -286,10 +289,10 @@ class TelegramBotController extends Controller
         if (mb_strlen($daySlug, 'UTF-8') > 3) {
             $daySlug = mb_substr($daySlug, 0, 3);
         }
-        if (in_array($daySlug, DayRepository::$techDaysArray[0], true)) {
+        if (in_array($daySlug, DayRepository::$techDaysArray['today'], true)) {
             $requestData['dayNum'] = $requestData['currentDay'];
             return true;
-        } elseif (in_array($daySlug, ['зав', 'tom'], true)) {
+        } elseif (in_array($daySlug, DayRepository::$techDaysArray['tomorrow'], true)) {
             $dayNum = $requestData['currentDay'] + 1;
             if ($dayNum === 7)
                 $dayNum = 0;
