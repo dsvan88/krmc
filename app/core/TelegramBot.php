@@ -226,15 +226,17 @@ class TelegramBot
         $params = [
             'chat_id' => $chatId, // id чата
             'message_id' => $messageId, // id сообщения
-            'reaction' => [
+            'reaction' => json_encode([
                 [
                     'type' => 'emoji',
                     'emoji' => $reaction
                 ]
-            ],
+            ]),
         ];
 
-        return self::send('setMessageReaction', $params);
+        $result = self::send('setMessageReaction', $params);
+        error_log('setMessageReaction: '.json_encode(static::$result, JSON_UNESCAPED_UNICODE));
+        return true;
     }
 
     public static function send(string $method = '', $params = [])
@@ -253,7 +255,7 @@ class TelegramBot
         curl_setopt_array($curl, $options);
         static::$result = json_decode(curl_exec($curl), true);
 
-        error_log($method.': '.json_encode(static::$result, JSON_UNESCAPED_UNICODE));
+        
         return !empty(static::$result['ok']);
     }
 }
