@@ -142,8 +142,7 @@ class TelegramBotController extends Controller
                 'messageData' => self::$message,
             ];
             if (!empty($_SESSION['debug'])) {
-                $debugMessage .= PHP_EOL . 'DEBUG:' . PHP_EOL;
-                $debugMessage .= PHP_EOL . implode(PHP_EOL, $_SESSION['debug']);
+                $debugMessage['debug'] = PHP_EOL . 'DEBUG:' . PHP_EOL . implode(PHP_EOL, $_SESSION['debug']);
                 unset($_SESSION['debug']);
             }
             Sender::message(self::$techTelegramId, json_encode($debugMessage, JSON_UNESCAPED_UNICODE));
