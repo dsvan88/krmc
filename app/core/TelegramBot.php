@@ -223,19 +223,16 @@ class TelegramBot
      *  */
     public static function setMessageReaction($chatId, $messageId, $reaction)
     {
-        $params = json_encode([
+        $params = [
             'chat_id' => $chatId, // id чата
             'message_id' => $messageId, // id сообщения
             'reaction' => [
-                'type' => 'emoji',
-                'emoji' => $reaction
+                [
+                    'type' => 'emoji',
+                    'emoji' => $reaction
+                ]
             ],
-        ]);
-
-        self::$options[CURLOPT_HTTPHEADER] = array(                                                                          
-            'Content-Type: application/json',                                                                                
-            'Content-Length: ' . strlen($params)                                                                       
-        );
+        ];
 
         return self::send('setMessageReaction', $params);
     }
