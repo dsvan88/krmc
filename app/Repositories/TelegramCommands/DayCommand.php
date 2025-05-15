@@ -22,7 +22,7 @@ class DayCommand extends ChatCommand
         if ($requestData['dayNum'] < $requestData['currentDay'])
         $weekId++;
     
-        $_SESSION['debug'] = json_encode($requestData);
+        // $_SESSION['debug'] = json_encode($requestData);
         
         $weekData = Weeks::weekDataById($weekId);
         $message = Days::getFullDescription($weekData, $requestData['dayNum']);

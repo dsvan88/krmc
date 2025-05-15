@@ -304,6 +304,7 @@ class TelegramBot
         curl_setopt_array($curl, $options);
         $result = json_decode(curl_exec($curl), true);
 
+        error_log($method.': '.json_encode($result['ok'], JSON_UNESCAPED_UNICODE));
         return !empty($result['ok']);
     }
 }
