@@ -226,10 +226,10 @@ class TelegramBot
         $params = json_encode([
             'chat_id' => $chatId, // id чата
             'message_id' => $messageId, // id сообщения
-            'reaction' => json_encode([
+            'reaction' => [
                 'type' => 'emoji',
                 'emoji' => $reaction
-            ]),
+            ],
         ]);
 
         self::$options[CURLOPT_HTTPHEADER] = array(                                                                          
