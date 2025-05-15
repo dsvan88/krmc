@@ -229,7 +229,7 @@ class TelegramBot
             'reaction' => json_encode([
                 'type' => 'emoji',
                 'emoji' => $reaction
-            ], JSON_UNESCAPED_UNICODE),
+            ]),
         ];
 
         return self::send('setMessageReaction', $params);
