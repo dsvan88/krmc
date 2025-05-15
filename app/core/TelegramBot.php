@@ -233,10 +233,7 @@ class TelegramBot
                 ]
             ]),
         ];
-
-        $result = self::send('setMessageReaction', $params);
-        error_log('setMessageReaction: '.json_encode(static::$result, JSON_UNESCAPED_UNICODE));
-        return true;
+        return self::send('setMessageReaction', $params);
     }
 
     public static function send(string $method = '', $params = [])
@@ -254,7 +251,6 @@ class TelegramBot
         $curl = curl_init();
         curl_setopt_array($curl, $options);
         static::$result = json_decode(curl_exec($curl), true);
-
         
         return !empty(static::$result['ok']);
     }
