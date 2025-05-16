@@ -5,9 +5,7 @@ namespace app\Controllers;
 use app\core\Controller;
 use app\core\Locale;
 use app\core\Sender;
-use app\core\Tech;
 use app\core\Validator;
-use app\core\View;
 use app\models\Contacts;
 use app\models\Days;
 use app\models\Settings;
@@ -21,7 +19,7 @@ class TelegramBotController extends Controller
     private static $mainGroupTelegramId = null;
 
     public static $requester = [];
-    public static $message = [];
+    public static $incomeMessage = [];
     public static $chatId = null;
     public static $command = '';
     public static $commandArguments = [];
@@ -74,7 +72,7 @@ class TelegramBotController extends Controller
         $text = trim($message['message']['text']);
 
         $command = self::parseCommand($text);
-        self::$message = $message;
+        self::$incomeMessage = $message;
         self::$techTelegramId = Settings::getTechTelegramId();
         self::$mainGroupTelegramId = Settings::getMainTelegramId();
         self::$chatId = $message['message']['chat']['id'];
@@ -84,7 +82,7 @@ class TelegramBotController extends Controller
         $userId = Contacts::getUserIdByContact('telegramid', $userTelegramId);
 
         if (empty($userId) && $command && !in_array(self::$command, self::$guestCommands)) {
-            Sender::message(self::$chatId, Locale::phrase('{{ Tg_Unknown_Requester }}'), self::$message['message']['message_id']);
+            Sender::message(self::$chatId, Locale::phrase('{{ Tg_Unknown_Requester }}'), self::$incomeMessage['message']['message_id']);
             return false;
         }
         self::$requester = Users::find($userId);
@@ -104,22 +102,22 @@ class TelegramBotController extends Controller
     }
     public static function webhookAction()
     {
-        // exit(json_encode(['message' => self::$message], JSON_UNESCAPED_UNICODE));
+        // exit(json_encode(['message' => self::$incomeMessage], JSON_UNESCAPED_UNICODE));
         try {
             if (!self::execute()) {
                 if (empty(self::$resultMessage)) return false;
                 if (!empty($_SESSION['debug'])) {
-                    self::$message['debug'] = PHP_EOL . 'DEBUG:' . PHP_EOL . PHP_EOL . implode(PHP_EOL, $_SESSION['debug']);
+                    self::$incomeMessage['debug'] = PHP_EOL . 'DEBUG:' . PHP_EOL . PHP_EOL . implode(PHP_EOL, $_SESSION['debug']);
                     unset($_SESSION['debug']);
                 }
-                $botResult = Sender::message(self::$techTelegramId, json_encode([self::$message, /* self::$requester ,*/ self::parseArguments(self::$commandArguments)], JSON_UNESCAPED_UNICODE));
+                $botResult = Sender::message(self::$techTelegramId, json_encode([self::$incomeMessage, /* self::$requester ,*/ self::parseArguments(self::$commandArguments)], JSON_UNESCAPED_UNICODE));
             }
 
             if (!empty(self::$reaction)) {
                 // https://core.telegram.org/bots/api#setmessagereaction
                 // https://core.telegram.org/bots/api#reactiontype
-                // Sender::message(self::$chatId, self::$reaction, self::$message['message']['message_id']);
-                Sender::setMessageReaction(self::$chatId, self::$message['message']['message_id'], self::$reaction);
+                // Sender::message(self::$chatId, self::$reaction, self::$incomeMessage['message']['message_id']);
+                Sender::setMessageReaction(self::$chatId, self::$incomeMessage['message']['message_id'], self::$reaction);
             }
 
             $botResult = Sender::message(self::$chatId, Locale::phrase(self::$resultMessage));
@@ -130,7 +128,7 @@ class TelegramBotController extends Controller
                     self::pinMessage($botResult[0]['result']['message_id']);
                 }
                 /*                 if (in_array($command, ['reg', 'set', 'week', 'recall', 'today', 'day', 'promo'], true) && self::$chatId !== self::$techTelegramId) {
-                    Sender::delete(self::$chatId, self::$message['message']['message_id']);
+                    Sender::delete(self::$chatId, self::$incomeMessage['message']['message_id']);
                 } */
                 if (in_array(self::$command, ['booking', 'reg', 'set', 'recall', 'promo'], true)) {
                     self::updateWeekMessages();
@@ -139,7 +137,7 @@ class TelegramBotController extends Controller
         } catch (\Throwable $th) {
             $debugMessage = [
                 'commonError' => $th->__toString(),
-                'messageData' => self::$message,
+                'messageData' => self::$incomeMessage,
             ];
             if (!empty($_SESSION['debug'])) {
                 $debugMessage['debug'] = PHP_EOL . 'DEBUG:' . PHP_EOL . implode(PHP_EOL, $_SESSION['debug']);
@@ -324,7 +322,7 @@ class TelegramBotController extends Controller
         $ready = $class::set([
             'operatorClass' => self::class,
             'requester' => self::$requester,
-            'message' => self::$message
+            'message' => self::$incomeMessage
         ]);
 
         if (!$ready) return false;
@@ -348,29 +346,33 @@ class TelegramBotController extends Controller
         if (!empty(self::$requester) && $status === 'guest')
             $status = 'user';
 
-        if (self::$message['message']['chat']['type'] !== 'private' && self::$chatId != self::$techTelegramId && $levels[$status] > 1) {
+        if (self::$incomeMessage['message']['chat']['type'] !== 'private' && self::$chatId != self::$techTelegramId && $levels[$status] > 1) {
             $status = 'user';
         }
         return $levels[$level] <= $levels[$status];
     }
-    public static function updateWeekMessages(): array
+    public static function updateWeekMessages(): bool
     {
-        $result = [];
         self::execute('week');
 
         $chatData = TelegramChats::getChatsWithPinned();
         foreach ($chatData as $chatId => $pinned) {
-            $result[] = Sender::edit($chatId, $pinned, self::$resultMessage);
+            Sender::edit($chatId, $pinned, self::$resultMessage);
+
+            if (Sender::$operator::$result['ok'] || Sender::$operator::$result['error_code'] != 400) continue;
+
+            // Clear saved pinned message if not found in the chat.
+            TelegramChats::savePinned(self::$incomeMessage);
         }
 
-        return $result;
+        return true;
     }
     public static function pinMessage(int $messageId = 0)
     {
         if (empty($messageId)) return false;
 
         Sender::pin(self::$chatId, $messageId);
-        TelegramChats::savePinned(self::$message, $messageId);
+        TelegramChats::savePinned(self::$incomeMessage, $messageId);
 
         return true;
     }

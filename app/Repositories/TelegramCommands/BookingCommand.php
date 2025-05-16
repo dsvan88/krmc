@@ -17,7 +17,7 @@ class BookingCommand extends ChatCommand
     {
         $requestData = $arguments;
         self::$operatorClass::parseDayNum($requestData['dayName'], $requestData);
-        // $requestData = self::$operatorClass::parseArguments($arguments);
+
         $requestData['userId'] = self::$requester['id'];
         $requestData['userName'] = self::$requester['name'];
         $requestData['userStatus'] = empty(self::$requester['privilege']['status']) ? 'user' : self::$requester['privilege']['status'];

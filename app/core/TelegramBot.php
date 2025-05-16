@@ -4,7 +4,6 @@ namespace app\core;
 
 use app\models\Settings;
 use Exception;
-use LDAP\Result;
 
 class TelegramBot
 {
@@ -232,6 +231,7 @@ class TelegramBot
                     'emoji' => $reaction
                 ]
             ]),
+            'is_big' => true,
         ];
         return self::send('setMessageReaction', $params);
     }
@@ -251,7 +251,7 @@ class TelegramBot
         $curl = curl_init();
         curl_setopt_array($curl, $options);
         static::$result = json_decode(curl_exec($curl), true);
-        
+
         return !empty(static::$result['ok']);
     }
 }

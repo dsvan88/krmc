@@ -83,17 +83,17 @@ class TelegramChats extends Model
 
         return empty($chatData['data']['pinned']) ? false : $chatData['data']['pinned'];
     }
-    public static function savePinned($messageArray, $messageId)
+    public static function savePinned(array $incomeMessage, int $messageId = 0)
     {
-        $chatId = $messageArray['message']['chat']['id'];
+        $chatId = $incomeMessage['message']['chat']['id'];
         $chatData = self::getChat($chatId);
         if (!$chatData) {
-            self::createPinned($chatId, $messageArray, $messageId);
+            self::createPinned($chatId, $incomeMessage, $messageId);
             return true;
         }
         $id = $chatData['id'];
         $data = $chatData['data'];
-        $data['last_seems'] = $messageArray['message']['date'];
+        $data['last_seems'] = $incomeMessage['message']['date'];
         $data['pinned'] = $messageId;
         self::edit(['data' => json_encode($data, JSON_UNESCAPED_UNICODE)], $id);
         return true;
@@ -144,9 +144,8 @@ class TelegramChats extends Model
         $chats = self::getChatsList();
         $result = [];
         for ($i = 0; $i < count($chats); $i++) {
-            if (isset($chats[$i]['data']['pinned'])) {
-                $result[$chats[$i]['uid']] = $chats[$i]['data']['pinned'];
-            }
+            if (empty($chats[$i]['data']['pinned'])) continue;
+            $result[$chats[$i]['uid']] = $chats[$i]['data']['pinned'];
         }
         return $result;
     }
@@ -175,7 +174,7 @@ class TelegramChats extends Model
         }
         return $chatsData;
     }
-    public static function createPinned($chatId, $messageArray, $messageId)
+    public static function createPinned(int $chatId, array $messageArray = [], int $messageId = 0)
     {
         $chatData = [
             'uid' => $chatId,
