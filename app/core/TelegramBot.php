@@ -11,7 +11,7 @@ class TelegramBot
     private static $botToken = '';
     private static $options = [];
     private static $params = [];
-    private static $result = [];
+    public static $result = [];
 
     public function __construct($text = '')
     {
