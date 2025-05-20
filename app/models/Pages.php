@@ -71,7 +71,9 @@ class Pages extends Model
     public static function create(&$data)
     {
         $array = self::prepDbArray($data);
-        $array['slug'] = preg_replace(['/[^a-z0-9]+/i', '/--/'], '-', Locale::translitization(trim($array['title'])));
+
+        if (!$array) return false;
+
         return self::insert($array);
     }
     public static function edit(array $data = [], string $slug = '')
@@ -97,7 +99,7 @@ class Pages extends Model
     }
     public static function prepDbArray(array &$data, string $slug = '')
     {
-        if (empty($data) || empty($slug)) return false;
+        if (empty($data)) return false;
 
         $array = [
             'title' => trim($data['title']),
@@ -146,6 +148,8 @@ class Pages extends Model
         if (!empty($array['data'])) {
             $array['data'] = json_encode($array['data'], JSON_UNESCAPED_UNICODE);
         }
+
+        $array['slug'] = empty($slug) ? preg_replace(['/[^a-z0-9]+/i', '/--/'], '-', Locale::translitization(trim($array['title']))) : $slug;
         $array['lang'] = Locale::$langCode;
         return $array;
     }
