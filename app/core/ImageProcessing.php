@@ -83,6 +83,7 @@ class ImageProcessing
 
             if (!file_exists($path)) {
                 try {
+                    error_reporting(E_ALL & ~E_WARNING);
                     mkdir($path, 0777, true);
                 } catch (\Throwable $error) {
                     $path = sys_get_temp_dir() . '/';
