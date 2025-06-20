@@ -1,25 +1,34 @@
 #overlay {
-    position: fixed; /* всегдa перекрывaет весь сaйт */
-	z-index: 6; /* пoдлoжкa дoлжнa быть выше слoев элементoв сaйтa, нo ниже слoя мoдaльнoгo oкнa */
-	background-color: #000; /* чернaя */
-	opacity: 0.8; /* нo немнoгo прoзрaчнa */
+	position: fixed;
+	/* всегдa перекрывaет весь сaйт */
+	z-index: 6;
+	/* пoдлoжкa дoлжнa быть выше слoев элементoв сaйтa, нo ниже слoя мoдaльнoгo oкнa */
+	background-color: #000;
+	/* чернaя */
+	opacity: 0.8;
+	/* нo немнoгo прoзрaчнa */
 	width: 100%;
-	height: 100%; /* рaзмерoм вo весь экрaн */
-	top: 0; /* сверху и слевa 0, oбязaтельные свoйствa! */
+	height: 100%;
+	/* рaзмерoм вo весь экрaн */
+	top: 0;
+	/* сверху и слевa 0, oбязaтельные свoйствa! */
 	left: 0;
 }
 
 .modal {
-    box-shadow: -1px 1px 10px 3px #b1c0fb;
-    transition: all $animation-fast ease-in;
-    border-radius: 5px;
-    margin-top: 3vh;
-	.text-accent{
+	box-shadow: -1px 1px 10px 3px #b1c0fb;
+	transition: all $animation-fast ease-in;
+	border-radius: 5px;
+	margin-top: 3vh;
+
+	.text-accent {
 		color: $color-text-accent;
 		text-decoration: underline;
 	}
+
 	&__overlay {
-		position: fixed; /* чтoбы oкнo былo в видимoй зoне в любoм месте */
+		position: fixed;
+		/* чтoбы oкнo былo в видимoй зoне в любoм месте */
 		width: 100vw;
 		height: 100vh;
 		top: 0px;
@@ -29,38 +38,44 @@
 		align-items: center;
 		background-color: $modal-overlay-bg-color;
 	}
-    &__header {
-        background: linear-gradient($modal-hd-start 20%, $modal-hd-end 90%);
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        font-size: 1.2rem;
-        padding: 0 0.5em;
-        color: $modal-title-color;
-    }
-	&__container {
-        position: relative;
-        background: url("/public/images/blood-sprite.png"), linear-gradient($bg-color-light 35%, $bg-color-dark-blur);
-        background-size: 10em, auto;
-        background-repeat: repeat-x, repeat;
-        border-radius: 0px 0px 3px 3px;
-        padding: 1em 2em;
-        color: $modal-color;
-    }
-    & &__close {
-        cursor: pointer;
-        transition: color $animation-fast ease-in;
 
-        &:hover {
-            color: #ff1010;
-        }
-    }
+	&__header {
+		background: linear-gradient($modal-hd-start 20%, #390707 90%);
+		// background: linear-gradient($modal-hd-start 20%, $modal-hd-end 90%);
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		font-size: 1.2rem;
+		padding: 0 0.5em;
+		color: $modal-title-color;
+	}
+
+	&__container {
+		position: relative;
+		background: url("/public/images/blood-sprite.png"), linear-gradient($bg-color-light 35%, $bg-color-dark-blur);
+		background-size: 10em, auto;
+		background-repeat: repeat-x, repeat;
+		border-radius: 0px 0px 3px 3px;
+		padding: 1em 2em;
+		color: $modal-color;
+	}
+
+	& &__close {
+		cursor: pointer;
+		transition: color $animation-fast ease-in;
+
+		&:hover {
+			color: #ff1010;
+		}
+	}
+
 	&__title {
-        margin: 0.4em;
-        text-align: left;
-        padding-right: 1em;
-    }
-	&__form{
+		margin: 0.4em;
+		text-align: left;
+		padding-right: 1em;
+	}
+
+	&__form {
 		&-title {
 			margin: .2em 1em .5em 1em;
 			border-radius: 15px;
@@ -70,18 +85,22 @@
 			text-decoration: underline;
 			color: $color-text-dark;
 		}
-		&-subtitle{
+
+		&-subtitle {
 			margin: 0.3em auto;
 			text-align: center;
 		}
 	}
+
 	&__row {
 		margin-bottom: 1em;
+
 		&-title {
 			text-align: center;
 			margin-top: 1em;
 			margin-bottom: 0.5em;
 		}
+
 		&.big-list {
 			max-height: 55vh;
 			overflow-y: auto;
@@ -89,6 +108,7 @@
 			font-size: 1.2em;
 			padding-right: 10px;
 		}
+
 		&-label {
 			&-file {
 				display: block;
@@ -98,18 +118,21 @@
 				cursor: pointer;
 			}
 		}
-		&-accent{
+
+		&-accent {
 			margin: 0.5em 0;
 			padding-left: 2em;
 		}
 	}
-    &__buttons {
-        margin-top: 0.8em;
-        margin-bottom: 0.5em;
-        display: flex;
-        justify-content: space-around;
+
+	&__buttons {
+		margin-top: 0.8em;
+		margin-bottom: 0.5em;
+		display: flex;
+		justify-content: space-around;
 		gap: 1em;
-    }
+	}
+
 	&__links {
 		margin-top: 0.5em;
 		margin-bottom: 0.3em;
@@ -117,12 +140,15 @@
 		justify-content: space-between;
 		color: $color-text-accent;
 	}
-	&__list{
+
+	&__list {
 		padding-left: 2em;
-		&-item{
+
+		&-item {
 			list-style: disclosure-closed;
 		}
 	}
+
 	button,
 	a.anchor-button {
 		@extend %buttonStyle;
@@ -139,11 +165,11 @@
 		font-size: 1.2em;
 		line-height: 1.3em;
 		color: $color-text-dark-blur;
-	
+
 		&:focus {
 			border-bottom-color: $color-text-dark;
 		}
-	
+
 		&[type="file"] {
 			display: none;
 		}
@@ -170,25 +196,26 @@
 		padding: 1em 2em;
 		border-radius: 3px;
 	}
-	
+
 	&__column {
 		flex: 1 1 20vw;
 		margin-right: 1em;
 		max-width: 40vw;
-	
+
 		&:last-of-type {
 			margin-right: 0;
 		}
-	
+
 		&.shrinked {
 			flex: 0 1 20vw;
 		}
-	
+
 		&.growed {
 			flex: 1 0 20vw;
 		}
 	}
-	&__pause{
+
+	&__pause {
 		position: fixed;
 		top: 0;
 		left: 0;
@@ -201,7 +228,8 @@
 		background-color: $bg-color-light;
 		opacity: .55;
 	}
-	legend{
+
+	legend {
 		border-bottom: 1px dotted;
 	}
 }
