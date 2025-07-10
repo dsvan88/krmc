@@ -5,6 +5,7 @@ namespace app\Controllers;
 use app\core\Controller;
 use app\core\Locale;
 use app\core\Sender;
+use app\core\TelegramBot;
 use app\core\Validator;
 use app\models\Contacts;
 use app\models\Days;
@@ -12,6 +13,7 @@ use app\models\Settings;
 use app\models\TelegramChats;
 use app\models\Users;
 use app\Repositories\DayRepository;
+use app\Repositories\TelegramBotRepository;
 
 class TelegramBotController extends Controller
 {
@@ -361,6 +363,13 @@ class TelegramBotController extends Controller
 
             if (Sender::$operator::$result['ok'] || Sender::$operator::$result['error_code'] != 400) continue;
 
+            Sender::message(
+                self::$techTelegramId,
+                'ok = ' . Sender::$operator::$result['ok'] . PHP_EOL
+                    . 'error_code = ' . Sender::$operator::$result['error_code'] . PHP_EOL
+                    . 'result: ' . PHP_EOL
+                    . json_encode(Sender::$operator::$result, JSON_UNESCAPED_UNICODE)
+            );
             // Clear saved pinned message if not found in the chat.
             TelegramChats::savePinned(self::$incomeMessage);
         }
