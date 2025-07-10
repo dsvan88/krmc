@@ -83,13 +83,13 @@ class TelegramChats extends Model
 
         return empty($chatData['data']['pinned']) ? false : $chatData['data']['pinned'];
     }
-    public static function savePinned(array $incomeMessage, int $messageId = 0)
+    public static function savePinned(array $incomeMessage, int $messageId = 0): void
     {
         $chatId = $incomeMessage['message']['chat']['id'];
         $chatData = self::getChat($chatId);
         if (!$chatData) {
             self::createPinned($chatId, $incomeMessage, $messageId);
-            return true;
+            return;
         }
         $data = $chatData['data'];
 
@@ -97,14 +97,14 @@ class TelegramChats extends Model
         $data['pinned'] = $messageId;
 
         self::edit(['data' => $data], $chatData['id']);
-        return true;
+        return;
     }
-    public static function clearPinned(int $chatId)
+    public static function clearPinned(int $chatId): void
     {
         $chatData = self::getChat($chatId);
         unset($chatData['data']['pinned']);
         self::edit(['data' => $chatData['data']], $chatData['id']);
-        return true;
+        return;
     }
     public static function getChat($uid)
     {

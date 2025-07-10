@@ -363,17 +363,6 @@ class TelegramBotController extends Controller
 
             if (Sender::$operator::$result['ok'] || Sender::$operator::$result['error_code'] != 400) continue;
 
-            Sender::message(
-                self::$techTelegramId,
-                'chatId = ' . $chatId . PHP_EOL
-                    . 'incomeMessage = ' . self::$incomeMessage['message']['chat']['id'] . PHP_EOL
-                    . 'pinned = ' . $pinned . PHP_EOL
-                    . 'ok = ' . Sender::$operator::$result['ok'] . PHP_EOL
-                    . 'error_code = ' . Sender::$operator::$result['error_code'] . PHP_EOL
-                    . 'result: ' . PHP_EOL
-                    . json_encode(Sender::$operator::$result, JSON_UNESCAPED_UNICODE)
-            );
-
             // Clear saved pinned message if not found in the chat.
             TelegramChats::clearPinned($chatId);
         }
