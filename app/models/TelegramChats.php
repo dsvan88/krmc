@@ -91,11 +91,14 @@ class TelegramChats extends Model
             self::createPinned($chatId, $incomeMessage, $messageId);
             return true;
         }
-        $id = $chatData['id'];
         $data = $chatData['data'];
-        $data['last_seems'] = $incomeMessage['message']['date'];
-        $data['pinned'] = $messageId;
-        self::edit(['data' => json_encode($data, JSON_UNESCAPED_UNICODE)], $id);
+        if (empty($messageId)) {
+            unset($data['pinned']);
+        } else {
+            $data['last_seems'] = $incomeMessage['message']['date'];
+            $data['pinned'] = $messageId;
+        }
+        self::edit(['data' => $data], $chatData['id']);
         return true;
     }
     public static function getChat($uid)

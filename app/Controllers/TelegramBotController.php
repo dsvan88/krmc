@@ -372,6 +372,7 @@ class TelegramBotController extends Controller
                     . 'result: ' . PHP_EOL
                     . json_encode(Sender::$operator::$result, JSON_UNESCAPED_UNICODE)
             );
+            
             // Clear saved pinned message if not found in the chat.
             TelegramChats::savePinned(self::$incomeMessage);
         }
