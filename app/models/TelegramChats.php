@@ -92,12 +92,18 @@ class TelegramChats extends Model
             return true;
         }
         $data = $chatData['data'];
-        if (empty($messageId)) {
-            unset($data['pinned']);
-        } else {
-            $data['last_seems'] = $incomeMessage['message']['date'];
-            $data['pinned'] = $messageId;
-        }
+
+        $data['last_seems'] = $incomeMessage['message']['date'];
+        $data['pinned'] = $messageId;
+
+        self::edit(['data' => $data], $chatData['id']);
+        return true;
+    }
+    public static function clearPinned(array $incomeMessage)
+    {
+        $chatData = self::getChat($incomeMessage['message']['chat']['id']);
+        $data = $chatData['data'];
+        unset($data['pinned']);
         self::edit(['data' => $data], $chatData['id']);
         return true;
     }

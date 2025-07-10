@@ -375,7 +375,7 @@ class TelegramBotController extends Controller
             );
 
             // Clear saved pinned message if not found in the chat.
-            TelegramChats::savePinned(self::$incomeMessage);
+            TelegramChats::clearPinned(self::$incomeMessage);
         }
 
         return true;
