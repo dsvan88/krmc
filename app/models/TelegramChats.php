@@ -99,9 +99,9 @@ class TelegramChats extends Model
         self::edit(['data' => $data], $chatData['id']);
         return true;
     }
-    public static function clearPinned(array $incomeMessage)
+    public static function clearPinned(int $chatId)
     {
-        $chatData = self::getChat($incomeMessage['message']['chat']['id']);
+        $chatData = self::getChat($chatId);
         unset($chatData['data']['pinned']);
         self::edit(['data' => $chatData['data']], $chatData['id']);
         return true;
@@ -211,7 +211,6 @@ class TelegramChats extends Model
                 $data[$key] = json_encode($value, JSON_UNESCAPED_UNICODE);
             }
         }
-        error_log("chatId: $id, data: " . json_encode($data, JSON_UNESCAPED_UNICODE));
         self::update($data, ['id' => $id]);
         return true;
     }
