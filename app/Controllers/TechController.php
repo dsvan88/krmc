@@ -116,7 +116,7 @@ class TechController extends Controller
     }
     public static function dbrebuildAction()
     {
-        // return View::redirect('/');
+        return View::redirect('/');
 
         $settings = [
             ['gdrive', 'credentials', 'Credentials JSON',  ''],
@@ -196,7 +196,7 @@ class TechController extends Controller
     }
     public static function selfTestTelegramAction()
     {
-        // View::redirect('/');
+        View::redirect('/');
         $params = [
             'message' => [
                 'message_id' => 189,
