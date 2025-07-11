@@ -32,6 +32,10 @@ class Locale
         if (!empty(self::$dictionary)) return false;
         self::$dictionary = require $_SERVER['DOCUMENT_ROOT'] . '/app/locale/' . self::$langCode . '.php';
     }
+    public static function get() : string
+    {
+        return self::$langCode;
+    }
     public static function change($code)
     {
         self::$langCode = $code;
