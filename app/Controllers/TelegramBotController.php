@@ -13,7 +13,6 @@ use app\models\Settings;
 use app\models\TelegramChats;
 use app\models\Users;
 use app\Repositories\DayRepository;
-use app\Repositories\TelegramBotRepository;
 
 class TelegramBotController extends Controller
 {
@@ -348,8 +347,8 @@ class TelegramBotController extends Controller
         if (!empty(self::$requester) && $status === 'guest')
             $status = 'user';
 
-        if (self::$incomeMessage['message']['chat']['type'] !== 'private' && self::$chatId != self::$techTelegramId && $levels[$status] > 1) {
-            $status = 'user';
+        if (self::$incomeMessage['message']['chat']['type'] !== 'private' && self::$chatId != self::$techTelegramId) {
+            $status = $levels[$status] > 1 ? 'trusted' : 'user';
         }
         return $levels[$level] <= $levels[$status];
     }

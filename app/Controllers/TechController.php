@@ -6,9 +6,7 @@ use app\core\Controller;
 use app\core\Tech;
 use app\core\View;
 use app\libs\Db;
-use app\models\Pages;
 use app\models\Settings;
-use app\models\Users;
 use app\Repositories\TechRepository;
 
 class TechController extends Controller
@@ -96,6 +94,7 @@ class TechController extends Controller
     public static function restoreAction()
     {
         // View::redirect('/');
+        ini_set('max_execution_time', 300);
         if (!empty($_POST)) {
             if (TechRepository::restore())
                 return View::message('Done!');
@@ -221,8 +220,8 @@ class TechController extends Controller
                 ],
                 'date' => 1652025484,
                 // 'text' => '+ на 18',
-                // 'text' => '/users дж',
-                'text' => '+пн',
+                'text' => '/ping чт',
+                // 'text' => '+пн',
                 // 'text' => '+пт?',
                 // 'text' => '+ на четвер, десь на 18:45, звісно, що підстрахую, але поки що (під ?)',
                 // 'text' => '/?',

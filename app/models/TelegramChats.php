@@ -50,17 +50,20 @@ class TelegramChats extends Model
         if (empty($chatData['personal']['last_name']) && !empty($messageArray['message']['from']['last_name'])) {
             $chatData['personal']['last_name'] = $messageArray['message']['from']['last_name'];
         }
-        if (empty($chatData['personal']['username']) && !empty($messageArray['message']['from']['username'])) {
-            $chatData['personal']['username'] = $messageArray['message']['from']['username'];
-        }
         if ($messageArray['message']['chat']['type'] === 'private') {
             $chatData['data']['direct'] = true;
         }
+        $chatData['personal']['username'] = $messageArray['message']['from']['username'];
 
-        if (empty($chatData['user_id'])) {
-            $userId = Contacts::getUserIdByContact('telegramid', $chatId);
-            if (!empty($userId)) {
-                $chatData['user_id'] = $userId;
+        $userId = Contacts::getUserIdByContact('telegramid', $chatId);
+        if (!empty($userId)) {
+            $chatData['user_id'] = $userId;
+
+            $contact = Contacts::getUserContact($userId, 'telegram');
+            if (empty($tgName['contact'])) {
+                Contacts::new(['telegram' => $messageArray['message']['from']['username']], $userId);
+            } elseif ($contact['contact'] !== $messageArray['message']['from']['username']) {
+                Contacts::update(['contact' => $messageArray['message']['from']['username']], ['id' => $contact['id']]);
             }
         }
         $chatData['data']['last_seems'] = $messageArray['message']['date'];
@@ -69,7 +72,7 @@ class TelegramChats extends Model
         $chatData['data'] = json_encode($chatData['data'], JSON_UNESCAPED_UNICODE);
 
         $saveData = ['personal' => $chatData['personal'], 'data' => $chatData['data']];
-        if (!empty($chatData['user_id']) && !is_null($chatData['user_id'])) {
+        if (!empty($chatData['user_id'])) {
             $saveData['user_id'] = $chatData['user_id'];
         }
         self::update($saveData, ['id' => $savedChatId]);
