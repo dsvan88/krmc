@@ -95,16 +95,16 @@ class View
 
         if (isset($scripts)) {
             foreach ($scripts as $script) {
+
+                if (empty($script)) continue;
+
                 $file = $_SERVER['DOCUMENT_ROOT'] . SCRIPTS_PUBLIC . $script;
-                if (file_exists($file)) {
+                if (
+                    file_exists($file) ||
+                    copy($_SERVER['DOCUMENT_ROOT'] . SCRIPTS_STORAGE . $script, $file) && file_exists($file)
+                ) {
                     $response['jsFile'][] = SCRIPTS_PUBLIC . $script;
-                    continue;
                 }
-                if (copy($_SERVER['DOCUMENT_ROOT'] . SCRIPTS_STORAGE . $script, $file) && file_exists($file)) {
-                    $response['jsFile'][] = SCRIPTS_PUBLIC . $script;
-                    continue;
-                }
-                continue;
             }
         }
         if (isset($css))
