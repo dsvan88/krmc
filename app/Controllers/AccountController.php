@@ -404,7 +404,7 @@ class AccountController extends Controller
         $userData = Users::find($uid);
 
         if ($userData['personal']['avatar'] === '') {
-            $vars = ['error' => 0, 'modal' => true, 'jsFile' => '/public/scripts/avatar-get-new.js?v=' . $_SERVER['REQUEST_TIME']];
+            $vars = ['error' => 0, 'modal' => true, 'jsFile' => 'avatar-get-new.js?v=' . $_SERVER['REQUEST_TIME']];
             return View::message($vars);
         }
 
@@ -426,7 +426,7 @@ class AccountController extends Controller
     }
     public function profileAvatarRecropFormAction()
     {
-        $vars = ['modal' => true, 'jsFile' => '/public/scripts/avatar-get-recrop.js?v=' . $_SERVER['REQUEST_TIME']];
+        $vars = ['modal' => true, 'jsFile' => 'avatar-get-recrop.js?v=' . $_SERVER['REQUEST_TIME']];
         return View::message($vars);
     }
     public function passwordChange($userData, $post)
@@ -617,7 +617,7 @@ class AccountController extends Controller
                 'CancelLabel' => 'Cancel',
             ],
             'scripts' => [
-                '/public/scripts/account-register.js',
+                'account-register.js',
             ],
         ];
         View::$route['vars'] = array_merge(View::$route['vars'], $vars);

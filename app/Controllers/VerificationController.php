@@ -125,7 +125,7 @@ class VerificationController extends Controller
                 'CancelLabel' => 'Cancel',
             ],
             'scripts' => [
-                '/public/scripts/account-register.js',
+                'account-register.js',
             ],
         ];
         View::$route['vars'] = array_merge(View::$route['vars'], $vars);

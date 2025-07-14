@@ -93,8 +93,20 @@ class View
             'title' => $title,
         ];
 
-        if (isset($scripts))
-            $response['jsFile'] = $scripts;
+        if (isset($scripts)) {
+            foreach ($scripts as $script) {
+                $file = $_SERVER['DOCUMENT_ROOT'] . SCRIPTS_PUBLIC . $script;
+                if (file_exists($file)) {
+                    $response['jsFile'][] = SCRIPTS_PUBLIC . $script;
+                    continue;
+                }
+                if (copy($_SERVER['DOCUMENT_ROOT'] . SCRIPTS_STORAGE . $script, $file) && file_exists($file)) {
+                    $response['jsFile'][] = SCRIPTS_PUBLIC . $script;
+                    continue;
+                }
+                continue;
+            }
+        }
         if (isset($css))
             $response['cssFile'] = $css;
 
