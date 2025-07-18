@@ -93,20 +93,22 @@ class View
             'title' => $title,
         ];
 
-        if (isset($scripts)) {
-            foreach ($scripts as $script) {
+        if (isset($scripts))
+            $response['jsFile'] = [SCRIPTS_PUBLIC .ViewRepository::compressModalScripts($scripts)];
+        // if (isset($scripts)) {
+        //     foreach ($scripts as $script) {
 
-                if (empty($script)) continue;
+        //         if (empty($script)) continue;
 
-                $file = $_SERVER['DOCUMENT_ROOT'] . SCRIPTS_PUBLIC . $script;
-                if (
-                    file_exists($file) ||
-                    copy($_SERVER['DOCUMENT_ROOT'] . SCRIPTS_STORAGE . $script, $file) && file_exists($file)
-                ) {
-                    $response['jsFile'][] = SCRIPTS_PUBLIC . $script;
-                }
-            }
-        }
+        //         $file = $_SERVER['DOCUMENT_ROOT'] . SCRIPTS_PUBLIC . $script;
+        //         if (
+        //             file_exists($file) ||
+        //             copy($_SERVER['DOCUMENT_ROOT'] . SCRIPTS_STORAGE . $script, $file) && file_exists($file)
+        //         ) {
+        //             $response['jsFile'][] = SCRIPTS_PUBLIC . $script;
+        //         }
+        //     }
+        // }
         if (isset($css))
             $response['cssFile'] = $css;
 

@@ -283,16 +283,44 @@ class ViewRepository
 
         if (file_exists($filePath) && filemtime($filePath) > self::checkLastModify($scripts)) return $name;
 
-        $content = self::concatsSripts($scripts);
+        $content = self::concatSripts($scripts);
         file_put_contents($filePath, $content);
 
         View::$refresh = true;
         return $name;
     }
-    public static function concatsSripts(array $scripts): string
+    
+    public static function concatSripts(array $scripts): string
     {
         $result = '';
         $scripts = array_merge(View::$defaultScripts, $scripts);
+        foreach ($scripts as $script) {
+            $result .= file_get_contents($_SERVER['DOCUMENT_ROOT'] . SCRIPTS_STORAGE . $script) . PHP_EOL;
+        }
+        return $result;
+    }
+    public static function compressModalScripts(array $scripts): string
+    {
+        $name = md5(implode(' ', $scripts)) . '.js';
+
+        View::$scriptsPath = SCRIPTS_PUBLIC;
+        if (!file_exists($_SERVER['DOCUMENT_ROOT'] . View::$scriptsPath)) {
+            mkdir($_SERVER['DOCUMENT_ROOT'] . View::$scriptsPath, 0777, false);
+        }
+
+        $filePath = $_SERVER['DOCUMENT_ROOT'] . View::$scriptsPath . $name;
+
+        if (file_exists($filePath) && filemtime($filePath) > self::checkLastModify($scripts)) return $name;
+
+        $content = self::concatModalSripts($scripts);
+        file_put_contents($filePath, $content);
+
+        View::$refresh = true;
+        return $name;
+    }
+    public static function concatModalSripts(array $scripts): string
+    {
+        $result = '';
         foreach ($scripts as $script) {
             $result .= file_get_contents($_SERVER['DOCUMENT_ROOT'] . SCRIPTS_STORAGE . $script) . PHP_EOL;
         }
