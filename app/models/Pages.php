@@ -21,19 +21,71 @@ class Pages extends Model
         'html' => '',
         'expired_at' => '',
     ];
+
+    public static $langsPriority = [
+        'uk',
+        'en',
+        'ru'
+    ];
     public static $jsonFields = ['data'];
 
     public static function getBySlug(string $slug)
     {
         $table = static::$table;
 
-        $query = "SELECT * FROM $table WHERE slug = ? AND ( lang IS NULL OR lang = ? )";
-        $values = [$slug, Locale::$langCode];
+        $_langs = self::$langsPriority;
+        array_splice($_langs, array_search(Locale::$langCode, $_langs, true), 1);
+        array_unshift($_langs, Locale::$langCode);
+
+        $query = "SELECT * FROM $table WHERE slug = ? AND lang = ?";
         if (CFG_SOFT_DELETE) {
             $query .= ' AND date_delete IS NULL';
         }
-        $query .= ' ORDER BY id DESC LIMIT 2';
-        $pages = self::query($query, $values, 'Assoc');
+        $query .= ' ORDER BY id DESC LIMIT 1';
+        
+        $pages = [];
+        $continue = true;
+        do{
+            if (empty($_langs)){
+                $query = str_replace('lang = ?', 'lang is NULL', $query);
+                $values = [$slug];
+                $continue = false;
+            }
+            else {
+                $values = [$slug, array_shift($_langs)];
+            }
+            $pages = self::query($query, $values, 'Assoc');
+
+        } while ($continue && empty($pages));
+        
+        // do{
+        //     $query = "SELECT * FROM $table WHERE slug = ?";
+        //     if (empty($_langs)){
+        //         $query .= ' AND lang is NULL';
+        //         $values = [$slug];
+        //     }
+        //     else {
+        //         $query .= ' AND lang = ?';
+        //         $values = [$slug, array_shift($_langs)];
+        //     }
+            
+        //     if (CFG_SOFT_DELETE) {
+        //         $query .= ' AND date_delete IS NULL';
+        //     }
+        //     $query .= ' ORDER BY id DESC LIMIT 1';
+        //     $pages = self::query($query, $values, 'Assoc');
+
+        //     if (empty($_langs)) break;
+        // } while (empty($pages));
+
+        // $query = "SELECT * FROM $table WHERE slug = ? AND ( lang IS NULL OR lang = ? )";
+        // $values = [$slug, Locale::$langCode];
+        // if (CFG_SOFT_DELETE) {
+        //     $query .= ' AND date_delete IS NULL';
+        // }
+        // $query .= ' ORDER BY id DESC LIMIT 2';
+        // $pages = self::query($query, $values, 'Assoc');
+
         if (empty($pages)) return false;
 
         return static::decodeJson($pages[0]);
@@ -105,8 +157,10 @@ class Pages extends Model
             'title' => trim($data['title']),
             'subtitle' => trim($data['subtitle']),
             'html' => trim($data['html']),
-            'published_at' => date('Y-m-d H:i:s', strtotime($data['published_at'])),
         ];
+        if (!empty($data['published_at'])){
+            $array['published_at'] = date('Y-m-d H:i:s', strtotime($data['published_at']));
+        }
         if (!empty($data['description'])) {
             $pattern = ['/<\/p>\s*<p>/', '/<.*?>/', "/^\"/", "/ \"/", '/ "/', "/\"/", '/"/', "/\'/", "/'/"];
             $replace = ["\n", '', '«', ' «', ' «', '»', '»', '’', '’'];

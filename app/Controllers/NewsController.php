@@ -115,7 +115,7 @@ class NewsController extends Controller
             News::edit($_POST, 'promo');
             return View::message(['error' => 0, 'message' => 'Changes saved successfully!']);
         }
-        $newsData = News::getPromo();
+        $newsData = News::getBySlug('promo');
         $vars = [
             'title' => '{{ News_Edit_Page_Title }}',
             'texts' => [

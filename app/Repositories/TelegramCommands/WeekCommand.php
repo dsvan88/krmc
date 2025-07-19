@@ -36,7 +36,7 @@ class WeekCommand extends ChatCommand
             }
         }
 
-        $promoData = News::getPromo();
+        $promoData = News::getBySlug('promo');
         if ($promoData) {
             if ($promoData['title'] !== '') {
                 $message .= "<u><b>$promoData[title]</b></u>\n<i>$promoData[subtitle]</i>\n\n";
