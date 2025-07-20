@@ -196,7 +196,7 @@ class TechController extends Controller
     }
     public static function selfTestTelegramAction()
     {
-        View::redirect('/');
+        // View::redirect('/');
         $params = [
             'message' => [
                 'message_id' => 189,
@@ -220,7 +220,7 @@ class TechController extends Controller
                 ],
                 'date' => 1652025484,
                 // 'text' => '+ на 18',
-                'text' => '/ping чт',
+                'text' => '/ping ср',
                 // 'text' => '+пн',
                 // 'text' => '+пт?',
                 // 'text' => '+ на четвер, десь на 18:45, звісно, що підстрахую, але поки що (під ?)',

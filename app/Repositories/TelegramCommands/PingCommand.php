@@ -61,7 +61,12 @@ class PingCommand extends ChatCommand
             return false;
         }
 
-        self::$operatorClass::$resultMessage = '@' . implode(', @', $tgNames) . PHP_EOL . self::locale('Mb you wanna to come?😉');
+        $dayTimestamp = $weekData['start'] + (TIMESTAMP_DAY * $day);
+        $format = 'd.m.Y ' . $weekData['data'][$requestData['dayNum']]['time'];
+        $dayDate = strtotime(date($format, $dayTimestamp));
+
+        $list = '@' . implode(', @', $tgNames);
+        self::$operatorClass::$resultMessage =  self::locale(['string' => "Dear players: %s!\n%swe're going to play in %s!\nAre you in?😉", 'values' => [$list, $dayDate, $currentDay['game']]]);
         return true;
     }
 }
