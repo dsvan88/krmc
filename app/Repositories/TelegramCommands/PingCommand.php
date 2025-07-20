@@ -52,14 +52,17 @@ class PingCommand extends ChatCommand
             if (in_array($userId, $userIds) || in_array($userId, $existsIds)) continue;
             $userIds[] = $userId;
         }
-        $_SESSION['debug'] = $userIds;
-        
+
         $contacts = Contacts::findGroup('user_id', $userIds);
         $tgNames = [];
         foreach ($contacts as $contact) {
             if ($contact['type'] !== 'telegram') continue;
             $tgNames[] = $contact['contact'];
         }
+        
+        $_SESSION['debug'][] = count($userIds);
+        $_SESSION['debug'] = implode(PHP_EOL,$userIds);
+        $_SESSION['debug'] = implode(PHP_EOL,$tgNames);
 
         if (empty($tgNames)) {
             // self::$operatorClass::$resultMessage = self::locale('{{ Tg_Command_Games_Not_Set }}');
