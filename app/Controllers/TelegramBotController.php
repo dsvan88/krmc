@@ -140,12 +140,14 @@ class TelegramBotController extends Controller
                 'commonError' => $th->__toString(),
                 'messageData' => self::$incomeMessage,
             ];
-            if (!empty($_SESSION['debug'])) {
-                $debugMessage['debug'] = PHP_EOL . 'DEBUG:' . PHP_EOL . implode(PHP_EOL, $_SESSION['debug']);
-                unset($_SESSION['debug']);
-            }
-            Sender::message(self::$techTelegramId, json_encode($debugMessage, JSON_UNESCAPED_UNICODE));
             Sender::message(self::$chatId, Locale::phrase("Something went wrong😱!\nWe are deeply sorry for that😢\nI’ve informed our administrators about your situation, and they are fixing it right now!\nThank you for understanding!"));
+        }
+        finally {
+            if (empty($_SESSION['debug'])) return true;
+
+            $debugMessage['debug'] = PHP_EOL . 'DEBUG:' . PHP_EOL . implode(PHP_EOL, $_SESSION['debug']);
+            unset($_SESSION['debug']);
+            Sender::message(self::$techTelegramId, json_encode($debugMessage, JSON_UNESCAPED_UNICODE));
         }
     }
     public static function parseCommand(string $text): bool
