@@ -61,7 +61,7 @@ class PingCommand extends ChatCommand
             return false;
         }
 
-        $dayTimestamp = $weekData['start'] + (TIMESTAMP_DAY * $day);
+        $dayTimestamp = $weekData['start'] + (TIMESTAMP_DAY * $requestData['dayNum']);
         $format = 'd.m.Y ' . $weekData['data'][$requestData['dayNum']]['time'];
         $dayDate = strtotime(date($format, $dayTimestamp));
 
