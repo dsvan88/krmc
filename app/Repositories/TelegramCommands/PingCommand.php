@@ -3,8 +3,10 @@
 namespace app\Repositories\TelegramCommands;
 
 use app\core\ChatCommand;
+use app\core\Locale;
 use app\core\Tech;
 use app\models\Contacts;
+use app\models\GameTypes;
 use app\models\Weeks;
 
 class PingCommand extends ChatCommand
@@ -65,8 +67,14 @@ class PingCommand extends ChatCommand
         $format = 'd.m.Y ' . $weekData['data'][$requestData['dayNum']]['time'];
         $dayDate = strtotime(date($format, $dayTimestamp));
 
+        $gameNames = GameTypes::names();
+
+        $lang = Locale::$langCode;
+        $proto = Tech::getRequestProtocol();
+        $link = "<a href='$proto://{$_SERVER['SERVER_NAME']}/game/{$game}/?lang=$lang'>{$gameNames[$game]}</a>";
+
         $list = '@' . implode(', @', $tgNames);
-        self::$operatorClass::$resultMessage =  self::locale(['string' => "Dear players: %s!\n%swe're going to play in %s!\nAre you in?😉", 'vars' => [$list, $dayDate, $currentDay['game']]]);
+        self::$operatorClass::$resultMessage =  self::locale(['string' => "Dear players: %s!\n%s we're going to play in %s!\nAre you in?😉", 'vars' => [$list, $dayDate, $link]]);
         return true;
     }
 }
