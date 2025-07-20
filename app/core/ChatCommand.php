@@ -32,6 +32,8 @@ class ChatCommand implements Command
     }
     public static function locale($phrase)
     {
+        if (is_array($phrase))
+            return Locale::apply($phrase);
         return Locale::phrase($phrase);
     }
 }

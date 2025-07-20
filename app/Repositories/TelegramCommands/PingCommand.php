@@ -6,6 +6,7 @@ use app\core\ChatCommand;
 use app\core\Locale;
 use app\core\Tech;
 use app\models\Contacts;
+use app\models\Days;
 use app\models\GameTypes;
 use app\models\Weeks;
 
@@ -66,6 +67,7 @@ class PingCommand extends ChatCommand
         $dayTimestamp = $weekData['start'] + (TIMESTAMP_DAY * $requestData['dayNum']);
         $format = 'd.m.Y ' . $weekData['data'][$requestData['dayNum']]['time'];
         $dayDate = strtotime(date($format, $dayTimestamp));
+        $date = date('d.m.Y', $dayDate) . ' (<b>' . self::locale(Days::$days[$requestData['dayNum']]) . '</b>) ' . $currentDay['time'];
 
         $gameNames = GameTypes::names();
 
@@ -74,7 +76,7 @@ class PingCommand extends ChatCommand
         $link = "<a href='$proto://{$_SERVER['SERVER_NAME']}/game/{$game}/?lang=$lang'>{$gameNames[$game]}</a>";
 
         $list = '@' . implode(', @', $tgNames);
-        self::$operatorClass::$resultMessage =  self::locale(['string' => "Dear players: %s!\n%s we're going to play in %s!\nAre you in?😉", 'vars' => [$list, $dayDate, $link]]);
+        self::$operatorClass::$resultMessage =  self::locale(['string' => "Dear players: %s!\n%s we're going to play in %s!\nAre you in?😉", 'vars' => [$list, $date, $link]]);
         return true;
     }
 }
