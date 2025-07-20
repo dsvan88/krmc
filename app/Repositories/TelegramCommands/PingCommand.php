@@ -30,12 +30,12 @@ class PingCommand extends ChatCommand
 
         $weekData = Weeks::weekDataById($weekId);
         $currentDay = $weekData['data'][$requestData['dayNum']];
-        $existsIds = array_map(fn($user): int => $user['id'], $currentDay['participants']);
+        $existsIds = array_column($currentDay['participants'], 'id');
         $game = $currentDay['game'];
 
         foreach ($weekData['data'] as $num => $day) {
             if ($num == $requestData['dayNum'] || $day['game'] !== $game) continue;
-            $bookedIds = array_map(fn($user): int => $user['id'], $day['participants']);
+            $bookedIds = array_column($day['participants'], 'id');
         }
 
         $offset = self::$weeksOffset;
@@ -47,10 +47,11 @@ class PingCommand extends ChatCommand
             }
         } while (--$offset > 0);
 
-        $userIds =  array_filter($bookedIds, function ($e) use ($existsIds) {
-            return !in_array($e, $existsIds, true);
-        });
-        $userIds = array_values(array_unique($userIds));
+        $userIds = [];
+        foreach($bookedIds as $userId){
+            if (in_array($userId, $userIds, true) || in_array($userId, $existsIds, true)) continue;
+            $userIds[] = $userId;
+        }
 
         $contacts = Contacts::findGroup('user_id', $userIds);
         $tgNames = [];
