@@ -60,7 +60,7 @@ class PingCommand extends ChatCommand
             $tgNames[] = $contact['contact'];
         }
         
-        $_SESSION['debug'][] = count($userIds);
+        $_SESSION['debug'][] = 'COUNT: ' . count($userIds);
         $_SESSION['debug'][] = implode(PHP_EOL,$userIds);
         $_SESSION['debug'][] = implode(PHP_EOL,$tgNames);
 
