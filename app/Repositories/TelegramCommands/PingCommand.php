@@ -49,10 +49,10 @@ class PingCommand extends ChatCommand
 
         $userIds = [];
         foreach($bookedIds as $userId){
-            if (in_array($userId, $userIds, true) || in_array($userId, $existsIds, true)) continue;
+            if (in_array($userId, $userIds) || in_array($userId, $existsIds)) continue;
             $userIds[] = $userId;
         }
-
+        
         $contacts = Contacts::findGroup('user_id', $userIds);
         $tgNames = [];
         foreach ($contacts as $contact) {
