@@ -52,6 +52,7 @@ class PingCommand extends ChatCommand
             if (in_array($userId, $userIds) || in_array($userId, $existsIds)) continue;
             $userIds[] = $userId;
         }
+        $_SESSION['debug'] = $userIds;
         
         $contacts = Contacts::findGroup('user_id', $userIds);
         $tgNames = [];
