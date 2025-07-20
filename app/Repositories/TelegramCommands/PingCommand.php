@@ -61,8 +61,8 @@ class PingCommand extends ChatCommand
         }
         
         $_SESSION['debug'][] = count($userIds);
-        $_SESSION['debug'] = implode(PHP_EOL,$userIds);
-        $_SESSION['debug'] = implode(PHP_EOL,$tgNames);
+        $_SESSION['debug'][] = implode(PHP_EOL,$userIds);
+        $_SESSION['debug'][] = implode(PHP_EOL,$tgNames);
 
         if (empty($tgNames)) {
             // self::$operatorClass::$resultMessage = self::locale('{{ Tg_Command_Games_Not_Set }}');
