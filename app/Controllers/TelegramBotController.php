@@ -215,7 +215,7 @@ class TelegramBotController extends Controller
             }
 
             if (in_array($command, ['reg', 'set'], true)) {
-                $text = mb_substr($text, $commandLen + 1, NULL, 'UTF-8');
+                $_text = mb_substr($_text, $commandLen + 1, NULL, 'UTF-8');
                 $arguments = explode(',', $_text);
                 // $arguments = explode(',', mb_strtolower(str_replace('на ', '', $text)));
                 if (preg_match('/\([^)]+\)/', $text, $prim) === 1) {
