@@ -213,7 +213,7 @@ class TelegramBotController extends Controller
                 self::$command = 'help';
                 return true;
             }
-            $_SESSION['debug'][] = '$command: ' . $command;
+
             if (in_array($command, ['reg', 'set'], true)) {
                 $text = mb_substr($text, $commandLen + 1, NULL, 'UTF-8');
                 $arguments = explode(',', $_text);
@@ -223,6 +223,7 @@ class TelegramBotController extends Controller
                 }
                 self::$command = $command;
                 self::$commandArguments = $arguments;
+                $_SESSION['debug'][] = '$arguments: ' . json_encode($arguments, JSON_UNESCAPED_UNICODE);
                 return true;
             }
             // preg_match_all('/([a-zA-Zа-яА-ЯрРсСтТуУфФчЧхХШшЩщЪъЫыЬьЭэЮюЄєІіЇїҐґ.0-9]+)/', trim(mb_substr($text, $commandLen + 1, NULL, 'UTF-8')), $matches);
