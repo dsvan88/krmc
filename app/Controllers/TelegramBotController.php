@@ -104,6 +104,7 @@ class TelegramBotController extends Controller
     public static function webhookAction()
     {
         // exit(json_encode(['message' => self::$incomeMessage], JSON_UNESCAPED_UNICODE));
+        $_SESSION['debug'][] = 'Test Reg command:';
         try {
             if (!self::execute()) {
                 if (empty(self::$resultMessage)) return false;
@@ -132,22 +133,19 @@ class TelegramBotController extends Controller
                 }
             }
         } catch (\Throwable $th) {
-            $debugMessage = [
-                'commonError' => $th->__toString(),
-                'messageData' => self::$incomeMessage,
-            ];
+            $_SESSION['debug'][] = 'commonError: ' . $th->__toString();
+            $_SESSION['debug'][] = 'messageData: ' . json_encode(self::$incomeMessage, JSON_UNESCAPED_UNICODE);
             Sender::message(self::$chatId, Locale::phrase("Something went wrong😱!\nWe are deeply sorry for that😢\nI’ve informed our administrators about your situation, and they are fixing it right now!\nThank you for understanding!"));
         } finally {
             if (empty($_SESSION['debug'])) return true;
 
-            $debugMessage['debug'] = 'DEBUG:' . PHP_EOL . implode(PHP_EOL, $_SESSION['debug']);
+            $debugMessage = 'DEBUG:' . PHP_EOL . implode(PHP_EOL, $_SESSION['debug']);
             unset($_SESSION['debug']);
             Sender::message(self::$techTelegramId, $debugMessage);
         }
     }
     public static function parseCommand(string $text): bool
     {
-        $_SESSION['debug'][] = 'Test Reg command:';
         $_text = mb_strtolower(str_replace('на ', '', $text), 'UTF-8');
         $days = DayRepository::getDayNamesForCommand();
         if (preg_match("/^([+-])\s{0,3}($days)/ui", $_text, $match) === 1) {
