@@ -223,7 +223,6 @@ class TelegramBotController extends Controller
                 }
                 self::$command = $command;
                 self::$commandArguments = $arguments;
-                $_SESSION['debug'][] = '$arguments: ' . json_encode($arguments, JSON_UNESCAPED_UNICODE);
                 return true;
             }
             // preg_match_all('/([a-zA-Zа-яА-ЯрРсСтТуУфФчЧхХШшЩщЪъЫыЬьЭэЮюЄєІіЇїҐґ.0-9]+)/', trim(mb_substr($text, $commandLen + 1, NULL, 'UTF-8')), $matches);
@@ -248,6 +247,7 @@ class TelegramBotController extends Controller
             $requestData['prim'] = $arguments['prim'];
             unset($arguments['prim']);
         }
+        $_SESSION['debug'][] = '$arguments: ' . json_encode($arguments, JSON_UNESCAPED_UNICODE);
         foreach ($arguments as $value) {
             $value = trim($value);
             if (preg_match('/^(\+|-)[^0-9]/', $value)) {
