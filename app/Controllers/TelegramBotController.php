@@ -104,7 +104,6 @@ class TelegramBotController extends Controller
     public static function webhookAction()
     {
         // exit(json_encode(['message' => self::$incomeMessage], JSON_UNESCAPED_UNICODE));
-        $_SESSION['debug'][] = 'Test Reg command:';
         try {
             if (!self::execute()) {
                 if (empty(self::$resultMessage)) return false;
@@ -146,6 +145,7 @@ class TelegramBotController extends Controller
     }
     public static function parseCommand(string $text): bool
     {
+        $_SESSION['debug'][] = 'Test Reg command:';
         $_text = mb_strtolower(str_replace('на ', '', $text), 'UTF-8');
         $days = DayRepository::getDayNamesForCommand();
         if (preg_match("/^([+-])\s{0,3}($days)/ui", $_text, $match) === 1) {
