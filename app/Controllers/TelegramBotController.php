@@ -271,13 +271,12 @@ class TelegramBotController extends Controller
             }
         }
 
-        if (empty($requestData['currentDay']))  self::parseDayNum('tod', $requestData);
+        if (!isset($requestData['currentDay']))  self::parseDayNum('tod', $requestData);
 
         return $requestData;
     }
     public static function parseDayNum(string $daySlug, array &$requestData): bool
     {
-        $_SESSION['debug'][] = '$daySlug: ' . $daySlug;
         $requestData['currentDay'] = Days::current();
 
         $daySlug = mb_strtolower($daySlug, 'UTF-8');
