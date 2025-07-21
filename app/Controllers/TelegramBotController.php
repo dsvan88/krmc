@@ -247,10 +247,10 @@ class TelegramBotController extends Controller
             $requestData['prim'] = $arguments['prim'];
             unset($arguments['prim']);
         }
-        $_SESSION['debug'][] = '$arguments: ' . json_encode($arguments, JSON_UNESCAPED_UNICODE);
         foreach ($arguments as $value) {
             $value = trim($value);
-            if (preg_match('/^(\+|-)[^0-9]/', $value)) {
+            if (preg_match('/^[+-][^0-9]/', $value)) {
+                $_SESSION['debug'][] = '$value: ' . $value;
 
                 $requestData['method'] = $value[0];
                 $withoutMethod = trim(mb_substr($value, 1, 6, 'UTF-8'));
