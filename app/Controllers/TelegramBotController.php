@@ -166,6 +166,7 @@ class TelegramBotController extends Controller
             self::$commandArguments = $arguments;
             return true;
         }
+        $_SESSION['debug'][] = '... Not booking';
         // if (preg_match('/^[+-]\s{0,3}(пн|пон|вт|вів|ср|сер|чт|чет|пт|пят|п’ят|сб|суб|вс|вос|нед|нд|сг|сег|сьо|зав|mon|tue|wed|thu|fri|sat|sun|tod|tom)/ui', $_text) === 1) {
         //     preg_match_all('/[+-]\s{0,3}(пн|пон|вт|вів|ср|сер|чт|чет|пт|пят|п’ят|сб|суб|вс|вос|нед|нд|сг|сег|сьо|зав|mon|tue|wed|thu|fri|sat|sun|tod|tom)/ui', str_replace('.', ':', $_text), $matches);
         //     $arguments = $matches[0];
