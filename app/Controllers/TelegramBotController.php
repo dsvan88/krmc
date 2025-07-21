@@ -250,7 +250,7 @@ class TelegramBotController extends Controller
             $requestData['prim'] = $arguments['prim'];
             unset($arguments['prim']);
         }
-
+        $_SESSION['debug'][] = 'parseArguments: ' . json_encode($arguments, JSON_UNESCAPED_UNICODE);
         foreach ($arguments as $value) {
             $value = trim($value);
             if (preg_match('/^(\+|-)[^0-9]/', $value)) {
@@ -260,8 +260,8 @@ class TelegramBotController extends Controller
                 $dayName = mb_strtolower(mb_substr($withoutMethod, 0, 3, 'UTF-8'), 'UTF-8');
 
                 self::parseDayNum($dayName, $requestData);
-                $_SESSION['debug'][] = $value;
-                $_SESSION['debug'][] = $requestData['currentDay'];
+                $_SESSION['debug'][] = 'ProbDay: ' . $value;
+                $_SESSION['debug'][] = 'Today: ' . $requestData['currentDay'];
             } elseif (preg_match('/^\d{2}:\d{2}$/', $value) === 1 && empty($requestData['arrive'])) {
                 $requestData['arrive'] = $value;
             } elseif (preg_match('/^(\+|-)\d{1,2}/', $value, $match) === 1) {
