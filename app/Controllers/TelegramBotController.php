@@ -193,7 +193,7 @@ class TelegramBotController extends Controller
             self::$commandArguments = $arguments;
             return true;
         }
-        $_SESSION['debug'][] = '... Not booking';
+
         if ($text[0] === '/') {
             $command = mb_substr($text, 1, NULL, 'UTF-8');
 
@@ -213,7 +213,7 @@ class TelegramBotController extends Controller
                 self::$command = 'help';
                 return true;
             }
-
+            $_SESSION['debug'][] = '$command: ' . $command;
             if (in_array($command, ['reg', 'set'], true)) {
                 $text = mb_substr($text, $commandLen + 1, NULL, 'UTF-8');
                 $arguments = explode(',', $_text);
