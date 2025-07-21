@@ -250,7 +250,6 @@ class TelegramBotController extends Controller
         foreach ($arguments as $value) {
             $value = trim($value);
             if (preg_match('/^[+-][^0-9]/', $value)) {
-                $_SESSION['debug'][] = '$value: ' . $value;
 
                 $requestData['method'] = $value[0];
                 $withoutMethod = trim(mb_substr($value, 1, 6, 'UTF-8'));
@@ -278,7 +277,7 @@ class TelegramBotController extends Controller
     }
     public static function parseDayNum(string $daySlug, array &$requestData): bool
     {
-
+        $_SESSION['debug'][] = '$daySlug: ' . $daySlug;
         $requestData['currentDay'] = Days::current();
 
         $daySlug = mb_strtolower($daySlug, 'UTF-8');
