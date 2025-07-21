@@ -72,7 +72,7 @@ class PingCommand extends ChatCommand
         $format = 'd.m.Y ' . $weekData['data'][$requestData['dayNum']]['time'];
         $dayDate = strtotime(date($format, $dayTimestamp));
         // $date = date('d.m.Y', $dayDate) . ' (<b>' . self::locale(Days::$days[$requestData['dayNum']]) . '</b>) ' . $currentDay['time'];
-        $date = date('d.m.Y', $dayDate) . ' at ' . $currentDay['time'];
+        $date = date('d.m.Y', $dayDate);
 
         $gameNames = GameTypes::names();
 
@@ -81,7 +81,7 @@ class PingCommand extends ChatCommand
         $link = "<a href='$proto://{$_SERVER['SERVER_NAME']}/game/{$game}/?lang=$lang'>{$gameNames[$game]}</a>";
 
         $list = '@' . implode(', @', $tgNames);
-        self::$operatorClass::$resultMessage =  self::locale(['string' => "Dear players: %s!\n%s we're going to play in %s!\nAre you in?😉", 'vars' => [$list, $date, $link]]);
+        self::$operatorClass::$resultMessage =  self::locale(['string' => "Dear players: %s!\n%s at %s we're going to play in %s!\nAre you in?😉", 'vars' => [$list, $date, $currentDay['time'], $link]]);
         return true;
     }
 }
