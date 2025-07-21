@@ -39,6 +39,12 @@ class PingCommand extends ChatCommand
             $bookedIds = array_column($day['participants'], 'id');
         }
 
+        $dayTimestamp = $weekData['start'] + (TIMESTAMP_DAY * $requestData['dayNum']);
+        $format = 'd.m.Y ' . $weekData['data'][$requestData['dayNum']]['time'];
+        $dayDate = strtotime(date($format, $dayTimestamp));
+        // $date = date('d.m.Y', $dayDate) . ' (<b>' . self::locale(Days::$days[$requestData['dayNum']]) . '</b>) ' . $currentDay['time'];
+        $date = date('d.m.Y', $dayDate);
+
         $offset = self::$weeksOffset;
         do {
             $weekData = Weeks::find($weekId - $offset);
@@ -67,12 +73,6 @@ class PingCommand extends ChatCommand
             // self::$operatorClass::$resultMessage = self::locale('{{ Tg_Command_Games_Not_Set }}');
             return false;
         }
-
-        $dayTimestamp = $weekData['start'] + (TIMESTAMP_DAY * $requestData['dayNum']);
-        $format = 'd.m.Y ' . $weekData['data'][$requestData['dayNum']]['time'];
-        $dayDate = strtotime(date($format, $dayTimestamp));
-        // $date = date('d.m.Y', $dayDate) . ' (<b>' . self::locale(Days::$days[$requestData['dayNum']]) . '</b>) ' . $currentDay['time'];
-        $date = date('d.m.Y', $dayDate);
 
         $gameNames = GameTypes::names();
 
