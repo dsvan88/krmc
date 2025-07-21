@@ -33,6 +33,7 @@ class PingCommand extends ChatCommand
         $existsIds = array_column($currentDay['participants'], 'id');
         $game = $currentDay['game'];
 
+        $bookedIds = [];
         foreach ($weekData['data'] as $num => $day) {
             if ($num == $requestData['dayNum'] || $day['game'] !== $game) continue;
             $bookedIds = array_column($day['participants'], 'id');
@@ -47,8 +48,10 @@ class PingCommand extends ChatCommand
             }
         } while (--$offset > 0);
 
+        if (empty($bookedIds)) return false;
+
         $userIds = [];
-        foreach($bookedIds as $userId){
+        foreach ($bookedIds as $userId) {
             if (empty($userId) || in_array($userId, $userIds, true) || in_array($userId, $existsIds, true)) continue;
             $userIds[] = $userId;
         }
@@ -59,10 +62,6 @@ class PingCommand extends ChatCommand
             if ($contact['type'] !== 'telegram' || in_array($contact['contact'], $tgNames, true)) continue;
             $tgNames[] = $contact['contact'];
         }
-        
-        $_SESSION['debug'][] = 'COUNT: ' . count($userIds);
-        $_SESSION['debug'][] = implode(PHP_EOL,$userIds);
-        $_SESSION['debug'][] = implode(PHP_EOL,$tgNames);
 
         if (empty($tgNames)) {
             // self::$operatorClass::$resultMessage = self::locale('{{ Tg_Command_Games_Not_Set }}');

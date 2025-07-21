@@ -53,17 +53,19 @@ class TelegramChats extends Model
         if ($messageArray['message']['chat']['type'] === 'private') {
             $chatData['data']['direct'] = true;
         }
-        $chatData['personal']['username'] = $messageArray['message']['from']['username'];
+        $chatData['personal']['username'] = empty($messageArray['message']['from']['username']) ? '' : $messageArray['message']['from']['username'];
 
         $userId = Contacts::getUserIdByContact('telegramid', $chatId);
         if (!empty($userId)) {
             $chatData['user_id'] = $userId;
 
-            $contact = Contacts::getUserContact($userId, 'telegram');
-            if (empty($tgName['contact'])) {
-                Contacts::new(['telegram' => $messageArray['message']['from']['username']], $userId);
-            } elseif ($contact['contact'] !== $messageArray['message']['from']['username']) {
-                Contacts::update(['contact' => $messageArray['message']['from']['username']], ['id' => $contact['id']]);
+            if (!empty($chatData['personal']['username'])) {
+                $contact = Contacts::getUserContact($userId, 'telegram');
+                if (empty($tgName['contact'])) {
+                    Contacts::new(['telegram' => $chatData['personal']['username']], $userId);
+                } elseif ($contact['contact'] !== $chatData['personal']['username']) {
+                    Contacts::update(['contact' => $chatData['personal']['username']], ['id' => $contact['id']]);
+                }
             }
         }
         $chatData['data']['last_seems'] = $messageArray['message']['date'];
