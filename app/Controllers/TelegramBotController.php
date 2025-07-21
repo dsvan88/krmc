@@ -141,13 +141,12 @@ class TelegramBotController extends Controller
                 'messageData' => self::$incomeMessage,
             ];
             Sender::message(self::$chatId, Locale::phrase("Something went wrong😱!\nWe are deeply sorry for that😢\nI’ve informed our administrators about your situation, and they are fixing it right now!\nThank you for understanding!"));
-        }
-        finally {
+        } finally {
             if (empty($_SESSION['debug'])) return true;
 
-            $debugMessage['debug'] = PHP_EOL . 'DEBUG:' . PHP_EOL . implode(PHP_EOL, $_SESSION['debug']);
+            $debugMessage['debug'] = 'DEBUG:' . PHP_EOL . implode(PHP_EOL, $_SESSION['debug']);
             unset($_SESSION['debug']);
-            Sender::message(self::$techTelegramId, json_encode($debugMessage, JSON_UNESCAPED_UNICODE));
+            Sender::message(self::$techTelegramId, $debugMessage);
         }
     }
     public static function parseCommand(string $text): bool
@@ -261,6 +260,8 @@ class TelegramBotController extends Controller
                 $dayName = mb_strtolower(mb_substr($withoutMethod, 0, 3, 'UTF-8'), 'UTF-8');
 
                 self::parseDayNum($dayName, $requestData);
+                $_SESSION['debug'][] = $value;
+                $_SESSION['debug'][] = $requestData['currentDay'];
             } elseif (preg_match('/^\d{2}:\d{2}$/', $value) === 1 && empty($requestData['arrive'])) {
                 $requestData['arrive'] = $value;
             } elseif (preg_match('/^(\+|-)\d{1,2}/', $value, $match) === 1) {
