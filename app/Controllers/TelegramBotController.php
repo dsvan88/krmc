@@ -107,10 +107,6 @@ class TelegramBotController extends Controller
         try {
             if (!self::execute()) {
                 if (empty(self::$resultMessage)) return false;
-                if (!empty($_SESSION['debug'])) {
-                    self::$incomeMessage['debug'] = PHP_EOL . 'DEBUG:' . PHP_EOL . PHP_EOL . implode(PHP_EOL, $_SESSION['debug']);
-                    unset($_SESSION['debug']);
-                }
                 $botResult = Sender::message(self::$techTelegramId, json_encode([self::$incomeMessage, /* self::$requester ,*/ self::parseArguments(self::$commandArguments)], JSON_UNESCAPED_UNICODE));
             }
 
@@ -151,6 +147,7 @@ class TelegramBotController extends Controller
     }
     public static function parseCommand(string $text): bool
     {
+        $_SESSION['debug'][] = 'Test Reg command:';
         $_text = mb_strtolower(str_replace('на ', '', $text), 'UTF-8');
         $days = DayRepository::getDayNamesForCommand();
         if (preg_match("/^([+-])\s{0,3}($days)/ui", $_text, $match) === 1) {
@@ -220,13 +217,13 @@ class TelegramBotController extends Controller
 
             if (in_array($command, ['reg', 'set'], true)) {
                 $text = mb_substr($text, $commandLen + 1, NULL, 'UTF-8');
-                $arguments = explode(',', mb_strtolower(str_replace('на ', '', $text)));
+                $arguments = explode(',', $_text);
+                // $arguments = explode(',', mb_strtolower(str_replace('на ', '', $text)));
                 if (preg_match('/\([^)]+\)/', $text, $prim) === 1) {
                     $arguments['prim'] = mb_substr($prim[0], 1, -1, 'UTF-8');
                 }
                 self::$command = $command;
                 self::$commandArguments = $arguments;
-                $_SESSION['debug'][] = 'arguments: ' . json_encode($arguments, JSON_UNESCAPED_UNICODE);
                 return true;
             }
             // preg_match_all('/([a-zA-Zа-яА-ЯрРсСтТуУфФчЧхХШшЩщЪъЫыЬьЭэЮюЄєІіЇїҐґ.0-9]+)/', trim(mb_substr($text, $commandLen + 1, NULL, 'UTF-8')), $matches);
