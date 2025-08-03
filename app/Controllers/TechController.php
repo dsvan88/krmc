@@ -220,7 +220,7 @@ class TechController extends Controller
                 ],
                 'date' => 1652025484,
                 // 'text' => '+ на 18',
-                'text' => '/ping ср',
+                'text' => '/newuser Вендiї',
                 // 'text' => '+пн',
                 // 'text' => '+пт?',
                 // 'text' => '+ на четвер, десь на 18:45, звісно, що підстрахую, але поки що (під ?)',

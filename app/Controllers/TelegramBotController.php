@@ -38,19 +38,19 @@ class TelegramBotController extends Controller
         if (APP_LOC !== 'local') {
             $ip = substr($_SERVER['REMOTE_ADDR'], 0, 4) === substr($_SERVER['SERVER_ADDR'], 0, 4) ? $_SERVER['HTTP_X_REAL_IP'] : $_SERVER['REMOTE_ADDR'];
             // if (!Validator::validate('telegramIp', $ip) && $ip !== '127.0.0.1') {
-            if (!Validator::validate('telegramIp', $ip)) {
-                self::$techTelegramId = Settings::getTechTelegramId();
-                $message = json_encode([
-                    'REMOTE_ADDR' => $_SERVER['REMOTE_ADDR'],
-                    'SERVER_ADDR' => $_SERVER['SERVER_ADDR'],
-                    'HTTP_X_REAL_IP' => $_SERVER['HTTP_X_REAL_IP'],
-                ]);
-                if (empty(self::$techTelegramId))
-                    error_log($message);
-                else
-                    Sender::message(self::$techTelegramId, $message);
-                return false;
-            }
+            // if (!Validator::validate('telegramIp', $ip)) {
+            //     self::$techTelegramId = Settings::getTechTelegramId();
+            //     $message = json_encode([
+            //         'REMOTE_ADDR' => $_SERVER['REMOTE_ADDR'],
+            //         'SERVER_ADDR' => $_SERVER['SERVER_ADDR'],
+            //         'HTTP_X_REAL_IP' => $_SERVER['HTTP_X_REAL_IP'],
+            //     ]);
+            //     if (empty(self::$techTelegramId))
+            //         error_log($message);
+            //     else
+            //         Sender::message(self::$techTelegramId, $message);
+            //     return false;
+            // }
         }
 
         $data = trim(file_get_contents('php://input'));
@@ -106,6 +106,7 @@ class TelegramBotController extends Controller
         // exit(json_encode(['message' => self::$incomeMessage], JSON_UNESCAPED_UNICODE));
         try {
             if (!self::execute()) {
+                var_dump(self::$resultMessage);
                 if (empty(self::$resultMessage)) return false;
                 $botResult = Sender::message(self::$techTelegramId, json_encode([self::$incomeMessage, /* self::$requester ,*/ self::parseArguments(self::$commandArguments)], JSON_UNESCAPED_UNICODE));
             }

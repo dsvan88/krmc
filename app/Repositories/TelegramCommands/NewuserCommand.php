@@ -28,7 +28,8 @@ class NewuserCommand extends ChatCommand
 
         $symbols = Locale::$cyrillicPattern;
         if (preg_match_all("/[^$symbols .0-9]/ui", $username, $matches)) {
-            self::$operatorClass::$resultMessage = self::locale(['string' => "Invalid nickname format!\nPlease use only <b>Cyrillic</b> and <b>spaces</b> in the nickname!\nWrong simbols: %s", 'vars' => ['"<i>' .implode('</i>", "<i>', $matches[0]).'</i>"']]);
+            $wrong = implode("</i>', '<i>", $matches[0]);
+            self::$operatorClass::$resultMessage = self::locale(['string' => "Invalid nickname format!\nPlease use only <b>Cyrillic</b> and <b>spaces</b> in the nickname!\nWrong simbols: %s", 'vars' => ["'<i>$wrong</i>'"]]);
             return false;
         }
 

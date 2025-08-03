@@ -23,6 +23,7 @@ class TelegramBot
         if (empty(self::$options)) {
             self::$options = [
                 CURLOPT_RETURNTRANSFER => true,
+                // CURLOPT_RETURNTRANSFER => false,
                 CURLOPT_POST => true,       // отправка данных методом POST
                 CURLOPT_TIMEOUT => 10,      // максимальное время выполнения запроса
             ];
@@ -52,7 +53,7 @@ class TelegramBot
         }
         $options = self::$options;
         $options[CURLOPT_URL] = "https://api.telegram.org/bot$botToken/sendMessage"; // адрес api телеграмм-бота
-        $options[CURLOPT_POSTFIELDS] = $params; // адрес api телеграмм-бота
+        $options[CURLOPT_POSTFIELDS] = $params;
 
         $curl = curl_init();
 
