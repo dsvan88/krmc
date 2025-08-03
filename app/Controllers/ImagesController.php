@@ -41,7 +41,8 @@ class ImagesController extends Controller
     }
     public function addAction()
     {
-        $filename = preg_replace('/([^a-zа-яєіїґ.,;0-9_-]+)/ui', '', trim($_POST['filename']));
+        $symbols = Locale::$cyrillicPattern;
+        $filename = preg_replace("/([^a-z$symbols.,;0-9_-]+)/ui", '', trim($_POST['filename']));
 
         if (ImageProcessing::saveBase64Image($_POST['image'], $filename) === false) return View::notice('Fail!');
 

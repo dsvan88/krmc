@@ -225,7 +225,8 @@ class TelegramBotController extends Controller
                 return true;
             }
             // preg_match_all('/([a-zA-Zа-яА-ЯрРсСтТуУфФчЧхХШшЩщЪъЫыЬьЭэЮюЄєІіЇїҐґ.0-9]+)/', trim(mb_substr($text, $commandLen + 1, NULL, 'UTF-8')), $matches);
-            preg_match_all('/([a-zа-яєіїґ.0-9#-]+)/ui', trim(mb_substr($text, $commandLen + 1, NULL, 'UTF-8')), $matches);
+            $symbols = Locale::$cyrillicPattern;
+            preg_match_all("/([a-z$symbols.0-9#-]+)/ui", trim(mb_substr($text, $commandLen + 1, NULL, 'UTF-8')), $matches);
 
             self::$command = $command;
             self::$commandArguments = $matches[0];

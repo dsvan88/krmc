@@ -23,11 +23,18 @@ class NickCommand extends ChatCommand
             self::$operatorClass::$resultMessage = self::locale(['string' => '{{ Tg_Command_Name_Already_Set }}', 'vars' => [self::$requester['name']]]);
             return false;
         }
-
-        $username = Users::formatName(implode(' ', $arguments));
+        $_username = implode(' ', $arguments);
+        $username = Users::formatName($_username);
 
         if (empty($username)) {
-            self::$operatorClass::$resultMessage = self::locale('{{ Tg_Command_Name_Wrong_Format }}');
+            self::$operatorClass::$resultMessage = self::locale('Invalid nickname format!\nPlease use only <b>Cyrillic</b> and <b>spaces</b> in the nickname!');
+            return false;
+        }
+
+        $symbols = Locale::$cyrillicPattern;
+        if (preg_match_all("/[^$symbols .0-9]/ui", $_username, $matches)) {
+            $wrong = implode('</i>", "<i>', $matches[0]);
+            self::$operatorClass::$resultMessage = self::locale(['string' => "Invalid nickname format!\nPlease use only <b>Cyrillic</b> and <b>spaces</b> in the nickname!\nWrong simbols: %s", 'vars' => ["\"<i>$wrong</i>\""]]);
             return false;
         }
 

@@ -542,7 +542,8 @@ class Users extends Model
     {
 
         // $name = preg_replace(['/\s+/', '/[^a-zа-яєіїґ.0-9 ]+/ui'], [' ', ''], trim($name));
-        $name = preg_replace(['/\s+/', '/[^а-яА-ЯрРсСтТуУфФчЧхХШшЩщЪъЫыЬьЭэЮюЄєІіЇїҐґ.0-9 ]+/ui'], [' ', ''], trim($name));
+        $symbols = Locale::$cyrillicPattern;
+        $name = preg_replace(["/\s+/', '/[^$symbols.0-9 ]+/ui"], [' ', ''], trim($name));
 
         if (empty($name)) return false;
 
