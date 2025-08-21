@@ -38,14 +38,14 @@ if (!defined('SQL_HOST')) {
     define('TIMESTAMP_WEEK', 604800);
     define('MAX_WEEKS_AHEAD', 6);
 
-    define('CFG_DEBUG', true);
+    define('CFG_DEBUG', empty($_ENV['CFG_DEBUG'])  ? false : $_ENV['CFG_DEBUG']);
     define('CFG_SOFT_DELETE', true);
     define('CFG_NEWS_PER_PAGE', 6);
     define('CFG_MAX_SESSION_AGE', TIMESTAMP_WEEK); // 60*60*24*7 == 1 week
 
     define('ROOT_PASS_DEFAULT', empty($_ENV['ROOT_PASS_DEFAULT'])  ? 'admin1234' : $_ENV['ROOT_PASS_DEFAULT']);
     define('BACKUP_FREQ',   empty($_ENV['BACKUP_FREQ']) ? TIMESTAMP_DAY * 2 : $_ENV['BACKUP_FREQ']);
-    define('APP_VERSION',   empty($_ENV['APP_VERSION'])     ? '0.21b' :     $_ENV['APP_VERSION']);
+    define('APP_VERSION',   empty($_ENV['APP_VERSION'])     ? '0.1' :     $_ENV['APP_VERSION']);
     define('APP_LOC', empty($_ENV['APP_LOC'])  ? 'product' : $_ENV['APP_LOC']);
     define('CLUB_NAME',     empty($_ENV['CLUB_NAME'])       ? 'Mafia Club Kryvyi Rih' :     $_ENV['CLUB_NAME']);
     define('CLUB_SNAME',    empty($_ENV['CLUB_SNAME'])      ? 'KRMC' :      $_ENV['CLUB_SNAME']);
