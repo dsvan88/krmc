@@ -27,7 +27,7 @@ class NickCommand extends ChatCommand
         $username = Users::formatName($_username);
 
         if (empty($username)) {
-            self::$operatorClass::$resultMessage = self::locale('Invalid nickname format!\nPlease use only <b>Cyrillic</b> and <b>spaces</b> in the nickname!');
+            self::$operatorClass::$resultMessage = self::locale("Invalid nickname format!\nPlease use only <b>Cyrillic</b> and <b>spaces</b> in the nickname!");
             return false;
         }
 
