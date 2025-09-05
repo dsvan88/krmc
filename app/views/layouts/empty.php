@@ -49,6 +49,7 @@
 </head>
 
 <body>
+    <? self::component('notices', ['notices' => $notices]) ?>
     <div class="wrapper">
     </div>
 </body>
