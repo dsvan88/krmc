@@ -42,7 +42,6 @@ class PingCommand extends ChatCommand
         $dayTimestamp = $weekData['start'] + (TIMESTAMP_DAY * $requestData['dayNum']);
         $format = 'd.m.Y ' . $weekData['data'][$requestData['dayNum']]['time'];
         $dayDate = strtotime(date($format, $dayTimestamp));
-        // $date = date('d.m.Y', $dayDate) . ' (<b>' . self::locale(Days::$days[$requestData['dayNum']]) . '</b>) ' . $currentDay['time'];
         $date = date('d.m.Y', $dayDate);
 
         $offset = self::$weeksOffset;
