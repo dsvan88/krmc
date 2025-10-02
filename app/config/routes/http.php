@@ -177,6 +177,11 @@ return  [
         'action' => 'index',
         'access' => ['category' => 'admin'],
     ],
+    'chat/list' => [
+        'controller' => 'telegramChat',
+        'action' => 'list',
+        'access' => ['category' => 'admin'],
+    ],
 
     'images/index' => [
         'controller' => 'images',

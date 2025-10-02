@@ -56,6 +56,27 @@ class Sender
 
         return self::$operator->unpinMessage($chatId, $messageId);
     }
+    public static function getUserProfilePhotos($userId = 0, $offset = 0, $limit = 1)
+    {
+        if (empty($userId)) return false;
+        if (empty(self::$operator)) self::init();
+
+        return self::$operator->getUserProfilePhotos($userId, $offset, $limit);
+    }
+    public static function getUserProfileAvatar(int $userId = 0)
+    {
+        if (empty($userId)) return false;
+        if (empty(self::$operator)) self::init();
+
+        return self::$operator->getUserProfileAvatar($userId);
+    }
+    public static function getFile(string $file_id = '')
+    {
+        if (empty($file_id)) return false;
+        if (empty(self::$operator)) self::init();
+
+        return self::$operator->getFile($file_id);
+    }
     public static function setMessageReaction($chatId, $messageId, $reaction)
     {
         if (empty($chatId)) return false;

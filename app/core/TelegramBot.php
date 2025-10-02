@@ -12,6 +12,8 @@ class TelegramBot
     private static $options = [];
     private static $params = [];
     public static $result = [];
+    public static $curl = null;
+    public static $close = true;
 
     public function __construct($text = '')
     {
@@ -31,6 +33,7 @@ class TelegramBot
         if ($text !== '') {
             self::$params['text'] = $text;
         }
+        self::$curl = curl_init();
     }
     private static function getAuthData()
     {
@@ -69,6 +72,9 @@ class TelegramBot
             return static::$result;
         }
         static::$result = json_decode(curl_exec($curl), true);
+
+        self::end();
+
         if (static::$result['ok']) {
             return [static::$result];
         }
@@ -110,6 +116,9 @@ class TelegramBot
             return static::$result;
         }
         static::$result = json_decode(curl_exec($curl), true);
+
+        self::end();
+
         if (static::$result['ok']) {
             return [static::$result];
         }
@@ -148,6 +157,9 @@ class TelegramBot
             return static::$result;
         }
         static::$result = json_decode(curl_exec($curl), true);
+
+        self::end();
+
         if (static::$result['ok']) {
             return [static::$result];
         }
@@ -180,6 +192,9 @@ class TelegramBot
         $curl = curl_init();
         curl_setopt_array($curl, $options);
         static::$result = json_decode(curl_exec($curl), true);
+
+        self::end();
+
         if (static::$result['ok']) {
             self::$botToken = $botToken;
             return true;
@@ -216,6 +231,65 @@ class TelegramBot
 
         return self::send('editMessageText', $params);
     }
+    public static function getUserProfilePhotos($userId = 0, $offset = 0, $limit = 1)
+    {
+        if (empty($userId)) {
+            throw new Exception('UserID can’t be empty.');
+        }
+        $params = [
+            'user_id' => $userId, // id користувача
+            'offset' => $offset, // зміщення від початку, скільки треба пропустити фотографій користувача
+            'limit' => $limit, // кількість фото користувача
+        ];
+
+        self::send('getUserProfilePhotos', $params);
+        return static::$result;
+    }
+    public static function getFile(string $file_id = '')
+    {
+        if (empty($file_id)) {
+            throw new Exception('UserID can’t be empty.');
+        }
+        $params = [
+            'file_id' => $file_id, // id файлу
+        ];
+
+        self::send('getFile', $params);
+        return static::$result;
+    }
+
+    public static function getUserProfileAvatar(int $userId = 0)
+    {
+        if (empty($userId)) {
+            throw new Exception('UserID can’t be empty.');
+        }
+
+        self::$close = false;
+        $profilePhotos = self::getUserProfilePhotos($userId);
+
+        if (empty($profilePhotos['result']['photos'][0][0]['file_id'])) return false;
+        
+        $mainPhotoData = self::getFile($profilePhotos['result']['photos'][0][0]['file_id']);
+
+        $botToken = self::$botToken;
+        $file_path = $mainPhotoData['result']['file_path'];
+        $url = "https://api.telegram.org/file/bot$botToken/$file_path";
+
+        self::$curl = curl_init();
+
+        $options = [
+            CURLOPT_URL => $url,
+            CURLOPT_RETURNTRANSFER => true
+        ];
+        curl_setopt_array(self::$curl, $options);
+
+        $fileContent = curl_exec(self::$curl);
+
+        self::$close = true;
+        self::end();
+
+        return empty($fileContent) ? false : $fileContent;
+    }
     /** 
      * ReactionTypeEmoji:
      *  type 	String 	Type of the reaction, always “emoji”
@@ -249,10 +323,19 @@ class TelegramBot
         }
         $options[CURLOPT_URL] = "https://api.telegram.org/bot$botToken/$method";
 
-        $curl = curl_init();
-        curl_setopt_array($curl, $options);
-        static::$result = json_decode(curl_exec($curl), true);
+        if (empty(self::$curl)) {
+            self::$curl = curl_init();
+        }
+        curl_setopt_array(self::$curl, $options);
+        static::$result = json_decode(curl_exec(self::$curl), true);
+
+        self::end();
 
         return !empty(static::$result['ok']);
+    }
+
+    public static function end()
+    {
+        if (self::$close) curl_close(self::$curl);
     }
 }

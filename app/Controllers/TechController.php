@@ -3,6 +3,7 @@
 namespace app\Controllers;
 
 use app\core\Controller;
+use app\core\Sender;
 use app\core\Tech;
 use app\core\View;
 use app\libs\Db;
@@ -249,10 +250,44 @@ class TechController extends Controller
     }
     public static function testAction()
     {
-        // try {
-        // static::backupSaveAction();
-        // } catch (\Throwable $error) {
-        //     Tech::dump($error);
-        // }
+        try {
+            $userId = 900669168;
+            $avatar = Sender::getUserProfileAvatar($userId);
+            echo '<img src="data:image/jpeg;base64,' . base64_encode($avatar) . '">';
+
+            /* $userId = 900669168;
+            $profilePhotos = Sender::getUserProfilePhotos($userId)['result'];
+            Tech::dump($profilePhotos);
+            Tech::dump($profilePhotos['photos'][0][0]['file_id']);
+            $mainPhotoData = Sender::getFile($profilePhotos['photos'][0][0]['file_id']);
+            Tech::dump($mainPhotoData);
+
+
+            $url = 'https://api.telegram.org/file/bot7298677756:AAE90Uudj1iqDyFODoD8LJ6FgKo1jfnIxCM/photos/file_0.jpg';
+            $ch = curl_init();
+
+            curl_setopt($ch, CURLOPT_URL, $url);
+
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+            $fileContent = curl_exec($ch);
+
+            curl_close($ch);
+
+            // Проверить, было ли получено содержимое файла
+            if ($fileContent === false) {
+                echo "Ошибка при скачивании файла.";
+            } else {
+                // Закодировать содержимое в Base64
+                $base64Data = base64_encode($fileContent);
+
+                // Вывести результат
+                echo "Base64-данные файла:\n" . '<br>';
+                echo $base64Data . '<br>';
+                echo '<img src="data:image/jpeg;base64,' . $base64Data . '">';
+            } */
+        } catch (\Throwable $error) {
+            Tech::dump($error);
+        }
     }
 }

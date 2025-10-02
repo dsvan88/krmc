@@ -22,6 +22,19 @@ class telegramChatController extends Controller
 
         return View::render();
     }
+    public static function listAction()
+    {
+        $chatsData = TelegramChats::getChatsList(10);
+        $chatsData = TelegramChats::avatars($chatsData);
+
+        $vars = [
+            'title' => '{{ Chats_List_Title }}',
+            'chatsData' => $chatsData,
+        ];
+        View::$route['vars'] = array_merge(View::$route['vars'], $vars);
+
+        return View::render();
+    }
     public static function sendAction()
     {
         if (!empty($_POST)) {

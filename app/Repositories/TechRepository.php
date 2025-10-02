@@ -14,6 +14,27 @@ use Google\Service\Drive\Permission as Google_Drive_Permission;
 
 class TechRepository
 {
+    public static function download(string $url = '')
+    {
+        if (empty($url)) {
+            throw 'URL can’t be empty';
+        }
+        
+        $curl = curl_init();
+
+        $options = [
+            CURLOPT_URL => $url,
+            CURLOPT_RETURNTRANSFER => true
+        ];
+        curl_setopt_array($curl, $options);
+
+
+        $fileContent = curl_exec($curl);
+
+        curl_close($curl);
+
+        return empty($fileContent) ? false : $fileContent;
+    }
     public static function backup(string $table = 'all')
     {
         if ($table !== 'all')

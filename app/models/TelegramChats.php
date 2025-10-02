@@ -3,6 +3,7 @@
 namespace app\models;
 
 use app\core\Model;
+use app\core\Sender;
 
 class TelegramChats extends Model
 {
@@ -116,10 +117,15 @@ class TelegramChats extends Model
         $result = self::findBy('uid', $uid);
         return empty($result) ? false : $result[0];
     }
-    public static function getChatsList()
+    public static function getChatsList(int $limit = 0, int $offset = 0)
     {
         $table = self::$table;
-        $result = self::query("SELECT * FROM $table ORDER BY id", [], 'Assoc');
+        $query = "SELECT * FROM $table ORDER BY id";
+
+        if (!empty($limit))
+            $query .= " LIMIT $limit OFFSET $offset";
+
+        $result = self::query($query, [], 'Assoc');
         if (empty($result)) {
             return false;
         }
@@ -185,6 +191,20 @@ class TelegramChats extends Model
                 $chatsData[$y]['nickname'] = $usersData[$x]['name'];
             }
         }
+        return $chatsData;
+    }
+    public static function avatars(array $chatsData)
+    {
+        if (!empty($chatsData['uid'])) {
+            $chatsData['avatar'] = Sender::getUserProfileAvatar($chatsData['uid']);
+        }
+
+        $countChats = count($chatsData);
+        for ($x = 0; $x < $countChats; $x++) {
+            if (empty($chatsData[$x]['uid']) || $chatsData[$x]['uid'] < 0) continue;
+            $chatsData[$x]['avatar'] = Sender::getUserProfileAvatar($chatsData[$x]['uid']);
+        }
+
         return $chatsData;
     }
     public static function createPinned(int $chatId, array $messageArray = [], int $messageId = 0)
