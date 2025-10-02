@@ -25,6 +25,8 @@
         <? endforeach; ?>
     </div>
     <? if ($weeksCount > 1) : ?>
-        <div class="paginator__links"><?= $paginator ?></div>
+        <div class="paginator">
+            <div class="paginator__links"><?= $paginator ?></div>
+        </div>
     <? endif; ?>
 </section>

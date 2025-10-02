@@ -1,8 +1,8 @@
-@import "normalize";
-@import "mixins_adapt";
-@import "font-awesome";
-@import "vars";
-@import "components";
+@import "tech/normalize";
+@import "tech/mixins_adapt";
+@import "tech/font-awesome";
+@import "tech/vars";
+@import "tech/components";
 
 :root {
     font-size: 14px;
@@ -23,7 +23,7 @@ body {
 
 .header-for-auto-scroll {
     position: absolute;
-    top: 0;
+    top: 0; 
 }
 
 .wrapper {
@@ -537,13 +537,10 @@ body {
 
 @import "modals";
 @import "news";
-@import "page";
 @import "weeks";
 @import "booking";
-@import "game";
 @import "profile";
 @import "users-list";
-@import "settings";
 @import "noticer";
 @import "popups";
 
