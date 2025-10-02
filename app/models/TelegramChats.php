@@ -62,7 +62,7 @@ class TelegramChats extends Model
 
             if (!empty($chatData['personal']['username'])) {
                 $contact = Contacts::getUserContact($userId, 'telegram');
-                if (empty($tgName['contact'])) {
+                if (empty($contact['contact'])) {
                     Contacts::new(['telegram' => $chatData['personal']['username']], $userId);
                 } elseif ($contact['contact'] !== $chatData['personal']['username']) {
                     Contacts::update(['contact' => $chatData['personal']['username']], ['id' => $contact['id']]);
