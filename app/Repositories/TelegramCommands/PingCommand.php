@@ -64,7 +64,7 @@ class PingCommand extends ChatCommand
         $contacts = Contacts::findGroup('user_id', $userIds);
         $tgNames = [];
         foreach ($contacts as $contact) {
-            if ($contact['type'] !== 'telegram' || in_array($contact['contact'], $tgNames, true)) continue;
+            if ($contact['type'] !== 'telegram') continue;
             $tgNames[] = $contact['contact'];
         }
 

@@ -118,31 +118,31 @@ class TechController extends Controller
     }
     public static function dbrebuildAction()
     {
-        // return View::redirect('/');
+        return View::redirect('/');
 
-        $contacts = Contacts::getAll();
+        // $contacts = Contacts::getAll();
         
-        $result = [];
-        $exists = [];
-        usort($contacts, function ($elemA, $elemB){
-            return $elemA['id'] > $elemB['id'] ? 1 : -1;
-        });
+        // $result = [];
+        // $exists = [];
+        // usort($contacts, function ($elemA, $elemB){
+        //     return $elemA['id'] > $elemB['id'] ? 1 : -1;
+        // });
 
-        foreach($contacts as $contact){
-            if ($contact['type'] !== 'telegram'){
-                unset($contact['id']);
-                $result[] = $contact;
-                continue;
-            }
-            if (array_search($contact['contact'], $exists, true) !== false) continue;
-            $exists[] = $contact['contact'];
+        // foreach($contacts as $contact){
+        //     if ($contact['type'] !== 'telegram'){
+        //         unset($contact['id']);
+        //         $result[] = $contact;
+        //         continue;
+        //     }
+        //     if (array_search($contact['contact'], $exists, true) !== false) continue;
+        //     $exists[] = $contact['contact'];
 
-            unset($contact['id']);
-            $result[] = $contact;
-        }
-        Contacts::dbDropTables(Contacts::$table);
-        Contacts::init();
-        Contacts::insert($result);
+        //     unset($contact['id']);
+        //     $result[] = $contact;
+        // }
+        // Contacts::dbDropTables(Contacts::$table);
+        // Contacts::init();
+        // Contacts::insert($result);
 
         // $settings = [
         //     ['gdrive', 'credentials', 'Credentials JSON',  ''],
