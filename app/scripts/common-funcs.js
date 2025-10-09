@@ -27,7 +27,7 @@ function redirectPost(url, data) {
 
 function simpleObjectToFormData(obj) {
 	let formData = new FormData();
-	for (let item in obj){
+	for (let item in obj) {
 		formData.append(item, obj[item]);
 	}
 	return formData;
@@ -41,7 +41,7 @@ function simpleObjectToGetString(obj) {
 	return strData.slice(0, -1);
 }
 function serializeForm(target) {
-	
+
 	const elements = target.querySelectorAll("input,select,textarea");
 	let result = {};
 	elements.forEach((element) => {
@@ -62,7 +62,7 @@ function serializeForm(target) {
 					element.value.replace(/\&/g, "%26")
 				]
 			}
-			else{
+			else {
 				result[element.name][result[element.name].length] = element.value.replace(/\&/g, "%26");
 			}
 			return;
@@ -79,37 +79,38 @@ function camelize(str) {
 		.join(""); // соединяет ['my', 'Long', 'Word'] в 'myLongWord'
 }
 
-function addScriptFile(src,callback = '') {
-	if (Array.isArray(src)){
+function addScriptFile(src, callback = '') {
+	if (Array.isArray(src)) {
+		let result = false;
 		for (let index = 0; index < src.length; index++) {
-			addScriptFile(src[index], callback)
+			result = addScriptFile(src[index], callback)
 		}
+		return result;
 	}
-	else{
-		if (document.head.querySelector(`script[src="${src}"]`)){
-			return false;
-		}
-		let script = document.createElement('script');
-		script.src = src;
-		script.async = true;
-		document.head.appendChild(script);
-		if (callback !== '')
-			script.onload = callback;
-		return true;
+
+	if (document.head.querySelector(`script[src="${src}"]`)) {
+		return false;
 	}
+	const script = document.createElement('script');
+	script.src = src;
+	script.async = true;
+	document.head.appendChild(script);
+	if (callback !== '')
+		script.onload = callback;
+	return true;
 }
 function addCssFile(src) {
-	if (Array.isArray(src)){
+	if (Array.isArray(src)) {
 		for (let index = 0; index < src.length; index++) {
 			addCssFile(src[index])
 		}
 	}
-	else{
-		if (document.head.querySelector(`link[href="${src}"]`)){
+	else {
+		if (document.head.querySelector(`link[href="${src}"]`)) {
 			return false;
 		}
-		let link  = document.createElement('link');
-		link.rel  = 'stylesheet';
+		let link = document.createElement('link');
+		link.rel = 'stylesheet';
 		link.type = 'text/css';
 		link.href = src;
 		link.media = 'all';
@@ -118,22 +119,22 @@ function addCssFile(src) {
 }
 
 function formDataToJson(data) {
-    const object = {};
-    data.forEach((value, key) => {
-        value = value.replace("'", '’');
-        if (key.includes('[')) {
+	const object = {};
+	data.forEach((value, key) => {
+		value = value.replace("'", '’');
+		if (key.includes('[')) {
 			key = key.substr(0, key.indexOf('['));
-			if (!object[key]){
+			if (!object[key]) {
 				object[key] = [];
 			}
 			object[key][object[key].length] = value;
 			return;
-        }
-        else {
-            object[key] = value;
-        }
-    });
-    return JSON.stringify(object);
+		}
+		else {
+			object[key] = value;
+		}
+	});
+	return JSON.stringify(object);
 }
 
 function catchResult(func) {
@@ -176,7 +177,7 @@ function CKEditorApply(editors) {
 				toolbarContainer.prepend(editor.ui.view.toolbar.element);
 				if (!window.CKEDITOR) {
 					window.CKEDITOR = {
-						'instances' : {}
+						'instances': {}
 					};
 				}
 				window.CKEDITOR.instances[randomIndex] = editor;

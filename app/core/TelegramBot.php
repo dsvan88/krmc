@@ -128,15 +128,16 @@ class TelegramBot
     {
         $botToken = self::$botToken;
         $params = self::$params;
-        $params['chat_id'] = is_array($userId) ? $userId[0] : $userId; // id получателя сообщения
-        if (empty($caption)) {
+        $params['chat_id'] = is_array($userId) ? $userId[0] : (int) $userId; // id получателя сообщения
+        if (!empty($caption)) {
             $params['caption'] = $caption;
             $params['parse_mode'] = 'HTML';
         }
         if ($messageId !== -1) {
             $params['reply_to_message_id'] = $messageId;
         }
-        if (empty($image)) {
+
+        if (!empty($image)) {
             $params['photo'] = curl_file_create($image, $type, 'image');
         }
         $options = self::$options;
@@ -144,6 +145,7 @@ class TelegramBot
         $options[CURLOPT_POSTFIELDS] = $params; // адрес api телеграмм-бота
 
         $curl = curl_init();
+
 
         curl_setopt_array($curl, $options);
 
@@ -268,7 +270,7 @@ class TelegramBot
         $profilePhotos = self::getUserProfilePhotos($userId);
 
         if (empty($profilePhotos['result']['photos'][0][0]['file_id'])) return false;
-        
+
         $mainPhotoData = self::getFile($profilePhotos['result']['photos'][0][0]['file_id']);
 
         $botToken = self::$botToken;

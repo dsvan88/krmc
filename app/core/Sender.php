@@ -28,12 +28,12 @@ class Sender
 
         return self::$operator->deleteMessage($chatId, $messageId);
     }
-    public static function photo($chatId, string $message, $image)
+    public static function photo($chatId, string $message, string $image)
     {
         if (empty($chatId)) return false;
         if (empty(self::$operator)) self::init();
 
-        return self::$operator->sendPhoto($chatId, $message);
+        return self::$operator->sendPhoto($chatId, $message, $image);
     }
     public static function edit(int $chatId, int $messageId, string $message)
     {

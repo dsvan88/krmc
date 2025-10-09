@@ -44,7 +44,16 @@
     <? endif ?>
 */
     ?>
-    <script defer="" src="<?= static::$scriptsPath . $scripts . (self::$refresh ? '' : '?v=' . $_SERVER['REQUEST_TIME']) ?>"></script>
+    <? if (!empty($scripts)) : ?>
+        <? if (is_string($scripts)) : ?>
+            <script defer="" src="<?= static::$scriptsPath . $scripts . (self::$refresh ? '?v=' . $_SERVER['REQUEST_TIME'] : '') ?>"></script>
+            <? else :
+            for ($x = 0; $x < count($scripts); $x++) : ?>
+                <script defer="" src="<?= static::$scriptsPath . $scripts[$x] . (self::$refresh ? '?v=' . $_SERVER['REQUEST_TIME'] : '') ?>"></script>
+            <? endfor ?>
+        <? endif ?>
+    <? endif ?>
+    <?/*<script defer="" src="<?= static::$scriptsPath . $scripts . (self::$refresh ? '' : '?v=' . $_SERVER['REQUEST_TIME']) ?>"></script>*/ ?>
     <link rel="icon" type="image/x-icon" href="/public/images/mafia-vintage-logo-short.svg">
     <?= $locales ?>
     <title><?= (isset($pageTitle) ? $pageTitle  : $title) . ' | ' . CLUB_SNAME . ' v' . APP_VERSION ?></title>

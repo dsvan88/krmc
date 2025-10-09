@@ -16,16 +16,16 @@ actionHandler.imageAdd = async function (event) {
     }
 }
 actionHandler.imageBackgroundGroup = async function (target, event) {
-    if (enumBgImages.length === 0){
-        return new Alert({title:'Empty list', text: 'List of files is empty.'});
+    if (enumBgImages.length === 0) {
+        return new Alert({ title: 'Empty list', text: 'List of files is empty.' });
     }
     const formData = new FormData();
     formData.append('file_ids', JSON.stringify(enumBgImages));
     const result = await this.apiTalk(target, event, 'actionClick', formData);
 }
 actionHandler.imageDeleteGroup = async function (target, event) {
-    if (enumBgImages.length === 0){
-        return new Alert({title:'Empty list', text: 'List of files is empty.'});
+    if (enumBgImages.length === 0) {
+        return new Alert({ title: 'Empty list', text: 'List of files is empty.' });
     }
     const formData = new FormData();
     formData.append('file_ids', JSON.stringify(enumBgImages));
@@ -34,22 +34,23 @@ actionHandler.imageDeleteGroup = async function (target, event) {
 actionHandler.imageToogle = function (event) {
     const value = event.target.value;
     const index = enumBgImages.indexOf(value);
-    if (index === -1){
+    if (index === -1) {
         enumBgImages.push(value)
     }
     else
         enumBgImages.splice(index, 1);
     return true;
 }
+
 actionHandler.getLink = function (target) {
     try {
         navigator.clipboard.writeText(target.dataset.link);
         alert('Скопійовано до буферу обміну');
     }
-    catch(error){
-        if (confirm(`Не вдалось скопіювати до будеру обміну.\nПерейти за посиланням у новому вікні?`)){
+    catch (error) {
+        if (confirm(`Не вдалось скопіювати до будеру обміну.\nПерейти за посиланням у новому вікні?`)) {
             return window.open(target.dataset.link, '_blank');
         }
-        return new Alert({ title: "Your link", text: `Your link to this image is:<br><a href="${target.dataset.link}" target="_blank">${target.dataset.link}</a>`});
-    }   
+        return new Alert({ title: "Your link", text: `Your link to this image is:<br><a href="${target.dataset.link}" target="_blank">${target.dataset.link}</a>` });
+    }
 }

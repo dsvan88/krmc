@@ -36,8 +36,24 @@ class ImagesController extends Controller
         $scripts = [
             'images.js',
         ];
-        View::$route['vars'] = array_merge(View::$route['vars'], compact('title', 'files', 'backgrounds','scripts'));
+        View::$route['vars'] = array_merge(View::$route['vars'], compact('title', 'files', 'backgrounds', 'scripts'));
         return View::render();
+    }
+    public function indexFormAction()
+    {
+        $pageToken = null;
+        extract(self::$route['vars']);
+
+        $gDrive = new GoogleDrive();
+        $title = 'Images';
+        $files = $gDrive->listFiles($pageToken);
+
+        $backgrounds = Settings::getImage('background')['value'];
+        $scripts = [
+            'images.js',
+        ];
+        View::$route['vars'] = array_merge(View::$route['vars'], compact('title', 'files', 'backgrounds', 'scripts'));
+        return View::modal();
     }
     public function addAction()
     {
@@ -82,15 +98,15 @@ class ImagesController extends Controller
         if (empty($imageId))
             return View::notice(['type' => 'error', 'message' => 'Fail!']);
 
-        try{
-            $images = Settings::findBy('type','img', 1)[0];
-            foreach($images['setting'] as $index=>$image){
+        try {
+            $images = Settings::findBy('type', 'img', 1)[0];
+            foreach ($images['setting'] as $index => $image) {
                 if ($image['slug'] !== 'background') continue;
                 $images['setting'][$index]['value'][] = $imageId;
             }
 
             $result = Settings::edit($images['id'], ['setting' => $images['setting']]);
-        }catch(\Throwable $error){
+        } catch (\Throwable $error) {
             Tech::dump($error);
             $result = false;
         }
@@ -105,17 +121,17 @@ class ImagesController extends Controller
         if (empty($imageId))
             return View::notice(['type' => 'error', 'message' => 'Fail!']);
 
-        try{
-            $images = Settings::findBy('type','img', 1)[0];
-            foreach($images['setting'] as $index=>$image){
+        try {
+            $images = Settings::findBy('type', 'img', 1)[0];
+            foreach ($images['setting'] as $index => $image) {
                 if ($image['slug'] !== 'background') continue;
-                $images['setting'][$index]['value'] = array_filter( $images['setting'][$index]['value'], function ($element) use ($imageId){
+                $images['setting'][$index]['value'] = array_filter($images['setting'][$index]['value'], function ($element) use ($imageId) {
                     return $element !== $imageId;
                 });
             }
 
             $result = Settings::edit($images['id'], ['setting' => $images['setting']]);
-        }catch(\Throwable $error){
+        } catch (\Throwable $error) {
             Tech::dump($error);
             $result = false;
         }
@@ -131,15 +147,15 @@ class ImagesController extends Controller
             return View::notice(['type' => 'error', 'message' => 'Fail!']);
 
         $imageIds = json_decode($imageIds, true);
-        try{
-            $images = Settings::findBy('type','img', 1)[0];
-            foreach($images['setting'] as $index=>$image){
+        try {
+            $images = Settings::findBy('type', 'img', 1)[0];
+            foreach ($images['setting'] as $index => $image) {
                 if ($image['slug'] !== 'background') continue;
                 $images['setting'][$index]['value'] = $imageIds;
             }
 
             $result = Settings::edit($images['id'], ['setting' => $images['setting']]);
-        }catch(\Throwable $error){
+        } catch (\Throwable $error) {
             Tech::dump($error);
             $result = false;
         }
@@ -155,15 +171,14 @@ class ImagesController extends Controller
             return View::notice(['type' => 'error', 'message' => 'Fail!']);
 
         $imageIds = json_decode($imageIds, true);
-        try{
+        try {
 
             $gDrive = new GoogleDrive();
             $count = count($imageIds);
-            for ($x=0; $x < $count; $x++) { 
+            for ($x = 0; $x < $count; $x++) {
                 $result = $gDrive->delete($imageIds[$x]);
             }
-
-        }catch(\Throwable $error){
+        } catch (\Throwable $error) {
             Tech::dump($error);
             $result = false;
         }

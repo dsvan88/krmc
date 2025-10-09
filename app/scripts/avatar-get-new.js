@@ -1,5 +1,5 @@
 actionHandler.accountProfileAvatarFormReady = function ({ modal, data }) {
-	
+
 	let input = createNewElement({
 		tag: 'input',
 		type: 'file',
@@ -13,17 +13,17 @@ actionHandler.accountProfileAvatarFormReady = function ({ modal, data }) {
 	input.onchange = (event) => actionHandler.accountProfileAvatarChange(event, modal);
 }
 actionHandler.accountProfileAvatarChange = function (event, modal) {
-	
+
 	let form = createNewElement({
 		tag: 'form',
-		className: 'common-form',
+		className: 'form',
 		method: 'POST',
 		action: '',
 	});
-	
+
 	let divRow = createNewElement({
 		tag: 'div',
-		className: 'common-form__row'
+		className: 'form__row'
 	});
 	let divImagePlace = createNewElement({
 		tag: 'div',

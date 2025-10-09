@@ -2,9 +2,9 @@
 @import "tech/mixins_adapt";
 @import "tech/components";
 
-.common-form {
+.form {
 	background-color: $body-bg-color;
-	padding: 2em 1em 1em 2em;
+	padding: 2em 2em 1em 2em;
 
 	label {
 		cursor: pointer;
@@ -18,6 +18,10 @@
 		display: none;
 	}
 
+	&__title {
+		margin-bottom: .3em;
+	}
+
 	&__image {
 		height: 10vh;
 		width: auto;
@@ -26,7 +30,6 @@
 	&__columns {
 		display: flex;
 		flex-direction: column;
-		padding: 1em 2em;
 
 		@include md {
 			flex-direction: row;
@@ -43,13 +46,8 @@
 	&__row {
 		display: flex;
 		align-items: baseline;
-
-		&.image {
-			&__place {
-				justify-content: center;
-				align-items: center;
-			}
-		}
+		margin-bottom: .2em;
+		gap: .5em;
 	}
 
 	&__label {
@@ -93,7 +91,7 @@
 	}
 
 	&__button {
-		@extend %buttonStyle;
+		// @extend %buttonStyle;
 
 		&-place {
 			margin-top: 10px;
@@ -117,6 +115,21 @@
 			.editor {
 				min-height: 50vh;
 			}
+		}
+	}
+
+	.image {
+		&__container {
+			width: 100%;
+			height: 5em;
+		}
+
+		&__img {
+			height: 100%;
+			width: auto;
+			background-color: $bg-color-light-blue-blur;
+			box-sizing: border-box;
+			padding: .2em;
 		}
 	}
 }

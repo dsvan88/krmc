@@ -4,6 +4,7 @@
         <h2 class='subtitle'><?= $page['subtitle'] ?></h2>
     </header>
     <div class='content'>
+        
         <? if (!empty($page['logoLink'])): ?>
             <div class="page__image-place">
                 <img src="<?= $page['logoLink'] ?>" alt="Main image" class="page__image">

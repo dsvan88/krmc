@@ -5,6 +5,7 @@ namespace app\core;
 class ImageProcessing
 {
     public static $path = '';
+
     public static function imageToWebp($source, $output, $from = 'png')
     {
         $func = 'imagecreatefrom' . ($from !== 'jpg' ? $from : 'jpeg');
@@ -89,23 +90,21 @@ class ImageProcessing
                     $path = sys_get_temp_dir() . '/';
                 }
             }
+            $fullpath = $_SERVER['DOCUMENT_ROOT'] . "$path$filename";
 
             $data = base64_decode($uri);
 
             $imageSize = getimagesizefromstring($data);
 
             if ($imageSize[0] > 720) {
-
                 $image = imagecreatefromstring($data);
                 $image = imagescale($image, 720);
                 ob_start();
                 imagejpeg($image);
                 $data = ob_get_clean();
-                // $data = ob_get_contents();
-                // ob_end_clean();
             }
-            file_put_contents($_SERVER['DOCUMENT_ROOT'] . "$path/$filename", $data);
-            return ['filename' => $filename, 'data' => $data];
+            file_put_contents($fullpath, $data);
+            return ['fullpath' => $fullpath, 'filename' => $filename, 'data' => $data];
         } catch (\Throwable $th) {
             error_log($th->__toString());
             return false;

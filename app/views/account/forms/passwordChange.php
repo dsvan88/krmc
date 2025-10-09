@@ -4,10 +4,10 @@
         <input class="modal__input" type="password" name="password" value="" placeholder="Old password" required>
     </div>
     <div class="modal__row">
-        <input class="modal__input" type="password" name="new_password" value="" class="common-form__input" placeholder="New password" required>
+        <input class="modal__input" type="password" name="new_password" value="" class="form__input" placeholder="New password" required>
     </div>
     <div class="modal__row">
-        <input class="modal__input" type="password" name="new_password_confirmation" value="" class="common-form__input" placeholder="Password again" required>
+        <input class="modal__input" type="password" name="new_password_confirmation" value="" class="form__input" placeholder="Password again" required>
     </div>
     <div class="modal__buttons">
         <button type="submit" class="positive"><?= $texts['SubmitLabel'] ?></button>

@@ -270,9 +270,11 @@ class ViewRepository
         ];
         return Locale::apply($menu);
     }
-    public static function compressScripts(array $scripts): string
+    public static function compressScripts(array $scripts): array
     {
-        $name = md5(implode(' ', $scripts)) . '.js';
+        $_scripts = array_filter($scripts, fn($s) => strpos($s, 'plugins/') === false);
+
+        $name = md5(implode(' ', $_scripts)) . '.js';
 
         View::$scriptsPath = SCRIPTS_PUBLIC;
         if (!file_exists($_SERVER['DOCUMENT_ROOT'] . View::$scriptsPath)) {
@@ -281,15 +283,15 @@ class ViewRepository
 
         $filePath = $_SERVER['DOCUMENT_ROOT'] . View::$scriptsPath . $name;
 
-        if (file_exists($filePath) && filemtime($filePath) > self::checkLastModify($scripts)) return $name;
+        if (file_exists($filePath) && filemtime($filePath) > self::checkLastModify($_scripts)) return [...array_diff($scripts, $_scripts), $name];
 
-        $content = self::concatSripts($scripts);
+        $content = self::concatSripts($_scripts);
         file_put_contents($filePath, $content);
 
         View::$refresh = true;
-        return $name;
+        return [...array_diff($scripts, $_scripts), $name];
     }
-    
+
     public static function concatSripts(array $scripts): string
     {
         $result = '';
@@ -316,7 +318,7 @@ class ViewRepository
         file_put_contents($filePath, $content);
 
         View::$refresh = true;
-        return $name;
+        return $name . '?v=' . $_SERVER['REQUEST_TIME'];
     }
     public static function concatModalSripts(array $scripts): string
     {
@@ -330,6 +332,7 @@ class ViewRepository
     {
         $result = 0;
         $scripts = array_merge(View::$defaultScripts, $scripts);
+
         foreach ($scripts as $script) {
             $mTime = filemtime($_SERVER['DOCUMENT_ROOT'] . SCRIPTS_STORAGE . $script);
             $result = $mTime > $result ? $mTime : $result;

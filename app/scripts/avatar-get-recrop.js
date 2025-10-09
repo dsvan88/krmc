@@ -1,5 +1,5 @@
 actionHandler.accountProfileAvatarRecropFormReady = function ({ modal, data }) {
-	
+
 	let input = createNewElement({
 		tag: 'input',
 		type: 'file',
@@ -12,17 +12,17 @@ actionHandler.accountProfileAvatarRecropFormReady = function ({ modal, data }) {
 	input.onchange = (event) => actionHandler.accountProfileAvatarChange(event, modal);
 }
 actionHandler.accountProfileAvatarChange = function (event, modal) {
-	
-    let form = createNewElement({
+
+	let form = createNewElement({
 		tag: 'form',
-		className: 'common-form',
+		className: 'form',
 		method: 'POST',
 		action: '',
 	});
-	
+
 	let divRow = createNewElement({
 		tag: 'div',
-		className: 'common-form__row'
+		className: 'form__row'
 	});
 	let divImagePlace = createNewElement({
 		tag: 'div',
@@ -59,18 +59,18 @@ actionHandler.accountProfileAvatarChange = function (event, modal) {
 	divButtonsRow.appendChild(buttonCancel);
 	form.appendChild(divButtonsRow);
 
-    modal.modal.querySelector('.modal__close').click();
-    
-    let divContainer = document.body.querySelector('.modal-container .big-avatar').closest('.modal-container');
-    divContainer.innerHTML = '';
-    divContainer.append(form);
+	modal.modal.querySelector('.modal__close').click();
+
+	let divContainer = document.body.querySelector('.modal-container .big-avatar').closest('.modal-container');
+	divContainer.innerHTML = '';
+	divContainer.append(form);
 	$(img).cropper({
 		aspectRatio: 3.5 / 4,
 		minContainerWidth: 325,
 		minContainerHeight: 220,
 		checkOrientation: false,
-    });
-    modal = divContainer.closest('.modal');
+	});
+	modal = divContainer.closest('.modal');
 	form.addEventListener('submit', (event) => actionHandler.profileRecropImageSubmit(event, modal, img))
 }
 

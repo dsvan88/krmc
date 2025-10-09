@@ -266,5 +266,10 @@ return  [
         'action' => 'deleteGroup',
         'access' => ['category' => 'manager']
     ],
-
+    'api/image/index/form' =>
+    [
+        'controller' => 'images',
+        'action' => 'indexForm',
+        'access' => ['category' => 'manager']
+    ],
 ];
