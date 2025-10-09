@@ -52,7 +52,11 @@ class ImagesController extends Controller
         $scripts = [
             'images.js',
         ];
-        View::$route['vars'] = array_merge(View::$route['vars'], compact('title', 'files', 'backgrounds', 'scripts'));
+        $css = [
+            STYLES_STORAGE.'images-modal.css?v='.$_SERVER['REQUEST_TIME'],
+            // STYLES_STORAGE.'images-modal.css',
+        ];
+        View::$route['vars'] = array_merge(View::$route['vars'], compact('title', 'files', 'backgrounds', 'scripts', 'css'));
         return View::modal();
     }
     public function addAction()
