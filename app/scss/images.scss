@@ -1,11 +1,12 @@
 @import "tech/vars";
 $size: 8em;
 
-main{
+main {
     .images {
-        &__wrapper{
+        &__wrapper {
             display: flex;
         }
+
         min-height: 40vh;
         display: flex;
         flex-wrap: wrap;
@@ -15,15 +16,16 @@ main{
         outline: $bg-color-dark-blur;
         border: 1px solid $bg-color-dark;
 
-        &__dashboard{
+        &__dashboard {
             background-color: $bg-color-light-red-blur;
             font-size: 3em;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap:.2em;
+            gap: .2em;
             padding: .2em;
         }
+
         .image {
             position: relative;
             flex: 0 1 $size;
@@ -46,14 +48,17 @@ main{
                 width: 2em;
                 cursor: pointer;
             }
-            input[type="checkbox"]{
+
+            input[type="checkbox"] {
                 position: absolute;
                 top: .1em;
                 left: .1em;
             }
-            &.select_bg{
+
+            &.select_bg {
                 background-color: transparentize($bg-color-light-blue, 0.5);
             }
+
             &__dashboard {
                 display: flex;
                 font-size: 1.5em;
@@ -131,6 +136,7 @@ main{
             }
         }
     }
+
     .dashboard {
         &__item {
             color: $bg-color-light-blue;

@@ -1,4 +1,4 @@
-<section class="section">
+<div class="form__row">
     <div class="images__wrapper">
         <div class="images">
             <? self::component('list/image/new') ?>
@@ -14,4 +14,4 @@
     <div class="images__paginator">
         <a href="/images/index/<?= $_SESSION['nextPageToken'] ?>">-></a>
     </div>
-</section>
+</div>
