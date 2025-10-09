@@ -1,3 +1,5 @@
+@import 'vars';
+
 %nonDeleteTextForInput {
 	position: relative;
 	display: flex;
@@ -215,15 +217,19 @@ mark {
 }
 
 .paginator {
+	display: flex;
+	justify-content: center;
+	
 	&__links {
-		display: flex;
-		justify-content: center;
 		padding: 1.3em 10px;
-
 		>span {
 			margin: 0 .6em;
+			padding: 3px 5px;
 			align-self: flex-end;
 			cursor: default;
+			border: 1px solid $color-text-main;
+			background-color: $color-text-light;
+			color: $bg-color-dark;
 		}
 
 		>a {
@@ -231,17 +237,19 @@ mark {
 			padding: 3px 5px;
 			border: 1px solid $color-text-main;
 			text-decoration: none;
-			color: $color-text-main;
+			background-color: $color-text-light;
+			color: $bg-color-dark;
 			transition: all $animation-fast ease-in;
 
 			&:hover {
 				background-color: $color-text-main;
-				color: $bg-color-dark;
+				color: $color-text-accent;
 			}
 
 			&.active {
 				margin: 0px 10px;
 				border: 1px solid $bg-color-dark;
+				background-color: $bg-color-light-blue-blur;
 			}
 
 			&:not([href]) {

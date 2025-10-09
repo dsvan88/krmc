@@ -7,6 +7,7 @@ use app\core\Sender;
 use app\core\Tech;
 use app\core\View;
 use app\libs\Db;
+use app\models\Contacts;
 use app\models\Settings;
 use app\Repositories\TechRepository;
 
@@ -119,21 +120,45 @@ class TechController extends Controller
     {
         return View::redirect('/');
 
-        $settings = [
-            ['gdrive', 'credentials', 'Credentials JSON',  ''],
-        ];
+        // $contacts = Contacts::getAll();
+        
+        // $result = [];
+        // $exists = [];
+        // usort($contacts, function ($elemA, $elemB){
+        //     return $elemA['id'] > $elemB['id'] ? 1 : -1;
+        // });
 
-        $array = [];
-        $keys = ['type', 'slug', 'name', 'value', 'default_value'];
-        for ($i = 0; $i < count($settings); $i++) {
-            foreach ($settings[$i] as $num => $setting) {
-                if (!is_array($setting)) continue;
-                $settings[$i][$num] = json_encode($setting, JSON_UNESCAPED_UNICODE);
-            }
-            $settings[$i][] = $settings[$i][3];
-            $array[] = array_combine($keys, $settings[$i]);
-        }
-        Settings::insert($array);
+        // foreach($contacts as $contact){
+        //     if ($contact['type'] !== 'telegram'){
+        //         unset($contact['id']);
+        //         $result[] = $contact;
+        //         continue;
+        //     }
+        //     if (array_search($contact['contact'], $exists, true) !== false) continue;
+        //     $exists[] = $contact['contact'];
+
+        //     unset($contact['id']);
+        //     $result[] = $contact;
+        // }
+        // Contacts::dbDropTables(Contacts::$table);
+        // Contacts::init();
+        // Contacts::insert($result);
+
+        // $settings = [
+        //     ['gdrive', 'credentials', 'Credentials JSON',  ''],
+        // ];
+
+        // $array = [];
+        // $keys = ['type', 'slug', 'name', 'value', 'default_value'];
+        // for ($i = 0; $i < count($settings); $i++) {
+        //     foreach ($settings[$i] as $num => $setting) {
+        //         if (!is_array($setting)) continue;
+        //         $settings[$i][$num] = json_encode($setting, JSON_UNESCAPED_UNICODE);
+        //     }
+        //     $settings[$i][] = $settings[$i][3];
+        //     $array[] = array_combine($keys, $settings[$i]);
+        // }
+        // Settings::insert($array);
 
         // $table = Pages::$table;
         // Users::query("ALTER TABLE $table ADD COLUMN lang CHARACTER VARYING(5) DEFAULT NULL");
