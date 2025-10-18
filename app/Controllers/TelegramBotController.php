@@ -161,7 +161,9 @@ class TelegramBotController extends Controller
                 $arguments['prim'] = mb_substr($prim[0], 1, -1, 'UTF-8');
             } elseif (preg_match('/\?/', $_text) === 1) {
                 $arguments['prim'] = '?';
-            }
+            } /* elseif (preg_match('/\!/', $_text) === 1) {
+                $arguments['prim'] = '!';
+            } */
             self::$command = 'booking';
             self::$commandArguments = $arguments;
             return true;

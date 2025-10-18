@@ -274,7 +274,7 @@ class ViewRepository
     {
         $_scripts = array_filter($scripts, fn($s) => strpos($s, 'plugins/') === false);
 
-        $name = md5(implode(' ', $_scripts)) . '.js';
+        $name = hash('xxh3', implode(' ', $_scripts)) . '.js'; //fastest modern algoritm
 
         View::$scriptsPath = SCRIPTS_PUBLIC;
         if (!file_exists($_SERVER['DOCUMENT_ROOT'] . View::$scriptsPath)) {
@@ -303,7 +303,7 @@ class ViewRepository
     }
     public static function compressModalScripts(array $scripts): string
     {
-        $name = md5(implode(' ', $scripts)) . '.js';
+        $name = hash('xxh3', implode(' ', $scripts)) . '.js'; //fastest modern algoritm
 
         View::$scriptsPath = SCRIPTS_PUBLIC;
         if (!file_exists($_SERVER['DOCUMENT_ROOT'] . View::$scriptsPath)) {

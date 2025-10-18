@@ -65,7 +65,7 @@ class NewsController extends Controller
             $array = $_POST;
             if (!empty($array['main-image'])) {
                 $path = $_SERVER['DOCUMENT_ROOT'] . FILE_MAINGALL . 'news';
-                $filename = md5($array['main-image']);
+                $filename = hash('xxh3', $array['main-image']); //fastest modern algoritm
                 $image = ImageProcessing::saveBase64Image($array['main-image'], $filename, $path);
                 if ($image) {
                     $array['logo'] = $image['filename'];
@@ -142,7 +142,7 @@ class NewsController extends Controller
             $array = $_POST;
             if (!empty($array['main-image'])) {
                 $path = $_SERVER['DOCUMENT_ROOT'] . FILE_MAINGALL . 'news';
-                $filename = md5($array['main-image']);
+                $filename = hash('xxh3', $array['main-image']); //fastest modern algoritm
                 $image = ImageProcessing::saveBase64Image($array['main-image'], $filename, $path);
                 if ($image) {
                     $array['logo'] = $image['filename'];

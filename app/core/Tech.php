@@ -63,7 +63,8 @@ class Tech
         if (empty($string)) return '';
 
         $cipher = "AES-256-CBC";
-        $key = md5(ROOT_PASS_DEFAULT);
+        // $key = md5(ROOT_PASS_DEFAULT);
+        $key = hash('xxh3', ROOT_PASS_DEFAULT); //fastest modern algoritm
 
         $compressed = gzcompress($string, 9);
         $ivLength = openssl_cipher_iv_length($cipher);
@@ -77,7 +78,8 @@ class Tech
         if (empty($encryptedData)) return '';
 
         $cipher = "AES-256-CBC";
-        $key = md5(ROOT_PASS_DEFAULT);
+        // $key = md5(ROOT_PASS_DEFAULT);
+        $key = hash('xxh3', ROOT_PASS_DEFAULT); //fastest modern algoritm
         $ivLength = openssl_cipher_iv_length($cipher);
         $decoded = base64_decode($encryptedData);
         $extractedIV = substr($decoded, 0, $ivLength);

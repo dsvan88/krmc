@@ -514,7 +514,7 @@ class AccountController extends Controller
             if (isset($userData['personal']['forget'])) {
                 $hash = $userData['personal']['forget'];
             } else {
-                $hash = md5(json_encode([$userData['personal'], $userData['privilege']]) . $_SERVER['REQUEST_TIME']);
+                $hash = hash('xxh3', json_encode([$userData['personal'], $userData['privilege']]) . $_SERVER['REQUEST_TIME']); //fastest modern algoritm
             }
             Users::saveForget($userData, $hash);
             $contact = Contacts::getUserContact($userData['id'], 'telegramid');

@@ -1,4 +1,5 @@
 @import "tech/vars";
+@import "tech/mixins_adapt";
 $size: 6em;
 
 .modal {
@@ -16,6 +17,11 @@ $size: 6em;
         outline: $bg-color-dark-blur;
         border: 1px solid $bg-color-dark;
 
+        @include md {
+            max-width: 60vw;
+        }
+
+
         &__dashboard {
             background-color: $bg-color-light-red-blur;
             display: flex;
@@ -23,10 +29,12 @@ $size: 6em;
             align-items: center;
             gap: .2em;
             padding: .2em;
-            .dashboard__item{
+
+            .dashboard__item {
                 font-size: 3em;
             }
         }
+
         .image {
             position: relative;
             flex: 0 1 $size;
@@ -49,7 +57,7 @@ $size: 6em;
                 width: 2em;
                 cursor: pointer;
             }
-            
+
 
             input[type="checkbox"] {
                 position: absolute;
