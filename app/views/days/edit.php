@@ -27,14 +27,38 @@
                         <option value="<?= $gameType['slug'] ?>" <?= ($day['game'] === $gameType['slug'] ? 'selected' : '') ?>><?= $gameType['name'] ?></option>
                     <? endforeach ?>
                 </select>
-                <span class="checkbox-styled">
-                    <input type="checkbox" name="mods[]" id="game-tournament-checkbox" value="tournament" class="checkbox-styled-checkbox" <?= $day['tournament'] ?> />
-                    <label for="game-tournament-checkbox" class="checkbox-styled__label"> <?= $texts['dayTournamentCheckboxLabel'] ?> </label>
-                </span>
-                <span class="checkbox-styled">
+                <?
+                self::component('forms/checkbox-icon', [
+                    'prefix'=> 'game', 
+                    'id' => 'tournament', 
+                    'name' =>'mods[]', 
+                    'value' => 'tournament', 
+                    'icon' => 'fa-trophy', 
+                    'checked' => $day['tournament'],
+                    'title'=> $texts['dayTournamentCheckboxLabel']
+                ]);
+                
+                self::component('forms/checkbox-icon', [
+                    'prefix'=> 'game', 
+                    'id' => 'tournament', 
+                    'name' =>'mods[]', 
+                    'value' => 'tournament', 
+                    'icon' => 'fa-graduation-cap', 
+                    'checked' => $day['tournament'],
+                    'title'=> $texts['dayTournamentCheckboxLabel']
+                ]);
+                self::component('forms/checkbox-icon', [
+                    'prefix'=> 'game', 
+                    'name' =>'send', 
+                    'value' => '1', 
+                    'icon' => 'fa-paper-plane-o',
+                    'title'=> $texts['daySendCheckboxLabel']
+                ])
+                ?>
+                <?/*<span class="checkbox-styled">
                     <input type="checkbox" name="send" id="game-send-checkbox" value="1" class="checkbox-styled-checkbox" />
                     <label for="game-send-checkbox" class="checkbox-styled__label"> <?= $texts['daySendCheckboxLabel'] ?> </label>
-                </span>
+                </span>*/?>
             </div>
             <div class="booking__settings-row">
                 <div class="booking__settings-wrapper single">

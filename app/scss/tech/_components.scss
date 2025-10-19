@@ -124,6 +124,35 @@ a.button {
 	}
 }
 
+.cb {
+	text-align: center;
+	color: $color-text-dark-blur;
+	border: 1px solid;
+	border-radius: 2px;
+	margin-left: .5em;
+
+	&__label {
+		text-transform: uppercase;
+		cursor: pointer;
+		padding: .1em .3em;
+		&.fa{
+			font-size: 2em;
+		}
+		&:hover{
+			outline: dotted 1px;
+		}
+	}
+
+	&__checkbox {
+		display: none;
+	}
+
+	&__checkbox:checked+&__label {
+		color: $color-text-accent;
+		filter: drop-shadow(0px 0px 0.5rem $color-text-accent) drop-shadow(0px 0px 0.5rem $color-text-accent);
+	}
+}
+
 blockquote {
 	margin: 0;
 	padding: 10px 10px 10px 30px;
