@@ -38,13 +38,15 @@ class DaysController extends Controller
         $vars = [
             'title' => '{{ Day_Set_Page_Title }}',
             'texts' => [
-                'daysBlockTitle' => 'Event’s setup',
-                'dayStartTime' => 'Start:',
+                'daysBlockTitle' => 'Event',
+                'dayStartTime' => 'Start',
+                'daySettingsLegend' => 'Settings',
                 'daysBlockParticipantsTitle' => 'Participants',
                 'dayTournamentCheckboxLabel' => 'Tournament',
                 'daySendCheckboxLabel' => 'Send to chat',
                 'dayGameStart' => 'Booking time',
-                'dayEvent' => 'Game’s type:',
+                'dayEvent' => 'Game’s type',
+                'dayMods' => 'Game’s mods',
                 'ArrivePlaceHolder' => 'Arrive',
                 'RemarkPlaceHolder' => 'Remark',
                 'clearLabel' => 'Clear',
@@ -74,7 +76,8 @@ class DaysController extends Controller
         }
 
         $dayTimestamp = $day['weekStart'] + TIMESTAMP_DAY * $dayId;
-        $day['date'] = empty($day['weekStart']) ? '{{ Day_Date_Not_Set }}' : date('d.m.Y', $dayTimestamp) . ' (<strong>' . Locale::phrase(date('l', $dayTimestamp)) . '</strong>) ' . $day['time'];
+        $day['date'] = empty($day['weekStart']) ? '{{ Day_Date_Not_Set }}' : date('d.m.Y', $dayTimestamp) . ' (<strong>' . Locale::phrase(date('l', $dayTimestamp)) . '</strong>) ';
+        $day['dateTime'] = empty($day['weekStart']) ? '{{ Day_Date_Not_Set }}' : $day['date'] . $day['time'];
 
         if ($dayId == 0 && !Weeks::checkPrevWeek($weekId)) {
             $yesterday = [
@@ -158,9 +161,9 @@ class DaysController extends Controller
     public function addAction()
     {
         $vars = [
-            'title' => 'Event’s setup',
+            'title' => 'Event',
             'texts' => [
-                'dayStartTime' => 'Start:',
+                'dayStartTime' => 'Start',
                 'daysBlockParticipantsTitle' => 'Participants',
             ]
         ];

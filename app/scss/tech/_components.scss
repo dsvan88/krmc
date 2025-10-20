@@ -17,10 +17,15 @@
 	}
 }
 
-%buttonStyle {
+.hidden {
+	display: none;
+}
+
+button,
+a.button {
 	background: $bg-color-red-blur;
 	font-weight: bold;
-	font-size: 1em;
+	font-size: .8em;
 	line-height: 1.2em;
 	letter-spacing: 0.05em;
 	text-transform: uppercase;
@@ -76,18 +81,6 @@
 	}
 }
 
-.hidden {
-	display: none;
-}
-
-button {
-	@extend %buttonStyle;
-}
-
-a.button {
-	@extend %buttonStyle;
-}
-
 .setting-text-dashboard {
 	font-size: 2rem;
 	text-align: right;
@@ -135,10 +128,12 @@ a.button {
 		text-transform: uppercase;
 		cursor: pointer;
 		padding: .1em .3em;
-		&.fa{
+
+		&.fa {
 			font-size: 2em;
 		}
-		&:hover{
+
+		&:hover {
 			outline: dotted 1px;
 		}
 	}
@@ -248,9 +243,10 @@ mark {
 .paginator {
 	display: flex;
 	justify-content: center;
-	
+
 	&__links {
 		padding: 1.3em 10px;
+
 		>span {
 			margin: 0 .6em;
 			padding: 3px 5px;

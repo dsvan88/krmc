@@ -1,16 +1,21 @@
 .booking {
+    margin: 20px auto 0px auto;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    margin: 20px 0px;
-    border: 1px solid $color-text-dark-blur;
-    border-radius: 2px;
-    background-color: $bg-color-light;
+
+    &__form {
+        border-radius: 2px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: stretch;
+    }
 
     &__day {
         &-settings-row {
-            font-size: 1.2em;
+            font-size: 1.1em;
         }
 
         &-event {
@@ -52,7 +57,7 @@
     &__title {
         margin: 10px 0 20px 0;
         text-align: center;
-        font-size: 2em;
+        font-size: 1.7em;
         text-transform: uppercase;
         flex-grow: 1;
     }
@@ -64,23 +69,61 @@
         text-transform: uppercase;
     }
 
-    &__settings {
-        &-row {
-            width: 55vw;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 10px;
+    &__body {
+        background-color: $bg-color-light;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: stretch;
+        padding: 1em 1em .5em 1em;
+
+        @include md {
+            padding: 2em 2em 1em 2em;
+        }
+    }
+
+    &__value {
+        flex: 1 1 50px;
+
+        input,
+        select {
+            width: 100%;
         }
 
-        &-wrapper {
-            &.single {
-                width: 100%;
-            }
 
-            * {
-                width: 100%;
+    }
+
+    &__row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+
+        &.submit {
+            position: fixed;
+            bottom: 5em;
+            right: 1em;
+            font-size: 1.5em;
+            flex-direction: column-reverse;
+            gap: .3em;
+
+            @include md {
+                flex-direction: row;
+                position: static;
+                bottom: 0;
+                right: 0;
+                font-size: 1em;
             }
+        }
+    }
+
+    &__wrapper {
+        &.single {
+            width: 100%;
+        }
+
+        * {
+            width: 100%;
         }
     }
 
@@ -88,8 +131,13 @@
         margin: 20px 0 10px 0;
     }
 
-    &__label-centered {
-        text-align: center;
+    &__label {
+        font-size: 1.2em;
+        flex: 1 1 25px;
+
+        .centered {
+            text-align: center;
+        }
     }
 
     &__participant {
@@ -99,7 +147,15 @@
         white-space: nowrap;
 
         &-num {
-            width: 30px;
+            width: 1.5em;
+            height: 1.5em;
+            padding: .2em .25em;
+            display: flex;
+            font-size: .8em;
+            justify-content: center;
+            align-items: center;
+            background-color: $bg-color-light-red-blur;
+            border-radius: 50%;
         }
 
         &-arrive {
@@ -138,16 +194,55 @@
         }
     }
 
+    &__buttons {
+        display: flex;
+        justify-content: space-evenly;
+        margin: 20px 0;
+    }
+
+    &__additional-evening {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    &__self {
+        display: flex;
+        justify-content: space-around;
+        margin-top: 1em;
+        margin-bottom: 2em;
+    }
+
+    .cb {
+        &:last-of-type {
+            margin-left: 2em;
+        }
+
+        &__label {
+            font-size: 1.8em;
+        }
+    }
+
+
     input,
+    textarea,
     select {
         background-color: $bg-color-input;
-        text-align: center;
         border: 0;
-        font-size: 1.4rem;
+        font-size: 1.2rem;
         color: $color-text-dark;
 
         &[placeholder] {
             color: $color-text-dark;
+        }
+
+        &:hover {
+            box-shadow: inset 0px 0px 3px $bg-color-dark-blur;
+        }
+
+        &:focus {
+            outline: 1px solid $bg-color-light-red;
         }
 
         option {
@@ -159,20 +254,15 @@
         }
     }
 
-    &__buttons {
-        margin: 20px 0;
+    input,
+    select {
+        text-align: center;
     }
 
-    &__additional-evening {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-    }
-    &__self{
-        display: flex;
-        justify-content: space-around;
-        margin-top: 1em;
-        margin-bottom: 2em;
+    textarea {
+        width: 100%;
+        resize: vertical;
+        padding: .2em .5em;
+        box-sizing: border-box
     }
 }

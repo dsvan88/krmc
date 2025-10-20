@@ -44,7 +44,8 @@
             <script defer="" src="<?= static::$scriptsPath . $scripts . (self::$refresh ? '?v=' . $_SERVER['REQUEST_TIME'] : '') ?>"></script>
             <? else :
             for ($x = 0; $x < count($scripts); $x++) : ?>
-                <script defer="" src="<?= static::$scriptsPath . $scripts[$x] . (self::$refresh ? '?v=' . $_SERVER['REQUEST_TIME'] : '') ?>"></script>
+                <? /*<script defer="" src="<?= static::$scriptsPath . $scripts[$x] . (self::$refresh ? '?v=' . $_SERVER['REQUEST_TIME'] : '') ?>"></script> */ ?>
+                <script defer="" src="<?= static::$scriptsPath . $scripts[$x] . '?v=' . $_SERVER['REQUEST_TIME'] ?>"></script>
             <? endfor ?>
         <? endif ?>
     <? endif ?>

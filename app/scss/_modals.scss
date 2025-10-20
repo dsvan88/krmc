@@ -149,12 +149,6 @@
 		}
 	}
 
-	button,
-	a.anchor-button {
-		@extend %buttonStyle;
-		margin: 5px auto;
-	}
-
 	&__input {
 		width: 100%;
 		border: 0;

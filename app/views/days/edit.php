@@ -1,85 +1,120 @@
-<section class="section near-evening">
-    <? /*<form class="booking" action="/days<?= $dayId ?>/w<?= $weekId ?>" data-wid="<?= $weekId ?>" data-did="<?= $dayId ?>">*/ ?>
-    <form class="booking" action="/week/<?= $day['weekId'] ?>/day/<?= $day['dayId'] ?>/" method="POST">
-        <header class="booking__header">
-            <? if (empty($yesterday['link'])) : ?>
-                <span class="booking__header-link"><?= $yesterday['label'] ?></span>
-            <? else : ?>
-                <span class="booking__header-link"><a href="<?= $yesterday['link'] ?>"><i class="fa fa-angle-double-left"></i>&nbsp;<?= $yesterday['label'] ?></a></span>
-            <? endif ?>
-            <h3 class="booking__title"><?= $texts['daysBlockTitle'] ?></h3>
-            <? if (empty($tomorrow['link'])) : ?>
-                <span class="booking__header-link"><?= $tomorrow['label'] ?></span>
-            <? else : ?>
-                <span class="booking__header-link"><a href="<?= $tomorrow['link'] ?>"><?= $tomorrow['label'] ?>&nbsp;<i class="fa fa-angle-double-right"></i></a></span>
-            <? endif ?>
-        </header>
-        <div class="booking__settings">
-            <div class="booking__settings-row">
-                <label for="game-day-time" class="booking__label-centered"> <?= $day['date'] ?> </label>
-                <div class="booking__settings-wrapper">
-                    <input list="time-list" type="text" name="day_time" value="<?= $day['time'] ?>" placeholder="<?= $texts['dayGameStart'] ?>" id="game-day-time" />
+<section class="section">
+    <div class="booking">
+        <form class="booking__form" action="/week/<?= $day['weekId'] ?>/day/<?= $day['dayId'] ?>/" method="POST">
+            <header class="booking__header">
+                <? if (empty($yesterday['link'])) : ?>
+                    <span class="booking__header-link"><?= $yesterday['label'] ?></span>
+                <? else : ?>
+                    <span class="booking__header-link"><a href="<?= $yesterday['link'] ?>"><i class="fa fa-angle-double-left"></i>&nbsp;<?= $yesterday['label'] ?></a></span>
+                <? endif ?>
+                <h3 class="booking__title"><?= $day['dateTime'] ?></h3>
+                <? if (empty($tomorrow['link'])) : ?>
+                    <span class="booking__header-link"><?= $tomorrow['label'] ?></span>
+                <? else : ?>
+                    <span class="booking__header-link"><a href="<?= $tomorrow['link'] ?>"><?= $tomorrow['label'] ?>&nbsp;<i class="fa fa-angle-double-right"></i></a></span>
+                <? endif ?>
+            </header>
+            <div class="booking__body">
+                <fieldset class="booking__settings">
+                    <legend><?= $texts['daySettingsLegend'] ?>:</legend>
+                    <div class="booking__row">
+                        <label for="day-time" class="booking__label"> <?= $texts['dayStartTime'] ?>: </label>
+                        <div class="booking__value">
+                            <input list="time-list" type="text" name="day_time" value="<?= $day['time'] ?>" placeholder="<?= $texts['dayGameStart'] ?>" id="day-time" />
+                        </div>
+                    </div>
+                    <div class="booking__row">
+                        <label for="day-game" class="booking__label"><?= $texts['dayEvent'] ?>:</label>
+                        <div class="booking__value">
+                            <select name="game" id="day-game">
+                                <? foreach ($gameTypes as $num => $gameType) : ?>
+                                    <option value="<?= $gameType['slug'] ?>" <?= ($day['game'] === $gameType['slug'] ? 'selected' : '') ?>><?= $gameType['name'] ?></option>
+                                <? endforeach ?>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="booking__row">
+                        <label for="day-game" class="booking__label"><?= $texts['dayMods'] ?>:</label>
+                        <?
+                        self::component('forms/checkbox-icon', [
+                            'prefix' => 'game',
+                            'id' => 'tournament',
+                            'name' => 'mods[]',
+                            'value' => 'tournament',
+                            'icon' => 'fa-graduation-cap',
+                            'checked' => $day['tournament'],
+                            'title' => 'Навчальна'
+                        ]);
+                        self::component('forms/checkbox-icon', [
+                            'prefix' => 'game',
+                            'id' => 'tournament',
+                            'name' => 'mods[]',
+                            'value' => 'tournament',
+                            'icon' => 'fa-moon-o',
+                            'checked' => $day['tournament'],
+                            'title' => 'Нічна'
+                        ]);
+                        self::component('forms/checkbox-icon', [
+                            'prefix' => 'game',
+                            'id' => 'tournament',
+                            'name' => 'mods[]',
+                            'value' => 'tournament',
+                            'icon' => 'fa-birthday-cake',
+                            'checked' => $day['tournament'],
+                            'title' => 'Тематична'
+                        ]);
+                        self::component('forms/checkbox-icon', [
+                            'prefix' => 'game',
+                            'id' => 'tournament',
+                            'name' => 'mods[]',
+                            'value' => 'tournament',
+                            'icon' => 'fa-child',
+                            'checked' => $day['tournament'],
+                            'title' => 'Фанова'
+                        ]);
+                        self::component('forms/checkbox-icon', [
+                            'prefix' => 'game',
+                            'id' => 'tournament',
+                            'name' => 'mods[]',
+                            'value' => 'tournament',
+                            'icon' => 'fa-trophy',
+                            'checked' => $day['tournament'],
+                            'title' => $texts['dayTournamentCheckboxLabel']
+                        ]);
+
+                        self::component('forms/checkbox-icon', [
+                            'prefix' => 'game',
+                            'name' => 'send',
+                            'value' => '1',
+                            'icon' => 'fa-paper-plane-o',
+                            'title' => $texts['daySendCheckboxLabel']
+                        ])
+                        ?>
+                    </div>
+                    <div class="booking__row">
+                        <div class="booking__value">
+                            <textarea
+                                name="day_prim"
+                                placeholder="<?= $texts['RemarkPlaceHolder'] ?>"><?= $day['day_prim'] ?></textarea>
+                        </div>
+                    </div>
+                    <div class="booking__row submit">
+                        <button type="submit" class="positive fa fa-save"></button>
+                        <button type="reset" class="fa fa-undo"></button>
+                    </div>
+                </fieldset>
+                <fieldset class="booking__participants">
+                    <legend><?= $texts['daysBlockParticipantsTitle'] ?>:</legend>
+                    <? for ($x = 0; $x < $playersCount; $x++)
+                        self::component('participants-field', ['participantId' => $x, 'participant' => empty($day['participants'][$x]) ? [] : $day['participants'][$x]])
+                    ?>
+                    <button class="fa fa-plus cicrle" data-action-click="participant-field-get"></button>
+                </fieldset>
+                <div class="booking__buttons">
+                    <button type="submit" class="positive fa fa-save"></button>
                 </div>
             </div>
-            <div class="booking__settings-row single">
-                <select name="game">
-                    <? foreach ($gameTypes as $num => $gameType) : ?>
-                        <option value="<?= $gameType['slug'] ?>" <?= ($day['game'] === $gameType['slug'] ? 'selected' : '') ?>><?= $gameType['name'] ?></option>
-                    <? endforeach ?>
-                </select>
-                <?
-                self::component('forms/checkbox-icon', [
-                    'prefix'=> 'game', 
-                    'id' => 'tournament', 
-                    'name' =>'mods[]', 
-                    'value' => 'tournament', 
-                    'icon' => 'fa-trophy', 
-                    'checked' => $day['tournament'],
-                    'title'=> $texts['dayTournamentCheckboxLabel']
-                ]);
-                
-                self::component('forms/checkbox-icon', [
-                    'prefix'=> 'game', 
-                    'id' => 'tournament', 
-                    'name' =>'mods[]', 
-                    'value' => 'tournament', 
-                    'icon' => 'fa-graduation-cap', 
-                    'checked' => $day['tournament'],
-                    'title'=> $texts['dayTournamentCheckboxLabel']
-                ]);
-                self::component('forms/checkbox-icon', [
-                    'prefix'=> 'game', 
-                    'name' =>'send', 
-                    'value' => '1', 
-                    'icon' => 'fa-paper-plane-o',
-                    'title'=> $texts['daySendCheckboxLabel']
-                ])
-                ?>
-                <?/*<span class="checkbox-styled">
-                    <input type="checkbox" name="send" id="game-send-checkbox" value="1" class="checkbox-styled-checkbox" />
-                    <label for="game-send-checkbox" class="checkbox-styled__label"> <?= $texts['daySendCheckboxLabel'] ?> </label>
-                </span>*/?>
-            </div>
-            <div class="booking__settings-row">
-                <div class="booking__settings-wrapper single">
-                    <input type="text" name="day_prim" value='<?= $day['day_prim'] ?>' placeholder="<?= $texts['RemarkPlaceHolder'] ?>" />
-                </div>
-            </div>
-        </div>
-        <div class="booking__participants">
-            <h2 class="booking__subtitle"><?= $texts['daysBlockParticipantsTitle'] ?>:</h2>
-            <? for ($x = 0; $x < $playersCount; $x++) : ?>
-                <? self::component('participants-field', ['participantId' => $x, 'participant' => empty($day['participants'][$x]) ? [] : $day['participants'][$x]]) ?>
-            <? endfor ?>
-
-        </div>
-
-        <div class="booking__buttons">
-            <button type="button" data-action-click="participant-field-get"><?= $texts['addFieldLabel'] ?></button>
-        </div>
-        <div class="booking__buttons">
-            <button type="submit" class="positive"><?= $texts['setDayApprovedLabel'] ?></button>
-        </div>
+    </div>
     </form>
     <datalist id="users-names-list"> </datalist>
     <datalist id="time-list">

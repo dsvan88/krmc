@@ -107,9 +107,11 @@ return [
     'Our leisure club is going to participate in the following games' => 'Наш клуб досуга собирается для участия в следующих играх',
 
 
-    'Event’s setup' => 'Настройка события',
-    'Game’s type:' => 'Вид игры:',
-    'Start:' => 'Начало:',
+    'Event' => 'Событие',
+    'Settings' => 'Настройки',
+    'Game’s type' => 'Вид игры',
+    'Game’s mods' => 'Модификаторы',
+    'Start' => 'Начало',
     'Participants' => 'Участники',
     'Tournament' => 'Турнир',
     'Send to chat' => 'Отправить в чат',
