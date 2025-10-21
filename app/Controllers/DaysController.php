@@ -46,7 +46,8 @@ class DaysController extends Controller
                 'daySendCheckboxLabel' => 'Send to chat',
                 'dayGameStart' => 'Booking time',
                 'dayEvent' => 'Game’s type',
-                'dayMods' => 'Game’s mods',
+                'dayMods' => 'Peculiarities',
+                'dayCosts' => 'Costs',
                 'ArrivePlaceHolder' => 'Arrive',
                 'RemarkPlaceHolder' => 'Remark',
                 'clearLabel' => 'Clear',
@@ -103,12 +104,14 @@ class DaysController extends Controller
             ];
         }
 
-        $day['day_prim'] = empty($day['day_prim']) ? '' : str_replace("\n", '  ', $day['day_prim']);
-
-        $day['tournament'] = '';
-        if (isset($day['mods']) && in_array('tournament', $day['mods'])) {
-            $day['tournament'] = 'checked';
-        }
+        if (empty($day['day_prim'])) $day['day_prim'] = '';
+        // $day['day_prim'] = empty($day['day_prim']) ? '' : str_replace("\n", '  ', $day['day_prim']);
+        
+        if (empty($day['mods']))
+            $day = array_merge($day, DayRepository::$dayDefaultModsArray);
+        else
+            foreach (DayRepository::$dayDefaultModsArray as $mod => $value)
+                $day[$mod] = in_array($mod, $day['mods']) ?  'checked' : '';
 
         $description = DayRepository::dayDescription($day);
         $playersCount = max(count($day['participants']), 11);

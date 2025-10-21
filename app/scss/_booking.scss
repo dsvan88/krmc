@@ -215,9 +215,9 @@
     }
 
     .cb {
-        &:last-of-type {
+        /*         &:last-of-type {
             margin-left: 2em;
-        }
+        } */
 
         &__label {
             font-size: 1.8em;
@@ -238,11 +238,13 @@
         }
 
         &:hover {
-            box-shadow: inset 0px 0px 3px $bg-color-dark-blur;
+            box-shadow: inset 0px 0px 3px $bg-color-light-blue;
         }
 
         &:focus {
             outline: 1px solid $bg-color-light-red;
+            // outline: 0;
+            // border-bottom: 1px solid $bg-color-light-red;
         }
 
         option {

@@ -38,38 +38,38 @@
                         <?
                         self::component('forms/checkbox-icon', [
                             'prefix' => 'game',
-                            'id' => 'tournament',
+                            'id' => 'beginners',
                             'name' => 'mods[]',
-                            'value' => 'tournament',
+                            'value' => 'beginners',
                             'icon' => 'fa-graduation-cap',
-                            'checked' => $day['tournament'],
+                            'checked' => $day['beginners'],
                             'title' => 'Навчальна'
                         ]);
                         self::component('forms/checkbox-icon', [
                             'prefix' => 'game',
-                            'id' => 'tournament',
+                            'id' => 'night',
                             'name' => 'mods[]',
-                            'value' => 'tournament',
+                            'value' => 'night',
                             'icon' => 'fa-moon-o',
-                            'checked' => $day['tournament'],
+                            'checked' => $day['night'],
                             'title' => 'Нічна'
                         ]);
                         self::component('forms/checkbox-icon', [
                             'prefix' => 'game',
-                            'id' => 'tournament',
+                            'id' => 'theme',
                             'name' => 'mods[]',
-                            'value' => 'tournament',
+                            'value' => 'theme',
                             'icon' => 'fa-birthday-cake',
-                            'checked' => $day['tournament'],
+                            'checked' => $day['theme'],
                             'title' => 'Тематична'
                         ]);
                         self::component('forms/checkbox-icon', [
                             'prefix' => 'game',
-                            'id' => 'tournament',
+                            'id' => 'funs',
                             'name' => 'mods[]',
-                            'value' => 'tournament',
+                            'value' => 'funs',
                             'icon' => 'fa-child',
-                            'checked' => $day['tournament'],
+                            'checked' => $day['funs'],
                             'title' => 'Фанова'
                         ]);
                         self::component('forms/checkbox-icon', [
@@ -81,15 +81,13 @@
                             'checked' => $day['tournament'],
                             'title' => $texts['dayTournamentCheckboxLabel']
                         ]);
-
-                        self::component('forms/checkbox-icon', [
-                            'prefix' => 'game',
-                            'name' => 'send',
-                            'value' => '1',
-                            'icon' => 'fa-paper-plane-o',
-                            'title' => $texts['daySendCheckboxLabel']
-                        ])
                         ?>
+                    </div>
+                    <div class="booking__row">
+                        <label for="day-game" class="booking__label"><?= $texts['dayCosts'] ?>:</label>
+                        <div class="booking__value">
+                            <input type="text" name="day_cost" value="<?= $day['cost'] ?>" placeholder="<?= $texts['dayCosts'] ?>" id="day-time" />
+                        </div>
                     </div>
                     <div class="booking__row">
                         <div class="booking__value">
@@ -100,6 +98,13 @@
                     </div>
                     <div class="booking__row submit">
                         <button type="submit" class="positive fa fa-save"></button>
+                        <? self::component('forms/checkbox-icon', [
+                            'prefix' => 'game',
+                            'name' => 'send',
+                            'value' => '1',
+                            'icon' => 'fa-paper-plane-o',
+                            'title' => $texts['daySendCheckboxLabel']
+                        ]) ?>
                         <button type="reset" class="fa fa-undo"></button>
                     </div>
                 </fieldset>

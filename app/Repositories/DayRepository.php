@@ -18,10 +18,19 @@ class DayRepository
         ['вс', 'вос', 'нед', 'нд', 'sun']
     ];
 
+    public static $dayDefaultModsArray = [
+        'beginners' => '',
+        'tournament' => '',
+        'night' => '',
+        'theme' => '',
+        'funs' => ''
+    ];
     public static $techDaysArray = [
         'today' => ['tod', 'td', 'сг', 'сег', 'сьо'],
         'tomorrow' => ['tom', 'tm', 'зав'],
     ];
+
+
 
     public static function renamePlayer(int $userId, string $name): void
     {
