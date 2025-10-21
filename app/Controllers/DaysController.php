@@ -6,6 +6,7 @@ use app\core\Controller;
 use app\core\Locale;
 use app\core\Noticer;
 use app\core\Sender;
+use app\core\Tech;
 use app\core\View;
 use app\models\Days;
 use app\models\GameTypes;
@@ -104,9 +105,12 @@ class DaysController extends Controller
             ];
         }
 
-        if (empty($day['day_prim'])) $day['day_prim'] = '';
+        if (empty($day['day_prim']))
+            $day['day_prim'] = empty($day['mods']) ?
+                '' :
+                '<p>' . str_replace("\n", '</p><p>', DayRepository::getModsTexts($day['mods'])) . '</p>';
         // $day['day_prim'] = empty($day['day_prim']) ? '' : str_replace("\n", '  ', $day['day_prim']);
-        
+
         if (empty($day['mods']))
             $day = array_merge($day, DayRepository::$dayDefaultModsArray);
         else

@@ -77,4 +77,21 @@ class DayRepository
         }
         return implode('|', $days);
     }
+    public static function getModsTexts(array $mods = []): string
+    {
+        if (empty($mods)) return '';
+        
+        $result = '';
+        if (in_array('funs', $mods, true))
+            $result .= Locale::phrase("*<b>Fun game</b>!\nFewer rules, more emotions, additional roles and moves!\nHave a good time and have fun!\n");
+        if (in_array('beginners', $mods, true))
+            $result .= Locale::phrase("*<b>Begginers</b>!\nLess strict, more explanatory, friendly atmosphere!\nIt’s time to try something new in safest way!😉\n");
+        if (in_array('night', $mods, true))
+            $result .= Locale::phrase("*<b>Nights</b>!\nAll night long! Don’t stop!😉\n");
+        if (in_array('theme', $mods, true))
+            $result .= Locale::phrase("*<b>Themes</b>!\nPrepeare yourself and your image!\nIt’s time to dive into a different world!😁\n");
+        if (in_array('tournament', $mods, true))
+            $result .= Locale::phrase("<b>Tournament</b>!\nBecome a champion in a glorious and fair competition!\n");
+        return $result;
+    }
 }

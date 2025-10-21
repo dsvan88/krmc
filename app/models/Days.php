@@ -178,18 +178,7 @@ class Days extends Model
         $proto = Tech::getRequestProtocol();
         $result = "$date - <a href='$proto://{$_SERVER['SERVER_NAME']}/game/{$weekData['data'][$day]['game']}/?lang=$lang'>{$gameNames[$weekData['data'][$day]['game']]}</a>\n";
 
-        if (!empty($weekData['data'][$day]['mods'])) {
-            if (in_array('funs', $weekData['data'][$day]['mods'], true))
-                $result .= Locale::phrase("*<b>Fun game</b>!\nFewer rules, more emotions, additional roles and moves!\nHave a good time and have fun!\n");
-            if (in_array('beginners', $weekData['data'][$day]['mods'], true))
-                $result .= Locale::phrase("*<b>Begginers</b>!\nLess strict, more explanatory, friendly atmosphere!\nIt’s time to try something new in safest way!😉\n");
-            if (in_array('night', $weekData['data'][$day]['mods'], true))
-                $result .= Locale::phrase("*<b>Nights</b>!\nAll night long! Don’t stop!😉\n");
-            if (in_array('theme', $weekData['data'][$day]['mods'], true))
-                $result .= Locale::phrase("*<b>Themes</b>!\nPrepeare yourself and your image!\nIt’s time to dive into a different world!😁\n");
-            if (in_array('tournament', $weekData['data'][$day]['mods'], true))
-                $result .= Locale::phrase("<b>Tournament</b>!\nBecome a champion in a glorious and fair competition!\n");
-        }
+        $result = DayRepository::getModsTexts($weekData['data'][$day]['mods']);
 
         if (!empty($weekData['data'][$day]['cost']))
             $result .= Locale::phrase('Costs') . ": <u>{$weekData['data'][$day]['cost']}</u>\n";

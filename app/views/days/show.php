@@ -22,24 +22,30 @@
                     <h4 class="booking__day-prim"><?= $day['day_prim'] ?></h4>
                 </div>
                 <div class="booking__day-settings-row">
-                    <label class="booking__day-settings-label"><?= $texts['dayStartTime'] ?></label> <span><?= $day['dateTime'] ?></span>
+                    <label class="booking__day-settings-label"><?= $texts['dayStartTime'] ?>:</label> <span><u><?= $day['dateTime'] ?></u></span>
+                </div>
+                <div class="booking__day-settings-row">
+                    <label class="booking__day-settings-label"><?= $texts['dayCosts'] ?>:</label> <span><u><?= $day['cost'] ?></u></span>
                 </div>
             </div>
             <div class="booking__participants">
                 <h2 class="booking__subtitle"><?= $texts['daysBlockParticipantsTitle'] ?></h2>
                 <? for ($x = 0; $x < $playersCount; $x++) : ?>
-                    <div class="booking__participant">
-                        <label class="booking__participant-num"><?= ($x + 1) ?>.</label>
-                        <div class="booking__participant-info">
+                    <div class="participant">
+                        <label class="participant__num"><?= ($x + 1) ?>.</label>
+                        <div class="participant__info">
                             <? if (isset($day['participants'][$x])) : ?>
-                                <span class="booking__participant-name"><?= empty($day['participants'][$x]['name']) ? '' : $day['participants'][$x]['name'] ?></span>
-                                <span><?= empty($day['participants'][$x]['arrive']) ? '' : $day['participants'][$x]['arrive'] ?></span>
-                                <span><?= empty($day['participants'][$x]['prim']) ? '' : " (<em>{$day['participants'][$x]['prim']}</em>)" ?></span>
+                                <div class="participant__name"><?= empty($day['participants'][$x]['name']) ? '' : $day['participants'][$x]['name'] ?></div>
+                                <div class="participant__details">
+                                    <span><?= empty($day['participants'][$x]['arrive']) ? '' : $day['participants'][$x]['arrive'] ?></span>
+                                    <span><?= empty($day['participants'][$x]['prim']) ? '' : " (<em>{$day['participants'][$x]['prim']}</em>)" ?></span>
+                                </div>
                             <? else : ?>
-                                <span class="booking__participant-name"></span>
-                                <span></span>
-                                <span></span>
-                                <span></span>
+                                <div class="participant__name"></div>
+                                <div class="participant__details">
+                                    <span></span>
+                                    <span></span>
+                                </div>
                             <? endif ?>
                         </div>
                     </div>
