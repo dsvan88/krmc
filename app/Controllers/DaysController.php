@@ -105,11 +105,11 @@ class DaysController extends Controller
             ];
         }
 
-        if (empty($day['day_prim']))
-            $day['day_prim'] = empty($day['mods']) ?
-                '' :
-                '<p>' . str_replace("\n", '</p><p>', DayRepository::getModsTexts($day['mods'])) . '</p>';
-        // $day['day_prim'] = empty($day['day_prim']) ? '' : str_replace("\n", '  ', $day['day_prim']);
+        if (empty($day['day_prim'])) $day['day_prim'] = '';
+
+        $day['day_mods_text'] = empty($day['mods']) ?
+            '' :
+            '<p>' . str_replace("\n", '</p><p>', DayRepository::getModsTexts($day['mods'])) . '</p>';
 
         if (empty($day['mods']))
             $day = array_merge($day, DayRepository::$dayDefaultModsArray);

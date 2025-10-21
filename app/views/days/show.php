@@ -19,6 +19,9 @@
                     <h2 class="booking__day-event"><a href="/game/<?= $day['game'] ?>/"><?= $day['gameName'] ?></a></h2>
                 </div>
                 <div class="booking__day-settings-row">
+                    <h4 class="booking__day-prim"><?= $day['day_mods_text'] ?></h4>
+                </div>
+                <div class="booking__day-settings-row">
                     <h4 class="booking__day-prim"><?= $day['day_prim'] ?></h4>
                 </div>
                 <div class="booking__day-settings-row">
