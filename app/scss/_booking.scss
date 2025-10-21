@@ -257,6 +257,7 @@
         border: 0;
         font-size: 1.2rem;
         color: $color-text-black;
+        box-shadow: inset 1px 1px 2px $bg-color-light-odd;
 
         &::placeholder {
             color: $color-text-dark-blur;
