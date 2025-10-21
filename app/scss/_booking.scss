@@ -258,7 +258,7 @@
         font-size: 1.2rem;
         color: $color-text-black;
 
-        &[placeholder] {
+        &::placeholder {
             color: $color-text-dark-blur;
         }
 
