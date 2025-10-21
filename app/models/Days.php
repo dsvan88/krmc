@@ -178,7 +178,7 @@ class Days extends Model
         $proto = Tech::getRequestProtocol();
         $result = "$date - <a href='$proto://{$_SERVER['SERVER_NAME']}/game/{$weekData['data'][$day]['game']}/?lang=$lang'>{$gameNames[$weekData['data'][$day]['game']]}</a>\n";
 
-        $result = DayRepository::getModsTexts($weekData['data'][$day]['mods']);
+        $result .= DayRepository::getModsTexts($weekData['data'][$day]['mods']);
 
         if (!empty($weekData['data'][$day]['cost']))
             $result .= Locale::phrase('Costs') . ": <u>{$weekData['data'][$day]['cost']}</u>\n";
