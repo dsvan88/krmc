@@ -119,8 +119,8 @@
                     <button type="submit" class="positive fa fa-save"></button>
                 </div>
             </div>
+        </form>
     </div>
-    </form>
     <datalist id="users-names-list"> </datalist>
     <datalist id="time-list">
         <?
