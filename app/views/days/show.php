@@ -2,15 +2,15 @@
     <form class="booking__form">
         <header class="booking__header">
             <? if (empty($yesterday['link'])) : ?>
-                <span class="booking__header-link"><?= $yesterday['label'] ?></span>
+                <span class="booking__navlink"><?= $yesterday['label'] ?></span>
             <? else : ?>
-                <span class="booking__header-link"><a href="<?= $yesterday['link'] ?>"><i class="fa fa-angle-double-left"></i>&nbsp;<?= $yesterday['label'] ?></a></span>
+                <span class="booking__navlink"><a href="<?= $yesterday['link'] ?>"><i class="fa fa-angle-double-left"></i>&nbsp;<?= $yesterday['label'] ?></a></span>
             <? endif ?>
             <h3 class="booking__title"><?= $day['dateTime'] ?></h3>
             <? if (empty($tomorrow['link'])) : ?>
-                <span class="booking__header-link"><?= $tomorrow['label'] ?></span>
+                <span class="booking__navlink"><?= $tomorrow['label'] ?></span>
             <? else : ?>
-                <span class="booking__header-link"><a href="<?= $tomorrow['link'] ?>"><?= $tomorrow['label'] ?>&nbsp;<i class="fa fa-angle-double-right"></i></a></span>
+                <span class="booking__navlink"><a href="<?= $tomorrow['link'] ?>"><?= $tomorrow['label'] ?>&nbsp;<i class="fa fa-angle-double-right"></i></a></span>
             <? endif ?>
         </header>
         <div class="booking__body">

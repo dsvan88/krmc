@@ -44,21 +44,21 @@
         display: flex;
         gap: 2em;
         align-items: center;
+    }
 
-        &-link {
-            a {
-                color: $color-text-dark-blur;
-                white-space: nowrap;
-            }
-
-            font-size: 1.5em;
+    &__navlink {
+        a {
+            color: $color-text-dark-blur;
+            white-space: nowrap;
         }
+
+        font-size: 1.5em;
     }
 
     &__title {
         margin: 10px 0 20px 0;
         text-align: center;
-        font-size: 1.7em;
+        font-size: 1.6em;
         text-transform: uppercase;
         flex-grow: 1;
     }
