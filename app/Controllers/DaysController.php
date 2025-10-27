@@ -117,6 +117,8 @@ class DaysController extends Controller
             foreach (DayRepository::$dayDefaultModsArray as $mod => $value)
                 $day[$mod] = in_array($mod, $day['mods']) ?  'checked' : '';
 
+        if (empty($day['cost'])) $day['cost'] = '';
+
         $description = DayRepository::dayDescription($day);
         $playersCount = max(count($day['participants']), 11);
 
