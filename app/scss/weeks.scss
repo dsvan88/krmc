@@ -1,5 +1,9 @@
+@import "tech/mixins_adapt";
+@import "tech/vars";
+
 .week {
 	margin-bottom: 50px;
+
 	&__list {
 		display: flex;
 		justify-content: center;
@@ -39,6 +43,7 @@
 	&:hover {
 		border-color: $color-item-border-hover;
 		transform: translateY(-0.3em);
+
 		&.expire {
 			filter: none;
 		}
@@ -53,6 +58,7 @@
 			max-width: 20em;
 		}
 	}
+
 	&__date {
 		white-space: nowrap;
 		margin-bottom: 0.8em;
@@ -81,6 +87,7 @@
 		display: grid;
 		grid-template-columns: 1fr 1fr;
 	}
+
 	&__participant {
 		margin: 0 0.5em;
 		font-size: 1.2em;

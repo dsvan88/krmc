@@ -1,3 +1,6 @@
+@import "tech/mixins_adapt";
+@import "tech/vars";
+
 .booking {
     margin: 20px auto 0px auto;
     display: flex;
@@ -11,33 +14,6 @@
         flex-direction: column;
         justify-content: center;
         align-items: stretch;
-    }
-
-    &__day {
-
-        &-settings-row {
-            font-size: 1.1em;
-        }
-
-        &-event {
-            margin: 0px 0px 5px 0px;
-            font-size: 2em;
-            text-align: center;
-            color: $color-text-accent;
-
-            a {
-                color: inherit;
-            }
-
-        }
-
-        &-prim {
-            margin: 0px 0px 5px 0px;
-            font-size: 0.9em;
-            text-align: center;
-            color: $color-text-dark-blur;
-            border-bottom: 1px solid;
-        }
     }
 
     &__header {
@@ -119,16 +95,6 @@
         }
     }
 
-    &__wrapper {
-        &.single {
-            width: 100%;
-        }
-
-        * {
-            width: 100%;
-        }
-    }
-
     &__participants {
         margin: 20px 0 10px 0;
     }
@@ -142,13 +108,12 @@
         }
     }
 
-    &__participant {
+    .participant {
         display: flex;
         align-items: center;
         margin: 10px 0;
-        // white-space: nowrap;
 
-        &-num {
+        &__num {
             width: 1.5em;
             height: 1.5em;
             padding: .2em .25em;
@@ -160,49 +125,26 @@
             border-radius: 50%;
         }
 
-        &-arrive {
+        &__arrive {
             width: 70px;
         }
 
-        &-info {
-            span {
-                font-size: 1.4em;
-            }
-        }
-
-        &-name {
-            display: inline-block;
-            width: 30vw
-        }
-
-        &-prim {
+        &__name {
             display: inline-block;
             width: 25vw
         }
 
-        &-remove {
-            font-size: 1.3em;
-            color: $button-remove-color;
-            cursor: pointer;
-            transition: all $animation-fast ease-in-out;
-
-            &:hover {
-                color: $button-remove-color-hover;
-            }
+        &__prim {
+            display: inline-block;
+            width: 25vw
         }
+
     }
 
     &__buttons {
         display: flex;
         justify-content: space-evenly;
         margin: 20px 0;
-    }
-
-    &__additional-evening {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
     }
 
     &__self {
@@ -212,39 +154,7 @@
         margin-bottom: 2em;
     }
 
-    .participant {
-        border-bottom: 1px solid $bg-color-light-blue;
-        display: flex;
-        font-size: 1.2em;
-        gap: .5em;
-        margin-bottom: .3em;
-        align-items: center;
-
-        &__num {
-            width: 1.5em;
-            height: 1.5em;
-            padding: .2em .25em;
-            display: flex;
-            font-size: .8em;
-            justify-content: center;
-            align-items: center;
-            background-color: $bg-color-light-blue;
-            border-radius: 50%;
-        }
-
-        &__info {
-            display: flex;
-            gap: .5em;
-            font-size: .9em;
-        }
-    }
-
-
     .cb {
-        /*         &:last-of-type {
-            margin-left: 2em;
-        } */
-
         &__label {
             font-size: 1.8em;
         }

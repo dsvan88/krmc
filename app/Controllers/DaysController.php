@@ -6,7 +6,6 @@ use app\core\Controller;
 use app\core\Locale;
 use app\core\Noticer;
 use app\core\Sender;
-use app\core\Tech;
 use app\core\View;
 use app\models\Days;
 use app\models\GameTypes;
@@ -32,7 +31,8 @@ class DaysController extends Controller
             }
             self::$route['action'] = 'edit';
             View::set(self::$route);
-            View::$route['vars']['scripts'] = ['day-edit-funcs.js'];
+            View::$route['vars']['scripts'] = ['booking.js'];
+            View::$route['vars']['styles'] = ['booking'];
         }
         $gameTypes = GameTypes::menu();
 
@@ -139,6 +139,7 @@ class DaysController extends Controller
             }
         }
 
+        if (empty(View::$route['vars']['styles'])) View::$route['vars']['styles'] = ['day'];
         View::$route['vars'] = array_merge(View::$route['vars'], $vars, compact('day', 'playersCount', 'description', 'selfBooking', 'yesterday', 'tomorrow'));
 
         return View::render();

@@ -1,8 +1,9 @@
 actionHandler.participantFieldGet = function (target, event) {
     const participantsFields = target.closest(".booking__participants");
-    const newID = participantsFields.querySelectorAll(".booking__participant").length;
+    const newID = participantsFields.querySelectorAll(".participant").length;
     let data = new FormData();
     data.append('id', newID);
+    console.log(newID);
     request({
         url: 'participant-field-get',
         data: data,

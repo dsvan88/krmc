@@ -14,7 +14,7 @@ class WeeksController extends Controller
     {
         $weekId = 0;
         extract(self::$route['vars']);
-        
+
         $vars = WeekRepository::getShowData($weekId);
 
         $vars['texts'] = [
@@ -25,6 +25,7 @@ class WeeksController extends Controller
 
         View::$route['vars'] = array_merge(View::$route['vars'], $vars);
         View::$route['vars']['og'] = WeekRepository::formWeekOG($vars);
+        View::$route['vars']['styles'] = ['weeks'];
 
         return View::render();
     }

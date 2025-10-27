@@ -1,38 +1,32 @@
-<section class="section booking">
-    <form class="booking__form">
-        <header class="booking__header">
+<section class="section day">
+    <form class="day__form">
+        <header class="day__header">
             <? if (empty($yesterday['link'])) : ?>
-                <span class="booking__navlink"><?= $yesterday['label'] ?></span>
+                <span class="day__navlink"><?= $yesterday['label'] ?></span>
             <? else : ?>
-                <span class="booking__navlink"><a href="<?= $yesterday['link'] ?>"><i class="fa fa-angle-double-left"></i>&nbsp;<?= $yesterday['label'] ?></a></span>
+                <span class="day__navlink"><a href="<?= $yesterday['link'] ?>"><i class="fa fa-angle-double-left"></i>&nbsp;<?= $yesterday['label'] ?></a></span>
             <? endif ?>
-            <h3 class="booking__title"><?= $day['dateTime'] ?></h3>
+            <h3 class="day__title"><?= $day['dateTime'] ?></h3>
             <? if (empty($tomorrow['link'])) : ?>
-                <span class="booking__navlink"><?= $tomorrow['label'] ?></span>
+                <span class="day__navlink"><?= $tomorrow['label'] ?></span>
             <? else : ?>
-                <span class="booking__navlink"><a href="<?= $tomorrow['link'] ?>"><?= $tomorrow['label'] ?>&nbsp;<i class="fa fa-angle-double-right"></i></a></span>
+                <span class="day__navlink"><a href="<?= $tomorrow['link'] ?>"><?= $tomorrow['label'] ?>&nbsp;<i class="fa fa-angle-double-right"></i></a></span>
             <? endif ?>
         </header>
-        <div class="booking__body">
-            <div class="booking__day-settings">
-                <div class="booking__day-settings-row">
-                    <h2 class="booking__day-event"><a href="/game/<?= $day['game'] ?>/"><?= $day['gameName'] ?></a></h2>
+        <div class="day__body">
+            <h2 class="day__event"><a href="/game/<?= $day['game'] ?>/"><?= $day['gameName'] ?></a></h2>
+            <div class="day__settings">
+                <div class="day__prim"><?= $day['day_mods_text'] ?></div>
+                <div class="day__prim"><?= $day['day_prim'] ?></div>
+                <div class="day__row">
+                    <label class="day__label"><?= $texts['dayStartTime'] ?>:</label> <span><u><?= $day['dateTime'] ?></u></span>
                 </div>
-                <div class="booking__day-settings-row">
-                    <h4 class="booking__day-prim"><?= $day['day_mods_text'] ?></h4>
-                </div>
-                <div class="booking__day-settings-row">
-                    <h4 class="booking__day-prim"><?= $day['day_prim'] ?></h4>
-                </div>
-                <div class="booking__day-settings-row">
-                    <label class="booking__day-settings-label"><?= $texts['dayStartTime'] ?>:</label> <span><u><?= $day['dateTime'] ?></u></span>
-                </div>
-                <div class="booking__day-settings-row">
-                    <label class="booking__day-settings-label"><?= $texts['dayCosts'] ?>:</label> <span><u><?= $day['cost'] ?></u></span>
+                <div class="day__row">
+                    <label class="day__label"><?= $texts['dayCosts'] ?>:</label> <span><u><?= $day['cost'] ?></u></span>
                 </div>
             </div>
-            <div class="booking__participants">
-                <h2 class="booking__subtitle"><?= $texts['daysBlockParticipantsTitle'] ?></h2>
+            <div class="day__participants">
+                <h2 class="day__subtitle"><?= $texts['daysBlockParticipantsTitle'] ?></h2>
                 <? for ($x = 0; $x < $playersCount; $x++) : ?>
                     <div class="participant">
                         <label class="participant__num"><?= ($x + 1) ?>.</label>
@@ -54,7 +48,7 @@
                     </div>
                 <? endfor ?>
                 <? if (!empty($selfBooking)) : ?>
-                    <div class="booking__self">
+                    <div class="day__self">
                         <a href="<?= $selfBooking['link'] ?>" class="button"><?= $selfBooking['label'] ?></a>
                     </div>
                 <? endif; ?>
