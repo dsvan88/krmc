@@ -39,25 +39,23 @@ class ImagesController extends Controller
         View::$route['vars'] = array_merge(View::$route['vars'], compact('title', 'files', 'backgrounds', 'scripts'));
         return View::render();
     }
-    public function indexFormAction()
+    public function listAction()
     {
         $pageToken = null;
         extract(self::$route['vars']);
 
         $gDrive = new GoogleDrive();
-        $title = 'Images';
         $files = $gDrive->listFiles($pageToken);
 
-        $backgrounds = Settings::getImage('background')['value'];
-        $scripts = [
-            'images.js',
-        ];
-        $css = [
-            STYLES_STORAGE.'images-modal.css?v='.$_SERVER['REQUEST_TIME'],
-            // STYLES_STORAGE.'images-modal.css',
-        ];
-        View::$route['vars'] = array_merge(View::$route['vars'], compact('title', 'files', 'backgrounds', 'scripts', 'css'));
-        return View::modal();
+        $result = [];
+        foreach($files as $file){
+            $result[] = [
+                'name' => $file['name'],
+                'size' => ceil($file['size'] / 1024),
+                'thumbnailLink' => $file['thumbnailLink'],
+            ];
+        }
+        return View::response($result);
     }
     public function addAction()
     {

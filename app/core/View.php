@@ -193,10 +193,7 @@ class View
     }
     public static function response($data)
     {
-        if (is_array($data)) {
-            $data = json_encode($data, JSON_UNESCAPED_UNICODE);
-        }
-        return $data;
+        echo is_array($data) ? json_encode($data, JSON_UNESCAPED_UNICODE) : $data;
     }
     public static function file($file, $name = 'backup.txt')
     {

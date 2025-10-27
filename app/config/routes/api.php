@@ -272,4 +272,10 @@ return  [
         'action' => 'indexForm',
         'access' => ['category' => 'manager']
     ],
+    'api/forms/images/list' =>
+    [
+        'controller' => 'images',
+        'action' => 'list',
+        'access' => ['category' => 'manager']
+    ],
 ];

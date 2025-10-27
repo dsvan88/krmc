@@ -21,7 +21,7 @@
             </div>
             <div class="form__column">
                 <div class="form__row">
-                    <? self::component('forms/image-modal') ?>
+                    <? self::component('forms/images-modal') ?>
                 </div>
             </div>
         </div>

@@ -48,17 +48,17 @@ function CKEditorApply(editors) {
 }
 
 actionHandler.mainImageChange = function (event) {
-	let file = event.target.files[0];
-	let img = createNewElement({
+	const file = event.target.files[0];
+	const img = createNewElement({
 		tag: 'img',
 		style: 'height:10vh;width:auto',
 		src: URL.createObjectURL(file)
 	});
-	let imgPlace = document.body.querySelector('#main-image-place');
+	const imgPlace = document.body.querySelector('#main-image-place');
 	imgPlace.innerHTML = '';
 	imgPlace.append(img)
 
-	let reader = new FileReader();
+	const reader = new FileReader();
 	reader.onload = applyNewImage(img);
 	reader.readAsDataURL(file);
 
@@ -83,4 +83,11 @@ actionHandler.formImageChange = function (event) {
 		parent.querySelector('input[name="filename"]').value = file.name;
 	};
 	reader.readAsDataURL(file);
+}
+
+actionHandler.formsImagesList = async function (target, event) {
+    const images = await this.apiTalk(target, event, 'actionClick');
+	const imagesPad = new ImagesPad({
+		images: images
+	});
 }
