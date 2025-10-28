@@ -7,9 +7,9 @@
     outline: 1px solid gray;
     border-radius: 5px;
     padding: 1em;
-    pointer-events:auto;
+    pointer-events: auto;
 
-    &__overlay{
+    &__overlay {
         position: absolute;
         width: 100vw;
         height: 100vh;
@@ -30,10 +30,11 @@
 
     &__text {
         margin: 1em 0;
+
         .positive {
             color: $bg-color-green;
         }
-        
+
         .negative {
             color: $bg-color-red-blur;
         }
@@ -101,6 +102,7 @@
             color: $color-text-dark-blur;
         }
     }
+
     &__radio {
         &-wrapper {
             border: 1px solid black;
@@ -124,4 +126,6 @@
             color: $color-text-dark-blur;
         }
     }
+
+    @import "popups/images";
 }

@@ -5,7 +5,7 @@ class ImagesPad extends Prompt {
         value = '';
         super({ title, text, value, action, cancel })
         this.images = images;
-        this.modifyForImagesPad().modifyEventsNumpad();
+        this.modifyForImagesPad();//.modifyEventsNumpad();
         this.dialog.focus();
     }
 
@@ -13,19 +13,31 @@ class ImagesPad extends Prompt {
         this.input.classList.add('hidden');
         const inputWrapper = this.input.closest('.popup__input-wrapper');
 
-        for(const image of this.images){
-            inputWrapper.innerHTML += `<img src="${image.thumbnailLink}" style="height:5em;width:auto">`;
+        inputWrapper.classList.add('images');
+
+        const imagesPad = document.createElement('div');
+        imagesPad.classList.add('images__list');
+
+        this.checkboxs = [];
+
+        for (let x = 0; x < this.images.length; x++) {
+            const checkboxWrapper = document.createElement('span');
+            checkboxWrapper.classList.add('images__item');
+            this.checkboxs[x] = document.createElement('input');
+            this.checkboxs[x].type = 'checkbox';
+            this.checkboxs[x].id = `checkbox[${x}]`;
+            this.checkboxs[x].value = this.images[x].thumbnailLink;
+
+            const img = document.createElement('img');
+            img.src = this.images[x].thumbnailLink;
+            img.classList.add('images__image');
+            checkboxWrapper.append(this.checkboxs[x]);
+            checkboxWrapper.append(img);
+            imagesPad.append(checkboxWrapper);
         }
-        
-        // inputWrapper.classList.add('numpad');
-
-        // const numpad = document.createElement('div');
-        // numpad.classList.add('popup__numpad');
-
-        // this.checkboxs = [];
+        inputWrapper.append(imagesPad);
         // for (let x = 0; x < 10; x++) {
-        //     let checkboxWrapper = document.createElement('span');
-        //     checkboxWrapper.classList.add('popup__checkbox-wrapper');
+        //     
 
         //     this.checkboxs[x] = document.createElement('input');
         //     this.checkboxs[x].type = 'checkbox';
