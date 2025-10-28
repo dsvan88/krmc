@@ -74,11 +74,33 @@ class ImagesController extends Controller
             'realLink' => $gDrive->getLink($fileId),
             'name' => $filename,
         ];
+        if (!empty($_POST['prompt'])){
+            return View::response($file);
+        }
         $path = '/components/list/image/item';
 
         View::$route['vars'] = array_merge(View::$route['vars'], compact('file', 'path'));
-        View::html();
+        return View::html();
     }
+    // public function imagesPadAddAction()
+    // {
+    //     $symbols = Locale::$cyrillicPattern;
+    //     $filename = preg_replace("/([^a-z$symbols.,;0-9_-]+)/ui", '', trim($_POST['filename']));
+
+    //     if (ImageProcessing::saveBase64Image($_POST['image'], $filename) === false) return View::notice('Fail!');
+
+    //     $filePath = $_SERVER['DOCUMENT_ROOT'] . FILE_MAINGALL . $filename;
+    //     $gDrive = new GoogleDrive();
+    //     $fileId = $gDrive->create($_SERVER['DOCUMENT_ROOT'] . FILE_MAINGALL . $filename);
+
+    //     unlink($filePath);
+    //     $file = [
+    //         'id' => $fileId,
+    //         'realLink' => $gDrive->getLink($fileId),
+    //         'name' => $filename,
+    //     ];
+    //     return View::response($file);
+    // }
     public function deleteAction()
     {
         $imageId = $_POST['imageId'];

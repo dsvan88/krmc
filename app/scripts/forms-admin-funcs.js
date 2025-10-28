@@ -70,19 +70,19 @@ actionHandler.mainImageChange = function (event) {
 	}
 }
 
-// actionHandler.formImageChange = function (event) {
-// 	const file = event.target.files[0];
-// 	const parent = event.target.closest('.image__container');
-// 	const img = parent.querySelector('.image__img');
-// 	img.src = URL.createObjectURL(file);
+actionHandler.formImageChange = function (event) {
+	const file = event.target.files[0];
+	const parent = event.target.closest('.image__container');
+	const img = parent.querySelector('.image__img');
+	img.src = URL.createObjectURL(file);
 
-// 	const reader = new FileReader();
-// 	reader.onload = (e) => {
-// 		parent.querySelector('input[name="image"]').value = e.target.result;
-// 		parent.querySelector('input[name="filename"]').value = file.name;
-// 	};
-// 	reader.readAsDataURL(file);
-// }
+	const reader = new FileReader();
+	reader.onload = (e) => {
+		parent.querySelector('input[name="image"]').value = e.target.result;
+		parent.querySelector('input[name="filename"]').value = file.name;
+	};
+	reader.readAsDataURL(file);
+}
 
 actionHandler.formsImageUpdate = function (target, urls = []) {
 	const parent = target.closest('.image__container');
