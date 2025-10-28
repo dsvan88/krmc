@@ -3,6 +3,7 @@
 namespace app\core;
 
 use app\models\Settings;
+use Error;
 use Exception;
 
 class TelegramBot
@@ -138,7 +139,9 @@ class TelegramBot
         }
 
         if (!empty($image)) {
-            $params['photo'] = curl_file_create($image, $type, 'image');
+            $params['photo'] = strpos($image, 'https://') === false ?
+                $image :
+                curl_file_create($image, $type, 'image');
         }
         $options = self::$options;
         $options[CURLOPT_URL] = "https://api.telegram.org/bot$botToken/sendPhoto"; // адрес api телеграмм-бота
@@ -274,7 +277,7 @@ class TelegramBot
         $mainPhotoData = self::getFile($profilePhotos['result']['photos'][0][0]['file_id']);
 
         if (empty($mainPhotoData['result']['file_path'])) return false;
-        
+
         $botToken = self::$botToken;
         $file_path = $mainPhotoData['result']['file_path'];
         $url = "https://api.telegram.org/file/bot$botToken/$file_path";

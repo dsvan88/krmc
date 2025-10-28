@@ -5,12 +5,12 @@ class ImagesPad extends Prompt {
         value = '';
         super({ title, text, value, action, cancel })
         this.images = images;
-        this.modifyForImagesPad();//.modifyEventsNumpad();
+        this.modifyForImagesPad().modifyEventsImagesPad();
         this.dialog.focus();
     }
 
     modifyForImagesPad() {
-        this.input.classList.add('hidden');
+        // this.input.classList.add('hidden');
         const inputWrapper = this.input.closest('.popup__input-wrapper');
 
         inputWrapper.classList.add('images');
@@ -68,16 +68,19 @@ class ImagesPad extends Prompt {
         // buttonWrapper.append(this.allButton);
         return this;
     }
-    // updateInput(checkbox) {
-    //     const values = this.input.value ? this.input.value.split(',') : [];
-    //     if (checkbox.checked) {
-    //         values.push(checkbox.value);
-    //     }
-    //     else {
-    //         const index = values.indexOf(checkbox.value);
-    //         values.splice(index, 1);
-    //     }
-    //     values.sort((a, b) => a - b);
-    //     this.input.value = values.join(',');
-    // }
+    modifyEventsImagesPad() {
+        const self = this;
+        this.checkboxs.forEach(checkbox => checkbox.addEventListener('change', () => self.updateInput.call(self, checkbox)));
+    }
+    updateInput(checkbox) {
+        const values = this.input.value ? this.input.value.split(',') : [];
+        if (checkbox.checked) {
+            values.push(checkbox.value);
+        }
+        else {
+            const index = values.indexOf(checkbox.value);
+            values.splice(index, 1);
+        }
+        this.input.value = values.join(',');
+    }
 }

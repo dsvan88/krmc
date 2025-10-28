@@ -42,16 +42,20 @@ class TelegramChatsRepository
             $targets = array_column(TelegramChats::getChatsList(), 'uid');
         }
 
-        $symbols = Locale::$cyrillicPattern;
-        $filename = preg_replace("/([^a-z$symbols.,;0-9_-]+)/ui", '', trim($post['filename']));
-
-        if (empty($post['image']))
+        if (empty($post['link'])) {
             return Sender::message($targets, $message)[0]['ok'];
-
-        $image = ImageProcessing::saveBase64Image($post['image'], $filename);
-        if (!$image) {
-            throw new Exception('Image didn’t saved');
         }
-        return Sender::photo($targets, $message, $image['fullpath'])[0]['ok'];
+
+        // $symbols = Locale::$cyrillicPattern;
+        // $filename = preg_replace("/([^a-z$symbols.,;0-9_-]+)/ui", '', trim($post['filename']));
+
+        // if (empty($post['image']))
+        //     return Sender::message($targets, $message)[0]['ok'];
+
+        // $image = ImageProcessing::saveBase64Image($post['image'], $filename);
+        // if (!$image) {
+        //     throw new Exception('Image didn’t saved');
+        // }
+        return Sender::photo($targets, $message, $post['link'])[0]['ok'];
     }
 }
