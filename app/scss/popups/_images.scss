@@ -51,4 +51,27 @@
         width: auto;
         transition: box-shadow $animation-very-fast;
     }
+    .new {
+        label {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 2em;
+            box-sizing: border-box;
+            border: 1px dashed $bg-color-light-blue;
+            background-color: $bg-color-light-blue-blur;
+            font-size: 3em;
+            height: 100%;
+            cursor: pointer;
+            color: $bg-color-light-blue;
+            transition: color $animation-fast;
+
+            &:hover{
+                color: $bg-color-blue-blur;
+            }
+        }
+    }
+    input[type="file"]{
+        display: none;
+    }
 }
