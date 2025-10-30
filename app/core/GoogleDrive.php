@@ -70,7 +70,7 @@ class GoogleDrive
         }
         return true;
     }
-    public static function listFiles(string $pageToken = null)
+    public static function listFiles(string $pageToken = '')
     {
         $result = [];
         try {

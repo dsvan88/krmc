@@ -292,7 +292,7 @@ let actionHandler = {
 			});
 		});
 
-		return promise.then();
+		return await promise.then();
 	},
 	phoneInputFocus: function (event) {
 		const input = event.target,

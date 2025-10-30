@@ -91,19 +91,22 @@ actionHandler.formsImageUpdate = function (target, urls = []) {
 	parent.querySelector('input[name="link"]').value = urls[0];
 }
 actionHandler.formsImagesList = async function (target, event) {
+
+	if (target.classList.contains('blocked')) return false;
+
+	target.classList.add('blocked');
+
 	const self = this;
-	const images = await this.apiTalk(target, event, 'actionClick');
-	const promise = new Promise((resolve) => {
-		new ImagesPad({
-			title: "Images",
-			text: 'Choose images to send',
-			value: '',
-			images: images,
-			action: (value) => {
-				if (!value) return false;
-				const urls = value.split(',');
-				self.formsImageUpdate(target, urls);
-			},
-		});
-	});
+	const data = await this.apiTalk(target, event, 'actionClick');
+
+	const image = await imagesPad({ data: data });
+
+	target.classList.remove('blocked');
+
+	if (!image) return false;
+
+	const urls = image.split(',');
+	self.formsImageUpdate(target, urls);
+
+	return true;
 }

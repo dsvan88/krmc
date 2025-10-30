@@ -25,7 +25,7 @@ class ImagesController extends Controller
     }
     public function indexAction()
     {
-        $pageToken = null;
+        $pageToken = '';
         extract(self::$route['vars']);
 
         $gDrive = new GoogleDrive();
@@ -41,15 +41,17 @@ class ImagesController extends Controller
     }
     public function listAction()
     {
-        $pageToken = null;
+        $pageToken = '';
         extract(self::$route['vars']);
 
         $gDrive = new GoogleDrive();
         $files = $gDrive->listFiles($pageToken);
 
-        $result = [];
-        foreach($files as $file){
-            $result[] = [
+        $result = [
+            'nextPageToken' => $_SESSION['nextPageToken'],
+        ];
+        foreach ($files as $file) {
+            $result['images'][] = [
                 'name' => $file['name'],
                 'size' => ceil($file['size'] / 1024),
                 'thumbnailLink' => $file['thumbnailLink'],
@@ -74,7 +76,7 @@ class ImagesController extends Controller
             'realLink' => $gDrive->getLink($fileId),
             'name' => $filename,
         ];
-        if (!empty($_POST['prompt'])){
+        if (!empty($_POST['prompt'])) {
             return View::response($file);
         }
         $path = '/components/list/image/item';

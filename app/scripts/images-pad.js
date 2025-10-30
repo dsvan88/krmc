@@ -1,18 +1,21 @@
-class ImagesPad extends Prompt {
+class CustomImagesPad extends Prompt {
     checkboxs = [];
     values = [];
     addNewInput = null;
+    nextPageBotton = null;
 
-    constructor({ title = "Images list", text = "Choose images:", value = '', action = null, cancel = null, images = [] } = {}) {
+    constructor({ title = "Images list", text = "Choose images:", value = '', action = null, cancel = null, data = {} } = {}) {
         value = '';
         super({ title, text, value, action, cancel })
-        this.images = images;
+
+        this.nextPageToken = data['nextPageToken'];
+        this.images = data['images'];
         this.modifyForImagesPad().modifyEventsImagesPad();
         this.dialog.focus();
     }
 
     modifyForImagesPad() {
-        // this.input.classList.add('hidden');
+        this.input.classList.add('hidden');
         const inputWrapper = this.input.closest('.popup__input-wrapper');
 
         inputWrapper.classList.add('images');
@@ -39,6 +42,9 @@ class ImagesPad extends Prompt {
             checkboxWrapper.append(img);
             imagesPad.append(checkboxWrapper);
         }
+
+        imagesPad.append(this.getMoreImagesButton());
+
         inputWrapper.append(imagesPad);
         return this;
     }
@@ -46,6 +52,7 @@ class ImagesPad extends Prompt {
         const self = this;
         this.checkboxs.forEach(checkbox => checkbox.addEventListener('change', () => self.updateInput.call(self, checkbox)));
         this.addNewInput.addEventListener('change', (e) => self.addNewImage.call(self, e));
+        this.nextPageBotton.addEventListener('click', (e) => self.getMoreImages.call(self, e));
     }
     updateInput(checkbox) {
         const values = this.input.value ? this.input.value.split(',') : [];
@@ -58,13 +65,13 @@ class ImagesPad extends Prompt {
         }
         this.input.value = values.join(',');
     }
-    getNewImageForm(){
+    getNewImageForm() {
         const newImageForm = document.createElement('form');
         newImageForm.classList.add('images__form', 'new');
 
         const input = document.createElement('input');
         input.type = 'file';
-        input.id = 'new_image_'+Math.ceil(Math.random()*100);
+        input.id = 'new_image_' + Math.ceil(Math.random() * 100);
         input.accept = '.png,.jpg,.jpeg,.webp';
         input.dataset.actionChange = 'image/add';
         this.addNewInput = input;
@@ -77,7 +84,15 @@ class ImagesPad extends Prompt {
         newImageForm.append(input);
         return newImageForm;
     }
-    async addNewImage(event){
+    getMoreImagesButton() {
+        const moreImagesSpan = document.createElement('span');
+        moreImagesSpan.classList.add('get-more', 'fa', 'fa-refresh');
+
+        this.nextPageBotton = moreImagesSpan;
+
+        return moreImagesSpan;
+    }
+    async addNewImage(event) {
         const self = this;
         const file = event.target.files[0];
 
@@ -88,11 +103,11 @@ class ImagesPad extends Prompt {
         checkbox.id = `checkbox[${this.checkboxs.length}]`;
         checkbox.value = URL.createObjectURL(file);
         checkbox.disabled = true;
-        
+
         const img = document.createElement('img');
         img.src = checkbox.value;
         img.classList.add('images__image');
-        
+
         checkboxWrapper.append(checkbox);
         checkboxWrapper.append(img);
         this.checkboxs.push(checkbox);
@@ -114,7 +129,19 @@ class ImagesPad extends Prompt {
             checkbox.disabled = false;
         }
     }
-    async apiTalk(target, event, mode, formData){
+    async apiTalk(target, event, mode, formData) {
         return await actionHandler.apiTalk(target, event, mode, formData);
     }
+    getMoreImages(event) {
+        console.log(event);
+        return false;
+    }
+}
+
+async function imagesPad(options = {}) {
+    const promise = new Promise((r) => {
+        options.action = (v) => r(v);
+        new CustomImagesPad(options);
+    })
+    return await promise.then();
 }

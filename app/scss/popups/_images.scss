@@ -1,5 +1,7 @@
 @import '../tech/vars';
 
+$itemsHeight: 8em;
+
 .images {
     max-width: 80vw;
 
@@ -15,7 +17,7 @@
     &__item {
         position: relative;
         display: inline-block;
-        height: 8em;
+        height: $itemsHeight;
         width: auto;
         padding: .1em;
         box-sizing: border-box;
@@ -51,6 +53,7 @@
         width: auto;
         transition: box-shadow $animation-very-fast;
     }
+
     .new {
         label {
             display: flex;
@@ -61,17 +64,37 @@
             border: 1px dashed $bg-color-light-blue;
             background-color: $bg-color-light-blue-blur;
             font-size: 3em;
-            height: 100%;
+            height: $itemsHeight/3;
             cursor: pointer;
             color: $bg-color-light-blue;
             transition: color $animation-fast;
 
-            &:hover{
+            &:hover {
                 color: $bg-color-blue-blur;
             }
         }
     }
-    input[type="file"]{
+
+    .get-more {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 2em;
+        box-sizing: border-box;
+        border: 1px dashed $bg-color-light-blue;
+        background-color: $bg-color-light-blue-blur;
+        font-size: 3em;
+        height: $itemsHeight/3;
+        cursor: pointer;
+        color: $bg-color-light-blue;
+        transition: color $animation-fast;
+
+        &:hover {
+            color: $bg-color-blue-blur;
+        }
+    }
+
+    input[type="file"] {
         display: none;
     }
 }

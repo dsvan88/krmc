@@ -8,9 +8,14 @@
 
 	label {
 		cursor: pointer;
+		transition: filter $animation-fast;
 
 		&:hover {
 			color: $color-text-section-title
+		}
+
+		&.blocked {
+			filter: grayscale(90%);
 		}
 	}
 

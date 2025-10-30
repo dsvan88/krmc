@@ -156,7 +156,7 @@ class Confirm extends Alert {
 
         super({ title, text });
 
-        this.action = action || ((data) => console.log(data));
+        this.action = action || ((data) => console.log('Here is no action for this data: ' + data));
         this.cancel = cancel;
 
         this.modifyForm().modifyEvents();
