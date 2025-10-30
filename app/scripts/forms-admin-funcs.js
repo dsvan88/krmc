@@ -88,7 +88,7 @@ actionHandler.formsImageUpdate = function (target, urls = []) {
 	const parent = target.closest('.image__container');
 	const img = parent.querySelector('.image__img');
 	img.src = urls[0];
-	parent.querySelector('input[name="link"]').value = urls[0];
+	parent.querySelector('input[name="image_link"]').value = urls[0];
 }
 actionHandler.formsImagesList = async function (target, event) {
 
@@ -96,17 +96,14 @@ actionHandler.formsImagesList = async function (target, event) {
 
 	target.classList.add('blocked');
 
-	const self = this;
-	const data = await this.apiTalk(target, event, 'actionClick');
-
-	const image = await imagesPad({ data: data });
+	const image = await imagesPad({ urlGet: target.dataset.actionClick });
 
 	target.classList.remove('blocked');
 
 	if (!image) return false;
 
 	const urls = image.split(',');
-	self.formsImageUpdate(target, urls);
+	this.formsImageUpdate(target, urls);
 
 	return true;
 }

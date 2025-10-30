@@ -100,6 +100,7 @@ class NewsController extends Controller
             'scripts' => [
                 'plugins/ckeditor.js',
                 'forms-admin-funcs.js',
+                'images-pad.js',
             ],
             'styles' => [
                 'forms',
@@ -125,7 +126,7 @@ class NewsController extends Controller
             'newsData' => $newsData,
             'scripts' => [
                 'plugins/ckeditor.js',
-                'forms-admin-funcs.js',
+                'forms-admin-funcs.js'
             ],
             'styles' => [
                 'forms',
@@ -160,6 +161,7 @@ class NewsController extends Controller
             'scripts' => [
                 'plugins/ckeditor.js',
                 'forms-admin-funcs.js',
+                'images-pad.js',
             ],
             'styles' => [
                 'forms',

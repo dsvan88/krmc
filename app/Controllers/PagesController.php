@@ -101,6 +101,7 @@ class PagesController extends Controller
             'scripts' => [
                 'plugins/ckeditor.js',
                 'forms-admin-funcs.js',
+                'images-pad.js',
             ],
             'page' => $page,
         ];
@@ -136,6 +137,7 @@ class PagesController extends Controller
             'scripts' => [
                 'plugins/ckeditor.js',
                 'forms-admin-funcs.js',
+                'images-pad.js',
             ],
         ];
         View::$route['vars'] = array_merge(View::$route['vars'], $vars);

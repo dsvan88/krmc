@@ -42,7 +42,7 @@ class TelegramChatsRepository
             $targets = array_column(TelegramChats::getChatsList(), 'uid');
         }
 
-        if (empty($post['link'])) {
+        if (empty($post['image_link'])) {
             return Sender::message($targets, $message)[0]['ok'];
         }
 
@@ -56,6 +56,6 @@ class TelegramChatsRepository
         // if (!$image) {
         //     throw new Exception('Image didn’t saved');
         // }
-        return Sender::photo($targets, $message, $post['link'])[0]['ok'];
+        return Sender::photo($targets, $message, $post['image_link'])[0]['ok'];
     }
 }

@@ -379,7 +379,7 @@ let actionHandler = {
 			});
 		});
 
-		return promise.then();
+		return await promise.then();
 	},
 	phoneInputFocus: function (event) {
 		const input = event.target,
@@ -618,7 +618,7 @@ class Confirm extends Alert {
 
         super({ title, text });
 
-        this.action = action || ((data) => console.log(data));
+        this.action = action || ((data) => console.log('Here is no action for this data: ' + data));
         this.cancel = cancel;
 
         this.modifyForm().modifyEvents();
@@ -1300,17 +1300,17 @@ function CKEditorApply(editors) {
 }
 
 actionHandler.mainImageChange = function (event) {
-	let file = event.target.files[0];
-	let img = createNewElement({
+	const file = event.target.files[0];
+	const img = createNewElement({
 		tag: 'img',
 		style: 'height:10vh;width:auto',
 		src: URL.createObjectURL(file)
 	});
-	let imgPlace = document.body.querySelector('#main-image-place');
+	const imgPlace = document.body.querySelector('#main-image-place');
 	imgPlace.innerHTML = '';
 	imgPlace.append(img)
 
-	let reader = new FileReader();
+	const reader = new FileReader();
 	reader.onload = applyNewImage(img);
 	reader.readAsDataURL(file);
 
@@ -1324,7 +1324,6 @@ actionHandler.mainImageChange = function (event) {
 
 actionHandler.formImageChange = function (event) {
 	const file = event.target.files[0];
-	console.dir(file.name);
 	const parent = event.target.closest('.image__container');
 	const img = parent.querySelector('.image__img');
 	img.src = URL.createObjectURL(file);
@@ -1335,4 +1334,28 @@ actionHandler.formImageChange = function (event) {
 		parent.querySelector('input[name="filename"]').value = file.name;
 	};
 	reader.readAsDataURL(file);
+}
+
+actionHandler.formsImageUpdate = function (target, urls = []) {
+	const parent = target.closest('.image__container');
+	const img = parent.querySelector('.image__img');
+	img.src = urls[0];
+	parent.querySelector('input[name="image_link"]').value = urls[0];
+}
+actionHandler.formsImagesList = async function (target, event) {
+
+	if (target.classList.contains('blocked')) return false;
+
+	target.classList.add('blocked');
+
+	const image = await imagesPad({ urlGet: target.dataset.actionClick });
+
+	target.classList.remove('blocked');
+
+	if (!image) return false;
+
+	const urls = image.split(',');
+	this.formsImageUpdate(target, urls);
+
+	return true;
 }

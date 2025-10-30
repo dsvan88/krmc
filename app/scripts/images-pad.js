@@ -2,14 +2,24 @@ class CustomImagesPad extends Prompt {
     checkboxs = [];
     values = [];
     addNewInput = null;
-    nextPageBotton = null;
+    nextPageButton = null;
 
-    constructor({ title = "Images list", text = "Choose images:", value = '', action = null, cancel = null, data = {} } = {}) {
-        value = '';
+    constructor({ 
+        title = "Images list", 
+        text = "Choose images:", 
+        value = '', 
+        action = null, 
+        cancel = null, 
+        data = {}, 
+        urlGet = 'forms/images/list',
+        urlAdd = 'image/add' } = {}
+    ) {
         super({ title, text, value, action, cancel })
 
         this.nextPageToken = data['nextPageToken'];
         this.images = data['images'];
+        this.urlGet = urlGet;
+        this.urlAdd = urlAdd;
         this.modifyForImagesPad().modifyEventsImagesPad();
         this.dialog.focus();
     }
@@ -24,10 +34,16 @@ class CustomImagesPad extends Prompt {
         imagesPad.classList.add('images__list');
 
         imagesPad.append(this.getNewImageForm());
+        imagesPad.append(this.getMoreImagesButton());
 
-        this.checkboxs = [];
+        this.showImagesPad();       
 
-        for (let x = 0; x < this.images.length; x++) {
+        inputWrapper.append(imagesPad);
+        return this;
+    }
+    showImagesPad(){
+        const y = this.checkboxs.length;
+        for (let x = y; x < this.images.length; x++) {
             const checkboxWrapper = document.createElement('span');
             checkboxWrapper.classList.add('images__item');
             this.checkboxs[x] = document.createElement('input');
@@ -40,19 +56,14 @@ class CustomImagesPad extends Prompt {
             img.classList.add('images__image');
             checkboxWrapper.append(this.checkboxs[x]);
             checkboxWrapper.append(img);
-            imagesPad.append(checkboxWrapper);
+            this.nextPageButton.before(checkboxWrapper);
         }
-
-        imagesPad.append(this.getMoreImagesButton());
-
-        inputWrapper.append(imagesPad);
-        return this;
     }
     modifyEventsImagesPad() {
-        const self = this;
-        this.checkboxs.forEach(checkbox => checkbox.addEventListener('change', () => self.updateInput.call(self, checkbox)));
-        this.addNewInput.addEventListener('change', (e) => self.addNewImage.call(self, e));
-        this.nextPageBotton.addEventListener('click', (e) => self.getMoreImages.call(self, e));
+        const s = this;
+        this.checkboxs.forEach(checkbox => checkbox.addEventListener('change', () => s.updateInput.call(s, checkbox)));
+        this.addNewInput.addEventListener('change', (e) => s.addNewImage.call(s, e));
+        this.nextPageButton.addEventListener('click', (e) => s.getMoreImages.call(s, e));
     }
     updateInput(checkbox) {
         const values = this.input.value ? this.input.value.split(',') : [];
@@ -73,7 +84,6 @@ class CustomImagesPad extends Prompt {
         input.type = 'file';
         input.id = 'new_image_' + Math.ceil(Math.random() * 100);
         input.accept = '.png,.jpg,.jpeg,.webp';
-        input.dataset.actionChange = 'image/add';
         this.addNewInput = input;
 
         const label = document.createElement('label');
@@ -85,12 +95,13 @@ class CustomImagesPad extends Prompt {
         return newImageForm;
     }
     getMoreImagesButton() {
-        const moreImagesSpan = document.createElement('span');
-        moreImagesSpan.classList.add('get-more', 'fa', 'fa-refresh');
+        this.nextPageButton = document.createElement('span');
+        this.nextPageButton.classList.add('get-more', 'fa', 'fa-refresh');
+        
+        if (!this.nextPageToken)
+            this.nextPageButton.classList.add('hidden');
 
-        this.nextPageBotton = moreImagesSpan;
-
-        return moreImagesSpan;
+        return this.nextPageButton;
     }
     async addNewImage(event) {
         const self = this;
@@ -123,22 +134,36 @@ class CustomImagesPad extends Prompt {
             formData.append('filename', file.name);
             formData.append('image', reader.result);
             formData.append('prompt', 1);
-            const result = await self.apiTalk(event.target, event, 'actionChange', formData);
+            const result = await request({url: self.urlAdd, data: formData});
             checkbox.value = result.realLink;
             img.src = result.realLink;
             checkbox.disabled = false;
         }
     }
-    async apiTalk(target, event, mode, formData) {
-        return await actionHandler.apiTalk(target, event, mode, formData);
-    }
-    getMoreImages(event) {
-        console.log(event);
-        return false;
+
+    async getMoreImages() {
+
+        if (!this.nextPageToken) return false;
+
+        const formData = new FormData();
+        formData.append('pageToken', this.nextPageToken);
+        const data = await request({url: this.urlGet, data: formData});
+        
+        this.nextPageToken = data.nextPageToken;
+        this.images = this.images.concat(data.images);
+        this.showImagesPad();
+
+        if (!this.nextPageToken)
+            this.nextPageButton.classList.add('hidden');
+
+        return true;
     }
 }
 
 async function imagesPad(options = {}) {
+
+	options.data = await request({url: options.urlGet});
+
     const promise = new Promise((r) => {
         options.action = (v) => r(v);
         new CustomImagesPad(options);

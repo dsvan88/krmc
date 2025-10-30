@@ -13,6 +13,7 @@
             </div>
             <div class="form__column">
                 <div class="form__row image__place">
+                    <? //self::component('forms/images-pad', ['link' => empty($page['logo-link']) ? '' : $page['logo-link']]) ?>
                     <label for="news-logo-input-file" id="main-image-place" class="form__image-label">
                         <? if (empty($page['data']['logo'])) : ?>
                             Додати головне зображення

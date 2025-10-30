@@ -278,4 +278,10 @@ return  [
         'action' => 'list',
         'access' => ['category' => 'manager']
     ],
+    'api/forms/images/list/{pageToken}' =>
+    [
+        'controller' => 'images',
+        'action' => 'list',
+        'access' => ['category' => 'manager']
+    ],
 ];
