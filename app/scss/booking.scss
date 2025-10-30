@@ -37,6 +37,18 @@
         font-size: 1.6em;
         text-transform: uppercase;
         flex-grow: 1;
+
+        @include md {
+            display: none;
+        }
+
+        &.tablet {
+            display: none;
+
+            @include md {
+                display: block;
+            }
+        }
     }
 
     &__subtitle {
@@ -102,6 +114,11 @@
     &__label {
         font-size: 1.2em;
         flex: 1 1 25px;
+        display: none;
+
+        @include md {
+            display: block;
+        }
 
         .centered {
             text-align: center;

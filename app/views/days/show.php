@@ -7,6 +7,7 @@
                 <span class="day__navlink"><a href="<?= $yesterday['link'] ?>"><i class="fa fa-angle-double-left"></i>&nbsp;<?= $yesterday['label'] ?></a></span>
             <? endif ?>
             <h3 class="day__title"><?= $day['dateTime'] ?></h3>
+            <h3 class="day__title tablet"><?= $day['dateDayTime'] ?></h3>
             <? if (empty($tomorrow['link'])) : ?>
                 <span class="day__navlink"><?= $tomorrow['label'] ?></span>
             <? else : ?>

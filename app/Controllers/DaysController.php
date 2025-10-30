@@ -79,7 +79,8 @@ class DaysController extends Controller
 
         $dayTimestamp = $day['weekStart'] + TIMESTAMP_DAY * $dayId;
         $day['date'] = empty($day['weekStart']) ? '{{ Day_Date_Not_Set }}' : date('d.m.Y', $dayTimestamp) . ' (<strong>' . Locale::phrase(date('l', $dayTimestamp)) . '</strong>) ';
-        $day['dateTime'] = empty($day['weekStart']) ? '{{ Day_Date_Not_Set }}' : $day['date'] . $day['time'];
+        $day['dateTime'] = empty($day['weekStart']) ? '{{ Day_Date_Not_Set }}' : date('d.m.Y', $dayTimestamp) . ' ' . $day['time'];
+        $day['dateDayTime'] = empty($day['weekStart']) ? '{{ Day_Date_Not_Set }}' : $day['date'] . $day['time'];
 
         if ($dayId == 0 && !Weeks::checkPrevWeek($weekId)) {
             $yesterday = [

@@ -37,6 +37,18 @@
         font-size: 1.6em;
         text-transform: uppercase;
         flex-grow: 1;
+
+        @include md {
+            display: none;
+        }
+
+        &.tablet {
+            display: none;
+
+            @include md {
+                display: block;
+            }
+        }
     }
 
     &__subtitle {
