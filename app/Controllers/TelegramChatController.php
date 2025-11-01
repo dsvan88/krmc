@@ -18,6 +18,9 @@ class telegramChatController extends Controller
         $vars = [
             'title' => '{{ Chats_List_Title }}',
             'chatsData' => $chatsData,
+            'scripts' => [
+                'chats/list.js'
+            ],
         ];
         View::$route['vars'] = array_merge(View::$route['vars'], $vars);
 
@@ -31,6 +34,9 @@ class telegramChatController extends Controller
         $vars = [
             'title' => '{{ Chats_List_Title }}',
             'chatsData' => $chatsData,
+            'scripts' => [
+                'chats/list.js'
+            ],
         ];
         View::$route['vars'] = array_merge(View::$route['vars'], $vars);
 

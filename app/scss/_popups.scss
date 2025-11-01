@@ -43,10 +43,11 @@
     &__input {
         border-radius: 5px;
         outline: none;
+          padding: .2em .4em;
 
         &-wrapper {
             text-align: center;
-            margin: .5em 0;
+            margin: 1em 0;
         }
     }
 

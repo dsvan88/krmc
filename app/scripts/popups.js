@@ -232,3 +232,13 @@ class Prompt extends Confirm {
             return this.cancel ? cancel(this.input.value) : this.action(false);
     }
 }
+
+
+async function customPrompt(options = {}) {
+
+    const promise = new Promise((r) => {
+        options.action = (v) => r(v);
+        new Prompt(options);
+    })
+    return await promise.then();
+}

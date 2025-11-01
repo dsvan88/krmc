@@ -256,17 +256,17 @@ class AccountController extends Controller
         if (!Users::checkAccess('admin')) {
             return View::message(['error' => 1, 'message' => 'You don’t have enough rights to change information about other users!']);
         }
-        extract(self::$route['vars']);
+        $chatId = (int) $_POST['cid'];
 
         AccountRepository::unlinkTelegram($chatId);
 
         $name = trim($_POST['name']);
         if (empty($name) || $name === '-') {
-            return View::message('Success!');
+            return View::notice(['message'=>'Success!', 'time' =>  1500, 'location' => 'reload']);
         }
 
         AccountRepository::linkTelegram($chatId, $name);
-        return View::message('Success!');
+        return View::notice(['message'=>'Success!', 'time' =>  1500, 'location' => 'reload']);
     }
     public function setNicknameFormAction()
     {

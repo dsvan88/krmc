@@ -111,13 +111,7 @@ return  [
         'action' => 'ban',
         'access' => ['category' => 'admin']
     ],
-    'api/account/set/nickname/form' =>
-    [
-        'controller' => 'account',
-        'action' => 'setNicknameForm',
-        'access' => ['category' => 'manager']
-    ],
-    'api/account/set/nickname/{chatId}' =>
+    'api/account/set/nickname' =>
     [
         'controller' => 'account',
         'action' => 'setNickname',
