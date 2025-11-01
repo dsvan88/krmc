@@ -40,7 +40,7 @@ class PageRepository
             $imageSize = getimagesize($_SERVER['DOCUMENT_ROOT'] . $page['logo']);
         }
         else {
-            $image = GoogleDrive::getLink($page['data']['logo']);
+            $image = empty($page['logoLink']) ? GoogleDrive::getLink($page['data']['logo']) : $page['logoLink'];
             $imageSize = getimagesize($image);
         }
         

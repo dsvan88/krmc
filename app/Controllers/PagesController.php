@@ -79,9 +79,9 @@ class PagesController extends Controller
                     $page['keywords'] = $page['data']['keywords'];
             }
         }
-        $page['logo-link'] = '';
+        $page['image_link'] = '';
         if (!empty($page['data']['logo'])) {
-            $page['logo-link'] = GoogleDrive::getLink($page['data']['logo']);
+            $page['image_link'] = GoogleDrive::getLink($page['data']['logo']);
         }
         $page['published_at'] = strtotime($page['published_at']);
         $page['published_at'] = date('Y-m-d', $page['published_at']) . 'T' . date('H:i', $page['published_at']);

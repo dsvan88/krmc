@@ -7,7 +7,7 @@
         
         <? if (!empty($page['logoLink'])): ?>
             <div class="page__image-place">
-                <img src="<?= $page['logoLink'] ?>" alt="Main image" class="page__image">
+                <img src="<?= $page['logoLink'] ?>" alt="" class="page__image">
             </div>
         <? endif ?>
         <?= $page['html'] ?>

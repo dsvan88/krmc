@@ -1336,11 +1336,13 @@ actionHandler.formImageChange = function (event) {
 	reader.readAsDataURL(file);
 }
 
-actionHandler.formsImageUpdate = function (target, urls = []) {
+actionHandler.formsImageUpdate = function (target, image = []) {
 	const parent = target.closest('.image__container');
 	const img = parent.querySelector('.image__img');
-	img.src = urls[0];
-	parent.querySelector('input[name="image_link"]').value = urls[0];
+	img.src = image[0]['thumbnailLink'];
+
+	parent.querySelector('input[name="image_link"]').value = image[0]['thumbnailLink'];
+	parent.querySelector('input[name="image_id"]').value = image[0]['id'];
 }
 actionHandler.formsImagesList = async function (target, event) {
 
@@ -1354,8 +1356,7 @@ actionHandler.formsImagesList = async function (target, event) {
 
 	if (!image) return false;
 
-	const urls = image.split(',');
-	this.formsImageUpdate(target, urls);
+	this.formsImageUpdate(target, JSON.parse(image));
 
 	return true;
 }

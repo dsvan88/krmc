@@ -56,6 +56,7 @@ class ImagesController extends Controller
 
         foreach ($files as $file) {
             $result['images'][] = [
+                'id' => $file['id'],
                 'name' => $file['name'],
                 'size' => ceil($file['size'] / 1024),
                 'thumbnailLink' => $file['thumbnailLink'],

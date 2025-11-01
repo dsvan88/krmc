@@ -126,13 +126,18 @@
 			width: 100%;
 			height: 5em;
 		}
+		&__label{
+			display: flex;
+			justify-content: center;
+			height: 100%;
+		}
 
 		&__img {
-			height: 100%;
+			// height: 100%;
 			width: auto;
 			background-color: $bg-color-light-blue-blur;
 			box-sizing: border-box;
 			padding: .2em;
 		}
-	}
+	} 
 }

@@ -1,0 +1,57 @@
+@import "tech/mixins_adapt";
+@import "tech/vars";
+
+.game-types{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    list-style: none;
+    gap: 2em;
+    &__item{
+        border: 1px solid $bg-color-light-blue-blur;
+        padding: 1em;
+        box-sizing: border-box;
+        transition: border-color $animation-fast, box-shadow $animation-fast;
+        &:hover {
+            border: 1px solid $bg-color-light-blue;
+            box-shadow: .1em .1em .1em .1em $bg-color-light-blue;
+        }
+        @include md {
+            width: 30vw;
+        }
+        @include lg {
+            width: 25vw;
+        }
+        @include xl {
+            width: 20vw;
+        }
+    }
+    &__logo{
+        float: left;
+        max-width: 30%;
+        border: 1px solid $bg-color-dark;
+        text-indent: 0;
+        box-sizing: border-box;
+        margin: 0 1em 2em 0;
+        img{
+            width: 100%;
+            height: auto;
+            outline: 1px solid $bg-color-dark-blur;
+            position: relative;
+            top: -.5em;
+            left: -.5em;
+            box-shadow: .1em .1em .2em .2em $bg-color-dark-blur;
+        }
+    }
+    &__title{
+        font-size: 1.2em;
+        margin-bottom: 1em;
+    }
+    &__description{
+        margin-bottom: 1em;
+        padding-left: 1em;
+    }
+    &__readmore{
+        float: right;
+    }
+}

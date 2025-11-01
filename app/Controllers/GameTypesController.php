@@ -27,14 +27,22 @@ class GameTypesController extends Controller
                 ";
             $dashboard .= '</span>';
         }
+        
+        $games = GameTypes::all();
+        
+        array_walk($games, fn (&$game) => $game['data']['logo'] = empty($game['data']['logo']) ? '' : GoogleDrive::getLink($game['data']['logo']) );
+
         $vars = [
             'title' => 'Games',
             'dashboard' => $dashboard,
-            'games' => Locale::apply(GameTypes::names()),
+            'games' => $games,
             'texts' => [
                 'BlockTitle' => 'Games of our club',
                 'BlockSubTitle' => 'Our leisure club is going to participate in the following games',
             ],
+            'styles' => [
+                'game-types'
+            ]
         ];
 
         View::$route['vars'] = array_merge(View::$route['vars'], $vars);

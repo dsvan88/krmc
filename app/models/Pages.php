@@ -175,23 +175,8 @@ class Pages extends Model
         if (!empty($data['expired_at'])) {
             $array['expired_at'] = date('Y-m-d H:i:s', strtotime($data['expired_at']));
         }
-
-        if (!empty($data['main-image'])) {
-            $filename = $slug . '-logo.';
-            preg_match('/data:image\/([^;]+)/', $data['main-image'], $matches);
-            $extension = $matches[1];
-            $filename .= $extension;
-
-            ImageProcessing::saveBase64Image($data['main-image'], $filename);
-
-            $filePath = $_SERVER['DOCUMENT_ROOT'] . FILE_MAINGALL . $filename;
-            $gDrive = new GoogleDrive();
-            $fileId = $gDrive->create($_SERVER['DOCUMENT_ROOT'] . FILE_MAINGALL . $filename);
-
-            unlink($filePath);
-            $array['data']['logo'] = $fileId;
-        } elseif (!empty($data['logo-link'])) {
-            $array['data']['logo'] = basename($data['logo-link']);
+        if (!empty($data['image_id'])) {
+            $array['data']['logo'] = $data['image_id'];
         }
         if (!empty($data['keywords'])) {
             $array['data']['keywords'] = explode(',', $data['keywords']);

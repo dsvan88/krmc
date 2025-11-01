@@ -18,6 +18,11 @@
                 <div class="form__row"><label class="form__label" for="published_at">Дата публікації:</label><input type="datetime-local" id="published_at" name="published_at" value="<?= date('Y-m-d') . 'T' . date('H:i') ?>" class="form__input" placeholder="Дата публікації"></div>
                 <div class="form__row"><label class="form__label" for="expired_at">Дійсна до:</label><input type="datetime-local" id="expired_at" name="expired_at" value="" class="form__input" placeholder="Дата публікації"></div>
             </div>
+            <div class="form__column">
+                <div class="form__row">
+                    <? self::component('forms/images-pad') ?>
+                </div>
+            </div>
         </div>
         <div class="editor-block" data-field="html">
             <div class="toolbar-container"></div>

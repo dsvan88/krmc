@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use app\core\GoogleDrive;
 use app\core\Locale;
 
 class GameTypes extends Pages
@@ -50,6 +51,24 @@ class GameTypes extends Pages
         }
         self::$gameNames = array_merge(self::$defaultGames, $names);
         return self::$gameNames;
+    }
+    public static function all() : array
+    {
+        $games = self::findBy('type', 'game');
+
+        if (!$games)
+            return [];
+
+        $count = count($games);
+        $result = [];
+        $lang = Locale::$langCode;
+        for ($i = 0; $i < $count; $i++) {
+            if (!empty($games[$i]['date_delete'])) continue;
+            // if (!empty($games[$i]['lang']) && $games[$i]['lang'] !== $lang) continue;
+            if ($lang !== $games[$i]['lang']) continue;
+            $result[] = $games[$i];
+        }
+        return $result;
     }
     public static function getKeywords()
     {

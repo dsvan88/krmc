@@ -49,7 +49,7 @@ class CustomImagesPad extends Prompt {
             this.checkboxs[x] = document.createElement('input');
             this.checkboxs[x].type = 'checkbox';
             this.checkboxs[x].id = `checkbox[${x}]`;
-            this.checkboxs[x].value = this.images[x].thumbnailLink;
+            this.checkboxs[x].value = x;;
 
             const img = document.createElement('img');
             img.src = this.images[x].thumbnailLink;
@@ -61,20 +61,8 @@ class CustomImagesPad extends Prompt {
     }
     modifyEventsImagesPad() {
         const s = this;
-        this.checkboxs.forEach(checkbox => checkbox.addEventListener('change', () => s.updateInput.call(s, checkbox)));
         this.addNewInput.addEventListener('change', (e) => s.addNewImage.call(s, e));
         this.nextPageButton.addEventListener('click', (e) => s.getMoreImages.call(s, e));
-    }
-    updateInput(checkbox) {
-        const values = this.input.value ? this.input.value.split(',') : [];
-        if (checkbox.checked) {
-            values.push(checkbox.value);
-        }
-        else {
-            const index = values.indexOf(checkbox.value);
-            values.splice(index, 1);
-        }
-        this.input.value = values.join(',');
     }
     getNewImageForm() {
         const newImageForm = document.createElement('form');
@@ -157,6 +145,19 @@ class CustomImagesPad extends Prompt {
             this.nextPageButton.classList.add('hidden');
 
         return true;
+    }
+    submit() {
+        const result = [];
+        for(const checkbox of this.checkboxs){
+            if (!checkbox.checked) continue;
+            result.push(this.images[checkbox.value]);
+        }
+        this.input.value = JSON.stringify(result);
+        super.submit();
+        // if (this.state)
+        //     return this.action(this.input.value);
+        // else
+        //     return this.cancel ? cancel(this.input.value) : this.action(false);
     }
 }
 
