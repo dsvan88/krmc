@@ -696,7 +696,7 @@ class Prompt extends Confirm {
 }
 
 
-async function imagesPad(options = {}) {
+async function customPrompt(options = {}) {
 
     const promise = new Promise((r) => {
         options.action = (v) => r(v);
