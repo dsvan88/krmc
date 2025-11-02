@@ -379,7 +379,7 @@ let actionHandler = {
 			});
 		});
 
-		return promise.then();
+		return await promise.then();
 	},
 	phoneInputFocus: function (event) {
 		const input = event.target,
@@ -618,7 +618,7 @@ class Confirm extends Alert {
 
         super({ title, text });
 
-        this.action = action || ((data) => console.log(data));
+        this.action = action || ((data) => console.log('Here is no action for this data: ' + data));
         this.cancel = cancel;
 
         this.modifyForm().modifyEvents();
@@ -693,6 +693,16 @@ class Prompt extends Confirm {
         else
             return this.cancel ? cancel(this.input.value) : this.action(false);
     }
+}
+
+
+async function customPrompt(options = {}) {
+
+    const promise = new Promise((r) => {
+        options.action = (v) => r(v);
+        new Prompt(options);
+    })
+    return await promise.then();
 }
 class Noticer {
 

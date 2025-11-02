@@ -13,6 +13,7 @@ use app\core\View;
 use app\models\Pages;
 use app\models\Settings;
 use app\models\Users;
+use app\Repositories\ImageRepository;
 use app\Repositories\PageRepository;
 
 class ImagesController extends Controller
@@ -23,20 +24,51 @@ class ImagesController extends Controller
         View::$route['vars']['styles'][] = 'images';
         return true;
     }
+    public function getMoreAction()
+    {
+        $pageToken = '';
+        extract(self::$route['vars']);
+
+        if (!empty($_POST['pageToken']))
+            $pageToken = $_POST['pageToken'];
+
+        ImageRepository::getImagesList($pageToken, $files, $nextPageToken);
+
+        $html = '';
+        $backgrounds = Settings::getImage('background')['value'];
+        $path = $_SERVER['DOCUMENT_ROOT'] . View::$viewsFolder . "/components/list/image/item.php";
+
+        $count = count($files);
+        for ($i=0; $i < $count; $i++) { 
+            $file = [
+                'id' => $files[$i]['id'],
+                'thumbnailLink' => $files[$i]['thumbnailLink'],
+                'realLink' => GoogleDrive::getLink($files[$i]['id']),
+                'name' => $files[$i]['name'],
+            ];
+            ob_start();
+            require $path;
+            $html .= ob_get_clean();
+        }
+        return View::response(compact('html', 'nextPageToken'));
+    }
     public function indexAction()
     {
         $pageToken = '';
         extract(self::$route['vars']);
 
-        $gDrive = new GoogleDrive();
-        $title = 'Images';
-        $files = $gDrive->listFiles($pageToken);
+        if (!empty($_POST['pageToken']))
+            $pageToken = $_POST['pageToken'];
 
+        ImageRepository::getImagesList($pageToken, $files, $nextPageToken);
+        
+        $title = 'Images';
         $backgrounds = Settings::getImage('background')['value'];
         $scripts = [
             'images.js',
         ];
-        View::$route['vars'] = array_merge(View::$route['vars'], compact('title', 'files', 'backgrounds', 'scripts'));
+        View::$route['vars'] = array_merge(View::$route['vars'], compact('title', 'files', 'backgrounds', 'scripts', 'nextPageToken'));
+        
         return View::render();
     }
     public function listAction()
@@ -184,7 +216,6 @@ class ImagesController extends Controller
 
         $imageIds = json_decode($imageIds, true);
         try {
-
             $gDrive = new GoogleDrive();
             $count = count($imageIds);
             for ($x = 0; $x < $count; $x++) {

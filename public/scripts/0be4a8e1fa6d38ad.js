@@ -694,6 +694,16 @@ class Prompt extends Confirm {
             return this.cancel ? cancel(this.input.value) : this.action(false);
     }
 }
+
+
+async function customPrompt(options = {}) {
+
+    const promise = new Promise((r) => {
+        options.action = (v) => r(v);
+        new Prompt(options);
+    })
+    return await promise.then();
+}
 class Noticer {
 
 	noticesPlace = null;
@@ -1292,6 +1302,16 @@ actionHandler.imageToogle = function (event) {
     else
         enumBgImages.splice(index, 1);
     return true;
+}
+actionHandler.imagesGetMore = async function (target, event) {
+    const formData = new FormData();
+    formData.append('pageToken', target.dataset.pageToken);
+    const result = await this.apiTalk(target, event, 'actionClick', formData);
+    target.insertAdjacentHTML('beforebegin', result.html);
+    target.dataset.pageToken = result.nextPageToken ? result.nextPageToken : '';
+    if (!result.nextPageToken){
+        target.classList.add('hidden');
+    }
 }
 
 actionHandler.getLink = function (target) {

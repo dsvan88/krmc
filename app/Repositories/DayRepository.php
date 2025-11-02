@@ -22,6 +22,7 @@ class DayRepository
         'beginners' => '',
         'tournament' => '',
         'night' => '',
+        'close' => '',
         'theme' => '',
         'funs' => ''
     ];

@@ -129,6 +129,32 @@ main {
                     }
                 }
             }
+            &.get-more {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                cursor: pointer;
+
+                .label {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    font-size: 5em;
+                    transition: font-size $animation-fast;
+                    height: 100%;
+                    max-width: 100%;
+                    cursor: pointer;
+                }
+
+                &:hover {
+                    .label {
+                        font-size: 7em;
+                    }
+                }
+                &.hidden {
+                    display: none;
+                }
+            }
 
             .dropdown {
                 width: 3em;

@@ -229,6 +229,11 @@ return  [
         'action' => 'add',
         'access' => ['category' => 'manager']
     ],
+    'api/images/get-more' => [
+        'controller' => 'images',
+        'action' => 'getMore',
+        'access' => ['category' => 'manager'],
+    ],
     'api/image/delete' =>
     [
         'controller' => 'images',
@@ -258,12 +263,6 @@ return  [
     [
         'controller' => 'images',
         'action' => 'deleteGroup',
-        'access' => ['category' => 'manager']
-    ],
-    'api/image/index/form' =>
-    [
-        'controller' => 'images',
-        'action' => 'indexForm',
         'access' => ['category' => 'manager']
     ],
     'api/forms/images/list' =>

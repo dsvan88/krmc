@@ -41,6 +41,16 @@ actionHandler.imageToogle = function (event) {
         enumBgImages.splice(index, 1);
     return true;
 }
+actionHandler.imagesGetMore = async function (target, event) {
+    const formData = new FormData();
+    formData.append('pageToken', target.dataset.pageToken);
+    const result = await this.apiTalk(target, event, 'actionClick', formData);
+    target.insertAdjacentHTML('beforebegin', result.html);
+    target.dataset.pageToken = result.nextPageToken ? result.nextPageToken : '';
+    if (!result.nextPageToken){
+        target.classList.add('hidden');
+    }
+}
 
 actionHandler.getLink = function (target) {
     try {
