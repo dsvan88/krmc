@@ -519,9 +519,9 @@ class Alert {
     }
     fill({ title = "PopUp", text = "There is no information, yet!" }) {
         this.title.innerText = title;
-        if (/\<[a-s]/.test(text))
+        if (/\<[a-z]/.test(text)) {
             this.text.innerHTML = '<p>' + text.replace(/\n/g, '</p><p>') + '</p>';
-        else
+        } else
             this.text.innerText = text;
     }
     close() {
@@ -695,6 +695,15 @@ class Prompt extends Confirm {
     }
 }
 
+
+async function customConfirm(options = {}) {
+
+    const promise = new Promise((r) => {
+        options.action = (v) => r(v);
+        new Confirm(options);
+    })
+    return await promise.then();
+}
 
 async function customPrompt(options = {}) {
 

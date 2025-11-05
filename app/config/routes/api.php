@@ -178,11 +178,6 @@ return  [
         'access' => ['category' => 'trusted']
     ],
 
-    'api/settings/edit/form' => [
-        'controller' => 'settings',
-        'action' => 'editForm',
-        'access' => ['category' => 'admin']
-    ],
     'api/settings/edit' => [
         'controller' => 'settings',
         'action' => 'edit',

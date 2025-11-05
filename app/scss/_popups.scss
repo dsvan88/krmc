@@ -38,12 +38,16 @@
         .negative {
             color: $bg-color-red-blur;
         }
+
+        p {
+            margin-bottom: .5em;
+        }
     }
 
     &__input {
         border-radius: 5px;
         outline: none;
-          padding: .2em .4em;
+        padding: .2em .4em;
 
         &-wrapper {
             text-align: center;

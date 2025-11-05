@@ -519,9 +519,9 @@ class Alert {
     }
     fill({ title = "PopUp", text = "There is no information, yet!" }) {
         this.title.innerText = title;
-        if (/\<[a-s]/.test(text))
+        if (/\<[a-z]/.test(text)) {
             this.text.innerHTML = '<p>' + text.replace(/\n/g, '</p><p>') + '</p>';
-        else
+        } else
             this.text.innerText = text;
     }
     close() {
@@ -693,6 +693,25 @@ class Prompt extends Confirm {
         else
             return this.cancel ? cancel(this.input.value) : this.action(false);
     }
+}
+
+
+async function customConfirm(options = {}) {
+
+    const promise = new Promise((r) => {
+        options.action = (v) => r(v);
+        new Confirm(options);
+    })
+    return await promise.then();
+}
+
+async function customPrompt(options = {}) {
+
+    const promise = new Promise((r) => {
+        options.action = (v) => r(v);
+        new Prompt(options);
+    })
+    return await promise.then();
 }
 class Noticer {
 
@@ -1268,19 +1287,19 @@ actionHandler.commonFormSubmit = function (event) {
 	});
 }
 
-let commonForm = document.body.querySelector('.form .form__form');
+const commonForm = document.body.querySelector('.form .form__form');
 if (commonForm) {
 	commonForm.onsubmit = actionHandler.commonFormSubmit;
 }
 
-let editorsBlocks = document.body.querySelectorAll('div.editor-block');
+const editorsBlocks = document.body.querySelectorAll('div.editor-block');
 if (editorsBlocks.length > 0) {
 	CKEditorApply(editorsBlocks);
 }
 
 function CKEditorApply(editors) {
-	for (let index = 0; index < editors.length; index++) {
-		let randomIndex = Math.random(321123);
+	for (const index = 0; index < editors.length; index++) {
+		const randomIndex = Math.random(321123);
 		editors[index].id = randomIndex;
 		DecoupledEditor.create(
 			editors[index].querySelector('.editor')
@@ -1344,7 +1363,7 @@ actionHandler.formsImageUpdate = function (target, image = []) {
 	parent.querySelector('input[name="image_link"]').value = image[0]['thumbnailLink'];
 	parent.querySelector('input[name="image_id"]').value = image[0]['id'];
 }
-actionHandler.formsImagesList = async function (target, event) {
+actionHandler.formsImagesList = async function (target) {
 
 	if (target.classList.contains('blocked')) return false;
 
@@ -1359,4 +1378,21 @@ actionHandler.formsImagesList = async function (target, event) {
 	this.formsImageUpdate(target, JSON.parse(image));
 
 	return true;
+}
+actionHandler.settingsEdit = async function (target, event) {
+	const value = target.innerText;
+	const newValue = await customPrompt({
+		title: 'Set a value',
+		text: `Setting's name:\n<u>${target.dataset.name}</u>`,
+		value: value
+	});
+
+	if (!newValue || newValue === value) return false;
+
+	const formData = new FormData();
+	formData.append('type', target.dataset.type);
+	formData.append('slug', target.dataset.slug);
+	formData.append('value', newValue);
+
+	return await this.apiTalk(target, event, 'actionDblclick', formData);
 }
