@@ -7,5 +7,5 @@ composer.phar
 tg-message.txt
 .env.dev
 /vendor/*
-/public/scripts/*.js
+public/scripts/*.js
 composer.phar

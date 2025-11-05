@@ -116,7 +116,7 @@ actionHandler.settingsEdit = async function (target, event) {
 		value: value
 	});
 
-	if (!newValue || newValue === value) return false;
+	if (newValue === false || newValue === value) return false;
 
 	const formData = new FormData();
 	formData.append('type', target.dataset.type);

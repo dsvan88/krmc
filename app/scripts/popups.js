@@ -236,18 +236,16 @@ class Prompt extends Confirm {
 
 async function customConfirm(options = {}) {
 
-    const promise = new Promise((r) => {
+    return await new Promise((r) => {
         options.action = (v) => r(v);
         new Confirm(options);
-    })
-    return await promise.then();
+    }).then();
 }
 
 async function customPrompt(options = {}) {
 
-    const promise = new Promise((r) => {
+    return await new Promise((r) => {
         options.action = (v) => r(v);
         new Prompt(options);
-    })
-    return await promise.then();
+    }).then();
 }
