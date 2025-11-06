@@ -39,7 +39,7 @@ class ImagesController extends Controller
         $path = $_SERVER['DOCUMENT_ROOT'] . View::$viewsFolder . "/components/list/image/item.php";
 
         $count = count($files);
-        for ($i=0; $i < $count; $i++) { 
+        for ($i = 0; $i < $count; $i++) {
             $file = [
                 'id' => $files[$i]['id'],
                 'thumbnailLink' => $files[$i]['thumbnailLink'],
@@ -61,14 +61,14 @@ class ImagesController extends Controller
             $pageToken = $_POST['pageToken'];
 
         ImageRepository::getImagesList($pageToken, $files, $nextPageToken);
-        
+
         $title = 'Images';
         $backgrounds = Settings::getImage('background')['value'];
         $scripts = [
             'images.js',
         ];
         View::$route['vars'] = array_merge(View::$route['vars'], compact('title', 'files', 'backgrounds', 'scripts', 'nextPageToken'));
-        
+
         return View::render();
     }
     public function listAction()
@@ -105,20 +105,24 @@ class ImagesController extends Controller
 
         $filePath = $_SERVER['DOCUMENT_ROOT'] . FILE_MAINGALL . $filename;
         $gDrive = new GoogleDrive();
-        $fileId = $gDrive->create($_SERVER['DOCUMENT_ROOT'] . FILE_MAINGALL . $filename);
+        $fileId = $gDrive->create($filePath);
+        $size = filesize($filePath);
 
         unlink($filePath);
         $file = [
             'id' => $fileId,
             'realLink' => $gDrive->getLink($fileId),
+            'thumbnailLink' => $gDrive->getLink($fileId),
             'name' => $filename,
+            'size' => $size,
         ];
         if (!empty($_POST['prompt'])) {
             return View::response($file);
         }
+
         $path = '/components/list/image/item';
 
-        View::$route['vars'] = array_merge(View::$route['vars'], compact('file', 'path'));
+        View::$route['vars'] = array_merge(View::$route['vars'], ['file' => $file, 'path' => $path, 'backgrounds' => []]);
         return View::html();
     }
     public function deleteAction()

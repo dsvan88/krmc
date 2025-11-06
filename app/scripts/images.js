@@ -13,6 +13,7 @@ actionHandler.imageAdd = async function (event) {
         formData.append('image', reader.result);
         const result = await self.apiTalk(event.target, event, 'actionChange', formData);
         target.insertAdjacentHTML('afterend', result.html);
+        target.nextSibling.addEventListener('change', (e) => self.changeCommonHandler(e));
     }
 }
 actionHandler.imageBackgroundGroup = async function (target, event) {
