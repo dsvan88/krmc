@@ -1,3 +1,4 @@
+@import "tech/mixins_adapt";
 @import "tech/vars";
 $size: 8em;
 
@@ -5,9 +6,13 @@ main {
     .images {
         &__wrapper {
             display: flex;
+            justify-content: center;
         }
 
         min-height: 40vh;
+        max-height: 80vh;
+        width: 40vw;
+        overflow-y: auto;
         display: flex;
         flex-wrap: wrap;
         gap: 0.5em;
@@ -16,14 +21,20 @@ main {
         outline: $bg-color-dark-blur;
         border: 1px solid $bg-color-dark;
 
-        &__dashboard {
+
+        @include md {
+            width: auto;
+        }
+
+        &__details {
             background-color: $bg-color-light-red-blur;
-            font-size: 3em;
+        }
+
+        &__dashboard {
+            font-size: 4em;
             display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: .2em;
-            padding: .2em;
+            gap: .3em;
+            padding: .2em .5em;
         }
 
         .image {
@@ -53,6 +64,14 @@ main {
                 position: absolute;
                 top: .1em;
                 left: .1em;
+            }
+
+            &__radio {
+                display: none;
+
+                &:checked+.image {
+                    box-shadow: 1px 1px 2px 2px $bg-color-light-blue, ;
+                }
             }
 
             &.select_bg {
@@ -129,6 +148,7 @@ main {
                     }
                 }
             }
+
             &.get-more {
                 display: flex;
                 justify-content: center;
@@ -151,6 +171,7 @@ main {
                         font-size: 7em;
                     }
                 }
+
                 &.hidden {
                     display: none;
                 }
@@ -176,6 +197,33 @@ main {
                     color: $bg-color-red-blur;
                 }
             }
+        }
+    }
+
+    .info {
+        &__row {
+            display: flex;
+            gap: 1em;
+            padding: 0 1em;
+            border-bottom: 1px solid $bg-color-dark-blur;
+        }
+
+        &__caption {
+            display: none;
+
+            @include md {
+                display: inline;
+            }
+
+            &::after {
+                content: ':';
+            }
+        }
+
+        &__value {
+            font-size: 1.2em;
+            max-width: 15em;
+            overflow: hidden;
         }
     }
 }

@@ -6,8 +6,6 @@ namespace app\Controllers;
 use app\models\Settings;
 use app\core\Controller;
 use app\core\View;
-use app\core\Locale;
-use app\core\Tech;
 
 class SettingsController extends Controller
 {

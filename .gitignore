@@ -1,11 +1,5 @@
-/rudiments/*
-git-get.bat
-git-push.bat
-git-stash.bat
+public/scripts/*.js
 .prettierrc.json
 composer.phar
-tg-message.txt
 .env.dev
 /vendor/*
-public/scripts/*.js
-composer.phar

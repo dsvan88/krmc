@@ -47,20 +47,43 @@ actionHandler.imagesGetMore = async function (target, event) {
     const result = await this.apiTalk(target, event, 'actionClick', formData);
     target.insertAdjacentHTML('beforebegin', result.html);
     target.dataset.pageToken = result.nextPageToken ? result.nextPageToken : '';
-    if (!result.nextPageToken){
+    if (!result.nextPageToken) {
         target.classList.add('hidden');
     }
 }
 
+actionHandler.showImageInfo = function (event) {
+    // console.log(target);
+    info_value_name.innerText = event.target.dataset.name;
+    info_value_bytes.innerText = Math.ceil(event.target.dataset.size / 1024) + ' Kb';
+}
 actionHandler.getLink = function (target) {
     try {
         navigator.clipboard.writeText(target.dataset.link);
-        alert('Скопійовано до буферу обміну');
+        if (confirm('Скопійовано до буферу обміну.\nБажаєте відркити в новому вікні?'))
+            return window.open(target.dataset.link, '_blank');
     }
     catch (error) {
         if (confirm(`Не вдалось скопіювати до будеру обміну.\nПерейти за посиланням у новому вікні?`)) {
             return window.open(target.dataset.link, '_blank');
         }
         return new Alert({ title: "Your link", text: `Your link to this image is:<br><a href="${target.dataset.link}" target="_blank">${target.dataset.link}</a>` });
+    }
+}
+actionHandler.imageGetLink = function (target) {
+    const radio = document.querySelector('.image__radio:checked');
+
+    if (!radio) return false;
+
+    try {
+        navigator.clipboard.writeText(radio.dataset.link);
+        if (confirm('Скопійовано до буферу обміну.\nБажаєте відркити в новому вікні?'))
+            return window.open(radio.dataset.link, '_blank');
+    }
+    catch (error) {
+        if (confirm(`Не вдалось скопіювати до будеру обміну.\nПерейти за посиланням у новому вікні?`)) {
+            return window.open(radio.dataset.link, '_blank');
+        }
+        return new Alert({ title: "Your link", text: `Your link to this image is:<br><a href="${radio.dataset.link}" target="_blank">${radio.dataset.link}</a>` });
     }
 }

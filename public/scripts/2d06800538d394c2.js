@@ -702,7 +702,6 @@ async function customConfirm(options = {}) {
         options.action = (v) => r(v);
         new Confirm(options);
     }).then();
-    // return await promise.then();
 }
 
 async function customPrompt(options = {}) {
@@ -711,7 +710,6 @@ async function customPrompt(options = {}) {
         options.action = (v) => r(v);
         new Prompt(options);
     }).then();
-    // return await promise.then();
 }
 class Noticer {
 

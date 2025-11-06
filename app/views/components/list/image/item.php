@@ -1,10 +1,11 @@
-<? 
+<?
 $selected = '';
-if (in_array($file['id'],$backgrounds,true)){
+if (in_array($file['id'], $backgrounds, true)) {
     $selected = 'select_bg';
 }
 ?>
-<div class="image <?=$selected?>">
+<input type="radio" name="image-radio" class="image__radio" id="<?= $file['id'] ?>" data-name="<?= $file['name'] ?>" data-size="<?= $file['size'] ?>" data-action-change="show-image-info" data-action-dblclick="get-link" data-link="<?= $file['realLink'] ?>">
+<label class="image <?= $selected ?>" for="<?= $file['id'] ?>">
     <label class="dashboard__label">
         <input type="checkbox" name="image_check[]" value="<?= $file['id'] ?>" data-action-change="image-toogle">
     </label>
@@ -14,14 +15,4 @@ if (in_array($file['id'],$backgrounds,true)){
     <div class="image__place">
         <img class="image__img" src="<?= $file['thumbnailLink'] ?>" loading="lazy" alt="<?= $file['name'] ?>" title="<?= $file['name'] ?>">
     </div>
-    <div class="dropdown fa fa-ellipsis-v">
-        <ul class="image__menu dropdown__menu">
-            <? if ($selected): ?>
-                <li class="dropdown__item"><span data-action-click="image/background/remove" data-image-id="<?= $file['id'] ?>">Прибрати з фону</span></li>
-            <? else: ?>
-                <li class="dropdown__item"><span data-action-click="image/background/set" data-image-id="<?= $file['id'] ?>">Додати на фон</span></li>
-            <?endif?>
-            <li class="dropdown__item"><span data-action-click="get-link" data-link="<?= $file['realLink'] ?>">&lt;Отримати посилання&gt;</span></li>
-        </ul>
-    </div>
-</div>
+</label>
