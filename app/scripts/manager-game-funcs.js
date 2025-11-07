@@ -30,12 +30,12 @@ if (gameForm) {
 
 actionHandler.renameDummy = async function (target) {
 
-	return new Promise((resolve) => {
+	return new Promise((r) => {
 		new Prompt({
 			title : 'Rename dummy Player',
 			text: "Enter new name:",
 			value: "",
-			action: resolve,
+			action: r,
 		});
 	}).then(
 		async result => {

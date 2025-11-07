@@ -203,9 +203,9 @@ class CustomImagesPad extends Prompt {
 async function imagesPad(options = {}) {
 
     options.data = await request({ url: options.urlGet });
-    const promise = new Promise((r) => {
-        options.action = (v) => r(v);
+    
+    return await new Promise((r) => {
+        options.action = r;
         new CustomImagesPad(options);
-    })
-    return await promise.then();
+    }).then();
 }
