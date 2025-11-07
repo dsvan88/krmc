@@ -13,7 +13,7 @@ actionHandler.imageAdd = async function (event) {
         formData.append('image', reader.result);
         const result = await self.apiTalk(event.target, event, 'actionChange', formData);
         target.insertAdjacentHTML('afterend', result.html);
-        target.nextSibling.addEventListener('change', (e) => self.changeCommonHandler(e));
+        self.addChangeListeners();
     }
 }
 actionHandler.imageBackgroundGroup = async function (target, event) {
@@ -43,7 +43,6 @@ actionHandler.imageToogle = function (event) {
     return true;
 }
 actionHandler.imagesGetMore = async function (target, event) {
-    const self = this;
     const formData = new FormData();
     formData.append('pageToken', target.dataset.pageToken);
     const result = await this.apiTalk(target, event, 'actionClick', formData);
@@ -52,9 +51,10 @@ actionHandler.imagesGetMore = async function (target, event) {
     if (!result.nextPageToken) {
         target.classList.add('hidden');
     }
-    self.addChangeListeners();
+    this.addChangeListeners();
 }
 actionHandler.addChangeListeners = function () {
+    const self = this;
     const inputs = document.querySelectorAll('input[data-action-change]');
     for (const i of inputs) {
         if (i.changeListener) continue;
