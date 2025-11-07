@@ -139,7 +139,7 @@
     position: fixed;
     background-color: $bg-color-light;
     pointer-events: none;
-    z-index: 10;
+    z-index: 1000;
     padding: .3em .6em;
     line-height: 1.5em;
     color: $bg-color-dark-blur;

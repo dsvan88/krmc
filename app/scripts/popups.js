@@ -109,7 +109,7 @@ class Alert {
         const self = this;
 
         self.dialog.style.position = 'absolute';
-        self.dialog.style.zIndex = 1000;
+        self.dialog.style.zIndex = 100;
         self.dialog.style.margin = 0;
 
         document.body.append(self.dialog);
