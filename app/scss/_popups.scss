@@ -56,6 +56,10 @@
     }
 
     &__button {
+        padding: .4em 1em;
+        box-sizing: content-box;
+        cursor: pointer;
+
         &-wrapper {
             display: flex;
             justify-content: space-evenly;
@@ -64,10 +68,6 @@
         &.positive {
             padding: .4em 2em;
         }
-
-        padding: .4em 1em;
-        box-sizing: content-box;
-        cursor: pointer;
     }
 
     &__numpad {
@@ -133,4 +133,16 @@
     }
 
     @import "popups/images";
+}
+
+.info {
+    position: fixed;
+    background-color: $bg-color-light;
+    pointer-events: none;
+    z-index: 10;
+    padding: .3em .6em;
+    line-height: 1.5em;
+    color: $bg-color-dark-blur;
+    opacity: .9;
+    border-radius: 3px;
 }

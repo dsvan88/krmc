@@ -34,15 +34,6 @@
 
 .page {
 	&__image {
-		&-place {
-			float: left;
-			max-width: 30vw;
-			border: 1px solid $bg-color-dark;
-			text-indent: 0;
-			box-sizing: border-box;
-			margin: 0 1em 2em 0;
-		}
-
 		width: 100%;
 		height: auto;
 		max-height: 40vh;
@@ -51,5 +42,14 @@
 		top: -1em;
 		left: -1em;
 		box-shadow: .3em .3em .4em .4em $bg-color-dark-blur;
+
+		&-place {
+			float: left;
+			max-width: 30vw;
+			border: 1px solid $bg-color-dark;
+			text-indent: 0;
+			box-sizing: border-box;
+			margin: 0 1em 2em 0;
+		}
 	}
 }
