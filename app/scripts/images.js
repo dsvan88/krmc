@@ -43,6 +43,7 @@ actionHandler.imageToogle = function (event) {
     return true;
 }
 actionHandler.imagesGetMore = async function (target, event) {
+    const self = this;
     const formData = new FormData();
     formData.append('pageToken', target.dataset.pageToken);
     const result = await this.apiTalk(target, event, 'actionClick', formData);
@@ -50,6 +51,15 @@ actionHandler.imagesGetMore = async function (target, event) {
     target.dataset.pageToken = result.nextPageToken ? result.nextPageToken : '';
     if (!result.nextPageToken) {
         target.classList.add('hidden');
+    }
+    const radios = document.querySelectorAll('input.image__radio');
+    for (const r of radios) {
+        if (r.changeListener) {
+            console.log(r);
+            continue;
+        }
+        r.addEventListener('change', (e) => self.changeCommonHandler.call(self, e));
+        r.changeListener = true;
     }
 }
 

@@ -40,8 +40,7 @@ class ImagesController extends Controller
         $backgrounds = Settings::getImage('background')['value'];
         $path = $_SERVER['DOCUMENT_ROOT'] . View::$viewsFolder . "/components/list/image/item.php";
 
-        $count = count($files);
-        for ($i = 0; $i < $count; $i++) {
+        foreach ($files as $file) {
             ob_start();
             require $path;
             $html .= ob_get_clean();
