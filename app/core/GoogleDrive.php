@@ -75,7 +75,7 @@ class GoogleDrive
         $result = [];
         try {
             $results = static::$service->files->listFiles([
-                'pageSize' => 5,
+                'pageSize' => 20,
                 'pageToken' => $pageToken,
                 'fields' => 'nextPageToken, files(id, name, size, thumbnailLink, imageMediaMetadata)',
             ]);
