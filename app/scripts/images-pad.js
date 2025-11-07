@@ -54,6 +54,7 @@ class CustomImagesPad extends Prompt {
             this.checkboxes[x].id = `checkbox[${x}]`;
             this.checkboxes[x].value = x;
             checkboxWrapper.htmlFor = this.checkboxes[x].id;
+            checkboxWrapper.index = x;
 
             const img = document.createElement('img');
             img.src = this.images[x].thumbnailLink;
@@ -117,9 +118,10 @@ class CustomImagesPad extends Prompt {
     mouseEnterEvent(e) {
         this.mouseOver = e.target;
         this.infoTile.classList.remove('hidden');
-        this.infoTile.rows[0].innerText = this.images[this.mouseOver.htmlFor.slice(-2, -1)].name;
-        this.infoTile.rows[1].innerText = this.images[this.mouseOver.htmlFor.slice(-2, -1)].size + ' Кб';
-        this.infoTile.rows[2].innerText = this.images[this.mouseOver.htmlFor.slice(-2, -1)].resol;
+        const index = this.mouseOver.index;
+        this.infoTile.rows[0].innerText = this.images[index].name;
+        this.infoTile.rows[1].innerText = this.images[index].size + ' Кб';
+        this.infoTile.rows[2].innerText = this.images[index].resol;
     }
     mouseLeaveEvent() {
         this.mouseOver = null;
