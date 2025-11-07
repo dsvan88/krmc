@@ -52,15 +52,17 @@ actionHandler.imagesGetMore = async function (target, event) {
     if (!result.nextPageToken) {
         target.classList.add('hidden');
     }
-    const radios = document.querySelectorAll('input.image__radio');
-    for (const r of radios) {
-        if (r.changeListener) continue;
+    self.addChangeListeners();
+}
+actionHandler.addChangeListeners = function () {
+    const inputs = document.querySelectorAll('input[data-action-change]');
+    for (const i of inputs) {
+        if (i.changeListener) continue;
 
-        r.addEventListener('change', (e) => self.changeCommonHandler.call(self, e));
-        r.changeListener = true;
+        i.addEventListener('change', (e) => self.changeCommonHandler.call(self, e));
+        i.changeListener = true;
     }
 }
-
 actionHandler.showImageInfo = function (event) {
     info_value_name.innerText = event.target.dataset.name;
     info_value_bytes.innerText = Math.ceil(event.target.dataset.size / 1024) + ' Kb';
