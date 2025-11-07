@@ -104,7 +104,7 @@ class CustomImagesPad extends Prompt {
     }
     createInfoTile() {
         this.infoTile = document.createElement('div');
-        this.infoTile.classList.add('image__info', 'info', 'hidden');
+        this.infoTile.classList.add('images-pad', 'info', 'hidden');
         this.infoTile.rows = [];
 
         for (let x = 0; x < 3; x++) {
