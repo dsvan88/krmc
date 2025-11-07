@@ -4,8 +4,8 @@ if (in_array($file['id'], $backgrounds, true)) {
     $selected = 'select_bg';
 }
 ?>
-<input type="radio" name="image-radio" class="image__radio" id="<?= $file['id'] ?>" data-name="<?= $file['name'] ?>" data-size="<?= $file['size'] ?>" data-action-change="show-image-info" data-action-dblclick="get-link" data-link="<?= $file['realLink'] ?>">
-<label class="image <?= $selected ?>" for="<?= $file['id'] ?>">
+<input type="radio" name="image-radio" class="image__radio" id="r_<?= $file['id'] ?>" data-name="<?= $file['name'] ?>" data-size="<?= $file['size'] ?>" data-resol="<?= $file['resol'] ?>" data-action-change="show-image-info" data-action-dblclick="get-link" data-link="<?= $file['realLink'] ?>">
+<label class="image <?= $selected ?>" for="r_<?= $file['id'] ?>">
     <label class="dashboard__label">
         <input type="checkbox" name="image_check[]" value="<?= $file['id'] ?>" data-action-change="image-toogle">
     </label>

@@ -27,7 +27,7 @@ if (editorsBlocks.length > 0) {
 }
 
 function CKEditorApply(editors) {
-	for (const index = 0; index < editors.length; index++) {
+	for (let index = 0; index < editors.length; index++) {
 		const randomIndex = Math.random(321123);
 		editors[index].id = randomIndex;
 		DecoupledEditor.create(

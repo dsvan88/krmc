@@ -22,7 +22,7 @@ class GoogleDrive
     {
         try {
             $_credentials = Settings::get('gdrive');
-            foreach($_credentials as $key => $value){
+            foreach ($_credentials as $key => $value) {
                 static::$credentials[$key] = $value['value'];
             }
             static::$client = new Google_Client();
@@ -77,7 +77,7 @@ class GoogleDrive
             $results = static::$service->files->listFiles([
                 'pageSize' => 20,
                 'pageToken' => $pageToken,
-                'fields' => 'nextPageToken, files(id, name, size, thumbnailLink)',
+                'fields' => 'nextPageToken, files(id, name, size, thumbnailLink, imageMediaMetadata)',
             ]);
 
             $_SESSION['nextPageToken'] = $results->nextPageToken;

@@ -22,7 +22,7 @@ actionHandler.imageBackgroundGroup = async function (target, event) {
     }
     const formData = new FormData();
     formData.append('file_ids', JSON.stringify(enumBgImages));
-    const result = await this.apiTalk(target, event, 'actionClick', formData);
+    return await this.apiTalk(target, event, 'actionClick', formData);
 }
 actionHandler.imageDeleteGroup = async function (target, event) {
     if (enumBgImages.length === 0) {
@@ -30,7 +30,7 @@ actionHandler.imageDeleteGroup = async function (target, event) {
     }
     const formData = new FormData();
     formData.append('file_ids', JSON.stringify(enumBgImages));
-    const result = await this.apiTalk(target, event, 'actionClick', formData);
+    return await this.apiTalk(target, event, 'actionClick', formData);
 }
 actionHandler.imageToogle = function (event) {
     const value = event.target.value;
@@ -54,14 +54,14 @@ actionHandler.imagesGetMore = async function (target, event) {
 }
 
 actionHandler.showImageInfo = function (event) {
-    // console.log(target);
     info_value_name.innerText = event.target.dataset.name;
     info_value_bytes.innerText = Math.ceil(event.target.dataset.size / 1024) + ' Kb';
+    info_value_resol.innerText = event.target.dataset.resol;
 }
 actionHandler.getLink = function (target) {
     try {
         navigator.clipboard.writeText(target.dataset.link);
-        if (confirm('Скопійовано до буферу обміну.\nБажаєте відркити в новому вікні?'))
+        if (confirm('Скопійовано до буферу обміну.\nБажаєте відкрити в новому вікні?'))
             return window.open(target.dataset.link, '_blank');
     }
     catch (error) {
@@ -82,7 +82,7 @@ actionHandler.imageGetLink = function (target) {
             return window.open(radio.dataset.link, '_blank');
     }
     catch (error) {
-        if (confirm(`Не вдалось скопіювати до будеру обміну.\nПерейти за посиланням у новому вікні?`)) {
+        if (confirm(`Не вдалось скопіювати до буферу обміну.\nПерейти за посиланням у новому вікні?`)) {
             return window.open(radio.dataset.link, '_blank');
         }
         return new Alert({ title: "Your link", text: `Your link to this image is:<br><a href="${radio.dataset.link}" target="_blank">${radio.dataset.link}</a>` });

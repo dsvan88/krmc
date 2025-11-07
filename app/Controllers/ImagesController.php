@@ -32,7 +32,9 @@ class ImagesController extends Controller
         if (!empty($_POST['pageToken']))
             $pageToken = $_POST['pageToken'];
 
-        ImageRepository::getImagesList($pageToken, $files, $nextPageToken);
+        if (!ImageRepository::getImagesList($pageToken, $files, $nextPageToken)) {
+            return View::notice(['message' => 'Image’s list is empty']);
+        }
 
         $html = '';
         $backgrounds = Settings::getImage('background')['value'];
@@ -40,12 +42,6 @@ class ImagesController extends Controller
 
         $count = count($files);
         for ($i = 0; $i < $count; $i++) {
-            $file = [
-                'id' => $files[$i]['id'],
-                'thumbnailLink' => $files[$i]['thumbnailLink'],
-                'realLink' => GoogleDrive::getLink($files[$i]['id']),
-                'name' => $files[$i]['name'],
-            ];
             ob_start();
             require $path;
             $html .= ob_get_clean();
@@ -60,7 +56,9 @@ class ImagesController extends Controller
         if (!empty($_POST['pageToken']))
             $pageToken = $_POST['pageToken'];
 
-        ImageRepository::getImagesList($pageToken, $files, $nextPageToken);
+        if (!ImageRepository::getImagesList($pageToken, $files, $nextPageToken)) {
+            return View::notice(['message' => 'Image’s list is empty']);
+        }
 
         $title = 'Images';
         $backgrounds = Settings::getImage('background')['value'];
@@ -79,22 +77,25 @@ class ImagesController extends Controller
         if (!empty($_POST['pageToken']))
             $pageToken = $_POST['pageToken'];
 
-        $gDrive = new GoogleDrive();
-        $files = $gDrive->listFiles($pageToken);
-
-        $result = [
-            'nextPageToken' => $_SESSION['nextPageToken'],
-        ];
-
-        foreach ($files as $file) {
-            $result['images'][] = [
-                'id' => $file['id'],
-                'name' => $file['name'],
-                'size' => ceil($file['size'] / 1024),
-                'thumbnailLink' => $file['thumbnailLink'],
-            ];
+        if (!ImageRepository::getImagesList($pageToken, $files, $nextPageToken)) {
+            return View::notice(['message' => 'Image’s list is empty']);
         }
-        return View::response($result);
+
+        // $gDrive = new GoogleDrive();
+        // $files = $gDrive->listFiles($pageToken);
+        // $result = [
+        //     'nextPageToken' => $_SESSION['nextPageToken'],
+        // ];
+
+        // foreach ($files as $file) {
+        //     $result['images'][] = [
+        //         'id' => $file['id'],
+        //         'name' => $file['name'],
+        //         'size' => ceil($file['size'] / 1024),
+        //         'thumbnailLink' => $file['thumbnailLink'],
+        //     ];
+        // }
+        return View::response(compact('files', 'nextPageToken'));
     }
     public function addAction()
     {
