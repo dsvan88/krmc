@@ -54,10 +54,8 @@ actionHandler.imagesGetMore = async function (target, event) {
     }
     const radios = document.querySelectorAll('input.image__radio');
     for (const r of radios) {
-        if (r.changeListener) {
-            console.log(r);
-            continue;
-        }
+        if (r.changeListener) continue;
+
         r.addEventListener('change', (e) => self.changeCommonHandler.call(self, e));
         r.changeListener = true;
     }
@@ -82,6 +80,7 @@ actionHandler.getLink = function (target) {
     }
 }
 actionHandler.imageGetLink = function (target) {
+
     const radio = document.querySelector('.image__radio:checked');
 
     if (!radio) return false;

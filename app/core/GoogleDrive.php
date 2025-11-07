@@ -63,24 +63,24 @@ class GoogleDrive
     public static function delete(string $fileId): bool
     {
         try {
-            $uploadedFile = static::$service->files->delete($fileId);
+            static::$service->files->delete($fileId);
         } catch (\Throwable $error) {
             error_log('Error uploading file: ' . $error->getMessage());
             return false;
         }
         return true;
     }
-    public static function listFiles(string $pageToken = '')
+    public static function listFiles(string $pageToken = '', &$nextPageToken = '')
     {
         $result = [];
         try {
             $results = static::$service->files->listFiles([
-                'pageSize' => 20,
+                'pageSize' => 5,
                 'pageToken' => $pageToken,
                 'fields' => 'nextPageToken, files(id, name, size, thumbnailLink, imageMediaMetadata)',
             ]);
 
-            $_SESSION['nextPageToken'] = $results->nextPageToken;
+            $nextPageToken = $results->nextPageToken;
 
             if (count($results->files) === 0)
                 return $result;

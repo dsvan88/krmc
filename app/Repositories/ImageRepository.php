@@ -9,8 +9,7 @@ class ImageRepository
     public static function getImagesList(string $pageToken = '', &$files = [], &$nextPageToken = ''): bool
     {
         $gDrive = new GoogleDrive();
-        $_files = $gDrive->listFiles($pageToken);
-        $nextPageToken = $_SESSION['nextPageToken'];
+        $_files = $gDrive->listFiles($pageToken, $nextPageToken);
         $files = array_map(
             fn($e) => [
                 'id' => $e['id'],
