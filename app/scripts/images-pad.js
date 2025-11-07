@@ -122,6 +122,8 @@ class CustomImagesPad extends Prompt {
         this.infoTile.rows[0].innerText = this.images[index].name;
         this.infoTile.rows[1].innerText = this.images[index].size + ' Кб';
         this.infoTile.rows[2].innerText = this.images[index].resol;
+        this.infoTile.style.left = (e.clientX + 20) + 'px';
+        this.infoTile.style.top = (e.clientY + 20) + 'px';
     }
     mouseLeaveEvent() {
         this.mouseOver = null;
