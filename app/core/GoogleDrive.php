@@ -35,12 +35,50 @@ class GoogleDrive
             return false;
         }
     }
-    public static function create(string $filePath)
+    public static function getFolderId(string $folder)
+    {
+        if (empty($folder)) return false;
+
+        $response = static::$service->files->listFiles([
+            'q' => "mimeType='application/vnd.google-apps.folder' and name='$folder' and trashed=false",
+            'fields' => 'files(id, name)'
+        ]);
+
+        return empty($response->files[0]->id) ?
+            static::createFolder($folder) :
+            $response->files[0]->id;
+    }
+    public static function createFolder(string $folder)
+    {
+        if (empty($folder)) return false;
+
+        $folderMetadata = new Google_Drive_File([
+            'name' => $folder,
+            'mimeType' => 'application/vnd.google-apps.folder'
+        ]);
+
+        $folder = static::$service->files->create($folderMetadata, [
+            'fields' => 'id'
+        ]);
+
+        $permission = new Google_Drive_Permission();
+        $permission->setType('anyone');
+        $permission->setRole('reader');
+
+        static::$service->permissions->create($folder->getId(), $permission);
+
+        return $folder->id;
+    }
+    public static function create(string $filePath, string $folder = '')
     {
         $filename = basename($filePath);
 
         $driveFile = new Google_Drive_File();
         $driveFile->setName($filename);
+
+        if (!empty($folder))
+            $driveFile->setParents([static::getFolderId($folder)]);
+
         $content = file_get_contents($filePath);
 
         try {

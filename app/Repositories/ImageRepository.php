@@ -15,7 +15,7 @@ class ImageRepository
                 'id' => $e['id'],
                 'thumbnailLink' => $e['thumbnailLink'],
                 'size' => ceil($e['size'] / 1024),
-                'realLink' => GoogleDrive::getLink($e['id']),
+                'realLink' => $gDrive->getLink($e['id']),
                 'name' => $e['name'],
                 'resol' => $e['imageMediaMetadata']['width'] . 'x' . $e['imageMediaMetadata']['height'],
             ],

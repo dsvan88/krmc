@@ -248,6 +248,7 @@ class TelegramBot
         ];
 
         self::send('getUserProfilePhotos', $params);
+        Tech::dump()
         return static::$result;
     }
     public static function getFile(string $file_id = '')
@@ -266,7 +267,7 @@ class TelegramBot
     public static function getUserProfileAvatar(int $userId = 0)
     {
         if (empty($userId)) {
-            throw new Exception('UserID can’t be empty.');
+            throw new Exception(__METHOD__ . ': UserID can’t be empty.');
         }
 
         self::$close = false;

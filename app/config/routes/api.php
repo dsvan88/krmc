@@ -63,6 +63,12 @@ return  [
         'action' => 'profileSectionEdit',
         'access' => ['category' => 'user']
     ],
+    'api/account/avatar/tg/get' =>
+    [
+        'controller' => 'account',
+        'action' => 'avatarTgGet',
+        'access' => ['category' => 'all']
+    ],
     'api/account/profile/avatar/form' =>
     [
         'controller' => 'account',

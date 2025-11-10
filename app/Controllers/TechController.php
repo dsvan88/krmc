@@ -3,6 +3,9 @@
 namespace app\Controllers;
 
 use app\core\Controller;
+use app\core\GoogleDrive;
+use app\core\ImageProcessing;
+use app\core\Locale;
 use app\core\Sender;
 use app\core\Tech;
 use app\core\View;
@@ -10,6 +13,7 @@ use app\libs\Db;
 use app\models\Contacts;
 use app\models\Settings;
 use app\Repositories\TechRepository;
+use Exception;
 
 class TechController extends Controller
 {
@@ -124,7 +128,7 @@ class TechController extends Controller
         return View::redirect('/');
 
         // $contacts = Contacts::getAll();
-        
+
         // $result = [];
         // $exists = [];
         // usort($contacts, function ($elemA, $elemB){
@@ -278,10 +282,29 @@ class TechController extends Controller
     }
     public static function testAction()
     {
+        // $gDrive = new GoogleDrive;
+        // echo $gDrive->getFolderId('avatars');
+
         try {
-            $userId = 900669168;
+            $userId = 492381252;
             $avatar = Sender::getUserProfileAvatar($userId);
-            echo '<img src="data:image/jpeg;base64,' . base64_encode($avatar) . '">';
+
+            $base64Image = 'data:image/jpeg;base64,' . base64_encode($avatar);
+            echo '<img src="' . $base64Image . '">';
+
+            // $filename = 'avatar_15.jpg';
+
+            // if (ImageProcessing::saveBase64Image($base64Image, $filename) === false)
+            //     throw new Exception(__METHOD__ . ': Image didn’t saved successfully!');
+
+            // $filePath = $_SERVER['DOCUMENT_ROOT'] . FILE_MAINGALL . $filename;
+            // echo $filePath .  '<br>';
+            // $gDrive = new GoogleDrive();
+            // $fileId = $gDrive->create($filePath, 'avatars');
+            // echo $fileId .  '<br>';
+
+            // unlink($filePath);
+            // echo '<img src="' .  $gDrive->getLink($fileId) . '">';
         } catch (\Throwable $error) {
             Tech::dump($error);
         }

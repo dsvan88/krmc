@@ -3,6 +3,7 @@
 namespace app\Controllers;
 
 use app\core\Controller;
+use app\core\GoogleDrive;
 use app\core\ImageProcessing;
 use app\core\View;
 use app\core\Locale;
@@ -17,12 +18,12 @@ use app\models\Settings;
 use app\models\Users;
 use app\Repositories\AccountRepository;
 use app\Repositories\ContactRepository;
+use Exception;
 
 class AccountController extends Controller
 {
     public static function before()
     {
-        // View::$layout = 'custom';
         return true;
     }
     public function logoutAction()
@@ -92,9 +93,10 @@ class AccountController extends Controller
         }
         $userData = Users::find($userId);
 
-        $avatar = empty($userData['personal']['avatar']) ? Settings::getImage('empty_avatar')['value'] : FILE_USRGALL . "{$userData['id']}/{$userData['personal']['avatar']}";
+        $avatar = empty($userData['personal']['avatar']) ? Settings::getImage('empty_avatar')['value'] : GoogleDrive::getLink($userData['personal']['avatar']);
 
-        $userData['avatar'] = ImageProcessing::inputImage($avatar, ['title' => Locale::phrase(['string' => '{{ Account_Profile_Form_User_Avatar }}', 'vars' => [$userData['name']]])]);
+        // $userData['avatar'] = ImageProcessing::inputImage($avatar, ['title' => Locale::phrase(['string' => '{{ Account_Profile_Form_User_Avatar }}', 'vars' => [$userData['name']]])]);
+        $userData['avatar'] = "<img src='$avatar'>";
         $userData['personal']['genderName'] = empty($userData['personal']['gender']) ? '' : Locale::phrase(ucfirst($userData['personal']['gender']));
 
         $vars = [
@@ -262,11 +264,11 @@ class AccountController extends Controller
 
         $name = trim($_POST['name']);
         if (empty($name) || $name === '-') {
-            return View::notice(['message'=>'Success!', 'time' =>  1500, 'location' => 'reload']);
+            return View::notice(['message' => 'Success!', 'time' =>  1500, 'location' => 'reload']);
         }
 
         AccountRepository::linkTelegram($chatId, $name);
-        return View::notice(['message'=>'Success!', 'time' =>  1500, 'location' => 'reload']);
+        return View::notice(['message' => 'Success!', 'time' =>  1500, 'location' => 'reload']);
     }
     public function setNicknameFormAction()
     {
@@ -391,6 +393,40 @@ class AccountController extends Controller
         ];
         View::$route['vars'] = array_merge(View::$route['vars'], $vars);
         return View::modal();
+    }
+    public function avatarTgGetAction()
+    {
+        $uid = (int) $_POST['uid'];
+        if (!isset($_SESSION['privilege']['status'])) {
+            return View::errorCode(403, ['message' => 'Forbidden!']);
+        }
+
+        if (!Users::checkAccess('manager')) {
+            $uid = (int) $_SESSION['id'];
+        }
+        $userData = Users::find($uid);
+        Users::contacts($userData);
+
+        $tgId = $userData['contacts']['telegramid'];
+        $avatar = Sender::getUserProfileAvatar($tgId);
+
+        $base64Image = 'data:image/jpeg;base64,' . base64_encode($avatar);
+
+        $filename = $uid . '_avatar.jpg';
+        $image = ImageProcessing::saveBase64Image($base64Image, $filename);
+
+        if ($image === false)
+            return View::notice(['message' => 'Fail!', 'type' => 'error', 'time' => '1000']);
+
+        $gDrive = new GoogleDrive();
+        $fileId = $gDrive->create($image['fullpath'], 'avatars');
+
+        $userData['personal']['avatar'] = $fileId;
+
+        unlink($image['fullpath']);
+        Users::edit(['personal' => $userData['personal']], ['id' => $uid]);
+
+        return View::notice(['message' => 'Success!', 'time' => '1500', 'location' => 'reload']);
     }
     public function profileAvatarFormAction()
     {

@@ -465,7 +465,7 @@ class Users extends Model
         }
         return $userLevel >= $requireLevel;
     }
-    public static function contacts(array $source): array
+    public static function contacts(array &$source): array
     {
         if (!empty($source['id'])) {
             $contacts = Contacts::findBy('user_id', $source['id']);
