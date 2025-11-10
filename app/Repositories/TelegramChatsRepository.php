@@ -2,11 +2,13 @@
 
 namespace app\Repositories;
 
+use app\core\GoogleDrive;
 use app\core\ImageProcessing;
 use app\core\Locale;
 use app\core\Sender;
 use app\models\Settings;
 use app\models\TelegramChats;
+use app\models\Users;
 use Exception;
 
 class TelegramChatsRepository
@@ -57,5 +59,39 @@ class TelegramChatsRepository
         //     throw new Exception('Image didn’t saved');
         // }
         return Sender::photo($targets, $message, $post['image_link'])[0]['ok'];
+    }
+    public static function getAndSaveTgAvatar(int $userId = 0): bool
+    {
+
+        if (empty($userId))
+            throw new Exception("UserID is empty!");
+        
+        $userData = Users::find($userId);
+        Users::contacts($userData);
+
+        if (empty($userData['contacts']['telegramid']))
+            throw new Exception("Telegram ID is empty!\nLink your Telegram account first.");
+
+        $avatar = Sender::getUserProfileAvatar($userData['contacts']['telegramid']);
+
+        if (!$avatar)
+            throw new Exception("Profile avatar is empty!");
+        
+        // $base64Image = 'data:image/jpeg;base64,' . base64_encode($avatar);
+
+        $filename = $userData['id'] . '_avatar.jpg';
+        $image = ImageProcessing::saveRawImage($avatar, $filename);
+
+        if ($image === false)
+            throw new Exception("Image didn't saved successfully!");
+
+        $gDrive = new GoogleDrive();
+        $fileId = $gDrive->create($image['fullpath'], 'avatars');
+
+        $userData['personal']['avatar'] = $fileId;
+
+        unlink($image['fullpath']);
+
+        return (bool) Users::edit(['personal' => $userData['personal']], ['id' => $userId]);
     }
 }

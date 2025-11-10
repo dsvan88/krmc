@@ -289,6 +289,9 @@ class TechController extends Controller
             $userId = 492381252;
             $avatar = Sender::getUserProfileAvatar($userId);
 
+            if (!$avatar)
+                throw new Exception("Avatar is empty");
+                
             $base64Image = 'data:image/jpeg;base64,' . base64_encode($avatar);
             echo '<img src="' . $base64Image . '">';
 

@@ -110,4 +110,34 @@ class ImageProcessing
             return false;
         }
     }
+    public static function saveRawImage(string $rawImage, string $filename, string $path = FILE_MAINGALL)
+    {
+        try {
+
+            if (!file_exists($path)) {
+                try {
+                    error_reporting(E_ALL & ~E_WARNING);
+                    mkdir($path, 0777, true);
+                } catch (\Throwable $error) {
+                    $path = sys_get_temp_dir() . '/';
+                }
+            }
+            $fullpath = $_SERVER['DOCUMENT_ROOT'] . "$path$filename";
+
+            $imageSize = getimagesizefromstring($rawImage);
+
+            if ($imageSize[0] > 720) {
+                $image = imagecreatefromstring($rawImage);
+                $image = imagescale($image, 720);
+                ob_start();
+                imagejpeg($image);
+                $rawImage = ob_get_clean();
+            }
+            file_put_contents($fullpath, $rawImage);
+            return ['fullpath' => $fullpath, 'filename' => $filename, 'data' => $rawImage];
+        } catch (\Throwable $th) {
+            error_log($th->__toString());
+            return false;
+        }
+    }
 }

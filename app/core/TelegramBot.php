@@ -248,7 +248,7 @@ class TelegramBot
         ];
 
         self::send('getUserProfilePhotos', $params);
-        Tech::dump()
+
         return static::$result;
     }
     public static function getFile(string $file_id = '')
@@ -261,6 +261,7 @@ class TelegramBot
         ];
 
         self::send('getFile', $params);
+
         return static::$result;
     }
 
@@ -273,12 +274,13 @@ class TelegramBot
         self::$close = false;
         $profilePhotos = self::getUserProfilePhotos($userId);
 
-        if (empty($profilePhotos['result']['photos'][0][0]['file_id'])) return false;
+        if (empty($profilePhotos['result']['total_count'] === '0')) return false;
 
         $mainPhotoData = self::getFile($profilePhotos['result']['photos'][0][0]['file_id']);
 
         if (empty($mainPhotoData['result']['file_path'])) return false;
 
+        Tech::dump($mainPhotoData);
         $botToken = self::$botToken;
         $file_path = $mainPhotoData['result']['file_path'];
         $url = "https://api.telegram.org/file/bot$botToken/$file_path";

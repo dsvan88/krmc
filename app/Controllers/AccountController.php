@@ -18,6 +18,8 @@ use app\models\Settings;
 use app\models\Users;
 use app\Repositories\AccountRepository;
 use app\Repositories\ContactRepository;
+use app\Repositories\TechRepository;
+use app\Repositories\TelegramChatsRepository;
 use Exception;
 
 class AccountController extends Controller
@@ -404,29 +406,16 @@ class AccountController extends Controller
         if (!Users::checkAccess('manager')) {
             $uid = (int) $_SESSION['id'];
         }
-        $userData = Users::find($uid);
-        Users::contacts($userData);
 
-        $tgId = $userData['contacts']['telegramid'];
-        $avatar = Sender::getUserProfileAvatar($tgId);
-
-        $base64Image = 'data:image/jpeg;base64,' . base64_encode($avatar);
-
-        $filename = $uid . '_avatar.jpg';
-        $image = ImageProcessing::saveBase64Image($base64Image, $filename);
-
-        if ($image === false)
-            return View::notice(['message' => 'Fail!', 'type' => 'error', 'time' => '1000']);
-
-        $gDrive = new GoogleDrive();
-        $fileId = $gDrive->create($image['fullpath'], 'avatars');
-
-        $userData['personal']['avatar'] = $fileId;
-
-        unlink($image['fullpath']);
-        Users::edit(['personal' => $userData['personal']], ['id' => $uid]);
-
-        return View::notice(['message' => 'Success!', 'time' => '1500', 'location' => 'reload']);
+        $message = 'Success!';
+        $type = '';
+        try {
+            TelegramChatsRepository::getAndSaveTgAvatar($uid);
+        } catch (\Throwable $th) {
+            $message = "Error:\n" . $th->__toString();
+            $type = 'error';
+        }
+        return View::notice(['message' => $message, 'type' => $type, 'time' => '1500', 'location' => 'reload']);
     }
     public function profileAvatarFormAction()
     {
