@@ -22,23 +22,6 @@
     <link rel="stylesheet" href="/public/css/cropper.css">
     <link rel="stylesheet" href="/public/css/jquery.datetimepicker.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+Pro">
-
-    <?/*= //$styles 
-    <!--     <script defer="" src="/public/scripts/jquery.min.js"></script>
-    <script defer="" src="/public/scripts/jquery-ui.min.js"></script>
-    <script defer="" src="/public/scripts/jquery.datetimepicker.full.min.js"></script>
-    <script defer="" src="/public/scripts/jquery-cropper.js"></script> -->
-    */ ?>
-
-    <? /*
-    <script defer="" src="/public/scripts/request.js?v=<?= $_SERVER['REQUEST_TIME'] ?>"></script>
-    <script defer="" src="/public/scripts/action-handler.js?v=<?= $_SERVER['REQUEST_TIME'] ?>"></script>
-    <script defer="" src="/public/scripts/popups.js?v=<?= $_SERVER['REQUEST_TIME'] ?>"></script>
-    <script defer="" src="/public/scripts/noticer.js?v=<?= $_SERVER['REQUEST_TIME'] ?>"></script>
-    <script defer="" src="/public/scripts/common-funcs.js?v=<?= $_SERVER['REQUEST_TIME'] ?>"></script>
-    <script defer="" src="/public/scripts/common.js?v=<?= $_SERVER['REQUEST_TIME'] ?>"></script>
-    <script defer="" src="/public/scripts/modals.js?v=<?= $_SERVER['REQUEST_TIME'] ?>"></script> */
-    ?>
     <? if (!empty($scripts)) : ?>
         <? if (is_string($scripts)) : ?>
             <script defer="" src="<?= static::$scriptsPath . $scripts . (self::$refresh ? '?v=' . $_SERVER['REQUEST_TIME'] : '') ?>"></script>
@@ -51,7 +34,7 @@
     <? endif ?>
 
     <?/*<script defer="" src="<?= static::$scriptsPath . $scripts . (self::$refresh ? '?v=' . $_SERVER['REQUEST_TIME'] : '') ?>"></script>*/ ?>
-    <link rel=" icon" type="image/x-icon" href="/public/images/mafia-vintage-logo-short.svg">
+    <link rel="icon" type="image/x-icon" href="/public/images/mafia-vintage-logo-short.svg">
     <?= $locales ?>
     <title><?= (isset($pageTitle) ? $pageTitle  : $title) . ' | ' . CLUB_SNAME . ' v' . APP_VERSION ?></title>
     <? if (!empty($og)) self::component('open-graph', ['og' => $og]) ?>

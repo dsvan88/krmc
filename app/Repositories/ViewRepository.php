@@ -2,6 +2,7 @@
 
 namespace app\Repositories;
 
+use app\core\GoogleDrive;
 use app\core\ImageProcessing;
 use app\core\Locale;
 use app\core\View;
@@ -34,11 +35,10 @@ class ViewRepository
         if (isset($_SESSION['id'])) {
             if (empty($_SESSION['avatar'])) {
                 $profileImage = empty($_SESSION['gender']) ? $images['profile']['value'] : $images[$_SESSION['gender']]['value'];
+                $vars['profileImage'] = ImageProcessing::inputImage($profileImage, ['title' => $_SESSION['name']]);
             } else {
-                $profileImage = FILE_USRGALL . "{$_SESSION['id']}/{$_SESSION['avatar']}";
+                $vars['profileImage'] = '<img src="' . GoogleDrive::getLink($_SESSION['avatar']) . '" alt="Profile" title="' . $_SESSION['name'] . '" loading="lazy">';
             }
-
-            $vars['profileImage'] = ImageProcessing::inputImage($profileImage, ['title' => $_SESSION['name']]);
 
             $vars['headerDashboard'] = self::dashboard();
             $vars['profileMenu'] = self::profileMenu();

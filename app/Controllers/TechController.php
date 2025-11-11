@@ -284,21 +284,21 @@ class TechController extends Controller
     }
     public static function testAction()
     {
-        $gDrive = new GoogleDrive;
-        $fId = $gDrive->getFolderId('avatars');
-        $gDrive->delete($fId);
+        // $gDrive = new GoogleDrive;
+        // $fId = $gDrive->getFolderId('avatars');
+        // $gDrive->delete($fId);
 
-        $fId = $gDrive->getFolderId('avatars');
+        // $fId = $gDrive->getFolderId('avatars');
         $users = Users::getAll();
         foreach ($users as $user) {
-            $user['personal']['avatar'] = '';
-            Users::edit(['personal' => $user['personal']], ['id' => $user['id']]);
-            // try {
-            //     if (!empty($user['personal']['avatar'])) continue;
-            //     TelegramChatsRepository::getAndSaveTgAvatar($user['id'], true);
-            // } catch (\Throwable $th) {
-            //     Tech::dump($th);
-            // }
+            // $user['personal']['avatar'] = '';
+            // Users::edit(['personal' => $user['personal']], ['id' => $user['id']]);
+            try {
+                if (!empty($user['personal']['avatar'])) continue;
+                TelegramChatsRepository::getAndSaveTgAvatar($user['id'], true);
+            } catch (\Throwable $th) {
+                Tech::dump($th);
+            }
         }
     }
 }
