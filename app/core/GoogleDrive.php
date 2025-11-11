@@ -108,11 +108,12 @@ class GoogleDrive
         }
         return true;
     }
-    public static function listFiles(string $pageToken = '', &$nextPageToken = '')
+    public static function listFiles(string $pageToken = '', &$nextPageToken = '', string $folderId = 'root')
     {
         $result = [];
         try {
             $results = static::$service->files->listFiles([
+                'q' => "'$folderId' in parents and trashed = false",
                 'pageSize' => 20,
                 'pageToken' => $pageToken,
                 'fields' => 'nextPageToken, files(id, name, size, thumbnailLink, imageMediaMetadata)',

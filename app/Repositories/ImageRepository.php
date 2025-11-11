@@ -17,7 +17,7 @@ class ImageRepository
                 'size' => ceil($e['size'] / 1024),
                 'realLink' => $gDrive->getLink($e['id']),
                 'name' => $e['name'],
-                'resol' => $e['imageMediaMetadata']['width'] . 'x' . $e['imageMediaMetadata']['height'],
+                'resol' => empty($e['imageMediaMetadata']) ? '' : $e['imageMediaMetadata']['width'] . 'x' . $e['imageMediaMetadata']['height'],
             ],
             $_files
         );

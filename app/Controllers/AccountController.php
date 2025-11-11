@@ -412,14 +412,15 @@ class AccountController extends Controller
         try {
             TelegramChatsRepository::getAndSaveTgAvatar($uid);
         } catch (\Throwable $th) {
-            $message = "Error:\n" . $th->__toString();
+            $message = "Error:\n" . Locale::phrase($th->getMessage());
             $type = 'error';
+            error_log($th->__toString());
         }
         return View::notice(['message' => $message, 'type' => $type, 'time' => '1500', 'location' => 'reload']);
     }
     public function profileAvatarFormAction()
     {
-        $uid = (int)$_POST['uid'];
+        $uid = (int) $_POST['uid'];
         if (!isset($_SESSION['privilege']['status'])) {
             return View::errorCode(403, ['message' => 'Forbidden!']);
         }

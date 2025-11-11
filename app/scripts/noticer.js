@@ -48,7 +48,7 @@ class Noticer {
 			noticeCloseBlock.timeOut = setTimeout((event) => self.close.call(self, noticeBlock), notice['time']);
 		}
 		if (notice["location"]) {
-			setTimeout(() => notice["location"] === 'reload' ? window.location.reload() : window.location = notice["location"], notice['time'] ? notice['time'] + 100 : 1000);
+			setTimeout(() => notice["location"] === 'reload' ? window.location.reload() : window.location = notice["location"], notice['time'] ? notice['time'] - 1 : 1000);
 		}
 	}
 	close(notice) {

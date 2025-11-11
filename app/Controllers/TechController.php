@@ -12,7 +12,9 @@ use app\core\View;
 use app\libs\Db;
 use app\models\Contacts;
 use app\models\Settings;
+use app\models\Users;
 use app\Repositories\TechRepository;
+use app\Repositories\TelegramChatsRepository;
 use Exception;
 
 class TechController extends Controller
@@ -285,31 +287,14 @@ class TechController extends Controller
         // $gDrive = new GoogleDrive;
         // echo $gDrive->getFolderId('avatars');
 
-        try {
-            $userId = 492381252;
-            $avatar = Sender::getUserProfileAvatar($userId);
-
-            if (!$avatar)
-                throw new Exception("Avatar is empty");
-                
-            $base64Image = 'data:image/jpeg;base64,' . base64_encode($avatar);
-            echo '<img src="' . $base64Image . '">';
-
-            // $filename = 'avatar_15.jpg';
-
-            // if (ImageProcessing::saveBase64Image($base64Image, $filename) === false)
-            //     throw new Exception(__METHOD__ . ': Image didn’t saved successfully!');
-
-            // $filePath = $_SERVER['DOCUMENT_ROOT'] . FILE_MAINGALL . $filename;
-            // echo $filePath .  '<br>';
-            // $gDrive = new GoogleDrive();
-            // $fileId = $gDrive->create($filePath, 'avatars');
-            // echo $fileId .  '<br>';
-
-            // unlink($filePath);
-            // echo '<img src="' .  $gDrive->getLink($fileId) . '">';
-        } catch (\Throwable $error) {
-            Tech::dump($error);
+        $users = Users::getAll();
+        foreach($users as $user){
+            try {
+                if (!empty($user['personal']['avatar'])) continue;
+                TelegramChatsRepository::getAndSaveTgAvatar($user['id'], true);
+            } catch (\Throwable $th) {
+                Tech::dump($th);
+            }
         }
     }
 }
