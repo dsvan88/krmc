@@ -47,10 +47,12 @@ class MainController extends Controller
     {
 
         $contacts = Settings::load('contacts');
+        $socials = Settings::load('socials');
 
         $vars = [
             'title' => 'Contacts',
             'contacts' => $contacts,
+            'socials' => $socials,
             'texts' => [
                 'SubmitLabel' => 'Create'
             ],

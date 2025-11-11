@@ -30,5 +30,23 @@
                 </div>
             </div>
         </div>
+        <? if (!empty($socials['youtube']['value'])) : ?>
+            <div class="contacts__item">
+                <h3 class="contacts__label"><?= $socials['youtube']['name'] ?></h3>
+                <p><a class="contacts__link" href="<?= $socials['youtube']['value'] ?>"><?= $socials['youtube']['name'] ?></a></p>
+            </div>
+        <? endif ?>
+        <? if (!empty($socials['instagram']['value'])) : ?>
+            <div class="contacts__item">
+                <h3 class="contacts__label"><?= $socials['instagram']['name'] ?></h3>
+                <p><a class="contacts__link" href="<?= $socials['instagram']['value'] ?>"><?= $socials['instagram']['name'] ?></a></p>
+            </div>
+        <? endif ?>
+        <? if (!empty($socials['facebook']['value'])) : ?>
+            <div class="contacts__item">
+                <h3 class="contacts__label"><?= $socials['facebook']['name'] ?></h3>
+                <p><a class="contacts__link" href="<?= $socials['facebook']['value'] ?>"><?= $socials['facebook']['name'] ?></a></p>
+            </div>
+        <? endif ?>
     </div>
 </section>
