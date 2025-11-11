@@ -10,6 +10,7 @@ use app\models\Settings;
 use app\models\TelegramChats;
 use app\models\Users;
 use app\Repositories\ContactRepository;
+use app\Repositories\TelegramChatsRepository;
 
 class NickCommand extends ChatCommand
 {
@@ -54,6 +55,7 @@ class NickCommand extends ChatCommand
 
             Contacts::new(['telegramid' => $telegramId, 'telegram' => $telegram], $userId);
             TelegramChats::save(self::$message);
+            TelegramChatsRepository::getAndSaveTgAvatar($userId, true);
 
             self::$operatorClass::$resultMessage = self::locale(['string' => '{{ Tg_Command_Name_Save_Success }}', 'vars' => [$username]]);
             return true;
