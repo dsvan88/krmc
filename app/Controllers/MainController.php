@@ -19,7 +19,7 @@ class MainController extends Controller
     {
 
         $images = Settings::load('img');
-        $gallery = array_map(fn($img) => GoogleDrive::getLink($img), $images['background']['value']);
+        $gallery = array_map(fn($i) => GoogleDrive::getLink($i), $images['background']['value']);
 
         $vars = [
             'title' => 'Gallery',
@@ -54,9 +54,9 @@ class MainController extends Controller
             'texts' => [
                 'SubmitLabel' => 'Create'
             ],
-            // 'styles' => [
-            //     'forms',
-            // ],
+            'styles' => [
+                'contacts',
+            ],
             // 'scripts' => [
             //     'plugins/ckeditor.js',
             //     'forms-admin-funcs.js',

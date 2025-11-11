@@ -1,0 +1,65 @@
+@use "sass:color";
+
+@import "tech/mixins_adapt";
+@import "tech/vars";
+
+$size: 8em;
+
+.contacts {
+    &__columns {
+        display: flex;
+        flex-direction: column;
+
+        @include md {
+            flex-direction: row;
+            justify-content: space-evenly;
+        }
+    }
+
+    &__column {
+        display: flex;
+        flex-direction: column;
+    }
+
+    &__item {
+        margin-bottom: 1.3em;
+
+        p {
+            font-size: .9em;
+            letter-spacing: .03em;
+        }
+    }
+
+    &__label {
+        font-size: 1.1em;
+        letter-spacing: .05em;
+        margin-bottom: .1em;
+
+        &::after {
+            content: ':';
+        }
+    }
+
+    &__gmap {
+        iframe {
+            width: 100%;
+            height: 20vh;
+        }
+    }
+
+    &__link {
+        color: $bg-color-blue-blur;
+
+        &:hover {
+            color: $bg-color-red-blur;
+        }
+
+        &:active {
+            color: $bg-color-dark-red-blur;
+        }
+
+        &:visited {
+            color: $bg-color-red-blur;
+        }
+    }
+}
