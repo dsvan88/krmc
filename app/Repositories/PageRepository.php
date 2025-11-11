@@ -31,7 +31,7 @@ class PageRepository
         }
         return $page;
     }
-    public static function formPageOG(array $page = null)
+    public static function formPageOG(array $page = [])
     {
         $url = Tech::getRequestProtocol() . "://{$_SERVER['SERVER_NAME']}";
         if (empty($page['data']['logo'])){

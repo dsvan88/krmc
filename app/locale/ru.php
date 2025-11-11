@@ -11,6 +11,9 @@ return [
     "Not ready yet!\nPlease, inform admins!" => "Пока не реализовано!\nобратитесь к администратору!",
     'Clear' => 'Очистить',
     'Changes saved successfully!' => 'Изменения успешно сохранены',
+    'About us' => 'Про нас',
+    'Gallery' => 'Галерея',
+    'Contacts' => 'Контакты',
 
     'Login' => 'Логин',
     'Nickname (in game)' => 'Псевдоним (игровой)',

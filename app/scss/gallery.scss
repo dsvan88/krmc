@@ -1,0 +1,17 @@
+@use "sass:color";
+
+@import "tech/mixins_adapt";
+@import "tech/vars";
+
+$size: 8em;
+
+.gallery {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .5em;
+
+    &__item {
+        height: 10em;
+        width: auto;
+    }
+}

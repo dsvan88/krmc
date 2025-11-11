@@ -89,8 +89,19 @@ class ViewRepository
     {
         $menu = [
             [
-                'path' => '',
-                'label' => 'Home'
+                'path' => 'home',
+                'label' => 'About us',
+                'type' => 'main',
+                'menu' => [
+                    [
+                        'name' => 'Gallery',
+                        'slug' => 'gallery',
+                    ],
+                    [
+                        'name' => 'Contacts',
+                        'slug' => 'contacts',
+                    ],
+                ],
             ],
             [
                 'path' => 'news/',
@@ -103,7 +114,7 @@ class ViewRepository
             // [
             //     'path' => '',
             //     'label' => Locale::phrase('{{ HEADER_MENU_INFORMATION }}'),
-            //     'menu' => Pages::getList(),
+            // 'menu' => Pages::getList(),
             //     'type' => 'page'
             // ],
             [
@@ -270,7 +281,7 @@ class ViewRepository
         ];
         return Locale::apply($menu);
     }
-    public static function compressScripts(array $scripts): array
+    public static function compressScripts(array $scripts = []): array
     {
         $_scripts = array_filter($scripts, fn($s) => strpos($s, 'plugins/') === false);
 

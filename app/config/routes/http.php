@@ -19,6 +19,16 @@ return  [
         'action' => 'home',
         'access' => ['category' => 'all']
     ],
+    'main/gallery' => [
+        'controller' => 'main',
+        'action' => 'gallery',
+        'access' => ['category' => 'all']
+    ],
+    'main/contacts' => [
+        'controller' => 'main',
+        'action' => 'contacts',
+        'access' => ['category' => 'all']
+    ],
     'page/add' => [
         'controller' => 'pages',
         'action' => 'add',

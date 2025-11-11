@@ -13,7 +13,7 @@ main {
         overflow-y: auto;
         display: flex;
         flex-wrap: wrap;
-        gap: 0.5em;
+        gap: .5em;
         background-color: $bg-color-light-odd;
         padding: .5em;
         outline: $bg-color-dark-blur;
