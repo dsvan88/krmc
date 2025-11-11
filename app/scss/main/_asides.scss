@@ -4,6 +4,8 @@ aside.images {
     flex-direction: column;
     display: none;
     padding-top: 10vh;
+    opacity: .95;
+    filter: contrast(70%) grayscale(50%);
 
     &.left {
         left: 0;
