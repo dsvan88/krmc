@@ -66,6 +66,7 @@ class NickCommand extends ChatCommand
 
         if (empty($userContacts)) {
             Contacts::new(['telegramid' => $telegramId, 'telegram' => $telegram], $userExistsData['id']);
+            TelegramChatsRepository::getAndSaveTgAvatar($userExistsData['id'], true);
             self::$operatorClass::$resultMessage = self::locale(['string' => '{{ Tg_Command_Name_Save_Success }}', 'vars' => [$username]]);
             return true;
         }
