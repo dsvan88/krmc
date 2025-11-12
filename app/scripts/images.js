@@ -10,6 +10,7 @@ actionHandler.imageAdd = async function (event) {
     reader.onloadend = async function () {
         const formData = new FormData();
         formData.append('filename', file.name);
+        formData.append('type', event.target.dataset.type);
         formData.append('image', reader.result);
         const result = await self.apiTalk(event.target, event, 'actionChange', formData);
         target.insertAdjacentHTML('afterend', result.html);
@@ -45,6 +46,7 @@ actionHandler.imageToogle = function (event) {
 actionHandler.imagesGetMore = async function (target, event) {
     const formData = new FormData();
     formData.append('pageToken', target.dataset.pageToken);
+    formData.append('type', target.dataset.type);
     const result = await this.apiTalk(target, event, 'actionClick', formData);
     target.insertAdjacentHTML('beforebegin', result.html);
     target.dataset.pageToken = result.nextPageToken ? result.nextPageToken : '';

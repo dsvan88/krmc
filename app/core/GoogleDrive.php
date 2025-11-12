@@ -130,7 +130,7 @@ class GoogleDrive
                 $result[] = $_result;
             }
         } catch (\Throwable $error) {
-            error_log('Error uploading file: ' . $error->getMessage());
+            error_log('Error get file list: ' . $error->getMessage());
         }
         return $result;
     }

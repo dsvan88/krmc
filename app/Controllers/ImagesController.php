@@ -32,7 +32,11 @@ class ImagesController extends Controller
         if (!empty($_POST['pageToken']))
             $pageToken = $_POST['pageToken'];
 
-        if (!ImageRepository::getImagesList($pageToken, $files, $nextPageToken)) {
+        $folder = '';
+        if (!empty($_POST['type']))
+            $folder = preg_replace('/[^a-z0-9_+ -]/ui', '', trim($_POST['type']));
+
+        if (!ImageRepository::getImagesList($pageToken, $files, $nextPageToken, $folder)) {
             return View::notice(['message' => 'Image’s list is empty']);
         }
 
@@ -91,7 +95,12 @@ class ImagesController extends Controller
 
         $filePath = $_SERVER['DOCUMENT_ROOT'] . FILE_MAINGALL . $filename;
         $gDrive = new GoogleDrive();
-        $fileId = $gDrive->create($filePath);
+
+        $folder = '';
+        if (!empty($_POST['type']))
+            $folder = preg_replace('/[^a-z0-9_+ -]/ui', '', trim($_POST['type']));
+
+        $fileId = $gDrive->create($filePath, $folder);
         $size = filesize($filePath);
 
         unlink($filePath);

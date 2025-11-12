@@ -24,6 +24,11 @@ return  [
         'action' => 'gallery',
         'access' => ['category' => 'all']
     ],
+    'main/gallery/edit' => [
+        'controller' => 'main',
+        'action' => 'galleryEdit',
+        'access' => ['category' => 'all']
+    ],
     'main/contacts' => [
         'controller' => 'main',
         'action' => 'contacts',
