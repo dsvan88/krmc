@@ -89,38 +89,49 @@ class ImagesController extends Controller
     }
     public function addAction()
     {
-        $symbols = Locale::$cyrillicPattern;
-        $filename = preg_replace("/([^a-z$symbols.,;0-9_-]+)/ui", '', trim($_POST['filename']));
-
-        if (ImageProcessing::saveBase64Image($_POST['image'], $filename) === false)
-            return View::notice(['message' => 'Fail!']);
-
-        $filePath = $_SERVER['DOCUMENT_ROOT'] . FILE_MAINGALL . $filename;
-        $gDrive = new GoogleDrive();
-
         $folder = '';
         if (!empty($_POST['type']))
             $folder = preg_replace('/[^a-z0-9_+ -]/ui', '', trim($_POST['type']));
 
-        $fileId = $gDrive->create($filePath, $folder);
-        $size = filesize($filePath);
+        if ($folder === 'gallery')
+            ImageProcessing::$maxWidth = 1080;
 
-        unlink($filePath);
-        $file = [
-            'id' => $fileId,
-            'realLink' => $gDrive->getLink($fileId),
-            'thumbnailLink' => $gDrive->getLink($fileId),
-            'name' => $filename,
-            'size' => $size,
-        ];
-        if (!empty($_POST['prompt'])) {
-            return View::response($file);
+        $gDrive = new GoogleDrive();
+        $count = count($_POST['filename']);
+
+        $path = $_SERVER['DOCUMENT_ROOT'] . View::$viewsFolder . "/components/list/image/item.php";
+        $files = [];
+        $symbols = Locale::$cyrillicPattern;
+        for ($x = 0; $x < $count; $x++) {
+            $filename = preg_replace("/([^a-z$symbols.,;0-9_-]+)/ui", '', trim($_POST['filename'][$x]));
+
+            if (ImageProcessing::saveBase64Image($_POST['image'][$x], $filename) === false)
+                continue;
+
+            $filePath = $_SERVER['DOCUMENT_ROOT'] . FILE_MAINGALL . $filename;
+
+            $fileId = $gDrive->create($filePath, $folder);
+            $size = filesize($filePath);
+            unlink($filePath);
+
+            $file = [
+                'id' => $fileId,
+                'realLink' => $gDrive->getLink($fileId),
+                'thumbnailLink' => $gDrive->getLink($fileId),
+                'name' => $filename,
+                'size' => $size,
+            ];
+
+            $files[] = $file;
+
+            if (!empty($_POST['prompt'])) continue;
+
+            ob_start();
+            require $path;
+            $html .= ob_get_clean();
         }
 
-        $path = '/components/list/image/item';
-
-        View::$route['vars'] = array_merge(View::$route['vars'], ['file' => $file, 'path' => $path, 'backgrounds' => []]);
-        return View::html();
+        return View::response(empty($_POST['prompt']) ? ['html' => $html] : $files);
     }
     public function deleteAction()
     {

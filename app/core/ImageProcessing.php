@@ -5,6 +5,7 @@ namespace app\core;
 class ImageProcessing
 {
     public static $path = '';
+    public static $maxWidth = 720;
 
     public static function imageToWebp($source, $output, $from = 'png')
     {
@@ -96,9 +97,9 @@ class ImageProcessing
 
             $imageSize = getimagesizefromstring($data);
 
-            if ($imageSize[0] > 720) {
+            if ($imageSize[0] > static::$maxWidth) {
                 $image = imagecreatefromstring($data);
-                $image = imagescale($image, 720);
+                $image = imagescale($image, static::$maxWidth);
                 ob_start();
                 imagejpeg($image);
                 $data = ob_get_clean();
@@ -126,9 +127,9 @@ class ImageProcessing
 
             $imageSize = getimagesizefromstring($rawImage);
 
-            if ($imageSize[0] > 720) {
+            if ($imageSize[0] > static::$maxWidth) {
                 $image = imagecreatefromstring($rawImage);
-                $image = imagescale($image, 720);
+                $image = imagescale($image, static::$maxWidth);
                 ob_start();
                 imagejpeg($image);
                 $rawImage = ob_get_clean();

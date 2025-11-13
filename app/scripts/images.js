@@ -3,18 +3,23 @@ const enumBgImages = [];
 actionHandler.imageAdd = async function (event) {
     const self = this;
     const target = event.target.closest('form');
-    const reader = new FileReader();
-    const file = event.target.files[0];
-    reader.readAsDataURL(file);
+    const formData = new FormData();
+    const readers = [];
 
-    reader.onloadend = async function () {
-        const formData = new FormData();
-        formData.append('filename', file.name);
-        formData.append('type', event.target.dataset.type);
-        formData.append('image', reader.result);
-        const result = await self.apiTalk(event.target, event, 'actionChange', formData);
-        target.insertAdjacentHTML('afterend', result.html);
-        self.addChangeListeners();
+    for (let x = 0; x < event.target.files.length; x++) {
+        readers.push(new FileReader());
+        readers[x].onloadend = async function (e) {
+            formData.append('filename[]', event.target.files[x].name);
+            formData.append('type', event.target.dataset.type);
+            formData.append('image[]', readers[x].result);
+            for (let y = 0; y < event.target.files.length; y++) {
+                if (!readers[y] || readers[y].readyState !== FileReader.DONE) return true;
+            }
+            const result = await self.apiTalk(event.target, event, 'actionChange', formData);
+            target.insertAdjacentHTML('afterend', result.html);
+            self.addChangeListeners();
+        }
+        readers[x].readAsDataURL(event.target.files[x]);
     }
 }
 actionHandler.imageBackgroundGroup = async function (target, event) {

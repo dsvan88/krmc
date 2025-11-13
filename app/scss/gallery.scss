@@ -98,11 +98,12 @@ $size: 20em;
 
         &__place {
             height: 100%;
+            max-width: $size+3em;
         }
 
         &__img {
             height: 100%;
-            max-width: 100%;
+            width: auto;
         }
 
         &__description {
