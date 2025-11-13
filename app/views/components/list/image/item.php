@@ -1,9 +1,6 @@
 <?
 $selected = '';
-if (empty($backgrounds)){
-    $backgrounds = [];
-}
-else if (in_array($file['id'], $backgrounds, true)) {
+if (!empty($backgrounds) && in_array($file['id'], $backgrounds, true)) {
     $selected = 'select_bg';
 }
 ?>

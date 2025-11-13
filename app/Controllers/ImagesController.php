@@ -36,6 +36,7 @@ class ImagesController extends Controller
         if (!empty($_POST['type']))
             $folder = preg_replace('/[^a-z0-9_+ -]/ui', '', trim($_POST['type']));
 
+        $files = [];
         if (!ImageRepository::getImagesList($pageToken, $files, $nextPageToken, $folder)) {
             return View::notice(['message' => 'Image’s list is empty']);
         }
@@ -91,7 +92,8 @@ class ImagesController extends Controller
         $symbols = Locale::$cyrillicPattern;
         $filename = preg_replace("/([^a-z$symbols.,;0-9_-]+)/ui", '', trim($_POST['filename']));
 
-        if (ImageProcessing::saveBase64Image($_POST['image'], $filename) === false) return View::notice('Fail!');
+        if (ImageProcessing::saveBase64Image($_POST['image'], $filename) === false)
+            return View::notice(['message' => 'Fail!']);
 
         $filePath = $_SERVER['DOCUMENT_ROOT'] . FILE_MAINGALL . $filename;
         $gDrive = new GoogleDrive();

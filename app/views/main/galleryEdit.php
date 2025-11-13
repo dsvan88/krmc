@@ -13,7 +13,7 @@
         </div>
         <div class="images__details">
             <div class="images__dashboard">
-                <span class="dashboard__item delete fa fa-trash" data-action-click="gallery/remove/group" data-verification="confirm" title="Remove there images from the Gallery"></span>
+                <span class="dashboard__item delete fa fa-trash" data-action-click="image/delete/group" data-verification="confirm" title="Remove there images from the Gallery"></span>
             </div>
             <div class="images__info info">
                 <div class="info__row">
