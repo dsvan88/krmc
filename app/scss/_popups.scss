@@ -132,6 +132,14 @@
         }
     }
 
+    &__image {
+        &-big {
+            max-height: 80vh;
+            max-width: 90vw;
+            height: auto;
+        }
+    }
+
     @import "popups/images";
 }
 

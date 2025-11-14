@@ -88,6 +88,10 @@ actionHandler.getLink = function (target) {
         return new Alert({ title: "Your link", text: `Your link to this image is:<br><a href="${target.dataset.link}" target="_blank">${target.dataset.link}</a>` });
     }
 }
+actionHandler.imageShow = function (t) {
+    const alert = alertImage({ title: t.title, image: t.src })
+    alert.dialog.style.marginTop = '1vh';
+}
 actionHandler.imageGetLink = function (target) {
 
     const radio = document.querySelector('.image__radio:checked');

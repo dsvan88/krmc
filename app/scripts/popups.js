@@ -234,6 +234,10 @@ class Prompt extends Confirm {
 }
 
 
+function alertImage(options = {}) {
+    options.text = `<img src="${options.image}" class="popup__image-big">`;
+    return new Alert(options)
+}
 async function customConfirm(options = {}) {
 
     return await new Promise((r) => {
