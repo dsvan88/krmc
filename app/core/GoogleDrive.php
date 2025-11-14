@@ -13,6 +13,7 @@ class GoogleDrive
     public static $credentials = [];
     public static $client = null;
     public static $service = null;
+    public static $maxPerPage = 20;
 
     public function __construct()
     {
@@ -114,7 +115,7 @@ class GoogleDrive
         try {
             $results = static::$service->files->listFiles([
                 'q' => "'$folderId' in parents and trashed = false",
-                'pageSize' => 20,
+                'pageSize' => static::$maxPerPage,
                 'pageToken' => $pageToken,
                 'fields' => 'nextPageToken, files(id, name, size, thumbnailLink, imageMediaMetadata)',
             ]);

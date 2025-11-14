@@ -8,19 +8,20 @@ $size: 15em;
 .gallery {
     min-height: 40vh;
     max-height: 80vh;
-    width: 40vw;
+    // width: 40vw;
     overflow-y: auto;
     display: flex;
+    justify-content: center;
     flex-wrap: wrap;
     background-color: $bg-color-light-odd;
-    padding: .5em;
+    padding: .5em !important;
     outline: $bg-color-dark-blur;
     border: 1px solid $bg-color-dark;
+    gap: 0 0;
 
+    // @include md {
 
-    @include md {
-        width: auto;
-    }
+    // }
 
     &__wrapper {
         display: flex;
@@ -69,10 +70,6 @@ $size: 15em;
 
         &__radio {
             display: none;
-
-            // &:checked+.image {
-            //     box-shadow: 1px 1px 2px 2px $bg-color-light-blue;
-            // }
         }
 
         &.select_bg {

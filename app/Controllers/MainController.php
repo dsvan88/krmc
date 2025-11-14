@@ -21,6 +21,7 @@ class MainController extends Controller
     {
 
         $gDrive = new GoogleDrive;
+        $gDrive::$maxPerPage = 40;
         $gallery = $gDrive->listFiles('', $nextPageToken, $gDrive->getFolderId('gallery'));
 
         $vars = [
