@@ -1,13 +1,11 @@
-actionHandler.accountProfileSection = async function (target, event) {
+actionHandler.accountProfileSection = async function (target) {
     if (target.classList.contains('active'))
         return false;
     const activeItem = target.closest('.profile__sections').querySelector('.active');
     activeItem.classList.remove('active');
     target.classList.add('active');
 
-    const data = getFormDataFromDataset(target);
-
-    const result = await this.apiTalk(target, null, 'actionClick', data);
+    const result = await this.apiTalk(target, null, 'actionClick');
 
     this.changeCardContent(result);
 }
