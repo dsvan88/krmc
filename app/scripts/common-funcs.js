@@ -25,6 +25,14 @@ function redirectPost(url, data) {
 	form.submit();
 }
 
+function getFormDataFromDataset(t) {
+	const data = new FormData();
+	for (const [key, value] of Object.entries(t.dataset)) {
+		if (key.startsWith('action')) continue;
+		data.append(key, value);
+	}
+	return data;
+}
 function simpleObjectToFormData(obj) {
 	let formData = new FormData();
 	for (let item in obj) {

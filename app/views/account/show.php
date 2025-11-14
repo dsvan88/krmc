@@ -13,9 +13,15 @@
             <div class="profile__card">
                 <div class="profile__card-avatar avatar">
                     <div class="avatar__wrapper">
-                        <span class="avatar__image" data-action-click="account/avatar/tg/get" data-uid="<?= $userId ?>">
-                            <?= $data['avatar'] ?>
-                        </span>
+                        <? if ($emptyAvatar): ?>
+                            <span class="avatar__image" data-action-dblclick="account/avatar/tg/get" data-uid="<?= $userId ?>">
+                                <?= $data['avatar'] ?>
+                            </span>
+                        <? else : ?>
+                            <span class="avatar__image" data-action-click="account/avatar/show">
+                                <?= $data['avatar'] ?>
+                            </span>
+                        <? endif ?>
                     </div>
                 </div>
                 <div class="profile__card-content">

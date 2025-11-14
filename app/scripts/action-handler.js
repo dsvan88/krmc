@@ -82,10 +82,12 @@ let actionHandler = {
 		} catch (error) {
 			alert(`Не существует метода для этого action-click: ${type}... или возникла ошибка. Сообщите администратору!\r\n${error.name}: ${error.message}`);
 			console.log(error);
+			return false;
 		}
+		return true;
 	},
 	apiTalk: async function (target, event, method, formData = null) {
-		let action = target.dataset[method];
+		const action = target.dataset[method];
 		let modal = false;
 		const self = this;
 		if (action.endsWith('/form')) {

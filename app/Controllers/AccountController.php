@@ -87,15 +87,13 @@ class AccountController extends Controller
     public function showAction()
     {
         extract(self::$route['vars']);
-        if (!Users::checkAccess('manager')) {
-            $userId = (int) $_SESSION['id'];
-            $isAdmin = false;
-        } else {
-            $isAdmin = true;
-        }
+
+        $isAdmin = Users::checkAccess('manager');
+
         $userData = Users::find($userId);
 
-        $avatar = empty($userData['personal']['avatar']) ? Settings::getImage('empty_avatar')['value'] : GoogleDrive::getLink($userData['personal']['avatar']);
+        $emptyAvatar = empty($userData['personal']['avatar']);
+        $avatar =  $emptyAvatar ? Settings::getImage('empty_avatar')['value'] : GoogleDrive::getLink($userData['personal']['avatar']);
 
         // $userData['avatar'] = ImageProcessing::inputImage($avatar, ['title' => Locale::phrase(['string' => '{{ Account_Profile_Form_User_Avatar }}', 'vars' => [$userData['name']]])]);
         $userData['avatar'] = "<img src='$avatar'>";

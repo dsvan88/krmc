@@ -89,7 +89,7 @@ actionHandler.getLink = function (target) {
     }
 }
 actionHandler.imageShow = function (t) {
-    const alert = alertImage({ title: t.title, image: t.src })
+    const alert = alertImage({ title: t.title, image: t.src });
     alert.dialog.style.marginTop = '1vh';
 }
 actionHandler.imageGetLink = function (target) {

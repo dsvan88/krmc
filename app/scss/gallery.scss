@@ -100,6 +100,7 @@ $size: 15em;
             height: 100%;
             width: auto;
             filter: grayscale(60%) contrast(80%);
+            transition: filter $animation-fast;
 
             &:hover {
                 filter: none;

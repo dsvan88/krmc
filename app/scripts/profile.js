@@ -1,18 +1,43 @@
-actionHandler.accountProfileSection = function (target, event) {
+actionHandler.accountProfileSection = async function (target, event) {
     if (target.classList.contains('active'))
         return false;
-    let activeItem = target.closest('.profile__sections').querySelector('.active');
+    const activeItem = target.closest('.profile__sections').querySelector('.active');
     activeItem.classList.remove('active');
     target.classList.add('active');
-    
-    this.changeCardContent(target.dataset.actionClick, target);
+
+    const data = getFormDataFromDataset(target);
+
+    const result = await this.apiTalk(target, null, 'actionClick', data);
+
+    this.changeCardContent(result);
 }
-actionHandler.accountProfileSectionEdit = function (target, event) {
-    let parent = target.closest('*[data-section]');
+actionHandler.accountAvatarShow = function (target) {
+    const image = target.querySelector('img');
+    alertImage({ title: 'User’s avatar', image: image.src });
+}
+actionHandler.accountProfileSectionEdit = async function (target) {
+    const parent = target.closest('*[data-section]');
     if (!parent || !parent.classList.contains('active'))
         return false;
-    
-    this.changeCardContent(target.dataset.actionClick, parent);
+
+    const data = getFormDataFromDataset(parent);
+
+    const result = await this.apiTalk(target, null, 'actionClick', data);
+
+    this.changeCardContent(result);
+}
+actionHandler.changeCardContent = async function (result = {}) {
+
+    if (!result.html) return false;
+
+    const self = this;
+    const cardContent = document.querySelector('.profile__card-content');
+    cardContent.innerHTML = result.html;
+    const form = cardContent.querySelector('form');
+    if (form)
+        form.addEventListener('submit', (e) => self.commonSubmitFormHandler.call(self, e));
+
+    return true;
 }
 actionHandler.verificationEmail = async function (target, event) {
     const self = this;
@@ -27,28 +52,5 @@ actionHandler.verificationEmail = async function (target, event) {
         url: target.dataset.actionClick,
         data: formData,
         success: (result) => self.commonResponse.call(self, result),
-    });
-}
-actionHandler.changeCardContent = function (url, target){
-    let data = new FormData();
-    data.append('uid', target.dataset.uid);
-    data.append('section', target.dataset.section);
-    let cardContent = document.querySelector('.profile__card-content');
-    request({
-        url: url,
-        data: data,
-        success: function ({html, error, message}) {
-            if (error) {
-                alert(message);
-                return false;
-            }
-            if (message) {
-                alert(message);
-            }
-            cardContent.innerHTML = html;
-            let form = cardContent.querySelector('form');
-            if (form)
-                form.addEventListener('submit', (event) => actionHandler.commonSubmitFormHandler.call(actionHandler, event));
-        },
     });
 }
