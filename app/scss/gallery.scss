@@ -3,7 +3,7 @@
 @import "tech/mixins_adapt";
 @import "tech/vars";
 
-$size: 20em;
+$size: 15em;
 
 .gallery {
     min-height: 40vh;
@@ -12,7 +12,6 @@ $size: 20em;
     overflow-y: auto;
     display: flex;
     flex-wrap: wrap;
-    gap: .5em;
     background-color: $bg-color-light-odd;
     padding: .5em;
     outline: $bg-color-dark-blur;
@@ -42,15 +41,14 @@ $size: 20em;
 
     .image {
         position: relative;
-        flex: 0 1 $size;
         height: $size;
-        max-width: $size+3em;
+        width: $size - 5em;
+        overflow: hidden;
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
         background-color: $bg-color-light;
-        padding: .5em .5em 2em .5em;
         transition: scale $animation-fast, padding $animation-fast;
 
         .dashboard__label {
@@ -104,6 +102,11 @@ $size: 20em;
         &__img {
             height: 100%;
             width: auto;
+            filter: grayscale(60%) contrast(80%);
+
+            &:hover {
+                filter: none;
+            }
         }
 
         &__description {
@@ -113,20 +116,6 @@ $size: 20em;
             transition: max-height $animation-fast;
             overflow: hidden;
         }
-
-        // &:hover:not(.new) {
-        //     position: relative;
-        //     z-index: 5;
-        //     scale: 1.1;
-
-        //     .image__dashboard {
-        //         opacity: .85;
-        //     }
-
-        //     .image__description {
-        //         max-height: 10em;
-        //     }
-        // }
 
         &.new {
             display: flex;
