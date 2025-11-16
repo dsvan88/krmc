@@ -1,3 +1,6 @@
+@import "tech/vars";
+@import "tech/mixins_adapt";
+
 .profile {
     &__wrapper {
         background-color: $bg-color-light-odd;
@@ -13,11 +16,16 @@
     }
 
     &__sections {
-        @extend %asideMenu;
+        background-color: $color-text-light;
+        display: flex;
+        flex-direction: column;
+        font-size: 1.2em;
     }
 
     &__section {
-        @extend %asideMenuItem;
+        padding: .1em .2em;
+        margin-bottom: .3em;
+        border: 1px solid $color-text-light-blur;
 
         .edit-section {
             opacity: 0;

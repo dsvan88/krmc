@@ -112,11 +112,15 @@ class AccountController extends Controller
                 'SaveLabel' => 'Save',
                 'CancelLabel' => 'Cancel',
             ],
+            'styles' => [
+                'profile',
+            ],
             'scripts' => [
                 'profile.js',
             ],
             'userId' => $userId,
             'data' => $userData,
+            'emptyAvatar' => $emptyAvatar,
             'isAdmin' => $isAdmin,
         ];
         View::$route['vars'] = array_merge(View::$route['vars'], $vars);
