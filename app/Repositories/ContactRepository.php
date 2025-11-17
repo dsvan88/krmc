@@ -21,9 +21,10 @@ class ContactRepository
         }
         return $contacts;
     }
-    public static function formatUserContacts(array $contacts){
+    public static function formatUserContacts(array $contacts)
+    {
         $result = [];
-        foreach($contacts as $num => $contact){
+        foreach ($contacts as $num => $contact) {
             $result[$contact['type']] = $contact['contact'];
         }
         return $result;
@@ -67,16 +68,16 @@ class ContactRepository
         }
         return true;
     }
-    public static function findContactByType(string $type, array $contacts){
+    public static function findContactByType(string $type, array $contacts)
+    {
         foreach ($contacts as $index => $data) {
             if ($data['type'] !== $type) continue;
             if (!empty($data['data'])) {
-                $data['data'] = json_decode($data['data'], true);
 
                 if (empty($data['data']['approve']))
                     return $data;
 
-                if ($data['data']['approve']['expired'] < $_SERVER['REQUEST_TIME']){
+                if ($data['data']['approve']['expired'] < $_SERVER['REQUEST_TIME']) {
                     unset($data['data']['approve']);
                 }
             }
@@ -90,11 +91,10 @@ class ContactRepository
 
         if ($contact === false)
             return false;
-                        
-        if (empty($contact['data']['approve']['code'])){
+
+        if (empty($contact['data']['approve']['code'])) {
             $_SESSION['approve_code'] = Tech::getCode(json_encode($contacts));
-        }
-        else {
+        } else {
             $_SESSION['approve_code'] = $contact['data']['approve']['code'];
         }
 
@@ -123,8 +123,6 @@ class ContactRepository
             }
 
             if (empty($data['data'])) continue;
-
-            $data['data'] = json_decode($data['data'], true);
 
             if (empty($data['data']['approved'])) continue;
 

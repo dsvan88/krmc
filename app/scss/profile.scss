@@ -23,6 +23,10 @@
         font-size: 1.2em;
         color: $bg-color-light;
         padding: 1em .2em;
+
+        hr {
+            margin-bottom: .2em;
+        }
     }
 
     &__section {
@@ -77,6 +81,11 @@
         .text-accent {
             color: $color-text-accent;
             text-decoration: underline;
+            margin-left: .2em;
+
+            &.small {
+                font-size: .9em;
+            }
 
             &[data-action-click] {
                 cursor: pointer;
@@ -149,9 +158,11 @@
     }
 
     .avatar {
-        position: absolute;
-        top: -1em;
-        right: 0;
+        @include md {
+            position: absolute;
+            top: -1em;
+            right: 0;
+        }
 
         &__wrapper {
             border: .2em solid $bg-color-light;
@@ -169,6 +180,18 @@
 
         .empty {
             background-color: $bg-color-light-red-blur;
+        }
+    }
+
+    fieldset {
+        margin-bottom: .6em;
+    }
+
+    .section-label {
+        display: none;
+
+        @include md {
+            display: inline;
         }
     }
 }

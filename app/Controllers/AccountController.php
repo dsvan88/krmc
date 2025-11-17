@@ -101,6 +101,8 @@ class AccountController extends Controller
 
         $data = ContactRepository::getFields($userId, 'No data');
         $data = ContactRepository::wrapLinks($data);
+        $data['approved'] = ContactRepository::checkApproved($userId);
+
         $userData = array_merge($userData, $data);
 
         $vars = [

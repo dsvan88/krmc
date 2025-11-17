@@ -1,6 +1,3 @@
-<div class="profile__card-row">
-    <h3 class="profile__card-title"><?= $texts['profileCardTitle'] ?><span class="text-accent"><?= $userId ?></span>:</h3>
-</div>
 <fieldset>
     <legend><?= $texts['personalTitle'] ?></legend>
     <div class="profile__card-row">
@@ -44,6 +41,15 @@
         </h5>
         <div class="profile__card-value">
             <?= $data['email'] ?>
+            <? if (isset($data['approved']['email'])): ?>
+                <i class="fa fa-check-circle text-accent"></i>
+            <? else: ?>
+                <? if ($_SESSION['id'] == $data['id']): ?>
+                    <span class="text-accent small" data-action-click="verification/email">Підтвердити</span>
+                <? else: ?>
+                    <i class="fa fa-times text-accent" title="Не підтвердженно"></i>
+                <? endif ?>
+            <? endif ?>
         </div>
     </div>
     <div class="profile__card-row">
@@ -52,6 +58,9 @@
         </h5>
         <div class="profile__card-value">
             <?= $data['telegram'] ?>
+            <? if (isset($data['approved']['telegramid'])): ?>
+                <i class="fa fa-check-circle text-accent"></i>
+            <? endif ?>
         </div>
     </div>
     <div class="profile__card-row">
