@@ -77,11 +77,14 @@
         .text-accent {
             color: $color-text-accent;
             text-decoration: underline;
+
+            &[data-action-click] {
+                cursor: pointer;
+            }
         }
 
         &-title {
             font-size: 1.3em;
-            text-transform: uppercase;
             letter-spacing: 0.1em;
         }
 
@@ -120,13 +123,19 @@
             font-size: .7em;
             letter-spacing: 0.1em;
             margin-bottom: .1em;
+            color: $color-text-dark-blur;
+
+            &::after {
+                content: ':';
+            }
         }
 
         &-value {
             letter-spacing: 0.05em;
-            font-size: 1.3em;
+            font-size: 1.1em;
             border-bottom: 1px solid $color-text-main;
             display: flex;
+
 
             button {
                 font-size: 0.7em;
@@ -159,7 +168,7 @@
         }
 
         .empty {
-            background-color: $bg-color-dark-red-blur;
+            background-color: $bg-color-light-red-blur;
         }
     }
 }

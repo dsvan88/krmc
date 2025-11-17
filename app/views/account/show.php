@@ -4,7 +4,7 @@
         <div class="profile__content">
             <menu class="profile__sections">
                 <li class="profile__section fa fa-user active" data-action-click="account/profile/section" data-uid="<?= $userId ?>" data-section="personal"><span class="section-label">Особисті</span><span class="edit-section fa fa-pencil-square-o" data-action-click="account/profile/section/edit" title="Редагувати"></span></li>
-                <li class="profile__section fa fa-envelope-o" data-action-click="account/profile/section" data-uid="<?= $userId ?>" data-section="contacts"><span class="section-label">Контакти</span><span class="edit-section fa fa-pencil-square-o" data-action-click="account/profile/section/edit" title="Редагувати"></span></li>
+                <!-- <li class="profile__section fa fa-envelope-o" data-action-click="account/profile/section" data-uid="<?= $userId ?>" data-section="contacts"><span class="section-label">Контакти</span><span class="edit-section fa fa-pencil-square-o" data-action-click="account/profile/section/edit" title="Редагувати"></span></li> -->
                 <li class="profile__section fa fa-lock" data-action-click="account/profile/section" data-uid="<?= $userId ?>" data-section="security"><span class="section-label">Безпека</span><span></span></li>
                 <? if ($isAdmin) : ?>
                     <li class="profile__section fa fa-lock" data-action-click="account/profile/section" data-uid="<?= $userId ?>" data-section="control"><span class="section-label">Керування</span><span class="edit-section fa fa-pencil-square-o" data-action-click="account/profile/section/edit" title="Редагувати"></span></li>
@@ -13,17 +13,19 @@
             </menu>
             <div class="profile__card">
                 <div class="profile__avatar avatar">
-                    <div class="avatar__wrapper">
-                        <? if ($emptyAvatar): ?>
-                            <span class="avatar__image empty" data-action-dblclick="account/avatar/tg/get" data-uid="<?= $userId ?>">
+                    <? if ($emptyAvatar): ?>
+                        <div class="avatar__wrapper empty">
+                            <span class="avatar__image" data-action-dblclick="account/avatar/tg/get" data-uid="<?= $userId ?>">
                                 <?= $data['avatar'] ?>
                             </span>
-                        <? else : ?>
+                        </div>
+                    <? else : ?>
+                        <div class="avatar__wrapper">
                             <span class="avatar__image" data-action-click="account/avatar/show">
                                 <?= $data['avatar'] ?>
                             </span>
-                        <? endif ?>
-                    </div>
+                        </div>
+                    <? endif ?>
                 </div>
                 <div class="profile__card-content">
                     <? require $_SERVER['DOCUMENT_ROOT'] . '/app/views/account/sections/personal.php' ?>

@@ -1,11 +1,11 @@
 <div class="profile__card-row">
-    <h3 class="profile__card-title">Справа № <span class="text-accent"><?= $userId ?></span>:</h3>
+    <h3 class="profile__card-title"><?= $texts['profileCardTitle'] ?><span class="text-accent"><?= $userId ?></span>:</h3>
 </div>
 <fieldset>
-    <legend>Особисті дані</legend>
+    <legend><?= $texts['personalTitle'] ?></legend>
     <div class="profile__card-row">
         <h5 class="profile__card-label">
-            Псевдонім:
+            <?= $texts['nickLabel'] ?>
         </h5>
         <div class="profile__card-value">
             <?= $data['name'] ?>
@@ -13,7 +13,7 @@
     </div>
     <div class="profile__card-row">
         <h5 class="profile__card-label">
-            <?= $texts['FioLabel'] ?>:
+            <?= $texts['FioLabel'] ?>
         </h5>
         <div class="profile__card-value">
             <?= empty($data['personal']['fio']) ? '' : $data['personal']['fio'] ?>
@@ -21,7 +21,7 @@
     </div>
     <div class="profile__card-row">
         <h5 class="profile__card-label">
-            <?= $texts['BirthdayLabel'] ?>:
+            <?= $texts['BirthdayLabel'] ?>
         </h5>
         <div class="profile__card-value">
             <?= empty($data['personal']['birthday']) ? '' : date('d.m.Y', $data['personal']['birthday']) ?>
@@ -29,7 +29,7 @@
     </div>
     <div class="profile__card-row">
         <h5 class="profile__card-label">
-            <?= $texts['GenderLabel'] ?>:
+            <?= $texts['GenderLabel'] ?>
         </h5>
         <div class="profile__card-value">
             <?= $data['personal']['genderName'] ?>
@@ -37,10 +37,10 @@
     </div>
 </fieldset>
 <fieldset>
-    <legend>Явочні контакти</legend>
+    <legend><?= $texts['contactsLabel'] ?></legend>
     <div class="profile__card-row">
         <h5 class="profile__card-label">
-            <?= $texts['EmailLabel'] ?>:
+            <?= $texts['EmailLabel'] ?>
         </h5>
         <div class="profile__card-value">
             <?= $data['email'] ?>
@@ -48,7 +48,7 @@
     </div>
     <div class="profile__card-row">
         <h5 class="profile__card-label">
-            <?= $texts['TelegramLabel'] ?>:
+            <?= $texts['TelegramLabel'] ?>
         </h5>
         <div class="profile__card-value">
             <?= $data['telegram'] ?>
@@ -56,7 +56,7 @@
     </div>
     <div class="profile__card-row">
         <h5 class="profile__card-label">
-            <?= $texts['PhoneLabel'] ?>:
+            <?= $texts['PhoneLabel'] ?>
         </h5>
         <div class="profile__card-value">
             <?= $data['phone'] ?>

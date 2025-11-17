@@ -67,9 +67,12 @@ return [
     'Rename Temporary Player' => 'Смена имени временного игрока',
 
     'Agent’s profile «<b>%s</b>»' => 'Личное дело агента «<b>%s</b>»',
+    'Profile #' => 'Личное дело №',
+    'Personal data' => 'Личные данные',
     'Name, secondary name, middle name' => 'Ф.И.О.',
     'Birthday' => 'Дата рождения',
     'Gender' => 'Пол',
+    'Visual contacts' => 'Явочные контакты',
     'E-mail' => 'Электонная почта',
     'Telegram' => 'Телеграм',
     'Phone Number' => 'Номер телефона',
@@ -77,6 +80,7 @@ return [
     'Male' => 'Господин',
     'Female' => 'Госпожа',
     'secret' => 'Некто',
+    'Precautions' => 'Меры предосторожности',
 
     'Ban time' => 'Бан до',
     'Ban options' => 'Настройки бана',

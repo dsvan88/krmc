@@ -16,13 +16,15 @@ class AccountRepository
     public static function getFields(int $userId): array
     {
         $data = Users::find($userId);
-        $data['personal']['gender'] = '';
         $data['personal']['genderName'] = '';
-        if (empty($data['personal']['gender'])) {
-            $data['personal']['gender'] = $data['personal']['gender'];
+
+        if (!empty($data['personal']['gender'])) {
             $data['personal']['genderName'] = Locale::phrase(ucfirst($data['personal']['gender']));
         }
-        return $data;
+        $contacts = ContactRepository::getFields($userId, 'No data');
+        $contacts = ContactRepository::wrapLinks($contacts);
+
+        return array_merge($data, $contacts);
     }
     public static function edit(int $userId, array $data)
     {

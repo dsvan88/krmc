@@ -1,17 +1,18 @@
 <div class="profile__card-row">
-    <h3 class="profile__card-title">Запобіжні заходи:</h3>
+    <h3 class="profile__card-title"><?= $texts['securityTitle'] ?></h3>
 </div>
 <div class="profile__card-row">
     <h5 class="profile__card-label">
-        Пароль:
+        <?= $texts['passwordLabel'] ?>
     </h5>
     <div class="profile__card-value">
-        <button type="button" data-action-click="account/password/change/form">Змінити</button>
+        <?= $texts['passwordText'] ?>
+        <i class="text-accent fa fa-pencil" data-action-click="account/password/change/form" title="<?= $texts['editLabel'] ?>"></i>
     </div>
 </div>
 <div class="profile__card-row">
     <h5 class="profile__card-label">
-        Пошта:
+        <?= $texts['EmailLabel'] ?>
     </h5>
     <div class="profile__card-value">
         <? if (isset($data['email'])) : ?>

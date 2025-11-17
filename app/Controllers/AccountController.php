@@ -99,16 +99,26 @@ class AccountController extends Controller
         $userData['avatar'] = "<img src='$avatar'>";
         $userData['personal']['genderName'] = empty($userData['personal']['gender']) ? '' : Locale::phrase(ucfirst($userData['personal']['gender']));
 
+        $data = ContactRepository::getFields($userId, 'No data');
+        $data = ContactRepository::wrapLinks($data);
+        $userData = array_merge($userData, $data);
+
         $vars = [
             'title' => [
                 'string' => 'Agent’s profile «<b>%s</b>»',
                 'vars' => [$userData['name']]
             ],
             'texts' => [
+                'profileCardTitle' => 'Profile #',
+                'personalTitle' => 'Personal data',
+                'nickLabel' => 'Nickname (in game)',
                 'FioLabel' => 'Name, secondary name, middle name',
                 'BirthdayLabel' => 'Birthday',
                 'GenderLabel' => 'Gender',
+                'contactsLabel' => 'Visual contacts',
                 'EmailLabel' => 'Email',
+                'TelegramLabel' => 'Telegram',
+                'PhoneLabel' => 'Phone',
                 'SaveLabel' => 'Save',
                 'CancelLabel' => 'Cancel',
             ],
@@ -135,10 +145,7 @@ class AccountController extends Controller
         if ($_SESSION['id'] != $userId && !Users::checkAccess('manager')) {
             return View::message(['error' => 1, 'text' => 'You don’t have enough rights to change information about other users!']);
         }
-        if ($section === 'contacts') {
-            $data = ContactRepository::getFields($userId, 'No data');
-            $data = ContactRepository::wrapLinks($data);
-        } elseif ($section === 'security') {
+        if ($section === 'security') {
             $data = ContactRepository::checkApproved($userId);
         } else {
             $data = AccountRepository::getFields($userId);
@@ -157,16 +164,24 @@ class AccountController extends Controller
         }
 
         $texts = [
+            'profileCardTitle' => 'Profile #',
+            'personalTitle' => 'Personal data',
+            'securityTitle' => 'Precautions',
+            'nickLabel' => 'Nickname (in game)',
             'FioLabel' => 'Name, secondary name, middle name',
             'BirthdayLabel' => 'Birthday',
             'GenderLabel' => 'Gender',
-            'EmailLabel' => 'E-mail',
+            'contactsLabel' => 'Visual contacts',
+            'EmailLabel' => 'Email',
             'TelegramLabel' => 'Telegram',
             'PhoneLabel' => 'Phone',
+            'passwordLabel' => 'Password',
+            'passwordText' => '*******&nbsp;',
             'CredoLiveLabel' => 'Life Creed',
             'CredoGameLabel' => 'Gaming Creed',
             'BestQuoteLabel' => 'Favorite Quote',
             'SignatureLabel' => 'Signature',
+            'editLabel' => 'Edit',
             'SaveLabel' => 'Save',
             'CancelLabel' => 'Cancel',
         ];
