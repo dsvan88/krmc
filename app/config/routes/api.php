@@ -134,6 +134,11 @@ return  [
         'action' => 'delete',
         'access' => ['category' => 'admin']
     ],
+    'api/account/personal/edit' => [
+        'controller' => 'account',
+        'action' => 'personalEdit',
+        'access' => ['category' => 'admin']
+    ],
 
     'api/autocomplete/users-names' =>
     [

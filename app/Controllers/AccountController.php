@@ -237,6 +237,46 @@ class AccountController extends Controller
         }
         return View::notice(['message' => 'Success!', 'location' => '/account/profile/' . $userId]);
     }
+    public function personalEditAction()
+    {
+        // extract(self::$route['vars']);
+
+        // $isAdmin = false;
+        // if (!Users::checkAccess('manager')) {
+        //     $userId = (int) $_SESSION['id'];
+        // } else {
+        //     $isAdmin = true;
+        // }
+
+        // if ($section === 'contacts') {
+        //     $contacts = [
+        //         'email' => Validator::validate('email', $_POST['email']),
+        //         'telegram' => Validator::validate('telegram', $_POST['telegram']),
+        //         'phone' => Validator::validate('phone', $_POST['phone']),
+        //     ];
+        //     ContactRepository::edit($userId, $contacts);
+        // } else if ($section === 'control' && $isAdmin) {
+        //     $name = trim($_POST['name']);
+        //     $status = trim($_POST['status']);
+        //     $userData = Users::find($userId);
+        //     if ($userData['name'] !== $name) {
+        //         $result = AccountRepository::rename($userId, $name);
+        //         if (!$result['result']) {
+        //             $result['type'] = 'error';
+        //             return View::notice($result);
+        //         }
+        //         $result['location'] = '/account/profile/' . $userId;
+        //         return View::notice($result);
+        //     }
+        //     if ($userData['privilege']['status'] !== $status) {
+        //         $userData['privilege']['status'] = $status;
+        //         Users::edit(['privilege' => $userData['privilege']], ['id' => $userId]);
+        //     }
+        // } else {
+        //     AccountRepository::edit($userId, $_POST);
+        // }
+        return View::notice(['message' => 'Success!', 'data' => $_POST]);
+    }
     public function profileSectionEditFormAction()
     {
         $userId = (int) trim($_POST['uid']);

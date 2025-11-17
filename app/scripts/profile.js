@@ -46,9 +46,23 @@ actionHandler.verificationEmail = async function (target, event) {
 
     const formData = new FormData();
     formData.append('approval_code', verification)
-    request({
-        url: target.dataset.actionClick,
-        data: formData,
-        success: (result) => self.commonResponse.call(self, result),
-    });
+
+    const result = await this.apiTalk(target, null, 'actionClick', formData);
+
+    // request({
+    //     url: target.dataset.actionClick,
+    //     data: formData,
+    //     success: (result) => self.commonResponse.call(self, result),
+    // });
+}
+actionHandler.accountPersonalEdit = async function (target) {
+    const newValue = await customPrompt({ title: 'Введіть нове значення', value: target.innerText });
+
+    if (newValue === false) return false;
+
+    const formData = new FormData();
+    formData.append('field', target.dataset.field);
+    formData.append('value', newValue);
+    const result = this.apiTalk(target, null, 'actionDblclick', formData)
+
 }

@@ -12,7 +12,7 @@
         <h5 class="profile__card-label">
             <?= $texts['FioLabel'] ?>
         </h5>
-        <div class="profile__card-value">
+        <div class="profile__card-value" data-action-dblclick="account/personal/edit" data-field="fio">
             <?= empty($data['personal']['fio']) ? '' : $data['personal']['fio'] ?>
         </div>
     </div>
@@ -20,7 +20,7 @@
         <h5 class="profile__card-label">
             <?= $texts['BirthdayLabel'] ?>
         </h5>
-        <div class="profile__card-value">
+        <div class="profile__card-value" data-action-dblclick="account/personal/edit" data-field="birthday" data-type="date">
             <?= empty($data['personal']['birthday']) ? '' : date('d.m.Y', $data['personal']['birthday']) ?>
         </div>
     </div>
