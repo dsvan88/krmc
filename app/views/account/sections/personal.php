@@ -37,10 +37,7 @@
     </div>
 </fieldset>
 <fieldset>
-    <legend>Контакти</legend>
-    <div class="profile__card-row">
-        <h3 class="profile__card-title">Явочні контакти:</h3>
-    </div>
+    <legend>Явочні контакти</legend>
     <div class="profile__card-row">
         <h5 class="profile__card-label">
             <?= $texts['EmailLabel'] ?>:

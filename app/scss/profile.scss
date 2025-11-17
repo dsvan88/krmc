@@ -13,6 +13,7 @@
 
     &__content {
         display: flex;
+        min-height: 65vh;
     }
 
     &__sections {
@@ -116,7 +117,7 @@
         }
 
         &-label {
-            font-size: 1.1em;
+            font-size: .7em;
             letter-spacing: 0.1em;
             margin-bottom: .1em;
         }
