@@ -30,6 +30,7 @@
                 </div>
             </div>
         </div>
+        <hr>
         <? if (!empty($socials['youtube']['value'])) : ?>
             <div class="contacts__item">
                 <h3 class="contacts__label"><?= $socials['youtube']['name'] ?></h3>
