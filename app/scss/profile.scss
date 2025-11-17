@@ -16,26 +16,49 @@
     }
 
     &__sections {
-        background-color: $color-text-light;
+        background-color: $bg-color-dark-blur;
         display: flex;
         flex-direction: column;
         font-size: 1.2em;
+        color: $bg-color-light;
+        padding: 1em .2em;
     }
 
     &__section {
-        padding: .1em .2em;
+        padding: .1em;
         margin-bottom: .3em;
-        border: 1px solid $color-text-light-blur;
+        display: flex !important;
+        align-items: center;
+        border: 1px solid $bg-color-dark-blur;
+        cursor: pointer;
+        transition: border-color $animation-fast;
+
+        &::before {
+            display: inline-block;
+            width: 1.7em;
+            text-align: center;
+        }
+
+        &:hover {
+            border-color: $bg-color-dark;
+        }
 
         .edit-section {
             opacity: 0;
-            font-size: 1.3em;
+            font-size: 1.2em;
             cursor: pointer;
             pointer-events: none;
-            margin-left: 1em;
+            margin-left: 1.2em;
+            transition: color $animation-fast;
+
+            &:hover {
+                color: $bg-color-light-red;
+            }
         }
 
         &.active {
+            border-color: $bg-color-red-blur;
+
             .edit-section {
                 opacity: 1;
                 pointer-events: all;
@@ -47,11 +70,8 @@
         flex-grow: 1;
         padding: 1.5em 13.5vw 1.5em 2em;
         position: relative;
-        border: 1px solid white;
-        outline: 2px solid grey;
         border-radius: 2px;
-        margin: 1em 2em;
-        background-color: rgba(255, 249, 158, 0.856);
+        background-color: $bg-color-light-yellow-blur;
 
         .text-accent {
             color: $color-text-accent;
@@ -124,19 +144,21 @@
         right: 0;
 
         &__wrapper {
-            border: .2em solid $color-text-menu;
-            ;
-            background-color: #fdc18d;
+            border: .2em solid $bg-color-light;
+            background-color: $bg-color-dark-blur;
         }
 
         &__image {
             img {
                 display: inline-block;
-                // min-width: 80px;
                 max-width: 13vw;
                 height: auto;
             }
 
+        }
+
+        .empty {
+            background-color: $bg-color-dark-red-blur;
         }
     }
 }

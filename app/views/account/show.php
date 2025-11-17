@@ -11,10 +11,10 @@
                 <? endif; ?>
             </menu>
             <div class="profile__card">
-                <div class="profile__card-avatar avatar">
+                <div class="profile__avatar avatar">
                     <div class="avatar__wrapper">
                         <? if ($emptyAvatar): ?>
-                            <span class="avatar__image" data-action-dblclick="account/avatar/tg/get" data-uid="<?= $userId ?>">
+                            <span class="avatar__image empty" data-action-dblclick="account/avatar/tg/get" data-uid="<?= $userId ?>">
                                 <?= $data['avatar'] ?>
                             </span>
                         <? else : ?>
