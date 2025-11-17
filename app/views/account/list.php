@@ -17,7 +17,10 @@
             <? for ($x = 0; $x < count($usersData); $x++) : ?>
                 <tr>
                     <td><?= ($x + 1) ?>.</td>
-                    <td title="Псевдонім" class="users-list__name"><a href="/account/profile/<?=$usersData[$x]['id']?>" target="_blank"><?= $usersData[$x]['name'] ?></a></td>
+                    <td title="Псевдонім" class="users-list__name">
+                        <a href="/account/profile/<?= $usersData[$x]['id'] ?>" target="_blank"><img class="users-list__avatar" src="<?= $usersData[$x]['avatar'] ?>" alt=""></a>
+                        <a href="/account/profile/<?= $usersData[$x]['id'] ?>" target="_blank"><?= $usersData[$x]['name'] ?></a>
+                    </td>
                     <td title="Реєстрація"><?= empty($usersData[$x]['login']) ? '<i class="fa fa-square-o"></i>' : '<i class="fa fa-check-square-o"></i>' ?></td>
                     <td title="Статус"><?= empty($usersData[$x]['privilege']['status']) ? '' : $usersData[$x]['privilege']['status'] ?></td>
                     <td title="Гендер"><?= empty($usersData[$x]['contacts']['gender']) ? '' : $usersData[$x]['contacts']['gender'] ?></td>

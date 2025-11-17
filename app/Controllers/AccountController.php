@@ -78,6 +78,9 @@ class AccountController extends Controller
             'texts' => [
                 'formTitle' => '{{ Users_List_Title }}',
             ],
+            'styles' => [
+                'users-list',
+            ]
         ];
 
         View::$route['vars'] = array_merge(View::$route['vars'], $vars);

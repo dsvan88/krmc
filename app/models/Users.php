@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use app\core\GoogleDrive;
 use app\core\Locale;
 use app\core\Model;
 use app\core\Tech;
@@ -272,6 +273,7 @@ class Users extends Model
         for ($i = 0; $i < $count; $i++) {
             $result[$i]['password'] = '***';
             $result[$i] = self::decodeJson($result[$i]);
+            $result[$i]['avatar'] = empty($result[$i]['personal']['avatar']) ? '' : GoogleDrive::getLink($result[$i]['personal']['avatar']);
         }
 
         return $result;
