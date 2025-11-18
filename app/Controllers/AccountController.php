@@ -21,6 +21,7 @@ use app\Repositories\ContactRepository;
 use app\Repositories\TechRepository;
 use app\Repositories\TelegramChatsRepository;
 use Exception;
+use PDO;
 
 class AccountController extends Controller
 {
@@ -92,6 +93,7 @@ class AccountController extends Controller
         extract(self::$route['vars']);
 
         $isAdmin = Users::checkAccess('manager');
+        $isSelf = isset($_SESSION['id']) && $_SESSION['id'] == $userId;
 
         $userData = Users::find($userId);
 
@@ -101,6 +103,12 @@ class AccountController extends Controller
         // $userData['avatar'] = ImageProcessing::inputImage($avatar, ['title' => Locale::phrase(['string' => '{{ Account_Profile_Form_User_Avatar }}', 'vars' => [$userData['name']]])]);
         $userData['avatar'] = "<img src='$avatar'>";
         $userData['personal']['genderName'] = empty($userData['personal']['gender']) ? '' : Locale::phrase(ucfirst($userData['personal']['gender']));
+
+        $userData['status'] = '';
+
+        if (!empty($userData['privilege']['status']) && array_search($userData['privilege']['status'], Users::$usersAccessLevels) > 2) {
+            $userData['status'] = $userData['privilege']['status'];
+        }
 
         $data = ContactRepository::getFields($userId, 'No data');
         $data = ContactRepository::wrapLinks($data);
@@ -117,6 +125,7 @@ class AccountController extends Controller
                 'profileCardTitle' => 'Profile #',
                 'personalTitle' => 'Personal data',
                 'nickLabel' => 'Nickname (in game)',
+                'emojiLabel' => 'Emoji',
                 'FioLabel' => 'Name, secondary name, middle name',
                 'BirthdayLabel' => 'Birthday',
                 'GenderLabel' => 'Gender',
@@ -137,6 +146,7 @@ class AccountController extends Controller
             'data' => $userData,
             'emptyAvatar' => $emptyAvatar,
             'isAdmin' => $isAdmin,
+            'isSelf' => $isSelf,
         ];
         View::$route['vars'] = array_merge(View::$route['vars'], $vars);
 
@@ -146,6 +156,9 @@ class AccountController extends Controller
     {
         $userId = (int) trim($_POST['uid']);
         $section = trim($_POST['section']);
+
+        $isAdmin = Users::checkAccess('manager');
+        $isSelf = isset($_SESSION['id']) && $_SESSION['id'] == $userId;
 
         if ($_SESSION['id'] != $userId && !Users::checkAccess('manager')) {
             return View::message(['error' => 1, 'text' => 'You don’t have enough rights to change information about other users!']);
@@ -174,6 +187,7 @@ class AccountController extends Controller
             'securityTitle' => 'Precautions',
             'nickLabel' => 'Nickname (in game)',
             'FioLabel' => 'Name, secondary name, middle name',
+            'emojiLabel' => 'Emoji',
             'BirthdayLabel' => 'Birthday',
             'GenderLabel' => 'Gender',
             'contactsLabel' => 'Visual contacts',
@@ -193,6 +207,9 @@ class AccountController extends Controller
 
         View::$route['vars']['userId'] = $userId;
         View::$route['vars']['data'] = $data;
+        View::$route['vars']['isAdmin'] = $isAdmin;
+        View::$route['vars']['isSelf'] = $isSelf;
+        View::$route['vars']['data'] = $data;
         View::$route['vars']['texts'] = Locale::apply($texts);
         View::$route['vars']['path'] = 'account/sections/' . $section;
         return View::html();
@@ -201,9 +218,11 @@ class AccountController extends Controller
     {
         extract(self::$route['vars']);
 
+        $isSelf = false;
         $isAdmin = false;
         if (!Users::checkAccess('manager')) {
             $userId = (int) $_SESSION['id'];
+            $isSelf = true;
         } else {
             $isAdmin = true;
         }
@@ -239,14 +258,48 @@ class AccountController extends Controller
     }
     public function personalEditAction()
     {
-        // extract(self::$route['vars']);
+        $userId = (int) $_POST['userId'];
 
-        // $isAdmin = false;
-        // if (!Users::checkAccess('manager')) {
-        //     $userId = (int) $_SESSION['id'];
-        // } else {
-        //     $isAdmin = true;
-        // }
+        if (!$userId)
+            return View::notice(['type' => 'error', 'message' => 'UserID can’t be empty!']);
+
+        $isAdmin = Users::checkAccess('manager');
+        $isSelf = isset($_SESSION['id']) && $_SESSION['id'] == $userId;
+
+        if (!$isAdmin && !$isSelf)
+            return View::notice(['type' => 'error', 'message' => 'You don’t have enough rights to change information about other users!']);
+
+        $category = '';
+        $field = $_POST['field'];
+        if (($p = strpos($field, '.')) !== false) {
+            $category = substr($field, 0, $p);
+            $field = substr($field, $p + 1);
+        }
+        $value = $_POST['value'];
+        if ($field === 'gender') {
+            $value = Validator::validate('gender', $value);
+            if (!$value)
+                return View::notice(['type' => 'error', 'message' => "Gender isn't in correct format!\nSelect it from the list!"]);
+        } else if ($field === 'birthday') {
+            $value = Validator::validate('date', $value);
+            if (!$value)
+                return View::notice(['type' => 'error', 'message' => "Birthday isn't in correct format!\nCorrect format is: 'd.m.Y'"]);
+        }
+
+        $userData = Users::find($userId);
+        if (empty($userData))
+            return View::notice(['type' => 'error', 'message' => "UserData is empty!\nCheck your form or contact with an administrator!"]);
+
+        if (!empty($category)) {
+            $userData[$category][$field] = $value;
+            Users::edit([$category => $userData[$category]], ['id' => $userId]);
+        } else {
+            Users::edit([$field => $value], ['id' => $userId]);
+        }
+        return View::notice(['message' => 'Success', 'time' => '1500', 'location' => 'reload']);
+
+
+
 
         // if ($section === 'contacts') {
         //     $contacts = [
@@ -275,7 +328,7 @@ class AccountController extends Controller
         // } else {
         //     AccountRepository::edit($userId, $_POST);
         // }
-        return View::notice(['message' => 'Success!', 'data' => $_POST]);
+        return View::notice(['message' => 'Success!', 'data' => $_POST, 'category' => $category, 'field' => $field]);
     }
     public function profileSectionEditFormAction()
     {

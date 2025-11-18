@@ -4,6 +4,7 @@ namespace app\Controllers;
 
 use app\core\Controller;
 use app\core\Locale;
+use app\core\Router;
 use app\core\Sender;
 use app\core\TelegramBot;
 use app\core\Validator;
@@ -335,15 +336,15 @@ class TelegramBotController extends Controller
 
         return $class::execute(self::$commandArguments);
     }
-    public static function checkAccess(string $level = 'guest')
+    public static function checkAccess(string $level = 'all')
     {
-        $levels = ['guest' => 0, 'user' => 1, 'trusted' => 2, 'manager' => 3, 'admin' => 4, 'root' => 5];
-        $status = 'guest';
+        $levels = Router::$accessLevels;
+        $status = 'all';
 
         if (!empty(self::$requester['privilege']['status']))
             $status = self::$requester['privilege']['status'];
 
-        if (!empty(self::$requester) && $status === 'guest')
+        if (!empty(self::$requester) && $status === 'all')
             $status = 'user';
 
         if (self::$incomeMessage['message']['chat']['type'] !== 'private' && self::$chatId != self::$techTelegramId) {

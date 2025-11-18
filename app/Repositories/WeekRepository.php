@@ -109,7 +109,7 @@ class WeekRepository
         $result .= Locale::phrase("Welcome to our club") . '!';
         return preg_replace('/<.*?>/', '', $result);
     }
-    public static function formWeekOG(array $data = null)
+    public static function formWeekOG(array $data = [])
     {
         $url = Tech::getRequestProtocol() . "://{$_SERVER['SERVER_NAME']}";
         $logo = empty($data['logo']) ? '/public/images/club-logo-w-city.jpg' : $data['logo'];

@@ -32,14 +32,19 @@ class ContactRepository
     public static function wrapLinks(array $data): array
     {
         foreach ($data as $type => $value) {
+            if (empty($value) || $value === 'No data')
+                continue;
             if ($type === 'email') {
                 $data[$type] = "<a href='mailto:$value' target='_blank'>$value</a>";
+                continue;
             }
             if ($type === 'telegram') {
                 $data[$type] = "<a href='https://t.me/$value' target='_blank'>@$value</a>";
+                continue;
             }
             if ($type === 'phone') {
                 $data[$type] = "<a href='tel:$value' target='_blank'>$value</a>";
+                continue;
             }
         }
         return $data;

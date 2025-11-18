@@ -34,6 +34,12 @@ class Validator
         if (empty($value)) return false;
         return filter_var($value, FILTER_VALIDATE_EMAIL) ? $value : false;
     }
+    private static function date(string $value, string $format = 'd.m.Y')
+    {
+        $value = trim($value);
+        $dateTime = \DateTime::createFromFormat($format, $value);
+        return ($dateTime && $dateTime->format($format) === $value) ? $value : false;
+    }
     private static function telegram(string $value)
     {
         $value = trim($value);

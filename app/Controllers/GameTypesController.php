@@ -21,16 +21,16 @@ class GameTypesController extends Controller
     {
         // Extract $weekId & $dayId from array self::$route['vars']
         $dashboard = '';
-        if (Users::checkAccess('trusted')) {
+        if (Users::checkAccess('activist')) {
             $dashboard = "<span class='page__dashboard' style='float:right'>
                 <a href='/page/add' title='Додати' class='fa fa-plus-square-o'></a>
                 ";
             $dashboard .= '</span>';
         }
-        
+
         $games = GameTypes::all();
-        
-        array_walk($games, fn (&$game) => $game['data']['logo'] = empty($game['data']['logo']) ? '' : GoogleDrive::getLink($game['data']['logo']) );
+
+        array_walk($games, fn(&$game) => $game['data']['logo'] = empty($game['data']['logo']) ? '' : GoogleDrive::getLink($game['data']['logo']));
 
         $vars = [
             'title' => 'Games',

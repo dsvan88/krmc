@@ -61,6 +61,7 @@ actionHandler.accountPersonalEdit = async function (target) {
     if (newValue === false) return false;
 
     const formData = new FormData();
+    formData.append('userId', target.dataset.userId);
     formData.append('field', target.dataset.field);
     formData.append('value', newValue);
     const result = this.apiTalk(target, null, 'actionDblclick', formData)

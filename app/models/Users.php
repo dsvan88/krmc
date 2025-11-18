@@ -12,8 +12,30 @@ class Users extends Model
 {
     public static $table = SQL_TBL_USERS;
     public static $genders = ['', 'господин', 'госпожа', 'некто'];
+    public static $accessTgEmoji = [
+        'trusted' => [
+            'male' => '🧑‍🎓',
+            'female' => '👩‍🎓',
+            'secret' => '👨‍🎓',
+        ],
+        'activist' => [
+            'male' => '🦸‍♂️',
+            'female' => '🦸‍♀️',
+            'secret' => '🦸',
+        ],
+        'manager' => [
+            'male' => '👮‍♂️',
+            'female' => '👮‍♀️',
+            'secret' => '👮',
+        ],
+        'admin' => [
+            'male' => '🧑‍⚖️',
+            'female' => '👩‍⚖️',
+            'secret' => '👨‍⚖️',
+        ],
+    ];
     public static $statuses = ['Гость', 'Резидент', 'Мастер'];
-    public static $usersAccessLevels = ['', 'guest', 'user', 'trusted', 'manager', 'admin', 'root'];
+    public static $usersAccessLevels = ['', 'guest', 'user', 'trusted', 'activist', 'manager', 'admin', 'root'];
     public static $userToken = '';
     public static $jsonFields = ['privilege', 'personal', 'contacts', 'credo', 'ban'];
     public static $current = null;
@@ -507,6 +529,13 @@ class Users extends Model
         if (!empty($source['id'])) {
             $userData = self::find($source['id']);
             $source['name'] = empty($userData) ? '&lt; Deleted &gt;' : $userData['name'];
+
+            if (empty($userData['privilege']['status'])) return $source;
+
+            $source['status'] = $userData['privilege']['status'];
+            $source['gender'] = $userData['personal']['gender'];
+            $source['emoji'] = empty($userData['personal']['emoji']) ? '' : $userData['personal']['emoji'];
+
             return $source;
         }
 
@@ -526,6 +555,12 @@ class Users extends Model
             for ($y = 0; $y < $countSource; $y++) {
                 if ($source[$y]['id'] != $data[$x]['id']) continue;
                 $source[$y]['name'] = $data[$x]['name'];
+
+                if (empty($data[$x]['privilege']['status'])) return $source;
+
+                $source[$y]['status'] = $data[$x]['privilege']['status'];
+                $source[$y]['gender'] = $data[$x]['personal']['gender'];
+                $source[$y]['emoji'] = empty($data[$x]['personal']['emoji']) ? '' : $data[$x]['personal']['emoji'];
             }
         }
 

@@ -11,6 +11,7 @@
                 <option value="" <?= empty($userStatus) ? 'selected' : '' ?>></option>
                 <option value="user" <?= $userStatus === 'user' ? 'selected' : '' ?>>Користувач</option>
                 <option value="trusted" <?= $userStatus === 'trusted' ? 'selected' : '' ?>>Довірений користувач</option>
+                <option value="activist" <?= $userStatus === 'activist' ? 'selected' : '' ?>>Активіст</option>
                 <option value="manager" <?= $userStatus === 'manager' ? 'selected' : '' ?>>Менеджер</option>
                 <option value="admin" <?= $userStatus === 'admin' ? 'selected' : '' ?>>Адмін</option>
             </select>

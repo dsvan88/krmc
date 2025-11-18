@@ -68,7 +68,7 @@ class ViewRepository
                 'icon' => 'games',
             ],
         ];
-        if (Users::checkAccess('trusted')) {
+        if (Users::checkAccess('activist')) {
             $menu[] = [
                 'path' => 'game/mafia/start',
                 'label' => 'Play a game',
@@ -130,7 +130,7 @@ class ViewRepository
             $menu = array_values($menu);
         }
 
-        if (Users::checkAccess('trusted')) {
+        if (Users::checkAccess('activist')) {
             $menu[] = [
                 'label' => 'Activity',
                 'menu' => [
@@ -211,7 +211,7 @@ class ViewRepository
     public static function dashboard(): array
     {
 
-        if (!Users::checkAccess('trusted')) return [];
+        if (!Users::checkAccess('activist')) return [];
 
         $links = [
             [

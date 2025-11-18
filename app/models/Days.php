@@ -215,6 +215,12 @@ class Days extends Model
 
             if (!empty($participants[$x]['name'])) {
                 $userName = $participants[$x]['name'];
+                if (!empty($participants[$x]['emoji'])) {
+                    $userName .= $participants[$x]['emoji'];
+                }
+                if (!empty($participants[$x]['status']) && !empty($participants[$x]['gender'])) {
+                    $userName .= Users::$accessTgEmoji[$participants[$x]['status']][$participants[$x]['gender']];
+                }
             }
 
             if ($participants[$x]['arrive'] !== '' && $participants[$x]['arrive'] !== $weekData['data'][$day]['time']) {

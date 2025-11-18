@@ -21,6 +21,12 @@ class AccountRepository
         if (!empty($data['personal']['gender'])) {
             $data['personal']['genderName'] = Locale::phrase(ucfirst($data['personal']['gender']));
         }
+
+        $data['status'] = '';
+        if (!empty($data['privilege']['status']) && array_search($data['privilege']['status'], Users::$usersAccessLevels) > 2) {
+            $data['status'] = $data['privilege']['status'];
+        }
+
         $contacts = ContactRepository::getFields($userId, 'No data');
         $contacts = ContactRepository::wrapLinks($contacts);
 

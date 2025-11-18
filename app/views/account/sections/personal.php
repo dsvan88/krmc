@@ -8,20 +8,30 @@
             <?= $data['name'] ?>
         </div>
     </div>
+    <? if (!empty($data['status'])): ?>
+        <div class="profile__card-row">
+            <h5 class="profile__card-label">
+                <?= $texts['emojiLabel'] ?>
+            </h5>
+            <div class="profile__card-value" <? if ($isAdmin || $isSelf): ?> data-action-dblclick="account/personal/edit" data-user-id="<?= $data['id'] ?>" data-field="personal.emoji" <? endif ?>>
+                <?= empty($data['personal']['emoji']) ? '&nbsp;' : $data['personal']['emoji'] ?>
+            </div>
+        </div>
+    <? endif ?>
     <div class="profile__card-row">
         <h5 class="profile__card-label">
             <?= $texts['FioLabel'] ?>
         </h5>
-        <div class="profile__card-value" data-action-dblclick="account/personal/edit" data-field="fio">
-            <?= empty($data['personal']['fio']) ? '' : $data['personal']['fio'] ?>
+        <div class="profile__card-value" <? if ($isAdmin || $isSelf): ?> data-action-dblclick="account/personal/edit" data-user-id="<?= $data['id'] ?>" data-field="personal.fio" <? endif ?>>
+            <?= empty($data['personal']['fio']) ? '&nbsp;' : $data['personal']['fio'] ?>
         </div>
     </div>
     <div class="profile__card-row">
         <h5 class="profile__card-label">
             <?= $texts['BirthdayLabel'] ?>
         </h5>
-        <div class="profile__card-value" data-action-dblclick="account/personal/edit" data-field="birthday" data-type="date">
-            <?= empty($data['personal']['birthday']) ? '' : date('d.m.Y', $data['personal']['birthday']) ?>
+        <div class="profile__card-value" <? if ($isAdmin || $isSelf): ?> data-action-dblclick="account/personal/edit" data-user-id="<?= $data['id'] ?>" data-field="personal.birthday" data-type="date" <? endif ?>>
+            <?= empty($data['personal']['birthday']) ? '&nbsp;' : date('d.m.Y', $data['personal']['birthday']) ?>
         </div>
     </div>
     <div class="profile__card-row">
@@ -44,7 +54,7 @@
             <? if (isset($data['approved']['email'])): ?>
                 <i class="fa fa-check-circle text-accent"></i>
             <? else: ?>
-                <? if ($_SESSION['id'] == $data['id']): ?>
+                <? if ($isSelf): ?>
                     <span class="text-accent small" data-action-click="verification/email">Підтвердити</span>
                 <? else: ?>
                     <i class="fa fa-times text-accent" title="Не підтвердженно"></i>
