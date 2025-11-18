@@ -38,7 +38,7 @@
         <h5 class="profile__card-label">
             <?= $texts['GenderLabel'] ?>
         </h5>
-        <div class="profile__card-value">
+        <div class="profile__card-value" <? if ($isAdmin || $isSelf): ?> data-action-dblclick="account/personal/edit" data-user-id="<?= $data['id'] ?>" data-field="personal.gender" <? endif ?>>
             <?= $data['personal']['genderName'] ?>
         </div>
     </div>

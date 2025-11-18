@@ -199,26 +199,40 @@ class Prompt extends Confirm {
     state = true;
     inputWrapper = null;
 
-    constructor({ title = "Prompt", text = "Enter value:", value = "No", action = null, cancel = null, input = { type: 'text' } } = {}) {
+    constructor({ title = "Prompt", text = "Enter value:", value = "No", action = null, cancel = null, input = { type: 'text' }, select = null } = {}) {
         super({ title, text, action, cancel });
-        this.modifyPrompt({ value, input });
+        console.log(select);
+        this.modifyPrompt({ value, input, select });
         return this;
     }
-    modifyPrompt({ value = "No", input = { type: 'text' } } = {}) {
+    modifyPrompt({ value = "No", input = { type: 'text' }, select = null } = {}) {
         this.agreeButton.innerText = 'Ok';
         this.cancelButton.innerText = 'Cancel';
 
         this.inputWrapper = document.createElement('div');
         this.inputWrapper.classList.add('popup__input-wrapper');
 
-        this.input = document.createElement('input');
-        this.input.classList.add('popup__input');
-        this.input.value = value;
-
-        for (const attr in input) {
-            this.input[attr] = input[attr];
+        if (!select) {
+            this.input = document.createElement('input');
+            this.input.value = value;
+            for (const attr in input) {
+                this.input[attr] = input[attr];
+            }
+        }
+        else {
+            this.input = document.createElement('select');
+            for (const [v, l] of Object.entries(select.options)) {
+                const option = document.createElement('option');
+                option.value = v;
+                option.innerText = l;
+                if (value === l)
+                    option.selected = true;
+                this.input.append(option)
+            }
         }
 
+
+        this.input.classList.add('popup__input');
         this.inputWrapper.append(this.input);
 
         this.buttonWrapper.before(this.inputWrapper);

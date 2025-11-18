@@ -283,7 +283,8 @@ class AccountController extends Controller
         } else if ($field === 'birthday') {
             $value = Validator::validate('date', $value);
             if (!$value)
-                return View::notice(['type' => 'error', 'message' => "Birthday isn't in correct format!\nCorrect format is: 'd.m.Y'"]);
+                return View::notice(['type' => 'error', 'message' => "Birthday isn't in correct format!"]);
+            $value = strtotime($value);
         }
 
         $userData = Users::find($userId);

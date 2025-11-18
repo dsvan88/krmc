@@ -56,7 +56,26 @@ actionHandler.verificationEmail = async function (target, event) {
     // });
 }
 actionHandler.accountPersonalEdit = async function (target) {
-    const newValue = await customPrompt({ title: 'Введіть нове значення', value: target.innerText });
+    let value = target.innerText;
+    let type = target.dataset.type;
+    let select = null;
+
+    if (type === 'date') {
+        const date = value.split('.');
+        value = `${date[2]}-${date[1]}-${date[0]}`;
+    }
+    else if (target.dataset.field === 'personal.gender') {
+        select = {
+            options: {
+                '': '',
+                'male': 'Пан',
+                'female': 'Пані',
+                'secret': 'Секрет',
+            }
+        }
+    }
+    console.log(select);
+    const newValue = await customPrompt({ title: 'Введіть нове значення', value: value, input: { type: type }, select: select });
 
     if (newValue === false) return false;
 

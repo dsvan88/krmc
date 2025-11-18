@@ -268,7 +268,7 @@ class Days extends Model
         $dayData['participants'][$slot] = [
             'id'        =>    $userData['userId'],
             'arrive'    =>    !empty($userData['arrive']) ? $userData['arrive'] : '',
-            'prim'        =>    !empty($userData['prim']) ? $userData['prim'] : '',
+            'prim'      =>    !empty($userData['prim']) ? $userData['prim'] : '',
         ];
 
         return $dayData;
