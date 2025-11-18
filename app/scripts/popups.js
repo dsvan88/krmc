@@ -212,14 +212,7 @@ class Prompt extends Confirm {
         this.inputWrapper = document.createElement('div');
         this.inputWrapper.classList.add('popup__input-wrapper');
 
-        if (!select) {
-            this.input = document.createElement('input');
-            this.input.value = value;
-            for (const attr in input) {
-                this.input[attr] = input[attr];
-            }
-        }
-        else {
+        if (select) {
             this.input = document.createElement('select');
             for (const [v, l] of Object.entries(select.options)) {
                 const option = document.createElement('option');
@@ -230,7 +223,13 @@ class Prompt extends Confirm {
                 this.input.append(option)
             }
         }
-
+        else {
+            this.input = document.createElement('input');
+            this.input.value = value;
+            for (const attr in input) {
+                this.input[attr] = input[attr];
+            }
+        }
 
         this.input.classList.add('popup__input');
         this.inputWrapper.append(this.input);
