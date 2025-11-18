@@ -3,3 +3,4 @@ public/scripts/*.js
 composer.phar
 .env.dev
 /vendor/*
+app/scripts/_old/*

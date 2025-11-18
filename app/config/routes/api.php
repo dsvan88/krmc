@@ -70,12 +70,18 @@ return  [
         'action' => 'avatarTgGet',
         'access' => ['category' => 'all']
     ],
-    'api/account/profile/avatar/form' =>
+    'api/account/avatar/edit/form' =>
     [
         'controller' => 'account',
-        'action' => 'profileAvatarForm',
+        'action' => 'avatarEditForm',
         'access' => ['category' => 'all']
     ],
+    // 'api/account/profile/avatar/form' =>
+    // [
+    //     'controller' => 'account',
+    //     'action' => 'profileAvatarForm',
+    //     'access' => ['category' => 'all']
+    // ],
     'api/account/profile/avatar/recrop/form' =>
     [
         'controller' => 'account',

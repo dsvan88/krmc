@@ -6,7 +6,7 @@ return [
     'Save' => 'Зберегти',
     'Send' => 'Надіслати',
     'Cancel' => 'Відміна',
-    'Success!' => 'Дія успішно виконана',
+    'Success' => 'Дія успішно виконана',
     'Fail!' => 'Дія не виконана!',
     "Not ready yet!\nPlease, inform admins!" => "Поки що - не реалізовано!\nЗверніться до адміністратора!",
     'Clear' => "Очистити",
@@ -88,8 +88,8 @@ return [
     'Unbooking' => 'Відписатись',
     'Authentication' => 'Авторизація',
     'Chat' => 'Чат',
-    '{{ Account_Avatar_Form_Title }}' => 'Аватар користувача %s',
-    '{{ Account_Avatar_Form_Newcrop_Link }}' => 'Замінити',
+    'Avatar of %s' => 'Аватар користувача %s',
+    'Replace' => 'Замінити',
 
     'Registration form' => 'Форма реєстрації',
 

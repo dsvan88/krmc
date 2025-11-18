@@ -102,6 +102,7 @@ function addScriptFile(src, callback = '') {
 	const script = document.createElement('script');
 	script.src = src;
 	script.async = true;
+	script.type = 'module';
 	document.head.appendChild(script);
 	if (callback !== '')
 		script.onload = callback;

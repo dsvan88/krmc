@@ -167,6 +167,20 @@
         &__wrapper {
             border: .2em solid $bg-color-light;
         }
+        &__edit {
+            position: absolute;
+            top: .3em;
+            right: .3em;
+            font-size: 2em;
+            color: $bg-color-light-purple-blur;
+            opacity: .5;
+            transition: color $animation-fast, opacity $animation-fast;
+            cursor: pointer;
+            &:hover{
+                color: $bg-color-purple-blur;
+                opacity: 1;
+            }
+        }
 
         &__image {
             img {

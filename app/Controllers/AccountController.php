@@ -48,7 +48,7 @@ class AccountController extends Controller
             return View::notice(['error' => 403, 'message' => "User isn’t found!\nCheck your login and password!", 'time' => 2000]);
         }
 
-        return View::notice(['message' => 'Success!', 'location' => isset($_SESSION['path']) ? $_SESSION['path'] : '/', 'time' => 700]);
+        return View::notice(['message' => 'Success', 'location' => isset($_SESSION['path']) ? $_SESSION['path'] : '/', 'time' => 700]);
     }
     public function loginFormAction()
     {
@@ -254,7 +254,7 @@ class AccountController extends Controller
         } else {
             AccountRepository::edit($userId, $_POST);
         }
-        return View::notice(['message' => 'Success!', 'location' => '/account/profile/' . $userId]);
+        return View::notice(['message' => 'Success', 'location' => '/account/profile/' . $userId]);
     }
     public function personalEditAction()
     {
@@ -329,7 +329,7 @@ class AccountController extends Controller
         // } else {
         //     AccountRepository::edit($userId, $_POST);
         // }
-        return View::notice(['message' => 'Success!', 'data' => $_POST, 'category' => $category, 'field' => $field]);
+        return View::notice(['message' => 'Success', 'data' => $_POST, 'category' => $category, 'field' => $field]);
     }
     public function profileSectionEditFormAction()
     {
@@ -382,11 +382,11 @@ class AccountController extends Controller
 
         $name = trim($_POST['name']);
         if (empty($name) || $name === '-') {
-            return View::notice(['message' => 'Success!', 'time' =>  1500, 'location' => 'reload']);
+            return View::notice(['message' => 'Success', 'time' =>  1500, 'location' => 'reload']);
         }
 
         AccountRepository::linkTelegram($chatId, $name);
-        return View::notice(['message' => 'Success!', 'time' =>  1500, 'location' => 'reload']);
+        return View::notice(['message' => 'Success', 'time' =>  1500, 'location' => 'reload']);
     }
     public function setNicknameFormAction()
     {
@@ -480,7 +480,7 @@ class AccountController extends Controller
             if (empty($name)) View::message('Fail!');
 
             if (AccountRepository::renameDummy($name)) {
-                return View::message(['name' => $name, 'message' => 'Success!']);
+                return View::message(['name' => $name, 'message' => 'Success']);
             }
 
             return View::message('Fail!');
@@ -523,7 +523,7 @@ class AccountController extends Controller
             $uid = (int) $_SESSION['id'];
         }
 
-        $message = 'Success!';
+        $message = 'Success';
         $type = '';
         try {
             TelegramChatsRepository::getAndSaveTgAvatar($uid);
@@ -534,38 +534,67 @@ class AccountController extends Controller
         }
         return View::notice(['message' => $message, 'type' => $type, 'time' => '1500', 'location' => 'reload']);
     }
-    public function profileAvatarFormAction()
+    public function avatarEditFormAction()
     {
         $uid = (int) $_POST['uid'];
-        if (!isset($_SESSION['privilege']['status'])) {
+
+        if (!Users::checkAccess('manager') && $uid !== $_SESSION['id']) {
             return View::errorCode(403, ['message' => 'Forbidden!']);
         }
-        if (!Users::checkAccess('manager')) {
-            $uid = (int) $_SESSION['id'];
-        }
+
         $userData = Users::find($uid);
 
-        if ($userData['personal']['avatar'] === '') {
-            $vars = ['error' => 0, 'modal' => true, 'jsFile' => 'avatar-get-new.js?v=' . $_SERVER['REQUEST_TIME']];
-            return View::message($vars);
-        }
-
-        $userData['avatar'] = ImageProcessing::inputImage(FILE_USRGALL . "{$userData['id']}/{$userData['personal']['avatar']}", ['title' => Locale::phrase(['string' => '{{ Account_Profile_Form_User_Avatar }}', 'vars' => [$userData['name']]])]);
+        $userData['avatar'] = GoogleDrive::getLink($userData['personal']['avatar']);
 
         $vars = [
             'title' => [
-                'string' => '{{ Account_Avatar_Form_Title }}',
+                'string' => 'Avatar of %s',
                 'vars' => [$userData['name']],
             ],
             'texts' => [
-                'ReCropLabel' => '{{ Account_Avatar_Form_Newcrop_Link }}',
+                'ReCropLabel' => 'Replace',
                 'CancelLabel' => 'Cancel'
             ],
-            'userData' => $userData
+            'userData' => $userData,
+            'scripts' => [
+                'profile/avatar-recrop.js',
+            ]
         ];
         View::$route['vars'] = array_merge(View::$route['vars'], $vars);
         return View::modal();
     }
+    // public function profileAvatarFormAction()
+    // {
+    //     $uid = (int) $_POST['uid'];
+    //     if (!isset($_SESSION['privilege']['status'])) {
+    //         return View::errorCode(403, ['message' => 'Forbidden!']);
+    //     }
+    //     if (!Users::checkAccess('manager')) {
+    //         $uid = (int) $_SESSION['id'];
+    //     }
+    //     $userData = Users::find($uid);
+
+    //     if ($userData['personal']['avatar'] === '') {
+    //         $vars = ['error' => 0, 'modal' => true, 'jsFile' => 'avatar-get-new.js?v=' . $_SERVER['REQUEST_TIME']];
+    //         return View::message($vars);
+    //     }
+
+    //     $userData['avatar'] = ImageProcessing::inputImage(FILE_USRGALL . "{$userData['id']}/{$userData['personal']['avatar']}", ['title' => Locale::phrase(['string' => '{{ Account_Profile_Form_User_Avatar }}', 'vars' => [$userData['name']]])]);
+
+    //     $vars = [
+    //         'title' => [
+    //             'string' => 'Avatar of %s',
+    //             'vars' => [$userData['name']],
+    //         ],
+    //         'texts' => [
+    //             'ReCropLabel' => 'Replace',
+    //             'CancelLabel' => 'Cancel'
+    //         ],
+    //         'userData' => $userData
+    //     ];
+    //     View::$route['vars'] = array_merge(View::$route['vars'], $vars);
+    //     return View::modal();
+    // }
     public function profileAvatarRecropFormAction()
     {
         $vars = ['modal' => true, 'jsFile' => 'avatar-get-recrop.js?v=' . $_SERVER['REQUEST_TIME']];
@@ -592,7 +621,7 @@ class AccountController extends Controller
             return View::message($message);
         }
         Users::passwordChange($_SESSION['id'], $post['new_password']);
-        return View::message(['message' => 'Success!', 'url' => '/']);
+        return View::message(['message' => 'Success', 'url' => '/']);
     }
     public function passwordChangeFormAction()
     {
@@ -628,7 +657,7 @@ class AccountController extends Controller
                 return View::message('Passwords Not Match!');
             }
             Users::passwordReset($userData, $_POST['password']);
-            return View::message(['message' => 'Success!', 'url' => '/']);
+            return View::message(['message' => 'Success', 'url' => '/']);
         }
 
         $vars = [
@@ -738,7 +767,7 @@ class AccountController extends Controller
         if ($result !== true) {
             return View::message($result);
         }
-        return View::message('Success!');
+        return View::message('Success');
     }
     public function registerFormAction()
     {
@@ -777,7 +806,7 @@ class AccountController extends Controller
         }
 
         if (Users::remove($userId)) {
-            return View::notice(['message' => 'Success!', 'location' => '/users/list']);
+            return View::notice(['message' => 'Success', 'location' => '/users/list']);
         }
 
         return View::notice(['error' => 1, 'message' => 'Something went wrong']);
@@ -795,7 +824,7 @@ class AccountController extends Controller
         $result = AccountRepository::mergeAccounts($userId, $name);
 
         if ($result)
-            return View::message(['message' => 'Success!']);
+            return View::message(['message' => 'Success']);
 
         return View::message(['error' => 404, 'message' => 'Not found!']);
     }

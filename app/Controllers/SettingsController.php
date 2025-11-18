@@ -55,7 +55,7 @@ class SettingsController extends Controller
         $result = Settings::edit($setting['id'], ['setting' => $setting['setting']]);
 
         return $result ?
-            View::notice(['message' => 'Success!', 'location' => '/settings/section/index/' . $type]) :
+            View::notice(['message' => 'Success', 'location' => '/settings/section/index/' . $type]) :
             View::notice(['type' => 'error', 'message' => 'Fail!']);
     }
     // public function editFormAction()

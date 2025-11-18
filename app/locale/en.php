@@ -22,9 +22,6 @@ return [
     '{{ Account_Profile_Form_Title }}' => 'Agent’s profile «<b>%s</b>»',
     '{{ Account_Profile_Form_User_Avatar }}' => 'Users avatar of %s',
 
-    '{{ Account_Avatar_Form_Title }}' => 'Avatar of %s',
-    '{{ Account_Avatar_Form_Newcrop_Link }}' => 'Replace',
-
     '{{ Account_Register_Form_Title }}' => 'Registration form',
 
     '{{ Account_Password_Reset_Title }}' => 'Reset password',

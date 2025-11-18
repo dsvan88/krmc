@@ -158,12 +158,12 @@ class DaysController extends Controller
 
         if ($bookingMode === 'booking') {
             if (Days::addParticipant($weekId, $dayId, $_SESSION['id']))
-                Noticer::set('Success!');
+                Noticer::set('Success');
             else
                 Noticer::set(['type' => 'error', 'message' => 'Fail!']);
         } else {
             if (Days::removeParticipant($weekId, $dayId, $_SESSION['id']))
-                Noticer::set('Success!');
+                Noticer::set('Success');
             else
                 Noticer::set(['type' => 'error', 'message' => 'Fail!']);
         }

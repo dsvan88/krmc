@@ -88,8 +88,8 @@ return [
     'Unbooking' => 'Отписаться',
     'Authentication' => 'Авторизация',
     'Chat' => 'Чат',
-    '{{ Account_Avatar_Form_Title }}' => 'Аватар пользователя %s',
-    '{{ Account_Avatar_Form_Newcrop_Link }}' => 'Заменить',
+    'Avatar of %s' => 'Аватар пользователя %s',
+    'Replace' => 'Заменить',
 
     'Registration form' => 'Форма регистрации',
 

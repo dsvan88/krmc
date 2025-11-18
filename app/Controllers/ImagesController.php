@@ -144,7 +144,7 @@ class ImagesController extends Controller
         $result = $gDrive->delete($imageId);
 
         return $result ?
-            View::notice(['message' => 'Success!', 'location' => 'reload']) :
+            View::notice(['message' => 'Success', 'location' => 'reload']) :
             View::notice(['type' => 'error', 'message' => 'Fail!']);
     }
     public function backgroundSetAction()
@@ -167,7 +167,7 @@ class ImagesController extends Controller
             $result = false;
         }
         return $result ?
-            View::notice(['message' => 'Success!']) :
+            View::notice(['message' => 'Success']) :
             View::notice(['type' => 'error', 'message' => 'Fail!']);
     }
     public function backgroundRemoveAction()
@@ -192,7 +192,7 @@ class ImagesController extends Controller
             $result = false;
         }
         return $result ?
-            View::notice(['message' => 'Success!']) :
+            View::notice(['message' => 'Success']) :
             View::notice(['type' => 'error', 'message' => 'Fail!']);
     }
     public function backgroundGroupAction()
@@ -216,7 +216,7 @@ class ImagesController extends Controller
             $result = false;
         }
         return $result ?
-            View::notice(['message' => 'Success!']) :
+            View::notice(['message' => 'Success']) :
             View::notice(['type' => 'error', 'message' => 'Fail!']);
     }
     public function deleteGroupAction()
@@ -238,7 +238,7 @@ class ImagesController extends Controller
             $result = false;
         }
         return $result ?
-            View::notice(['message' => 'Success!', 'location' => 'reload']) :
+            View::notice(['message' => 'Success', 'location' => 'reload']) :
             View::notice(['type' => 'error', 'message' => 'Fail!']);
     }
 }

@@ -31,7 +31,6 @@
             <? endfor ?>
         <? endif ?>
     <? endif ?>
-
     <link rel="icon" type="image/x-icon" href="/public/images/mafia-vintage-logo-short.svg">
     <?= $locales ?>
     <title><?= (isset($pageTitle) ? $pageTitle  : $title) . ' | ' . CLUB_SNAME . ' v' . APP_VERSION ?></title>

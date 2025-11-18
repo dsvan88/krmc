@@ -19,9 +19,9 @@ document.querySelectorAll('details[data-action-open],details[data-action-close]'
 	element.addEventListener('toggle', (event) => actionHandler.commonToggleHandler.call(actionHandler, event), false)
 );
 
-let menuCheckbox = document.body.querySelector('#profile-menu-checkbox');
+const menuCheckbox = document.body.querySelector('#profile-menu-checkbox');
 if (menuCheckbox) {
-	let menu = document.body.querySelector('div.header__profile-options');
+	const menu = document.body.querySelector('div.header__profile-options');
 	document.body.addEventListener('click', (event) => {
 		if (!menuCheckbox.checked) {
 			return false;
@@ -33,7 +33,7 @@ if (menuCheckbox) {
 	});
 };
 
-pageCheckbox = document.body.querySelector('#header__dropdown-menu-checkbox');
+const pageCheckbox = document.body.querySelector('#header__dropdown-menu-checkbox');
 if (pageCheckbox) {
 	let menu = document.body.querySelector('li.header__navigation-item.dropdown');
 	document.body.addEventListener('click', (event) => {

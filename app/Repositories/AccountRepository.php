@@ -63,7 +63,7 @@ class AccountRepository
 
         // DayRepository::renamePlayer($userId, $name);
         Users::edit(['name' => $name], ['id' => $userId]);
-        return ['result' => true, 'message' => 'Success!'];
+        return ['result' => true, 'message' => 'Success'];
     }
     public static function addParticipantToDay(string $name, int $day = null)
     {

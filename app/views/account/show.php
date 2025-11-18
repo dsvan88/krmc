@@ -26,6 +26,9 @@
                         </div>
                     <? else : ?>
                         <div class="avatar__wrapper">
+                            <? if ($isSelf):?>
+                                <i class="avatar__edit fa fa-pencil-square-o" data-action-click="account/avatar/edit/form"  data-uid="<?= $userId ?>"></i>
+                            <?endif?>
                             <span class="avatar__image" data-action-click="account/avatar/show">
                                 <?= $data['avatar'] ?>
                             </span>

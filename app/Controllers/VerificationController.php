@@ -48,7 +48,7 @@ class VerificationController extends Controller
             if (is_string($result)) {
                 return View::notice(['type' => 'error', 'message' => $result, 'location' => "/account/profile/{$_SESSION['id']}/"]);
             }
-            return View::notice(['message' => 'Success!', 'location' => "/account/profile/{$_SESSION['id']}/"]);
+            return View::notice(['message' => 'Success', 'location' => "/account/profile/{$_SESSION['id']}/"]);
         }
 
         if (!VerificationRepository::send2FAVerification('email')) {
@@ -112,7 +112,7 @@ class VerificationController extends Controller
             if ($result !== true) {
                 return View::message($result);
             }
-            return View::message('Success!');
+            return View::message('Success');
         }
         $vars = [
             'title' => 'Registration form',

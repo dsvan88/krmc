@@ -47,7 +47,7 @@ class telegramChatController extends Controller
         if (!empty($_POST)) {
             $result = TelegramChatsRepository::sendPhoto($_POST);
             return $result ?
-                View::notice(['message' =>  'Success!']) :
+                View::notice(['message' =>  'Success']) :
                 View::notice(['type' => 'error', 'message' => 'Fail!']);
         }
         $chats = array_merge(TelegramChats::getGroupChatsList(), TelegramChats::getDirectChats());

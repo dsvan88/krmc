@@ -1,7 +1,7 @@
 <form>
     <h2 class="modal-form__title"><?= $title ?></h2>
     <div class="input_row big-avatar">
-        <?= $userData['avatar'] ?>
+        <img src="<?= $userData['avatar'] ?>" alt="" title="<?= $title ?>" id="image_cropper">
     </div>
 
     <? if ($_SESSION['id'] == $userData['id']) : ?>

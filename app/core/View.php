@@ -92,7 +92,7 @@ class View
         ];
 
         if (isset($scripts))
-            $response['jsFile'] = [SCRIPTS_PUBLIC . ViewRepository::compressModalScripts($scripts)];
+            $response['jsFile'] = array_map(fn($e) => SCRIPTS_PUBLIC . $e, ViewRepository::compressModalScripts($scripts));
 
         if (isset($css))
             $response['cssFile'] = $css;

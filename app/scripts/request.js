@@ -1,3 +1,5 @@
+"use strict"
+
 async function request({ url, data, method = 'POST', responseType = 'json', success, error, ...args }) {
 
 	if (error == undefined) {

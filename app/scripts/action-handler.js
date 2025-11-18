@@ -1,4 +1,4 @@
-let actionHandler = {
+const actionHandler = {
 	noticer: null,
 	phoneMask: "+38 (0__) ___-__-__",
 	inputCommonHandler: function (event) {
