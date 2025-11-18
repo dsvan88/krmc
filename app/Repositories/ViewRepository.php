@@ -285,7 +285,8 @@ class ViewRepository
     {
         $_scripts = array_filter($scripts, fn($s) => strpos($s, 'plugins/') === false);
 
-        $name = hash('xxh3', implode(' ', $_scripts)) . '.js'; //fastest modern algoritm
+        $lastModify = self::checkLastModify($_scripts);
+        $name = hash('xxh3', implode(' ', $_scripts) . $lastModify) . '.js'; //fastest modern algoritm
 
         View::$scriptsPath = SCRIPTS_PUBLIC;
         if (!file_exists($_SERVER['DOCUMENT_ROOT'] . View::$scriptsPath)) {
@@ -294,12 +295,11 @@ class ViewRepository
 
         $filePath = $_SERVER['DOCUMENT_ROOT'] . View::$scriptsPath . $name;
 
-        if (file_exists($filePath) && filemtime($filePath) > self::checkLastModify($_scripts)) return [...array_diff($scripts, $_scripts), $name];
+        if (file_exists($filePath) && filemtime($filePath) > $lastModify) return [...array_diff($scripts, $_scripts), $name];
 
         $content = self::concatSripts($_scripts);
         file_put_contents($filePath, $content);
 
-        View::$refresh = true;
         return [...array_diff($scripts, $_scripts), $name];
     }
 
@@ -314,7 +314,8 @@ class ViewRepository
     }
     public static function compressModalScripts(array $scripts): string
     {
-        $name = hash('xxh3', implode(' ', $scripts)) . '.js'; //fastest modern algoritm
+        $lastModify = self::checkLastModify($scripts, false);
+        $name = hash('xxh3', implode(' ', $scripts) . $lastModify) . '.js'; //fastest modern algoritm
 
         View::$scriptsPath = SCRIPTS_PUBLIC;
         if (!file_exists($_SERVER['DOCUMENT_ROOT'] . View::$scriptsPath)) {
@@ -323,12 +324,11 @@ class ViewRepository
 
         $filePath = $_SERVER['DOCUMENT_ROOT'] . View::$scriptsPath . $name;
 
-        if (file_exists($filePath) && filemtime($filePath) > self::checkLastModify($scripts)) return $name;
+        if (file_exists($filePath) && filemtime($filePath) > $lastModify) return $name;
 
         $content = self::concatModalSripts($scripts);
         file_put_contents($filePath, $content);
 
-        View::$refresh = true;
         return $name . '?v=' . $_SERVER['REQUEST_TIME'];
     }
     public static function concatModalSripts(array $scripts): string
@@ -339,15 +339,17 @@ class ViewRepository
         }
         return $result;
     }
-    public static function checkLastModify(array $scripts): int
+    public static function checkLastModify(array $scripts, bool $wDefaults = true): int
     {
-        $result = 0;
-        $scripts = array_merge(View::$defaultScripts, $scripts);
+        $time = 0;
+
+        if ($wDefaults)
+            $scripts = array_merge(View::$defaultScripts, $scripts);
 
         foreach ($scripts as $script) {
             $mTime = filemtime($_SERVER['DOCUMENT_ROOT'] . SCRIPTS_STORAGE . $script);
-            $result = $mTime > $result ? $mTime : $result;
+            $time = $mTime > $time ? $mTime : $time;
         }
-        return $result;
+        return $time;
     }
 }

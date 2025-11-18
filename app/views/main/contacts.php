@@ -1,7 +1,6 @@
 <section class='section'>
     <header>
         <h1 class='title'><?= $title ?> <? empty($dashboard) ? '' : self::component('page-dashboard', ['dashboard' => $dashboard]) ?></h1>
-        <!-- <h2 class='subtitle'><?= $subtitle ?></h2> -->
         <h2 class='subtitle'><?= $contacts['tg-name']['value'] ?></h2>
     </header>
     <div class='content contacts'>

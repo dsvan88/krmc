@@ -21,7 +21,6 @@ class View
         'modals.js',
         'common.js',
     ];
-    public static $refresh = false;
 
     public function __construct($route)
     {
