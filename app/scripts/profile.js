@@ -74,7 +74,6 @@ actionHandler.accountPersonalEdit = async function (target) {
             }
         }
     }
-    console.log(select);
     const newValue = await customPrompt({ title: 'Введіть нове значення', value: value, input: { type: type }, select: select });
 
     if (newValue === false) return false;

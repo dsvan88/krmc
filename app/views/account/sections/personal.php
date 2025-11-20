@@ -13,7 +13,7 @@
             <h5 class="profile__card-label">
                 <?= $texts['emojiLabel'] ?>
             </h5>
-            <div class="profile__card-value" <? if ($isAdmin || $isSelf): ?> data-action-dblclick="account/personal/edit" data-user-id="<?= $data['id'] ?>" data-field="personal.emoji" <? endif ?>>
+            <div class="profile__card-value" <? if ($isAdmin): ?> data-action-dblclick="account/personal/edit" data-user-id="<?= $data['id'] ?>" data-field="personal.emoji" <? endif ?>>
                 <?= empty($data['personal']['emoji']) ? '&nbsp;' : $data['personal']['emoji'] ?>
             </div>
         </div>

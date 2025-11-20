@@ -187,7 +187,7 @@ const actionHandler = {
 
 		if (!data["modal"]) return false;
 
-		let actionModified = camelize(action.replace(/\//g, '-'));
+		const _action = camelize(action.replace(/\//g, '-'));
 
 		if (data["jsFile"]) {
 			addScriptFile(data["jsFile"]);
@@ -197,10 +197,13 @@ const actionHandler = {
 			addCssFile(data["cssFile"]);
 		};
 
-		if (self[actionModified + "Ready"])
-			modal.content.onload = self[actionModified + "Ready"]({ modal, data: data });
+		setTimeout(() => {
+			self.commonFormEventEnd({ modal, data, submit: _action + 'Submit' });
 
-		setTimeout(() => self.commonFormEventEnd.call(self, { modal, data, submit: actionModified + 'Submit' }), 50);
+			if (self[_action + "Ready"])
+				modal.content.onloadend = self[_action + "Ready"]({ modal, data: data });
+		}, 50)
+
 	},
 	commonResponse: function (response, modal = null) {
 		const self = this;
@@ -209,7 +212,6 @@ const actionHandler = {
 			return false;
 		}
 		if (response["message"]) {
-			// new Alert({ text: response["message"] });
 			alert(response["message"]);
 		}
 		if (response["notice"] && this.noticer) {

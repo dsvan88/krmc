@@ -514,14 +514,13 @@ class AccountController extends Controller
     }
     public function avatarTgGetAction()
     {
-        $uid = (int) $_POST['uid'];
-        if (!isset($_SESSION['privilege']['status'])) {
-            return View::errorCode(403, ['message' => 'Forbidden!']);
-        }
+        if (!Users::checkAccess('manager'))
+            return View::notice(['message' => 'You don’t have enought rights to do this action!', 'type' => 'error', 'time' => '1500']);
 
-        if (!Users::checkAccess('manager')) {
-            $uid = (int) $_SESSION['id'];
-        }
+        $uid = (int) $_POST['uid'];
+
+        if (empty($uid))
+            return View::notice(['message' => 'UserID can’t be empty!', 'type' => 'error', 'time' => '1500']);
 
         $message = 'Success';
         $type = '';
@@ -539,7 +538,7 @@ class AccountController extends Controller
         $uid = (int) $_POST['uid'];
 
         if (!Users::checkAccess('manager') && $uid !== $_SESSION['id']) {
-            return View::errorCode(403, ['message' => 'Forbidden!']);
+            return View::notice(['message' => 'You don’t have enought rights to do this action!', 'type' => 'error', 'time' => '1500']);
         }
 
         $userData = Users::find($uid);
@@ -558,6 +557,7 @@ class AccountController extends Controller
             'userData' => $userData,
             'scripts' => [
                 'profile/avatar-recrop.js',
+                // 'avatar-get-recrop.js',
             ]
         ];
         View::$route['vars'] = array_merge(View::$route['vars'], $vars);
@@ -595,11 +595,11 @@ class AccountController extends Controller
     //     View::$route['vars'] = array_merge(View::$route['vars'], $vars);
     //     return View::modal();
     // }
-    public function profileAvatarRecropFormAction()
-    {
-        $vars = ['modal' => true, 'jsFile' => 'avatar-get-recrop.js?v=' . $_SERVER['REQUEST_TIME']];
-        return View::message($vars);
-    }
+    // public function profileAvatarRecropFormAction()
+    // {
+    //     $vars = ['modal' => true, 'jsFile' => 'avatar-get-recrop.js?v=' . $_SERVER['REQUEST_TIME']];
+    //     return View::message($vars);
+    // }
     public function passwordChange($userData, $post)
     {
         if ($post['new_password'] != $post['new_password_confirmation']) {

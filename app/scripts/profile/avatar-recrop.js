@@ -1,8 +1,8 @@
+'use strict'
+
 import { Cropper } from "./plugins/cropper.js";
 
-actionHandler.accountProfileAvatarRecropForm = async function (target){
-    const modal = target.closest('.modal');
-    console.log(modal);
-    const cropper = new Cropper('#image_cropper');
-    console.log(cropper);
+actionHandler.accountAvatarEditFormReady = async function ({ modal }) {
+    console.log(modal.modal.querySelector('#image_cropper'));
+    const cropper = new Cropper(modal.modal.querySelector('#image_cropper'));
 }

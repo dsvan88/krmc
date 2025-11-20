@@ -26,27 +26,6 @@ if (editorsBlocks.length > 0) {
 	CKEditorApply(editorsBlocks);
 }
 
-function CKEditorApply(editors) {
-	for (let index = 0; index < editors.length; index++) {
-		const randomIndex = Math.random(321123);
-		editors[index].id = randomIndex;
-		DecoupledEditor.create(
-			editors[index].querySelector('.editor')
-		).then(
-			editor => {
-				const toolbarContainer = editors[index].querySelector('.toolbar-container');
-				toolbarContainer.prepend(editor.ui.view.toolbar.element);
-				if (!window.CKEDITOR) {
-					window.CKEDITOR = {
-						'instances': {}
-					};
-				}
-				window.CKEDITOR.instances[randomIndex] = editor;
-			}
-		)
-	}
-}
-
 actionHandler.mainImageChange = function (event) {
 	const file = event.target.files[0];
 	const img = createNewElement({

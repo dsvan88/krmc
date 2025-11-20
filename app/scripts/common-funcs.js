@@ -118,7 +118,7 @@ function addCssFile(src) {
 		if (document.head.querySelector(`link[href="${src}"]`)) {
 			return false;
 		}
-		let link = document.createElement('link');
+		const link = document.createElement('link');
 		link.rel = 'stylesheet';
 		link.type = 'text/css';
 		link.href = src;
