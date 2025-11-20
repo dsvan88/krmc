@@ -132,7 +132,7 @@ const actionHandler = {
 
 		return result;
 	},
-	commonFormEventEnd: function ({ modal, data, submit = null, ...args } = {}) {
+	commonFormEventEnd: function ({ modal, data, action = null, ...args } = {}) {
 		let modalWindow;
 		const self = this;
 
@@ -140,13 +140,19 @@ const actionHandler = {
 			return modalWindow = modal.fill({ html: data['html'], title: 'Error!', buttons: [{ 'text': 'Okay', 'className': 'modal__close positive' }] });
 		}
 
-		if (!submit || !self[submit])
+		const _action = camelize(action.replace(/\//g, '-'));
+		let submit = _action + "Submit";
+
+		if (!self[submit])
 			submit = 'commonSubmitFormHandler';
 
 		data.context = self;
 		data.submit = self[submit];
 
 		modalWindow = modal.fill(data);
+
+		if (self[_action + "Ready"])
+			self[_action + "Ready"]({ modal, data: data });
 
 		self.handleEvents(modalWindow);
 
@@ -187,8 +193,6 @@ const actionHandler = {
 
 		if (!data["modal"]) return false;
 
-		const _action = camelize(action.replace(/\//g, '-'));
-
 		if (data["jsFile"]) {
 			addScriptFile(data["jsFile"]);
 		};
@@ -197,13 +201,7 @@ const actionHandler = {
 			addCssFile(data["cssFile"]);
 		};
 
-		setTimeout(() => {
-			self.commonFormEventEnd({ modal, data, submit: _action + 'Submit' });
-
-			if (self[_action + "Ready"])
-				modal.content.onloadend = self[_action + "Ready"]({ modal, data: data });
-		}, 50)
-
+		setTimeout(() => self.commonFormEventEnd({ modal, data, action }), 100);
 	},
 	commonResponse: function (response, modal = null) {
 		const self = this;
@@ -356,23 +354,23 @@ const actionHandler = {
 	setLocale: function (event) {
 		window.location = '?lang=' + event.target.value;
 	},
-	handleEvents: function (target) {
-		const self = this;
-		target.querySelectorAll('input[data-action-input]').forEach(element =>
-			element.addEventListener('input', (event) => self.inputCommonHandler.call(self, event))
+	handleEvents: function (t) {
+		const s = this;
+		t.querySelectorAll('input[data-action-input]').forEach(i =>
+			i.addEventListener('input', (e) => s.inputCommonHandler.call(s, e))
 		);
-		target.querySelectorAll('input[data-action-change]').forEach(element =>
-			element.addEventListener('change', (event) => self.changeCommonHandler.call(self, event))
+		t.querySelectorAll('input[data-action-change]').forEach(i =>
+			i.addEventListener('change', (e) => s.changeCommonHandler.call(s, e))
 		);
-		target.querySelectorAll('form[data-action-submit]').forEach(element =>
-			element.addEventListener('submit', (event) => self.commonSubmitFormHandler.call(self, event))
+		t.querySelectorAll('form[data-action-submit]').forEach(i =>
+			i.addEventListener('submit', (e) => s.commonSubmitFormHandler.call(s, e))
 		);
-		target.querySelectorAll('input[type="tel"]').forEach(element => {
-			element.addEventListener('focus', (event) => self.phoneInputFocus.call(self, event));
-			element.addEventListener('input', (event) => self.phoneInputFormat.call(self, event), false);
+		t.querySelectorAll('input[type="tel"]').forEach(i => {
+			i.addEventListener('focus', (e) => s.phoneInputFocus.call(s, e));
+			i.addEventListener('input', (e) => s.phoneInputFormat.call(s, e), false);
 		});
-		target.querySelectorAll('details[data-action-open],details[data-action-close]').forEach(element =>
-			element.addEventListener('toggle', (event) => self.commonToggleHandler.call(self, event), false)
+		t.querySelectorAll('details[data-action-open],details[data-action-close]').forEach(i =>
+			i.addEventListener('toggle', (e) => s.commonToggleHandler.call(s, e), false)
 		);
 	}
 };

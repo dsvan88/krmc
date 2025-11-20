@@ -8,7 +8,7 @@ class ModalWindow {
 	title = null;
 	formSubmitHandler = null;
 	pauseLayout = null;
-	// context = null;
+	context = null;
 	content = null;
 	dragged = false;
 
@@ -37,9 +37,9 @@ class ModalWindow {
 		if (html) {
 			this.content.innerHTML = html;
 		}
-		
-		if (title){
-			if (/<\w+?>/.test(title)){
+
+		if (title) {
+			if (/<\w+?>/.test(title)) {
 				this.title.innerHTML = title;
 			} else {
 				this.title.innerText = title;
@@ -59,7 +59,7 @@ class ModalWindow {
 			modalContainer.append(modalButtons)
 			this.content = modalContainer;
 		}
-		
+
 		if (submit && this.content) {
 			this.formSubmitHandler = submit;
 			this.context = context;
@@ -99,7 +99,7 @@ class ModalWindow {
 		this.modal = document.createElement("div");
 		this.modal.className = "modal";
 		this.modal.append(modalHeader);
-		
+
 		this.content = document.createElement("div");
 		this.content.classList.add('modal__container');
 
@@ -121,7 +121,7 @@ class ModalWindow {
 
 		document.body.append(this.currentOverlay);
 
-		this.currentOverlay.addEventListener("click",  (event) => this.close(event));
+		this.currentOverlay.addEventListener("click", (event) => this.close(event));
 
 		this.popUp();
 	};
@@ -150,7 +150,7 @@ class ModalWindow {
 		this.pauseLayout.remove();
 	}
 	close(event) {
-		if (event && event.target){
+		if (event && event.target) {
 			if (!event.target.classList.contains("modal__close"))
 				return;
 
@@ -170,79 +170,79 @@ class ModalWindow {
 	submit(event) {
 		event.preventDefault();
 		this.pause();
-		let formData = new FormData(event.target);
+		const formData = new FormData(event.target);
 		if (this.context) {
 			this.formSubmitHandler.call(this.context, event, formData, this);
 		}
-		else{
+		else {
 			this.formSubmitHandler(event, formData, this);
 		}
 	}
 	attachEvents() {
-        const self = this;
+		const self = this;
 
-		self.currentOverlay.querySelectorAll('.modal__close').forEach(element => element.addEventListener("click",  (event) => self.close(event)) );
+		self.currentOverlay.querySelectorAll('.modal__close').forEach(element => element.addEventListener("click", (event) => self.close(event)));
 
-        // self.modal.ondragstart = () => false;
+		// self.modal.ondragstart = () => false;
 
-        // self.title.addEventListener('mousedown', (event) => self.dragStart.call(self, event));
+		// self.title.addEventListener('mousedown', (event) => self.dragStart.call(self, event));
 
-        // self.modal.addEventListener('touchstart', (event) => self.dragStart.call(self, event));
-    }
+		// self.modal.addEventListener('touchstart', (event) => self.dragStart.call(self, event));
+	}
 	dragStart(event) {
 
-        if (this.dragged) return;
-        this.dragged = true;
+		if (this.dragged) return;
+		this.dragged = true;
 
-        const clientX = event.clientX || event.targetTouches[0].clientX;
-        const clientY = event.clientY || event.targetTouches[0].clientY;
+		const clientX = event.clientX || event.targetTouches[0].clientX;
+		const clientY = event.clientY || event.targetTouches[0].clientY;
 
-        this.shiftX = clientX - this.modal.getBoundingClientRect().left;
-        this.shiftY = clientY - this.modal.getBoundingClientRect().top;
+		this.shiftX = clientX - this.modal.getBoundingClientRect().left;
+		this.shiftY = clientY - this.modal.getBoundingClientRect().top;
 
-        this.dragnDrop(event);
-    }
-    dragnDrop(event) {
+		this.dragnDrop(event);
+	}
+	dragnDrop(event) {
 
-        const self = this;
+		const self = this;
 
-        self.modal.style.position = 'absolute';
-        self.modal.style.zIndex = 1000;
-        self.modal.style.margin = 0;
+		self.modal.style.position = 'absolute';
+		self.modal.style.zIndex = 1000;
+		self.modal.style.margin = 0;
 
-        document.body.append(self.modal);
+		document.body.append(self.modal);
 
-        const pageX = event.pageX || event.targetTouches[0].pageX;
-        const pageY = event.pageY || event.targetTouches[0].pageY;
+		const pageX = event.pageX || event.targetTouches[0].pageX;
+		const pageY = event.pageY || event.targetTouches[0].pageY;
 
-        self.moveAt(pageX, pageY);
+		self.moveAt(pageX, pageY);
 
-        document.context = self;
-        document.addEventListener('mousemove', self.onMouseMove);
-        document.addEventListener('touchmove', self.onMouseMove);
+		document.context = self;
+		document.addEventListener('mousemove', self.onMouseMove);
+		document.addEventListener('touchmove', self.onMouseMove);
 
-        self.modal.onmouseup = (event) => this.moveEnd(event);
-        self.modal.ontouchend = (event) => this.moveEnd(event);
-    }
-    moveEnd(event) {
+		self.modal.onmouseup = (event) => this.moveEnd(event);
+		self.modal.ontouchend = (event) => this.moveEnd(event);
+	}
+	moveEnd(event) {
 		// console.log(event);
-        document.removeEventListener(event.type, this.onMouseMove);
-        this.dragged = false;
-        this.modal.ontouchend = null;
-        document.context = null;
-    }
-    moveAt(pageX, pageY) {
-        this.modal.style.left = pageX - this.shiftX + 'px';
-        this.modal.style.top = pageY - this.shiftY + 'px';
-    }
-    onMouseMove(event) {
-        const self = document.context;
+		document.removeEventListener(event.type, this.onMouseMove);
+		this.dragged = false;
+		this.modal.ontouchend = null;
+		document.context = null;
+	}
+	moveAt(pageX, pageY) {
+		this.modal.style.left = pageX - this.shiftX + 'px';
+		this.modal.style.top = pageY - this.shiftY + 'px';
+	}
+	onMouseMove(event) {
+		const self = document.context;
 
-        if (!self) return false;
+		if (!self) return false;
 
-        const pageX = event.pageX || event.targetTouches[0].pageX;
-        const pageY = event.pageY || event.targetTouches[0].pageY;
+		const pageX = event.pageX || event.targetTouches[0].pageX;
+		const pageY = event.pageY || event.targetTouches[0].pageY;
 
-        self.moveAt(pageX, pageY);
-    }
+		self.moveAt(pageX, pageY);
+	}
 }
