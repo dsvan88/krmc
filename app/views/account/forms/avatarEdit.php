@@ -2,7 +2,7 @@
 <form enctype='multipart/form-data'>
     <!-- <h2 class="modal__subtitle"><?= $title ?></h2> -->
     <div class="input_row big-avatar">
-        <input type="hidden" name="userId" value="<?=$userData['id']?>">
+        <input type="hidden" name="uid" value="<?=$userData['id']?>">
         <div class="big-avatar__dashboard">
             <label class="big-avatar__change fa fa-refresh" for="input_<?= $idPrefix ?>" title="<?= $texts['ReCropLabel'] ?>"></label>
             <input type="file" class="hidden" id="input_<?= $idPrefix ?>" data-action-change="new-avatar-input-change">

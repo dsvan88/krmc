@@ -9,9 +9,9 @@ actionHandler.accountAvatarEditFormReady = async function ({ modal }) {
     image.style.width = 'auto';
     new Cropper(modal.content.querySelector('img[id^=image_cropper_]'));
     const cropperCanvas = modal.content.querySelector('cropper-canvas');
-    cropperCanvas.style.minHeight = '40vh';
-    cropperCanvas.style.minWidth = '40vw';
-    modal.content.querySelector('cropper-selection').aspectRatio = 1;
+    cropperCanvas.style.minHeight = '70vh';
+    cropperCanvas.style.minWidth = '70vw';
+    modal.content.querySelector('cropper-selection').aspectRatio = 3 / 4;
 }
 actionHandler.newAvatarInputChange = async function (e) {
     const modal = e.target.closest('.modal');
@@ -21,20 +21,23 @@ actionHandler.newAvatarInputChange = async function (e) {
     cropperImage.src = URL.createObjectURL(file);
 }
 
-actionHandler.accountAvatarEditFormSubmit = async function (e) {
+actionHandler.accountAvatarEditFormSubmit = async function (e, fd, m) {
     const s = this;
     const cropperSelection = e.target.querySelector('cropper-selection');
     const result = await cropperSelection.$toCanvas();
     result.toBlob(
-        (blob) => s.avatarNew.call(s, e.target, blob),
+        async (blob) => s.avatarNew.call(s, { f: e.target, fd: fd, b: blob, m: m }), //f - form, fd - FormData, b - blob, m - Modal Window;
         'image/jpeg',
         1
     );
-    return false;    
+    return false;
 }
-actionHandler.avatarNew = async function(f, b){
-    const b64 =  await blobToBase64(b);
-    const fd = new FormData(f);
+actionHandler.avatarNew = async function ({ f = null, fd = null, b = null, m = null } = {}) {
+    const b64 = await blobToBase64(b);
     fd.append('image', b64);
-    const r = this.request({url: "account/avatar/new", data: fd});
+    const r = await this.request({ url: "account/avatar/new", data: fd });
+    if (!r.notice.type)
+        m.close();
+    else
+        m.unpause();
 }

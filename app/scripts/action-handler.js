@@ -130,11 +130,11 @@ const actionHandler = {
 	request: async function (options, modal) {
 		if (!options.url) return false;
 
-		await request(options)
-		if (modal) self.commonModalEvent(modal, action, r);
+		const r = await request(options)
+		if (modal) this.commonModalEvent(modal, options.url, r);
 
-		self.commonResponse(r);
-		return ;
+		this.commonResponse(r);
+		return r;
 	},
 	commonFormEventEnd: function ({ modal, data, action = null, ...args } = {}) {
 		let modalWindow;

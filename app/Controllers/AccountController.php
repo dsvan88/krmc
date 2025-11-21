@@ -558,7 +558,6 @@ class AccountController extends Controller
             'userData' => $userData,
             'scripts' => [
                 'profile/avatar-recrop.js',
-                // 'avatar-get-recrop.js',
             ]
         ];
         View::$route['vars'] = array_merge(View::$route['vars'], $vars);
@@ -566,8 +565,25 @@ class AccountController extends Controller
     }
     public function avatarNewAction()
     {
-        // Tech::dump($_POST);
-        return View::notice('Success!');
+        $uid = (int) $_POST['uid'];
+        $filename = $uid . '_avatar.jpg';
+        $image = ImageProcessing::saveBase64Image($_POST['image'], $filename);
+
+        $gDrive = new GoogleDrive();
+
+        $userData = Users::find($uid);
+        if (!empty($userData['personal']['avatar'])) {
+            $gDrive->delete($userData['personal']['avatar']);
+        }
+
+        $fileId = $gDrive->create($image['fullpath'], 'avatars');
+
+        $userData['personal']['avatar'] = $fileId;
+
+        Users::edit(['personal' =>  $userData['personal']], ['id' => $uid]);
+        unlink($image['fullpath']);
+
+        return View::notice(['message' => 'Success', 'time' => 1500, 'location' => 'reload']);
     }
     // public function profileAvatarFormAction()
     // {

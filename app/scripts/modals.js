@@ -33,7 +33,6 @@ class ModalWindow {
 		this.attachEvents();
 	};
 	fill({ html = "", title = "", buttons = [], submit = null, context = null }) {
-		let modalContainer = null;
 		if (html) {
 			this.content.innerHTML = html;
 		}
@@ -46,7 +45,7 @@ class ModalWindow {
 			}
 		}
 		if (buttons.length !== 0) {
-			modalContainer = this.content || this.modal.querySelector('.modal__container');
+			const modalContainer = this.content || this.modal.querySelector('.modal__container');
 			const modalButtons = document.createElement('div');
 			modalButtons.className = 'modal__buttons';
 			buttons.forEach(button => {
