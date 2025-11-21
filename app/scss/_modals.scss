@@ -227,3 +227,25 @@
 		border-bottom: 1px dotted;
 	}
 }
+
+.big-avatar{
+	position: relative;
+	&__dashboard{
+		position: absolute;
+		top: .5em;
+		right: .5em;
+		z-index: 1000;
+	}
+	&__change{
+			text-decoration: none !important;
+			font-size: 3em;
+			cursor: pointer;
+			color: $bg-color-light-purple-blur;
+			transition: color $animation-fast, opacity $animation-fast;
+			opacity: .5;
+			&:hover{
+				color: $bg-color-light-purple;
+				opacity: 1;
+			}
+	}
+}

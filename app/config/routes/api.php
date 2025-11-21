@@ -68,13 +68,19 @@ return  [
     [
         'controller' => 'account',
         'action' => 'avatarTgGet',
-        'access' => ['category' => 'all']
+        'access' => ['category' => 'user']
     ],
     'api/account/avatar/edit/form' =>
     [
         'controller' => 'account',
         'action' => 'avatarEditForm',
-        'access' => ['category' => 'all']
+        'access' => ['category' => 'user']
+    ],
+    'api/account/avatar/new' =>
+    [
+        'controller' => 'account',
+        'action' => 'avatarNew',
+        'access' => ['category' => 'user']
     ],
     // 'api/account/profile/avatar/form' =>
     // [

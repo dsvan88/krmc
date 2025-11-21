@@ -120,17 +120,21 @@ const actionHandler = {
 				formData.append('verification', verification);
 			}
 		}
-
-		const result = await request({
+		const r = await this.request({
 			url: action,
 			data: formData,
-		});
+		}, modal);
 
-		if (modal) self.commonModalEvent(modal, action, result);
+		return r;
+	},
+	request: async function (options, modal) {
+		if (!options.url) return false;
 
-		self.commonResponse(result);
+		await request(options)
+		if (modal) self.commonModalEvent(modal, action, r);
 
-		return result;
+		self.commonResponse(r);
+		return ;
 	},
 	commonFormEventEnd: function ({ modal, data, action = null, ...args } = {}) {
 		let modalWindow;

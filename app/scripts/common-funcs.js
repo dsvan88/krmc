@@ -202,3 +202,13 @@ Array.prototype.shuffle = function () {
 	}
 	return this;
 };
+
+async function blobToBase64(b){
+	return await new Promise(r => {
+		const reader = new FileReader();
+		reader.onload = function() {
+			r(reader.result.split(',')[1]);
+		};
+		reader.readAsDataURL(b);
+	}).then();
+}

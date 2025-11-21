@@ -551,6 +551,7 @@ class AccountController extends Controller
                 'vars' => [$userData['name']],
             ],
             'texts' => [
+                'SaveLabel' => 'Save',
                 'ReCropLabel' => 'Replace',
                 'CancelLabel' => 'Cancel'
             ],
@@ -562,6 +563,11 @@ class AccountController extends Controller
         ];
         View::$route['vars'] = array_merge(View::$route['vars'], $vars);
         return View::modal();
+    }
+    public function avatarNewAction()
+    {
+        // Tech::dump($_POST);
+        return View::notice('Success!');
     }
     // public function profileAvatarFormAction()
     // {

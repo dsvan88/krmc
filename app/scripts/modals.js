@@ -72,7 +72,7 @@ class ModalWindow {
 				this.content.innerHTML = form.outerHTML;
 				form = this.content.querySelector('form');
 			}
-			form.addEventListener('submit', event => this.submit(event))
+			form.addEventListener('submit', e => this.submit(e))
 		}
 		this.attachEvents();
 
