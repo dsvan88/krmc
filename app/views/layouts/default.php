@@ -55,7 +55,7 @@
                         <label for="navigation__checkbox" class="navigation-for-small-display menu-show fa fa-bars"></label>
                         <input type="checkbox" name="toggle-navigation" id="navigation__checkbox" class="navigation-for-small-display-chechbox">
                         <nav class="navigation" id="navigation">
-                            <label for="navigation__checkbox" class="navigation-for-small-display menu-hide"><i class="fa fa-times"></i></label>
+                            <label for="navigation__checkbox" class="navigation-for-small-display menu-hide fa fa-times"></label>
                             <? foreach ($headerMenu as $headerMenuItem) : ?>
                                 <? self::component('header/menu-item', ['menuItem' => $headerMenuItem]) ?>
                             <? endforeach ?>
