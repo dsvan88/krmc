@@ -139,7 +139,7 @@ class Db
         return true;
     }
     // Проверка наличия записей в базе по критериям
-    public static function isExists($criteria, string $table = null, $criteriaType = 'OR')
+    public static function isExists($criteria, string $table = '', $criteriaType = 'OR')
     {
         if (empty($table)) $table = static::$table;
 
@@ -157,7 +157,7 @@ class Db
     // $data - ассоциативный массив со значениями записи: array('column_name'=>'column_value',...)
     // $table - таблица в которую будет добавлена запись
     // возвращает последнюю запись из таблицы (id новой записи, если верно указан $g_id)
-    public static function insert($data, string $table = null)
+    public static function insert($data, string $table = '')
     {
         if (empty($table)) $table = static::$table;
 
@@ -207,7 +207,7 @@ class Db
         return self::query(substr($query, 0, -1) . substr($conditon, 0, -mb_strlen($method, 'UTF-8')), $data);
     }
     // Удаляет строку по её полю ID в таблице
-    public static function delete(mixed $id, string $table = null)
+    public static function delete(mixed $id, string $table = '')
     {
         if (empty($id)) return false;
 
@@ -231,7 +231,7 @@ class Db
         return self::query($query, $params);
     }
     //Очищает таблицу
-    public static function tableTruncate(string $table = null)
+    public static function tableTruncate(string $table = '')
     {
         if (empty($table)) $table = static::$table;
 

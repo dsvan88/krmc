@@ -297,7 +297,7 @@ class AccountController extends Controller
         } else {
             Users::edit([$field => $value], ['id' => $userId]);
         }
-        return View::notice(['message' => 'Success', 'time' => '1500', 'location' => 'reload']);
+        return View::notice(['message' => 'Success', 'time' => 1500, 'location' => 'reload']);
 
 
 
@@ -329,7 +329,7 @@ class AccountController extends Controller
         // } else {
         //     AccountRepository::edit($userId, $_POST);
         // }
-        return View::notice(['message' => 'Success', 'data' => $_POST, 'category' => $category, 'field' => $field]);
+        // return View::notice(['message' => 'Success', 'data' => $_POST, 'category' => $category, 'field' => $field]);
     }
     public function profileSectionEditFormAction()
     {
@@ -515,12 +515,12 @@ class AccountController extends Controller
     public function avatarTgGetAction()
     {
         if (!Users::checkAccess('manager'))
-            return View::notice(['message' => 'You don’t have enought rights to do this action!', 'type' => 'error', 'time' => '1500']);
+            return View::notice(['message' => 'You don’t have enought rights to do this action!', 'type' => 'error', 'time' => 1500]);
 
         $uid = (int) $_POST['uid'];
 
         if (empty($uid))
-            return View::notice(['message' => 'UserID can’t be empty!', 'type' => 'error', 'time' => '1500']);
+            return View::notice(['message' => 'UserID can’t be empty!', 'type' => 'error', 'time' => 1500]);
 
         $message = 'Success';
         $type = '';
@@ -531,14 +531,14 @@ class AccountController extends Controller
             $type = 'error';
             error_log($th->__toString());
         }
-        return View::notice(['message' => $message, 'type' => $type, 'time' => '1500', 'location' => 'reload']);
+        return View::notice(['message' => $message, 'type' => $type, 'time' => 1500, 'location' => 'reload']);
     }
     public function avatarEditFormAction()
     {
         $uid = (int) $_POST['uid'];
 
         if (!Users::checkAccess('manager') && $uid !== $_SESSION['id']) {
-            return View::notice(['message' => 'You don’t have enought rights to do this action!', 'type' => 'error', 'time' => '1500']);
+            return View::notice(['message' => 'You don’t have enought rights to do this action!', 'type' => 'error', 'time' => 1500]);
         }
 
         $userData = Users::find($uid);
@@ -566,21 +566,43 @@ class AccountController extends Controller
     public function avatarNewAction()
     {
         $uid = (int) $_POST['uid'];
+        if (!$uid) {
+            return View::notice(['message' => 'UserID can’t be empty!', 'type' => 'error', 'time' => 1500]);
+        }
+
+        if ($uid != $_SESSION['id'] && Users::checkAccess('manager')) {
+            return View::notice(['message' => 'You don’t have enought rights to do this action!', 'type' => 'error', 'time' => 1500]);
+        }
+
         $filename = $uid . '_avatar.jpg';
         $image = ImageProcessing::saveBase64Image($_POST['image'], $filename);
+
+        if (!$image) {
+            return View::notice(['message' => 'Image didn’t saved successfully!', 'type' => 'error', 'time' => 1500]);
+        }
 
         $gDrive = new GoogleDrive();
 
         $userData = Users::find($uid);
+
+        if (!$userData) {
+            return View::notice(['message' => 'User with this UserID isn’t found!', 'type' => 'error', 'time' => 1500]);
+        }
+
         if (!empty($userData['personal']['avatar'])) {
             $gDrive->delete($userData['personal']['avatar']);
         }
 
         $fileId = $gDrive->create($image['fullpath'], 'avatars');
 
+        if (!$fileId) {
+            return View::notice(['message' => "Image didn’t saved successfully on Google Drive!\nContact with an admins.", 'type' => 'error', 'time' => 1500]);
+        }
+
         $userData['personal']['avatar'] = $fileId;
 
         Users::edit(['personal' =>  $userData['personal']], ['id' => $uid]);
+        
         unlink($image['fullpath']);
 
         return View::notice(['message' => 'Success', 'time' => 1500, 'location' => 'reload']);
@@ -616,11 +638,6 @@ class AccountController extends Controller
     //     ];
     //     View::$route['vars'] = array_merge(View::$route['vars'], $vars);
     //     return View::modal();
-    // }
-    // public function profileAvatarRecropFormAction()
-    // {
-    //     $vars = ['modal' => true, 'jsFile' => 'avatar-get-recrop.js?v=' . $_SERVER['REQUEST_TIME']];
-    //     return View::message($vars);
     // }
     public function passwordChange($userData, $post)
     {

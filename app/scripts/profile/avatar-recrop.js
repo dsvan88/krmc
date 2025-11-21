@@ -7,11 +7,14 @@ actionHandler.accountAvatarEditFormReady = async function ({ modal }) {
     image.crossOrigin = 'anonymous';
     image.style.height = '20vh';
     image.style.width = 'auto';
+    
     new Cropper(modal.content.querySelector('img[id^=image_cropper_]'));
+    
     const cropperCanvas = modal.content.querySelector('cropper-canvas');
     cropperCanvas.style.minHeight = '70vh';
     cropperCanvas.style.minWidth = '70vw';
     modal.content.querySelector('cropper-selection').aspectRatio = 3 / 4;
+    modal.content.querySelector('cropper-selection').height = '70vh';
 }
 actionHandler.newAvatarInputChange = async function (e) {
     const modal = e.target.closest('.modal');
@@ -36,8 +39,9 @@ actionHandler.avatarNew = async function ({ f = null, fd = null, b = null, m = n
     const b64 = await blobToBase64(b);
     fd.append('image', b64);
     const r = await this.request({ url: "account/avatar/new", data: fd });
-    if (!r.notice.type)
-        m.close();
-    else
-        m.unpause();
+    
+    if (r.notice.type)
+        return m.unpause();
+    
+    m.close();        
 }
