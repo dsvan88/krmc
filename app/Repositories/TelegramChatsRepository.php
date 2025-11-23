@@ -95,7 +95,7 @@ class TelegramChatsRepository
 
         $userData['personal']['avatar'] = $fileId;
 
-        // unlink($image['fullpath']);
+        unlink($image['fullpath']);
 
         return (bool) Users::edit(['personal' => $userData['personal']], ['id' => $userId]);
     }
