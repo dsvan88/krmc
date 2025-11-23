@@ -526,14 +526,13 @@ class Users extends Model
     {
         if (empty($source))
             return $source;
+
         if (!empty($source['id'])) {
             $userData = self::find($source['id']);
             $source['name'] = empty($userData) ? '&lt; Deleted &gt;' : $userData['name'];
 
-            if (empty($userData['privilege']['status'])) return $source;
-
-            $source['status'] = $userData['privilege']['status'];
-            $source['gender'] = $userData['personal']['gender'];
+            $source['status'] = empty($userData['personal']['status']) ? '' : $userData['personal']['status'];
+            $source['gender'] = empty($userData['personal']['gender']) ? '' : $userData['personal']['gender'];
             $source['emoji'] = empty($userData['personal']['emoji']) ? '' : $userData['personal']['emoji'];
 
             return $source;
@@ -556,10 +555,8 @@ class Users extends Model
                 if ($source[$y]['id'] != $data[$x]['id']) continue;
                 $source[$y]['name'] = $data[$x]['name'];
 
-                if (empty($data[$x]['privilege']['status'])) return $source;
-
-                $source[$y]['status'] = $data[$x]['privilege']['status'];
-                $source[$y]['gender'] = $data[$x]['personal']['gender'];
+                $source[$y]['status'] = empty($data[$x]['personal']['status']) ? '' : $data[$x]['personal']['status'];
+                $source[$y]['gender'] = empty($data[$x]['personal']['gender']) ? '' : $data[$x]['personal']['gender'];
                 $source[$y]['emoji'] = empty($data[$x]['personal']['emoji']) ? '' : $data[$x]['personal']['emoji'];
             }
         }
