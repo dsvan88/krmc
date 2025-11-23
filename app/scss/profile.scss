@@ -3,12 +3,13 @@
 
 .profile {
     &__wrapper {
-        background-color: $bg-color-light-odd;
+        background-color: $bg-color-dark-blur;
         padding: 1em;
     }
 
     &__title {
         font-size: 1.5em;
+        color: $color-text-light;
     }
 
     &__content {
@@ -76,7 +77,7 @@
         padding: 1.5em 13.5vw 1.5em 2em;
         position: relative;
         border-radius: 2px;
-        background-color: $bg-color-light-yellow-blur;
+        background-color: $bg-color-light-odd;
 
         .text-accent {
             color: $color-text-accent;
@@ -158,6 +159,8 @@
     }
 
     .avatar {
+        display: flex;
+        justify-content: center;
         @include md {
             position: absolute;
             top: -1em;
@@ -165,20 +168,27 @@
         }
 
         &__wrapper {
+            position: relative;
             border: .2em solid $bg-color-light;
         }
         &__edit {
             position: absolute;
             top: .3em;
             right: .3em;
-            font-size: 2em;
-            color: $bg-color-light-purple-blur;
-            opacity: .5;
-            transition: color $animation-fast, opacity $animation-fast;
+            font-size: 3em;
+            padding: .1em .1em 0 .2em;
+            border-radius: 3px;
+            color: $bg-color-purple-blur;
+            opacity: .6;
+            transition: color $animation-fast, opacity $animation-fast, background-color $animation-fast;
             cursor: pointer;
             &:hover{
-                color: $bg-color-purple-blur;
-                opacity: 1;
+                color: $bg-color-purple;
+                opacity: .8;
+                background-color: $bg-color-light-green-blur;
+            }
+            @include md {
+                font-size: 2em;
             }
         }
 

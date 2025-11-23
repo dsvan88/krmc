@@ -67,7 +67,7 @@
             <?= $texts['TelegramLabel'] ?>
         </h5>
         <div class="profile__card-value">
-            <?= $data['telegram'] ?>
+            <?= empty($data['telegram']) ? '< No Data >' : $data['telegram'] ?>
             <? if (isset($data['approved']['telegramid'])): ?>
                 <i class="fa fa-check-circle text-accent"></i>
             <? endif ?>

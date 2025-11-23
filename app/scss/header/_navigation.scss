@@ -35,6 +35,12 @@
             transition: all $animation-fast ease-in;
         }
     }
+    &__label{
+        a {
+            display: inline-block;
+            width: 100%;
+        }
+    }
     @include md {
         &__label{
             font-size: 1.2em;
