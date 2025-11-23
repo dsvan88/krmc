@@ -292,6 +292,7 @@ class TechController extends Controller
             if (empty($user['personal']['avatar'])) continue;
             try {
                 TelegramChatsRepository::getAndSaveTgAvatar($user['id'], true);
+                echo $user['id'].'<br>';
             } catch (\Throwable $th) {
                 Tech::dump($th);
             }

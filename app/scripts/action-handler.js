@@ -117,6 +117,9 @@ const actionHandler = {
 				if (/(root|pass)/.test(target.dataset.verification))
 					input = { type: 'password' };
 				const verification = await self.verification(null, target.dataset.verification, input);
+				
+				if (!verification) return false;
+				
 				formData.append('verification', verification);
 			}
 		}
