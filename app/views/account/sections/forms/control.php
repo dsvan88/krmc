@@ -1,10 +1,10 @@
 <form action="/account/profile/edit/<?= $userId ?>/control" method="post">
     <div class="profile__card-row">
-        <h3 class="profile__card-title">Керування профілем:</h3>
+        <h3 class="profile__card-title">Керування профілем</h3>
     </div>
     <div class="profile__card-row">
         <h4 class="profile__card-label">
-            Статус:
+            Статус
         </h4>
         <div class="profile__card-value">
             <select name="status">
@@ -19,7 +19,7 @@
     </div>
     <div class="profile__card-row">
         <h4 class="profile__card-label">
-            Новий псевдонім:
+            Новий псевдонім
         </h4>
         <div class="profile__card-value">
             <input type="text" name='name' value="<?= $data['name'] ?>">
@@ -27,7 +27,7 @@
     </div>
     <div class="profile__card-row">
         <h4 class="profile__card-label">
-            Видалення:
+            Видалення
         </h4>
         <div class="profile__card-value">
             <button type="button" class="negative" data-action-click='account/delete' data-user-id="<?= $userId ?>" data-verification="verification/root">Видалити</button>

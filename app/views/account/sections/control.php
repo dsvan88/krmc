@@ -3,7 +3,7 @@
 </div>
 <div class="profile__card-row">
     <h5 class="profile__card-label">
-        Бан: <?= !empty($data['ban']) ? " дійсний до <u>{$data['ban']['expired']}</u>" : ''?>
+        Бан <?= !empty($data['ban']) ? " дійсний до <u>{$data['ban']['expired']}</u>" : ''?>
     </h5>
     <div class="profile__card-value">
         <? if (empty($data['ban']['options'])): ?>
@@ -15,7 +15,7 @@
 </div>
 <div class="profile__card-row">
     <h5 class="profile__card-label">
-        Статус:
+        Статус
     </h5>
     <div class="profile__card-value">
         <span class="text-accent"><?= empty($data['privilege']['status']) ? '' : $data['privilege']['status']?></span>
@@ -23,7 +23,7 @@
 </div>
 <div class="profile__card-row">
     <h5 class="profile__card-label">
-        Перейменування:
+        Перейменування
     </h5>
     <div class="profile__card-value">
         <span class="text-accent">Доступне</span>
@@ -31,7 +31,7 @@
 </div>
 <div class="profile__card-row">
     <h5 class="profile__card-label">
-        Видалення:
+        Видалення
     </h5>
     <div class="profile__card-value">
         <span class="text-accent">Доступне</span>

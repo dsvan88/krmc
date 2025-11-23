@@ -24,8 +24,12 @@
                                 <span class="avatar__image" data-action-dblclick="account/avatar/tg/get" data-uid="<?= $userId ?>">
                                     <?= $data['avatar'] ?>
                                 </span>
-                            <? else: ?>
+                            <? elseif ($isSelf): ?>
                                 <span class="avatar__image" data-action-dblclick="account/avatar/edit/form" data-uid="<?= $userId ?>">
+                                    <?= $data['avatar'] ?>
+                                </span>
+                            <? else: ?>
+                                <span class="avatar__image">
                                     <?= $data['avatar'] ?>
                                 </span>
                             <? endif ?>

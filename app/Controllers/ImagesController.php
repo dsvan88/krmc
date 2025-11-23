@@ -32,7 +32,7 @@ class ImagesController extends Controller
         if (!empty($_POST['pageToken']))
             $pageToken = $_POST['pageToken'];
 
-        $folder = '';
+        $folder = 'root';
         if (!empty($_POST['type']))
             $folder = preg_replace('/[^a-z0-9_+ -]/ui', '', trim($_POST['type']));
 
@@ -60,8 +60,8 @@ class ImagesController extends Controller
         if (!empty($_POST['pageToken']))
             $pageToken = $_POST['pageToken'];
 
-        if (!ImageRepository::getImagesList($pageToken, $files, $nextPageToken, 'avatars')) {
-            return View::notice(['message' => 'Image’s list is empty']);
+        if (!ImageRepository::getImagesList($pageToken, $files, $nextPageToken)) {
+            Noticer::set(['message' => 'Image’s list is empty', 'type' => 'info']);
         }
 
         $title = 'Images';
