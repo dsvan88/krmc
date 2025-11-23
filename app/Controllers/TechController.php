@@ -284,18 +284,18 @@ class TechController extends Controller
     }
     public static function testAction()
     {
-        ignore_user_abort(true);
-        set_time_limit(900);
+        // ignore_user_abort(true);
+        // set_time_limit(900);
 
-        $users = Users::getAll();
-        foreach ($users as $user) {
-            if ($user['id'] < 340) continue;
-            if (!empty($user['personal']['avatar'])) continue;
-            try {
-                TelegramChatsRepository::getAndSaveTgAvatar($user['id'], true);
-            } catch (\Throwable $th) {
-                Tech::dump($th);
-            }
-        }
+        // $users = Users::getAll();
+        // foreach ($users as $user) {
+        //     if ($user['id'] < 340) continue;
+        //     if (!empty($user['personal']['avatar'])) continue;
+        //     try {
+        //         TelegramChatsRepository::getAndSaveTgAvatar($user['id'], true);
+        //     } catch (\Throwable $th) {
+        //         Tech::dump($th);
+        //     }
+        // }
     }
 }
