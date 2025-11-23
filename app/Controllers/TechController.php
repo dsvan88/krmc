@@ -289,6 +289,7 @@ class TechController extends Controller
 
         $users = Users::getAll();
         foreach ($users as $user) {
+            if ($user['id'] < 340) continue;
             if (!empty($user['personal']['avatar'])) continue;
             try {
                 TelegramChatsRepository::getAndSaveTgAvatar($user['id'], true);
