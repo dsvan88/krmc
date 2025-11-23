@@ -137,35 +137,33 @@ const actionHandler = {
 		return r;
 	},
 	commonFormEventEnd: function ({ modal, data, action = null, ...args } = {}) {
-		let modalWindow;
-		const self = this;
 
 		if (data['error']) {
-			return modalWindow = modal.fill({ html: data['html'], title: 'Error!', buttons: [{ 'text': 'Okay', 'className': 'modal__close positive' }] });
+			return modal.fill({ html: data['html'], title: 'Error!', buttons: [{ 'text': 'Okay', 'className': 'modal__close positive' }] });
 		}
 
 		const _action = camelize(action.replace(/\//g, '-'));
-		let submit = _action + "Submit";
+		const submit = _action + "Submit";
 
-		if (!self[submit])
+		if (!this[submit])
 			submit = 'commonSubmitFormHandler';
 
-		data.context = self;
-		data.submit = self[submit];
+		data.context = this;
+		data.submit = this[submit];
 
-		modalWindow = modal.fill(data);
+		const modalWindow = modal.fill(data);
 
-		if (self[_action + "Ready"])
-			self[_action + "Ready"]({ modal, data: data });
+		if (this[_action + "Ready"])
+			this[_action + "Ready"]({ modal, data: data });
 
-		self.handleEvents(modalWindow);
+		this.handleEvents(modalWindow);
 
 		return modalWindow;
 	},
-	commonFormEventReady: function ({ modal = null, result = {}, type = null }) {
-		let firstInput = modal.querySelector("input");
-		if (firstInput !== null) {
-			firstInput.focus();
+	commonFormEventReady: function ({ modal = null, result = {}}) {
+		const input = modal.querySelector("input");
+		if (input) {
+			input.focus();
 		}
 		if (result["javascript"]) {
 			window.eval(result["javascript"]);
@@ -179,11 +177,11 @@ const actionHandler = {
 		await request({
 			url: event.target.action.replace(window.location.origin + '/', ''),
 			data: formData,
-			success: (result) => {
-				submitResult = result;
-				self.commonResponse.call(self, result, modal)
+			success: (r) => {
+				submitResult = r;
+				self.commonResponse.call(self, r, modal)
 			},
-			error: (result) => self.commonResponse.call(self, result, modal),
+			error: (r) => self.commonResponse.call(self, r, modal),
 		});
 		return submitResult;
 	},

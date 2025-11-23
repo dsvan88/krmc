@@ -35,6 +35,11 @@
             transition: all $animation-fast ease-in;
         }
     }
+    @include md {
+        &__label{
+            font-size: 1.2em;
+        }
+    }
 }
 
 .navigation-for-small-display {
@@ -60,7 +65,8 @@
 @include sm {
     .navigation {
         flex-direction: column;
-        justify-content: center;
+        justify-content: flex-start;
+        padding-top: 10vh;
         height: 100vh;
         position: fixed;
         top: 0;
@@ -70,7 +76,7 @@
         transition: left $animation-fast ease-in-out;
 
         &__item {
-            margin: 5px 20px;
+            margin: 0 1em 3px 1em;
             font-size: 1.5em;
         }
     }

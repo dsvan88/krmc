@@ -304,31 +304,25 @@ mark {
 
 
 .dropdown {
-	position: relative;
-
 	&__menu {
-		position: absolute;
-		background-color: $bg-color-red-blur;
-		display: none;
-		box-shadow: 0 0 10px 3px #1515158a;
-		z-index: 3;
+		max-height: 0;
+		overflow: hidden;
+		transition: max-height $animation-fast;
 	}
 
 	&:hover {
 		>.dropdown__menu {
+			max-height: 500px;
 			display: block;
 		}
 	}
 
 	&__item {
-
 		margin: 5px;
 		padding: 3px 10px;
 		display: flex;
 		flex-direction: column;
-		// justify-content: center;
-		// align-items: center;
-		font-size: 1.3rem;
+		font-size: .8em;
 		color: $color-text-menu;
 		white-space: nowrap;
 		cursor: pointer;
@@ -348,6 +342,53 @@ mark {
 		border-radius: 0 0 25px 25px;
 		background-color: $color-text-menu;
 		transition: width $animation-fast ease-in;
+	}
+	&__checkbox{
+		display: none;
+		@include sm {
+			&:checked{
+			 	~.dropdown__menu {
+					max-height: 400px;
+				}
+				~ .dropdown__label .dropdown__toggle {
+					&::before{
+						transform: rotate(0deg);
+					}
+				}
+			}
+		}
+	}
+
+	&__label{
+		display: flex;
+		&:first-child{
+			flex:0 0 auto;
+		}
+	}
+	&__toggle{
+		flex-grow: 1;
+		padding-left: .5em;
+
+		&::before {
+			transition: transform $animation-fast;
+			transform: rotate(-90deg);
+			display: inline-block;		
+			font-size: .7em;	
+		}
+	}
+	@include md{
+		position: relative;
+		font-size: 1.2em;
+		&__menu{
+			position: absolute;
+			background-color: $bg-color-red-blur;
+			display: none;
+			box-shadow: 0 0 10px 3px #1515158a;
+			z-index: 3;
+		}
+		&__toggle{
+			display: none;
+		}
 	}
 }
 
