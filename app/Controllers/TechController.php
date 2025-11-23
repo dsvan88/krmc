@@ -289,7 +289,7 @@ class TechController extends Controller
         $checked = [3, 8, 9, 13, 15, 21, 26, 30, 37, 43, 166, 172, 179, 183, 212, 226, 280, 282, 288, 317, 322, 323, 324, 327, 341, 342, 343, 371];
         $users = Users::getAll();
         foreach ($users as $user) {
-            // if ($user['id'] < 166) continue;
+            if ($user['id'] < 171) continue;
             // if (empty($user['personal']['avatar'])) continue;
             if (!in_array($user['id'], $checked)) continue;
             try {
