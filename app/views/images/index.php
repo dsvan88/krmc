@@ -3,7 +3,11 @@
         <div class="images">
             <? self::component('list/image/new') ?>
             <? foreach ($files as $file): ?>
-                <? self::component('list/image/item', compact('file', 'backgrounds')) ?>
+                <? if (empty($file['thumbnailLink'])) :?>
+                    <? self::component('list/image/folder', compact('file')) ?>
+                <? else :?>
+                    <? self::component('list/image/item', compact('file', 'backgrounds')) ?>
+                <? endif ?>
             <? endforeach ?>
             <? if (!empty($nextPageToken)) : ?>
                 <div class="image get-more" data-action-click="images/get-more" data-page-token="<?= $nextPageToken ?>">

@@ -72,8 +72,13 @@ actionHandler.addChangeListeners = function () {
 }
 actionHandler.showImageInfo = function (event) {
     info_value_name.innerText = event.target.dataset.name;
-    info_value_bytes.innerText = Math.ceil(event.target.dataset.size / 1024) + ' Kb';
+    info_value_bytes.innerText = event.target.dataset.size + ' Kb';
     info_value_resol.innerText = event.target.dataset.resol;
+}
+actionHandler.showFolderInfo = function (event) {
+    info_value_name.innerText = event.target.dataset.name;
+    info_value_bytes.innerText = 'Folder';
+    info_value_resol.innerText = '-';
 }
 actionHandler.getLink = function (target) {
     try {

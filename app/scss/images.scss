@@ -42,6 +42,58 @@ main {
             padding: .2em .5em;
         }
 
+        .folder{
+            position: relative;
+            flex: 0 1 $size;
+            height: $size;
+            max-width: $size+3em;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: $bg-color-light;
+            padding: .5em .5em 2em .5em;
+            transition: scale $animation-fast, padding $animation-fast;
+            cursor: pointer;
+
+            &__dashboard {
+                display: flex;
+                font-size: 1.5em;
+                position: absolute;
+                background-color: $bg-color-light;
+                padding: .2em;
+                box-sizing: border-box;
+                border-radius: 0 0 0 .2em;
+                top: 0;
+                right: 0;
+                gap: .1em;
+                opacity: 0;
+                transition: opacity $animation-very-fast;
+            }
+
+            &__place {
+                height: 100%;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                font-size: $size/2;
+            }
+            
+            &:hover {
+                position: relative;
+                z-index: 5;
+                scale: 1.1;
+
+                .image__dashboard {
+                    opacity: .85;
+                }
+
+                .image__description {
+                    max-height: 10em;
+                }
+            }
+        }
         .image {
             position: relative;
             flex: 0 1 $size;
@@ -100,7 +152,6 @@ main {
 
             &__place {
                 height: 100%;
-                // max-width: 100%;
             }
 
             &__img {

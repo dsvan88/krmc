@@ -540,11 +540,6 @@ class Users extends Model
 
         $countSource = count($source);
         $ids = array_column($source,'id');
-        // $ids = [];
-        // for ($x = 0; $x < $countSource; $x++) {
-        //     if (empty($source[$x]['id'])) continue;
-        //     $ids[] = $source[$x]['id'];
-        // }
 
         if (empty($ids))
             return $source;
@@ -559,7 +554,7 @@ class Users extends Model
                 $source[$y]['status'] = empty($data[$x]['personal']['status']) ? '' : $data[$x]['personal']['status'];
                 $source[$y]['gender'] = empty($data[$x]['personal']['gender']) ? '' : $data[$x]['personal']['gender'];
                 $source[$y]['emoji'] = empty($data[$x]['personal']['emoji']) ? '' : $data[$x]['personal']['emoji'];
-
+                break;
             }
         }
 
