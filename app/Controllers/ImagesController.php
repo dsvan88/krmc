@@ -60,7 +60,7 @@ class ImagesController extends Controller
         if (!empty($_POST['pageToken']))
             $pageToken = $_POST['pageToken'];
 
-        if (!ImageRepository::getImagesList($pageToken, $files, $nextPageToken)) {
+        if (!ImageRepository::getImagesList($pageToken, $files, $nextPageToken, 'avatars')) {
             Noticer::set(['message' => 'Image’s list is empty', 'type' => 'info']);
         }
 

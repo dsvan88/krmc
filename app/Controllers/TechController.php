@@ -284,15 +284,13 @@ class TechController extends Controller
     }
     public static function testAction()
     {
-        ini_set('max_execution_time', 300);
-        $gDrive = new GoogleDrive;
-        $fId = $gDrive->getFolderId('avatars');
-        $gDrive->delete($fId);
+        ignore_user_abort(true);
+        set_time_limit(900);
 
         $users = Users::getAll();
         foreach ($users as $user) {
+            $user['personal']['avatar'] = '';
             try {
-                if (!empty($user['personal']['avatar'])) continue;
                 TelegramChatsRepository::getAndSaveTgAvatar($user['id'], true);
             } catch (\Throwable $th) {
                 Tech::dump($th);

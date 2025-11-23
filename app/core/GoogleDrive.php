@@ -13,7 +13,8 @@ class GoogleDrive
     public static $credentials = [];
     public static $client = null;
     public static $service = null;
-    public static $maxPerPage = 20;
+    public static $maxPerPage = 50;
+    public static $folderIds = [];
 
     public function __construct()
     {
@@ -36,20 +37,27 @@ class GoogleDrive
             return false;
         }
     }
-    public static function getFolderId(string $folder)
+    public static function getFolderId(string $folder = '')
     {
         if (empty($folder)) return false;
+
+        if (!empty(static::$folderIds[$folder]))
+            return static::$folderIds[$folder];
 
         $response = static::$service->files->listFiles([
             'q' => "mimeType='application/vnd.google-apps.folder' and name='$folder' and trashed=false",
             'fields' => 'files(id, name)'
         ]);
 
-        return empty($response->files[0]->id) ?
-            static::createFolder($folder) :
-            $response->files[0]->id;
+        $fId = empty($response->files[0]->id) ? static::createFolder($folder) : $response->files[0]->id;
+
+        static::$folderIds = [
+            $folder => $fId,
+        ];
+
+        return $fId;
     }
-    public static function createFolder(string $folder)
+    public static function createFolder(string $folder = '')
     {
         if (empty($folder)) return false;
 
