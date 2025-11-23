@@ -43,42 +43,55 @@
         </div>
     </div>
 </fieldset>
-<fieldset>
-    <legend><?= $texts['contactsLabel'] ?></legend>
-    <div class="profile__card-row">
-        <h5 class="profile__card-label">
-            <?= $texts['EmailLabel'] ?>
-        </h5>
-        <div class="profile__card-value">
-            <?= $data['email'] ?>
-            <? if (isset($data['approved']['email'])): ?>
-                <i class="fa fa-check-circle text-accent"></i>
-            <? else: ?>
-                <? if ($isSelf): ?>
-                    <span class="text-accent small" data-action-click="verification/email">Підтвердити</span>
+
+<? if ($isAdmin || $isSelf): ?>
+    <fieldset>
+        <legend><?= $texts['contactsLabel'] ?></legend>
+        <div class="profile__card-row">
+            <h5 class="profile__card-label">
+                <?= $texts['EmailLabel'] ?>
+            </h5>
+            <? if ($isAdmin): ?>
+                <div class="profile__card-value" <? if ($isAdmin || $isSelf): ?> data-action-dblclick="account/personal/edit" data-user-id="<?= $data['id'] ?>" data-field="contacts.email" <? endif ?>>
+                    <? if (isset($data['approved']['email'])): ?>
+                        <?= $data['email'] ?><i class="fa fa-check-circle text-accent"></i>
+                    <? else: ?>
+                        <?= $data['email__value'] ?><i class="fa fa-times text-accent" title="Не підтвердженно"></i>
+                    <? endif ?>
+                    <? if ($isSelf && !empty($data['email__value']) && empty($data['approved']['email'])): ?>
+                        <span class="text-accent small" data-action-click="verification/email"><?= $texts['approveLabel'] ?></span>
+                    <?endif?>
+                </div>
                 <? else: ?>
-                    <i class="fa fa-times text-accent" title="Не підтвердженно"></i>
+                     <div class="profile__card-value">
+                    <? if (isset($data['approved']['email'])): ?>
+                        <?= $data['email__value'] ?><i class="fa fa-check-circle text-accent"></i>
+                    <? else: ?>
+                        <? if (!empty($data['email__value']) && empty($data['approved']['email'])) :?> 
+                            <?= $data['email__value'] ?><span class="text-accent small" data-action-click="verification/email"><?= $texts['approveLabel'] ?></span>
+                        <? endif ?>
+                    <? endif ?>
+                </div>
+                <?endif?>
+        </div>
+        <div class="profile__card-row">
+            <h5 class="profile__card-label">
+                <?= $texts['TelegramLabel'] ?>
+            </h5>
+            <div class="profile__card-value">
+                <?= empty($data['telegram']) ? '< No Data >' : $data['telegram'] ?>
+                <? if (isset($data['approved']['telegramid'])): ?>
+                    <i class="fa fa-check-circle text-accent"></i>
                 <? endif ?>
-            <? endif ?>
+            </div>
         </div>
-    </div>
-    <div class="profile__card-row">
-        <h5 class="profile__card-label">
-            <?= $texts['TelegramLabel'] ?>
-        </h5>
-        <div class="profile__card-value">
-            <?= empty($data['telegram']) ? '< No Data >' : $data['telegram'] ?>
-            <? if (isset($data['approved']['telegramid'])): ?>
-                <i class="fa fa-check-circle text-accent"></i>
-            <? endif ?>
+        <div class="profile__card-row">
+            <h5 class="profile__card-label">
+                <?= $texts['PhoneLabel'] ?>
+            </h5>
+            <div class="profile__card-value" <? if ($isAdmin || $isSelf): ?> data-action-dblclick="account/personal/edit" data-user-id="<?= $data['id'] ?>" data-field="contacts.phone" data-type="tel" <? endif ?>>
+                <?= $data['phone'] ?>
+            </div>
         </div>
-    </div>
-    <div class="profile__card-row">
-        <h5 class="profile__card-label">
-            <?= $texts['PhoneLabel'] ?>
-        </h5>
-        <div class="profile__card-value">
-            <?= $data['phone'] ?>
-        </div>
-    </div>
-</fieldset>
+    </fieldset>
+<? endif ?>

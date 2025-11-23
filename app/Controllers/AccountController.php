@@ -133,6 +133,7 @@ class AccountController extends Controller
                 'EmailLabel' => 'Email',
                 'TelegramLabel' => 'Telegram',
                 'PhoneLabel' => 'Phone',
+                'approveLabel' => 'Approve',
                 'SaveLabel' => 'Save',
                 'CancelLabel' => 'Cancel',
             ],
@@ -200,6 +201,7 @@ class AccountController extends Controller
             'CredoGameLabel' => 'Gaming Creed',
             'BestQuoteLabel' => 'Favorite Quote',
             'SignatureLabel' => 'Signature',
+            'approveLabel' => 'Approve',
             'editLabel' => 'Edit',
             'SaveLabel' => 'Save',
             'CancelLabel' => 'Cancel',
@@ -285,6 +287,11 @@ class AccountController extends Controller
             if (!$value)
                 return View::notice(['type' => 'error', 'message' => "Birthday isn't in correct format!"]);
             $value = strtotime($value);
+        } else if ($field === 'phone') {
+            $value = Validator::validate('phone', $value);
+            if (!$value)
+                return View::notice(['type' => 'error', 'message' => "Phone isn't in correct format!"]);
+            $value = preg_replace('/[^0-9]/i', '', $value);
         }
 
         $userData = Users::find($userId);
@@ -297,6 +304,10 @@ class AccountController extends Controller
         } else {
             Users::edit([$field => $value], ['id' => $userId]);
         }
+        if ($category === 'contacts'){
+            Contacts::reLink([$field => $value], $userId);
+        }
+        // return View::notice(['message' => 'Success']);
         return View::notice(['message' => 'Success', 'time' => 1500, 'location' => 'reload']);
 
 

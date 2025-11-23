@@ -47,13 +47,10 @@ actionHandler.verificationEmail = async function (target, event) {
     const formData = new FormData();
     formData.append('approval_code', verification)
 
-    const result = await this.apiTalk(target, null, 'actionClick', formData);
-
-    // request({
-    //     url: target.dataset.actionClick,
-    //     data: formData,
-    //     success: (result) => self.commonResponse.call(self, result),
-    // });
+    const result = await this.request({
+        url: target.dataset.actionClick,
+        data: formData,
+    });
 }
 actionHandler.accountPersonalEdit = async function (target) {
     let value = target.innerText;
@@ -63,6 +60,9 @@ actionHandler.accountPersonalEdit = async function (target) {
     if (type === 'date') {
         const date = value.split('.');
         value = `${date[2]}-${date[1]}-${date[0]}`;
+    }
+    else if (type === 'tel') {
+        value = value === 'No data' ? this.phoneMask : value;
     }
     else if (target.dataset.field === 'personal.gender') {
         select = {
@@ -82,6 +82,10 @@ actionHandler.accountPersonalEdit = async function (target) {
     formData.append('userId', target.dataset.userId);
     formData.append('field', target.dataset.field);
     formData.append('value', newValue);
-    const result = this.apiTalk(target, null, 'actionDblclick', formData)
+
+    return await this.request({
+        url: target.dataset.actionDblclick,
+        data: formData,
+    });
 
 }

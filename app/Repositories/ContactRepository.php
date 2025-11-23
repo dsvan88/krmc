@@ -32,8 +32,12 @@ class ContactRepository
     public static function wrapLinks(array $data): array
     {
         foreach ($data as $type => $value) {
+            $data[$type.'__value'] = '';
             if (empty($value) || $value === 'No data')
                 continue;
+
+            $data[$type.'__value'] = $value;
+
             if ($type === 'email') {
                 $data[$type] = "<a href='mailto:$value' target='_blank'>$value</a>";
                 continue;
@@ -43,7 +47,10 @@ class ContactRepository
                 continue;
             }
             if ($type === 'phone') {
-                $data[$type] = "<a href='tel:$value' target='_blank'>$value</a>";
+                $phone = preg_replace('/[^0-9]/', '', $value);
+                preg_match('/(\d{2})(\d{3})(\d{3})(\d{2})(\d{2})/', $phone, $phoneParts);
+                $phoneFormatted = sprintf('+%s (%s) %s-%s-%s', $phoneParts[1], $phoneParts[2], $phoneParts[3], $phoneParts[4], $phoneParts[5]);
+                $data[$type] = "<a href='tel:+$value' target='_blank'>$phoneFormatted</a>";
                 continue;
             }
         }

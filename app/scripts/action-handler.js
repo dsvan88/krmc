@@ -143,7 +143,7 @@ const actionHandler = {
 		}
 
 		const _action = camelize(action.replace(/\//g, '-'));
-		const submit = _action + "Submit";
+		let submit = _action + "Submit";
 
 		if (!this[submit])
 			submit = 'commonSubmitFormHandler';

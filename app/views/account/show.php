@@ -20,14 +20,20 @@
                 <div class="profile__avatar avatar">
                     <? if ($emptyAvatar): ?>
                         <div class="avatar__wrapper empty">
-                            <span class="avatar__image" data-action-dblclick="account/avatar/tg/get" data-uid="<?= $userId ?>">
-                                <?= $data['avatar'] ?>
-                            </span>
+                            <? if ($isAdmin):?>
+                                <span class="avatar__image" data-action-dblclick="account/avatar/tg/get" data-uid="<?= $userId ?>">
+                                    <?= $data['avatar'] ?>
+                                </span>
+                            <? else: ?>
+                                <span class="avatar__image" data-action-dblclick="account/avatar/edit/form" data-uid="<?= $userId ?>">
+                                    <?= $data['avatar'] ?>
+                                </span>
+                            <? endif ?>
                         </div>
                     <? else : ?>
                         <div class="avatar__wrapper">
                             <? if ($isSelf):?>
-                                <i class="avatar__edit fa fa-pencil-square-o" data-action-click="account/avatar/edit/form"  data-uid="<?= $userId ?>"></i>
+                                <i class="avatar__edit fa fa-pencil-square-o" data-action-click="account/avatar/edit/form" data-uid="<?= $userId ?>"></i>
                             <?endif?>
                             <span class="avatar__image" data-action-click="account/avatar/show">
                                 <?= $data['avatar'] ?>

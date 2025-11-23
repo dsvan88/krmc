@@ -150,7 +150,7 @@ return  [
     'api/account/personal/edit' => [
         'controller' => 'account',
         'action' => 'personalEdit',
-        'access' => ['category' => 'admin']
+        'access' => ['category' => 'user']
     ],
 
     'api/autocomplete/users-names' =>

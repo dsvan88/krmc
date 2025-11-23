@@ -179,6 +179,8 @@ class Confirm extends Alert {
         self.form.addEventListener('submit', (event) => self.submit.call(self, event), { once: true });
 
         self.cancelButton.addEventListener('click', () => self.state = false);
+
+        return this;
     }
     submit() {
         if (this.state)
@@ -198,11 +200,11 @@ class Prompt extends Confirm {
     input = null;
     state = true;
     inputWrapper = null;
+    phoneMask = "+38 (0__) ___-__-__";
 
     constructor({ title = "Prompt", text = "Enter value:", value = "No", action = null, cancel = null, input = { type: 'text' }, select = null } = {}) {
         super({ title, text, action, cancel });
-        console.log(select);
-        this.modifyPrompt({ value, input, select });
+        this.modifyPrompt({ value, input, select }).modifyPromptEvents();
         return this;
     }
     modifyPrompt({ value = "No", input = { type: 'text' }, select = null } = {}) {
@@ -230,7 +232,6 @@ class Prompt extends Confirm {
                 this.input[attr] = input[attr];
             }
         }
-
         this.input.classList.add('popup__input');
         this.inputWrapper.append(this.input);
 
@@ -244,6 +245,70 @@ class Prompt extends Confirm {
         else
             return this.cancel ? cancel(this.input.value) : this.action(false);
     }
+    modifyPromptEvents(){
+        if (this.input.type !== 'tel') return this;
+        
+        const s = this;
+        this.input.addEventListener('focus', (e) => s.phoneInputFocus.call(s, e));
+        this.input.addEventListener('input', (e) => this.phoneInputFormat.call(s, e), false);
+        
+        return this;
+    }
+    phoneInputFocus(e) {
+		const input = e.target,
+			inputNumbersValue = input.value.replace(/\D/g, '');
+
+		if (!inputNumbersValue)
+			input.value = this.phoneMask;
+
+		const pos = input.value.indexOf('_');
+		if (pos) {
+			input.setSelectionRange(pos, pos);
+		}
+	}
+    phoneInputFormat(e) {
+		const input = e.target;
+		let inputNumbersValue = input.value.replace(/\D/g, '');
+
+		if (!inputNumbersValue) {
+			return input.value = "";
+		}
+		const maskLength = this.phoneMask.replace(/[^0-9_]/g, '').length;
+
+		if (inputNumbersValue.length < maskLength)
+			inputNumbersValue = inputNumbersValue.padEnd(maskLength, '_');
+
+		let result = '';
+		let index = -1;
+		for (let char of inputNumbersValue) {
+			++index;
+			if (index >= maskLength)
+				break;
+			if (index === 0)
+				char = `+${char}`;
+			else if (index === 2)
+				char = ` (${char}`;
+			else if (index === 4)
+				char = `${char}) `;
+			else if (index === 8 || index === 10)
+				char = `-${char}`;
+			result += char;
+		}
+		input.value = result;
+
+		let pos = input.value.indexOf('_');
+		if (pos) {
+			if (!e.data) {
+				if (input.value[pos - 1] === '-') {
+					--pos;
+				}
+				else if ([' ', '('].indexOf(input.value[pos - 1]) !== -1) {
+					pos -= 2;
+				}
+			}
+			input.setSelectionRange(pos, pos);
+		}
+	}
 }
 
 
