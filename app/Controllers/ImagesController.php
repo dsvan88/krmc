@@ -140,6 +140,8 @@ class ImagesController extends Controller
         if (empty($imageId))
             return View::notice(['type' => 'error', 'message' => 'Fail!']);
 
+        // Add check is this a folder? If so - check verification.
+
         $gDrive = new GoogleDrive();
         $result = $gDrive->delete($imageId);
 
