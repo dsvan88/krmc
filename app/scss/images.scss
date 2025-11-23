@@ -79,19 +79,19 @@ main {
                 align-items: center;
                 font-size: $size/2;
             }
-            
+
             &:hover {
                 position: relative;
                 z-index: 5;
                 scale: 1.1;
 
-                .image__dashboard {
+                .folder__dashboard {
                     opacity: .85;
                 }
 
-                .image__description {
-                    max-height: 10em;
-                }
+                // .image__description {
+                //     max-height: 10em;
+                // }
             }
         }
         .image {
