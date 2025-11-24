@@ -28,7 +28,7 @@ return  [
     'main/gallery/edit' => [
         'controller' => 'main',
         'action' => 'galleryEdit',
-        'access' => ['category' => 'all']
+        'access' => ['category' => 'manager']
     ],
     'main/contacts' => [
         'controller' => 'main',

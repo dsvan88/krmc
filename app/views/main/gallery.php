@@ -2,9 +2,11 @@
     <header>
         <h1 class='title'>
             <?= $page['title'] ?>
-            <span class='page__dashboard' style='float:right'>
-                <a href='/main/gallery/edit' title='<?= $texts['edit'] ?>' class='fa fa-pencil-square-o'></a>
-            </span>
+            <? if ($isAdmin) :?>
+                <span class='page__dashboard' style='float:right'>
+                    <a href='/main/gallery/edit' title='<?= $texts['edit'] ?>' class='fa fa-pencil-square-o'></a>
+                </span>
+            <? endif ?>
         </h1>
         <h2 class='subtitle'><?= $page['subtitle'] ?></h2>
     </header>

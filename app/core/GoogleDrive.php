@@ -117,6 +117,17 @@ class GoogleDrive
         }
         return true;
     }
+    public static function isFolder(string $fileId = '')
+    {
+        if (empty($fileId)) return false;
+
+        try {
+            return static::$service->files->get($fileId, ['fields' => 'mimeType'])->mimeType === "application/vnd.google-apps.folder";
+        } catch (\Throwable $error) {
+            error_log('Error get file list: ' . $error->getMessage());
+        }
+        return false;
+    }
     public static function listFiles(string $pageToken = '', &$nextPageToken = '', string $folderId = 'root')
     {
         $result = [];

@@ -19,15 +19,17 @@ class MainController extends Controller
     }
     public function galleryAction()
     {
-
         $gDrive = new GoogleDrive;
         $gDrive::$maxPerPage = 40;
         $gallery = $gDrive->listFiles('', $nextPageToken, $gDrive->getFolderId('gallery'));
+
+        $isAdmin = Users::checkAccess('manager');
 
         $vars = [
             'title' => 'Gallery',
             'gallery' => $gallery,
             'nextPageToken' => $nextPageToken,
+            'isAdmin' => $isAdmin,
             'page' => [
                 'title' => 'Gallery',
                 'subtitle' => 'Peek on us!:)',

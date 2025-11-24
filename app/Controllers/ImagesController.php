@@ -9,6 +9,7 @@ use app\core\ImageProcessing;
 use app\core\Locale;
 use app\core\Noticer;
 use app\core\Tech;
+use app\core\Validator;
 use app\core\View;
 use app\models\Pages;
 use app\models\Settings;
@@ -143,6 +144,10 @@ class ImagesController extends Controller
         // Add check is this a folder? If so - check verification.
 
         $gDrive = new GoogleDrive();
+        
+        if ($gDrive->isFolder($imageId) && (empty($_POST['verification']) || !Validator::validate('rootpass', $_POST['verification'])))
+            return View::notice(['type' => 'error', 'message' => 'You don’t have enough rights to do this action!']);
+
         $result = $gDrive->delete($imageId);
 
         return $result ?
