@@ -32,10 +32,10 @@ class ImagesController extends Controller
 
         if (!empty($_POST['pageToken']))
             $pageToken = $_POST['pageToken'];
-
+        
         $folder = 'root';
-        if (!empty($_POST['type']))
-            $folder = preg_replace('/[^a-z0-9_+ -]/ui', '', trim($_POST['type']));
+        if (!empty($_POST['folderName']))
+            $folder = preg_replace('/[^a-z0-9_+ -]/ui', '', trim($_POST['folderName']));
 
         $files = [];
         if (!ImageRepository::getImagesList($pageToken, $files, $nextPageToken, $folder)) {
@@ -56,12 +56,13 @@ class ImagesController extends Controller
     public function indexAction()
     {
         $pageToken = '';
+        $folderName = 'root';
         extract(self::$route['vars']);
 
         if (!empty($_POST['pageToken']))
             $pageToken = $_POST['pageToken'];
 
-        if (!ImageRepository::getImagesList($pageToken, $files, $nextPageToken)) {
+        if (!ImageRepository::getImagesList($pageToken, $files, $nextPageToken, $folderName)) {
             Noticer::set(['message' => 'Image’s list is empty', 'type' => 'info']);
         }
 
@@ -70,7 +71,7 @@ class ImagesController extends Controller
         $scripts = [
             'images.js',
         ];
-        View::$route['vars'] = array_merge(View::$route['vars'], compact('title', 'files', 'backgrounds', 'scripts', 'nextPageToken'));
+        View::$route['vars'] = array_merge(View::$route['vars'], compact('title', 'files', 'backgrounds', 'scripts', 'nextPageToken', 'folderName'));
 
         return View::render();
     }

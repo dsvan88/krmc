@@ -49,10 +49,7 @@ actionHandler.imageToogle = function (event) {
     return true;
 }
 actionHandler.imagesGetMore = async function (target, event) {
-    const formData = new FormData();
-    formData.append('pageToken', target.dataset.pageToken);
-    formData.append('type', target.dataset.type);
-    const result = await this.apiTalk(target, event, 'actionClick', formData);
+    const result = await this.apiTalk(target, event, 'actionClick');
     target.insertAdjacentHTML('beforebegin', result.html);
     target.dataset.pageToken = result.nextPageToken ? result.nextPageToken : '';
     if (!result.nextPageToken) {
@@ -79,6 +76,10 @@ actionHandler.showFolderInfo = function (event) {
     info_value_name.innerText = event.target.dataset.name;
     info_value_bytes.innerText = 'Folder';
     info_value_resol.innerText = '-';
+}
+actionHandler.openImagesFolder = function (target){
+    // console.log('/images/'+target.dataset.name);
+    return window.location = '/images/'+target.dataset.name;
 }
 actionHandler.getLink = function (target) {
     try {

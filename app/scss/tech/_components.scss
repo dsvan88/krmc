@@ -384,7 +384,7 @@ mark {
 		}
 		&:hover {
 			>.dropdown__menu {
-				height: min(auto, 10em);
+				max-height: 20em;
 				display: block;
 			}
 		}
