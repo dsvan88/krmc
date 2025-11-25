@@ -531,7 +531,7 @@ class Users extends Model
             $userData = self::find($source['id']);
             $source['name'] = empty($userData) ? '&lt; Deleted &gt;' : $userData['name'];
 
-            $source['status'] = empty($userData['personal']['status']) ? '' : $userData['personal']['status'];
+            $source['status'] = empty($userData['privilege']['status']) ? '' : $userData['privilege']['status'];
             $source['gender'] = empty($userData['personal']['gender']) ? '' : $userData['personal']['gender'];
             $source['emoji'] = empty($userData['personal']['emoji']) ? '' : $userData['personal']['emoji'];
 
@@ -551,7 +551,7 @@ class Users extends Model
                 if ($source[$y]['id'] != $data[$x]['id']) continue;
                 $source[$y]['name'] = $data[$x]['name'];
 
-                $source[$y]['status'] = empty($data[$x]['personal']['status']) ? '' : $data[$x]['personal']['status'];
+                $source[$y]['status'] = empty($data[$x]['privilege']['status']) ? '' : $data[$x]['privilege']['status'];
                 $source[$y]['gender'] = empty($data[$x]['personal']['gender']) ? '' : $data[$x]['personal']['gender'];
                 $source[$y]['emoji'] = empty($data[$x]['personal']['emoji']) ? '' : $data[$x]['personal']['emoji'];
                 break;

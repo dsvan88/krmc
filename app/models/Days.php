@@ -173,7 +173,6 @@ class Days extends Model
             $gameNames = GameTypes::names();
         }
 
-        // $result = "$date - {$gameNames[$weekData['data'][$day]['game']]}\n";
         $lang = Locale::$langCode;
         $proto = Tech::getRequestProtocol();
         $result = "$date - <a href='$proto://{$_SERVER['SERVER_NAME']}/game/{$weekData['data'][$day]['game']}/?lang=$lang'>{$gameNames[$weekData['data'][$day]['game']]}</a>\n";

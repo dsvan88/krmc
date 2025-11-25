@@ -21,8 +21,6 @@ class DayCommand extends ChatCommand
         self::$operatorClass::parseDayNum($daySlug, $requestData);
         if ($requestData['dayNum'] < $requestData['currentDay'])
         $weekId++;
-    
-        // $_SESSION['debug'] = json_encode($requestData);
         
         $weekData = Weeks::weekDataById($weekId);
         $message = Days::getFullDescription($weekData, $requestData['dayNum']);
