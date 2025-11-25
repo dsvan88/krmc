@@ -100,7 +100,6 @@ class AccountController extends Controller
         $emptyAvatar = empty($userData['personal']['avatar']);
         $avatar =  $emptyAvatar ? Settings::getImage('empty_avatar')['value'] : GoogleDrive::getLink($userData['personal']['avatar']);
 
-        // $userData['avatar'] = ImageProcessing::inputImage($avatar, ['title' => Locale::phrase(['string' => '{{ Account_Profile_Form_User_Avatar }}', 'vars' => [$userData['name']]])]);
         $userData['avatar'] = "<img src='$avatar'>";
         $userData['personal']['genderName'] = empty($userData['personal']['gender']) ? '' : Locale::phrase(ucfirst($userData['personal']['gender']));
 
@@ -168,6 +167,7 @@ class AccountController extends Controller
             $data = ContactRepository::checkApproved($userId);
         } else {
             $data = AccountRepository::getFields($userId);
+            $data['approved'] = ContactRepository::checkApproved($userId);
         }
         if ($section === 'control' && !empty($data['ban'])) {
             if ($data['ban']['expired'] < $_SERVER['REQUEST_TIME'])
@@ -307,40 +307,7 @@ class AccountController extends Controller
         if ($category === 'contacts'){
             Contacts::reLink([$field => $value], $userId);
         }
-        // return View::notice(['message' => 'Success']);
         return View::notice(['message' => 'Success', 'time' => 1500, 'location' => 'reload']);
-
-
-
-
-        // if ($section === 'contacts') {
-        //     $contacts = [
-        //         'email' => Validator::validate('email', $_POST['email']),
-        //         'telegram' => Validator::validate('telegram', $_POST['telegram']),
-        //         'phone' => Validator::validate('phone', $_POST['phone']),
-        //     ];
-        //     ContactRepository::edit($userId, $contacts);
-        // } else if ($section === 'control' && $isAdmin) {
-        //     $name = trim($_POST['name']);
-        //     $status = trim($_POST['status']);
-        //     $userData = Users::find($userId);
-        //     if ($userData['name'] !== $name) {
-        //         $result = AccountRepository::rename($userId, $name);
-        //         if (!$result['result']) {
-        //             $result['type'] = 'error';
-        //             return View::notice($result);
-        //         }
-        //         $result['location'] = '/account/profile/' . $userId;
-        //         return View::notice($result);
-        //     }
-        //     if ($userData['privilege']['status'] !== $status) {
-        //         $userData['privilege']['status'] = $status;
-        //         Users::edit(['privilege' => $userData['privilege']], ['id' => $userId]);
-        //     }
-        // } else {
-        //     AccountRepository::edit($userId, $_POST);
-        // }
-        // return View::notice(['message' => 'Success', 'data' => $_POST, 'category' => $category, 'field' => $field]);
     }
     public function profileSectionEditFormAction()
     {

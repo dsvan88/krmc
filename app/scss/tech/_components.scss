@@ -310,13 +310,6 @@ mark {
 		transition: max-height $animation-fast;
 	}
 
-	&:hover {
-		>.dropdown__menu {
-			max-height: 500px;
-			display: block;
-		}
-	}
-
 	&__item {
 		margin: 5px;
 		padding: 3px 10px;
@@ -388,6 +381,12 @@ mark {
 		}
 		&__toggle{
 			display: none;
+		}
+		&:hover {
+			>.dropdown__menu {
+				height: min(auto, 10em);
+				display: block;
+			}
 		}
 	}
 }
