@@ -18,9 +18,6 @@
         <? endif ?>
     <? endif ?>
     <link rel="stylesheet" href="/public/css/style-tg.css?v=<?= $_SERVER['REQUEST_TIME'] ?>">
-    <!-- <link rel="stylesheet" href="/public/css/jquery-ui.min.css"> -->
-    <!-- <link rel="stylesheet" href="/public/css/cropper.css"> -->
-    <!-- <link rel="stylesheet" href="/public/css/jquery.datetimepicker.min.css"> -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+Pro">
 
     <script defer="" src="https://telegram.org/js/telegram-web-app.js"></script>
