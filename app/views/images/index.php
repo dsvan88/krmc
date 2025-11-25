@@ -10,7 +10,7 @@
                 <? endif ?>
             <? endforeach ?>
             <? if (!empty($nextPageToken)) : ?>
-                <div class="image get-more" data-action-click="images/get-more" data-page-token="<?= $nextPageToken ?>"<?= $folderName === 'root' ? '' : " data-folder-name='$folderName'" ?>>
+                <div class="image get-more" data-action-click="images/get-more" data-page-token="<?= $nextPageToken ?>"<?= $folderName === 'root' ? '' : " data-folder='$folderName'" ?>>
                     <span class="label fa fa-refresh"></span>
                 </div>
             <? endif ?>
