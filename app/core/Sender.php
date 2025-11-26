@@ -14,12 +14,12 @@ class Sender
         }
         return self::$operator;
     }
-    public static function message($chatId, string $message, int $replyOn = 0)
+    public static function message($chatId, string $message, int $replyOn = 0, array $replyMarkup = [])
     {
         if (empty($chatId)) return false;
         if (empty(self::$operator)) self::init();
 
-        return self::$operator->sendMessage($chatId, $message, $replyOn);
+        return self::$operator->sendMessage($chatId, $message, $replyOn, $replyMarkup);
     }
     public static function delete(int $chatId, int $messageId)
     {

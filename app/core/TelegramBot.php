@@ -43,7 +43,7 @@ class TelegramBot
         return Settings::getBotToken();
     }
 
-    public static function sendMessage($userId, $message = '', $messageId = -1)
+    public static function sendMessage($userId, string $message = '', int $messageId = -1, array $replyMarkup = [])
     {
         $botToken = self::$botToken;
         $params = self::$params;
@@ -54,6 +54,9 @@ class TelegramBot
         }
         if ($messageId !== -1) {
             $params['reply_to_message_id'] = $messageId;
+        }
+        if (!empty($replyMarkup)){
+            $params['reply_markup'] = json_encode($replyMarkup);
         }
         $options = self::$options;
         $options[CURLOPT_URL] = "https://api.telegram.org/bot$botToken/sendMessage"; // адрес api телеграмм-бота
