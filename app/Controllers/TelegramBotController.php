@@ -119,7 +119,7 @@ class TelegramBotController extends Controller
             }
 
             $replyMarkup = [];
-            if (self::$command === 'booking' && self::$chatId === self::$techTelegramId){
+            if (self::$command === 'booking' && self::$chatId == self::$techTelegramId){
                 error_log(self::$command);
                 $replyMarkup = [
                 'inline_keyboard' => [ 
