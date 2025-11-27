@@ -30,6 +30,7 @@ class TelegramBotController extends Controller
 
     public static $resultMessage = '';
     public static $reaction = '';
+    public static $class = '';
 
     public static function before()
     {
@@ -57,9 +58,10 @@ class TelegramBotController extends Controller
         $data = trim(file_get_contents('php://input'));
         $message = json_decode($data, true);
         
-        if (!empty($message['callback_query']))
+        if (!empty($message['callback_query'])){
             self::$techTelegramId = Settings::getTechTelegramId();
-        Sender::message(self::$techTelegramId, json_encode($data));
+            Sender::message(self::$techTelegramId, $message['callback_query']['data']);
+        }
 
         if (!is_array($message) || empty($message['message']) || empty($message['message']['text'])) {
             die('{"error":"1","title":"Error!","text":"Error: Nothing to get."}');
@@ -127,7 +129,8 @@ class TelegramBotController extends Controller
                 $replyMarkup = [
                     'inline_keyboard' => [ 
                             [
-                                ['text' => 'test', 'callback_data' => 'booking?']
+                                ['text' => Locale::phrase('I will too!'), 'callback_data' => 'booking'],
+                                ['text' => Locale::phrase('I will too!'), 'callback_data' => 'booking?'],
                             ],
                         ],
                     ];
@@ -327,14 +330,14 @@ class TelegramBotController extends Controller
             $command = self::$command;
         }
 
-        $class = ucfirst($command) . 'Command';
-        $class = str_replace('/', '\\', self::$CommandNamespace . '\\' . $class);
+        static::$class = ucfirst($command) . 'Command';
+        static::$class = str_replace('/', '\\', self::$CommandNamespace . '\\' . static::$class);
 
-        if (!class_exists($class)) {
+        if (!class_exists(static::$class)) {
             return false;
         }
 
-        $ready = $class::set([
+        $ready = static::$class::set([
             'operatorClass' => self::class,
             'requester' => self::$requester,
             'message' => self::$incomeMessage
@@ -342,13 +345,13 @@ class TelegramBotController extends Controller
 
         if (!$ready) return false;
 
-        $accessLevel = $class::getAccessLevel();
+        $accessLevel = static::$class::getAccessLevel();
 
         if (!self::checkAccess($accessLevel)) {
             return false;
         }
 
-        return $class::execute(self::$commandArguments);
+        return static::$class::execute(self::$commandArguments);
     }
     public static function checkAccess(string $level = 'all')
     {
