@@ -18,7 +18,7 @@
             </thead>
             <tbody>
                 <? foreach ($settings as $setting) : ?>
-                    <? self::component('settings\row', compact('setting', 'section')) ?>
+                    <? self::component('settings/row', compact('setting', 'section')) ?>
                 <? endforeach ?>
             </tbody>
         </table>
