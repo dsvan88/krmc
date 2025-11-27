@@ -58,7 +58,7 @@ class TelegramBot
         if (!empty($replyMarkup)){
             $params['reply_markup'] = $replyMarkup;
         }
-        error_log($params['reply_markup']);
+
         $options = self::$options;
         $options[CURLOPT_URL] = "https://api.telegram.org/bot$botToken/sendMessage"; // адрес api телеграмм-бота
         $options[CURLOPT_POSTFIELDS] = $params;
