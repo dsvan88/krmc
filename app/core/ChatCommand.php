@@ -9,7 +9,7 @@ class ChatCommand implements Command
     public static $requester = [];
     public static $message = [];
     public static $operatorClass;
-    public static $accessLevel = 'guest';
+    public static $accessLevel = 'all';
 
     public static function set(array $arguments = []): bool
     {

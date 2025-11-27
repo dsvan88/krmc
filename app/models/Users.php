@@ -35,7 +35,7 @@ class Users extends Model
         ],
     ];
     public static $statuses = ['Гость', 'Резидент', 'Мастер'];
-    public static $usersAccessLevels = ['', 'guest', 'user', 'trusted', 'activist', 'manager', 'admin', 'root'];
+    public static $usersAccessLevels = ['', 'all', 'user', 'trusted', 'activist', 'manager', 'admin', 'root'];
     public static $userToken = '';
     public static $jsonFields = ['privilege', 'personal', 'contacts', 'credo', 'ban'];
     public static $current = null;

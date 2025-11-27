@@ -119,13 +119,17 @@ class TelegramBotController extends Controller
             }
 
             $replyMarkup = [];
-            if (self::$command === 'booking' && self::$chatId === self::$techTelegramId)
+            error_log(self::$command);
+            error_log(self::$chatId);
+            error_log(self::$techTelegramId);
+            if (self::$command === 'booking' && self::$chatId === self::$techTelegramId){
                 $replyMarkup = [
                 'inline_keyboard' => [ 
                         [json_encode(['text' => 'test', 'callback_data' => 'booking?'])],
                     ],
                 ];
-                
+            }
+
             $botResult = Sender::message(self::$chatId, Locale::phrase(self::$resultMessage), 0, $replyMarkup);
 
             if ($botResult[0]['ok']) {
