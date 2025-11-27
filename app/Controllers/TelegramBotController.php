@@ -57,6 +57,9 @@ class TelegramBotController extends Controller
         $data = trim(file_get_contents('php://input'));
         $message = json_decode($data, true);
 
+        if (!empty($message['callback_query']))
+            Sender::message(self::$techTelegramId, json_encode($message));
+        
         if (!is_array($message) || empty($message['message']) || empty($message['message']['text'])) {
             die('{"error":"1","title":"Error!","text":"Error: Nothing to get."}');
         }
