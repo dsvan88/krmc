@@ -60,7 +60,7 @@ class TelegramBotController extends Controller
         
         if (!empty($message['callback_query'])){
             self::$techTelegramId = Settings::getTechTelegramId();
-            Sender::message(self::$techTelegramId, $message['callback_query']['data']);
+            Sender::message(self::$techTelegramId, json_encode($message['callback_query']));
         }
 
         if (!is_array($message) || empty($message['message']) || empty($message['message']['text'])) {
@@ -186,16 +186,7 @@ class TelegramBotController extends Controller
             self::$commandArguments = $arguments;
             return true;
         }
-        // if (preg_match('/^[+-]\s{0,3}(пн|пон|вт|вів|ср|сер|чт|чет|пт|пят|п’ят|сб|суб|вс|вос|нед|нд|сг|сег|сьо|зав|mon|tue|wed|thu|fri|sat|sun|tod|tom)/ui', $_text) === 1) {
-        //     preg_match_all('/[+-]\s{0,3}(пн|пон|вт|вів|ср|сер|чт|чет|пт|пят|п’ят|сб|суб|вс|вос|нед|нд|сг|сег|сьо|зав|mon|tue|wed|thu|fri|sat|sun|tod|tom)/ui', str_replace('.', ':', $_text), $matches);
-        //     $arguments = $matches[0];
-        //     if (preg_match('/\([^)]+\)/', $text, $prim) === 1) {
-        //         $arguments['prim'] = mb_substr($prim[0], 1, -1, 'UTF-8');
-        //     }
-        //     self::$command = 'booking';
-        //     self::$commandArguments = $arguments;
-        //     return true;
-        // }
+
         if (preg_match('/^[+]\s{0,3}[0-2]{0,1}[0-9]/', $_text) === 1) {
             preg_match('/^(\+)\s{0,3}([0-2]{0,1}[0-9])(:[0-5][0-9]){0,1}/i', mb_strtolower(str_replace('.', ':', $_text), 'UTF-8'), $matches);
 
