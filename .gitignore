@@ -1,5 +1,4 @@
 public/scripts/*.js
-.prettierrc.json
 composer.phar
 .env.dev
 /vendor/*
