@@ -56,7 +56,7 @@ class TelegramBot
             $params['reply_to_message_id'] = $messageId;
         }
         if (!empty($replyMarkup)){
-            $params['reply_markup'] = $replyMarkup;
+            $params['reply_markup'] = json_encode($replyMarkup);
         }
         error_log(json_encode($params['reply_markup']));
         $options = self::$options;
