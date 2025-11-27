@@ -63,6 +63,7 @@ class TelegramBotController extends Controller
         
         // if (!empty($message['callback_query']))
         error_log('Message should to be send');
+        error_log(json_encode($data));
         Sender::message(self::$techTelegramId, json_encode($data));
 
         if (!is_array($message) || empty($message['message']) || empty($message['message']['text'])) {
