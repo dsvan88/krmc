@@ -129,8 +129,8 @@ class TelegramBotController extends Controller
                 $replyMarkup = [
                     'inline_keyboard' => [ 
                             [
-                                ['text' => Locale::phrase('I will too!'), 'callback_data' => 'booking'],
-                                ['text' => Locale::phrase('I will too!'), 'callback_data' => 'booking?'],
+                                ['text' => Locale::phrase('I will too!'), 'callback_data' => 'booking!'],
+                                ['text' => Locale::phrase('I will too! I hope...'), 'callback_data' => 'booking, with ?'],
                             ],
                         ],
                     ];
