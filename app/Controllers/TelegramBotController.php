@@ -107,7 +107,6 @@ class TelegramBotController extends Controller
         // exit(json_encode(['message' => self::$incomeMessage], JSON_UNESCAPED_UNICODE));
         try {
             if (!self::execute()) {
-                var_dump(self::$resultMessage);
                 if (empty(self::$resultMessage)) return false;
                 $botResult = Sender::message(self::$techTelegramId, json_encode([self::$incomeMessage, /* self::$requester ,*/ self::parseArguments(self::$commandArguments)], JSON_UNESCAPED_UNICODE));
             }
@@ -119,7 +118,15 @@ class TelegramBotController extends Controller
                 Sender::setMessageReaction(self::$chatId, self::$incomeMessage['message']['message_id'], self::$reaction);
             }
 
-            $botResult = Sender::message(self::$chatId, Locale::phrase(self::$resultMessage));
+            $replyMarkup = [];
+            if (self::$command === 'booking' && self::$chatId === self::$techTelegramId)
+                $replyMarkup = [
+                'inline_keyboard' => [ 
+                        [json_encode(['text' => 'test', 'callback_data' => 'booking?'])],
+                    ],
+                ];
+                
+            $botResult = Sender::message(self::$chatId, Locale::phrase(self::$resultMessage), 0, $replyMarkup);
 
             if ($botResult[0]['ok']) {
                 if (self::$command === 'week') {
