@@ -33,9 +33,11 @@ class TelegramBotController extends Controller
 
     public static function before()
     {
+        error_log('before');
         $contentType = isset($_SERVER['CONTENT_TYPE']) ? strtolower(trim($_SERVER['CONTENT_TYPE'])) : '';
         if (strpos($contentType, 'application/json') ===  false) return false;
-
+        
+        error_log('Check contentType');
         if (APP_LOC !== 'local') {
             $ip = substr($_SERVER['REMOTE_ADDR'], 0, 4) === substr($_SERVER['SERVER_ADDR'], 0, 4) ? $_SERVER['HTTP_X_REAL_IP'] : $_SERVER['REMOTE_ADDR'];
             if (!Validator::validate('telegramIp', $ip) && $ip !== '127.0.0.1') {
@@ -53,12 +55,15 @@ class TelegramBotController extends Controller
                 return false;
             }
         }
-
+            
+            
+        error_log('Pass Local');
         $data = trim(file_get_contents('php://input'));
         $message = json_decode($data, true);
-
+        
         // if (!empty($message['callback_query']))
-        Sender::message(self::$techTelegramId, json_encode($message));
+        error_log('Message should to be send');
+        Sender::message(self::$techTelegramId, json_encode($data));
 
         if (!is_array($message) || empty($message['message']) || empty($message['message']['text'])) {
             die('{"error":"1","title":"Error!","text":"Error: Nothing to get."}');
