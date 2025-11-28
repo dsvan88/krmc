@@ -19,7 +19,6 @@ class TelegramBotRepository
         $dayNum = (int) $arguments['dNum'];
         
         $weekData = Weeks::weekDataById($weekId);
-        $participantId = -1;
         if ($weekData['data'][$dayNum]['status'] !== 'set') {
             if (!in_array($userData['status'], ['trusted', 'activist', 'manager', 'admin'])) {
                 return '{{ Tg_Gameday_Not_Set }}';
@@ -30,14 +29,11 @@ class TelegramBotRepository
             $weekData['data'][$dayNum]['status'] = 'set';
         }
 
-        foreach ($weekData['data'][$dayNum]['participants'] as $index => $participant) {
-            if ($participant['id'] != $userData['userId']) continue;
-            $participantId = $index;
-            break;
-        }
-        if ($participantId !== -1) {
+        foreach ($weekData['data'][$dayNum]['participants'] as $participant) {
+            if ($participant['id'] != $userData['id']) continue;
             return '{{ Tg_Command_Requester_Already_Booked }}';
         }
+
         $newDayData = $weekData['data'][$dayNum];
         $data = [
             'userId' => $userData['id'],
