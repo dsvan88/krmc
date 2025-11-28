@@ -135,14 +135,14 @@ class BookingCommand extends ChatCommand
 
         $message = Days::getFullDescription($weekData, $requestData['dayNum']);
         
-        // $replyMarkup = [
-        // 'inline_keyboard' => [ 
-        //         [
-        //             ['text' => self::locale('I will too!'), 'callback_data' => "booking;w:$weekId,d:{$requestData['dayNum']}"],
-        //             ['text' => self::locale('I will too! I hope...'), 'callback_data' => "booking;w:$weekId,d:{$requestData['dayNum']},p:?"],
-        //         ],
-        //     ],
-        // ];
+        $replyMarkup = [
+            'inline_keyboard' => [ 
+                    [
+                        ['text' => self::locale('I will too!'), 'callback_data' => "booking;w:$weekId,d:{$requestData['dayNum']}"],
+                        ['text' => self::locale('I will too! I hope...'), 'callback_data' => "booking;w:$weekId,d:{$requestData['dayNum']},p:?"],
+                    ],
+                ],
+            ];
         return true;
     }
 }
