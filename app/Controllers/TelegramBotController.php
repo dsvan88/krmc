@@ -133,6 +133,7 @@ class TelegramBotController extends Controller
     {
         // exit(json_encode(['message' => self::$incomeMessage], JSON_UNESCAPED_UNICODE));
         try {
+            error_log('WebHookAction Start');
             return static::$type === 'callback_query' ? self::executeCallbackQuery() : self::executeChatCommand();
         } catch (\Throwable $th) {
             $_SESSION['debug'][] = 'commonError: ' . $th->__toString();
