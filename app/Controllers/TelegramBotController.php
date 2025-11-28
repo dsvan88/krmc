@@ -91,7 +91,8 @@ class TelegramBotController extends Controller
         
         $userTelegramId = self::$incomeMessage[static::$type]['from']['id'];
         $userId = Contacts::getUserIdByContact('telegramid', $userTelegramId);
-
+        
+        error_log('UserData search');
         if (static::$type === 'message'){
             $text = trim(self::$incomeMessage['message']['text']);
             $command = self::parseCommand($text);
@@ -100,7 +101,7 @@ class TelegramBotController extends Controller
                 return false;
             }
         } else {
-            self::$commandArguments = base64_decode(json_decode(trim(self::$incomeMessage[static::$type]['data'])), true);
+            self::$commandArguments = json_decode(trim(base64_decode(self::$incomeMessage[static::$type]['data'])), true);
             self::$command = empty(self::$commandArguments['cmd']) ? '' : self::$commandArguments['cmd'];
             
             if (empty($userId) && !empty(self::$command) && !in_array(self::$command, self::$guestCommands)){
@@ -108,7 +109,7 @@ class TelegramBotController extends Controller
                 return false;
             }
         }
-        
+        error_log('UserData search');
         self::$requester = Users::find($userId);
 
         if (static::$type === 'message'){
@@ -133,7 +134,6 @@ class TelegramBotController extends Controller
     {
         // exit(json_encode(['message' => self::$incomeMessage], JSON_UNESCAPED_UNICODE));
         try {
-            error_log('WebHookAction Start');
             return static::$type === 'callback_query' ? self::executeCallbackQuery() : self::executeChatCommand();
         } catch (\Throwable $th) {
             $_SESSION['debug'][] = 'commonError: ' . $th->__toString();
