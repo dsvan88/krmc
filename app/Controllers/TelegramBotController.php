@@ -62,13 +62,13 @@ class TelegramBotController extends Controller
         $data = trim(file_get_contents('php://input'));
         $message = json_decode($data, true);
         
-        if (!empty($message['callback_query'])){
-            self::$techTelegramId = Settings::getTechTelegramId();
-            Sender::message(self::$techTelegramId, 'CallbackQuery:'.PHP_EOL.json_encode($message['callback_query']));
-            Sender::message(self::$techTelegramId, 'Data:'.PHP_EOL.$message['callback_query']['data']);
+        // if (!empty($message['callback_query'])){
+        //     self::$techTelegramId = Settings::getTechTelegramId();
+        //     Sender::message(self::$techTelegramId, 'CallbackQuery:'.PHP_EOL.json_encode($message['callback_query']));
+        //     Sender::message(self::$techTelegramId, 'Data:'.PHP_EOL.$message['callback_query']['data']);
         //     Sender::message(self::$techTelegramId, 'FROM:'.PHP_EOL.json_encode($message['callback_query']['from']));
         //     Sender::message(self::$techTelegramId, 'Message:'.PHP_EOL.json_encode($message['callback_query']['message']));
-        }
+        // }
 
         static::$type = empty($message['callback_query']) ? 'message' : 'callback_query';
 
@@ -92,9 +92,6 @@ class TelegramBotController extends Controller
         
         $userTelegramId = self::$incomeMessage[static::$type]['from']['id'];
         $userId = Contacts::getUserIdByContact('telegramid', $userTelegramId);
-        if (isset(self::$incomeMessage[static::$type]['data'])){
-            error_log('self::$incomeMessage[static::$type][data]:' . self::$incomeMessage[static::$type]['data']);
-        }
         if (static::$type === 'message'){
             $text = trim(self::$incomeMessage['message']['text']);
             $command = self::parseCommand($text);
@@ -105,11 +102,6 @@ class TelegramBotController extends Controller
         } else {
             self::$commandArguments = json_decode(base64_decode(self::$incomeMessage[static::$type]['data']), true);
             self::$command = empty(self::$commandArguments['cmd']) ? '' : self::$commandArguments['cmd'];
-            
-            error_log('self::$incomeMessage[static::$type][data] : '.self::$incomeMessage[static::$type]['data']);
-            error_log('base64_decode : '. base64_decode(self::$incomeMessage[static::$type]['data']));
-            error_log('self::$command : '.self::$command);
-            error_log('self::$commandArguments : '.json_encode(self::$commandArguments));
             if (empty($userId) && !empty(self::$command) && !in_array(self::$command, self::$guestCommands)){
                 Sender::callbackAnswer(self::$incomeMessage[static::$type]['id'], Locale::phrase('{{ Tg_Unknown_Requester }}'), true);
                 return false;
@@ -307,12 +299,13 @@ class TelegramBotController extends Controller
     }
     public static function executeCallbackQuery(){
         $command = static::$command;
-        $message = TelegramBotRepository::$command(static::$requester, self::$commandArguments, $update = '');
+        $update = [];
+        $message = TelegramBotRepository::$command(static::$requester, self::$commandArguments, $update);
         if (!empty($message)){
             Sender::callbackAnswer(self::$incomeMessage[static::$type]['id'], Locale::phrase($message));
         }
         if (!empty($update)){
-            Sender::edit(self::$chatId, self::$incomeMessage[static::$type]['message']['message_id'], $update);
+            Sender::edit(self::$chatId, self::$incomeMessage[static::$type]['message']['message_id'], $update['message']);
         }
         return true;
     }

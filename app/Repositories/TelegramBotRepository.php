@@ -8,7 +8,7 @@ use Exception;
 
 class TelegramBotRepository
 {
-    public static function booking(array $userData = [], array $arguments = [], string &$update = ''){
+    public static function booking(array $userData = [], array $arguments = [], array &$update = []){
         if (empty($userData) || empty($arguments))
             throw new Exception('UserData or arguments is empty');
 
