@@ -19,8 +19,8 @@ class TestCommand extends ChatCommand
         $replyMarkup = [
             'inline_keyboard' => [ 
                     [
-                        ['text' => self::locale('I will too!'), 'callback_data' => "booking;w:$weekId,d:$dayNum"],
-                        ['text' => self::locale('I will too! I hope...'), 'callback_data' => "booking;w:$weekId,d:$dayNum,p:?"],
+                        ['text' => self::locale('I will too!'), 'callback_data' => json_encode(['cmd' => 'booking', 'wId'=> $weekId, 'dNum' => $dayNum])],
+                        ['text' => self::locale('I will too! I hope...'), 'callback_data' => json_encode(['cmd' => 'booking', 'wId'=> $weekId, 'dNum' => $dayNum, 'prim' => '?'])],
                     ],
                 ],
             ];

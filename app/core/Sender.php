@@ -21,6 +21,13 @@ class Sender
 
         return self::$operator->sendMessage($chatId, $message, $replyOn, $replyMarkup);
     }
+    public static function callbackAnswer(int $cqId = 0, string $text = '', bool $alert = false)
+    {
+        if (empty($cqId)) return false;
+        if (empty(self::$operator)) self::init();
+
+        return self::$operator->answerCallbackQuery($cqId, $text, $alert);
+    }
     public static function delete(int $chatId, int $messageId)
     {
         if (empty($chatId)) return false;

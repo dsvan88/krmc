@@ -323,6 +323,15 @@ class TelegramBot
         ];
         return self::send('setMessageReaction', $params);
     }
+    public static function answerCallbackQuery(int $cqId = 0, string $text = '', bool $alert = false)
+    {
+        $params = [
+            'callback_query_id' => $cqId, // id колл-бек події
+            'text' => $text, // Текст повідомлення
+            'show_alert' => $alert, // Показати як alert повідомлення, замість зникаючого.
+        ];
+        return self::send('answerCallbackQuery', $params);
+    }
 
     public static function send(string $method = '', $params = [])
     {

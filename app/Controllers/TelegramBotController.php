@@ -15,6 +15,7 @@ use app\models\Settings;
 use app\models\TelegramChats;
 use app\models\Users;
 use app\Repositories\DayRepository;
+use app\Repositories\TelegramBotRepository;
 
 class TelegramBotController extends Controller
 {
@@ -33,6 +34,7 @@ class TelegramBotController extends Controller
     public static $reaction = '';
     public static $replyMarkup = [];
     public static $class = '';
+    public static $type = '';
 
     public static function before()
     {
@@ -67,80 +69,71 @@ class TelegramBotController extends Controller
             Sender::message(self::$techTelegramId, 'Message:'.PHP_EOL.json_encode($message['callback_query']['message']));
         }
 
-        if (!is_array($message) || empty($message['message']) || empty($message['message']['text'])) {
+        static::$type = empty($message['callback_query']) ? 'message' : 'callback_query';
+
+        if (!is_array($message) || empty($message[static::$type]) || (empty($message[static::$type]['text']) || empty($message[static::$type]['data']))) {
             die('{"error":"1","title":"Error!","text":"Error: Nothing to get."}');
         }
 
-        if (empty($message['message']['from']['is_bot'])) {
+        if (empty($message[static::$type]['from']['is_bot'])) {
             TelegramChats::save($message);
         }
 
         $langCode = 'uk';
-        if (isset($message['message']['from']['language_code']) && in_array($message['message']['from']['language_code'], ['en', 'ru'])) {
-            $langCode = $message['message']['from']['language_code'];
+        if (isset($message[static::$type]['from']['language_code']) && in_array($message[static::$type]['from']['language_code'], ['en', 'ru'])) {
+            $langCode = $message[static::$type]['from']['language_code'];
         }
         Locale::change($langCode);
-
-        $text = trim($message['message']['text']);
-
-        $command = self::parseCommand($text);
         self::$incomeMessage = $message;
         self::$techTelegramId = Settings::getTechTelegramId();
         self::$mainGroupTelegramId = Settings::getMainTelegramId();
-        self::$chatId = $message['message']['chat']['id'];
-
-        $userTelegramId = $message['message']['from']['id'];
-
+        self::$chatId = static::$type === 'message' ? self::$incomeMessage[static::$type]['chat']['id'] : self::$incomeMessage[static::$type]['message']['chat']['id'];
+        
+        $userTelegramId = self::$incomeMessage[static::$type]['from']['id'];
         $userId = Contacts::getUserIdByContact('telegramid', $userTelegramId);
+        
+        $command = '';
+        if (static::$type === 'message'){
+            $text = trim(self::$incomeMessage['message']['text']);
+            $command = self::parseCommand($text);
+            if (empty($userId) && $command && !in_array(self::$command, self::$guestCommands)){
+                Sender::message(self::$chatId, Locale::phrase('{{ Tg_Unknown_Requester }}'), self::$incomeMessage['message']['message_id']);
+                return false;
+            }
+        } else {
+            self::$commandArguments = json_decode(trim(self::$incomeMessage[static::$type]['data']));
+            self::$command = empty(self::$commandArguments['cmd']) ? '' : self::$commandArguments['cmd'];
 
-        if (empty($userId) && $command && !in_array(self::$command, self::$guestCommands)) {
-            Sender::message(self::$chatId, Locale::phrase('{{ Tg_Unknown_Requester }}'), self::$incomeMessage['message']['message_id']);
-            return false;
+            if (empty($userId) && !empty(self::$command) && !in_array(self::$command, self::$guestCommands)){
+                Sender::callbackAnswer(self::$incomeMessage[static::$type]['id'], Locale::phrase('{{ Tg_Unknown_Requester }}'), true);
+                return false;
+            }
         }
+
         self::$requester = Users::find($userId);
 
-        if (self::$command === 'booking' && Users::isBanned('booking', self::$requester['ban'])) {
-            Sender::delete(self::$chatId, $message['message']['message_id']);
-            Sender::message($userTelegramId, Locale::phrase(['string' => "I’m deeply sorry, but you banned for that action:(...\nYour ban will be lifted at: <b>%s</b>", 'vars' => [date('d.m.Y', self::$requester['ban']['expired'] + TIME_MARGE)]]));
-            return false;
+        if (static::$type === 'message'){
+            if (self::$command === 'booking' && Users::isBanned('booking', self::$requester['ban'])) {
+                Sender::delete(self::$chatId, self::$incomeMessage['message']['message_id']);
+                Sender::message($userTelegramId, Locale::phrase(['string' => "I’m deeply sorry, but you banned for that action:(...\nYour ban will be lifted at: <b>%s</b>", 'vars' => [date('d.m.Y', self::$requester['ban']['expired'] + TIME_MARGE)]]));
+                return false;
+            }
+            if (self::$chatId == self::$mainGroupTelegramId && Users::isBanned('chat', self::$requester['ban'])){
+                Sender::delete(self::$chatId, self::$incomeMessage['message']['message_id']);
+                Sender::message($userTelegramId, Locale::phrase(['string' => "I’m deeply sorry, but you banned for that action:(...\nYour ban will be lifted at: <b>%s</b>", 'vars' => [date('d.m.Y', self::$requester['ban']['expired'] + TIME_MARGE)]]));
+            }
+        }
+        elseif (self::$command === 'booking' && Users::isBanned('booking', self::$requester['ban'])){
+            Sender::callbackAnswer(self::$incomeMessage[static::$type]['id'], Locale::phrase(['string' => "I’m deeply sorry, but you banned for that action:(...\nYour ban will be lifted at: <b>%s</b>", 'vars' => [date('d.m.Y', self::$requester['ban']['expired'] + TIME_MARGE)]]), true);
         }
 
-        if (self::$chatId == self::$mainGroupTelegramId && Users::isBanned('chat', self::$requester['ban'])) {
-            Sender::delete(self::$chatId, $message['message']['message_id']);
-            Sender::message($userTelegramId, Locale::phrase(['string' => "I’m deeply sorry, but you banned for that action:(...\nYour ban will be lifted at: <b>%s</b>", 'vars' => [date('d.m.Y', self::$requester['ban']['expired'] + TIME_MARGE)]]));
-            return false;
-        }
         return $command;
     }
     public static function webhookAction()
     {
         // exit(json_encode(['message' => self::$incomeMessage], JSON_UNESCAPED_UNICODE));
         try {
-            if (!self::execute()) {
-                if (empty(self::$resultMessage)) return false;
-                $botResult = Sender::message(self::$techTelegramId, json_encode([self::$incomeMessage, /* self::$requester ,*/ self::parseArguments(self::$commandArguments)], JSON_UNESCAPED_UNICODE));
-            }
-            if (!empty(self::$reaction)) {
-                // https://core.telegram.org/bots/api#setmessagereaction
-                // https://core.telegram.org/bots/api#reactiontype
-                // Sender::message(self::$chatId, self::$reaction, self::$incomeMessage['message']['message_id']);
-                Sender::setMessageReaction(self::$chatId, self::$incomeMessage['message']['message_id'], self::$reaction);
-            }
-
-            $botResult = Sender::message(self::$chatId, Locale::phrase(self::$resultMessage), 0, self::$replyMarkup);
-
-            if ($botResult[0]['ok']) {
-                if (self::$command === 'week') {
-                    self::unpinWeekMessage();
-                    self::pinMessage($botResult[0]['result']['message_id']);
-                }
-                /*                 if (in_array($command, ['reg', 'set', 'week', 'recall', 'today', 'day', 'promo'], true) && self::$chatId !== self::$techTelegramId) {
-                    Sender::delete(self::$chatId, self::$incomeMessage['message']['message_id']);
-                } */
-                if (in_array(self::$command, ['booking', 'reg', 'set', 'recall', 'promo'], true)) {
-                    self::updateWeekMessages();
-                }
-            }
+            return static::$type === 'callback_query' ? self::executeCallbackQuery() : self::executeChatCommand();
         } catch (\Throwable $th) {
             $_SESSION['debug'][] = 'commonError: ' . $th->__toString();
             $_SESSION['debug'][] = 'messageData: ' . json_encode(self::$incomeMessage, JSON_UNESCAPED_UNICODE);
@@ -304,6 +297,41 @@ class TelegramBotController extends Controller
             }
         }
         return false;
+    }
+    public static function executeCallbackQuery(){
+        $command = static::$command;
+        $message = TelegramBotRepository::$command(static::$requester, self::$commandArguments, $update = '');
+        if (!empty($message)){
+            Sender::callbackAnswer(self::$incomeMessage[static::$type]['id'], Locale::phrase($message));
+        }
+        if (!empty($update)){
+            Sender::edit(self::$chatId, self::$incomeMessage[static::$type]['message']['message_id'], $update);
+        }
+        return true;
+    }
+    public static function executeChatCommand(){
+        if (!self::execute()) {
+                if (empty(self::$resultMessage)) return false;
+                $botResult = Sender::message(self::$techTelegramId, json_encode([self::$incomeMessage, /* self::$requester ,*/ self::parseArguments(self::$commandArguments)], JSON_UNESCAPED_UNICODE));
+            }
+        if (!empty(self::$reaction)) {
+            Sender::setMessageReaction(self::$chatId, self::$incomeMessage['message']['message_id'], self::$reaction);
+        }
+
+        if (self::$chatId === self::$techTelegramId)
+            $botResult = Sender::message(self::$chatId, Locale::phrase(self::$resultMessage), 0, self::$replyMarkup);
+        else 
+            $botResult = Sender::message(self::$chatId, Locale::phrase(self::$resultMessage), 0);
+
+        if ($botResult[0]['ok']) {
+            if (self::$command === 'week') {
+                self::unpinWeekMessage();
+                self::pinMessage($botResult[0]['result']['message_id']);
+            }
+            if (in_array(self::$command, ['booking', 'reg', 'set', 'recall', 'promo'], true)) {
+                self::updateWeekMessages();
+            }
+        }
     }
     public static function execute($command = null)
     {

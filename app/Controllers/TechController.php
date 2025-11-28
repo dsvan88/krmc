@@ -231,7 +231,7 @@ class TechController extends Controller
     }
     public static function selfTestTelegramAction()
     {
-        // View::redirect('/');
+        View::redirect('/');
         $params = [
             'message' => [
                 'message_id' => 189,
