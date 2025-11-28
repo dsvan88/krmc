@@ -229,7 +229,7 @@ class TelegramBot
 
         return self::send('unpinChatMessage', $params);
     }
-    public static function editMessage($chatId, $messageId, $message)
+    public static function editMessage($chatId, $messageId, $message, array $replyMarkup = [])
     {
         $params = [
             'chat_id' => $chatId, // id чата
@@ -237,6 +237,9 @@ class TelegramBot
             'text' => $message, // текст сообщения
             'parse_mode' => 'HTML', // режим отображения сообщения, не обязательный параметр
         ];
+        if (!empty($replyMarkup)){
+            $params['reply_markup'] = json_encode($replyMarkup);
+        }
 
         return self::send('editMessageText', $params);
     }

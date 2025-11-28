@@ -42,12 +42,12 @@ class Sender
 
         return self::$operator->sendPhoto($chatId, $message, $image);
     }
-    public static function edit(int $chatId, int $messageId, string $message)
+    public static function edit(int $chatId, int $messageId, string $message, array $replyMarkup = [])
     {
         if (empty($chatId)) return false;
         if (empty(self::$operator)) self::init();
 
-        return self::$operator->editMessage($chatId, $messageId, $message);
+        return self::$operator->editMessage($chatId, $messageId, $message, $replyMarkup);
     }
     public static function pin($chatId, $messageId)
     {

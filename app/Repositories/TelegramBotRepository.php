@@ -2,6 +2,7 @@
 
 namespace app\Repositories;
 
+use app\core\Locale;
 use app\models\Days;
 use app\models\Weeks;
 use Exception;
@@ -48,7 +49,17 @@ class TelegramBotRepository
 
         $weekData['data'][$dayNum] = $newDayData;
 
-        $update = ['message' => Days::getFullDescription($weekData, $dayNum)];
+        $update = [
+            'message' => Days::getFullDescription($weekData, $dayNum),
+            'replyMarkup' => [
+                'inline_keyboard' => [ 
+                        [
+                            ['text' => Locale::phrase('I will too!'), 'callback_data' => base64_encode(json_encode(['cmd' => 'booking', 'wId'=> $weekId, 'dNum' => $dayNum]))],
+                            ['text' => Locale::phrase('I will too! I hope...'), 'callback_data' => base64_encode(json_encode(['cmd' => 'booking', 'wId'=> $weekId, 'dNum' => $dayNum, 'prim' => '?']))],
+                        ],
+                    ],
+                ],
+        ];
 
         return 'Success';
     }
