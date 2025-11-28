@@ -92,6 +92,7 @@ class TelegramBotController extends Controller
         $userTelegramId = self::$incomeMessage[static::$type]['from']['id'];
         $userId = Contacts::getUserIdByContact('telegramid', $userTelegramId);
 
+        error_log('$userId’s checks');
         if (static::$type === 'message'){
             $text = trim(self::$incomeMessage['message']['text']);
             $command = self::parseCommand($text);
@@ -102,15 +103,17 @@ class TelegramBotController extends Controller
         } else {
             self::$commandArguments = json_decode(trim(self::$incomeMessage[static::$type]['data']));
             self::$command = empty(self::$commandArguments['cmd']) ? '' : self::$commandArguments['cmd'];
-
+            
             if (empty($userId) && !empty(self::$command) && !in_array(self::$command, self::$guestCommands)){
                 Sender::callbackAnswer(self::$incomeMessage[static::$type]['id'], Locale::phrase('{{ Tg_Unknown_Requester }}'), true);
                 return false;
             }
         }
-
+        error_log('$userId’s checks - passed');
+        
         self::$requester = Users::find($userId);
 
+        error_log('preEnding before action');
         if (static::$type === 'message'){
             if (self::$command === 'booking' && Users::isBanned('booking', self::$requester['ban'])) {
                 Sender::delete(self::$chatId, self::$incomeMessage['message']['message_id']);
@@ -127,7 +130,7 @@ class TelegramBotController extends Controller
             Sender::callbackAnswer(self::$incomeMessage[static::$type]['id'], Locale::phrase(['string' => "I’m deeply sorry, but you banned for that action:(...\nYour ban will be lifted at: <b>%s</b>", 'vars' => [date('d.m.Y', self::$requester['ban']['expired'] + TIME_MARGE)]]), true);
             return false;
         }
-
+        error_log('Before action is done');
         return true;
     }
     public static function webhookAction()
