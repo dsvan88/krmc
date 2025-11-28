@@ -19,6 +19,10 @@ class TelegramBotRepository
         $dayNum = (int) $arguments['dNum'];
         
         $weekData = Weeks::weekDataById($weekId);
+        $dayEnd = $weekData['start'] + (TIMESTAMP_DAY * ($dayNum + 1));
+        if ($dayEnd < $_SERVER['REQUEST_TIME'])
+            return 'This day is over🤷‍♂️';
+
         if ($weekData['data'][$dayNum]['status'] !== 'set') {
             if (!in_array($userData['status'], ['trusted', 'activist', 'manager', 'admin'])) {
                 return '{{ Tg_Gameday_Not_Set }}';

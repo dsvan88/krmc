@@ -30,6 +30,14 @@ class DayCommand extends ChatCommand
             return false;
         }
         $reaction = '👌';
+        $replyMarkup = [
+            'inline_keyboard' => [ 
+                    [
+                        ['text' => self::locale('I will too!'), 'callback_data' => base64_encode(json_encode(['cmd' => 'booking', 'wId'=> $weekId, 'dNum' => $requestData['dayNum']]))],
+                        ['text' => self::locale('I will too! I hope...'), 'callback_data' => base64_encode(json_encode(['cmd' => 'booking', 'wId'=> $weekId, 'dNum' => $requestData['dayNum'], 'prim' => '?']))],
+                    ],
+                ],
+            ];
         return true;
     }
 }
