@@ -62,12 +62,12 @@ class TelegramBotController extends Controller
         $data = trim(file_get_contents('php://input'));
         $message = json_decode($data, true);
         
-        if (!empty($message['callback_query'])){
-            self::$techTelegramId = Settings::getTechTelegramId();
-            Sender::message(self::$techTelegramId, 'CallbackQuery:'.PHP_EOL.json_encode($message['callback_query']));
-            Sender::message(self::$techTelegramId, 'FROM:'.PHP_EOL.json_encode($message['callback_query']['from']));
-            Sender::message(self::$techTelegramId, 'Message:'.PHP_EOL.json_encode($message['callback_query']['message']));
-        }
+        // if (!empty($message['callback_query'])){
+        //     self::$techTelegramId = Settings::getTechTelegramId();
+        //     Sender::message(self::$techTelegramId, 'CallbackQuery:'.PHP_EOL.json_encode($message['callback_query']));
+        //     Sender::message(self::$techTelegramId, 'FROM:'.PHP_EOL.json_encode($message['callback_query']['from']));
+        //     Sender::message(self::$techTelegramId, 'Message:'.PHP_EOL.json_encode($message['callback_query']['message']));
+        // }
 
         static::$type = empty($message['callback_query']) ? 'message' : 'callback_query';
 
@@ -91,8 +91,7 @@ class TelegramBotController extends Controller
         
         $userTelegramId = self::$incomeMessage[static::$type]['from']['id'];
         $userId = Contacts::getUserIdByContact('telegramid', $userTelegramId);
-        
-        $command = '';
+
         if (static::$type === 'message'){
             $text = trim(self::$incomeMessage['message']['text']);
             $command = self::parseCommand($text);
@@ -121,13 +120,15 @@ class TelegramBotController extends Controller
             if (self::$chatId == self::$mainGroupTelegramId && Users::isBanned('chat', self::$requester['ban'])){
                 Sender::delete(self::$chatId, self::$incomeMessage['message']['message_id']);
                 Sender::message($userTelegramId, Locale::phrase(['string' => "I’m deeply sorry, but you banned for that action:(...\nYour ban will be lifted at: <b>%s</b>", 'vars' => [date('d.m.Y', self::$requester['ban']['expired'] + TIME_MARGE)]]));
+                return false;
             }
         }
         elseif (self::$command === 'booking' && Users::isBanned('booking', self::$requester['ban'])){
             Sender::callbackAnswer(self::$incomeMessage[static::$type]['id'], Locale::phrase(['string' => "I’m deeply sorry, but you banned for that action:(...\nYour ban will be lifted at: <b>%s</b>", 'vars' => [date('d.m.Y', self::$requester['ban']['expired'] + TIME_MARGE)]]), true);
+            return false;
         }
 
-        return $command;
+        return true;
     }
     public static function webhookAction()
     {
