@@ -71,7 +71,7 @@ class TelegramBotController extends Controller
 
         static::$type = empty($message['callback_query']) ? 'message' : 'callback_query';
 
-        if (!is_array($message) || empty($message[static::$type]) || (empty($message[static::$type]['text']) || empty($message[static::$type]['data']))) {
+        if (!is_array($message) || empty($message[static::$type]) || (empty($message[static::$type]['text']) && empty($message[static::$type]['data']))) {
             die('{"error":"1","title":"Error!","text":"Error: Nothing to get."}');
         }
 
@@ -92,7 +92,7 @@ class TelegramBotController extends Controller
         $userTelegramId = self::$incomeMessage[static::$type]['from']['id'];
         $userId = Contacts::getUserIdByContact('telegramid', $userTelegramId);
 
-        error_log('$userId’s checks');
+        // error_log('$userId’s checks');
         if (static::$type === 'message'){
             $text = trim(self::$incomeMessage['message']['text']);
             $command = self::parseCommand($text);
@@ -109,11 +109,11 @@ class TelegramBotController extends Controller
                 return false;
             }
         }
-        error_log('$userId’s checks - passed');
+        // error_log('$userId’s checks - passed');
         
         self::$requester = Users::find($userId);
 
-        error_log('preEnding before action');
+        // error_log('preEnding before action');
         if (static::$type === 'message'){
             if (self::$command === 'booking' && Users::isBanned('booking', self::$requester['ban'])) {
                 Sender::delete(self::$chatId, self::$incomeMessage['message']['message_id']);
@@ -130,7 +130,7 @@ class TelegramBotController extends Controller
             Sender::callbackAnswer(self::$incomeMessage[static::$type]['id'], Locale::phrase(['string' => "I’m deeply sorry, but you banned for that action:(...\nYour ban will be lifted at: <b>%s</b>", 'vars' => [date('d.m.Y', self::$requester['ban']['expired'] + TIME_MARGE)]]), true);
             return false;
         }
-        error_log('Before action is done');
+        // error_log('Before action is done');
         return true;
     }
     public static function webhookAction()
