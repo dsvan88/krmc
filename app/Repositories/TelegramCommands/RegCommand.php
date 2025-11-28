@@ -16,17 +16,17 @@ class RegCommand extends ChatCommand
     /reg -mon, nickname
 ');
     }
-    public static function execute(array $arguments = [])
+    public static function execute(array $arguments = [], string &$message = '', string &$reaction = '', array &$replyMarkup = [])
     {
         if (empty($arguments)) {
-            self::$operatorClass::$resultMessage = self::locale('{{ Tg_Command_Without_Arguments }}');
+            $message = self::locale('{{ Tg_Command_Without_Arguments }}');
             return false;
         }
 
         $requestData = self::$operatorClass::parseArguments($arguments);
 
         if (!isset($requestData['nonames']) && $requestData['userId'] < 2) {
-            self::$operatorClass::$resultMessage = self::locale(['string' => 'No users found with nickname: <b>%s</b>!', 'vars' => [$requestData['probableUserName']]]);
+            $message = self::locale(['string' => 'No users found with nickname: <b>%s</b>!', 'vars' => [$requestData['probableUserName']]]);
             return false;
         }
 
@@ -69,7 +69,7 @@ class RegCommand extends ChatCommand
         $newDayData = $weekData['data'][$requestData['dayNum']];
         if ($requestData['method'] === '+') {
             if ($participantId !== -1) {
-                self::$operatorClass::$resultMessage = self::locale('{{ Tg_Command_User_Already_Booked }}');
+                $message = self::locale('{{ Tg_Command_User_Already_Booked }}');
                 return false;
             }
             if (isset($requestData['nonames'])) {
@@ -82,7 +82,7 @@ class RegCommand extends ChatCommand
                 $newDayData = Days::removeNonamesFromDayData($newDayData, $requestData['nonames']);
             } else {
                 if ($participantId === -1) {
-                    self::$operatorClass::$resultMessage = self::locale('{{ Tg_Command_User_Not_Booked }}');
+                    $message = self::locale('{{ Tg_Command_User_Not_Booked }}');
                     return false;
                 }
                 unset($newDayData['participants'][$participantId]);
@@ -93,8 +93,8 @@ class RegCommand extends ChatCommand
         $result = Days::setDayData($weekId, $requestData['dayNum'], $newDayData);
 
         $weekData['data'][$requestData['dayNum']] = $newDayData;
-
-        self::$operatorClass::$resultMessage = Days::getFullDescription($weekData, $requestData['dayNum']);
+        $message = Days::getFullDescription($weekData, $requestData['dayNum']);
+        $reaction = '👌';
         return true;
     }
 }

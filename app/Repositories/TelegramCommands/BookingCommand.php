@@ -13,7 +13,7 @@ class BookingCommand extends ChatCommand
     {
         return self::locale("<u>+ (week day)</u> <i>// Booking for the scheduled games of the current week, examples:</i>\n\t\t+вс\n\t\t+ на сегодня, на 19:30 (отсижу 1-2 игры, под ?)\n<u>- (week day)</u> <i>// Unsubscribe from games on a specific day that you previously signed up for, examples:</i>\n\t\t-вс\n\t\t- завтра\n");
     }
-    public static function execute(array $arguments = [])
+    public static function execute(array $arguments = [], string &$message = '', string &$reaction = '', array &$replyMarkup = [])
     {
         $requestData = $arguments;
         self::$operatorClass::parseDayNum($requestData['dayName'], $requestData);
@@ -32,7 +32,7 @@ class BookingCommand extends ChatCommand
         $participantId = $slot = -1;
         if ($weekData['data'][$requestData['dayNum']]['status'] !== 'set') {
             if (!in_array($requestData['userStatus'], ['trusted', 'activist', 'manager', 'admin'])) {
-                self::$operatorClass::$resultMessage = self::locale('{{ Tg_Gameday_Not_Set }}');
+                $message = self::locale('{{ Tg_Gameday_Not_Set }}');
                 return false;
             }
             if (!isset($weekData['data'][$requestData['dayNum']]['game']))
@@ -60,11 +60,12 @@ class BookingCommand extends ChatCommand
         $newDayData = $weekData['data'][$requestData['dayNum']];
         if ($requestData['method'] === '+') {
             if ($participantId !== -1) {
-                self::$operatorClass::$resultMessage = self::locale('{{ Tg_Command_Requester_Already_Booked }}');
+                $message = self::locale('{{ Tg_Command_Requester_Already_Booked }}');
                 return false;
             }
             $newDayData = Days::addParticipantToDayData($newDayData, $requestData, $slot);
             $reactions = [
+                '👍',
                 '🤩',
                 '🔥',
                 '❤',
@@ -94,7 +95,7 @@ class BookingCommand extends ChatCommand
             // ];
         } else {
             if ($participantId === -1) {
-                self::$operatorClass::$resultMessage = self::locale('{{ Tg_Command_Requester_Not_Booked }}');
+                $message = self::locale('{{ Tg_Command_Requester_Not_Booked }}');
                 return false;
             }
             unset($newDayData['participants'][$participantId]);
@@ -126,15 +127,22 @@ class BookingCommand extends ChatCommand
 
         Days::setDayData($weekId, $requestData['dayNum'], $newDayData);
 
-        $botReaction = '';
         if (!empty($reactions)) {
-            $botReaction = $reactions[mt_rand(0, count($reactions) - 1)];
+            $reaction = $reactions[mt_rand(0, count($reactions) - 1)];
         }
 
         $weekData['data'][$requestData['dayNum']] = $newDayData;
 
-        self::$operatorClass::$resultMessage = Days::getFullDescription($weekData, $requestData['dayNum']);
-        self::$operatorClass::$reaction = $botReaction;
+        $message = Days::getFullDescription($weekData, $requestData['dayNum']);
+        
+        // $replyMarkup = [
+        // 'inline_keyboard' => [ 
+        //         [
+        //             ['text' => self::locale('I will too!'), 'callback_data' => "booking;w:$weekId,d:{$requestData['dayNum']}"],
+        //             ['text' => self::locale('I will too! I hope...'), 'callback_data' => "booking;w:$weekId,d:{$requestData['dayNum']},p:?"],
+        //         ],
+        //     ],
+        // ];
         return true;
     }
 }

@@ -26,7 +26,7 @@ class ChatCommand implements Command
     {
         return static::class . ' - ' . self::locale('Here isn’t description yet');
     }
-    public static function execute(array $arguments = [])
+    public static function execute(array $arguments = [], string &$message = '', string &$reaction = '', array &$replyMarkup = [])
     {
         return static::class . ' - ' . self::locale('Action is done!');
     }

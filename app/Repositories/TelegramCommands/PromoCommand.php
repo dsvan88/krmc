@@ -12,7 +12,7 @@ class PromoCommand extends ChatCommand
     {
         return self::locale("\n<u>/promo</u> <i>// Fix notification that is added at the bottom of the /week command.</i> The text before the first line break is the title, before the second one is the subtitle, everything below is the text of the alert. Example:\n\t\t/promo Title\nSubtitle\nText, or: here could be your <b>Advertising</b><i>:)</i>\n");
     }
-    public static function execute(array $arguments = [])
+    public static function execute(array $arguments = [], string &$message = '', string &$reaction = '', array &$replyMarkup = [])
     {
         $text = self::$message['message']['text'];
         $promoText = trim(mb_substr($text, mb_strpos($text, ' ', 0, 'UTF-8') + 1, NULL, 'UTF-8'));
@@ -53,7 +53,8 @@ class PromoCommand extends ChatCommand
 
         News::edit($data, 'promo');
 
-        self::$operatorClass::$resultMessage = self::locale('{{ Tg_Command_Promo_Saved }}');
+        $reaction = '👌';
+        $message = self::locale('{{ Tg_Command_Promo_Saved }}');
         return true;
     }
 }

@@ -12,7 +12,7 @@ class DayCommand extends ChatCommand
     {
         return self::locale('<u>/day (week day)</u> <i>// Booking information for a specific day. Without specifying the day - for today</i>');
     }
-    public static function execute(array $arguments = [])
+    public static function execute(array $arguments = [], string &$message = '', string &$reaction = '', array &$replyMarkup = [])
     {
         $weekId = Weeks::currentId();
         $requestData = $arguments;
@@ -26,11 +26,10 @@ class DayCommand extends ChatCommand
         $message = Days::getFullDescription($weekData, $requestData['dayNum']);
 
         if (empty($message)) {
-            self::$operatorClass::$resultMessage = self::locale('{{ Tg_Command_Games_Not_Set }}');
+            $message = self::locale('{{ Tg_Command_Games_Not_Set }}');
             return false;
         }
-
-        self::$operatorClass::$resultMessage = $message;
+        $reaction = '👌';
         return true;
     }
 }

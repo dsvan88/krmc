@@ -6,6 +6,7 @@ use app\core\Controller;
 use app\core\Locale;
 use app\core\Router;
 use app\core\Sender;
+use app\core\Tech;
 use app\core\TelegramBot;
 use app\core\Validator;
 use app\models\Contacts;
@@ -30,6 +31,7 @@ class TelegramBotController extends Controller
 
     public static $resultMessage = '';
     public static $reaction = '';
+    public static $replyMarkup = [];
     public static $class = '';
 
     public static function before()
@@ -60,7 +62,9 @@ class TelegramBotController extends Controller
         
         if (!empty($message['callback_query'])){
             self::$techTelegramId = Settings::getTechTelegramId();
-            Sender::message(self::$techTelegramId, json_encode($message['callback_query']));
+            Sender::message(self::$techTelegramId, 'CallbackQuery:'.PHP_EOL.$message['callback_query']);
+            Sender::message(self::$techTelegramId, 'FROM:'.PHP_EOL.$message['from']);
+            Sender::message(self::$techTelegramId, 'Message:'.PHP_EOL.$message['message']);
         }
 
         if (!is_array($message) || empty($message['message']) || empty($message['message']['text'])) {
@@ -116,7 +120,6 @@ class TelegramBotController extends Controller
                 if (empty(self::$resultMessage)) return false;
                 $botResult = Sender::message(self::$techTelegramId, json_encode([self::$incomeMessage, /* self::$requester ,*/ self::parseArguments(self::$commandArguments)], JSON_UNESCAPED_UNICODE));
             }
-
             if (!empty(self::$reaction)) {
                 // https://core.telegram.org/bots/api#setmessagereaction
                 // https://core.telegram.org/bots/api#reactiontype
@@ -124,19 +127,7 @@ class TelegramBotController extends Controller
                 Sender::setMessageReaction(self::$chatId, self::$incomeMessage['message']['message_id'], self::$reaction);
             }
 
-            $replyMarkup = [];
-            if (self::$command === 'booking' && self::$chatId == self::$techTelegramId){
-                $replyMarkup = [
-                    'inline_keyboard' => [ 
-                            [
-                                ['text' => Locale::phrase('I will too!'), 'callback_data' => 'booking!'],
-                                ['text' => Locale::phrase('I will too! I hope...'), 'callback_data' => 'booking, with ?'],
-                            ],
-                        ],
-                    ];
-            }
-
-            $botResult = Sender::message(self::$chatId, Locale::phrase(self::$resultMessage), 0, $replyMarkup);
+            $botResult = Sender::message(self::$chatId, Locale::phrase(self::$resultMessage), 0, self::$replyMarkup);
 
             if ($botResult[0]['ok']) {
                 if (self::$command === 'week') {
@@ -337,12 +328,12 @@ class TelegramBotController extends Controller
         if (!$ready) return false;
 
         $accessLevel = static::$class::getAccessLevel();
-
+        
         if (!self::checkAccess($accessLevel)) {
             return false;
         }
-
-        return static::$class::execute(self::$commandArguments);
+        Tech::dump($accessLevel);
+        return static::$class::execute(self::$commandArguments, self::$resultMessage, self::$reaction, self::$replyMarkup);
     }
     public static function checkAccess(string $level = 'all')
     {

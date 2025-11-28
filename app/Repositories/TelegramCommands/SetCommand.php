@@ -15,10 +15,10 @@ class SetCommand extends ChatCommand
     {
         return self::locale("<u>/set</u> <i>// Set data for a specific day. Example:</i>\n\t\t/set sun, mafia, 18:00, (Good luck, have fun!)\n");
     }
-    public static function execute(array $arguments = [])
+    public static function execute(array $arguments = [], string &$message = '', string &$reaction = '', array &$replyMarkup = [])
     {
         if (empty($arguments)) {
-            self::$operatorClass::$resultMessage = self::locale('{{ Tg_Command_Without_Arguments }}');
+            $message = self::locale('{{ Tg_Command_Without_Arguments }}');
             return false;
         }
 
@@ -138,11 +138,12 @@ class SetCommand extends ChatCommand
         $result = Days::setDayData($weekId, $dayNum, $weekData['data'][$dayNum]);
 
         if (!$result) {
-            self::$operatorClass::$resultMessage = json_encode($weekData['data'][$dayNum], JSON_UNESCAPED_UNICODE);
+            $message = json_encode($weekData['data'][$dayNum], JSON_UNESCAPED_UNICODE);
             return false;
         }
 
-        self::$operatorClass::$resultMessage = $method === '-' ? self::locale('{{ Tg_Command_Successfully_Canceled }}') : Days::getFullDescription($weekData, $dayNum);
+        $message = $method === '-' ? self::locale('{{ Tg_Command_Successfully_Canceled }}') : Days::getFullDescription($weekData, $dayNum);
+        $reaction = '👌';
         return true;
     }
 }

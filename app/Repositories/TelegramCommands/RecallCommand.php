@@ -14,7 +14,7 @@ class RecallCommand extends ChatCommand
     {
         return self::locale("<u>/recall (week day)</u> <i>// Recall day settings for a specific day.\nRestored by a new registration from the admin.\nWithout specifying the day - for today</i>\n");
     }
-    public static function execute(array $arguments = [])
+    public static function execute(array $arguments = [], string &$message = '', string &$reaction = '', array &$replyMarkup = [])
     {
         $dayName = '';
         $requestData = $arguments;
@@ -36,7 +36,13 @@ class RecallCommand extends ChatCommand
         }
 
         $result = Days::recall($weekId, $requestData['dayNum']);
-        self::$operatorClass::$resultMessage = $result ? '{{ Tg_Command_Successfully_Canceled }}' : '{{ Tg_Command_Set_Day_Not_Found }}';;
+        $reaction = '😢';
+        $message = '{{ Tg_Command_Set_Day_Not_Found }}';
+
+        if (!empty($result)){
+            $reaction = '👌';
+            $message = '{{ Tg_Command_Successfully_Canceled }}';
+        }
         return $result;
     }
 }

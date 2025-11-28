@@ -18,7 +18,7 @@ class PingCommand extends ChatCommand
     {
         return self::locale('<u>/ping (week day)</u> <i>// Ping users from current activity to get their attention.</i>');
     }
-    public static function execute(array $arguments = [])
+    public static function execute(array $arguments = [], string &$message = '', string &$reaction = '', array &$replyMarkup = [])
     {
         $weekId = Weeks::currentId();
         $requestData = $arguments;
@@ -69,7 +69,7 @@ class PingCommand extends ChatCommand
         }
 
         if (empty($tgNames)) {
-            // self::$operatorClass::$resultMessage = self::locale('{{ Tg_Command_Games_Not_Set }}');
+            // $message = self::locale('{{ Tg_Command_Games_Not_Set }}');
             return false;
         }
 
@@ -80,7 +80,9 @@ class PingCommand extends ChatCommand
         $link = "<a href='$proto://{$_SERVER['SERVER_NAME']}/game/{$game}/?lang=$lang'>{$gameNames[$game]}</a>";
 
         $list = '@' . implode(', @', $tgNames);
-        self::$operatorClass::$resultMessage =  self::locale(['string' => "Dear players: %s!\n%s at %s we're going to play in %s!\nAre you in?😉", 'vars' => [$list, $date, $currentDay['time'], $link]]);
+        
+        $reaction = '👌';
+        $message =  self::locale(['string' => "Dear players: %s!\n%s at %s we're going to play in %s!\nAre you in?😉", 'vars' => [$list, $date, $currentDay['time'], $link]]);
         return true;
     }
 }

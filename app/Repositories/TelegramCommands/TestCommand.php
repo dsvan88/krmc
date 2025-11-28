@@ -6,14 +6,25 @@ use app\core\ChatCommand;
 
 class TestCommand extends ChatCommand
 {
-    public static $accessLevel = 'root';
+    public static $accessLevel = 'admin';
     public static function description()
     {
         return self::locale('<u>/test</u> //<i>Command for testing new functions.</i>');
     }
-    public static function execute(array $arguments = [])
+    public static function execute(array $arguments = [], string &$message = '', string &$reaction = '', array &$replyMarkup = [])
     {
-        self::$operatorClass::$resultMessage = json_encode(self::$message, JSON_UNESCAPED_UNICODE);
+        $message = json_encode(self::$message, JSON_UNESCAPED_UNICODE);
+        $weekId = 123;
+        $dayNum = 5;
+        $replyMarkup = [
+            'inline_keyboard' => [ 
+                    [
+                        ['text' => self::locale('I will too!'), 'callback_data' => "booking;w:$weekId,d:$dayNum"],
+                        ['text' => self::locale('I will too! I hope...'), 'callback_data' => "booking;w:$weekId,d:$dayNum,p:?"],
+                    ],
+                ],
+            ];
+        $reaction = '👌';
         return true;
     }
 }

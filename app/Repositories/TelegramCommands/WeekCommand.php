@@ -13,13 +13,12 @@ class WeekCommand extends ChatCommand
     {
         return self::locale('<u>/week</u> <i>// Schedule of upcoming games</i>');
     }
-    public static function execute(array $arguments = [])
+    public static function execute(array $arguments = [], string &$message = '', string &$reaction = '', array &$replyMarkup = [])
     {
         $weeksData = Weeks::nearWeeksDataByTime();
 
-        $message = '';
         if (empty($weeksData)) {
-            self::$operatorClass::$resultMessage = self::locale('{{ Tg_Command_Games_Not_Set }}');
+            $message = self::locale('{{ Tg_Command_Games_Not_Set }}');
             return false;
         }
         foreach ($weeksData as $weekData) {
@@ -44,7 +43,7 @@ class WeekCommand extends ChatCommand
             }
         }
 
-        self::$operatorClass::$resultMessage = $message;
+        $reaction = '👌';
         return true;
     }
 }

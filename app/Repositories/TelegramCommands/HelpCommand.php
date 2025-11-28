@@ -10,19 +10,19 @@ class HelpCommand extends ChatCommand
     {
         return self::locale('<u>/?</u> or <u>/start</u> or <u>/help</u> <i>// This help menu</i>');
     }
-    public static function execute(array $arguments = [])
+    public static function execute(array $arguments = [], string &$message = '', string &$reaction = '', array &$replyMarkup = [])
     {
         $folder = str_replace('\\','/',$_SERVER['DOCUMENT_ROOT'] . self::$operatorClass::$CommandNamespace);
 
         if (!is_dir($folder) || !file_exists($folder)) {
-            self::$operatorClass::$resultMessage = 'Something went wrong!';
+            $message = 'Something went wrong!';
             return false;
         }
 
         $list = scandir($folder);
 
-        if (!$list) {
-            self::$operatorClass::$resultMessage = 'Something went wrong! List is empty.';
+        if (empty($list)) {
+            $message = 'Something went wrong! List is empty.';
             return false;
         }
 
@@ -37,7 +37,7 @@ class HelpCommand extends ChatCommand
         $message .= implode("\n", $commandsList);
         $message .= self::locale("\n\nFeel free to ask the admins or community, if something is not clear!");
 
-        self::$operatorClass::$resultMessage = $message;
+        $message = $message;
         return true;
     }
     public static function getCommandDescriptions(string $filename)
@@ -53,6 +53,8 @@ class HelpCommand extends ChatCommand
             // error_log("Command $command - false");
             return false;
         }
+        
+        $reaction = '👌';
         return $class::description();
     }
 }
