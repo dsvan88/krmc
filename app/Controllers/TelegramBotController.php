@@ -307,13 +307,16 @@ class TelegramBotController extends Controller
         if (!empty($update)){
             Sender::edit(self::$chatId, self::$incomeMessage[static::$type]['message']['message_id'], $update['message'], $update['replyMarkup']);
         }
+        if (in_array(self::$command, ['booking'], true)) {
+            self::updateWeekMessages();
+        }
         return true;
     }
     public static function executeChatCommand(){
         if (!self::execute()) {
-                if (empty(self::$resultMessage)) return false;
-                $botResult = Sender::message(self::$techTelegramId, json_encode([self::$incomeMessage, /* self::$requester ,*/ self::parseArguments(self::$commandArguments)], JSON_UNESCAPED_UNICODE));
-            }
+            if (empty(self::$resultMessage)) return false;
+            $botResult = Sender::message(self::$techTelegramId, json_encode([self::$incomeMessage, /* self::$requester ,*/ self::parseArguments(self::$commandArguments)], JSON_UNESCAPED_UNICODE));
+        }
         if (!empty(self::$reaction)) {
             Sender::setMessageReaction(self::$chatId, self::$incomeMessage['message']['message_id'], self::$reaction);
         }
