@@ -100,7 +100,7 @@ class TelegramBotController extends Controller
                 return false;
             }
         } else {
-            self::$commandArguments = json_decode(trim(self::$incomeMessage[static::$type]['data']));
+            self::$commandArguments = base64_decode(json_decode(trim(self::$incomeMessage[static::$type]['data'])), true);
             self::$command = empty(self::$commandArguments['cmd']) ? '' : self::$commandArguments['cmd'];
             
             if (empty($userId) && !empty(self::$command) && !in_array(self::$command, self::$guestCommands)){
@@ -318,7 +318,6 @@ class TelegramBotController extends Controller
             Sender::setMessageReaction(self::$chatId, self::$incomeMessage['message']['message_id'], self::$reaction);
         }
 
-        error_log(json_encode(self::$replyMarkup, JSON_UNESCAPED_UNICODE));
         if (self::$chatId === self::$techTelegramId)
             $botResult = Sender::message(self::$chatId, Locale::phrase(self::$resultMessage), 0, self::$replyMarkup);
         else 
@@ -361,7 +360,7 @@ class TelegramBotController extends Controller
         if (!self::checkAccess($accessLevel)) {
             return false;
         }
-        Tech::dump($accessLevel);
+
         return static::$class::execute(self::$commandArguments, self::$resultMessage, self::$reaction, self::$replyMarkup);
     }
     public static function checkAccess(string $level = 'all')
