@@ -91,8 +91,7 @@ class TelegramBotController extends Controller
         
         $userTelegramId = self::$incomeMessage[static::$type]['from']['id'];
         $userId = Contacts::getUserIdByContact('telegramid', $userTelegramId);
-        
-        error_log('UserData search');
+
         if (static::$type === 'message'){
             $text = trim(self::$incomeMessage['message']['text']);
             $command = self::parseCommand($text);
@@ -103,13 +102,14 @@ class TelegramBotController extends Controller
         } else {
             self::$commandArguments = json_decode(trim(base64_decode(self::$incomeMessage[static::$type]['data'])), true);
             self::$command = empty(self::$commandArguments['cmd']) ? '' : self::$commandArguments['cmd'];
-            
+            error_log('self::$command : '.self::$command);
+            error_log('self::$commandArguments : '.json_encode(self::$commandArguments));
             if (empty($userId) && !empty(self::$command) && !in_array(self::$command, self::$guestCommands)){
                 Sender::callbackAnswer(self::$incomeMessage[static::$type]['id'], Locale::phrase('{{ Tg_Unknown_Requester }}'), true);
                 return false;
             }
         }
-        error_log('UserData search');
+
         self::$requester = Users::find($userId);
 
         if (static::$type === 'message'){
