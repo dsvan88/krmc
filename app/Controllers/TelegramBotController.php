@@ -102,6 +102,8 @@ class TelegramBotController extends Controller
         } else {
             self::$commandArguments = json_decode(trim(base64_decode(self::$incomeMessage[static::$type]['data'])), true);
             self::$command = empty(self::$commandArguments['cmd']) ? '' : self::$commandArguments['cmd'];
+            error_log('self::$incomeMessage[static::$type][data] : '.self::$incomeMessage[static::$type]['data']);
+            error_log('base64_decode : '. base64_decode(self::$incomeMessage[static::$type]['data']));
             error_log('self::$command : '.self::$command);
             error_log('self::$commandArguments : '.json_encode(self::$commandArguments));
             if (empty($userId) && !empty(self::$command) && !in_array(self::$command, self::$guestCommands)){
