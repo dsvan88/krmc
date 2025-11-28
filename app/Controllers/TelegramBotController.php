@@ -62,13 +62,13 @@ class TelegramBotController extends Controller
         $data = trim(file_get_contents('php://input'));
         $message = json_decode($data, true);
         
-        // if (!empty($message['callback_query'])){
-        self::$techTelegramId = Settings::getTechTelegramId();
-        Sender::message(self::$techTelegramId, 'CallbackQuery:'.PHP_EOL.json_encode($message['callback_query']));
-        Sender::message(self::$techTelegramId, 'Data:'.PHP_EOL.$message['callback_query']['data']);
+        if (!empty($message['callback_query'])){
+            self::$techTelegramId = Settings::getTechTelegramId();
+            Sender::message(self::$techTelegramId, 'CallbackQuery:'.PHP_EOL.json_encode($message['callback_query']));
+            Sender::message(self::$techTelegramId, 'Data:'.PHP_EOL.$message['callback_query']['data']);
         //     Sender::message(self::$techTelegramId, 'FROM:'.PHP_EOL.json_encode($message['callback_query']['from']));
         //     Sender::message(self::$techTelegramId, 'Message:'.PHP_EOL.json_encode($message['callback_query']['message']));
-        // }
+        }
 
         static::$type = empty($message['callback_query']) ? 'message' : 'callback_query';
 
