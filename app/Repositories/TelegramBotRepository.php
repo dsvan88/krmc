@@ -31,7 +31,7 @@ class TelegramBotRepository
         }
 
         foreach ($weekData['data'][$dayNum]['participants'] as $index => $participant) {
-            if ($participant['id'] !== $userData['userId']) continue;
+            if ($participant['id'] != $userData['userId']) continue;
             $participantId = $index;
             break;
         }
