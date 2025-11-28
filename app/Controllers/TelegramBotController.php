@@ -318,10 +318,10 @@ class TelegramBotController extends Controller
             Sender::setMessageReaction(self::$chatId, self::$incomeMessage['message']['message_id'], self::$reaction);
         }
 
-        if (self::$chatId == self::$techTelegramId)
-            $botResult = Sender::message(self::$chatId, Locale::phrase(self::$resultMessage), 0, self::$replyMarkup);
-        else 
-            $botResult = Sender::message(self::$chatId, Locale::phrase(self::$resultMessage), 0);
+        // if (self::$chatId == self::$techTelegramId)
+        //     $botResult = Sender::message(self::$chatId, Locale::phrase(self::$resultMessage), 0, self::$replyMarkup);
+        // else 
+        $botResult = Sender::message(self::$chatId, Locale::phrase(self::$resultMessage));
 
         if ($botResult[0]['ok']) {
             if (self::$command === 'week') {
@@ -332,6 +332,7 @@ class TelegramBotController extends Controller
                 self::updateWeekMessages();
             }
         }
+        return true;
     }
     public static function execute($command = null)
     {
