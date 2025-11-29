@@ -123,8 +123,8 @@ class Alert {
         document.addEventListener('mousemove', self.onMouseMove);
         document.addEventListener('touchmove', self.onMouseMove);
 
-        self.dialog.onmouseup = (event) => this.moveEnd(event, 'mousemove');
-        self.dialog.ontouchend = (event) => this.moveEnd(event, 'touchmove');
+        self.dialog.onmouseup = (event) => self.moveEnd(event, 'mousemove');
+        self.dialog.ontouchend = (event) => self.moveEnd(event, 'touchmove');
 
     }
     moveEnd(event, eventName) {
@@ -176,9 +176,13 @@ class Confirm extends Alert {
     }
     modifyEvents() {
         const self = this;
-        self.form.addEventListener('submit', (event) => self.submit.call(self, event), { once: true });
+        self.form.addEventListener('submit', (e) => self.submit.call(self, e), { once: true });
 
         self.cancelButton.addEventListener('click', () => self.state = false);
+
+        const ua = navigator.userAgent.toLowerCase();
+        if (ua.includes('safari') && !ua.includes('chrome'))
+            this.agreeButton.addEventListener('touchend', (e) => self.submit.call(self, e), { once: true } );
 
         return this;
     }

@@ -57,8 +57,10 @@
 </head>
 
 <body>
-    <? self::component('notices', ['notices' => $notices]) ?>
-    <div class="wrapper">
+    <div class="body">
+        <? self::component('notices', ['notices' => $notices]) ?>
+        <div class="wrapper">
+        </div>
     </div>
 </body>
 

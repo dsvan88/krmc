@@ -31,17 +31,19 @@
 </head>
 
 <body>
-    <div class="wrapper">
-        <header class="header">
-            <?= $header ?>
-        </header>
-        <div class="header-for-auto-scroll" id="start-page"></div>
-        <main class="main">
-            <?= $content ?>
-        </main>
-        <footer class="footer">
-            <div class="footer_content"><?= $footerContent ?></div>
-        </footer>
+    <div class="body">
+        <div class="wrapper">
+            <header class="header">
+                <?= $header ?>
+            </header>
+            <div class="header-for-auto-scroll" id="start-page"></div>
+            <main class="main">
+                <?= $content ?>
+            </main>
+            <footer class="footer">
+                <div class="footer_content"><?= $footerContent ?></div>
+            </footer>
+        </div>
     </div>
 </body>
 

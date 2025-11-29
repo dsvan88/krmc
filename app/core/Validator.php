@@ -61,7 +61,7 @@ class Validator
     {
         $value = trim($value);
         if (empty($value)) return '';
-        return in_array($value, ['male', 'female', 'secret'], true) ? $value : '';
+        return in_array($value, ['male', 'female', 'secret'], true) ? $value : false;
     }
     private static function telegramIp(string $ip): string
     {

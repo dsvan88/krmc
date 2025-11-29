@@ -9,10 +9,7 @@
 :root {
 	font-size: 16px;
 }
-
-body {
-	min-height: 100vh;
-	margin: 0;
+body{
 	background-color: $body-bg-color;
 	background-image: url(/public/images/background.jfif), linear-gradient(90deg, $bg-color-red 0, $bg-color-light 40%, $bg-color-dark 100%);
 	background-repeat: no-repeat;
@@ -20,13 +17,18 @@ body {
 	background-attachment: fixed, fixed;
 	background-blend-mode: multiply;
 	padding: 0;
-	display: grid;
-	place-items: center;
 	color: $color-text-main;
-	overflow-x: hidden;
 	// font-family: "Roboto", sans-serif;
 	font-family: "Ubuntu", sans-serif;
 	font-size: clamp($font-size-main-sm, 1.4vw, $font-size-main-xl);
+}
+.body {
+	min-height: 100dvh;
+	max-height: 100dvh;
+	margin: 0;
+	display: grid;
+	place-items: center;
+	overflow-x: hidden;
 }
 
 .header-for-auto-scroll {

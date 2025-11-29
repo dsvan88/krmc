@@ -74,11 +74,14 @@
 
     &__card {
         flex-grow: 1;
-        padding: 1.5em 13.5vw 1.5em 2em;
+        flex-shrink: 1;
+        padding: 1.5em 5vw 1.5em 2em;
         position: relative;
         border-radius: 2px;
         background-color: $bg-color-light-odd;
-
+        @include md {
+            padding: 1.5em 13.5vw 1.5em 2em;
+        }
         .text-accent {
             color: $color-text-accent;
             text-decoration: underline;
@@ -142,10 +145,17 @@
 
         &-value {
             letter-spacing: 0.05em;
-            font-size: 1.1em;
+            font-size: 1.3em;
             border-bottom: 1px solid $color-text-main;
             display: flex;
+            text-align: start;
+            display: inline-block;
+            width: min(100%, 55vw);
 
+            @include md {
+                font-size: 1.35rem;
+                width:100%;
+            }
 
             button {
                 font-size: 0.7em;

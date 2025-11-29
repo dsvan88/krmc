@@ -39,65 +39,67 @@
 </head>
 
 <body>
-    <? self::component('notices', ['notices' => $notices]) ?>
-    <div class="wrapper">
-        <header class="header">
-            <div class="header__content">
-                <? if (!empty($_SESSION['id'])) : ?>
-                    <div class="header__line">
-                        <div class="profile">
-                            <a href="/account/profile/<?= $_SESSION['id'] ?>/" alt="<?= $_SESSION['name'] ?>" title="<?= $_SESSION['name'] ?>"><?= $_SESSION['name'] ?></a>
+    <div class="body">
+        <? self::component('notices', ['notices' => $notices]) ?>
+        <div class="wrapper">
+            <header class="header">
+                <div class="header__content">
+                    <? if (!empty($_SESSION['id'])) : ?>
+                        <div class="header__line">
+                            <div class="profile">
+                                <a href="/account/profile/<?= $_SESSION['id'] ?>/" alt="<?= $_SESSION['name'] ?>" title="<?= $_SESSION['name'] ?>"><?= $_SESSION['name'] ?></a>
+                            </div>
                         </div>
+                        <menu class="header__menu">
+                            <? self::icon('gradient') ?>
+                            <? foreach ($headerMenu as $index => $item) : ?>
+                                <li class="header__menu-item">
+                                    <a href="/<?= $item['path'] ?>/" <?= empty($item['active']) ? '' : 'class="active"' ?>>
+                                        <? self::icon($item['icon']) ?>
+                                        <span><?= $item['label'] ?></span>
+                                    </a>
+                                </li>
+                            <? endforeach ?>
+                        </menu>
+                    <? endif ?>
+                </div>
+                <? if (!empty($headerDashboard)) : ?>
+                    <div class="header__dashboard">
+                        <? self::component('header/dashboard', ['dashboard' => $headerDashboard]) ?>
                     </div>
-                    <menu class="header__menu">
-                        <? self::icon('gradient') ?>
-                        <? foreach ($headerMenu as $index => $item) : ?>
-                            <li class="header__menu-item">
-                                <a href="/<?= $item['path'] ?>/" <?= empty($item['active']) ? '' : 'class="active"' ?>>
-                                    <? self::icon($item['icon']) ?>
-                                    <span><?= $item['label'] ?></span>
-                                </a>
-                            </li>
-                        <? endforeach ?>
-                    </menu>
                 <? endif ?>
-            </div>
-            <? if (!empty($headerDashboard)) : ?>
-                <div class="header__dashboard">
-                    <? self::component('header/dashboard', ['dashboard' => $headerDashboard]) ?>
-                </div>
-            <? endif ?>
-        </header>
-        <div class="header-for-auto-scroll" id="start-page"></div>
-        <main class="main <?= $mainClass ?>">
-            <?= $content ?>
-        </main>
-        <footer class="footer">
-            <div class="footer__content">
-                <div class="footer__block">
-                    <div class="footer__logo"><?= $headerLogo ?></div>
-                </div>
-                <div class="footer__block">
-                    <div class='footer__adress'>
-                        <a class='fa fa-map-marker footer__adress-link' href='<?= $footerGmapLink ?>' target='_blank'> Адреса: </a>
-                        <?= $footerAdress ?>
+            </header>
+            <div class="header-for-auto-scroll" id="start-page"></div>
+            <main class="main <?= $mainClass ?>">
+                <?= $content ?>
+            </main>
+            <footer class="footer">
+                <div class="footer__content">
+                    <div class="footer__block">
+                        <div class="footer__logo"><?= $headerLogo ?></div>
                     </div>
-                </div>
-                <div class="footer__block footer__gmap">
-                    <iframe src="<?= $footerGmapWidget ?>" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-                </div>
-                <div class="footer__block contacts">
-                    <div class="footer__contacts">
-                        <h4 class="footer__contacts-label">Контакти:</h4>
-                        <?= $footerContacts ?>
-                        <div class="footer__socials">
-                            <?= $footerSocials ?>
+                    <div class="footer__block">
+                        <div class='footer__adress'>
+                            <a class='fa fa-map-marker footer__adress-link' href='<?= $footerGmapLink ?>' target='_blank'> Адреса: </a>
+                            <?= $footerAdress ?>
                         </div>
                     </div>
-                    <div class="footer__copyrights">Designed for <?= CLUB_NAME ?>, by <a class="fa fa-telegram" href="https://t.me/dsvan88" target="_blank"> <?= CFG_AUTHOR ?></a></div>
+                    <div class="footer__block footer__gmap">
+                        <iframe src="<?= $footerGmapWidget ?>" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    </div>
+                    <div class="footer__block contacts">
+                        <div class="footer__contacts">
+                            <h4 class="footer__contacts-label">Контакти:</h4>
+                            <?= $footerContacts ?>
+                            <div class="footer__socials">
+                                <?= $footerSocials ?>
+                            </div>
+                        </div>
+                        <div class="footer__copyrights">Designed for <?= CLUB_NAME ?>, by <a class="fa fa-telegram" href="https://t.me/dsvan88" target="_blank"> <?= CFG_AUTHOR ?></a></div>
+                    </div>
                 </div>
-            </div>
-        </footer>
+            </footer>
+        </div>
     </div>
 </body>
 
