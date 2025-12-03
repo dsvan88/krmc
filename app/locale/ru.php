@@ -14,6 +14,8 @@ return [
     'About us' => 'Про нас',
     'Gallery' => 'Галерея',
     'Contacts' => 'Контакты',
+    'Yes' => 'Да',
+    'No' => 'Нет',
 
     'Login' => 'Логин',
     'Nickname (in game)' => 'Псевдоним (игровой)',
