@@ -24,26 +24,35 @@ class NickCommand extends ChatCommand
             $message = self::locale(['string' => '{{ Tg_Command_Name_Already_Set }}', 'vars' => [self::$requester['name']]]);
             return false;
         }
+
         $_username = implode(' ', $arguments);
-        $username = Users::formatName($_username);
 
-        if (empty($username)) {
-            $message = self::locale("Invalid nickname format!\nPlease use only <b>Cyrillic</b> and <b>spaces</b> in the nickname!");
+        if (empty(trim($_username))) {
+            $message = self::locale("Your nickname can't be empty!\nPlease, use that format:\n/nick <b>Your nickname</b>");
             return false;
         }
 
-        $symbols = Locale::$cyrillicPattern;
-        if (preg_match_all("/[^$symbols .0-9]/ui", $_username, $matches)) {
-            $wrong = implode('</i>", "<i>', $matches[0]);
-            $message = self::locale(['string' => "Invalid nickname format!\nPlease use only <b>Cyrillic</b> and <b>spaces</b> in the nickname!\nWrong simbols: %s", 'vars' => ["\"<i>$wrong</i>\""]]);
-            return false;
-        }
+        $lun = Users::formatName($_username, 'latin');
+        $cun = Users::formatName($_username, 'cyrillic');
+
+        $username = strlen($lun) > strlen($cun) ? $lun : $cun;
 
         if (mb_strlen($username, 'UTF-8') < 2) {
-            $message = self::locale('{{ Tg_Command_Name_Too_Short }}');
+            $message = self::locale("Your nickname is too short!\nPlease use at least <b>2</b> symbols, so people can recognize you!");
             return false;
         }
 
+        // if (empty($username)) {
+        //     $message = self::locale("Invalid nickname format!\nPlease use only <b>Cyrillic</b> and <b>spaces</b> in the nickname!");
+        //     return false;
+        // }
+
+        // $symbols = Locale::$cyrillicPattern;
+        // if (preg_match_all("/[^$symbols .0-9]/ui", $_username, $matches)) {
+        //     $wrong = implode('</i>", "<i>', $matches[0]);
+        //     $message = self::locale(['string' => "Invalid nickname format!\nPlease use only <b>Cyrillic</b> and <b>spaces</b> in the nickname!\nWrong simbols: %s", 'vars' => ["\"<i>$wrong</i>\""]]);
+        //     return false;
+        // }
 
         $telegramId = self::$message['message']['from']['id'];
         $telegram = self::$message['message']['from']['username'];

@@ -569,11 +569,11 @@ class Users extends Model
      * 
      * @return mixed        - new, formated nickname
      */
-    public static function formatName(string $name)
+    public static function formatName(string $name, string $alpha = 'latin')
     {
 
         // $name = preg_replace(['/\s+/', '/[^a-zа-яєіїґ.0-9 ]+/ui'], [' ', ''], trim($name));
-        $symbols = Locale::$cyrillicPattern;
+        $symbols = $alpha === 'latin' ? 'a-z' : Locale::$cyrillicPattern;
         $name = preg_replace(['/\s+/', "/[^$symbols.0-9 ]+/ui"], [' ', ''], trim($name));
 
         if (empty($name)) return false;

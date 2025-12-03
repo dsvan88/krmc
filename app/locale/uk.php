@@ -206,7 +206,8 @@ return [
     '{{ Tg_Command_Without_Arguments }}' => "Эта <b>Команда</b> не може бути виконана без яких-небудь аргументів!",
 
     '{{ Tg_Command_Name_Already_Set }}' => "Я вже запам’ятав Вас под псевдонімом <b>%s</b>!\n\nВнесення змін - лише через адміністраторів.",
-    '{{ Tg_Command_Name_Too_Short }}' => "Ваш псевдонім - занадто короткий!\nБудь-ласка, вкажіть, як мінімум <b>2</b> символи, аби люди мали змогу Вас упізнати!",
+    "Your nickname can't be empty!\nPlease, use that format:\n/nick <b>Your nickname</b>" => "Ваш псевдонім не може бути порожнім!\nБудь-ласка, використайте такий формат:\n/nick <b>Ваш псевдонім</b>",
+    'Your nickname is too short!\nPlease use at least <b>2</b> symbols, so people can recognize you!' => "Ваш псевдонім - занадто короткий!\nБудь-ласка, вкажіть, як мінімум <b>2</b> символи, аби люди мали змогу Вас упізнати!",
     "Invalid nickname format!\nPlease use only <b>Cyrillic</b> and <b>spaces</b> in the nickname!" => "Не вірний формат псевдоніму!\nВикористовуйте, будь-ласка, лише <b>Кирлицю</b> та <b>пробіли</b> в псевдонимі!",
     "Invalid nickname format!\nPlease use only <b>Cyrillic</b> and <b>spaces</b> in the nickname!\nWrong simbols: %s" => "Не вірний формат псевдоніму!\nВикористовуйте, будь-ласка, лише <b>Кирлицю</b> та <b>пробіли</b> в псевдонимі!\nНе вірні символи: %s",
     '{{ Tg_Command_Games_Not_Set }}' => "Найближчим часом, ігор - не заплановано!\nБудь-ласка, зверніться до нас трохи пізніше.\n",
