@@ -67,6 +67,14 @@ class NickCommand extends ChatCommand
             TelegramChatsRepository::getAndSaveTgAvatar($userId, true);
 
             $message = self::locale(['string' => '{{ Tg_Command_Name_Save_Success }}', 'vars' => [$username]]);
+            $replyMarkup = [
+                'inline_keyboard' => [ 
+                        [
+                            ['text' => self::locale('Yes'), 'callback_data' => base64_encode(json_encode(['cmd' => 'nick', 'uid' => $userId, 'save' => true]))],
+                            ['text' => self::locale('No'), 'callback_data' => base64_encode(json_encode(['cmd' => 'nick', 'uid' => $userId, 'save' => false]))],
+                        ],
+                    ],
+                ];
             return true;
         }
 
@@ -77,15 +85,6 @@ class NickCommand extends ChatCommand
             Contacts::new(['telegramid' => $telegramId, 'telegram' => $telegram], $userExistsData['id']);
             TelegramChatsRepository::getAndSaveTgAvatar($userExistsData['id'], true);
             $message = self::locale(['string' => '{{ Tg_Command_Name_Save_Success }}', 'vars' => [$username]]);
-
-            $replyMarkup = [
-                'inline_keyboard' => [ 
-                        [
-                            ['text' => self::locale('Yes'), 'callback_data' => base64_encode(json_encode(['cmd' => 'nick', 'username' => $username, 'save' => true]))],
-                            ['text' => self::locale('No'), 'callback_data' => base64_encode(json_encode(['cmd' => 'nick', 'username' => $username, 'save' => false]))],
-                        ],
-                    ],
-                ];
             return true;
         }
 

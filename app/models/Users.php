@@ -445,10 +445,12 @@ class Users extends Model
         }
         return self::update($data, $where);
     }
-    public static function add($name)
+    public static function add(string $name = '', bool $tmp = false)
     {
         $table = self::$table;
         $nickname = self::formatName($name);
+        
+        if (empty($nickname)) return false;
 
         return self::insert(['name' => $nickname], $table);
     }
