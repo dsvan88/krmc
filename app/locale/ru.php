@@ -14,6 +14,8 @@ return [
     'About us' => 'Про нас',
     'Gallery' => 'Галерея',
     'Contacts' => 'Контакты',
+    'Yes' => 'Да',
+    'No' => 'Нет',
 
     'Login' => 'Логин',
     'Nickname (in game)' => 'Псевдоним (игровой)',
@@ -206,7 +208,8 @@ return [
     '{{ Tg_Command_Without_Arguments }}' => "Эта <b>Команда</b> не может быть исполнена без каких-либо аргументов!",
 
     '{{ Tg_Command_Name_Already_Set }}' => "Я уже запомнил Вас под псевдонимом <b>%s</b>!\n\nИзменения - только через администраторов.",
-    '{{ Tg_Command_Name_Too_Short }}' => "Ваш псевдоним - слишком короткий!\nПожалуйста, укажите, как минимум <b>2</b> символа, что бы люди могли узнать Вас!",
+    "Your nickname can't be empty!\nPlease, use that format:\n/nick <b>Your nickname</b>" => "Ваш псевдоним не может быть пустым!\nПожалуйста, используйте такой формат:\n/nick <b>Ваш псевдоним</b>",
+    'Your nickname is too short!\nPlease use at least <b>2</b> symbols, so people can recognize you!' => "Ваш псевдоним - слишком короткий!\nПожалуйста, укажите, как минимум <b>2</b> символа, что бы люди могли узнать Вас!",
     "Invalid nickname format!\nPlease use only <b>Cyrillic</b> and <b>spaces</b> in the nickname!" => "Не верный формат псевдонима!\nИспользуйте, пожалуйста, только <b>Кирилицу</b> и <b>пробелы</b> в псевдониме!",
     "Invalid nickname format!\nPlease use only <b>Cyrillic</b> and <b>spaces</b> in the nickname!\nWrong simbols: %s" => "Не верный формат псевдонима!\nИспользуйте, пожалуйста, только <b>Кирилицу</b> и <b>пробелы</b> в псевдониме!\nНе верные символы: %s",
     '{{ Tg_Command_Games_Not_Set }}' => "На ближайшее время, игр - не запланировано!\nПожалуйста, загляните к нам чуть позднее.\n",
