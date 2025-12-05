@@ -62,13 +62,13 @@ class TelegramBotController extends Controller
         $data = trim(file_get_contents('php://input'));
         $message = json_decode($data, true);
         
-        // if (!empty($message['callback_query'])){
-        //     self::$techTelegramId = Settings::getTechTelegramId();
-        //     Sender::message(self::$techTelegramId, 'CallbackQuery:'.PHP_EOL.json_encode($message['callback_query']));
-        //     Sender::message(self::$techTelegramId, 'Data:'.PHP_EOL.$message['callback_query']['data']);
-        //     Sender::message(self::$techTelegramId, 'FROM:'.PHP_EOL.json_encode($message['callback_query']['from']));
-        //     Sender::message(self::$techTelegramId, 'Message:'.PHP_EOL.json_encode($message['callback_query']['message']));
-        // }
+        if (!empty($message['callback_query'])){
+            self::$techTelegramId = Settings::getTechTelegramId();
+            Sender::message(self::$techTelegramId, 'CallbackQuery:'.PHP_EOL.json_encode($message['callback_query']));
+            Sender::message(self::$techTelegramId, 'Data:'.PHP_EOL.$message['callback_query']['data']);
+            Sender::message(self::$techTelegramId, 'FROM:'.PHP_EOL.json_encode($message['callback_query']['from']));
+            Sender::message(self::$techTelegramId, 'Message:'.PHP_EOL.json_encode($message['callback_query']['message']));
+        }
 
         static::$type = empty($message['callback_query']) ? 'message' : 'callback_query';
 
@@ -321,10 +321,10 @@ class TelegramBotController extends Controller
             Sender::setMessageReaction(self::$chatId, self::$incomeMessage['message']['message_id'], self::$reaction);
         }
 
-        // if (self::$chatId == self::$techTelegramId)
-        //     $botResult = Sender::message(self::$chatId, Locale::phrase(self::$resultMessage), 0, self::$replyMarkup);
-        // else 
-        $botResult = Sender::message(self::$chatId, Locale::phrase(self::$resultMessage));
+        if (self::$chatId == self::$techTelegramId)
+            $botResult = Sender::message(self::$chatId, Locale::phrase(self::$resultMessage), 0, self::$replyMarkup);
+        else 
+            $botResult = Sender::message(self::$chatId, Locale::phrase(self::$resultMessage));
 
         if ($botResult[0]['ok']) {
             if (self::$command === 'week') {

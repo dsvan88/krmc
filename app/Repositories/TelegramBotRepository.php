@@ -4,6 +4,7 @@ namespace app\Repositories;
 
 use app\core\Locale;
 use app\models\Days;
+use app\models\Users;
 use app\models\Weeks;
 use Exception;
 
