@@ -10,6 +10,10 @@ use Exception;
 class TelegramBotRepository
 {
     public static function nick (array $userData = [], array $arguments = [], array &$update = []){
+        
+        if (empty($userData) || empty($arguments))
+            throw new Exception('UserData or arguments is empty');
+
         $tId = (int) trim($arguments['uid']);
         if (empty($tId))
             throw new Exception('UserID can’t be empty!');
