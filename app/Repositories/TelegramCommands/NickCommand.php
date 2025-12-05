@@ -67,6 +67,7 @@ class NickCommand extends ChatCommand
             TelegramChatsRepository::getAndSaveTgAvatar($userId, true);
 
             $message = self::locale(['string' => '{{ Tg_Command_Name_Save_Success }}', 'vars' => [$username]]);
+
             $replyMarkup = [
                 'inline_keyboard' => [ 
                         [
