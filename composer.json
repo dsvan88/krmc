@@ -13,7 +13,7 @@
         "ext-gd": "*",
         "ext-zip": "*",
         "google/apiclient": "^2.18",
-        "composer/composer": "^2.2.0",
+        "composer/composer": "^2.2.0"
     },
     "minimum-stability": "dev",
     "prefer-stable": true
