@@ -1,5 +1,6 @@
 public/scripts/*.js
 composer.phar
 .env.dev
+.env.*
 /vendor/*
 app/scripts/_old/*
