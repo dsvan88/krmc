@@ -12,8 +12,7 @@
         "ext-exif": "*",
         "ext-gd": "*",
         "ext-zip": "*",
-        "google/apiclient": "^2.18",
-        "phpmailer/phpmailer": "^7.0.0"
+        "google/apiclient": "^2.18"
     },
     "minimum-stability": "dev",
     "prefer-stable": true
