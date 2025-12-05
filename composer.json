@@ -2,9 +2,7 @@
     "name": "dsvan88/krmc",
     "description": "Kriviy Rih Mafia Club website",
     "license": "MIT",
-    "keywords": [
-        "framework"
-    ],
+    "keywords": ["framework"],
     "type": "project",
     "require": {
         "php": "^8.3",
