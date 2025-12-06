@@ -253,6 +253,12 @@ class TelegramBotController extends Controller
                 self::parseDayNum($dayName, $requestData);
             } elseif (preg_match('/^\d{2}:\d{2}$/', $value) === 1 && empty($requestData['arrive'])) {
                 $requestData['arrive'] = $value;
+            } elseif (preg_match('/\#(\d)*$/', $value, $match) === 1) {
+                $userRegData = Users::find($match[0]);
+                if ($userRegData) {
+                    $requestData['userId'] = $userRegData['id'];
+                    $requestData['userName'] = $userRegData['name'];
+                }
             } elseif (preg_match('/^(\+|-)\d{1,2}/', $value, $match) === 1) {
                 $requestData['nonames'] = substr($match[0], 1);
             } elseif ($requestData['userId'] < 2) {

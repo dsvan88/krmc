@@ -21,6 +21,11 @@ class NewuserCommand extends ChatCommand
         }
         $username = mb_substr($username, 0, -1, 'UTF-8');
 
+        // $lun = Users::formatName($_username, 'latin');
+        // $cun = Users::formatName($_username, 'cyrillic');
+
+        // $username = strlen($lun) > strlen($cun) ? $lun : $cun;
+
         if (mb_strlen(trim($username), 'UTF-8') < 2) {
             $message = self::locale('{{ Tg_Command_Name_Too_Short }}');
             return false;

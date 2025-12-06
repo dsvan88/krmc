@@ -573,10 +573,16 @@ class Users extends Model
      */
     public static function formatName(string $name, string $alpha = 'latin')
     {
+        $name = trim($name);
+        $symbols = 'a-z';
+        $lun = preg_replace(['/\s+/', "/[^$symbols.0-9 ]+/ui"], [' ', ''], $name);
+        $symbols = Locale::$cyrillicPattern;
+        $cun = preg_replace(['/\s+/', "/[^$symbols.0-9 ]+/ui"], [' ', ''], $name);
 
-        // $name = preg_replace(['/\s+/', '/[^a-zа-яєіїґ.0-9 ]+/ui'], [' ', ''], trim($name));
-        $symbols = $alpha === 'latin' ? 'a-z' : Locale::$cyrillicPattern;
-        $name = preg_replace(['/\s+/', "/[^$symbols.0-9 ]+/ui"], [' ', ''], trim($name));
+        $name = strlen($lun) > strlen($cun) ? $lun : $cun;
+
+        // $symbols = $alpha === 'latin' ? 'a-z' : Locale::$cyrillicPattern;
+        // $name = preg_replace(['/\s+/', "/[^$symbols.0-9 ]+/ui"], [' ', ''], trim($name));
 
         if (empty($name)) return false;
 

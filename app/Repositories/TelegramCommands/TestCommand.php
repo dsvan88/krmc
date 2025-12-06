@@ -28,10 +28,11 @@ class TestCommand extends ChatCommand
             return false;
         }
 
-        $lun = Users::formatName($_username, 'latin');
-        $cun = Users::formatName($_username, 'cyrillic');
+        // $lun = Users::formatName($_username, 'latin');
+        // $cun = Users::formatName($_username, 'cyrillic');
 
-        $username = strlen($lun) > strlen($cun) ? $lun : $cun;
+        // $username = strlen($lun) > strlen($cun) ? $lun : $cun;
+        Users::formatName($_username);
 
         if (mb_strlen($username, 'UTF-8') < 2) {
             $message = self::locale("Your nickname is too short!\nPlease use at least <b>2</b> symbols, so people can recognize you!");

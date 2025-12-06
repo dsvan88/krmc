@@ -34,7 +34,7 @@ class NickCommand extends ChatCommand
 
         // $lun = Users::formatName($_username, 'latin');
         // $cun = Users::formatName($_username, 'cyrillic');
-        $username = Users::formatName($_username, 'cyrillic');
+        $username = Users::formatName($_username);
 
         // $username = strlen($lun) > strlen($cun) ? $lun : $cun;
 
