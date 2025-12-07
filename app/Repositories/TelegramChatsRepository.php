@@ -9,6 +9,8 @@ use app\core\Sender;
 use app\models\Settings;
 use app\models\TelegramChats;
 use app\models\Users;
+use app\core\TelegramBot;
+use app\core\Tech;
 use Exception;
 
 class TelegramChatsRepository
@@ -98,5 +100,12 @@ class TelegramChatsRepository
         unlink($image['fullpath']);
 
         return (bool) Users::edit(['personal' => $userData['personal']], ['id' => $userId]);
+    }
+    public static function isChatExists(int $chatId){
+
+        $tgBot = new TelegramBot;
+        $tgBot->getChat($chatId);
+
+        return $tgBot::$result['ok'] || $tgBot::$result['error_code'] !== 400;
     }
 }

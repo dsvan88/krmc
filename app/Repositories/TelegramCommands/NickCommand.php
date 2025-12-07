@@ -87,11 +87,14 @@ class NickCommand extends ChatCommand
             return true;
         }
 
-        $userContacts = ContactRepository::formatUserContacts($userContacts);
-        // $isAvailable = AccountRepository::checkAvailable($userExistsData['id']);
-        
+        $userContacts = ContactRepository::formatUserContacts($userContacts);        
+
         if ($userContacts['telegramid'] !== $telegramId) {
             $message = self::locale(['string' => '{{ Tg_Command_Name_Already_Set_By_Other }}', 'vars' => [$username]]);
+
+            // $isAvailable = AccountRepository::checkAvailable($userExistsData['id']);
+
+            // $isTgChatExists = TelegramChatsRepository::isChatExists($userContacts['telegramid']);
             return false;
         }
 

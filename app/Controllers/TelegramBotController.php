@@ -319,13 +319,11 @@ class TelegramBotController extends Controller
         return true;
     }
     public static function executeChatCommand(){
-        if (self::$command === 'dice'){
-            TelegramBot::set();
-            TelegramBot::sendDice(self::$chatId);
-        }
-        if (self::$command === 'd64'){
-            TelegramBot::set();
-            TelegramBot::sendDice(self::$chatId, '🎰');
+        if (in_array(self::$command, ['dice', 'd6', 'd64'])){
+            $tbBot = new TelegramBot;
+            $tbBot->sendDice(self::$chatId, self::$command === 'd64' ? '🎰' : '🎲');
+            // error_log(json_encode($tbBot::$result['result']['dice']['value']));
+            return true;
         }
         if (!self::execute()) {
             if (empty(self::$resultMessage)) return false;

@@ -43,12 +43,19 @@ class TelegramBot
         return Settings::getBotToken();
     }
 
-    public static function sendDice($chatId)
+    public static function sendDice(int $chatId, string $emoji = '🎲')
     {
         $params['chat_id'] = $chatId; // id получателя сообщения
-        $params['emoji'] = '🎲'; // emoji , 🎯, 🎳, 🎰, 🏀, ⚽
+        $params['emoji'] = $emoji; // emoji: 🎲, 🎯, 🎳, 🎰, 🏀, ⚽
 
         return self::send('sendDice', $params);
+    }
+
+    public static function getChat(int $chatId)
+    {
+        $params['chat_id'] = $chatId; // id получателя сообщения
+
+        return self::send('getChat', $params);
     }
     public static function sendMessage($userId, string $message = '', int $messageId = -1, array $replyMarkup = [])
     {
