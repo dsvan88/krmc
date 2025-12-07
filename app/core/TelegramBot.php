@@ -43,6 +43,13 @@ class TelegramBot
         return Settings::getBotToken();
     }
 
+    public static function sendDice($chatId)
+    {
+        $params['chat_id'] = $chatId; // id получателя сообщения
+        $params['emoji'] = '🎲'; // emoji , 🎯, 🎳, 🎰, 🏀, ⚽
+
+        return self::send('sendDice', $params);
+    }
     public static function sendMessage($userId, string $message = '', int $messageId = -1, array $replyMarkup = [])
     {
         $botToken = self::$botToken;

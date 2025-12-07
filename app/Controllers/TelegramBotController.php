@@ -319,6 +319,14 @@ class TelegramBotController extends Controller
         return true;
     }
     public static function executeChatCommand(){
+        if (self::$command === 'dice'){
+            TelegramBot::set();
+            TelegramBot::sendDice(self::$chatId);
+        }
+        if (self::$command === 'd64'){
+            TelegramBot::set();
+            TelegramBot::sendDice(self::$chatId, '🎰');
+        }
         if (!self::execute()) {
             if (empty(self::$resultMessage)) return false;
             $botResult = Sender::message(self::$techTelegramId, json_encode([self::$incomeMessage, /* self::$requester ,*/ self::parseArguments(self::$commandArguments)], JSON_UNESCAPED_UNICODE));
