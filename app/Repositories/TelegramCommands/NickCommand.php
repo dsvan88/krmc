@@ -16,7 +16,7 @@ class NickCommand extends ChatCommand
 {
     public static function description()
     {
-        return self::locale('<u>/nick Your nickname</u> (Cyrillic) <i>// Register your nickname</i>');
+        return self::locale('<u>/nick Your nickname</u> <i>// Register your nickname</i>');
     }
     public static function execute(array $arguments = [], string &$message = '', string &$reaction = '', array &$replyMarkup = [])
     {
@@ -32,11 +32,7 @@ class NickCommand extends ChatCommand
             return false;
         }
 
-        // $lun = Users::formatName($_username, 'latin');
-        // $cun = Users::formatName($_username, 'cyrillic');
         $username = Users::formatName($_username);
-
-        // $username = strlen($lun) > strlen($cun) ? $lun : $cun;
 
         if (mb_strlen($username, 'UTF-8') < 2) {
             $message = self::locale("Your nickname is too short!\nPlease use at least <b>2</b> symbols, so people can recognize you!");
@@ -44,16 +40,16 @@ class NickCommand extends ChatCommand
         }
 
         if (empty($username)) {
-            $message = self::locale("Invalid nickname format!\nPlease use only <b>Cyrillic</b> and <b>spaces</b> in the nickname!");
+            $message = self::locale("Invalid nickname format!\nPlease use <b>Cyrillic</b> or <b>Latin</b> alphabet, <b>spaces</b> and <b>digits</b> in the nickname!");
             return false;
         }
 
-        $symbols = Locale::$cyrillicPattern;
-        if (preg_match_all("/[^$symbols .0-9]/ui", $_username, $matches)) {
-            $wrong = implode('</i>", "<i>', $matches[0]);
-            $message = self::locale(['string' => "Invalid nickname format!\nPlease use only <b>Cyrillic</b> and <b>spaces</b> in the nickname!\nWrong simbols: %s", 'vars' => ["\"<i>$wrong</i>\""]]);
-            return false;
-        }
+        // $symbols = Locale::$cyrillicPattern;
+        // if (preg_match_all("/[^a-z$symbols .0-9]/ui", $_username, $matches)) {
+        //     $wrong = implode('</i>", "<i>', $matches[0]);
+        //     $message = self::locale(['string' => "Invalid nickname format!\nPlease use <b>Cyrillic</b> or <b>Latin</b> alphabet, <b>spaces</b> and <b>digits</b>!\nWrong simbols: %s", 'vars' => ["\"<i>$wrong</i>\""]]);
+        //     return false;
+        // }
 
         $telegramId = self::$message['message']['from']['id'];
         $telegram = self::$message['message']['from']['username'];
@@ -67,7 +63,8 @@ class NickCommand extends ChatCommand
             TelegramChats::save(self::$message);
             TelegramChatsRepository::getAndSaveTgAvatar($userId, true);
 
-            $message = self::locale(['string' => '{{ Tg_Command_Name_Save_Success }}', 'vars' => [$username]]);
+            $message = self::locale(['string' => "So... we remember you under the nickname <b>%s</b>. Right?\n\nIf you make a mistake, don't worry, tell the administrator about it and he will quickly fix it😏", 'vars' => [$username]]);
+            // $message = self::locale(['string' => "So... we remember you under the nickname <b>%s</b>. Right?", 'vars' => [$username]]);
 
             $replyMarkup = [
                 'inline_keyboard' => [ 
@@ -86,11 +83,13 @@ class NickCommand extends ChatCommand
         if (empty($userContacts)) {
             Contacts::new(['telegramid' => $telegramId, 'telegram' => $telegram], $userExistsData['id']);
             TelegramChatsRepository::getAndSaveTgAvatar($userExistsData['id'], true);
-            $message = self::locale(['string' => '{{ Tg_Command_Name_Save_Success }}', 'vars' => [$username]]);
+            $message = self::locale(['string' => "So... we remember you under the nickname <b>%s</b>. Right?\n\nIf you make a mistake, don't worry, tell the administrator about it and he will quickly fix it😏", 'vars' => [$username]]);
             return true;
         }
 
         $userContacts = ContactRepository::formatUserContacts($userContacts);
+        // $isAvailable = AccountRepository::checkAvailable($userExistsData['id']);
+        
         if ($userContacts['telegramid'] !== $telegramId) {
             $message = self::locale(['string' => '{{ Tg_Command_Name_Already_Set_By_Other }}', 'vars' => [$username]]);
             return false;

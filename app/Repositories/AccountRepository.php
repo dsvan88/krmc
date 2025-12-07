@@ -65,7 +65,7 @@ class AccountRepository
         Users::edit(['name' => $name], ['id' => $userId]);
         return ['result' => true, 'message' => 'Success'];
     }
-    public static function addParticipantToDay(string $name, int $day = null)
+    public static function addParticipantToDay(string $name, int $day = -1)
     {
         $userData = Users::getDataByName($name);
         if (empty($userData)) {
@@ -75,7 +75,7 @@ class AccountRepository
         $weekId = Weeks::currentId();
         $weekData = Weeks::weekDataById($weekId);
 
-        if (is_null($day)) {
+        if ($day === -1) {
             $day = getdate()['wday'] - 1;
 
             if ($day === -1)
@@ -246,5 +246,23 @@ class AccountRepository
         if (!$userId) return false;
 
         return Users::auth($userId);
+    }
+    public static function checkAvailable(int $userId = 0) : bool
+    {
+        if (empty($userId)) return false;
+
+        $userData = Users::find($userId);
+        
+        if (!empty($userData['login'])) return false;
+        
+        $tgChat = TelegramChats::findBy('user_id', $userId)[0];
+
+        if ($tgChat['data']['last_seems'] > $_SERVER['REQUEST_TIME']-TIMESTAMP_DAY*365) return false;
+
+        $lastGameDay = DayRepository::findLastGameOfPlayer($userId);
+
+        if ($lastGameDay > $_SERVER['REQUEST_TIME']-TIMESTAMP_DAY*600) return false;
+        
+        return true;
     }
 }

@@ -571,7 +571,7 @@ class Users extends Model
      * 
      * @return mixed        - new, formated nickname
      */
-    public static function formatName(string $name, string $alpha = 'latin')
+    public static function formatName(string $name)
     {
         $name = trim($name);
         $symbols = 'a-z';

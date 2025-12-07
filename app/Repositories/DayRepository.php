@@ -97,4 +97,23 @@ class DayRepository
             $result .= Locale::phrase("<b>Tournament</b>!\nBecome a champion in a glorious and fair competition!\n");
         return $result;
     }
+    public static function findLastGameOfPlayer(int $userId = 0)
+    {
+        if (empty($userId)) return 0;
+
+        $weeks = Weeks::getAll();
+        $weeks = array_reverse($weeks);
+        foreach($weeks as $week){
+            foreach($week['data'] as $num=>$day)
+            {
+                if ($day['status'] !== 'set') continue;
+                foreach($day['participants'] as $player){
+                    if ($player['id'] == $userId) 
+                        return $week['start']+TIME_MARGE*($num+1);
+                }
+            }
+        }
+
+        return 0;
+    }
 }
