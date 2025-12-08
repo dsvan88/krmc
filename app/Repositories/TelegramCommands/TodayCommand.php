@@ -27,13 +27,13 @@ class TodayCommand extends ChatCommand
 
         $reaction = '👌';
         $replyMarkup = [
-            'inline_keyboard' => [ 
-                    [
-                        ['text' => self::locale('I will too!'), 'callback_data' => base64_encode(json_encode(['cmd' => 'booking', 'wId'=> $weekData['id'], 'dNum' => $currentDayNum]))],
-                        ['text' => self::locale('I will too! I hope...'), 'callback_data' => base64_encode(json_encode(['cmd' => 'booking', 'wId'=> $weekData['id'], 'dNum' => $currentDayNum, 'prim' => '?']))],
-                    ],
+            'inline_keyboard' => [
+                [
+                    ['text' => self::locale('I will too!'), 'callback_data' => static::replyButton(['cmd' => 'booking', 'wId' => $weekData['id'], 'dNum' => $currentDayNum])],
+                    ['text' => self::locale('I will too! I hope...'), 'callback_data' => static::replyButton(['cmd' => 'booking', 'wId' => $weekData['id'], 'dNum' => $currentDayNum, 'prim' => '?'])],
                 ],
-            ];
+            ],
+        ];
         return true;
     }
 }

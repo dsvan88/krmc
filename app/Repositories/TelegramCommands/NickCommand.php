@@ -67,13 +67,13 @@ class NickCommand extends ChatCommand
             // $message = self::locale(['string' => "So... we remember you under the nickname <b>%s</b>. Right?", 'vars' => [$username]]);
 
             $replyMarkup = [
-                'inline_keyboard' => [ 
-                        [
-                            ['text' => self::locale('Yes'), 'callback_data' => base64_encode(json_encode(['cmd' => 'nick', 'uid' => $userId, 'save' => true]))],
-                            ['text' => self::locale('No'), 'callback_data' => base64_encode(json_encode(['cmd' => 'nick', 'uid' => $userId, 'save' => false]))],
-                        ],
+                'inline_keyboard' => [
+                    [
+                        ['text' => self::locale('Yes'), 'callback_data' => static::replyButton(['cmd' => 'nick', 'uid' => $userId, 'save' => true])],
+                        ['text' => self::locale('No'), 'callback_data' => static::replyButton(['cmd' => 'nick', 'uid' => $userId, 'save' => false])],
                     ],
-                ];
+                ],
+            ];
             return true;
         }
 
@@ -87,7 +87,7 @@ class NickCommand extends ChatCommand
             return true;
         }
 
-        $userContacts = ContactRepository::formatUserContacts($userContacts);        
+        $userContacts = ContactRepository::formatUserContacts($userContacts);
 
         if ($userContacts['telegramid'] !== $telegramId) {
             $message = self::locale(['string' => '{{ Tg_Command_Name_Already_Set_By_Other }}', 'vars' => [$username]]);

@@ -58,30 +58,28 @@ class Tech
 
         return json_last_error() === JSON_ERROR_NONE;
     }
-    public static function encrypt(string $string): string
+    public static function encrypt(string $s): string
     {
-        if (empty($string)) return '';
+        if (empty($s)) return '';
 
         $cipher = "AES-256-CBC";
-        // $key = md5(ROOT_PASS_DEFAULT);
         $key = hash('xxh3', ROOT_PASS_DEFAULT); //fastest modern algoritm
 
-        $compressed = gzcompress($string, 9);
+        $compressed = gzcompress($s, 9);
         $ivLength = openssl_cipher_iv_length($cipher);
         $iv = openssl_random_pseudo_bytes($ivLength);
         $encrypted = openssl_encrypt($compressed, $cipher, $key, 0, $iv);
 
         return base64_encode($iv . $encrypted);
     }
-    public static function decrypt(string $encryptedData): string
+    public static function decrypt(string $enc): string
     {
-        if (empty($encryptedData)) return '';
+        if (empty($enc)) return '';
 
         $cipher = "AES-256-CBC";
-        // $key = md5(ROOT_PASS_DEFAULT);
         $key = hash('xxh3', ROOT_PASS_DEFAULT); //fastest modern algoritm
         $ivLength = openssl_cipher_iv_length($cipher);
-        $decoded = base64_decode($encryptedData);
+        $decoded = base64_decode($enc);
         $extractedIV = substr($decoded, 0, $ivLength);
         $encryptedText = substr($decoded, $ivLength);
 

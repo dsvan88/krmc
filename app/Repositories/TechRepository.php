@@ -7,10 +7,6 @@ use app\core\Mailer;
 use app\core\Tech;
 use app\libs\Db;
 use app\models\Settings;
-use Google\Client as Google_Client;
-use Google\Service\Drive  as Google_Drive;
-use Google\Service\Drive\DriveFile as Google_Drive_File;
-use Google\Service\Drive\Permission as Google_Drive_Permission;
 
 class TechRepository
 {
@@ -19,7 +15,7 @@ class TechRepository
         if (empty($url)) {
             throw 'URL can’t be empty';
         }
-        
+
         $curl = curl_init();
 
         $options = [
@@ -102,7 +98,7 @@ class TechRepository
 
         return glob("$folder/*.json");
     }
-    public static function truncateDirectory(string $folder = null, string $pattern = null): bool
+    public static function truncateDirectory(string $folder = '', string $pattern = ''): bool
     {
 
         if (empty($folder)) return false;

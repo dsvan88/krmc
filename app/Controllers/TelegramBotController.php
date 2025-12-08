@@ -61,13 +61,13 @@ class TelegramBotController extends Controller
 
         $data = trim(file_get_contents('php://input'));
         $message = json_decode($data, true);
-        
-        if (!empty($message['callback_query'])){
+
+        if (!empty($message['callback_query'])) {
             self::$techTelegramId = Settings::getTechTelegramId();
-            Sender::message(self::$techTelegramId, 'CallbackQuery:'.PHP_EOL.json_encode($message['callback_query']));
-            Sender::message(self::$techTelegramId, 'Data:'.PHP_EOL.$message['callback_query']['data']);
-            Sender::message(self::$techTelegramId, 'FROM:'.PHP_EOL.json_encode($message['callback_query']['from']));
-            Sender::message(self::$techTelegramId, 'Message:'.PHP_EOL.json_encode($message['callback_query']['message']));
+            Sender::message(self::$techTelegramId, 'CallbackQuery:' . PHP_EOL . json_encode($message['callback_query']));
+            Sender::message(self::$techTelegramId, 'Data:' . PHP_EOL . $message['callback_query']['data']);
+            Sender::message(self::$techTelegramId, 'FROM:' . PHP_EOL . json_encode($message['callback_query']['from']));
+            Sender::message(self::$techTelegramId, 'Message:' . PHP_EOL . json_encode($message['callback_query']['message']));
         }
 
         static::$type = empty($message['callback_query']) ? 'message' : 'callback_query';
@@ -89,20 +89,24 @@ class TelegramBotController extends Controller
         self::$techTelegramId = Settings::getTechTelegramId();
         self::$mainGroupTelegramId = Settings::getMainTelegramId();
         self::$chatId = static::$type === 'message' ? self::$incomeMessage[static::$type]['chat']['id'] : self::$incomeMessage[static::$type]['message']['chat']['id'];
-        
+
         $userTelegramId = self::$incomeMessage[static::$type]['from']['id'];
         $userId = Contacts::getUserIdByContact('telegramid', $userTelegramId);
-        if (static::$type === 'message'){
+        if (static::$type === 'message') {
             $text = trim(self::$incomeMessage['message']['text']);
             $command = self::parseCommand($text);
-            if (empty($userId) && $command && !in_array(self::$command, self::$guestCommands)){
+            if (empty($userId) && $command && !in_array(self::$command, self::$guestCommands)) {
                 Sender::message(self::$chatId, Locale::phrase('{{ Tg_Unknown_Requester }}'), self::$incomeMessage['message']['message_id']);
                 return false;
             }
         } else {
-            self::$commandArguments = json_decode(base64_decode(self::$incomeMessage[static::$type]['data']), true);
-            self::$command = empty(self::$commandArguments['cmd']) ? '' : self::$commandArguments['cmd'];
-            if (empty($userId) && !empty(self::$command) && !in_array(self::$command, self::$guestCommands)){
+            self::$commandArguments = json_decode(Tech::decrypt(self::$incomeMessage[static::$type]['data']), true);
+
+            if (empty(self::$commandArguments['cmd'])) return false;
+
+            self::$command =  self::$commandArguments['cmd'];
+
+            if (empty($userId) && !in_array(self::$command, self::$guestCommands)) {
                 Sender::callbackAnswer(self::$incomeMessage[static::$type]['id'], Locale::phrase('{{ Tg_Unknown_Requester }}'), true);
                 return false;
             }
@@ -110,19 +114,18 @@ class TelegramBotController extends Controller
 
         self::$requester = Users::find($userId);
 
-        if (static::$type === 'message'){
+        if (static::$type === 'message') {
             if (self::$command === 'booking' && Users::isBanned('booking', self::$requester['ban'])) {
                 Sender::delete(self::$chatId, self::$incomeMessage['message']['message_id']);
                 Sender::message($userTelegramId, Locale::phrase(['string' => "I’m deeply sorry, but you banned for that action:(...\nYour ban will be lifted at: <b>%s</b>", 'vars' => [date('d.m.Y', self::$requester['ban']['expired'] + TIME_MARGE)]]));
                 return false;
             }
-            if (self::$chatId == self::$mainGroupTelegramId && Users::isBanned('chat', self::$requester['ban'])){
+            if (self::$chatId == self::$mainGroupTelegramId && Users::isBanned('chat', self::$requester['ban'])) {
                 Sender::delete(self::$chatId, self::$incomeMessage['message']['message_id']);
                 Sender::message($userTelegramId, Locale::phrase(['string' => "I’m deeply sorry, but you banned for that action:(...\nYour ban will be lifted at: <b>%s</b>", 'vars' => [date('d.m.Y', self::$requester['ban']['expired'] + TIME_MARGE)]]));
                 return false;
             }
-        }
-        elseif (self::$command === 'booking' && Users::isBanned('booking', self::$requester['ban'])){
+        } elseif (self::$command === 'booking' && Users::isBanned('booking', self::$requester['ban'])) {
             Sender::callbackAnswer(self::$incomeMessage[static::$type]['id'], Locale::phrase(['string' => "I’m deeply sorry, but you banned for that action:(...\nYour ban will be lifted at: <b>%s</b>", 'vars' => [date('d.m.Y', self::$requester['ban']['expired'] + TIME_MARGE)]]), true);
             return false;
         }
@@ -303,14 +306,15 @@ class TelegramBotController extends Controller
         }
         return false;
     }
-    public static function executeCallbackQuery(){
+    public static function executeCallbackQuery()
+    {
         $command = static::$command;
         $update = [];
         $message = TelegramBotRepository::$command(static::$requester, self::$commandArguments, $update);
-        if (!empty($message)){
+        if (!empty($message)) {
             Sender::callbackAnswer(self::$incomeMessage[static::$type]['id'], Locale::phrase($message));
         }
-        if (!empty($update)){
+        if (!empty($update)) {
             Sender::edit(self::$chatId, self::$incomeMessage[static::$type]['message']['message_id'], $update['message'], $update['replyMarkup']);
         }
         if (in_array(self::$command, ['booking'], true)) {
@@ -318,8 +322,9 @@ class TelegramBotController extends Controller
         }
         return true;
     }
-    public static function executeChatCommand(){
-        if (in_array(self::$command, ['dice', 'd6', 'd64'])){
+    public static function executeChatCommand()
+    {
+        if (in_array(self::$command, ['dice', 'd6', 'd64'])) {
             $tbBot = new TelegramBot;
             $tbBot->sendDice(self::$chatId, self::$command === 'd64' ? '🎰' : '🎲');
             // error_log(json_encode($tbBot::$result['result']['dice']['value']));
@@ -335,7 +340,7 @@ class TelegramBotController extends Controller
 
         if (self::$chatId == self::$techTelegramId)
             $botResult = Sender::message(self::$chatId, Locale::phrase(self::$resultMessage), 0, self::$replyMarkup);
-        else 
+        else
             $botResult = Sender::message(self::$chatId, Locale::phrase(self::$resultMessage));
 
         if ($botResult[0]['ok']) {
@@ -372,7 +377,7 @@ class TelegramBotController extends Controller
         if (!$ready) return false;
 
         $accessLevel = static::$class::getAccessLevel();
-        
+
         if (!self::checkAccess($accessLevel)) {
             return false;
         }

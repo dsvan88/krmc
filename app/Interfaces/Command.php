@@ -8,5 +8,6 @@ interface Command
     public static function getAccessLevel(): string;
     public static function description();
     public static function execute(array $arguments = []);
-    public static function locale(string $phrase);
+    public static function locale($phrase);
+    public static function replyButton(array $data);
 }

@@ -20,8 +20,8 @@ class DayCommand extends ChatCommand
         $daySlug = isset($requestData[0]) ? $requestData[0] : 'tod';
         self::$operatorClass::parseDayNum($daySlug, $requestData);
         if ($requestData['dayNum'] < $requestData['currentDay'])
-        $weekId++;
-        
+            $weekId++;
+
         $weekData = Weeks::weekDataById($weekId);
         $message = Days::getFullDescription($weekData, $requestData['dayNum']);
 
@@ -31,13 +31,13 @@ class DayCommand extends ChatCommand
         }
         $reaction = '👌';
         $replyMarkup = [
-            'inline_keyboard' => [ 
-                    [
-                        ['text' => self::locale('I will too!'), 'callback_data' => base64_encode(json_encode(['cmd' => 'booking', 'wId'=> $weekId, 'dNum' => $requestData['dayNum']]))],
-                        ['text' => self::locale('I will too! I hope...'), 'callback_data' => base64_encode(json_encode(['cmd' => 'booking', 'wId'=> $weekId, 'dNum' => $requestData['dayNum'], 'prim' => '?']))],
-                    ],
+            'inline_keyboard' => [
+                [
+                    ['text' => self::locale('I will too!'), 'callback_data' => static::replyButton(['cmd' => 'booking', 'wId' => $weekId, 'dNum' => $requestData['dayNum']])],
+                    ['text' => self::locale('I will too! I hope...'), 'callback_data' => static::replyButton(['cmd' => 'booking', 'wId' => $weekId, 'dNum' => $requestData['dayNum'], 'prim' => '?'])],
                 ],
-            ];
+            ],
+        ];
         return true;
     }
 }
