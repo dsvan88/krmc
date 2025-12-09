@@ -11,6 +11,9 @@ use Exception;
 
 class TelegramBotRepository
 {
+    public static $message = '';
+    public static $userData = [];
+    public static $arguments = [];
     public static function nickRelink(array $userData = [], array $arguments = [], array &$update = []){
         
         // $userData IS EMPTY! Need to resolve add Relink To guestCommands;
@@ -22,6 +25,7 @@ class TelegramBotRepository
 
         if (empty($uId) || empty($tId))
             throw new Exception('UserID or TelegramID can’t be empty!');
+
 
         if (empty($userData['privilege']['status']) || !in_array($userData['privilege']['status'], ['manager', 'admin', 'root'], true))
             return 'You don’t have enough rights to change information about other users!';

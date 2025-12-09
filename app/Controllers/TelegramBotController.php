@@ -310,6 +310,9 @@ class TelegramBotController extends Controller
     {
         $command = static::$command;
         $update = [];
+        TelegramBotRepository::$message = static::$incomeMessage;
+        TelegramBotRepository::$userData = static::$requester;
+        TelegramBotRepository::$arguments = static::$commandArguments;
         $message = TelegramBotRepository::$command(static::$requester, self::$commandArguments, $update);
         if (!empty($message)) {
             Sender::callbackAnswer(self::$incomeMessage[static::$type]['id'], Locale::phrase($message));
