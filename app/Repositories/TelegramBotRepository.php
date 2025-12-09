@@ -11,6 +11,23 @@ use Exception;
 
 class TelegramBotRepository
 {
+    public static function nickRelink(array $userData = [], array $arguments = [], array &$update = []){
+        
+        // $userData IS EMPTY! Need to resolve add Relink To guestCommands;
+        if (empty($arguments))
+            throw new Exception('Arguments is empty!');
+
+        $uId = (int) trim($arguments['uid']);
+        $tId = (int) trim($arguments['tid']);
+
+        if (empty($uId) || empty($tId))
+            throw new Exception('UserID or TelegramID can’t be empty!');
+
+        if (empty($userData['privilege']['status']) || !in_array($userData['privilege']['status'], ['manager', 'admin', 'root'], true))
+            return 'You don’t have enough rights to change information about other users!';
+
+
+    }
     public static function nick(array $userData = [], array $arguments = [], array &$update = [])
     {
 
@@ -18,7 +35,6 @@ class TelegramBotRepository
             throw new Exception('UserData or arguments is empty');
 
         $uId = (int) trim($arguments['uid']);
-        $tId = (int) trim($arguments['tid']);
 
         if (empty($uId))
             throw new Exception('UserID can’t be empty!');
@@ -26,24 +42,22 @@ class TelegramBotRepository
         if ($userData['id'] != $uId && (empty($userData['privilege']['status']) || !in_array($userData['privilege']['status'], ['manager', 'admin', 'root'], true)))
             return 'You don’t have enough rights to change information about other users!';
 
-        if (isset($arguments['save'])){
-            if ($arguments['save']){
-                $update = [
-                    'message' => Locale::phrase(['text' => "<b>%s</b>, nice to meet you!\nYou successfully registered in our system!", 'vars' => $userData['name']]),PHP_EOL.PHP_EOL.Locale::phrase("If you make a mistake, don't worry, tell the administrator about it and he will quickly fix it😏"),
-                ];
-
-                return 'Success';
-            }
-
-            Users::delete($tId);
-            
+        if ($arguments['save']){
             $update = [
-                'message' => Locale::phrase(['text' => "Okay! Let's try again!\nUse the next command to register your nickname:\n/nick <b>%s</b>\n\nTry to avoid characters of different languages.", 'vars' => $userData['name']]),
+                'message' => Locale::phrase(['text' => "<b>%s</b>, nice to meet you!\nYou successfully registered in our system!", 'vars' => $userData['name']]),PHP_EOL.PHP_EOL.Locale::phrase("If you make a mistake, don't worry, tell the Administrator about it and he will quickly fix it😏"),
             ];
 
-            return 'Okay!';
+            return 'Success';
         }
-        return 'Something went wrong';
+
+        Users::delete($uId);
+        
+        $update = [
+            'message' => Locale::phrase(['text' => "Okay! Let's try again!\nUse the next command to register your nickname:\n/nick <b>%s</b>\n\nTry to avoid characters of different languages.", 'vars' => $userData['name']]),
+        ];
+
+        return 'Okay!';
+        
     }
     public static function booking(array $userData = [], array $arguments = [], array &$update = [])
     {
