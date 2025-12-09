@@ -17,28 +17,33 @@ class TelegramBotRepository
         if (empty($userData) || empty($arguments))
             throw new Exception('UserData or arguments is empty');
 
-        $tId = (int) trim($arguments['uid']);
-        if (empty($tId))
+        $uId = (int) trim($arguments['uid']);
+        $tId = (int) trim($arguments['tid']);
+
+        if (empty($uId))
             throw new Exception('UserID can’t be empty!');
 
-        if ($userData['id'] != $tId && (empty($userData['privilege']['status']) || !in_array($userData['privilege']['status'], ['manager', 'admin', 'root'], true)))
+        if ($userData['id'] != $uId && (empty($userData['privilege']['status']) || !in_array($userData['privilege']['status'], ['manager', 'admin', 'root'], true)))
             return 'You don’t have enough rights to change information about other users!';
 
-        if ($arguments['save']) {
+        if (isset($arguments['save'])){
+            if ($arguments['save']){
+                $update = [
+                    'message' => Locale::phrase(['text' => "<b>%s</b>, nice to meet you!\nYou successfully registered in our system!", 'vars' => $userData['name']]),PHP_EOL.PHP_EOL.Locale::phrase("If you make a mistake, don't worry, tell the administrator about it and he will quickly fix it😏"),
+                ];
+
+                return 'Success';
+            }
+
+            Users::delete($tId);
+            
             $update = [
-                'message' => Locale::phrase(['text' => "<b>%s</b>, nice to meet you!\nYou successfully registered in our system!\n\nIf you make a mistake, don't worry, tell the administrator about it and he will quickly fix it😏", 'vars' => $userData['name']]),
+                'message' => Locale::phrase(['text' => "Okay! Let's try again!\nUse the next command to register your nickname:\n/nick <b>%s</b>\n\nTry to avoid characters of different languages.", 'vars' => $userData['name']]),
             ];
 
-            return 'Success';
+            return 'Okay!';
         }
-
-        Users::delete($tId);
-
-        $update = [
-            'message' => Locale::phrase(['text' => "Okay! Let's try again!\nUse the next command to register your nickname:\n/nick <b>%s</b>\n\nTry to avoid characters of different languages.", 'vars' => $userData['name']]),
-        ];
-
-        return 'Okay!';
+        return 'Something went wrong';
     }
     public static function booking(array $userData = [], array $arguments = [], array &$update = [])
     {
