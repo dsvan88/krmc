@@ -89,7 +89,7 @@ class TelegramChatsRepository
 
         if ($image === false){
             if ($silent) return false;
-            throw new Exception("Image didn't saved successfully!");
+            throw new Exception("Image didn’t saved successfully!");
         }
 
         $gDrive = new GoogleDrive();

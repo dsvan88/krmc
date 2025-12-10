@@ -17,7 +17,7 @@ class ClearCommand extends ChatCommand
     public static function execute(array $arguments = [], string &$message = '', string &$reaction = '', array &$replyMarkup = [])
     {
         // $message = "Не можу очистити цей день.😥\nВін й досі запланований! Я можу очистити лише дні, по яким стався \"відбій\"";
-        $message = self::locale("Can't clear this day.\nIt's still \"set\". I can only clear \"recalled\"!");
+        $message = self::locale("Can’t clear this day.\nIt’s still \"set\". I can only clear \"recalled\"!");
 
         $dayName = '';
         $requestData = $arguments;

@@ -99,7 +99,7 @@ class Router
                     return View::errorCode(404, ['message' => "Action $action isn’t found in Controller $path!"]);
                 }
             } else {
-                return View::errorCode(404, ['message' => "Controller $path isn't found!"]);
+                return View::errorCode(404, ['message' => 'Controller $path isn’t found!']);
             }
         } else {
             return View::errorCode(404, ['message' => 'Route isn’t found!']);

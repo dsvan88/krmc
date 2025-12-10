@@ -30,7 +30,7 @@ class PagesController extends Controller
         $page = PageRepository::getPage($slug);
 
         if (empty($page))
-            return View::errorCode(404, ['message' => "Page $slug isn't found!"]);
+            return View::errorCode(404, ['message' => "Page $slug isn’t found!"]);
 
         $vars = [
             'mainClass' => 'pages',

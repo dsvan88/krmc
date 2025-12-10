@@ -48,7 +48,7 @@ class TelegramBotRepository
 
         if ($arguments['save']){
             $update = [
-                'message' => Locale::phrase(['text' => "<b>%s</b>, nice to meet you!\nYou successfully registered in our system!", 'vars' => $userData['name']]),PHP_EOL.PHP_EOL.Locale::phrase("If you make a mistake, don't worry, tell the Administrator about it and he will quickly fix it😏"),
+                'message' => Locale::phrase(['text' => "<b>%s</b>, nice to meet you!\nYou successfully registered in our system!", 'vars' => $userData['name']]),PHP_EOL.PHP_EOL.Locale::phrase("If you made a mistake, don’t worry, tell the Administrator about it and he will quickly fix it😏"),
             ];
 
             return 'Success';
@@ -57,7 +57,7 @@ class TelegramBotRepository
         Users::delete($uId);
         
         $update = [
-            'message' => Locale::phrase(['text' => "Okay! Let's try again!\nUse the next command to register your nickname:\n/nick <b>%s</b>\n\nTry to avoid characters of different languages.", 'vars' => $userData['name']]),
+            'message' => Locale::phrase(['text' => "Okay! Let’s try again!\nUse the next command to register your nickname:\n/nick <b>%s</b>\n\nTry to avoid characters of different languages.", 'vars' => $userData['name']]),
         ];
 
         return 'Okay!';

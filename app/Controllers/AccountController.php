@@ -281,16 +281,16 @@ class AccountController extends Controller
         if ($field === 'gender') {
             $value = Validator::validate('gender', $value);
             if (!$value)
-                return View::notice(['type' => 'error', 'message' => "Gender isn't in correct format!\nSelect it from the list!"]);
+                return View::notice(['type' => 'error', 'message' => "Gender isn’t in correct format!\nSelect it from the list!"]);
         } else if ($field === 'birthday') {
             $value = Validator::validate('date', $value);
             if (!$value)
-                return View::notice(['type' => 'error', 'message' => "Birthday isn't in correct format!"]);
+                return View::notice(['type' => 'error', 'message' => 'Birthday isn’t in correct format!']);
             $value = strtotime($value);
         } else if ($field === 'phone') {
             $value = Validator::validate('phone', $value);
             if (!$value)
-                return View::notice(['type' => 'error', 'message' => "Phone isn't in correct format!"]);
+                return View::notice(['type' => 'error', 'message' => 'Phone isn’t in correct format!']);
             $value = preg_replace('/[^0-9]/i', '', $value);
         }
 

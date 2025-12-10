@@ -9,6 +9,7 @@ use app\models\Contacts;
 use app\models\Settings;
 use app\models\TelegramChats;
 use app\models\Users;
+use app\Repositories\AccountRepository;
 use app\Repositories\ContactRepository;
 use app\Repositories\TelegramChatsRepository;
 
@@ -28,7 +29,7 @@ class NickCommand extends ChatCommand
         $_username = implode(' ', $arguments);
 
         if (empty(trim($_username))) {
-            $message = self::locale("Your nickname can't be empty!\nPlease, use that format:\n/nick <b>Your nickname</b>");
+            $message = self::locale("Your nickname can’t be empty!\nPlease, use that format:\n/nick <b>Your nickname</b>");
             return false;
         }
 
@@ -64,8 +65,8 @@ class NickCommand extends ChatCommand
             TelegramChatsRepository::getAndSaveTgAvatar($userId, true);
 
             $message = self::locale(['string' => "So... we remember you under the nickname <b>%s</b>. Right?\nNice to meet you!", 'vars' => [$username]]);
-            $message .= PHP_EOL.PHP_EOL;
-            $message .= self::locale("If you make a mistake, don't worry, tell the administrator about it and he will quickly fix it😏");
+            $message .= PHP_EOL . PHP_EOL;
+            $message .= self::locale("If you make a mistake, don’t worry, tell the administrator about it and he will quickly fix it😏");
 
             $replyMarkup = [
                 'inline_keyboard' => [
@@ -84,43 +85,43 @@ class NickCommand extends ChatCommand
             Contacts::new(['telegramid' => $telegramId, 'telegram' => $telegram], $userExistsData['id']);
             TelegramChatsRepository::getAndSaveTgAvatar($userExistsData['id'], true);
             $message = self::locale(['string' => "So... we remember you under the nickname <b>%s</b>. Right?\nNice to meet you!", 'vars' => [$username]]);
-            $message .= PHP_EOL.PHP_EOL;
-            $message .= self::locale("If you make a mistake, don't worry, tell the Administrator about it and he will quickly fix it😏");
+            $message .= PHP_EOL . PHP_EOL;
+            $message .= self::locale("If you make a mistake, don’t worry, tell the Administrator about it and he will quickly fix it😏");
             return true;
         }
 
         $userContacts = ContactRepository::formatUserContacts($userContacts);
 
-        if ($userContacts['telegramid'] === $telegramId){
+        if ($userContacts['telegramid'] === $telegramId) {
             $reaction = '👌';
             $message = self::locale('{{ Tg_Command_Name_You_Have_One }}');
             return false;
         }
-            
+
         $message = self::locale(['string' => '{{ Tg_Command_Name_Already_Set_By_Other }}', 'vars' => [$username]]);
 
         $isChatExists = TelegramChatsRepository::isChatExists($userContacts['telegramid']);
         $isAvailable = AccountRepository::checkAvailable($userExistsData['id']);
-        
-        if (!$isAvailable || $isChatExists){
+
+        if (!$isAvailable || $isChatExists) {
             $message .= PHP_EOL;
             $message = self::locale('If it is your, then contact the Administrators to make changes!');
             return false;
         }
 
-        if (!$isChatExists){
+        if (!$isChatExists) {
             $message = self::locale(['string' => 'The nickname <b>%s</b> is already registered by another member of the group!', 'vars' => [$username]]);
             $message .= PHP_EOL;
-            $message .= self::locale("But... I can't find his TelegramID🤷‍♂️");
+            $message .= self::locale("But... I can’t find his TelegramID🤷‍♂️");
             $message .= PHP_EOL;
             $message .= self::locale("Is it you?*");
-            $message .= PHP_EOL.PHP_EOL;
-            $message = '<i>'.self::locale("*This nickname will be your, after Administrators's approve.").'</i>';
+            $message .= PHP_EOL . PHP_EOL;
+            $message = '<i>' . self::locale("*This nickname will be your, after Administrators’s approve.") . '</i>';
             $replyMarkup = [
-                'inline_keyboard' => [ 
+                'inline_keyboard' => [
                     [
-                        ['text' => self::locale('Yes'), 'callback_data' => static::replyButton(['cmd' => 'nickRelink', 'uid' => $userId, 'tgid' => $telegramId, 'itsme' => true])],
-                        ['text' => self::locale('No'), 'callback_data' => static::replyButton(['cmd' => 'nickRelink', 'uid' => $userId, 'tgid' => $telegramId, 'itsme' => false])],
+                        ['text' => self::locale('Yes'), 'callback_data' => static::replyButton(['cmd' => 'nickRelink', 'uid' => $userExistsData['id'], 'tgid' => $telegramId, 'itsme' => true])],
+                        ['text' => self::locale('No'), 'callback_data' => static::replyButton(['cmd' => 'nickRelink', 'uid' => $userExistsData['id'], 'tgid' => $telegramId, 'itsme' => false])],
                     ],
                 ],
             ];
@@ -130,16 +131,16 @@ class NickCommand extends ChatCommand
 
         $message = self::locale(['string' => 'The nickname <b>%s</b> is already registered by another member of the group!', 'vars' => [$username]]);
         $message .= PHP_EOL;
-        $message .= self::locale("But... We didn't saw him for quite time🤷‍♂️");
+        $message .= self::locale("But... We didn’t saw him for quite time🤷‍♂️");
         $message .= PHP_EOL;
         $message .= self::locale("Do you wanna to make it your?*");
-        $message .= PHP_EOL.PHP_EOL;
-        $message = '<i>'.self::locale("*This nickname will be your, after Administrators's approve.").'</i>';
+        $message .= PHP_EOL . PHP_EOL;
+        $message = '<i>' . self::locale("*This nickname will be your, after Administrators’s approve.") . '</i>';
         $replyMarkup = [
-            'inline_keyboard' => [ 
+            'inline_keyboard' => [
                 [
-                    ['text' => self::locale('Yes'), 'callback_data' => static::replyButton(['cmd' => 'nickRelink', 'uid' => $userId, 'tgid' => $telegramId, 'itsme' => true])],
-                    ['text' => self::locale('No'), 'callback_data' => static::replyButton(['cmd' => 'nickRelink', 'uid' => $userId, 'tgid' => $telegramId, 'itsme' => false])],
+                    ['text' => self::locale('Yes'), 'callback_data' => static::replyButton(['cmd' => 'nickRelink', 'uid' => $userExistsData['id'], 'tgid' => $telegramId, 'itsme' => true])],
+                    ['text' => self::locale('No'), 'callback_data' => static::replyButton(['cmd' => 'nickRelink', 'uid' => $userExistsData['id'], 'tgid' => $telegramId, 'itsme' => false])],
                 ],
             ],
         ];

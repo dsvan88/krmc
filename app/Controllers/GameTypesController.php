@@ -56,7 +56,7 @@ class GameTypesController extends Controller
         $gameNames = GameTypes::names();
 
         if (empty($gameNames[$game]))
-            return View::errorCode(404, ['message' => "Game $game isn't found!"]);
+            return View::errorCode(404, ['message' => "Game $game isn’t found!"]);
 
         $page = PageRepository::getPage($game);
 

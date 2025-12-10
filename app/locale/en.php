@@ -65,24 +65,24 @@ return [
     '{{ Page_Add_Page_Title }}' => 'Create new Page',
     '{{ Page_Add_Block_Title }}' => 'Create new Page',
 
-    '{{ Tg_Unknown_Requester }}' => "Sorry! I don't recognize you in makeup🤷‍♂️\nLet's get acquainted!😏\nI'm a digital bot for booking. Your faithful friend and assistant in the matter of signing up for the games of our club🤗\nNow, please tell me your nickname in the game so that I can remember you!\nWrite: /nick <b>Your nickname</b> (<b>Cyrillic</b>!)\nExample:\n/nick Телеграм Бот",
-    '{{ Tg_Command_Without_Arguments }}' => "This <b>Command</b> can't be executed without any arguments!",
+    '{{ Tg_Unknown_Requester }}' => "Sorry! I don’t recognize you in makeup🤷‍♂️\nLet’s get acquainted!😏\nI’m a digital bot for booking. Your faithful friend and assistant in the matter of signing up for the games of our club🤗\nNow, please tell me your nickname in the game so that I can remember you!\nWrite: /nick <b>Your nickname</b> (<b>Cyrillic</b>!)\nExample:\n/nick Телеграм Бот",
+    '{{ Tg_Command_Without_Arguments }}' => "This <b>Command</b> can’t be executed without any arguments!",
 
     '{{ Tg_Command_Name_Already_Set }}' => "I already remember you as <b>%s</b>!\n\nChanges only through administrators",
     '{{ Tg_Command_Games_Not_Set }}' => "There are no games scheduled for the near future!\nPlease contact us later.\n",
     '{{ Tg_Command_Name_You_Have_One }}' => 'This nickname is already yours! Nice to meet you!😊',
-    '{{ Tg_Command_Successfully_Canceled }}' => "Day settings successfully recalled!\n\n*You can cancel ''recall'' by admin's registering for that day;)",
+    '{{ Tg_Command_Successfully_Canceled }}' => "Day settings successfully recalled!\n\n*You can cancel \"recall\" by admin’s registering for that day;)",
     '{{ Tg_Gameday_Not_Set }}' => "There are no games scheduled for this day!",
     '{{ Tg_Command_Set_Day_Not_Found }}' => "There are no games scheduled for this day.",
 
-    '{{ Tg_Command_Requester_Already_Booked }}' => "You are already signed up for this day's games!",
-    '{{ Tg_Command_Requester_Not_Booked }}' => "You weren't signed up for this day's games!",
+    '{{ Tg_Command_Requester_Already_Booked }}' => 'You are already signed up for this day’s games!',
+    '{{ Tg_Command_Requester_Not_Booked }}' => 'You weren’t signed up for this day’s games!',
 
     '{{ Tg_User_With_Telegramid }}' => "User with registered Telegram.",
-    '{{ Tg_Command_User_Already_Booked }}' => "This user is already signed up for today's games!",
-    '{{ Tg_Command_User_Not_Booked }}' => "This user has not been signed up for this day's games!",
+    '{{ Tg_Command_User_Already_Booked }}' => 'This user is already signed up for today’s games!',
+    '{{ Tg_Command_User_Not_Booked }}' => 'This user has not been signed up for this day’s games!',
     '{{ Tg_Command_Name_Already_Set_By_Other }}' => "The nickname <b>%s</b> is already registered by another member of the group!\n\nIf this is you, then contact the Administrators to make changes!",
-    '{{ Tg_Command_Name_Save_Success }}' => "So... we remember you under the nickname <b>%s</b>. Right?\n\nIf you make a mistake, don't worry, tell the administrator about it and he will quickly fix it😏",
+    '{{ Tg_Command_Name_Save_Success }}' => "So... we remember you under the nickname <b>%s</b>. Right?\n\nIf you make a mistake, don’t worry, tell the administrator about it and he will quickly fix it😏",
     '{{ Tg_Command_New_User_Already_Set }}' => "The player under the nickname <b>%s</b> is already registered in the system!",
     '{{ Tg_Command_New_User_Save_Success }}' => "The player under the nickname <b>%s</b> is successfully registered in the system!\n\n*Hint him about the desirability of registering this alias, or do it manually in the admin panel😏",
     '{{ Tg_Command_Promo_Saved }}' => 'Promo successfully saved!',
@@ -100,7 +100,7 @@ return [
 <u>/day (week day)</u> <i>// Booking information for a specific day. Without specifying the day - for today</i>
 <u>/nick Your nickname</u> (Cyrillic) <i>// Register your nickname</i>
 <u>/?</u> или <u>/help</u> <i>// This message</i>",
-    '{{ Tg_Command_Help_Admin }}' => "\n\n<b><u>Admin's commands</u></b>:
+    '{{ Tg_Command_Help_Admin }}' => "\n\n<b><u>Admin’s commands</u></b>:
 <u>/reg</u> <i>// Booking/unbooking players for a specific day. Examples:</i>
     /reg +вс, nickname, 18:00, (with ?)
     /reg -вс, nickname
