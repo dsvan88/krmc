@@ -71,8 +71,8 @@ class NickCommand extends ChatCommand
             $replyMarkup = [
                 'inline_keyboard' => [
                     [
-                        ['text' => '✅' . self::locale('Yes'), 'callback_data' => static::replyButton(['c' => 'nick', 'u' => $userId, 's' => true])],
-                        ['text' => '❌' . self::locale('No'), 'callback_data' => static::replyButton(['c' => 'nick', 'u' => $userId, 's' => false])],
+                        ['text' => '✅' . self::locale('Yes'), 'callback_data' => ['c' => 'nick', 'u' => $userId, 's' => 1]],
+                        ['text' => '❌' . self::locale('No'), 'callback_data' => ['c' => 'nick', 'u' => $userId, 's' => 0]],
                     ],
                 ],
             ];
@@ -122,8 +122,8 @@ class NickCommand extends ChatCommand
             $replyMarkup = [
                 'inline_keyboard' => [
                     [
-                        ['text' => '✅' . self::locale('Yes'), 'callback_data' => ['c' => 'nickRelink', 'u' => $userExistsData['id'], 't' => $telegramId, 'y' => true]],
-                        ['text' => '❌' . self::locale('No'), 'callback_data' => ['c' => 'nickRelink', 'u' => $userExistsData['id'], 't' => $telegramId, 'my' => false]],
+                        ['text' => '✅' . self::locale('Yes'), 'callback_data' => ['c' => 'nickRelink', 'u' => $userExistsData['id'], 't' => $telegramId, 'y' => 1]],
+                        ['text' => '❌' . self::locale('No'), 'callback_data' => ['c' => 'nickRelink', 'u' => $userExistsData['id'], 't' => $telegramId, 'y' => 0]],
                     ],
                 ],
             ];
@@ -141,8 +141,8 @@ class NickCommand extends ChatCommand
         $replyMarkup = [
             'inline_keyboard' => [
                 [
-                    ['text' => '✅' . self::locale('Yes'), 'callback_data' => ['c' => 'nickRelink', 'u' => $userExistsData['id'], 't' => $telegramId, 'y' => true]],
-                    ['text' => '❌' . self::locale('No'), 'callback_data' => ['c' => 'nickRelink', 'u' => $userExistsData['id'], 't' => $telegramId, 'y' => false]],
+                    ['text' => '✅' . self::locale('Yes'), 'callback_data' => ['c' => 'nickRelink', 'u' => $userExistsData['id'], 't' => $telegramId, 'y' => 1]],
+                    ['text' => '❌' . self::locale('No'), 'callback_data' => ['c' => 'nickRelink', 'u' => $userExistsData['id'], 't' => $telegramId, 'y' => 0]],
                 ],
             ],
         ];

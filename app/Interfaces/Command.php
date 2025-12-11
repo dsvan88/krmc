@@ -9,5 +9,4 @@ interface Command
     public static function description();
     public static function execute(array $arguments = []);
     public static function locale($phrase);
-    public static function replyButton(array $data);
 }

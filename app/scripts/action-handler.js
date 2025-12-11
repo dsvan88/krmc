@@ -134,6 +134,7 @@ const actionHandler = {
 		if (!options.url) return false;
 
 		const r = await request(options)
+		console.log('Result', r);
 		if (modal) this.commonModalEvent(modal, options.url, r);
 
 		this.commonResponse(r);

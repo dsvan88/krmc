@@ -9,6 +9,7 @@ use app\models\Days;
 use app\models\Users;
 use app\models\Weeks;
 use app\models\Settings;
+use Error;
 use Exception;
 
 class TelegramBotRepository
@@ -36,54 +37,52 @@ class TelegramBotRepository
         $userData = Users::find($uId);
 
         if (static::$message['callback_query']['from']['id'] == $tId) {
-            if ($arguments['m']) {
+            if (empty($arguments['m'])) {
                 $message = Locale::phrase(['string' => 'The nickname <b>%s</b> is already registered by another member of the group!', 'vars' => [$userData['name']]]);
                 $message .= PHP_EOL;
-                $message .= Locale::phrase('But... I can’t find his TelegramID🤷‍♂️');
-                $message .= PHP_EOL;
-                $message .= Locale::phrase('Is it your?*');
-                $message .= PHP_EOL . PHP_EOL;
-                $message .= '⏳<i>' . Locale::phrase('*Just wait a little for Administrators’s approve.') . '</i>';
-                $replyMarkup = [
-                    'inline_keyboard' => [
-                        [
-                            ['text' => '✅' . Locale::phrase('Yes'), 'callback_data' => ['c' => 'nickRelink', 'u' => $uId, 't' => $tId, 'm' => true]],
-                            ['text' => '❌' . Locale::phrase('No'), 'callback_data' => ['c' => 'nickRelink', 'u' => $uId, 't' => $tId, 'm' => false]],
-                        ],
-                    ],
-                ];
+                $message .= Locale::phrase('Just come up with a new nickname for yourself!');
                 $update = [
-                    'message' => $message,
-                    'replyMarkup' =>  $replyMarkup,
+                    'message' => $message
                 ];
-                //Узнать, что там в этой переменной лежит
-                if (static::$message['callback_query']['message']['chat']['id'] !== Settings::getMainTelegramId()){
-                    $message = Locale::phrase(['string' => 'Telegram user with ID <b>%s</b> trying to register athe nickname <b>%s</b>.', 'vars' => $tId]);
-                    $message .= PHP_EOL;
-                    $message .= Locale::phrase('It’s already registered in our system with TelegramID, but long time no saw or his TelegramID doesn’t exists anymore.');
-                    $message .= PHP_EOL;
-                    $message .= Locale::phrase('Do you agree to change a owner of nickname to a new user?');
-                    $replyMarkup = [
-                    'inline_keyboard' => [
-                        [
-                            ['text' => '✅' . Locale::phrase('Yes'), 'callback_data' => ['c' => 'nickApprove', 'u' => $uId, 't' => $tId, 'mi' => static::$message['callback_query']['message']['id'],'y' => true]],
-                            ['text' => '❌' . Locale::phrase('No'), 'callback_data' => ['c' => 'nickApprove', 'mi' => static::$message['callback_query']['message']['id'], 'y' => false]],
-                        ],
-                    ],
-                ];
-                    $tbBot = new TelegramBot;
-                    $tbBot->sendMessage(Settings::getTechTelegramId(), $message, -1, $replyMarkup);
-                }
                 return 'Success';
             }
-            $message = Locale::phrase(['string' => 'The nickname <b>%s</b> is already registered by another member of the group!', 'vars' => [$userData['name']]]);
-            $message .= PHP_EOL;
-            $message .= Locale::phrase('Just come up with a new nickname for yourself!');
-            $update = [
-                'message' => $message
+            $message = Locale::phrase(['string' => 'The nickname <b>%s</b> is already registered by another member of the group!', 'vars' => [$userData['name']]]) . PHP_EOL;
+            $message .= Locale::phrase('But... I can’t find his TelegramID🤷‍♂️') . PHP_EOL;
+            $message .= Locale::phrase('Is it your?*') . PHP_EOL;
+            $message .= PHP_EOL . '⏳<i>' . Locale::phrase('*Just wait a little for Administrators’s approve.') . '</i>';
+            $replyMarkup = [
+                'inline_keyboard' => [
+                    [
+                        ['text' => '✅' . Locale::phrase('Yes'), 'callback_data' => ['c' => 'nickRelink', 'u' => $uId, 't' => $tId, 'm' => 1]],
+                        ['text' => '❌' . Locale::phrase('No'), 'callback_data' => ['c' => 'nickRelink', 'u' => $uId, 't' => $tId, 'm' => 0]],
+                    ],
+                ],
             ];
+            $update = [
+                'message' => $message,
+                'replyMarkup' =>  $replyMarkup,
+            ];
+            
+            //Узнать, что там в этой переменной лежит
+            if (static::$message['callback_query']['message']['chat']['id'] !== Settings::getMainTelegramId()){
+                $message = Locale::phrase(['string' => 'Telegram user with ID <b>%s</b> trying to register athe nickname <b>%s</b>.', 'vars' => $tId]);
+                $message .= PHP_EOL;
+                $message .= Locale::phrase('It’s already registered in our system with TelegramID, but long time no saw or his TelegramID doesn’t exists anymore.');
+                $message .= PHP_EOL;
+                $message .= Locale::phrase('Do you agree to change a owner of nickname to a new user?');
+                $replyMarkup = [
+                'inline_keyboard' => [
+                    [
+                        ['text' => '✅' . Locale::phrase('Yes'), 'callback_data' => ['c' => 'nickApprove', 'u' => $uId, 't' => $tId, 'ci' => static::$message['callback_query']['message']['chat']['id'], 'mi' => static::$message['callback_query']['message']['id'], 'y' => 1]],
+                        ['text' => '❌' . Locale::phrase('No'), 'callback_data' => ['c' => 'nickApprove', 'ci' => static::$message['callback_query']['message']['chat']['id'], 'mi' => static::$message['callback_query']['message']['id'], 'y' => 0]],
+                    ],
+                ],
+            ];
+                $tbBot = new TelegramBot;
+                $tbBot->sendMessage(Settings::getTechTelegramId(), $message, -1, $replyMarkup);
+            }
             return 'Success';
-        }
+       }
 
         return 'You don’t have enough rights to change information about other users!';
     }
@@ -173,12 +172,21 @@ class TelegramBotRepository
 
         return 'Success';
     }
+    public static function encodeInlineKeyboard(array &$data): void
+    {
+        foreach($data as $i=>$row){
+            foreach($row as $k=>$v){
+                $data[$i][$k]['callback_data'] = TelegramBotRepository::replyButtonEncode($v['callback_data']);
+            }
+        }
+    }
     public static function replyButtonEncode(array $data): string
     {
-        return base64_encode(json_encode($data));
+        return base64_encode(http_build_query($data));
     }
     public static function replyButtonDecode(string $data): array
     {
-        return json_encode(base64_encode($data));
+        parse_str(base64_decode($data), $result);
+        return $result;
     }
 }

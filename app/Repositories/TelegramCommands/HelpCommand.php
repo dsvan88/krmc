@@ -37,7 +37,7 @@ class HelpCommand extends ChatCommand
         $message .= implode("\n", $commandsList);
         $message .= self::locale("\n\nFeel free to ask the admins or community, if something is not clear!");
 
-        $message = $message;
+        $reaction = '👌';
         return true;
     }
     public static function getCommandDescriptions(string $filename)
@@ -54,7 +54,7 @@ class HelpCommand extends ChatCommand
             return false;
         }
         
-        $reaction = '👌';
+        
         return $class::description();
     }
 }
