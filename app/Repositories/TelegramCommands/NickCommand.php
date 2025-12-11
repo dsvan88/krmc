@@ -71,8 +71,8 @@ class NickCommand extends ChatCommand
             $replyMarkup = [
                 'inline_keyboard' => [
                     [
-                        ['text' => self::locale('Yes'), 'callback_data' => static::replyButton(['c' => 'nick', 'u' => $userId, 's' => true])],
-                        ['text' => self::locale('No'), 'callback_data' => static::replyButton(['c' => 'nick', 'u' => $userId, 's' => false])],
+                        ['text' => '✅' . self::locale('Yes'), 'callback_data' => static::replyButton(['c' => 'nick', 'u' => $userId, 's' => true])],
+                        ['text' => '❌' . self::locale('No'), 'callback_data' => static::replyButton(['c' => 'nick', 'u' => $userId, 's' => false])],
                     ],
                 ],
             ];
@@ -116,12 +116,12 @@ class NickCommand extends ChatCommand
             $message .= PHP_EOL;
             $message .= self::locale('Is it your?*');
             $message .= PHP_EOL . PHP_EOL;
-            $message = '<i>' . self::locale("*This nickname will be your, after Administrators’s approve.") . '</i>';
+            $message .= '<i>' . self::locale("*This nickname will be your, after Administrators’s approve.") . '</i>';
             $replyMarkup = [
                 'inline_keyboard' => [
                     [
-                        ['text' => self::locale('Yes'), 'callback_data' => static::replyButton(['c' => 'nickRelink', 'u' => $userExistsData['id'], 't' => $telegramId, 'm' => true])],
-                        ['text' => self::locale('No'), 'callback_data' => static::replyButton(['c' => 'nickRelink', 'u' => $userExistsData['id'], 't' => $telegramId, 'm' => false])],
+                        ['text' => '✅' . self::locale('Yes'), 'callback_data' => static::replyButton(['c' => 'nickRelink', 'u' => $userExistsData['id'], 't' => $telegramId, 'm' => true])],
+                        ['text' => '❌' . self::locale('No'), 'callback_data' => static::replyButton(['c' => 'nickRelink', 'u' => $userExistsData['id'], 't' => $telegramId, 'm' => false])],
                     ],
                 ],
             ];
@@ -135,12 +135,12 @@ class NickCommand extends ChatCommand
         $message .= PHP_EOL;
         $message .= self::locale("Do you wanna to make it your?*");
         $message .= PHP_EOL . PHP_EOL;
-        $message = '<i>' . self::locale("*This nickname will be your, after Administrators’s approve.") . '</i>';
+        $message .= '<i>' . self::locale("*This nickname will be your, after Administrators’s approve.") . '</i>';
         $replyMarkup = [
             'inline_keyboard' => [
                 [
-                    ['text' => self::locale('Yes'), 'callback_data' => static::replyButton(['c' => 'nickRelink', 'u' => $userExistsData['id'], 't' => $telegramId, 'm' => true])],
-                    ['text' => self::locale('No'), 'callback_data' => static::replyButton(['c' => 'nickRelink', 'u' => $userExistsData['id'], 't' => $telegramId, 'm' => false])],
+                    ['text' => '✅' . self::locale('Yes'), 'callback_data' => static::replyButton(['c' => 'nickRelink', 'u' => $userExistsData['id'], 't' => $telegramId, 'm' => true])],
+                    ['text' => '❌' . self::locale('No'), 'callback_data' => static::replyButton(['c' => 'nickRelink', 'u' => $userExistsData['id'], 't' => $telegramId, 'm' => false])],
                 ],
             ],
         ];

@@ -7,6 +7,7 @@ use app\core\Locale;
 use app\models\Days;
 use app\models\Users;
 use app\models\Weeks;
+use app\models\Settings;
 use Exception;
 
 class TelegramBotRepository
@@ -27,9 +28,48 @@ class TelegramBotRepository
         if (empty($uId) || empty($tId))
             throw new Exception('UserID or TelegramID can’t be empty!');
 
+        $userData = Users::find($uId);
 
-        if (empty($userData['privilege']['status']) || !in_array($userData['privilege']['status'], ['manager', 'admin', 'root'], true))
-            return 'You don’t have enough rights to change information about other users!';
+        if (static::$message['callback_query']['from']['id'] == $tId) {
+            if ($arguments['m']) {
+                $message = Locale::phrase(['string' => 'The nickname <b>%s</b> is already registered by another member of the group!', 'vars' => [$userData['name']]]);
+                $message .= PHP_EOL;
+                $message .= Locale::phrase('But... I can’t find his TelegramID🤷‍♂️');
+                $message .= PHP_EOL;
+                $message .= Locale::phrase('Is it your?*');
+                $message .= PHP_EOL . PHP_EOL;
+                $message .= '⏳<i>' . Locale::phrase('*Just wait for Administrators’s approve.') . '</i>';
+                $replyMarkup = [
+                    'inline_keyboard' => [
+                        [
+                            ['text' => '✅' . Locale::phrase('Yes'), 'callback_data' => ChatCommand::replyButton(['c' => 'nickRelink', 'u' => $uId, 't' => $tId, 'm' => true])],
+                            ['text' => '❌' . Locale::phrase('No'), 'callback_data' => ChatCommand::replyButton(['c' => 'nickRelink', 'u' => $uId, 't' => $tId, 'm' => false])],
+                        ],
+                    ],
+                ];
+                $update = [
+                    'message' => $message,
+                    'replyMarkup' =>  $replyMarkup,
+                ];
+                //Узнать, что там в этой переменной лежит
+                if (static::$message['callback_query']['message']['chat']['id'] !== Settings::getMainTelegramId()){
+                    
+                }
+                return 'Success';
+            }
+            $message = Locale::phrase(['string' => 'The nickname <b>%s</b> is already registered by another member of the group!', 'vars' => [$userData['name']]]);
+            $message .= PHP_EOL;
+            $message .= Locale::phrase('Just come up with a new nickname for yourself!');
+            $update = [
+                'message' => $message
+            ];
+            return 'Success';
+        }
+
+        if (!empty($userData['privilege']['status']) && in_array($userData['privilege']['status'], ['manager', 'admin', 'root'], true)) {
+            return 'Success';
+        }
+        return 'You don’t have enough rights to change information about other users!';
     }
     public static function nick(array $userData = [], array $arguments = [], array &$update = [])
     {
