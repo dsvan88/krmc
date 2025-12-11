@@ -72,12 +72,12 @@ class TelegramBotRepository
                 $message .= Locale::phrase('Do you agree to change a owner of nickname to a new user?');
                 $replyMarkup = [
                 'inline_keyboard' => [
-                    [
-                        ['text' => '✅' . Locale::phrase('Yes'), 'callback_data' => ['c' => 'nickApprove', 'u' => $uId, 't' => $tId, 'ci' => static::$message['callback_query']['message']['chat']['id'], 'mi' => static::$message['callback_query']['message']['id'], 'y' => 1]],
-                        ['text' => '❌' . Locale::phrase('No'), 'callback_data' => ['c' => 'nickApprove', 'ci' => static::$message['callback_query']['message']['chat']['id'], 'mi' => static::$message['callback_query']['message']['id'], 'y' => 0]],
+                        [
+                            ['text' => '✅' . Locale::phrase('Yes'), 'callback_data' => ['c' => 'nickApprove', 'u' => $uId, 't' => $tId, 'ci' => static::$message['callback_query']['message']['chat']['id'], 'mi' => static::$message['callback_query']['message']['id'], 'y' => 1]],
+                            ['text' => '❌' . Locale::phrase('No'), 'callback_data' => ['c' => 'nickApprove', 'ci' => static::$message['callback_query']['message']['chat']['id'], 'mi' => static::$message['callback_query']['message']['id'], 'y' => 0]],
+                        ],
                     ],
-                ],
-            ];
+                ];
                 $tbBot = new TelegramBot;
                 $tbBot->sendMessage(Settings::getTechTelegramId(), $message, -1, $replyMarkup);
             }
@@ -85,6 +85,10 @@ class TelegramBotRepository
        }
 
         return 'You don’t have enough rights to change information about other users!';
+    }
+    public static function nickApprove(array $userData = [], array $arguments = [], array &$update = [])
+    {
+        
     }
     public static function nick(array $userData = [], array $arguments = [], array &$update = [])
     {

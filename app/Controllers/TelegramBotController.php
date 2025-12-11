@@ -27,7 +27,7 @@ class TelegramBotController extends Controller
     public static $chatId = null;
     public static $command = '';
     public static $commandArguments = [];
-    public static $guestCommands = ['help', 'nick', 'week', 'day', 'today'];
+    public static $guestCommands = ['help', 'nick', 'nickRelink', 'week', 'day', 'today'];
     public static $CommandNamespace = '\\app\\Repositories\\TelegramCommands';
 
     public static $resultMessage = '';
