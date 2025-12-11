@@ -159,7 +159,8 @@ class Days extends Model
             return '';
         }
 
-        $date = date('d.m.Y', $dayDate) . ' (<b>' . Locale::phrase(self::$days[$day]) . '</b>) ' . $weekData['data'][$day]['time'];
+        $result = '🗓 - <u>' . date('d.m.Y', $dayDate) . ' (<b>' . Locale::phrase(self::$days[$day]) . '</b>)</u>' . PHP_EOL;
+        $result .= DayRepository::getTimeEmoji($weekData['data'][$day]['time']) . ' - <u>' . $weekData['data'][$day]['time'] . '</u>' . PHP_EOL;
 
         $gameNames = [
             'mafia' => '{{ Tg_Mafia }}',
@@ -175,15 +176,20 @@ class Days extends Model
 
         $lang = Locale::$langCode;
         $proto = Tech::getRequestProtocol();
-        $result = "$date - <a href='$proto://{$_SERVER['SERVER_NAME']}/game/{$weekData['data'][$day]['game']}/?lang=$lang'>{$gameNames[$weekData['data'][$day]['game']]}</a>\n";
+        $result .= "🎮 - <a href='$proto://{$_SERVER['SERVER_NAME']}/game/{$weekData['data'][$day]['game']}/?lang=$lang'>{$gameNames[$weekData['data'][$day]['game']]}</a>\n";
 
         $result .= DayRepository::getModsTexts($weekData['data'][$day]['mods']);
 
         if (!empty($weekData['data'][$day]['cost']))
-            $result .= Locale::phrase('Costs') . ": <u>{$weekData['data'][$day]['cost']}</u>\n";
+            $result .= "💲 - <u>{$weekData['data'][$day]['cost']}</u>\n";
+        // $result .= Locale::phrase('Costs') . ": <u>{$weekData['data'][$day]['cost']}</u>\n";
         if (!empty($weekData['data'][$day]['day_prim']))
             $result .= "<u>{$weekData['data'][$day]['day_prim']}</u>\n";
 
+        $contacts = Settings::get('contacts');
+        $place = mb_substr($contacts['adress']['value'], mb_strrpos($contacts['adress']['value'], '  ', 0, 'UTF-8') + 2, null, 'UTF-8');
+
+        $result .= "📍 - <a href='{$contacts['gmap_link']['value']}'>$place</a>\n";
         $result .= "\n";
 
         $participants = [];
@@ -223,7 +229,7 @@ class Days extends Model
             }
 
             if ($participants[$x]['arrive'] !== '' && $participants[$x]['arrive'] !== $weekData['data'][$day]['time']) {
-                $modsData .= $participants[$x]['arrive'];
+                $modsData .= DayRepository::getTimeEmoji($participants[$x]['arrive']) . ' ' . $participants[$x]['arrive'];
                 if ($participants[$x]['prim'] != '') {
                     $modsData .= ', ';
                 }

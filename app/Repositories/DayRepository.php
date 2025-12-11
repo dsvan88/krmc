@@ -32,7 +32,6 @@ class DayRepository
     ];
 
 
-
     public static function renamePlayer(int $userId, string $name): void
     {
         $weeks = Weeks::getAll();
@@ -103,17 +102,61 @@ class DayRepository
 
         $weeks = Weeks::getAll();
         $weeks = array_reverse($weeks);
-        foreach($weeks as $week){
-            foreach($week['data'] as $num=>$day)
-            {
+        foreach ($weeks as $week) {
+            foreach ($week['data'] as $num => $day) {
                 if ($day['status'] !== 'set') continue;
-                foreach($day['participants'] as $player){
-                    if ($player['id'] == $userId) 
-                        return $week['start']+TIME_MARGE*($num+1);
+                foreach ($day['participants'] as $player) {
+                    if ($player['id'] == $userId)
+                        return $week['start'] + TIME_MARGE * ($num + 1);
                 }
             }
         }
 
         return 0;
+    }
+    public static function getTimeEmoji(string $time = ''): string
+    {
+        if (empty($time)) return '';
+
+        $offset = strpos($time, ':');
+        $hour = (int) substr($time, 0, $offset);
+        if ($hour > 12) $hour -= 12;
+        $mins = (int) substr($time, $offset + 1);
+        if (empty($mins) || $mins > 0 && $mins < 15) $mins = '';
+        elseif ($mins > 15 && $mins <= 45) $mins = 30;
+        elseif ($mins > 45 && $mins <= 59) {
+            ++$hour;
+            $mins = '';
+        } elseif ($mins >= 60) {
+            $hour += round($mins / 60);
+            $mins = '';
+        }
+        $clocks = [
+            '1' => '🕐',
+            '130' => '🕜',
+            '2' => '🕑',
+            '230' => '🕝',
+            '3' => '🕒',
+            '330' => '🕞',
+            '4' => '🕓',
+            '430' => '🕟',
+            '5' => '🕔',
+            '530' => '🕠',
+            '6' => '🕕',
+            '630' => '🕡',
+            '7' => '🕖',
+            '730' => '🕢',
+            '8' => '🕗',
+            '830' => '🕣',
+            '9' => '🕘',
+            '930' => '🕤',
+            '10' => '🕙',
+            '1030' => '🕥',
+            '11' => '🕚',
+            '1130' => '🕦',
+            '12' => '🕛',
+            '1230' => '🕧',
+        ];
+        return $clocks[$hour . $mins];
     }
 }

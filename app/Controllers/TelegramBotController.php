@@ -100,11 +100,11 @@ class TelegramBotController extends Controller
                 return false;
             }
         } else {
-            self::$commandArguments = json_decode(Tech::decrypt(self::$incomeMessage[static::$type]['data']), true);
+            self::$commandArguments = json_decode(base64_decode(self::$incomeMessage[static::$type]['data']), true);
 
-            if (empty(self::$commandArguments['cmd'])) return false;
+            if (empty(self::$commandArguments['c'])) return false;
 
-            self::$command =  self::$commandArguments['cmd'];
+            self::$command =  self::$commandArguments['c'];
 
             if (empty($userId) && !in_array(self::$command, self::$guestCommands)) {
                 Sender::callbackAnswer(self::$incomeMessage[static::$type]['id'], Locale::phrase('{{ Tg_Unknown_Requester }}'), true);
@@ -330,7 +330,6 @@ class TelegramBotController extends Controller
         if (in_array(self::$command, ['dice', 'd6', 'd64'])) {
             $tbBot = new TelegramBot;
             $tbBot->sendDice(self::$chatId, self::$command === 'd64' ? '🎰' : '🎲');
-            // error_log(json_encode($tbBot::$result['result']['dice']['value']));
             return true;
         }
         if (!self::execute()) {
@@ -341,9 +340,10 @@ class TelegramBotController extends Controller
             Sender::setMessageReaction(self::$chatId, self::$incomeMessage['message']['message_id'], self::$reaction);
         }
 
-        if (self::$chatId == self::$techTelegramId)
+        // $_SESSION['debug'][] = 'replyMarkup:' . json_encode(self::$replyMarkup);
+        if (self::$chatId == self::$techTelegramId) {
             $botResult = Sender::message(self::$chatId, Locale::phrase(self::$resultMessage), 0, self::$replyMarkup);
-        else
+        } else
             $botResult = Sender::message(self::$chatId, Locale::phrase(self::$resultMessage));
 
         if ($botResult[0]['ok']) {

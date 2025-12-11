@@ -21,8 +21,8 @@ class TelegramBotRepository
         if (empty($arguments))
             throw new Exception('Arguments is empty!');
 
-        $uId = (int) trim($arguments['uid']);
-        $tId = (int) trim($arguments['tid']);
+        $uId = (int) trim($arguments['u']);
+        $tId = (int) trim($arguments['t']);
 
         if (empty($uId) || empty($tId))
             throw new Exception('UserID or TelegramID can’t be empty!');
@@ -37,7 +37,7 @@ class TelegramBotRepository
         if (empty($userData) || empty($arguments))
             throw new Exception('UserData or arguments is empty');
 
-        $uId = (int) trim($arguments['uid']);
+        $uId = (int) trim($arguments['u']);
 
         if (empty($uId))
             throw new Exception('UserID can’t be empty!');
@@ -45,10 +45,10 @@ class TelegramBotRepository
         if ($userData['id'] != $uId && (empty($userData['privilege']['status']) || !in_array($userData['privilege']['status'], ['manager', 'admin', 'root'], true)))
             return 'You don’t have enough rights to change information about other users!';
 
-        if ($arguments['save']) {
+        if ($arguments['s']) {
             $update = [
                 'message' => Locale::phrase(['text' => "<b>%s</b>, nice to meet you!\nYou successfully registered in our system!", 'vars' => $userData['name']]),
-                PHP_EOL . PHP_EOL . Locale::phrase("If you made a mistake, don’t worry, tell the Administrator about it and he will quickly fix it😏"),
+                PHP_EOL . PHP_EOL . Locale::phrase('If you made a mistake - don’t worry! Just tell the Administrator about it and he will quickly fix it😏'),
             ];
 
             return 'Success';
@@ -69,8 +69,8 @@ class TelegramBotRepository
 
         $userData['status'] = empty($userData['privilege']['status']) ? 'user' : $userData['privilege']['status'];
 
-        $weekId = (int) trim($arguments['wId']);
-        $dayNum = (int) trim($arguments['dNum']);
+        $weekId = (int) trim($arguments['w']);
+        $dayNum = (int) trim($arguments['d']);
 
         $weekData = Weeks::weekDataById($weekId);
         $dayEnd = $weekData['start'] + (TIMESTAMP_DAY * ($dayNum + 1));
@@ -95,7 +95,7 @@ class TelegramBotRepository
         $newDayData = $weekData['data'][$dayNum];
         $data = [
             'userId' => $userData['id'],
-            'prim' => empty($arguments['prim']) ? '' : $arguments['prim'],
+            'prim' => empty($arguments['p']) ? '' : $arguments['p'],
         ];
         $newDayData = Days::addParticipantToDayData($newDayData, $data);
 
@@ -108,8 +108,8 @@ class TelegramBotRepository
             'replyMarkup' => [
                 'inline_keyboard' => [
                     [
-                        ['text' => Locale::phrase('I will too!'), 'callback_data' => ChatCommand::replyButton(['cmd' => 'booking', 'wId' => $weekId, 'dNum' => $dayNum])],
-                        ['text' => Locale::phrase('I will too! I hope...'), 'callback_data' => ChatCommand::replyButton(['cmd' => 'booking', 'wId' => $weekId, 'dNum' => $dayNum, 'prim' => '?'])],
+                        ['text' => Locale::phrase('I will too!'), 'callback_data' => ChatCommand::replyButton(['c' => 'booking', 'w' => $weekId, 'd' => $dayNum])],
+                        ['text' => Locale::phrase('I will too! I hope...'), 'callback_data' => ChatCommand::replyButton(['c' => 'booking', 'w' => $weekId, 'd' => $dayNum, 'p' => '?'])],
                     ],
                 ],
             ],

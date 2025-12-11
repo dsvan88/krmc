@@ -138,8 +138,8 @@ class BookingCommand extends ChatCommand
         $replyMarkup = [
             'inline_keyboard' => [
                 [
-                    ['text' => self::locale('I will too!'), 'callback_data' => static::replyButton(['cmd' => 'booking', 'wId' => $weekId, 'dNum' => $requestData['dayNum']])],
-                    ['text' => self::locale('I will too! I hope...'), 'callback_data' => static::replyButton(['cmd' => 'booking', 'wId' => $weekId, 'dNum' => $requestData['dayNum'], 'prim' => '?'])],
+                    ['text' => self::locale('I will too!'), 'callback_data' => static::replyButton(['c' => 'booking', 'w' => $weekId, 'd' => $requestData['dayNum']])],
+                    ['text' => self::locale('I will too! I hope...'), 'callback_data' => static::replyButton(['c' => 'booking', 'w' => $weekId, 'd' => $requestData['dayNum'], 'p' => '?'])],
                 ],
             ],
         ];

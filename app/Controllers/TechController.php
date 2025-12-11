@@ -3,22 +3,12 @@
 namespace app\Controllers;
 
 use app\core\Controller;
-use app\core\GoogleDrive;
-use app\core\ImageProcessing;
-use app\core\Locale;
-use app\core\Sender;
 use app\core\Tech;
 use app\core\View;
 use app\libs\Db;
-use app\models\Contacts;
 use app\models\Settings;
-use app\models\Users;
 use app\Repositories\TechRepository;
-use app\Repositories\DayRepository;
-use app\Repositories\AccountRepository;
 use app\Repositories\TelegramChatsRepository;
-use app\core\TelegramBot;
-use Exception;
 
 class TechController extends Controller
 {
@@ -258,7 +248,9 @@ class TechController extends Controller
                 ],
                 'date' => 1652025484,
                 // 'text' => '+ на 18',
-                'text' => '/dice',
+                // 'text' => '/dice',
+                // 'text' => '/test 18:00',
+                'text' => '/day сб',
                 // 'text' => '+пн',
                 // 'text' => '+пт?',
                 // 'text' => '+ на четвер, десь на 18:45, звісно, що підстрахую, але поки що (під ?)',

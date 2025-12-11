@@ -38,6 +38,6 @@ class ChatCommand implements Command
     }
     public static function replyButton(array $data)
     {
-        return Tech::encrypt(json_encode($data));
+        return base64_encode(json_encode($data));
     }
 }

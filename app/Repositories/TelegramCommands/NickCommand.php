@@ -71,8 +71,8 @@ class NickCommand extends ChatCommand
             $replyMarkup = [
                 'inline_keyboard' => [
                     [
-                        ['text' => self::locale('Yes'), 'callback_data' => static::replyButton(['cmd' => 'nick', 'uid' => $userId, 'save' => true])],
-                        ['text' => self::locale('No'), 'callback_data' => static::replyButton(['cmd' => 'nick', 'uid' => $userId, 'save' => false])],
+                        ['text' => self::locale('Yes'), 'callback_data' => static::replyButton(['c' => 'nick', 'u' => $userId, 's' => true])],
+                        ['text' => self::locale('No'), 'callback_data' => static::replyButton(['c' => 'nick', 'u' => $userId, 's' => false])],
                     ],
                 ],
             ];
@@ -120,8 +120,8 @@ class NickCommand extends ChatCommand
             $replyMarkup = [
                 'inline_keyboard' => [
                     [
-                        ['text' => self::locale('Yes'), 'callback_data' => static::replyButton(['cmd' => 'nickRelink', 'uid' => $userExistsData['id'], 'tgid' => $telegramId, 'itsme' => true])],
-                        ['text' => self::locale('No'), 'callback_data' => static::replyButton(['cmd' => 'nickRelink', 'uid' => $userExistsData['id'], 'tgid' => $telegramId, 'itsme' => false])],
+                        ['text' => self::locale('Yes'), 'callback_data' => static::replyButton(['c' => 'nickRelink', 'u' => $userExistsData['id'], 't' => $telegramId, 'm' => true])],
+                        ['text' => self::locale('No'), 'callback_data' => static::replyButton(['c' => 'nickRelink', 'u' => $userExistsData['id'], 't' => $telegramId, 'm' => false])],
                     ],
                 ],
             ];
@@ -139,8 +139,8 @@ class NickCommand extends ChatCommand
         $replyMarkup = [
             'inline_keyboard' => [
                 [
-                    ['text' => self::locale('Yes'), 'callback_data' => static::replyButton(['cmd' => 'nickRelink', 'uid' => $userExistsData['id'], 'tgid' => $telegramId, 'itsme' => true])],
-                    ['text' => self::locale('No'), 'callback_data' => static::replyButton(['cmd' => 'nickRelink', 'uid' => $userExistsData['id'], 'tgid' => $telegramId, 'itsme' => false])],
+                    ['text' => self::locale('Yes'), 'callback_data' => static::replyButton(['c' => 'nickRelink', 'u' => $userExistsData['id'], 't' => $telegramId, 'm' => true])],
+                    ['text' => self::locale('No'), 'callback_data' => static::replyButton(['c' => 'nickRelink', 'u' => $userExistsData['id'], 't' => $telegramId, 'm' => false])],
                 ],
             ],
         ];
