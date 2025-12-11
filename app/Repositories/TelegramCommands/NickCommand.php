@@ -86,7 +86,7 @@ class NickCommand extends ChatCommand
             TelegramChatsRepository::getAndSaveTgAvatar($userExistsData['id'], true);
             $message = self::locale(['string' => "So... we remember you under the nickname <b>%s</b>. Right?\nNice to meet you!", 'vars' => [$username]]);
             $message .= PHP_EOL . PHP_EOL;
-            $message .= self::locale("If you make a mistake, don’t worry, tell the Administrator about it and he will quickly fix it😏");
+            $message .= self::locale('If you make a mistake, don’t worry, tell the Administrator about it and he will quickly fix it😏');
             return true;
         }
 
@@ -112,9 +112,9 @@ class NickCommand extends ChatCommand
         if (!$isChatExists) {
             $message = self::locale(['string' => 'The nickname <b>%s</b> is already registered by another member of the group!', 'vars' => [$username]]);
             $message .= PHP_EOL;
-            $message .= self::locale("But... I can’t find his TelegramID🤷‍♂️");
+            $message .= self::locale('But... I can’t find his TelegramID🤷‍♂️');
             $message .= PHP_EOL;
-            $message .= self::locale("Is it you?*");
+            $message .= self::locale('Is it your?*');
             $message .= PHP_EOL . PHP_EOL;
             $message = '<i>' . self::locale("*This nickname will be your, after Administrators’s approve.") . '</i>';
             $replyMarkup = [
