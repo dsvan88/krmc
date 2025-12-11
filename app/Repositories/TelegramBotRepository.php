@@ -4,6 +4,7 @@ namespace app\Repositories;
 
 use app\core\ChatCommand;
 use app\core\Locale;
+use app\core\TelegramBot;
 use app\models\Days;
 use app\models\Users;
 use app\models\Weeks;
@@ -28,6 +29,10 @@ class TelegramBotRepository
         if (empty($uId) || empty($tId))
             throw new Exception('UserID or TelegramID can’t be empty!');
 
+        if (!empty($userData['privilege']['status']) && in_array($userData['privilege']['status'], ['manager', 'admin', 'root'], true)) {
+            return 'Success';
+        }
+
         $userData = Users::find($uId);
 
         if (static::$message['callback_query']['from']['id'] == $tId) {
@@ -38,12 +43,12 @@ class TelegramBotRepository
                 $message .= PHP_EOL;
                 $message .= Locale::phrase('Is it your?*');
                 $message .= PHP_EOL . PHP_EOL;
-                $message .= '⏳<i>' . Locale::phrase('*Just wait for Administrators’s approve.') . '</i>';
+                $message .= '⏳<i>' . Locale::phrase('*Just wait a little for Administrators’s approve.') . '</i>';
                 $replyMarkup = [
                     'inline_keyboard' => [
                         [
-                            ['text' => '✅' . Locale::phrase('Yes'), 'callback_data' => ChatCommand::replyButton(['c' => 'nickRelink', 'u' => $uId, 't' => $tId, 'm' => true])],
-                            ['text' => '❌' . Locale::phrase('No'), 'callback_data' => ChatCommand::replyButton(['c' => 'nickRelink', 'u' => $uId, 't' => $tId, 'm' => false])],
+                            ['text' => '✅' . Locale::phrase('Yes'), 'callback_data' => ['c' => 'nickRelink', 'u' => $uId, 't' => $tId, 'm' => true]],
+                            ['text' => '❌' . Locale::phrase('No'), 'callback_data' => ['c' => 'nickRelink', 'u' => $uId, 't' => $tId, 'm' => false]],
                         ],
                     ],
                 ];
@@ -53,7 +58,21 @@ class TelegramBotRepository
                 ];
                 //Узнать, что там в этой переменной лежит
                 if (static::$message['callback_query']['message']['chat']['id'] !== Settings::getMainTelegramId()){
-                    
+                    $message = Locale::phrase(['string' => 'Telegram user with ID <b>%s</b> trying to register athe nickname <b>%s</b>.', 'vars' => $tId]);
+                    $message .= PHP_EOL;
+                    $message .= Locale::phrase('It’s already registered in our system with TelegramID, but long time no saw or his TelegramID doesn’t exists anymore.');
+                    $message .= PHP_EOL;
+                    $message .= Locale::phrase('Do you agree to change a owner of nickname to a new user?');
+                    $replyMarkup = [
+                    'inline_keyboard' => [
+                        [
+                            ['text' => '✅' . Locale::phrase('Yes'), 'callback_data' => ['c' => 'nickApprove', 'u' => $uId, 't' => $tId, 'mi' => static::$message['callback_query']['message']['id'],'y' => true]],
+                            ['text' => '❌' . Locale::phrase('No'), 'callback_data' => ['c' => 'nickApprove', 'mi' => static::$message['callback_query']['message']['id'], 'y' => false]],
+                        ],
+                    ],
+                ];
+                    $tbBot = new TelegramBot;
+                    $tbBot->sendMessage(Settings::getTechTelegramId(), $message, -1, $replyMarkup);
                 }
                 return 'Success';
             }
@@ -66,9 +85,6 @@ class TelegramBotRepository
             return 'Success';
         }
 
-        if (!empty($userData['privilege']['status']) && in_array($userData['privilege']['status'], ['manager', 'admin', 'root'], true)) {
-            return 'Success';
-        }
         return 'You don’t have enough rights to change information about other users!';
     }
     public static function nick(array $userData = [], array $arguments = [], array &$update = [])
@@ -148,13 +164,21 @@ class TelegramBotRepository
             'replyMarkup' => [
                 'inline_keyboard' => [
                     [
-                        ['text' => Locale::phrase('I will too!'), 'callback_data' => ChatCommand::replyButton(['c' => 'booking', 'w' => $weekId, 'd' => $dayNum])],
-                        ['text' => Locale::phrase('I will too! I hope...'), 'callback_data' => ChatCommand::replyButton(['c' => 'booking', 'w' => $weekId, 'd' => $dayNum, 'p' => '?'])],
+                        ['text' => Locale::phrase('I will too!'), 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => $dayNum]],
+                        ['text' => Locale::phrase('I will too! I hope...'), 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => $dayNum, 'p' => '?']],
                     ],
                 ],
             ],
         ];
 
         return 'Success';
+    }
+    public static function replyButtonEncode(array $data): string
+    {
+        return base64_encode(json_encode($data));
+    }
+    public static function replyButtonDecode(string $data): array
+    {
+        return json_encode(base64_encode($data));
     }
 }

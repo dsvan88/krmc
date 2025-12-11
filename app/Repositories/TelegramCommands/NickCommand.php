@@ -87,13 +87,14 @@ class NickCommand extends ChatCommand
             $message = self::locale(['string' => "So... we remember you under the nickname <b>%s</b>. Right?\nNice to meet you!", 'vars' => [$username]]);
             $message .= PHP_EOL . PHP_EOL;
             $message .= self::locale('If you make a mistake, don’t worry, tell the Administrator about it and he will quickly fix it😏');
+            $reaction = '👌';
             return true;
         }
 
         $userContacts = ContactRepository::formatUserContacts($userContacts);
 
         if ($userContacts['telegramid'] === $telegramId) {
-            $reaction = '👌';
+            $reaction = '🤷‍♂️';
             $message = self::locale('{{ Tg_Command_Name_You_Have_One }}');
             return false;
         }
@@ -106,6 +107,7 @@ class NickCommand extends ChatCommand
         if (!$isAvailable || $isChatExists) {
             $message .= PHP_EOL;
             $message = self::locale('If it is your, then contact the Administrators to make changes!');
+            $reaction = '🤷‍♂️';
             return false;
         }
 
@@ -120,8 +122,8 @@ class NickCommand extends ChatCommand
             $replyMarkup = [
                 'inline_keyboard' => [
                     [
-                        ['text' => '✅' . self::locale('Yes'), 'callback_data' => static::replyButton(['c' => 'nickRelink', 'u' => $userExistsData['id'], 't' => $telegramId, 'm' => true])],
-                        ['text' => '❌' . self::locale('No'), 'callback_data' => static::replyButton(['c' => 'nickRelink', 'u' => $userExistsData['id'], 't' => $telegramId, 'm' => false])],
+                        ['text' => '✅' . self::locale('Yes'), 'callback_data' => ['c' => 'nickRelink', 'u' => $userExistsData['id'], 't' => $telegramId, 'y' => true]],
+                        ['text' => '❌' . self::locale('No'), 'callback_data' => ['c' => 'nickRelink', 'u' => $userExistsData['id'], 't' => $telegramId, 'my' => false]],
                     ],
                 ],
             ];
@@ -139,8 +141,8 @@ class NickCommand extends ChatCommand
         $replyMarkup = [
             'inline_keyboard' => [
                 [
-                    ['text' => '✅' . self::locale('Yes'), 'callback_data' => static::replyButton(['c' => 'nickRelink', 'u' => $userExistsData['id'], 't' => $telegramId, 'm' => true])],
-                    ['text' => '❌' . self::locale('No'), 'callback_data' => static::replyButton(['c' => 'nickRelink', 'u' => $userExistsData['id'], 't' => $telegramId, 'm' => false])],
+                    ['text' => '✅' . self::locale('Yes'), 'callback_data' => ['c' => 'nickRelink', 'u' => $userExistsData['id'], 't' => $telegramId, 'y' => true]],
+                    ['text' => '❌' . self::locale('No'), 'callback_data' => ['c' => 'nickRelink', 'u' => $userExistsData['id'], 't' => $telegramId, 'y' => false]],
                 ],
             ],
         ];

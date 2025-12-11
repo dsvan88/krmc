@@ -36,8 +36,4 @@ class ChatCommand implements Command
             return Locale::apply($phrase);
         return Locale::phrase($phrase);
     }
-    public static function replyButton(array $data)
-    {
-        return base64_encode(json_encode($data));
-    }
 }
