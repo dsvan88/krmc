@@ -323,7 +323,10 @@ class TelegramBotController extends Controller
             Sender::callbackAnswer(self::$incomeMessage[static::$type]['id'], Locale::phrase($message));
         }
         if (!empty($update)) {
+            // if (empty($update['chatId']))
             Sender::edit(self::$chatId, self::$incomeMessage[static::$type]['message']['message_id'], $update['message'], $update['replyMarkup']);
+            // else
+            //     Sender::edit($update['chatId'], $update['messageId'], $update['message'], $update['replyMarkup']);
         }
         if (in_array(self::$command, ['booking'], true)) {
             self::updateWeekMessages();

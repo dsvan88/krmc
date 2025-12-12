@@ -126,7 +126,7 @@ class TelegramBotRepository
             throw new Exception(__METHOD__ . ': UserData or arguments is empty');
 
         if (empty(static::$userData)) {
-            return "I can’t to recognize you!\nPlease, register first in our system!";
+            return "I can’t to recognize you!\nPlease, register in our system!";
         }
 
         $userData['status'] = empty($userData['privilege']['status']) ? 'user' : static::$userData['privilege']['status'];
@@ -171,7 +171,7 @@ class TelegramBotRepository
                 'inline_keyboard' => [
                     [
                         ['text' => '🙋' . Locale::phrase('I will too!'), 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => $dayNum]],
-                        ['text' => Locale::phrase('I will too! I hope...') . '🥹', 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => $dayNum, 'p' => '?']],
+                        ['text' => Locale::phrase('I want too!') . '🥹', 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => $dayNum, 'p' => '?']],
                     ],
                 ],
             ],
@@ -203,7 +203,7 @@ class TelegramBotRepository
             'inline_keyboard' => [
                 [
                     ['text' => '🙋' . Locale::phrase('I will too!'), 'callback_data' => ['c' => 'booking', 'w' => $wId, 'd' => $dId]],
-                    ['text' => Locale::phrase('I will too! I hope...') . '🥹', 'callback_data' => ['c' => 'booking', 'w' => $wId, 'd' => $dId, 'p' => '?']],
+                    ['text' => Locale::phrase('I want too!') . '🥹', 'callback_data' => ['c' => 'booking', 'w' => $wId, 'd' => $dId, 'p' => '?']],
                 ],
             ],
         ];
@@ -283,7 +283,7 @@ class TelegramBotRepository
         foreach ($data as $i => $row) {
             foreach ($row as $k => $v) {
                 $data[$i][$k]['text'] = Locale::phrase($data[$i][$k]['text']);
-                $data[$i][$k]['callback_data'] = TelegramBotRepository::replyButtonEncode($v['callback_data']);
+                $data[$i][$k]['callback_data'] = static::replyButtonEncode($v['callback_data']);
             }
         }
     }
