@@ -58,6 +58,9 @@ if (!defined('SQL_HOST')) {
     define('STYLES_STORAGE', '/public/css/');
     define('CFG_AUTHOR', 'DSVan');
     define('CSRF_NAME', '_token');
+
+
+    define('CFG_MAINTENCE', empty($_ENV['CFG_MAINTENCE'])  ? 0 : $_ENV['CFG_MAINTENCE']);
 }
 
 if (CFG_DEBUG) {

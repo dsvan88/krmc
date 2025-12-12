@@ -44,7 +44,6 @@ class TelegramBotController extends Controller
         if (APP_LOC !== 'local') {
             $ip = substr($_SERVER['REMOTE_ADDR'], 0, 4) === substr($_SERVER['SERVER_ADDR'], 0, 4) ? $_SERVER['HTTP_X_REAL_IP'] : $_SERVER['REMOTE_ADDR'];
             if (!Validator::validate('telegramIp', $ip) && $ip !== '127.0.0.1') {
-                // if (!Validator::validate('telegramIp', $ip)) {
                 self::$techTelegramId = Settings::getTechTelegramId();
                 $message = json_encode([
                     'REMOTE_ADDR' => $_SERVER['REMOTE_ADDR'],
@@ -113,6 +112,11 @@ class TelegramBotController extends Controller
         }
 
         self::$requester = Users::find($userId);
+
+        if (!empty(CFG_MAINTENCE) && !static::checkAccess('admin')) {
+            Sender::message(self::$chatId, Locale::phrase("I offer my deepest apologies, but I’m in the maintance mode 🧑‍💻 right now...\nPlease return to us a little later."));
+            return false;
+        }
 
         if (static::$type === 'message') {
             if (self::$command === 'booking' && Users::isBanned('booking', self::$requester['ban'])) {
@@ -313,7 +317,7 @@ class TelegramBotController extends Controller
         TelegramBotRepository::$message = static::$incomeMessage;
         TelegramBotRepository::$userData = static::$requester;
         TelegramBotRepository::$arguments = static::$commandArguments;
-        $message = TelegramBotRepository::$command(static::$requester, self::$commandArguments, $update);
+        $message = TelegramBotRepository::$command($update);
         if (!empty($message)) {
             Sender::callbackAnswer(self::$incomeMessage[static::$type]['id'], Locale::phrase($message));
         }
@@ -342,7 +346,7 @@ class TelegramBotController extends Controller
 
         if (!empty(self::$replyMarkup['inline_keyboard']))
             TelegramBotRepository::encodeInlineKeyboard(self::$replyMarkup['inline_keyboard']);
-        
+
         if (self::$chatId == self::$techTelegramId)
             $botResult = Sender::message(self::$chatId, Locale::phrase(self::$resultMessage), 0, self::$replyMarkup);
         else

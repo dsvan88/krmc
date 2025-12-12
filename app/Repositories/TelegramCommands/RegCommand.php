@@ -94,6 +94,11 @@ class RegCommand extends ChatCommand
 
         $weekData['data'][$requestData['dayNum']] = $newDayData;
         $message = Days::getFullDescription($weekData, $requestData['dayNum']);
+        $replyMarkup = [
+            'inline_keyboard' => [
+                ['text' => 'Send to the group?', 'callback_data' => ['c' => 'regSend', 'w' => $weekId, 'd' => $requestData['dayNum']]],
+            ]
+        ];
         $reaction = '👌';
         return true;
     }

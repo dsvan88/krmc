@@ -7,7 +7,7 @@ use app\core\Model;
 class Contacts extends Model
 {
     public static $table = SQL_TBL_CONTACTS;
-    public static $foreign = [ 'users' => Users::class ];
+    public static $foreign = ['users' => Users::class];
     public static $jsonFields = ['data'];
 
     public static function getByUserId(int $userId)
@@ -41,7 +41,7 @@ class Contacts extends Model
             ]);
         }
     }
-    public static function reLink(array $data, int $userId): void
+    public static function reLink(array $data, int $userId, int $newUserId = 0): void
     {
         self::deleteByUserId($userId, array_keys($data));
         self::new($data, $userId);
@@ -82,7 +82,7 @@ class Contacts extends Model
     public static function init()
     {
         $table = self::$table;
-        foreach(self::$foreign as $key=>$class){
+        foreach (self::$foreign as $key => $class) {
             $$key = $class::$table;
         }
 
