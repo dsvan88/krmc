@@ -226,13 +226,15 @@ class TelegramBotRepository
 
         if (empty(static::$arguments['u']) || empty(static::$arguments['t'])) {
 
-            $message = Locale::phrase('Okay! I get it.');
-            $message .= PHP_EOL;
-            $message .= Locale::phrase('I’ll inform the user about your decision😔');
+            if (static::$message['callback_query']['message']['chat']['id'] != Settings::getMainTelegramId()){
+                $message = Locale::phrase('Okay! I get it.');
+                $message .= PHP_EOL;
+                $message .= Locale::phrase('I’ll inform the user about your decision😔');
 
-            $update = [
-                'message' => $message,
-            ];
+                $update = [
+                    'message' => $message,
+                ];
+            }
 
             $message = Locale::phrase('I offer my deepest apologies, but the Administrator has rejected your request.');
             $message .= PHP_EOL;
@@ -255,13 +257,15 @@ class TelegramBotRepository
         // Contacts::reLink($contacts, $uId);
         // TelegramChatsRepository::getAndSaveTgAvatar($uId, true);
 
-        $message = Locale::phrase('Okay! I get it.');
-        $message .= PHP_EOL;
-        $message .= Locale::phrase('I’ll inform the user about your decision😊');
+        if (static::$message['callback_query']['message']['chat']['id'] != Settings::getMainTelegramId()){
+            $message = Locale::phrase('Okay! I get it.');
+            $message .= PHP_EOL;
+            $message .= Locale::phrase('I’ll inform the user about your decision😊');
 
-        $update = [
-            'message' => $message,
-        ];
+            $update = [
+                'message' => $message,
+            ];
+        }
 
         $message = Locale::phrase('The administrator has approved your request!');
         $message .= PHP_EOL;
