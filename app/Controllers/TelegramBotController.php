@@ -315,12 +315,13 @@ class TelegramBotController extends Controller
             Sender::callbackAnswer(self::$incomeMessage[static::$type]['id'], Locale::phrase($message));
         }
         if (!empty($update)) {
-            // error_log(__METHOD__.': '.json_encode($update));
-            // error_log(__METHOD__.': '.$update['message']);
-            error_log(__METHOD__.': '.self::$chatId);
-            error_log(__METHOD__.': '.self::$incomeMessage[static::$type]['message']['message_id']);
-            // if (empty($update['chatId']))
-            if (empty($update['replyMarkup'])) $update['replyMarkup'] = [];
+
+            if (empty($update['replyMarkup']))
+                $update['replyMarkup'] = [];
+            
+            if (!empty(self::$replyMarkup['inline_keyboard']))
+                TelegramBotRepository::encodeInlineKeyboard(self::$replyMarkup['inline_keyboard']);
+            
             Sender::edit(self::$chatId, self::$incomeMessage[static::$type]['message']['message_id'], $update['message'], $update['replyMarkup']);
             // else
             //     Sender::edit($update['chatId'], $update['messageId'], $update['message'], $update['replyMarkup']);
