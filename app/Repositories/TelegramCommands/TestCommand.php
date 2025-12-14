@@ -57,7 +57,7 @@ class TestCommand extends ChatCommand
 
             $message = self::locale(['string' => "So... we remember you under the nickname <b>%s</b>. Right?\nNice to meet you!", 'vars' => [$username]]);
             $message .= PHP_EOL . PHP_EOL;
-            $message .= self::locale("If you make a mistake, don’t worry, tell the administrator about it and he will quickly fix it😏");
+            $message .= self::locale("If you made a mistake, don’t worry, tell the administrator about it and he will quickly fix it😏");
 
             $replyMarkup = [
                 'inline_keyboard' => [
@@ -77,7 +77,7 @@ class TestCommand extends ChatCommand
             TelegramChatsRepository::getAndSaveTgAvatar($userExistsData['id'], true);
             $message = self::locale(['string' => "So... we remember you under the nickname <b>%s</b>. Right?\nNice to meet you!", 'vars' => [$username]]);
             $message .= PHP_EOL . PHP_EOL;
-            $message .= self::locale('If you make a mistake, don’t worry, tell the Administrator about it and he will quickly fix it😏');
+            $message .= self::locale('If you made a mistake, don’t worry, tell the Administrator about it and he will quickly fix it😏');
             $reaction = '👌';
             return true;
         }

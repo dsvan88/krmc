@@ -83,7 +83,7 @@ return [
     '{{ Tg_Command_User_Not_Booked }}' => 'This user has not been signed up for this day’s games!',
     // '{{ Tg_Command_Name_Already_Set_By_Other }}' => "The nickname <b>%s</b> is already registered by another member of the group!\n\nIf this is you, then contact the Administrators to make changes!",
     '{{ Tg_Command_Name_Already_Set_By_Other }}' => "The nickname <b>%s</b> is already registered by another member of the group!",
-    '{{ Tg_Command_Name_Save_Success }}' => "So... we remember you under the nickname <b>%s</b>. Right?\n\nIf you make a mistake, don’t worry, tell the administrator about it and he will quickly fix it😏",
+    '{{ Tg_Command_Name_Save_Success }}' => "So... we remember you under the nickname <b>%s</b>. Right?\n\nIf you made a mistake, don’t worry, tell the administrator about it and he will quickly fix it😏",
     '{{ Tg_Command_New_User_Already_Set }}' => "The player under the nickname <b>%s</b> is already registered in the system!",
     '{{ Tg_Command_New_User_Save_Success }}' => "The player under the nickname <b>%s</b> is successfully registered in the system!\n\n*Hint him about the desirability of registering this alias, or do it manually in the admin panel😏",
     '{{ Tg_Command_Promo_Saved }}' => 'Promo successfully saved!',
