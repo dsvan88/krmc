@@ -226,7 +226,7 @@ class TelegramBotRepository
 
         if (empty(static::$arguments['u']) || empty(static::$arguments['t'])) {
 
-            if (static::$message['callback_query']['message']['chat']['id'] != Settings::getMainTelegramId()){
+            if (static::$arguments['ci'] != Settings::getMainTelegramId()){
                 $message = Locale::phrase('Okay! I get it.');
                 $message .= PHP_EOL;
                 $message .= Locale::phrase('I’ll inform the user about your decision😔');
@@ -257,7 +257,7 @@ class TelegramBotRepository
         // Contacts::reLink($contacts, $uId);
         // TelegramChatsRepository::getAndSaveTgAvatar($uId, true);
 
-        if (static::$message['callback_query']['message']['chat']['id'] != Settings::getMainTelegramId()){
+        if (static::$arguments['ci'] != Settings::getMainTelegramId()){
             $message = Locale::phrase('Okay! I get it.');
             $message .= PHP_EOL;
             $message .= Locale::phrase('I’ll inform the user about your decision😊');
