@@ -283,8 +283,8 @@ class TelegramBotRepository
     {
         foreach ($data as $i => $row) {
             foreach ($row as $k => $v) {
-                $data[$i]['text'] = Locale::phrase($row['text']);
-                $data[$i]['callback_data'] = static::replyButtonEncode($row['callback_data']);
+                $data[$i][$k]['text'] = Locale::phrase($v['text']);
+                $data[$i][$k]['callback_data'] = static::replyButtonEncode($v['callback_data']);
             }
         }
     }
