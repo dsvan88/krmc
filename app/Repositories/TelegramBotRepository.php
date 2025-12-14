@@ -180,7 +180,7 @@ class TelegramBotRepository
                 ],
             ],
         ];
-
+        error_log(__METHOD__.': '.json_encode($update));
         return 'Success';
     }
 
