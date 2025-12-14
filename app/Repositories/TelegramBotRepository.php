@@ -28,7 +28,7 @@ class TelegramBotRepository
 
         if (!empty(static::$userData)) {
             if (empty(static::$userData['privilege']['status']) || in_array(static::$userData['privilege']['status'], ['manager', 'admin', 'root'], true))
-                return 'You don’t have enough rights to change information about other users!';
+                return 'nickRelink: You don’t have enough rights to change information about other users!';
             return static::nickApprove($update);
         }
 
@@ -52,7 +52,7 @@ class TelegramBotRepository
                 'inline_keyboard' => [
                     [
                         ['text' => '✅' . Locale::phrase('Yes'), 'callback_data' => ['c' => 'nickRelink', 'u' => $uId, 't' => $tId, 'y' => 1]],
-                        ['text' => '❌' . Locale::phrase('No'), 'callback_data' => ['c' => 'nickRelink', 'u' => $uId, 't' => $tId, 'y' => 0]],
+                        ['text' => '❌' . Locale::phrase('No'), 'callback_data' => ['c' => 'nickRelink', 'u' => $uId, 't' => $tId ]],
                     ],
                 ],
             ];

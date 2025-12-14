@@ -69,8 +69,8 @@ class TestCommand extends ChatCommand
             $replyMarkup = [
                 'inline_keyboard' => [
                     [
-                        ['text' => '✅' . self::locale('Yes'), 'callback_data' => ['c' => 'nick', 'u' => $userId, 's' => 1]],
-                        ['text' => '❌' . self::locale('No'), 'callback_data' => ['c' => 'nick', 'u' => $userId, 's' => 0]],
+                        ['text' => '✅' . self::locale('Yes'), 'callback_data' => ['c' => 'nick', 'u' => $userId, 'y' => 1]],
+                        ['text' => '❌' . self::locale('No'), 'callback_data' => ['c' => 'nick', 'u' => $userId]],
                     ],
                 ],
             ];
@@ -121,7 +121,7 @@ class TestCommand extends ChatCommand
                 'inline_keyboard' => [
                     [
                         ['text' => '✅' . self::locale('Yes'), 'callback_data' => ['c' => 'nickRelink', 'u' => $userExistsData['id'], 't' => $telegramId, 'y' => 1]],
-                        ['text' => '❌' . self::locale('No'), 'callback_data' => ['c' => 'nickRelink', 'u' => $userExistsData['id'], 't' => $telegramId, 'y' => 0]],
+                        ['text' => '❌' . self::locale('No'), 'callback_data' => ['c' => 'nickRelink', 'u' => $userExistsData['id'], 't' => $telegramId]],
                     ],
                 ],
             ];
@@ -140,7 +140,7 @@ class TestCommand extends ChatCommand
             'inline_keyboard' => [
                 [
                     ['text' => '✅' . self::locale('Yes'), 'callback_data' => ['c' => 'nickRelink', 'u' => $userExistsData['id'], 't' => $telegramId, 'y' => 1]],
-                    ['text' => '❌' . self::locale('No'), 'callback_data' => ['c' => 'nickRelink', 'u' => $userExistsData['id'], 't' => $telegramId, 'y' => 0]],
+                    ['text' => '❌' . self::locale('No'), 'callback_data' => ['c' => 'nickRelink', 'u' => $userExistsData['id'], 't' => $telegramId]],
                 ],
             ],
         ];
