@@ -283,7 +283,8 @@ class TelegramBotRepository
     {
         foreach ($data as $i => $row) {
             foreach ($row as $k => $v) {
-                error_log(json_encode($v['text']));
+                error_log(json_encode($row));
+                error_log(json_encode($v));
                 $data[$i][$k]['text'] = Locale::phrase($v['text']);
                 $data[$i][$k]['callback_data'] = static::replyButtonEncode($v['callback_data']);
             }
