@@ -161,7 +161,7 @@ class TelegramBotRepository
         $newDayData = $weekData['data'][$dayNum];
         $data = [
             'userId' => static::$userData['id'],
-            'prim' => empty($arguments['p']) ? '' : $arguments['p'],
+            'prim' => empty(static::$arguments['p']) ? '' : static::$arguments['p'],
         ];
         $newDayData = Days::addParticipantToDayData($newDayData, $data);
 

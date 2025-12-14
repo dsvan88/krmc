@@ -321,7 +321,7 @@ class TelegramBotController extends Controller
             
             if (!empty($update['replyMarkup']['inline_keyboard']))
                 TelegramBotRepository::encodeInlineKeyboard($update['replyMarkup']['inline_keyboard']);
-            error_log(__METHOD__.': '.json_encode($update['replyMarkup']['inline_keyboard']));
+
             Sender::edit(self::$chatId, self::$incomeMessage[static::$type]['message']['message_id'], $update['message'], $update['replyMarkup']);
             // else
             //     Sender::edit($update['chatId'], $update['messageId'], $update['message'], $update['replyMarkup']);
