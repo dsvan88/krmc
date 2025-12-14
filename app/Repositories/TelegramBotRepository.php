@@ -137,6 +137,7 @@ class TelegramBotRepository
 
         $weekId = (int) trim(static::$arguments['w']);
         $dayNum = (int) trim(static::$arguments['d']);
+        $chatId = (int) static::$message['callback_query']['message']['chat']['id'];
 
         $weekData = Weeks::weekDataById($weekId);
         $dayEnd = $weekData['start'] + (TIMESTAMP_DAY * ($dayNum + 1));
@@ -153,17 +154,24 @@ class TelegramBotRepository
             $weekData['data'][$dayNum]['status'] = 'set';
         }
 
-        foreach ($weekData['data'][$dayNum]['participants'] as $participant) {
+        foreach ($weekData['data'][$dayNum]['participants'] as $index => $participant) {
             if ($participant['id'] != static::$userData['id']) continue;
-            return '{{ Tg_Command_Requester_Already_Booked }}';
+            if (empty(static::$arguments['r']))
+                return '{{ Tg_Command_Requester_Already_Booked }}';
+
+            unset($weekData['data'][$dayNum]['participants'][$index]);
+            $weekData['data'][$dayNum]['participants'] = array_values($weekData['data'][$dayNum]['participants']);
         }
 
         $newDayData = $weekData['data'][$dayNum];
-        $data = [
-            'userId' => static::$userData['id'],
-            'prim' => empty(static::$arguments['p']) ? '' : static::$arguments['p'],
-        ];
-        $newDayData = Days::addParticipantToDayData($newDayData, $data);
+        
+        if (empty(static::$arguments['r'])){
+            $data = [
+                'userId' => static::$userData['id'],
+                'prim' => empty(static::$arguments['p']) ? '' : static::$arguments['p'],
+            ];
+            $newDayData = Days::addParticipantToDayData($newDayData, $data);
+        }
 
         Days::setDayData($weekId, $dayNum, $newDayData);
 
@@ -181,7 +189,7 @@ class TelegramBotRepository
             ],
         ];
         
-        if (static::$message['callback_query']['message']['chat']['id'] !== Settings::getMainTelegramId() && in_array(static::$userData['id'], array_column($weekData['data'][$dayNum]['participants'], 'id'))){
+        if ($chatId != Settings::getMainTelegramId() && in_array(static::$userData['id'], array_column($weekData['data'][$dayNum]['participants'], 'id'))){
             $update['replyMarkup']['inline_keyboard'][] = [
                 ['text' => '❌' . Locale::phrase('Opt-out'), 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => $dayNum, 'r' => 1]]
             ];
