@@ -114,7 +114,7 @@ class TelegramBotController extends Controller
 
         self::$requester = Users::find($userId);
 
-        if (!empty(CFG_MAINTENCE) && !static::checkAccess('admin')) {
+        if (!empty(CFG_MAINTENCE) && !empty(self::$command) && !static::checkAccess('admin')) {
             Sender::message(self::$chatId, Locale::phrase("I offer my deepest apologies, but I’m in the maintance mode 🧑‍💻 right now...\nPlease return to us a little later."));
             return false;
         }
