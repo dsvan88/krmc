@@ -25,6 +25,8 @@ class TelegramBotController extends Controller
     public static $requester = [];
     public static $incomeMessage = [];
     public static $chatId = null;
+    // public static $isDirect = true;
+    public static $isDirect = false;
     public static $command = '';
     public static $commandArguments = [];
     public static $guestCommands = ['help', 'nick', 'nickRelink', 'week', 'day', 'today'];
@@ -409,7 +411,7 @@ class TelegramBotController extends Controller
         if (!empty(self::$requester) && $status === 'all')
             $status = 'user';
 
-        if (self::$incomeMessage['message']['chat']['type'] !== 'private' && self::$chatId != self::$techTelegramId) {
+        if (!self::$isDirect && self::$chatId != self::$techTelegramId) {
             $status = $levels[$status] > 1 ? 'trusted' : 'user';
         }
         return $levels[$level] <= $levels[$status];
