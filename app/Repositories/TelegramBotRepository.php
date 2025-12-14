@@ -282,10 +282,11 @@ class TelegramBotRepository
     public static function encodeInlineKeyboard(array &$data): void
     {
         foreach ($data as $i => $row) {
-            // foreach ($row as $k => $v) {
-                $data[$i]['text'] = Locale::phrase($data[$i]['text']);
-                $data[$i]['callback_data'] = static::replyButtonEncode($data[$i]['callback_data']);
-            // }
+            foreach ($row as $k => $v) {
+                error_log(json_encode($v['text']));
+                $data[$i][$k]['text'] = Locale::phrase($v['text']);
+                $data[$i][$k]['callback_data'] = static::replyButtonEncode($v['callback_data']);
+            }
         }
     }
     public static function replyButtonEncode(array $data): string
