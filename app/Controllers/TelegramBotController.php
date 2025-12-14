@@ -346,11 +346,11 @@ class TelegramBotController extends Controller
 
         if (!empty(self::$replyMarkup['inline_keyboard']))
             TelegramBotRepository::encodeInlineKeyboard(self::$replyMarkup['inline_keyboard']);
-
-        if (self::$chatId == self::$techTelegramId)
-            $botResult = Sender::message(self::$chatId, Locale::phrase(self::$resultMessage), 0, self::$replyMarkup);
-        else
-            $botResult = Sender::message(self::$chatId, Locale::phrase(self::$resultMessage));
+// 
+        // if (self::$chatId == self::$techTelegramId)
+        $botResult = Sender::message(self::$chatId, Locale::phrase(self::$resultMessage), 0, self::$replyMarkup);
+        // else
+        //     $botResult = Sender::message(self::$chatId, Locale::phrase(self::$resultMessage));
 
         if ($botResult[0]['ok']) {
             if (self::$command === 'week') {
