@@ -154,6 +154,7 @@ class TelegramBotRepository
             $weekData['data'][$dayNum]['status'] = 'set';
         }
 
+        error_log($userData['id']);
         foreach ($weekData['data'][$dayNum]['participants'] as $participant) {
             if ($participant['id'] != $userData['id']) continue;
             return '{{ Tg_Command_Requester_Already_Booked }}';
