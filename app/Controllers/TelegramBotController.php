@@ -25,7 +25,6 @@ class TelegramBotController extends Controller
     public static $requester = [];
     public static $incomeMessage = [];
     public static $chatId = null;
-    // public static $isDirect = true;
     public static $isDirect = false;
     public static $command = '';
     public static $commandArguments = [];
@@ -62,14 +61,6 @@ class TelegramBotController extends Controller
 
         $data = trim(file_get_contents('php://input'));
         $message = json_decode($data, true);
-
-        if (!empty($message['callback_query'])) {
-            self::$techTelegramId = Settings::getTechTelegramId();
-            Sender::message(self::$techTelegramId, 'CallbackQuery:' . PHP_EOL . json_encode($message['callback_query']));
-            Sender::message(self::$techTelegramId, 'Data:' . PHP_EOL . $message['callback_query']['data']);
-            Sender::message(self::$techTelegramId, 'FROM:' . PHP_EOL . json_encode($message['callback_query']['from']));
-            Sender::message(self::$techTelegramId, 'Message:' . PHP_EOL . json_encode($message['callback_query']['message']));
-        }
 
         static::$type = empty($message['callback_query']) ? 'message' : 'callback_query';
 
@@ -175,9 +166,7 @@ class TelegramBotController extends Controller
                 $arguments['prim'] = mb_substr($prim[0], 1, -1, 'UTF-8');
             } elseif (preg_match('/\?/', $_text) === 1) {
                 $arguments['prim'] = '?';
-            } /* elseif (preg_match('/\!/', $_text) === 1) {
-                $arguments['prim'] = '!';
-            } */
+            }
             self::$command = 'booking';
             self::$commandArguments = $arguments;
             return true;
@@ -224,7 +213,6 @@ class TelegramBotController extends Controller
             if (in_array($command, ['reg', 'set'], true)) {
                 $_text = mb_substr($_text, $commandLen + 1, NULL, 'UTF-8');
                 $arguments = explode(',', $_text);
-                // $arguments = explode(',', mb_strtolower(str_replace('на ', '', $text)));
                 if (preg_match('/\([^)]+\)/', $text, $prim) === 1) {
                     $arguments['prim'] = mb_substr($prim[0], 1, -1, 'UTF-8');
                 }
@@ -232,7 +220,6 @@ class TelegramBotController extends Controller
                 self::$commandArguments = $arguments;
                 return true;
             }
-            // preg_match_all('/([a-zA-Zа-яА-ЯрРсСтТуУфФчЧхХШшЩщЪъЫыЬьЭэЮюЄєІіЇїҐґ.0-9]+)/', trim(mb_substr($text, $commandLen + 1, NULL, 'UTF-8')), $matches);
             $symbols = Locale::$cyrillicPattern;
             preg_match_all("/([a-z$symbols.0-9#-]+)/ui", trim(mb_substr($text, $commandLen + 1, NULL, 'UTF-8')), $matches);
 

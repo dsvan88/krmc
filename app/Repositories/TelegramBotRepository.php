@@ -65,7 +65,6 @@ class TelegramBotRepository
                 'replyMarkup' =>  $replyMarkup,
             ];
 
-            //Узнать, что там в этой переменной лежит
             $cId = static::$message['callback_query']['message']['chat']['id'];
             $mId = static::$message['callback_query']['message']['id'];
             if ($cId !== Settings::getMainTelegramId()) {
