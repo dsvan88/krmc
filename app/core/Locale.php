@@ -11,7 +11,18 @@ class Locale
     public static function apply($vars)
     {
         self::loadDictionary();
+        if (isset($vars['string']) && isset($vars['vars'])){
+            return static::phrase($vars);
+        }
         foreach ($vars as $key => $value) {
+            if (isset($value['string']) && isset($value['vars'])) {
+                if (empty(self::$dictionary[$value['string']])) {
+                    $vars[$key] = sprintf($value['string'], ...$value['vars']);
+                    continue;
+                }
+                $vars[$key] = sprintf(self::$dictionary[$value['string']], ...$value['vars']);
+                continue;
+            }
             if (is_array($value)) {
                 if (isset($value['string']) && isset($value['vars'])) {
                     if (empty(self::$dictionary[$value['string']])) {
