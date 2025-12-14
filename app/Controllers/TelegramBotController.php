@@ -324,7 +324,7 @@ class TelegramBotController extends Controller
         }
         if (!empty($update)) {
             // if (empty($update['chatId']))
-            Sender::edit(self::$chatId, self::$incomeMessage[static::$type]['message']['message_id'], $update['message'], $update['replyMarkup']);
+            Sender::edit(self::$chatId, self::$incomeMessage[static::$type]['message']['message_id'], $update['message'], empty($update['replyMarkup']) ? [] : $update['replyMarkup']);
             // else
             //     Sender::edit($update['chatId'], $update['messageId'], $update['message'], $update['replyMarkup']);
         }
