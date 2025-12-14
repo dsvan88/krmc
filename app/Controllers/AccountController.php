@@ -280,6 +280,7 @@ class AccountController extends Controller
         $value = $_POST['value'];
         if ($field === 'gender') {
             $value = Validator::validate('gender', $value);
+            error_log('value: '.json_encode($value));
             if ($value === false)
                 return View::notice(['type' => 'error', 'message' => "Gender isn’t in correct format!\nSelect it from the list!"]);
         } else if ($field === 'birthday') {
