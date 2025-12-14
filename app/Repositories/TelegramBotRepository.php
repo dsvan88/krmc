@@ -112,7 +112,7 @@ class TelegramBotRepository
             return 'Success';
         }
 
-        Users::delete($uId);
+        // Users::delete($uId);
 
         $update = [
             'message' => Locale::phrase(['text' => "Okay! Let’s try again!\nUse the next command to register your nickname:\n/nick <b>%s</b>\n\nTry to avoid characters of different languages.", 'vars' => static::$userData['name']]),
@@ -209,7 +209,8 @@ class TelegramBotRepository
         ];
 
         $tbBot = new TelegramBot;
-        $tbBot->sendMessage(Settings::getMainTelegramId(), $message, -1, $replyMarkup);
+        // $tbBot->sendMessage(Settings::getMainTelegramId(), $message, -1, $replyMarkup);
+        $tbBot->sendMessage(Settings::getTechTelegramId(), $message, -1, $replyMarkup);
 
         return 'Success';
     }
