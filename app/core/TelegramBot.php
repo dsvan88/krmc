@@ -254,7 +254,7 @@ class TelegramBot
         if (!empty($replyMarkup)){
             $params['reply_markup'] = json_encode($replyMarkup);
         }
-
+        error_log($messageId);
         return self::send('editMessageText', $params);
     }
     public static function getUserProfilePhotos($userId = 0, $offset = 0, $limit = 1)
@@ -367,6 +367,8 @@ class TelegramBot
         }
         curl_setopt_array(self::$curl, $options);
         static::$result = json_decode(curl_exec(self::$curl), true);
+        error_log(json_encode(static::$result,JSON_UNESCAPED_UNICODE));
+
 
         self::end();
 
