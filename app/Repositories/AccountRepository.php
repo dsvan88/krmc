@@ -251,9 +251,9 @@ class AccountRepository
     {
         if (empty($userId)) return false;
 
-        // $userData = Users::find($userId);
+        $userData = Users::find($userId);
         
-        // if (!empty($userData['login'])) return false;
+        if (!empty($userData['login'])) return false;
         
         $tgChat = TelegramChats::findBy('user_id', $userId)[0];
 

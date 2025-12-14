@@ -90,6 +90,9 @@ class TelegramBotController extends Controller
         self::$techTelegramId = Settings::getTechTelegramId();
         self::$mainGroupTelegramId = Settings::getMainTelegramId();
         self::$chatId = static::$type === 'message' ? self::$incomeMessage[static::$type]['chat']['id'] : self::$incomeMessage[static::$type]['message']['chat']['id'];
+        
+        $type = static::$type === 'message' ? self::$incomeMessage[static::$type]['chat']['type'] : self::$incomeMessage[static::$type]['message']['chat']['type'];
+        if ($type === 'private') self::$isDirect = true;
 
         $userTelegramId = self::$incomeMessage[static::$type]['from']['id'];
         $userId = Contacts::getUserIdByContact('telegramid', $userTelegramId);
