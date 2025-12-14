@@ -367,7 +367,7 @@ class TelegramBot
         }
         curl_setopt_array(self::$curl, $options);
         static::$result = json_decode(curl_exec(self::$curl), true);
-        error_log(json_encode(static::$result,JSON_UNESCAPED_UNICODE));
+        // error_log(json_encode(static::$result,JSON_UNESCAPED_UNICODE));
 
 
         self::end();
