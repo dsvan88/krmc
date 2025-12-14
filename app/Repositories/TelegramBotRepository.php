@@ -111,14 +111,14 @@ class TelegramBotRepository
             Users::delete($uId);
 
             $update = [
-                'message' => Locale::phrase(['string' => "Okay! Let’s try again!\nUse the next command to register your nickname:\n/nick <b>%s</b>\n\nTry to avoid characters of different languages.", 'vars' => static::$userData['name']]),
+                'message' => Locale::phrase(['string' => "Okay! Let’s try again!\nUse the next command to register your nickname:\n/nick <b>%s</b>\n\nTry to avoid characters of different languages.", 'vars' => [static::$userData['name']]]),
             ];
             return 'Okay!';
         }
 
         $update = [
             'message' => 
-                Locale::phrase(['string' => "<b>%s</b>, nice to meet you!\nYou successfully registered in our system!", 'vars' => static::$userData['name']]).
+                Locale::phrase(['string' => "<b>%s</b>, nice to meet you!\nYou successfully registered in our system!", 'vars' =>[static::$userData['name']]]).
                 PHP_EOL . PHP_EOL . 
                 Locale::phrase('If you made a mistake - don’t worry! Just tell the Administrator about it and he will quickly fix it😏'),
         ];
