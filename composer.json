@@ -5,7 +5,7 @@
     "keywords": ["framework"],
     "type": "project",
     "require": {
-        "php": "^8.3.0",
+        "php": "8.3.28",
         "ext-mbstring": "*",
         "ext-exif": "*",
         "ext-gd": "*",
