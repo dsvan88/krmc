@@ -134,7 +134,7 @@ class TelegramBotRepository
             return "I can’t to recognize you!\nPlease, register in our system!";
         }
 
-        $userData['status'] = empty($userData['privilege']['status']) ? 'user' : static::$userData['privilege']['status'];
+        static::$userData['status'] = empty($userData['privilege']['status']) ? 'user' : static::$userData['privilege']['status'];
 
         $weekId = (int) trim(static::$arguments['w']);
         $dayNum = (int) trim(static::$arguments['d']);
@@ -145,7 +145,7 @@ class TelegramBotRepository
             return 'This day is over🤷‍♂️';
 
         if ($weekData['data'][$dayNum]['status'] !== 'set') {
-            if (!in_array($userData['status'], ['trusted', 'activist', 'manager', 'admin'])) {
+            if (!in_array(static::$userData['status'], ['trusted', 'activist', 'manager', 'admin'])) {
                 return '{{ Tg_Gameday_Not_Set }}';
             }
             if (!isset($weekData['data'][$dayNum]['game']))
@@ -154,15 +154,14 @@ class TelegramBotRepository
             $weekData['data'][$dayNum]['status'] = 'set';
         }
 
-        error_log($userData['id']);
         foreach ($weekData['data'][$dayNum]['participants'] as $participant) {
-            if ($participant['id'] != $userData['id']) continue;
+            if ($participant['id'] != static::$userData['id']) continue;
             return '{{ Tg_Command_Requester_Already_Booked }}';
         }
 
         $newDayData = $weekData['data'][$dayNum];
         $data = [
-            'userId' => $userData['id'],
+            'userId' => static::$userData['id'],
             'prim' => empty($arguments['p']) ? '' : $arguments['p'],
         ];
         $newDayData = Days::addParticipantToDayData($newDayData, $data);
