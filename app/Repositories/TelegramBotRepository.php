@@ -27,8 +27,8 @@ class TelegramBotRepository
             throw new Exception(__METHOD__ . ': UserID or TelegramID can’t be empty!');
 
         if (!empty(static::$userData)) {
-            if (empty(static::$userData['privilege']['status']) || in_array(static::$userData['privilege']['status'], ['manager', 'admin', 'root'], true))
-                return 'nickRelink: You don’t have enough rights to change information about other users!';
+            if (empty(static::$userData['privilege']['status']) || !in_array(static::$userData['privilege']['status'], ['manager', 'admin', 'root'], true))
+                return 'You don’t have enough rights to change information about other users!';
             return static::nickApprove($update);
         }
 
