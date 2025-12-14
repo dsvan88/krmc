@@ -207,6 +207,7 @@ class TelegramBotRepository
                 ],
             ],
         ];
+        TelegramBotRepository::encodeInlineKeyboard($replyMarkup['inline_keyboard']);
 
         $tbBot = new TelegramBot;
         // $tbBot->sendMessage(Settings::getMainTelegramId(), $message, -1, $replyMarkup);
