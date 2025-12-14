@@ -19,10 +19,10 @@ class TestCommand extends ChatCommand
     }
     public static function execute(array $arguments = [], string &$message = '', string &$reaction = '', array &$replyMarkup = [])
     {
-        // if (!empty(self::$requester)) {
-        //     $message = self::locale(['string' => '{{ Tg_Command_Name_Already_Set }}', 'vars' => [self::$requester['name']]]);
-        //     return false;
-        // }
+        if (!empty(self::$requester)) {
+            $message = self::locale(['string' => '{{ Tg_Command_Name_Already_Set }}', 'vars' => [self::$requester['name']]]);
+            return false;
+        }
 
         $_username = implode(' ', $arguments);
 
@@ -42,13 +42,6 @@ class TestCommand extends ChatCommand
             $message = self::locale("Invalid nickname format!\nPlease use <b>Cyrillic</b> or <b>Latin</b> alphabet, <b>spaces</b> and <b>digits</b> in the nickname!");
             return false;
         }
-
-        // $symbols = Locale::$cyrillicPattern;
-        // if (preg_match_all("/[^a-z$symbols .0-9]/ui", $_username, $matches)) {
-        //     $wrong = implode('</i>", "<i>', $matches[0]);
-        //     $message = self::locale(['string' => "Invalid nickname format!\nPlease use <b>Cyrillic</b> or <b>Latin</b> alphabet, <b>spaces</b> and <b>digits</b>!\nWrong simbols: %s", 'vars' => ["\"<i>$wrong</i>\""]]);
-        //     return false;
-        // }
 
         $telegramId = self::$message['message']['from']['id'];
         $telegram = self::$message['message']['from']['username'];

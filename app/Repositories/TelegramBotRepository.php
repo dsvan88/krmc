@@ -4,10 +4,12 @@ namespace app\Repositories;
 
 use app\core\Locale;
 use app\core\TelegramBot;
+use app\models\Contacts;
 use app\models\Days;
 use app\models\Users;
 use app\models\Weeks;
 use app\models\Settings;
+use app\models\TelegramChats;
 use Exception;
 
 class TelegramBotRepository
@@ -105,22 +107,23 @@ class TelegramBotRepository
         if (static::$userData['id'] != $uId && (empty(static::$userData['privilege']['status']) || !in_array(static::$userData['privilege']['status'], ['manager', 'admin', 'root'], true)))
             return 'You don’t have enough rights to change information about other users!';
 
-        if (static::$arguments['s']) {
-            $update = [
-                'message' => Locale::phrase(['text' => "<b>%s</b>, nice to meet you!\nYou successfully registered in our system!", 'vars' => static::$userData['name']]),
-                PHP_EOL . PHP_EOL . Locale::phrase('If you made a mistake - don’t worry! Just tell the Administrator about it and he will quickly fix it😏'),
-            ];
+        if (empty(static::$arguments['y'])) {
+            Users::delete($uId);
 
-            return 'Success';
+            $update = [
+                'message' => Locale::phrase(['text' => "Okay! Let’s try again!\nUse the next command to register your nickname:\n/nick <b>%s</b>\n\nTry to avoid characters of different languages.", 'vars' => static::$userData['name']]),
+            ];
+            return 'Okay!';
         }
 
-        // Users::delete($uId);
-
         $update = [
-            'message' => Locale::phrase(['text' => "Okay! Let’s try again!\nUse the next command to register your nickname:\n/nick <b>%s</b>\n\nTry to avoid characters of different languages.", 'vars' => static::$userData['name']]),
+            'message' => 
+                Locale::phrase(['text' => "<b>%s</b>, nice to meet you!\nYou successfully registered in our system!", 'vars' => static::$userData['name']]).
+                PHP_EOL . PHP_EOL . 
+                Locale::phrase('If you made a mistake - don’t worry! Just tell the Administrator about it and he will quickly fix it😏'),
         ];
 
-        return 'Okay!';
+        return 'Success';
     }
     public static function booking(array &$update = [])
     {
@@ -212,8 +215,7 @@ class TelegramBotRepository
         TelegramBotRepository::encodeInlineKeyboard($replyMarkup['inline_keyboard']);
 
         $tbBot = new TelegramBot;
-        // $tbBot->sendMessage(Settings::getMainTelegramId(), $message, -1, $replyMarkup);
-        $tbBot->sendMessage(Settings::getTechTelegramId(), $message, -1, $replyMarkup);
+        $tbBot->sendMessage(Settings::getMainTelegramId(), $message, -1, $replyMarkup);
 
         return 'Success';
     }
@@ -228,8 +230,7 @@ class TelegramBotRepository
 
         if (empty(static::$arguments['u']) || empty(static::$arguments['t'])) {
 
-            if (static::$arguments['ci'] != Settings::getTechTelegramId()){
-            // if (static::$arguments['ci'] != Settings::getMainTelegramId()){
+            if (static::$arguments['ci'] != Settings::getMainTelegramId()){
                 $message = Locale::phrase('Okay! I get it.');
                 $message .= PHP_EOL;
                 $message .= Locale::phrase('I’ll inform the user about your decision😔');
@@ -255,13 +256,12 @@ class TelegramBotRepository
             throw new Exception(__METHOD__ . ': UserID or TelegramID can’t be empty!');
 
         $userData = Users::find($uId);
-        // $thChat = TelegramChats::getChat($tId);
-        // $contacts = [['telegramid' => $tId, 'telegram' => $thChat['personal']['username']]];
-        // Contacts::reLink($contacts, $uId);
-        // TelegramChatsRepository::getAndSaveTgAvatar($uId, true);
+        $thChat = TelegramChats::getChat($tId);
+        $contacts = [['telegramid' => $tId, 'telegram' => $thChat['personal']['username']]];
+        Contacts::reLink($contacts, $uId);
+        TelegramChatsRepository::getAndSaveTgAvatar($uId, true);
 
-        if (static::$arguments['ci'] != Settings::getTechTelegramId()){
-        // if (static::$arguments['ci'] != Settings::getMainTelegramId()){
+        if (static::$arguments['ci'] != Settings::getMainTelegramId()){
             $message = Locale::phrase('Okay! I get it.');
             $message .= PHP_EOL;
             $message .= Locale::phrase('I’ll inform the user about your decision😊');
