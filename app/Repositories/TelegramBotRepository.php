@@ -184,6 +184,7 @@ class TelegramBotRepository
         if (static::$message['callback_query']['message']['chat']['id'] !== Settings::getMainTelegramId() && in_array(static::$userData['id'], array_column($weekData['data'][$dayNum]['participants'], 'id'))){
             $update['replyMarkup']['inline_keyboard'][] = ['text' => '❌' . Locale::phrase('Opt-out'), 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => $dayNum, 'r' => 1]];
         }
+
         return 'Success';
     }
 
