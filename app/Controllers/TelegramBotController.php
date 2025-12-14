@@ -316,6 +316,7 @@ class TelegramBotController extends Controller
         }
         if (!empty($update)) {
             error_log(__METHOD__.': '.json_encode($update));
+            error_log(__METHOD__.': '.$update['message']);
             // if (empty($update['chatId']))
             if (empty($update['replyMarkup'])) $update['replyMarkup'] = [];
             Sender::edit(self::$chatId, self::$incomeMessage[static::$type]['message']['message_id'], $update['message'], $update['replyMarkup']);
