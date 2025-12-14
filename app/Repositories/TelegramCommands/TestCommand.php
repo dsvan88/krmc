@@ -104,7 +104,7 @@ class TestCommand extends ChatCommand
 
         if (!$isAvailable || $isChatExists) {
             $message .= PHP_EOL;
-            $message = self::locale('If it is your, then contact the Administrators to make changes!');
+            $message .= self::locale('If it is your, then contact the Administrators to make changes!');
             $reaction = '🤷‍♂️';
             return false;
         }
