@@ -12,5 +12,10 @@
         "ext-zip": "*",
         "google/apiclient": "^2.18"
     },
-    "minimum-stability": "stable"
+    "minimum-stability": "stable",
+    "extra": {
+        "heroku": {
+            "php-version": "8.2"
+        }
+    }
 }
