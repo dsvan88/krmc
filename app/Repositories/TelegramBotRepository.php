@@ -221,7 +221,7 @@ class TelegramBotRepository
         if (empty(static::$userData) || empty(static::$arguments))
             throw new Exception(__METHOD__ . ': UserData or Arguments is empty!');
 
-        if (empty(static::$userData['privilege']['status']) || in_array(static::$userData['privilege']['status'], ['admin', 'root'], true))
+        if (empty(static::$userData['privilege']['status']) || !in_array(static::$userData['privilege']['status'], ['admin', 'root'], true))
             return 'You don’t have enough rights to change information about other users!';
 
         if (empty(static::$arguments['u']) || empty(static::$arguments['t'])) {
