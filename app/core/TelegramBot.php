@@ -254,7 +254,7 @@ class TelegramBot
         if (!empty($replyMarkup)){
             $params['reply_markup'] = json_encode($replyMarkup);
         }
-        error_log($params['reply_markup']);
+        // error_log($params['reply_markup']);
         return self::send('editMessageText', $params);
     }
     public static function getUserProfilePhotos($userId = 0, $offset = 0, $limit = 1)
