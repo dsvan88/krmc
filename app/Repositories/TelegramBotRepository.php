@@ -29,6 +29,8 @@ class TelegramBotRepository
         if (!empty(static::$userData)) {
             if (empty(static::$userData['privilege']['status']) || !in_array(static::$userData['privilege']['status'], ['manager', 'admin', 'root'], true))
                 return 'You don’t have enough rights to change information about other users!';
+            static::$arguments['ci'] = static::$message['callback_query']['message']['chat']['id'];
+            static::$arguments['mi'] = static::$message['callback_query']['message']['id'];
             return static::nickApprove($update);
         }
 
