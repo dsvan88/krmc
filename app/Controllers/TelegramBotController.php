@@ -319,7 +319,7 @@ class TelegramBotController extends Controller
                 Sender::edit(
                     empty($item['chatId']) ? self::$chatId : $item['chatId'],
                     empty($item['messageId']) ? self::$incomeMessage[static::$type]['message']['message_id'] : $item['messageId'],
-                    empty($item['message']) ? '' : $item['message'],
+                    empty($item['message']) ? '' : Locale::phrase($item['message']),
                     empty($item['replyMarkup']) ? [] : $item['replyMarkup']
                 );
             }
@@ -330,7 +330,7 @@ class TelegramBotController extends Controller
                     TelegramBotRepository::encodeInlineKeyboard($item['replyMarkup']['inline_keyboard']);
                 Sender::message(
                     empty($item['chatId']) ? self::$chatId : $item['chatId'],
-                    empty($item['message']) ? '' : $item['message'],
+                    empty($item['message']) ? '' : Locale::phrase($item['message']),
                     empty($item['replyOn']) ? 0 : $item['replyOn'],
                     empty($item['replyMarkup']) ? [] : $item['replyMarkup']
                 );
