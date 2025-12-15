@@ -34,7 +34,6 @@ class TelegramBotController extends Controller
     public static $resultMessage = '';
     public static $reaction = '';
     public static $replyMarkup = [];
-    public static $class = '';
     public static $type = '';
 
     public static function before()
@@ -373,21 +372,21 @@ class TelegramBotController extends Controller
         }
         return true;
     }
-    public static function execute($command = null)
+    public static function execute(string $command = '')
     {
 
         if (empty($command)) {
             $command = self::$command;
         }
 
-        static::$class = ucfirst($command) . 'Command';
-        static::$class = str_replace('/', '\\', self::$CommandNamespace . '\\' . static::$class);
+        $class = ucfirst($command) . 'Command';
+        $class = str_replace('/', '\\', self::$CommandNamespace . '\\' . $class);
 
-        if (!class_exists(static::$class)) {
+        if (!class_exists($class)) {
             return false;
         }
 
-        $ready = static::$class::set([
+        $ready = $class::set([
             'operatorClass' => self::class,
             'requester' => self::$requester,
             'message' => self::$incomeMessage
@@ -395,13 +394,11 @@ class TelegramBotController extends Controller
 
         if (!$ready) return false;
 
-        $accessLevel = static::$class::getAccessLevel();
-
-        if (!self::checkAccess($accessLevel)) {
+        if (!self::checkAccess($class::getAccessLevel())) {
             return false;
         }
 
-        return static::$class::execute(self::$commandArguments, self::$resultMessage, self::$reaction, self::$replyMarkup);
+        return $class::execute(self::$commandArguments, self::$resultMessage, self::$reaction, self::$replyMarkup);
     }
     public static function checkAccess(string $level = 'all')
     {
