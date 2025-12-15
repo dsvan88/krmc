@@ -66,10 +66,10 @@ class TelegramBot
             $params['text'] = $message;
             $params['parse_mode'] = 'HTML';
         }
-        if ($messageId !== -1) {
+        if ($messageId > 0) {
             $params['reply_to_message_id'] = $messageId;
         }
-        if (!empty($replyMarkup)){
+        if (!empty($replyMarkup)) {
             $params['reply_markup'] = json_encode($replyMarkup);
         }
 
@@ -251,7 +251,7 @@ class TelegramBot
             'text' => $message, // текст сообщения
             'parse_mode' => 'HTML', // режим отображения сообщения, не обязательный параметр
         ];
-        if (!empty($replyMarkup)){
+        if (!empty($replyMarkup)) {
             $params['reply_markup'] = json_encode($replyMarkup);
         }
         // error_log($params['reply_markup']);

@@ -210,7 +210,7 @@ return [
 
     '{{ Tg_Command_Name_Already_Set }}' => "Я уже запомнил Вас под псевдонимом <b>%s</b>!\n\nИзменения - только через администраторов.",
     "Your nickname can’t be empty!\nPlease, use that format:\n/nick <b>Your nickname</b>" => "Ваш псевдоним не может быть пустым!\nПожалуйста, используйте такой формат:\n/nick <b>Ваш псевдоним</b>",
-    'Your nickname is too short!\nPlease use at least <b>2</b> symbols, so people can recognize you!' => "Ваш псевдоним - слишком короткий!\nПожалуйста, укажите, как минимум <b>2</b> символа, что бы люди могли узнать Вас!",
+    "Your nickname is too short!\nPlease use at least <b>2</b> symbols, so people can recognize you!" => "Ваш псевдоним - слишком короткий!\nПожалуйста, укажите, как минимум <b>2</b> символа, что бы люди могли узнать Вас!",
     "Invalid nickname format!\nPlease use <b>Cyrillic</b> or <b>Latin</b> alphabet, <b>spaces</b> and <b>digits</b> in the nickname!" => "Не верный формат псевдонима!\nИспользуйте, пожалуйста <b>Кирилицу</b> или <b>Латиницу</b>, <b>пробелы</b> и <b>цифры</b> в псевдониме!",
     "Invalid nickname format!\nPlease use <b>Cyrillic</b> or <b>Latin</b> alphabet, <b>spaces</b> and <b>digits</b> in the nickname!\nWrong simbols: %s" => "Не верный формат псевдонима!\nИспользуйте, пожалуйста, только <b>Кирилицу</b> или <b>Латиницу</b>, <b>пробелы</b> и <b>цифры</b> в псевдониме!\nНе верные символы: %s",
     '{{ Tg_Command_Games_Not_Set }}' => "На ближайшее время, игр - не запланировано!\nПожалуйста, загляните к нам чуть позднее.\n",
