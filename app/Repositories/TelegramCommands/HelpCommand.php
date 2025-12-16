@@ -2,7 +2,9 @@
 
 namespace app\Repositories\TelegramCommands;
 
+use app\Controllers\TelegramBotController;
 use app\core\ChatCommand;
+use app\Repositories\TelegramBotRepository;
 
 class HelpCommand extends ChatCommand
 {
@@ -12,7 +14,7 @@ class HelpCommand extends ChatCommand
     }
     public static function execute(array $arguments = [], string &$message = '', string &$reaction = '', array &$replyMarkup = [])
     {
-        $folder = str_replace('\\','/',$_SERVER['DOCUMENT_ROOT'] . self::$operatorClass::$CommandNamespace);
+        $folder = str_replace('\\', '/', $_SERVER['DOCUMENT_ROOT'] . __NAMESPACE__);
 
         if (!is_dir($folder) || !file_exists($folder)) {
             $message = 'Something went wrong!';
@@ -47,14 +49,14 @@ class HelpCommand extends ChatCommand
         $command = mb_substr($filename, 0, $offset, 'UTF-8');
 
         $class = ucfirst($command) . 'Command';
-        $class = str_replace('/', '\\', self::$operatorClass::$CommandNamespace . '\\' . $class);
+        $namespace = __NAMESPACE__;
+        $class = str_replace('/', '\\', "$namespace\\$class");
 
-        if (!class_exists($class) || !self::$operatorClass::checkAccess($class::$accessLevel)) {
-            // error_log("Command $command - false");
+        if (!class_exists($class) || !TelegramBotRepository::checkAccess($class::$accessLevel)) {
             return false;
         }
-        
-        
+
+
         return $class::description();
     }
 }

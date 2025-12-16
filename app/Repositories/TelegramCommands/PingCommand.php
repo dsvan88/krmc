@@ -6,9 +6,9 @@ use app\core\ChatCommand;
 use app\core\Locale;
 use app\core\Tech;
 use app\models\Contacts;
-use app\models\Days;
 use app\models\GameTypes;
 use app\models\Weeks;
+use app\Repositories\TelegramBotRepository;
 
 class PingCommand extends ChatCommand
 {
@@ -24,7 +24,7 @@ class PingCommand extends ChatCommand
         $requestData = $arguments;
 
         $daySlug = isset($requestData[0]) ? $requestData[0] : 'tod';
-        self::$operatorClass::parseDayNum($daySlug, $requestData);
+        TelegramBotRepository::parseDayNum($daySlug, $requestData);
         if ($requestData['dayNum'] < $requestData['currentDay'])
             $weekId++;
 

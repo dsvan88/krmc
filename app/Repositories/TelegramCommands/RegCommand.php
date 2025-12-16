@@ -5,6 +5,7 @@ namespace app\Repositories\TelegramCommands;
 use app\core\ChatCommand;
 use app\models\Days;
 use app\models\Weeks;
+use app\Repositories\TelegramBotRepository;
 
 class RegCommand extends ChatCommand
 {
@@ -23,7 +24,7 @@ class RegCommand extends ChatCommand
             return false;
         }
 
-        $requestData = self::$operatorClass::parseArguments($arguments);
+        $requestData = TelegramBotRepository::parseArguments($arguments);
 
         if (!isset($requestData['nonames']) && $requestData['userId'] < 2) {
             $message = self::locale(['string' => 'No users found with nickname: <b>%s</b>!', 'vars' => [$requestData['probableUserName']]]);

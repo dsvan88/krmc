@@ -249,7 +249,7 @@ class TelegramBotController extends Controller
                 $withoutMethod = trim(mb_substr($value, 1, 6, 'UTF-8'));
                 $dayName = mb_strtolower(mb_substr($withoutMethod, 0, 3, 'UTF-8'), 'UTF-8');
 
-                self::parseDayNum($dayName, $requestData);
+                TelegramBotRepository::parseDayNum($dayName, $requestData);
             } elseif (preg_match('/^\d{2}:\d{2}$/', $value) === 1 && empty($requestData['arrive'])) {
                 $requestData['arrive'] = $value;
             } elseif (preg_match('/\#(\d)*$/', $value, $match) === 1) {
@@ -271,43 +271,18 @@ class TelegramBotController extends Controller
             }
         }
 
-        if (!isset($requestData['currentDay']))  self::parseDayNum('tod', $requestData);
+        if (!isset($requestData['currentDay']))  TelegramBotRepository::parseDayNum('tod', $requestData);
 
         return $requestData;
-    }
-    public static function parseDayNum(string $daySlug, array &$requestData): bool
-    {
-        $requestData['currentDay'] = Days::current();
-
-        $daySlug = mb_strtolower($daySlug, 'UTF-8');
-        if (mb_strlen($daySlug, 'UTF-8') > 3) {
-            $daySlug = mb_substr($daySlug, 0, 3);
-        }
-        if (in_array($daySlug, DayRepository::$techDaysArray['today'], true)) {
-            $requestData['dayNum'] = $requestData['currentDay'];
-            return true;
-        } elseif (in_array($daySlug, DayRepository::$techDaysArray['tomorrow'], true)) {
-            $dayNum = $requestData['currentDay'] + 1;
-            if ($dayNum === 7)
-                $dayNum = 0;
-            $requestData['dayNum'] = $dayNum;
-            return true;
-        } else {
-            foreach (DayRepository::$daysArray as $num => $daysNames) {
-                if (in_array($daySlug, $daysNames, true)) {
-                    $requestData['dayNum'] = $num;
-                    return true;
-                }
-            }
-        }
-        return false;
     }
     public static function executeCallbackQuery()
     {
         $command = static::$command;
-        TelegramBotRepository::$message = static::$incomeMessage;
-        TelegramBotRepository::$userData = static::$requester;
-        TelegramBotRepository::$arguments = static::$commandArguments;
+        TelegramBotRepository::init([
+            'message' => static::$incomeMessage,
+            'userData' => static::$requester,
+            'arguments' => static::$commandArguments,
+        ]);
         $result = TelegramBotRepository::$command();
         if (!empty($result['message'])) {
             Sender::callbackAnswer(self::$incomeMessage[static::$type]['id'], Locale::phrase($result['message']));
@@ -372,7 +347,7 @@ class TelegramBotController extends Controller
         }
         return true;
     }
-    public static function execute(string $command = '')
+    public static function execute(string $command = ''): array
     {
 
         if (empty($command)) {
@@ -383,19 +358,22 @@ class TelegramBotController extends Controller
         $class = str_replace('/', '\\', self::$CommandNamespace . '\\' . $class);
 
         if (!class_exists($class)) {
-            return false;
+            return [];
         }
 
         $ready = $class::set([
             'operatorClass' => self::class,
             'requester' => self::$requester,
-            'message' => self::$incomeMessage
+            'message' => self::$incomeMessage,
+            'argumets' => self::$commandArguments,
         ]);
 
-        if (!$ready) return false;
+        if (empty($ready)) return [
+            'message' => $class::$status,
+        ];
 
         if (!self::checkAccess($class::getAccessLevel())) {
-            return false;
+            return [];
         }
 
         return $class::execute(self::$commandArguments, self::$resultMessage, self::$reaction, self::$replyMarkup);

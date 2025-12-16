@@ -8,8 +8,9 @@ class ChatCommand implements Command
 {
     public static $requester = [];
     public static $message = [];
-    public static $operatorClass;
     public static $accessLevel = 'all';
+    public static $arguments = [];
+    public static $status = '';
 
     public static function set(array $arguments = []): bool
     {
@@ -24,11 +25,22 @@ class ChatCommand implements Command
     }
     public static function description()
     {
-        return static::class . ' - ' . self::locale('Here isn’t description yet');
+        return [
+            'result' => true,
+            'send' => [
+                ['message' => static::class . ' - ' . self::locale('Here isn’t description yet')],
+            ]
+        ];
     }
-    public static function execute(array $arguments = [], string &$message = '', string &$reaction = '', array &$replyMarkup = [])
+    public static function execute()
     {
-        return static::class . ' - ' . self::locale('Action is done!');
+        static::$status = static::class . ' - ' . self::locale('Action is done!');
+        return [
+            'result' => true,
+            'send' => [
+                ['message' => static::$status]
+            ]
+        ];
     }
     public static function locale($phrase)
     {

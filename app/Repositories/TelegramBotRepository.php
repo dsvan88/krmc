@@ -16,6 +16,7 @@ class TelegramBotRepository
     public static $message = '';
     public static $userData = [];
     public static $arguments = [];
+
     public static function nickRelink(): array
     {
         if (empty(static::$arguments))
@@ -187,14 +188,17 @@ class TelegramBotRepository
                     [
                         ['text' => '🙋' . Locale::phrase('I will too!'), 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => $dayNum]],
                         ['text' => Locale::phrase('I want too!') . '🥹', 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => $dayNum, 'p' => '?']],
+                        ['text' => '❌', 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => $dayNum, 'r' => '1']],
                     ],
                 ],
             ],
         ];
 
         if ($chatId != Settings::getMainTelegramId() && in_array(static::$userData['id'], array_column($weekData['data'][$dayNum]['participants'], 'id'))) {
-            $update['replyMarkup']['inline_keyboard'][] = [
-                ['text' => '❌' . Locale::phrase('Opt-out'), 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => $dayNum, 'r' => 1]]
+            $update['replyMarkup']['inline_keyboard'] = [
+                [
+                    ['text' => '❌' . Locale::phrase('Opt-out'), 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => $dayNum, 'r' => 1]]
+                ]
             ];
         }
 
@@ -218,16 +222,17 @@ class TelegramBotRepository
         if (empty(static::$userData['privilege']['status']) || !in_array(static::$userData['privilege']['status'], ['manager', 'admin', 'root'], true))
             return ['message' => 'You don’t have enough rights!'];
 
-        $wId = (int) trim(static::$arguments['w']);
-        $dId = (int) trim(static::$arguments['d']);
+        $weekId = (int) trim(static::$arguments['w']);
+        $dayNum = (int) trim(static::$arguments['d']);
 
-        $message = Days::getFullDescription(Weeks::weekDataById($wId), $dId);
+        $message = Days::getFullDescription(Weeks::weekDataById($weekId), $dayNum);
 
         $replyMarkup = [
             'inline_keyboard' => [
                 [
-                    ['text' => '🙋' . Locale::phrase('I will too!'), 'callback_data' => ['c' => 'booking', 'w' => $wId, 'd' => $dId]],
-                    ['text' => Locale::phrase('I want too!') . '🥹', 'callback_data' => ['c' => 'booking', 'w' => $wId, 'd' => $dId, 'p' => '?']],
+                    ['text' => '🙋' . Locale::phrase('I will too!'), 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => $dayNum]],
+                    ['text' => Locale::phrase('I want too!') . '🥹', 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => $dayNum, 'p' => '?']],
+                    ['text' => '⛔️', 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => $dayNum, 'r' => '1']],
                 ],
             ],
         ];
@@ -285,7 +290,7 @@ class TelegramBotRepository
 
         $userData = Users::find($uId);
         $thChat = TelegramChats::getChat($tId);
-        $contacts = [['telegramid' => $tId, 'telegram' => $thChat['personal']['username']]];
+        $contacts = ['telegramid' => $tId, 'telegram' => $thChat['personal']['username']];
         Contacts::reLink($contacts, $uId);
         TelegramChatsRepository::getAndSaveTgAvatar($uId, true);
 
@@ -315,9 +320,47 @@ class TelegramBotRepository
     }
 
     /**
+     * Init chat callbackQuery command
+     */
+    public static function init(array $arguments): bool
+    {
+        foreach ($arguments as $k => $v) {
+            static::$$k = $v;
+        }
+        return true;
+    }
+
+    /**
      * Tech block
      */
 
+    public static function parseDayNum(string $daySlug, array &$requestData): bool
+    {
+        $requestData['currentDay'] = Days::current();
+
+        $daySlug = mb_strtolower($daySlug, 'UTF-8');
+        if (mb_strlen($daySlug, 'UTF-8') > 3) {
+            $daySlug = mb_substr($daySlug, 0, 3);
+        }
+        if (in_array($daySlug, DayRepository::$techDaysArray['today'], true)) {
+            $requestData['dayNum'] = $requestData['currentDay'];
+            return true;
+        } elseif (in_array($daySlug, DayRepository::$techDaysArray['tomorrow'], true)) {
+            $dayNum = $requestData['currentDay'] + 1;
+            if ($dayNum === 7)
+                $dayNum = 0;
+            $requestData['dayNum'] = $dayNum;
+            return true;
+        } else {
+            foreach (DayRepository::$daysArray as $num => $daysNames) {
+                if (in_array($daySlug, $daysNames, true)) {
+                    $requestData['dayNum'] = $num;
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
     public static function encodeInlineKeyboard(array &$data): void
     {

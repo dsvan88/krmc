@@ -6,6 +6,7 @@ use app\core\ChatCommand;
 use app\models\Days;
 use app\models\Weeks;
 use app\Repositories\DayRepository;
+use app\Repositories\TelegramBotRepository;
 
 class ClearCommand extends ChatCommand
 {
@@ -30,7 +31,7 @@ class ClearCommand extends ChatCommand
         if ($dayName === '')
             $dayName = 'сг';
 
-        self::$operatorClass::parseDayNum($dayName, $requestData);
+        TelegramBotRepository::parseDayNum($dayName, $requestData);
 
         $weekId = Weeks::currentId();
 

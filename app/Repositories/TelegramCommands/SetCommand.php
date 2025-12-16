@@ -7,6 +7,7 @@ use app\models\Days;
 use app\models\GameTypes;
 use app\models\Weeks;
 use app\Repositories\DayRepository;
+use app\Repositories\TelegramBotRepository;
 
 class SetCommand extends ChatCommand
 {
@@ -86,7 +87,7 @@ class SetCommand extends ChatCommand
             $dayName = mb_substr($dayName, 1, null, 'UTF-8');
         }
 
-        self::$operatorClass::parseDayNum($dayName, $requestData);
+        TelegramBotRepository::parseDayNum($dayName, $requestData);
 
         if ($gameName !== '') {
             foreach ($gamesArray as $name => $gameNames) {

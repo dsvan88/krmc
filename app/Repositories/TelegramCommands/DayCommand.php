@@ -5,6 +5,7 @@ namespace app\Repositories\TelegramCommands;
 use app\core\ChatCommand;
 use app\models\Days;
 use app\models\Weeks;
+use app\Repositories\TelegramBotRepository;
 
 class DayCommand extends ChatCommand
 {
@@ -18,7 +19,7 @@ class DayCommand extends ChatCommand
         $requestData = $arguments;
 
         $daySlug = isset($requestData[0]) ? $requestData[0] : 'tod';
-        self::$operatorClass::parseDayNum($daySlug, $requestData);
+        TelegramBotRepository::parseDayNum($daySlug, $requestData);
         if ($requestData['dayNum'] < $requestData['currentDay'])
             $weekId++;
 

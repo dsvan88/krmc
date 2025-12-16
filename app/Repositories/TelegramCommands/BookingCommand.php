@@ -5,6 +5,7 @@ namespace app\Repositories\TelegramCommands;
 use app\core\ChatCommand;
 use app\models\Days;
 use app\models\Weeks;
+use app\Repositories\TelegramBotRepository;
 
 class BookingCommand extends ChatCommand
 {
@@ -13,11 +14,12 @@ class BookingCommand extends ChatCommand
     {
         return self::locale("<u>+ (week day)</u> <i>// Booking for the scheduled games of the current week, examples:</i>\n\t\t+вс\n\t\t+ на сегодня, на 19:30 (отсижу 1-2 игры, под ?)\n<u>- (week day)</u> <i>// Unsubscribe from games on a specific day that you previously signed up for, examples:</i>\n\t\t-вс\n\t\t- завтра\n");
     }
-    public static function execute(array $arguments = [], string &$message = '', string &$reaction = '', array &$replyMarkup = [])
+    public static function execute()
     {
         $requestData = $arguments;
-        self::$operatorClass::parseDayNum($requestData['dayName'], $requestData);
+        TelegramBotRepository::parseDayNum($requestData['dayName'], $requestData);
 
+        $userId = static::$requester['id'];
         $requestData['userId'] = self::$requester['id'];
         $requestData['userName'] = self::$requester['name'];
         $requestData['userStatus'] = empty(self::$requester['privilege']['status']) ? 'user' : self::$requester['privilege']['status'];
@@ -78,21 +80,6 @@ class BookingCommand extends ChatCommand
                 '👌',
             ];
             //👍👎❤🔥🥰👏😁🤔🤯😱🤬😢🎉🤩🤮🤣💔💯⚡🤷‍♂🤝👌
-            // $reactions = [
-            //     '🤩',
-            //     '🔥',
-            //     '❤',
-            //     '❤‍🔥',
-            //     '💘',
-            //     '🆒',
-            //     '🎉',
-            //     '👏',
-            //     '🥰',
-            //     '😍',
-            //     '🤗',
-            //     '🤩',
-            //     '😘',
-            // ];
         } else {
             if ($participantId === -1) {
                 $message = self::locale('{{ Tg_Command_Requester_Not_Booked }}');
@@ -100,18 +87,6 @@ class BookingCommand extends ChatCommand
             }
             unset($newDayData['participants'][$participantId]);
             $newDayData['participants'] = array_values($newDayData['participants']);
-            // $reactions = [
-            //     '🤨',
-            //     '😐',
-            //     '😢',
-            //     '👎',
-            //     '😭',
-            //     '😱',
-            //     '😨',
-            //     '🤯',
-            //     '🤬',
-            //     '😡',
-            // ];
             //👍👎❤🔥🥰👏😁🤔🤯😱🤬😢🎉🤩🤮🤣💔💯⚡🤷‍♂🤝👌
             $reactions = [
                 '👎',
@@ -140,9 +115,10 @@ class BookingCommand extends ChatCommand
                 [
                     ['text' => '🙋' . self::locale('I will too!'), 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => $requestData['dayNum']]],
                     ['text' => self::locale('I want too!') . '🥹', 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => $requestData['dayNum'], 'p' => '?']],
+                    ['text' => '⛔️', 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => $requestData['dayNum'], 'r' => '1']],
                 ],
             ],
         ];
-        return true;
+        return;
     }
 }
