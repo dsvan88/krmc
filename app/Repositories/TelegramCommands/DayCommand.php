@@ -13,31 +13,36 @@ class DayCommand extends ChatCommand
     {
         return self::locale('<u>/day (week day)</u> <i>// Booking information for a specific day. Without specifying the day - for today</i>');
     }
-    public static function execute(array $arguments = [], string &$message = '', string &$reaction = '', array &$replyMarkup = [])
+    public static function execute()
     {
         $weekId = Weeks::currentId();
-        $requestData = $arguments;
 
-        $daySlug = isset($requestData[0]) ? $requestData[0] : 'tod';
-        TelegramBotRepository::parseDayNum($daySlug, $requestData);
-        if ($requestData['dayNum'] < $requestData['currentDay'])
+        $daySlug = isset(static::$arguments[0]) ? static::$arguments[0] : 'tod';
+        TelegramBotRepository::parseDayNum($daySlug, static::$arguments);
+        if (static::$arguments['dayNum'] < static::$arguments['currentDay'])
             $weekId++;
 
         $weekData = Weeks::weekDataById($weekId);
-        $message = Days::getFullDescription($weekData, $requestData['dayNum']);
+        $message = Days::getFullDescription($weekData, static::$arguments['dayNum']);
 
         if (empty($message)) {
-            $message = self::locale('{{ Tg_Command_Games_Not_Set }}');
-            return false;
+            return static::result('{{ Tg_Command_Games_Not_Set }}');
         }
-        $reaction = '👌';
-        $replyMarkup = [
-            'inline_keyboard' => [
+
+                
+        return [
+            'reaction' => '👌',
+            'send' => [
                 [
-                    ['text' => '🙋' . self::locale('I will too!'), 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => $requestData['dayNum']]],
-                    ['text' => self::locale('I want too!') . '🥹', 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => $requestData['dayNum'], 'p' => '?']],
-                ],
-            ],
+                    'message' => 'This day’s settings have been cleared.',
+                    'inline_keyboard' => [
+                        [
+                            ['text' => '🙋' . self::locale('I will too!'), 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => static::$arguments['dayNum']]],
+                            ['text' => self::locale('I want too!') . '🥹', 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => static::$arguments['dayNum'], 'p' => '?']],
+                        ],
+                    ],
+                ]
+            ]
         ];
         return true;
     }

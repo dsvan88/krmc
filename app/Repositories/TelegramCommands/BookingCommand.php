@@ -105,17 +105,20 @@ class BookingCommand extends ChatCommand
 
         $weekData['data'][static::$arguments['dayNum']] = $newDayData;
 
-        $result['send'][] = [
-            'message' => Days::getFullDescription($weekData, static::$arguments['dayNum']),
-            'replyMarkup' =>  [
-                'inline_keyboard' => [
-                    [
-                        ['text' => '🙋' . self::locale('I will too!'), 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => static::$arguments['dayNum']]],
-                        ['text' => self::locale('I want too!') . '🥹', 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => static::$arguments['dayNum'], 'p' => '?']],
-                        ['text' => '⛔️', 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => static::$arguments['dayNum'], 'r' => '1']],
-                    ],
+        $replyMarkup = [
+            'inline_keyboard' => [
+                [
+                    ['text' => '🙋' . self::locale('I will too!'), 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => static::$arguments['dayNum']]],
+                    ['text' => self::locale('I want too!') . '🥹', 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => static::$arguments['dayNum'], 'p' => '?']],
                 ],
             ],
+        ];
+
+        if ()
+
+        $result['send'][] = [
+            'message' => Days::getFullDescription($weekData, static::$arguments['dayNum']),
+            'replyMarkup' => $replyMarkup,
         ];
 
         return $result;

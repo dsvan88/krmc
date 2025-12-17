@@ -233,7 +233,7 @@ class TelegramBotController extends Controller
             // 'operatorClass' => self::class,
             'requester' => self::$requester,
             'message' => self::$incomeMessage,
-            'argumets' => self::$commandArguments,
+            'arguments' => self::$commandArguments,
         ]);
 
         if (empty($ready)) return [

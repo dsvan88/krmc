@@ -143,7 +143,7 @@ class TelegramBotRepository
 
         $weekId = (int) trim(static::$arguments['w']);
         $dayNum = (int) trim(static::$arguments['d']);
-        $chatId = (int) static::$message['callback_query']['message']['chat']['id'];
+        $chatId = static::getChatId();
 
         $weekData = Weeks::weekDataById($weekId);
         $dayEnd = $weekData['start'] + (TIMESTAMP_DAY * ($dayNum + 1));
@@ -201,13 +201,15 @@ class TelegramBotRepository
                     [
                         ['text' => '🙋' . Locale::phrase('I will too!'), 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => $dayNum]],
                         ['text' => Locale::phrase('I want too!') . '🥹', 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => $dayNum, 'p' => '?']],
-                        ['text' => '❌', 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => $dayNum, 'r' => '1']],
                     ],
                 ],
             ],
         ];
 
-        if ($chatId != Settings::getMainTelegramId() && in_array(static::$userData['id'], array_column($weekData['data'][$dayNum]['participants'], 'id'))) {
+        if (count($weekData['data'][$dayNum]['participants']) > 0) {
+            $update['replyMarkup']['inline_keyboard'][0][] = ['text' => '❌', 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => $dayNum, 'r' => '1']];
+        }
+        if (static::isDirect() && in_array(static::$userData['id'], array_column($weekData['data'][$dayNum]['participants'], 'id'))) {
             $update['replyMarkup']['inline_keyboard'] = [
                 [
                     ['text' => '❌' . Locale::phrase('Opt-out'), 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => $dayNum, 'r' => 1]]
