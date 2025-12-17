@@ -9,7 +9,7 @@ class Router
 {
     protected static $routes = [];
     protected static $params = [];
-    public static $accessLevels = ['all' => 0, 'user' => 1, 'trusted' => 2, 'activist' => 3, 'manager' => 4, 'admin' => 5, 'root' => 6];
+    public static $accessLevels = ['all', 'user', 'trusted', 'activist', 'manager', 'admin', 'root'];
     public static function before()
     {
         if (!empty(self::$routes)) {
@@ -109,7 +109,9 @@ class Router
     {
         if (empty($_SESSION['privilege'])) return false;
 
-        if (self::$accessLevels[$params['access']['category']] > self::$accessLevels[$_SESSION['privilege']['status']]) {
+        $levels = array_flip(self::$accessLevels);
+        
+        if ($levels[$params['access']['category']] > $levels[$_SESSION['privilege']['status']]) {
             return false;
         }
         return true;

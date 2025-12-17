@@ -15,7 +15,7 @@ class ClearCommand extends ChatCommand
     {
         return self::locale("<u>/clear (week day)</u> <i>// Clear patricipant’s list of a specific day.\n\tWithout specifying the day - for today.\n\tWorking on recalled day only!</i>");
     }
-    public static function execute(array $arguments = [], string &$message = '', string &$reaction = '', array &$replyMarkup = [])
+    public static function execute()
     {
         // $message = "Не можу очистити цей день.😥\nВін й досі запланований! Я можу очистити лише дні, по яким стався \"відбій\"";
         $message = self::locale("Can’t clear this day.\nIt’s still \"set\". I can only clear \"recalled\"!");
@@ -29,7 +29,7 @@ class ClearCommand extends ChatCommand
             }
         }
         if ($dayName === '')
-            $dayName = 'сг';
+            $dayName = 'tod';
 
         TelegramBotRepository::parseDayNum($dayName, $requestData);
 

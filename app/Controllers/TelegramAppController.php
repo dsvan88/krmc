@@ -7,9 +7,6 @@ use app\core\View;
 
 class TelegramAppController extends Controller
 {
-    private static $techTelegramId = null;
-    private static $mainGroupTelegramId = null;
-
     public static function before()
     {
         View::$layout = 'telegram';

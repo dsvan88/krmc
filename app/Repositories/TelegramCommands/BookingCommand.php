@@ -14,43 +14,41 @@ class BookingCommand extends ChatCommand
     {
         return self::locale("<u>+ (week day)</u> <i>// Booking for the scheduled games of the current week, examples:</i>\n\t\t+вс\n\t\t+ на сегодня, на 19:30 (отсижу 1-2 игры, под ?)\n<u>- (week day)</u> <i>// Unsubscribe from games on a specific day that you previously signed up for, examples:</i>\n\t\t-вс\n\t\t- завтра\n");
     }
-    public static function execute()
+    public static function execute(): array
     {
-        $requestData = $arguments;
-        TelegramBotRepository::parseDayNum($requestData['dayName'], $requestData);
+        TelegramBotRepository::parseDayNum(static::$arguments['dayName']);
 
         $userId = static::$requester['id'];
-        $requestData['userId'] = self::$requester['id'];
-        $requestData['userName'] = self::$requester['name'];
-        $requestData['userStatus'] = empty(self::$requester['privilege']['status']) ? 'user' : self::$requester['privilege']['status'];
+        static::$arguments['userId'] = self::$requester['id'];
+        static::$arguments['userName'] = self::$requester['name'];
+        static::$arguments['userStatus'] = empty(self::$requester['privilege']['status']) ? 'user' : self::$requester['privilege']['status'];
 
         $weekId = Weeks::currentId();
-        if ($requestData['currentDay'] > $requestData['dayNum']) {
+        if (static::$arguments['currentDay'] > static::$arguments['dayNum']) {
             ++$weekId;
         }
 
         $weekData = Weeks::weekDataById($weekId);
 
         $participantId = $slot = -1;
-        if ($weekData['data'][$requestData['dayNum']]['status'] !== 'set') {
-            if (!in_array($requestData['userStatus'], ['trusted', 'activist', 'manager', 'admin'])) {
-                $message = self::locale('{{ Tg_Gameday_Not_Set }}');
-                return false;
+        if ($weekData['data'][static::$arguments['dayNum']]['status'] !== 'set') {
+            if (!in_array(static::$arguments['userStatus'], ['trusted', 'activist', 'manager', 'admin'])) {
+                return static::result('{{ Tg_Gameday_Not_Set }}');
             }
-            if (!isset($weekData['data'][$requestData['dayNum']]['game']))
-                $weekData['data'][$requestData['dayNum']] = Days::$dayDataDefault;
+            if (!isset($weekData['data'][static::$arguments['dayNum']]['game']))
+                $weekData['data'][static::$arguments['dayNum']] = Days::$dayDataDefault;
 
-            if (!empty($requestData['arrive']))
-                $weekData['data'][$requestData['dayNum']]['time'] = $requestData['arrive'];
+            if (!empty(static::$arguments['arrive']))
+                $weekData['data'][static::$arguments['dayNum']]['time'] = static::$arguments['arrive'];
 
-            $requestData['arrive'] = '';
-            $weekData['data'][$requestData['dayNum']]['status'] = 'set';
+            static::$arguments['arrive'] = '';
+            $weekData['data'][static::$arguments['dayNum']]['status'] = 'set';
         }
 
-        foreach ($weekData['data'][$requestData['dayNum']]['participants'] as $index => $userData) {
-            if ($userData['id'] !== $requestData['userId']) continue;
+        foreach ($weekData['data'][static::$arguments['dayNum']]['participants'] as $index => $userData) {
+            if ($userData['id'] !== static::$arguments['userId']) continue;
 
-            if (!empty($requestData['arrive']) && $requestData['arrive'] !== $userData['arrive']) {
+            if (!empty(static::$arguments['arrive']) && static::$arguments['arrive'] !== $userData['arrive']) {
                 $slot = $index;
                 break;
             }
@@ -59,13 +57,13 @@ class BookingCommand extends ChatCommand
             break;
         }
 
-        $newDayData = $weekData['data'][$requestData['dayNum']];
-        if ($requestData['method'] === '+') {
+        $result = [];
+        $newDayData = $weekData['data'][static::$arguments['dayNum']];
+        if (static::$arguments['method'] === '+') {
             if ($participantId !== -1) {
-                $message = self::locale('{{ Tg_Command_Requester_Already_Booked }}');
-                return false;
+                return static::result('{{ Tg_Command_Requester_Already_Booked }}');
             }
-            $newDayData = Days::addParticipantToDayData($newDayData, $requestData, $slot);
+            $newDayData = Days::addParticipantToDayData($newDayData, static::$arguments, $slot);
             $reactions = [
                 '👍',
                 '🤩',
@@ -82,8 +80,7 @@ class BookingCommand extends ChatCommand
             //👍👎❤🔥🥰👏😁🤔🤯😱🤬😢🎉🤩🤮🤣💔💯⚡🤷‍♂🤝👌
         } else {
             if ($participantId === -1) {
-                $message = self::locale('{{ Tg_Command_Requester_Not_Booked }}');
-                return false;
+                return static::result('{{ Tg_Command_Requester_Not_Booked }}');
             }
             unset($newDayData['participants'][$participantId]);
             $newDayData['participants'] = array_values($newDayData['participants']);
@@ -100,25 +97,27 @@ class BookingCommand extends ChatCommand
             ];
         }
 
-        Days::setDayData($weekId, $requestData['dayNum'], $newDayData);
+        Days::setDayData($weekId, static::$arguments['dayNum'], $newDayData);
 
         if (!empty($reactions)) {
-            $reaction = $reactions[mt_rand(0, count($reactions) - 1)];
+            $result['reaction'] = $reactions[mt_rand(0, count($reactions) - 1)];
         }
 
-        $weekData['data'][$requestData['dayNum']] = $newDayData;
+        $weekData['data'][static::$arguments['dayNum']] = $newDayData;
 
-        $message = Days::getFullDescription($weekData, $requestData['dayNum']);
-
-        $replyMarkup = [
-            'inline_keyboard' => [
-                [
-                    ['text' => '🙋' . self::locale('I will too!'), 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => $requestData['dayNum']]],
-                    ['text' => self::locale('I want too!') . '🥹', 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => $requestData['dayNum'], 'p' => '?']],
-                    ['text' => '⛔️', 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => $requestData['dayNum'], 'r' => '1']],
+        $result['send'][] = [
+            'message' => Days::getFullDescription($weekData, static::$arguments['dayNum']),
+            'replyMarkup' =>  [
+                'inline_keyboard' => [
+                    [
+                        ['text' => '🙋' . self::locale('I will too!'), 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => static::$arguments['dayNum']]],
+                        ['text' => self::locale('I want too!') . '🥹', 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => static::$arguments['dayNum'], 'p' => '?']],
+                        ['text' => '⛔️', 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => static::$arguments['dayNum'], 'r' => '1']],
+                    ],
                 ],
             ],
         ];
-        return;
+
+        return $result;
     }
 }

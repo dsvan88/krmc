@@ -48,4 +48,15 @@ class ChatCommand implements Command
             return Locale::apply($phrase);
         return Locale::phrase($phrase);
     }
+    public static function result($message, bool $ok = false): array
+    {
+        return [
+            'result' => $ok,
+            'send' => [
+                [
+                    'message' => static::locale($message),
+                ],
+            ]
+        ];
+    }
 }

@@ -19,9 +19,6 @@ use app\Repositories\TelegramBotRepository;
 
 class TelegramBotController extends Controller
 {
-    private static $techTelegramId = null;
-    private static $mainGroupTelegramId = null;
-
     public static $requester = [];
     public static $incomeMessage = [];
     public static $chatId = null;
@@ -44,16 +41,16 @@ class TelegramBotController extends Controller
         if (APP_LOC !== 'local') {
             $ip = substr($_SERVER['REMOTE_ADDR'], 0, 4) === substr($_SERVER['SERVER_ADDR'], 0, 4) ? $_SERVER['HTTP_X_REAL_IP'] : $_SERVER['REMOTE_ADDR'];
             if (!Validator::validate('telegramIp', $ip) && $ip !== '127.0.0.1') {
-                self::$techTelegramId = Settings::getTechTelegramId();
+                $techTgId = Settings::getTechTelegramId();
                 $message = json_encode([
                     'REMOTE_ADDR' => $_SERVER['REMOTE_ADDR'],
                     'SERVER_ADDR' => $_SERVER['SERVER_ADDR'],
                     'HTTP_X_REAL_IP' => $_SERVER['HTTP_X_REAL_IP'],
                 ]);
-                if (empty(self::$techTelegramId))
+                if (empty($techTgId))
                     error_log($message);
                 else
-                    Sender::message(self::$techTelegramId, $message);
+                    Sender::message($techTgId, $message);
                 return false;
             }
         }
@@ -77,20 +74,14 @@ class TelegramBotController extends Controller
         }
         Locale::change($langCode);
         self::$incomeMessage = $message;
-        self::$techTelegramId = Settings::getTechTelegramId();
-        self::$mainGroupTelegramId = Settings::getMainTelegramId();
         self::$chatId = static::$type === 'message' ? self::$incomeMessage[static::$type]['chat']['id'] : self::$incomeMessage[static::$type]['message']['chat']['id'];
-
-        $type = static::$type === 'message' ? self::$incomeMessage[static::$type]['chat']['type'] : self::$incomeMessage[static::$type]['message']['chat']['type'];
-        if ($type === 'private') self::$isDirect = true;
 
         $userTelegramId = self::$incomeMessage[static::$type]['from']['id'];
         $userId = Contacts::getUserIdByContact('telegramid', $userTelegramId);
 
         if (static::$type === 'message') {
-            $text = trim(self::$incomeMessage['message']['text']);
-            $command = self::parseCommand($text);
-            if (empty($userId) && $command && !in_array(self::$command, self::$guestCommands)) {
+            static::$command = TelegramBotRepository::parseChatCommand(trim(self::$incomeMessage['message']['text']));
+            if (empty($userId) && !empty(static::$command) && !in_array(self::$command, self::$guestCommands)) {
                 Sender::message(self::$chatId, Locale::phrase('{{ Tg_Unknown_Requester }}'), self::$incomeMessage['message']['message_id']);
                 return false;
             }
@@ -109,7 +100,7 @@ class TelegramBotController extends Controller
 
         self::$requester = Users::find($userId);
 
-        if (!empty(CFG_MAINTENCE) && !empty(self::$command) && !static::checkAccess('admin')) {
+        if (!empty(CFG_MAINTENCE) && !empty(self::$command) && !TelegramBotRepository::hasAccess(self::$requester['privilege']['status'], 'admin')) {
             Sender::message(self::$chatId, Locale::phrase("I offer my deepest apologies, but I’m in the maintance mode 🧑‍💻 right now...\nPlease return to us a little later."));
             return false;
         }
@@ -120,7 +111,7 @@ class TelegramBotController extends Controller
                 Sender::message($userTelegramId, Locale::phrase(['string' => "I’m deeply sorry, but you banned for that action:(...\nYour ban will be lifted at: <b>%s</b>", 'vars' => [date('d.m.Y', self::$requester['ban']['expired'] + TIME_MARGE)]]));
                 return false;
             }
-            if (self::$chatId == self::$mainGroupTelegramId && Users::isBanned('chat', self::$requester['ban'])) {
+            if (self::$chatId == Settings::getMainTelegramId() && Users::isBanned('chat', self::$requester['ban'])) {
                 Sender::delete(self::$chatId, self::$incomeMessage['message']['message_id']);
                 Sender::message($userTelegramId, Locale::phrase(['string' => "I’m deeply sorry, but you banned for that action:(...\nYour ban will be lifted at: <b>%s</b>", 'vars' => [date('d.m.Y', self::$requester['ban']['expired'] + TIME_MARGE)]]));
                 return false;
@@ -145,135 +136,8 @@ class TelegramBotController extends Controller
 
             $debugMessage = 'DEBUG:' . PHP_EOL . implode(PHP_EOL, $_SESSION['debug']);
             unset($_SESSION['debug']);
-            Sender::message(self::$techTelegramId, $debugMessage);
+            Sender::message(Settings::getTechTelegramId(), $debugMessage);
         }
-    }
-    public static function parseCommand(string $text): bool
-    {
-        $_text = mb_strtolower(str_replace('на ', '', $text), 'UTF-8');
-        $days = DayRepository::getDayNamesForCommand();
-        if (preg_match("/^([+-])\s{0,3}($days)/ui", $_text, $match) === 1) {
-            $arguments['method'] = $match[1];
-            $arguments['dayName'] = $match[2];
-            if (preg_match('/([0-2][0-9])(:[0-5][0-9]){0,1}/', str_replace('.', ':', $_text), $match) === 1) {
-                $arguments['arrive'] = $match[0];
-                if (strlen($arguments['arrive']) < 3) {
-                    $arguments['arrive'] .= ':00';
-                }
-            }
-            if (preg_match('/\([^)]+\)/', $text, $prim) === 1) {
-                $arguments['prim'] = mb_substr($prim[0], 1, -1, 'UTF-8');
-            } elseif (preg_match('/\?/', $_text) === 1) {
-                $arguments['prim'] = '?';
-            }
-            self::$command = 'booking';
-            self::$commandArguments = $arguments;
-            return true;
-        }
-
-        if (preg_match('/^[+]\s{0,3}[0-2]{0,1}[0-9]/', $_text) === 1) {
-            preg_match('/^(\+)\s{0,3}([0-2]{0,1}[0-9])(:[0-5][0-9]){0,1}/i', mb_strtolower(str_replace('.', ':', $_text), 'UTF-8'), $matches);
-
-            if ($matches[2] < 8 || $matches[2] > 23) return false;
-            if (empty($matches[3])) $matches[3] = ':00';
-
-            $arguments['method'] = '+';
-            $arguments['dayName'] = 'tod';
-            $arguments['arrive'] = $matches[2] . $matches[3];
-
-            if (preg_match('/\([^)]+\)/', $text, $prim) === 1) {
-                $arguments['prim'] = mb_substr($prim[0], 1, -1, 'UTF-8');
-            }
-            self::$command = 'booking';
-            self::$commandArguments = $arguments;
-            return true;
-        }
-
-        if ($text[0] === '/') {
-            $command = mb_substr($text, 1, NULL, 'UTF-8');
-
-            $spacePos = mb_strpos($command, ' ', 0, 'UTF-8');
-            if ($spacePos !== false) {
-                $command = mb_substr($command, 0, $spacePos, 'UTF-8');
-            }
-            $commandLen = mb_strlen($command);
-            $atPos = mb_strpos($command, '@', 0, 'UTF-8'); // at = @ in English context
-            if ($atPos !== false) {
-                $command = mb_substr($command, 0, $atPos, 'UTF-8');
-                $commandLen = $atPos;
-            }
-            $command = strtolower($command);
-
-            if (in_array($command, ['?', 'help', 'start'])) {
-                self::$command = 'help';
-                return true;
-            }
-
-            if (in_array($command, ['reg', 'set'], true)) {
-                $_text = mb_substr($_text, $commandLen + 1, NULL, 'UTF-8');
-                $arguments = explode(',', $_text);
-                if (preg_match('/\([^)]+\)/', $text, $prim) === 1) {
-                    $arguments['prim'] = mb_substr($prim[0], 1, -1, 'UTF-8');
-                }
-                self::$command = $command;
-                self::$commandArguments = $arguments;
-                return true;
-            }
-            $symbols = Locale::$cyrillicPattern;
-            preg_match_all("/([a-z$symbols.0-9#-]+)/ui", trim(mb_substr($text, $commandLen + 1, NULL, 'UTF-8')), $matches);
-
-            self::$command = $command;
-            self::$commandArguments = $matches[0];
-            return true;
-        }
-        return false;
-    }
-    public static function parseArguments($arguments)
-    {
-        $requestData = [
-            'method' => '+',
-            'arrive' => '',
-            'prim' => '',
-            'dayNum' => -1,
-            'userId' => 0,
-        ];
-        if (isset($arguments['prim'])) {
-            $requestData['prim'] = $arguments['prim'];
-            unset($arguments['prim']);
-        }
-        foreach ($arguments as $value) {
-            $value = trim($value);
-            if (preg_match('/^[+-][^0-9]/', $value)) {
-
-                $requestData['method'] = $value[0];
-                $withoutMethod = trim(mb_substr($value, 1, 6, 'UTF-8'));
-                $dayName = mb_strtolower(mb_substr($withoutMethod, 0, 3, 'UTF-8'), 'UTF-8');
-
-                TelegramBotRepository::parseDayNum($dayName, $requestData);
-            } elseif (preg_match('/^\d{2}:\d{2}$/', $value) === 1 && empty($requestData['arrive'])) {
-                $requestData['arrive'] = $value;
-            } elseif (preg_match('/\#(\d)*$/', $value, $match) === 1) {
-                $userRegData = Users::find($match[0]);
-                if ($userRegData) {
-                    $requestData['userId'] = $userRegData['id'];
-                    $requestData['userName'] = $userRegData['name'];
-                }
-            } elseif (preg_match('/^(\+|-)\d{1,2}/', $value, $match) === 1) {
-                $requestData['nonames'] = substr($match[0], 1);
-            } elseif ($requestData['userId'] < 2) {
-                $value = str_ireplace(['m', 'c', 'o', 'p', 'x', 'a'], ['м', 'с', 'о', 'р', 'х', 'а'], $value);
-                $userRegData = Users::getDataByName($value);
-                if ($userRegData) {
-                    $requestData['userId'] = $userRegData['id'];
-                    $requestData['userName'] = $userRegData['name'];
-                } else
-                    $requestData['probableUserName'] = $value;
-            }
-        }
-
-        if (!isset($requestData['currentDay']))  TelegramBotRepository::parseDayNum('tod', $requestData);
-
-        return $requestData;
     }
     public static function executeCallbackQuery()
     {
@@ -325,7 +189,11 @@ class TelegramBotController extends Controller
         }
         if (!self::execute()) {
             if (empty(self::$resultMessage)) return false;
-            $botResult = Sender::message(self::$techTelegramId, json_encode([self::$incomeMessage, /* self::$requester ,*/ self::parseArguments(self::$commandArguments)], JSON_UNESCAPED_UNICODE));
+            $botResult = Sender::message(
+                Settings::getTechTelegramId(),
+                'Message: ' . json_encode(self::$incomeMessage, JSON_UNESCAPED_UNICODE), /* self::$requester ,*/
+                'Arguments: ' . json_encode(TelegramBotRepository::parseArguments(self::$commandArguments), JSON_UNESCAPED_UNICODE)
+            );
         }
         if (!empty(self::$reaction)) {
             Sender::setMessageReaction(self::$chatId, self::$incomeMessage['message']['message_id'], self::$reaction);
@@ -362,7 +230,7 @@ class TelegramBotController extends Controller
         }
 
         $ready = $class::set([
-            'operatorClass' => self::class,
+            // 'operatorClass' => self::class,
             'requester' => self::$requester,
             'message' => self::$incomeMessage,
             'argumets' => self::$commandArguments,
@@ -372,28 +240,29 @@ class TelegramBotController extends Controller
             'message' => $class::$status,
         ];
 
-        if (!self::checkAccess($class::getAccessLevel())) {
+        $status = empty(self::$requester['privilege']['status']) ? '' : self::$requester['privilege']['status'];
+        if (!TelegramBotRepository::hasAccess($status, $class::getAccessLevel())) {
             return [];
         }
 
         return $class::execute(self::$commandArguments, self::$resultMessage, self::$reaction, self::$replyMarkup);
     }
-    public static function checkAccess(string $level = 'all')
-    {
-        $levels = Router::$accessLevels;
-        $status = 'all';
+    // public static function checkAccess(string $level = 'all')
+    // {
+    //     $levels = Router::$accessLevels;
+    //     $status = 'all';
 
-        if (!empty(self::$requester['privilege']['status']))
-            $status = self::$requester['privilege']['status'];
+    //     if (!empty(self::$requester['privilege']['status']))
+    //         $status = self::$requester['privilege']['status'];
 
-        if (!empty(self::$requester) && $status === 'all')
-            $status = 'user';
+    //     if (!empty(self::$requester) && $status === 'all')
+    //         $status = 'user';
 
-        if (!self::$isDirect && self::$chatId != self::$techTelegramId) {
-            $status = $levels[$status] > 1 ? 'trusted' : 'user';
-        }
-        return $levels[$level] <= $levels[$status];
-    }
+    //     if (!self::$isDirect && self::$chatId != Settings::getTechTelegramId()) {
+    //         $status = $levels[$status] > 1 ? 'trusted' : 'user';
+    //     }
+    //     return $levels[$level] <= $levels[$status];
+    // }
     public static function updateWeekMessages(): bool
     {
         self::execute('week');
