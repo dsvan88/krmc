@@ -25,28 +25,27 @@ class NickCommand extends ChatCommand
             return static::result(['string' => '{{ Tg_Command_Name_Already_Set }}', 'vars' => [self::$requester['name']]]);
         }
 
-        $username = implode(' ', $arguments);
+        $_username = implode(' ', $arguments);
 
-        if (empty(trim($username))) {
+        if (empty(trim($_username))) {
             return static::result("Your nickname can’t be empty!\nPlease, use that format:\n/nick <b>Your nickname</b>");
         }
 
-        $username = Users::formatName($username);
-
-        if (mb_strlen($username, 'UTF-8') < 2) {
-            return static::result("Your nickname is too short!\nPlease use at least <b>2</b> symbols, so people can recognize you!");
-        }
+        $username = Users::formatName($_username);
 
         if (empty($username)) {
             return static::result("Invalid nickname format!\nPlease use <b>Cyrillic</b> or <b>Latin</b> alphabet, <b>spaces</b> and <b>digits</b> in the nickname!");
         }
 
-        // $symbols = Locale::$cyrillicPattern;
-        // if (preg_match_all("/[^a-z$symbols .0-9]/ui", $_username, $matches)) {
-        //     $wrong = implode('</i>", "<i>', $matches[0]);
-        //     $message = self::locale(['string' => "Invalid nickname format!\nPlease use <b>Cyrillic</b> or <b>Latin</b> alphabet, <b>spaces</b> and <b>digits</b>!\nWrong simbols: %s", 'vars' => ["\"<i>$wrong</i>\""]]);
-        //     return false;
-        // }
+        if (mb_strlen($username, 'UTF-8') < 2) {
+            return static::result("Your nickname is too short!\nPlease use at least <b>2</b> symbols, so people can recognize you!");
+        }
+
+        $symbols = Locale::$cyrillicPattern;
+        if (preg_match_all("/[^a-z$symbols .0-9]/ui", $_username, $matches)) {
+            $wrong = implode('</i>", "<i>', $matches[0]);
+            return static::result(['string' => "Invalid nickname format!\nPlease use <b>Cyrillic</b> or <b>Latin</b> alphabet, <b>spaces</b> and <b>digits</b>!\nWrong simbols: %s", 'vars' => ["\"<i>$wrong</i>\""]]);
+        }
 
         $telegramId = self::$message['message']['from']['id'];
         $telegram = self::$message['message']['from']['username'];
@@ -60,19 +59,26 @@ class NickCommand extends ChatCommand
             TelegramChats::save(self::$message);
             TelegramChatsRepository::getAndSaveTgAvatar($userId, true);
 
-            $message = self::locale(['string' => "So... we remember you under the nickname <b>%s</b>. Right?\nNice to meet you!", 'vars' => [$username]]);
-            $message .= PHP_EOL . PHP_EOL;
-            $message .= self::locale("If you made a mistake, don’t worry, tell the administrator about it and he will quickly fix it😏");
+            $message = self::locale(['string' => "So... we remember you under the nickname <b>%s</b>. Right?\nNice to meet you!", 'vars' => [$username]]) . PHP_EOL;
+            $message .= PHP_EOL. self::locale("If you made a mistake, don’t worry, tell the administrator about it and he will quickly fix it😏");
 
             $replyMarkup = [
                 'inline_keyboard' => [
                     [
-                        ['text' => '✅' . self::locale('Yes'), 'callback_data' => ['c' => 'nick', 'u' => $userId, 's' => 1]],
-                        ['text' => '❌' . self::locale('No'), 'callback_data' => ['c' => 'nick', 'u' => $userId, 's' => 0]],
+                        ['text' => '✅' . self::locale('Yes'), 'callback_data' => ['c' => 'nick', 'u' => $userId, 'y' => 1]],
+                        ['text' => '❌' . self::locale('No'), 'callback_data' => ['c' => 'nick', 'u' => $userId]],
                     ],
                 ],
             ];
-            return true;
+            return [
+                'result' => true,
+                'send' => [
+                    [
+                        'message' => $message,
+                        'replyMarkup' => $replyMarkup,
+                    ]
+                ]
+            ];
         }
 
         $userContacts = Contacts::getByUserId($userExistsData['id']);
@@ -119,7 +125,7 @@ class NickCommand extends ChatCommand
                 'inline_keyboard' => [
                     [
                         ['text' => '✅' . self::locale('Yes'), 'callback_data' => ['c' => 'nickRelink', 'u' => $userExistsData['id'], 't' => $telegramId, 'y' => 1]],
-                        ['text' => '❌' . self::locale('No'), 'callback_data' => ['c' => 'nickRelink', 'u' => $userExistsData['id'], 't' => $telegramId, 'y' => 0]],
+                        ['text' => '❌' . self::locale('No'), 'callback_data' => ['c' => 'nickRelink', 'u' => $userExistsData['id'], 't' => $telegramId]],
                     ],
                 ],
             ];
