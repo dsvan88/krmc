@@ -60,7 +60,7 @@ class NickCommand extends ChatCommand
             TelegramChatsRepository::getAndSaveTgAvatar($userId, true);
 
             $message = self::locale(['string' => "So... we remember you under the nickname <b>%s</b>. Right?\nNice to meet you!", 'vars' => [$username]]) . PHP_EOL;
-            $message .= PHP_EOL. self::locale("If you made a mistake, don’t worry, tell the administrator about it and he will quickly fix it😏");
+            $message .= PHP_EOL . self::locale("If you made a mistake, don’t worry, tell the administrator about it and he will quickly fix it😏");
 
             $replyMarkup = [
                 'inline_keyboard' => [
@@ -72,6 +72,7 @@ class NickCommand extends ChatCommand
             ];
             return [
                 'result' => true,
+                'reaction' => '👌',
                 'send' => [
                     [
                         'message' => $message,
@@ -89,16 +90,13 @@ class NickCommand extends ChatCommand
             $message = self::locale(['string' => "So... we remember you under the nickname <b>%s</b>. Right?\nNice to meet you!", 'vars' => [$username]]);
             $message .= PHP_EOL . PHP_EOL;
             $message .= self::locale('If you made a mistake, don’t worry, tell the Administrator about it and he will quickly fix it😏');
-            $reaction = '👌';
-            return true;
+            return static::result($message, '👌', true);
         }
 
         $userContacts = ContactRepository::formatUserContacts($userContacts);
 
         if ($userContacts['telegramid'] === $telegramId) {
-            $reaction = '🤷‍♂️';
-            $message = self::locale('{{ Tg_Command_Name_You_Have_One }}');
-            return false;
+            return static::result('{{ Tg_Command_Name_You_Have_One }}', '🤷‍♂️');
         }
 
         $message = self::locale(['string' => '{{ Tg_Command_Name_Already_Set_By_Other }}', 'vars' => [$username]]);
