@@ -9,5 +9,5 @@ interface Command
     public static function description();
     public static function execute();
     public static function locale($phrase);
-    public static function result($message, bool $ok);
+    public static function result($message, string $reaction, bool $ok);
 }

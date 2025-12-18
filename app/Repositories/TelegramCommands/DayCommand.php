@@ -29,18 +29,20 @@ class DayCommand extends ChatCommand
             return static::result('{{ Tg_Command_Games_Not_Set }}');
         }
 
-                
+
         return [
             'reaction' => '👌',
             'send' => [
                 [
-                    'message' => 'This day’s settings have been cleared.',
-                    'inline_keyboard' => [
-                        [
-                            ['text' => '🙋' . self::locale('I will too!'), 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => static::$arguments['dayNum']]],
-                            ['text' => self::locale('I want too!') . '🥹', 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => static::$arguments['dayNum'], 'p' => '?']],
+                    'message' => self::locale('This day’s settings have been cleared.'),
+                    'replyMarkup' => [
+                        'inline_keyboard' => [
+                            [
+                                ['text' => '🙋' . self::locale('I will too!'), 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => static::$arguments['dayNum']]],
+                                ['text' => self::locale('I want too!') . '🥹', 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => static::$arguments['dayNum'], 'p' => '?']],
+                            ],
                         ],
-                    ],
+                    ]
                 ]
             ]
         ];

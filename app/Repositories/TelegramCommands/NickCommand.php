@@ -22,27 +22,23 @@ class NickCommand extends ChatCommand
     public static function execute(array $arguments = [], string &$message = '', string &$reaction = '', array &$replyMarkup = [])
     {
         if (!empty(self::$requester)) {
-            $message = self::locale(['string' => '{{ Tg_Command_Name_Already_Set }}', 'vars' => [self::$requester['name']]]);
-            return false;
+            return static::result(['string' => '{{ Tg_Command_Name_Already_Set }}', 'vars' => [self::$requester['name']]]);
         }
 
-        $_username = implode(' ', $arguments);
+        $username = implode(' ', $arguments);
 
-        if (empty(trim($_username))) {
-            $message = self::locale("Your nickname can’t be empty!\nPlease, use that format:\n/nick <b>Your nickname</b>");
-            return false;
+        if (empty(trim($username))) {
+            return static::result("Your nickname can’t be empty!\nPlease, use that format:\n/nick <b>Your nickname</b>");
         }
 
-        $username = Users::formatName($_username);
+        $username = Users::formatName($username);
 
         if (mb_strlen($username, 'UTF-8') < 2) {
-            $message = self::locale("Your nickname is too short!\nPlease use at least <b>2</b> symbols, so people can recognize you!");
-            return false;
+            return static::result("Your nickname is too short!\nPlease use at least <b>2</b> symbols, so people can recognize you!");
         }
 
         if (empty($username)) {
-            $message = self::locale("Invalid nickname format!\nPlease use <b>Cyrillic</b> or <b>Latin</b> alphabet, <b>spaces</b> and <b>digits</b> in the nickname!");
-            return false;
+            return static::result("Invalid nickname format!\nPlease use <b>Cyrillic</b> or <b>Latin</b> alphabet, <b>spaces</b> and <b>digits</b> in the nickname!");
         }
 
         // $symbols = Locale::$cyrillicPattern;

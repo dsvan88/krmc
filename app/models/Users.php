@@ -581,9 +581,6 @@ class Users extends Model
 
         $name = strlen($lun) > strlen($cun) ? $lun : $cun;
 
-        // $symbols = $alpha === 'latin' ? 'a-z' : Locale::$cyrillicPattern;
-        // $name = preg_replace(['/\s+/', "/[^$symbols.0-9 ]+/ui"], [' ', ''], trim($name));
-
         if (empty($name)) return false;
 
         $nickname = '';

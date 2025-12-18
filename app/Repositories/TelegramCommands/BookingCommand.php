@@ -57,7 +57,7 @@ class BookingCommand extends ChatCommand
             break;
         }
 
-        $result = [];
+        $result = [ 'result' => true ];
         $newDayData = $weekData['data'][static::$arguments['dayNum']];
         if (static::$arguments['method'] === '+') {
             if ($participantId !== -1) {
@@ -114,7 +114,7 @@ class BookingCommand extends ChatCommand
             ],
         ];
 
-        if ()
+        // if ()
 
         $result['send'][] = [
             'message' => Days::getFullDescription($weekData, static::$arguments['dayNum']),

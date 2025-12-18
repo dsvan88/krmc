@@ -17,7 +17,7 @@ class ClearCommand extends ChatCommand
     }
     public static function execute()
     {
-        
+
         $dayName = '';
         $days = DayRepository::getDayNamesForCommand();
         if (!empty(static::$arguments)) {
@@ -29,24 +29,17 @@ class ClearCommand extends ChatCommand
             $dayName = 'tod';
 
         TelegramBotRepository::parseDayNum($dayName, static::$arguments);
-        
+
         $weekId = Weeks::currentId();
-        
+
         if (static::$arguments['dayNum'] < static::$arguments['currentDay']) {
             ++$weekId;
         }
-        
+
         // $message = "Не можу очистити цей день.😥\nВін й досі запланований! Я можу очистити лише дні, по яким стався \"відбій\"";
         if (!Days::clear($weekId, static::$arguments['dayNum']))
             return static::result("Can’t clear this day.\nIt’s still \"set\". I can only clear \"recalled\"!");
-        
-        return [
-            'reaction' => '👌',
-            'send' => [
-                [
-                    'message' => 'This day’s settings have been cleared.',
-                ]
-            ]
-        ];
+
+        return static::result('This day’s settings have been cleared.', '👌', true);
     }
 }
