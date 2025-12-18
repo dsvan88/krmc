@@ -70,7 +70,6 @@ return [
 
     '{{ Tg_Command_Name_Already_Set }}' => "I already remember you as <b>%s</b>!\n\nChanges only through administrators",
     '{{ Tg_Command_Games_Not_Set }}' => "There are no games scheduled for the near future!\nPlease contact us later.\n",
-    '{{ Tg_Command_Name_You_Have_One }}' => 'This nickname is already yours! Nice to meet you!😊',
     '{{ Tg_Command_Successfully_Canceled }}' => "Day settings successfully recalled!\n\n*You can cancel \"recall\" by admin’s registering for that day;)",
     '{{ Tg_Gameday_Not_Set }}' => "There are no games scheduled for this day!",
     '{{ Tg_Command_Set_Day_Not_Found }}' => "There are no games scheduled for this day.",

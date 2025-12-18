@@ -84,12 +84,6 @@ class TestCommand extends ChatCommand
 
         $userContacts = ContactRepository::formatUserContacts($userContacts);
 
-        if ($userContacts['telegramid'] === $telegramId) {
-            $reaction = '🤷‍♂️';
-            $message = self::locale('{{ Tg_Command_Name_You_Have_One }}');
-            return false;
-        }
-
         $message = self::locale(['string' => '{{ Tg_Command_Name_Already_Set_By_Other }}', 'vars' => [$username]]);
 
         $isChatExists = TelegramChatsRepository::isChatExists($userContacts['telegramid']);

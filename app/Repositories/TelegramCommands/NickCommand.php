@@ -95,10 +95,6 @@ class NickCommand extends ChatCommand
 
         $userContacts = ContactRepository::formatUserContacts($userContacts);
 
-        if ($userContacts['telegramid'] === $telegramId) {
-            return static::result('{{ Tg_Command_Name_You_Have_One }}', '🤷‍♂️');
-        }
-
         $message = self::locale(['string' => '{{ Tg_Command_Name_Already_Set_By_Other }}', 'vars' => [$username]]);
 
         $isChatExists = TelegramChatsRepository::isChatExists($userContacts['telegramid']);
