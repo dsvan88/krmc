@@ -15,7 +15,9 @@ use app\models\Settings;
 use app\models\TelegramChats;
 use app\models\Users;
 use app\Repositories\DayRepository;
+use app\Repositories\TechRepository;
 use app\Repositories\TelegramBotRepository;
+use Exception;
 
 class TelegramBotController extends Controller
 {
@@ -126,7 +128,9 @@ class TelegramBotController extends Controller
     {
         // exit(json_encode(['message' => self::$incomeMessage], JSON_UNESCAPED_UNICODE));
         try {
-            return static::$type === 'callback_query' ? self::executeCallbackQuery() : self::executeChatCommand();
+            $result = static::$type === 'callback_query' ? self::executeCallbackQuery() : self::executeChatCommand();
+            if ($result['result'])
+                static::resolveResult($result);
         } catch (\Throwable $th) {
             $_SESSION['debug'][] = 'commonError: ' . $th->__toString();
             $_SESSION['debug'][] = 'messageData: ' . json_encode(self::$incomeMessage, JSON_UNESCAPED_UNICODE);
@@ -147,38 +151,8 @@ class TelegramBotController extends Controller
             'userData' => static::$requester,
             'arguments' => static::$commandArguments,
         ]);
-        $result = TelegramBotRepository::$command();
-        if (!empty($result['message'])) {
-            Sender::callbackAnswer(self::$incomeMessage[static::$type]['id'], Locale::phrase($result['message']));
-        }
-        if (!empty($result['update'])) {
-            foreach ($result['update'] as $item) {
-                if (!empty($item['replyMarkup']['inline_keyboard']))
-                    TelegramBotRepository::encodeInlineKeyboard($item['replyMarkup']['inline_keyboard']);
-                Sender::edit(
-                    empty($item['chatId']) ? self::$chatId : $item['chatId'],
-                    empty($item['messageId']) ? self::$incomeMessage[static::$type]['message']['message_id'] : $item['messageId'],
-                    empty($item['message']) ? '' : Locale::phrase($item['message']),
-                    empty($item['replyMarkup']) ? [] : $item['replyMarkup']
-                );
-            }
-        }
-        if (!empty($result['send'])) {
-            foreach ($result['send'] as $item) {
-                if (!empty($send['replyMarkup']['inline_keyboard']))
-                    TelegramBotRepository::encodeInlineKeyboard($item['replyMarkup']['inline_keyboard']);
-                Sender::message(
-                    empty($item['chatId']) ? self::$chatId : $item['chatId'],
-                    empty($item['message']) ? '' : Locale::phrase($item['message']),
-                    empty($item['replyOn']) ? 0 : $item['replyOn'],
-                    empty($item['replyMarkup']) ? [] : $item['replyMarkup']
-                );
-            }
-        }
-        if (in_array(self::$command, ['booking'], true)) {
-            self::updateWeekMessages();
-        }
-        return true;
+
+        return TelegramBotRepository::$command();
     }
     public static function executeChatCommand()
     {
@@ -263,6 +237,48 @@ class TelegramBotController extends Controller
     //     }
     //     return $levels[$level] <= $levels[$status];
     // }
+    public static function resolveResult(array $result = []): void
+    {
+        if (empty($result)) {
+            throw new Exception(__METHOD__ . ': $result can’t be empty!');
+        }
+
+        if (!empty($result['reaction'])) {
+            Sender::setMessageReaction(self::$chatId, TelegramBotRepository::getMessageId(), $result['reaction']);
+        }
+
+        if (!empty($result['answer'])) {
+            Sender::callbackAnswer(self::$incomeMessage['callback_query']['id'], Locale::phrase($result['message']));
+        }
+
+        if (!empty($result['update'])) {
+            foreach ($result['update'] as $item) {
+                if (!empty($item['replyMarkup']['inline_keyboard']))
+                    TelegramBotRepository::encodeInlineKeyboard($item['replyMarkup']['inline_keyboard']);
+                Sender::edit(
+                    empty($item['chatId']) ? self::$chatId : $item['chatId'],
+                    empty($item['messageId']) ? TelegramBotRepository::getMessageId() : $item['messageId'],
+                    empty($item['message']) ? '' : Locale::phrase($item['message']),
+                    empty($item['replyMarkup']) ? [] : $item['replyMarkup']
+                );
+            }
+        }
+        if (!empty($result['send'])) {
+            foreach ($result['send'] as $item) {
+                if (!empty($send['replyMarkup']['inline_keyboard']))
+                    TelegramBotRepository::encodeInlineKeyboard($item['replyMarkup']['inline_keyboard']);
+                Sender::message(
+                    empty($item['chatId']) ? self::$chatId : $item['chatId'],
+                    empty($item['message']) ? '' : Locale::phrase($item['message']),
+                    empty($item['replyOn']) ? 0 : $item['replyOn'],
+                    empty($item['replyMarkup']) ? [] : $item['replyMarkup']
+                );
+            }
+        }
+        if (in_array(self::$command, ['booking'], true)) {
+            self::updateWeekMessages();
+        }
+    }
     public static function updateWeekMessages(): bool
     {
         self::execute('week');

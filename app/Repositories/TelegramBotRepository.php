@@ -32,7 +32,7 @@ class TelegramBotRepository
 
         if (!empty(static::$userData)) {
             if (empty(static::$userData['privilege']['status']) || !in_array(static::$userData['privilege']['status'], ['manager', 'admin', 'root'], true))
-                return ['message' => 'You don’t have enough rights to change information about other users!'];
+                return static::answer('You don’t have enough rights to change information about other users!');
             static::$arguments['ci'] = static::$message['callback_query']['message']['chat']['id'];
             static::$arguments['mi'] = static::$message['callback_query']['message']['message_id'];
             return static::nickApprove();
@@ -40,53 +40,46 @@ class TelegramBotRepository
 
         $userData = Users::find($uId);
 
-        if (static::$message['callback_query']['from']['id'] == $tId) {
-            if (empty(static::$arguments['y'])) {
-                $update['message'] = Locale::phrase(['string' => 'The nickname <b>%s</b> is already registered by another member of the group!', 'vars' => [$userData['name']]]);
-                $update['message'] .= PHP_EOL;
-                $update['message'] .= Locale::phrase('Just come up with a new nickname for yourself!');
-                return [
-                    'message' => 'Success',
-                    'update' => [$update],
-                ];
-            }
-            $update['message'] = Locale::phrase(['string' => 'The nickname <b>%s</b> is already registered by another member of the group!', 'vars' => [$userData['name']]]) . PHP_EOL;
-            $update['message'] .= Locale::phrase('But... I can’t find his TelegramID🤷‍♂️') . PHP_EOL;
-            $update['message'] .= Locale::phrase('Is it your?*') . PHP_EOL;
-            $update['message'] .= PHP_EOL . '⏳<i>' . Locale::phrase('*Just wait a little for Administrators’s approve.') . '</i>';
-            $update['replyMarkup'] = [
+        if (static::$message['callback_query']['from']['id'] != $tId) {
+            return static::answer('You don’t have enough rights to change information about other users!');
+        }
+
+        if (empty(static::$arguments['y'])) {
+            $update['message'] = Locale::phrase(['string' => 'The nickname <b>%s</b> is already registered by another member of the group!', 'vars' => [$userData['name']]]);
+            $update['message'] .= PHP_EOL;
+            $update['message'] .= Locale::phrase('Just come up with a new nickname for yourself!');
+            return array_merge(static::answer('Success', true), ['update' => [$update]]);
+        }
+        $update['message'] = Locale::phrase(['string' => 'The nickname <b>%s</b> is already registered by another member of the group!', 'vars' => [$userData['name']]]) . PHP_EOL;
+        $update['message'] .= Locale::phrase('But... I can’t find his TelegramID🤷‍♂️') . PHP_EOL;
+        $update['message'] .= Locale::phrase('Is it your?*') . PHP_EOL;
+        $update['message'] .= PHP_EOL . '⏳<i>' . Locale::phrase('*Just wait a little for Administrators’s approve.') . '</i>';
+        $update['replyMarkup'] = [
+            'inline_keyboard' => [
+                [
+                    ['text' => '✅' . Locale::phrase('Yes'), 'callback_data' => ['c' => 'nickRelink', 'u' => $uId, 't' => $tId, 'y' => 1]],
+                    ['text' => '❌' . Locale::phrase('No'), 'callback_data' => ['c' => 'nickRelink', 'u' => $uId, 't' => $tId]],
+                ],
+            ],
+        ];
+
+        $cId = static::$message['callback_query']['message']['chat']['id'];
+        $mId = static::$message['callback_query']['message']['id'];
+        $send = [];
+        if ($cId !== Settings::getMainTelegramId()) {
+            $send['message'] = Locale::phrase(['string' => 'Telegram user with ID <b>%s</b> trying to register the nickname <b>%s</b>.', 'vars' => [$tId, $userData['name']]]) . PHP_EOL;
+            $send['message'] .= Locale::phrase('It’s already registered in our system with another TelegramID, but his TelegramID doesn’t exists anymore or owner didn’t play for quite time.') . PHP_EOL;
+            $send['message'] .= Locale::phrase('Do you agree to pass an ownership of the nickname to a new user?');
+            $send['replyMarkup'] = [
                 'inline_keyboard' => [
                     [
-                        ['text' => '✅' . Locale::phrase('Yes'), 'callback_data' => ['c' => 'nickRelink', 'u' => $uId, 't' => $tId, 'y' => 1]],
-                        ['text' => '❌' . Locale::phrase('No'), 'callback_data' => ['c' => 'nickRelink', 'u' => $uId, 't' => $tId]],
+                        ['text' => '✅' . Locale::phrase('Yes'), 'callback_data' => ['c' => 'nickApprove', 'u' => $uId, 't' => $tId, 'ci' => $cId, 'mi' => $mId]],
+                        ['text' => '❌' . Locale::phrase('No'), 'callback_data' => ['c' => 'nickApprove', 'ci' => $cId, 'mi' => $mId]],
                     ],
                 ],
             ];
-
-            $result = [
-                'message' => 'Success',
-                'update' => [$update],
-            ];
-
-            $cId = static::$message['callback_query']['message']['chat']['id'];
-            $mId = static::$message['callback_query']['message']['id'];
-            if ($cId !== Settings::getMainTelegramId()) {
-                $send['message'] = Locale::phrase(['string' => 'Telegram user with ID <b>%s</b> trying to register the nickname <b>%s</b>.', 'vars' => [$tId, $userData['name']]]) . PHP_EOL;
-                $send['message'] .= Locale::phrase('It’s already registered in our system with another TelegramID, but his TelegramID doesn’t exists anymore or owner didn’t play for quite time.') . PHP_EOL;
-                $send['message'] .= Locale::phrase('Do you agree to pass an ownership of the nickname to a new user?');
-                $send['replyMarkup'] = [
-                    'inline_keyboard' => [
-                        [
-                            ['text' => '✅' . Locale::phrase('Yes'), 'callback_data' => ['c' => 'nickApprove', 'u' => $uId, 't' => $tId, 'ci' => $cId, 'mi' => $mId]],
-                            ['text' => '❌' . Locale::phrase('No'), 'callback_data' => ['c' => 'nickApprove', 'ci' => $cId, 'mi' => $mId]],
-                        ],
-                    ],
-                ];
-                $result['send'][] = $send;
-            }
-            return $result;
         }
-        return ['message' => 'You don’t have enough rights to change information about other users!'];
+        return array_merge(static::answer('Success', true), ['update' => [$update]], ['send' => [$send]]);
     }
     public static function nick(): array
     {
@@ -95,7 +88,7 @@ class TelegramBotRepository
             throw new Exception(__METHOD__ . ': Arguments is empty');
 
         if (empty(static::$userData)) {
-            return ['message' => 'You don’t have enough rights to change information about other users!'];
+            return static::answer('You don’t have enough rights to change information about other users!');
         }
 
         $uId = (int) trim(static::$arguments['u']);
@@ -104,31 +97,25 @@ class TelegramBotRepository
             throw new Exception(__METHOD__ . ': UserID can’t be empty!');
 
         if (static::$userData['id'] != $uId && (empty(static::$userData['privilege']['status']) || !in_array(static::$userData['privilege']['status'], ['manager', 'admin', 'root'], true)))
-            return ['message' => 'You don’t have enough rights to change information about other users!'];
+            return static::answer('You don’t have enough rights to change information about other users!');
 
         if (empty(static::$arguments['y'])) {
 
             Users::delete($uId);
 
-            return [
-                'message' => 'Okay!',
-                'update' => [
-                    'message' => Locale::phrase(['string' => "Okay! Let’s try again!\nUse the next command to register your nickname:\n/nick <b>%s</b>\n\nTry to avoid characters of different languages.", 'vars' => [static::$userData['name']]])
-                ],
+            $update = [
+                'message' => Locale::phrase(['string' => "Okay! Let’s try again!\nUse the next command to register your nickname:\n/nick <b>%s</b>\n\nTry to avoid characters of different languages.", 'vars' => [static::$userData['name']]])
+            ];
+        } else {
+            $update = [
+                'message' =>
+                Locale::phrase(['string' => "<b>%s</b>, nice to meet you!\nYou successfully registered in our system!", 'vars' => [static::$userData['name']]]) .
+                    PHP_EOL . PHP_EOL .
+                    Locale::phrase('If you made a mistake - don’t worry! Just tell the Administrator about it and he will quickly fix it😏'),
             ];
         }
 
-        return [
-            'message' => 'Okay!',
-            'update' => [
-                [
-                    'message' =>
-                    Locale::phrase(['string' => "<b>%s</b>, nice to meet you!\nYou successfully registered in our system!", 'vars' => [static::$userData['name']]]) .
-                        PHP_EOL . PHP_EOL .
-                        Locale::phrase('If you made a mistake - don’t worry! Just tell the Administrator about it and he will quickly fix it😏'),
-                ],
-            ],
-        ];
+        return array_merge(static::answer('Okay', true), ['update' => [$update]]);
     }
     public static function booking(): array
     {
@@ -136,7 +123,7 @@ class TelegramBotRepository
             throw new Exception(__METHOD__ . ': UserData or arguments is empty');
 
         if (empty(static::$userData)) {
-            return ['message' => "I can’t to recognize you!\nPlease, register in our system!"];
+            return static::answer("I can’t to recognize you!\nPlease, register in our system!");
         }
 
         static::$userData['status'] = empty($userData['privilege']['status']) ? 'user' : static::$userData['privilege']['status'];
@@ -148,11 +135,11 @@ class TelegramBotRepository
         $weekData = Weeks::weekDataById($weekId);
         $dayEnd = $weekData['start'] + (TIMESTAMP_DAY * ($dayNum + 1));
         if ($dayEnd < $_SERVER['REQUEST_TIME'])
-            return ['message' => 'This day is over🤷‍♂️'];
+            return static::answer('This day is over🤷‍♂️');
 
         if ($weekData['data'][$dayNum]['status'] !== 'set') {
             if (!static::hasAccess(static::$userData['status'], 'trusted')) {
-                return ['message' => '{{ Tg_Gameday_Not_Set }}'];
+                return static::answer('{{ Tg_Gameday_Not_Set }}');
             }
             if (!isset($weekData['data'][$dayNum]['game']))
                 $weekData['data'][$dayNum] = Days::$dayDataDefault;
@@ -164,7 +151,7 @@ class TelegramBotRepository
         foreach ($weekData['data'][$dayNum]['participants'] as $index => $participant) {
             if ($participant['id'] != static::$userData['id']) continue;
             if (empty(static::$arguments['r']))
-                return ['message' => '{{ Tg_Command_Requester_Already_Booked }}'];
+                return static::answer('{{ Tg_Command_Requester_Already_Booked }}');
 
             unset($weekData['data'][$dayNum]['participants'][$index]);
             $weekData['data'][$dayNum]['participants'] = array_values($weekData['data'][$dayNum]['participants']);
@@ -217,11 +204,7 @@ class TelegramBotRepository
             ];
         }
 
-        return [
-            'message' => 'Success',
-            'update' => [$update],
-            'send' => [$send],
-        ];
+        return array_merge(static::answer('Success', true), ['update' => [$update]], ['send' => [$send]]);
     }
 
 
@@ -236,7 +219,7 @@ class TelegramBotRepository
             throw new Exception(__METHOD__ . ': UserData or Arguments is empty!');
 
         if (empty(static::$userData['privilege']['status']) || !in_array(static::$userData['privilege']['status'], ['manager', 'admin', 'root'], true))
-            return ['message' => 'You don’t have enough rights!'];
+            return static::answer('You don’t have enough rights!');
 
         $weekId = (int) trim(static::$arguments['w']);
         $dayNum = (int) trim(static::$arguments['d']);
@@ -253,16 +236,12 @@ class TelegramBotRepository
             ],
         ];
 
-        return [
-            'message' => 'Success',
-            'send' => [
-                [
-                    'chatId' => Settings::getMainTelegramId(),
-                    'message' => $message,
-                    'replyMarkup' => $replyMarkup,
-                ],
-            ]
+        $send = [
+            'chatId' => Settings::getMainTelegramId(),
+            'message' => $message,
+            'replyMarkup' => $replyMarkup,
         ];
+        return array_merge(static::answer('Success', true), ['send' => [$send]]);
     }
 
     public static function nickApprove(): array
@@ -271,7 +250,7 @@ class TelegramBotRepository
             throw new Exception(__METHOD__ . ': UserData or Arguments is empty!');
 
         if (empty(static::$userData['privilege']['status']) || !in_array(static::$userData['privilege']['status'], ['admin', 'root'], true))
-            return ['message' => 'You don’t have enough rights to change information about other users!'];
+            return static::answer('You don’t have enough rights to change information about other users!');
 
         if (empty(static::$arguments['u']) || empty(static::$arguments['t'])) {
 
@@ -285,17 +264,13 @@ class TelegramBotRepository
             $message .= PHP_EOL;
             $message .= Locale::phrase('Just come up with a new nickname for yourself!');
 
-            return [
-                'message' => 'Success',
-                'update' => [
-                    $update,
-                    [
-                        'chatId' => (int) static::$arguments['ci'],
-                        'messageId' => (int) static::$arguments['mi'],
-                        'message' => $message,
-                    ]
-                ],
+            $update2 = [
+                'chatId' => (int) static::$arguments['ci'],
+                'messageId' => (int) static::$arguments['mi'],
+                'message' => $message,
             ];
+
+            return array_merge(static::answer('Success', true), ['update' => [$update, $update2]]);
         }
 
         $uId = (int) trim(static::$arguments['u']);
@@ -322,17 +297,13 @@ class TelegramBotRepository
         $message .= PHP_EOL;
         $message .= Locale::phrase('Nice to meet you!');
 
-        return [
-            'message' => 'Success',
-            'update' => [
-                $update,
-                [
-                    'chatId' => (int) static::$arguments['ci'],
-                    'messageId' => (int) static::$arguments['mi'],
-                    'message' => $message,
-                ]
-            ],
+        $update2 = [
+            'chatId' => (int) static::$arguments['ci'],
+            'messageId' => (int) static::$arguments['mi'],
+            'message' => $message,
         ];
+
+        return array_merge(static::answer('Success', true), ['update' => [$update, $update2]]);
     }
 
     /**
@@ -389,41 +360,40 @@ class TelegramBotRepository
             return 'booking';
         }
 
-        if ($text[0] === '/') {
-            $command = mb_substr($text, 1, NULL, 'UTF-8');
+        if ($text[0] !== '/') return '';
 
-            $spacePos = mb_strpos($command, ' ', 0, 'UTF-8');
-            if ($spacePos !== false) {
-                $command = mb_substr($command, 0, $spacePos, 'UTF-8');
-            }
-            $commandLen = mb_strlen($command);
-            $atPos = mb_strpos($command, '@', 0, 'UTF-8'); // at = @ in English context
-            if ($atPos !== false) {
-                $command = mb_substr($command, 0, $atPos, 'UTF-8');
-                $commandLen = $atPos;
-            }
-            $command = strtolower($command);
+        $command = mb_substr($text, 1, NULL, 'UTF-8');
 
-            if (in_array($command, ['?', 'help', 'start'])) {
-                return 'help';
-            }
+        $spacePos = mb_strpos($command, ' ', 0, 'UTF-8');
+        if ($spacePos !== false) {
+            $command = mb_substr($command, 0, $spacePos, 'UTF-8');
+        }
+        $commandLen = mb_strlen($command);
+        $atPos = mb_strpos($command, '@', 0, 'UTF-8'); // at = @ in English context
+        if ($atPos !== false) {
+            $command = mb_substr($command, 0, $atPos, 'UTF-8');
+            $commandLen = $atPos;
+        }
+        $command = strtolower($command);
 
-            if (in_array($command, ['reg', 'set'], true)) {
-                $_text = mb_substr($_text, $commandLen + 1, NULL, 'UTF-8');
-                $arguments = explode(',', $_text);
-                if (preg_match('/\([^)]+\)/', $text, $prim) === 1) {
-                    $arguments['prim'] = mb_substr($prim[0], 1, -1, 'UTF-8');
-                }
-                ChatCommand::$arguments = $arguments;
-                return $command;
-            }
-            $symbols = Locale::$cyrillicPattern;
-            preg_match_all("/([a-z$symbols.0-9#-]+)/ui", trim(mb_substr($text, $commandLen + 1, NULL, 'UTF-8')), $matches);
+        if (in_array($command, ['?', 'help', 'start'])) {
+            return 'help';
+        }
 
-            ChatCommand::$arguments = $matches[0];
+        if (in_array($command, ['reg', 'set'], true)) {
+            $_text = mb_substr($_text, $commandLen + 1, NULL, 'UTF-8');
+            $arguments = explode(',', $_text);
+            if (preg_match('/\([^)]+\)/', $text, $prim) === 1) {
+                $arguments['prim'] = mb_substr($prim[0], 1, -1, 'UTF-8');
+            }
+            ChatCommand::$arguments = $arguments;
             return $command;
         }
-        return '';
+        $symbols = Locale::$cyrillicPattern;
+        preg_match_all("/([a-z$symbols.0-9#-]+)/ui", trim(mb_substr($text, $commandLen + 1, NULL, 'UTF-8')), $matches);
+
+        ChatCommand::$arguments = $matches[0];
+        return $command;
     }
     public static function parseArguments($arguments): void
     {
@@ -507,6 +477,12 @@ class TelegramBotRepository
         }
         return $levels[$level] <= $levels[$status];
     }
+    public static function getMessageId(): int
+    {
+        return empty(static::$message['callback_query']) ?
+            static::$message['message']['message_id'] :
+            static::$message['callback_query']['message']['message_id'];
+    }
     public static function getChatId(): int
     {
         return empty(static::$message['callback_query']) ?
@@ -518,6 +494,13 @@ class TelegramBotRepository
         return empty(static::$message['callback_query']) ?
             static::$message['message']['chat']['type'] === 'private' :
             static::$message['callback_query']['message']['chat']['type'] === 'private';
+    }
+    public static function answer($answer, bool $ok = false): array
+    {
+        return [
+            'result' => $ok,
+            'answer' => Locale::phrase($answer),
+        ];
     }
     public static function encodeInlineKeyboard(array &$data): void
     {
