@@ -43,8 +43,8 @@ class TestCommand extends ChatCommand
             return false;
         }
 
-        $telegramId = self::$message['message']['from']['id'];
-        $telegram = self::$message['message']['from']['username'];
+        $telegramId = TelegramBotRepository::$message['message']['from']['id'];
+        $telegram = TelegramBotRepository::$message['message']['from']['username'];
 
         $userExistsData = Users::getDataByName($username);
 
@@ -52,7 +52,7 @@ class TestCommand extends ChatCommand
             $userId = Users::add($username);
 
             Contacts::new(['telegramid' => $telegramId, 'telegram' => $telegram], $userId);
-            TelegramChats::save(self::$message);
+            TelegramChats::save(TelegramBotRepository::$message);
             TelegramChatsRepository::getAndSaveTgAvatar($userId, true);
 
             $message = self::locale(['string' => "So... we remember you under the nickname <b>%s</b>. Right?\nNice to meet you!", 'vars' => [$username]]);

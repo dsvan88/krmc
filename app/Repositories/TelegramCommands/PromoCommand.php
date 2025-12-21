@@ -14,10 +14,10 @@ class PromoCommand extends ChatCommand
     }
     public static function execute(array $arguments = [], string &$message = '', string &$reaction = '', array &$replyMarkup = [])
     {
-        $text = self::$message['message']['text'];
+        $text = TelegramBotRepository::$message['message']['text'];
         $promoText = trim(mb_substr($text, mb_strpos($text, ' ', 0, 'UTF-8') + 1, NULL, 'UTF-8'));
 
-        if (isset(self::$message['message']['entities'])) {
+        if (isset(TelegramBotRepository::$message['message']['entities'])) {
 
             $newString = '';
             $offset = 0;
@@ -27,14 +27,14 @@ class PromoCommand extends ChatCommand
                 'strikethrough' => 's',
                 'spoiler' => 'tg-spoiler',
             ];
-            for ($i = 0; $i < count(self::$message['message']['entities']); $i++) {
-                if (self::$message['message']['entities'][$i]['type'] === 'bot_command') {
-                    $offset = self::$message['message']['entities'][$i]['offset'] + self::$message['message']['entities'][$i]['length'];
+            for ($i = 0; $i < count(TelegramBotRepository::$message['message']['entities']); $i++) {
+                if (TelegramBotRepository::$message['message']['entities'][$i]['type'] === 'bot_command') {
+                    $offset = TelegramBotRepository::$message['message']['entities'][$i]['offset'] + TelegramBotRepository::$message['message']['entities'][$i]['length'];
                     continue;
                 }
-                $newString .= mb_substr($text, $offset, self::$message['message']['entities'][$i]['offset'] - $offset, 'UTF-8');
-                $newString .= "<{$formattings[self::$message['message']['entities'][$i]['type']]}>" . mb_substr($text, self::$message['message']['entities'][$i]['offset'], self::$message['message']['entities'][$i]['length'], 'UTF-8') . "</{$formattings[self::$message['message']['entities'][$i]['type']]}>";
-                $offset = self::$message['message']['entities'][$i]['offset'] + self::$message['message']['entities'][$i]['length'];
+                $newString .= mb_substr($text, $offset, TelegramBotRepository::$message['message']['entities'][$i]['offset'] - $offset, 'UTF-8');
+                $newString .= "<{$formattings[TelegramBotRepository::$message['message']['entities'][$i]['type']]}>" . mb_substr($text, TelegramBotRepository::$message['message']['entities'][$i]['offset'], TelegramBotRepository::$message['message']['entities'][$i]['length'], 'UTF-8') . "</{$formattings[TelegramBotRepository::$message['message']['entities'][$i]['type']]}>";
+                $offset = TelegramBotRepository::$message['message']['entities'][$i]['offset'] + TelegramBotRepository::$message['message']['entities'][$i]['length'];
             }
             $newString .= mb_substr($text, $offset, null, 'UTF-8');
 

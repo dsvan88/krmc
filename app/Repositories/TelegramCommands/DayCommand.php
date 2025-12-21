@@ -29,23 +29,38 @@ class DayCommand extends ChatCommand
             return static::result('{{ Tg_Command_Games_Not_Set }}');
         }
 
+        $replyMarkup = [
+            'inline_keyboard' => [
+                [
+                    ['text' => '🙋' . self::locale('I will!'), 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => static::$arguments['dayNum']]],
+                    ['text' => self::locale('I want!') . '🥹', 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => static::$arguments['dayNum'], 'p' => '?']],
+                ],
+            ],
+        ];
 
-        return [
+        if (!TelegramBotRepository::isDirect()){
+            $replyMarkup['inline_keyboard'][0][] = ['text' => '❌' . Locale::phrase('Opt-out'), 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => $dayNum, 'r' => 1]];
+        }
+
+        $result = [
             'reaction' => '👌',
             'send' => [
                 [
-                    'message' => self::locale('This day’s settings have been cleared.'),
-                    'replyMarkup' => [
-                        'inline_keyboard' => [
-                            [
-                                ['text' => '🙋' . self::locale('I will too!'), 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => static::$arguments['dayNum']]],
-                                ['text' => self::locale('I want too!') . '🥹', 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => static::$arguments['dayNum'], 'p' => '?']],
-                            ],
-                        ],
-                    ]
+                    'message' => $message,
+                    'replyMarkup' => $replyMarkup,
                 ]
             ]
         ];
-        return true;
+
+        if (empty(self::$requester['id'])) return $result;
+
+        if (TelegramBotRepository::isDirect() && in_array(self::$requester['id'], array_column($weekData['data'][static::$arguments['dayNum']]['participants'], 'id'))) {
+            $result['send'][0]['replyMarkup']['inline_keyboard'] = [
+                [
+                    ['text' => '❌' . Locale::phrase('Opt-out'), 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => $dayNum, 'r' => 1]]
+                ]
+            ];
+        }
+        return $result;
     }
 }

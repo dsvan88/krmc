@@ -186,8 +186,8 @@ class TelegramBotRepository
             'replyMarkup' => [
                 'inline_keyboard' => [
                     [
-                        ['text' => '🙋' . Locale::phrase('I will too!'), 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => $dayNum]],
-                        ['text' => Locale::phrase('I want too!') . '🥹', 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => $dayNum, 'p' => '?']],
+                        ['text' => '🙋' . Locale::phrase('I will!'), 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => $dayNum]],
+                        ['text' => Locale::phrase('I want!') . '🥹', 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => $dayNum, 'p' => '?']],
                     ],
                 ],
             ],
@@ -229,8 +229,8 @@ class TelegramBotRepository
         $replyMarkup = [
             'inline_keyboard' => [
                 [
-                    ['text' => '🙋' . Locale::phrase('I will too!'), 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => $dayNum]],
-                    ['text' => Locale::phrase('I want too!') . '🥹', 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => $dayNum, 'p' => '?']],
+                    ['text' => '🙋' . Locale::phrase('I will!'), 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => $dayNum]],
+                    ['text' => Locale::phrase('I want!') . '🥹', 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => $dayNum, 'p' => '?']],
                     ['text' => '⛔️', 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => $dayNum, 'r' => '1']],
                 ],
             ],
@@ -477,23 +477,41 @@ class TelegramBotRepository
         }
         return $levels[$level] <= $levels[$status];
     }
-    public static function getMessageId(): int
+    public static function getMessageId(array $message = []): int
     {
-        return empty(static::$message['callback_query']) ?
-            static::$message['message']['message_id'] :
-            static::$message['callback_query']['message']['message_id'];
+        if (empty($message))
+            $message = static::$message;
+        
+        if (empty($message))
+            throw new Exception(__METHOD__.': $message can\'t be empty!');
+
+        return empty($message['callback_query']) ?
+            $message['message']['message_id'] :
+            $message['callback_query']['message']['message_id'];
     }
-    public static function getChatId(): int
+    public static function getChatId(array $message = []): int
     {
-        return empty(static::$message['callback_query']) ?
-            static::$message['message']['chat']['id'] :
-            static::$message['callback_query']['message']['chat']['id'];
+        if (empty($message))
+            $message = static::$message;
+        
+        if (empty($message))
+            throw new Exception(__METHOD__.': $message can\'t be empty!');
+
+        return empty($message['callback_query']) ?
+            $message['message']['chat']['id'] :
+            $message['callback_query']['message']['chat']['id'];
     }
-    public static function isDirect()
+    public static function isDirect(array $message = []): bool
     {
-        return empty(static::$message['callback_query']) ?
-            static::$message['message']['chat']['type'] === 'private' :
-            static::$message['callback_query']['message']['chat']['type'] === 'private';
+        if (empty($message))
+            $message = static::$message;
+
+        if (empty($message))
+            throw new Exception(__METHOD__.': $message can\'t be empty!');
+
+        return empty($message['callback_query']) ?
+            $message['message']['chat']['type'] === 'private' :
+            $message['callback_query']['message']['chat']['type'] === 'private';
     }
     public static function answer($answer, bool $ok = false): array
     {

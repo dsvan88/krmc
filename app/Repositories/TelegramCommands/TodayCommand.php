@@ -29,8 +29,8 @@ class TodayCommand extends ChatCommand
         $replyMarkup = [
             'inline_keyboard' => [
                 [
-                    ['text' => '🙋' . self::locale('I will too!'), 'callback_data' => ['c' => 'booking', 'w' => $weekData['id'], 'd' => $currentDayNum]],
-                    ['text' => self::locale('I want too!') . '🥹', 'callback_data' => ['c' => 'booking', 'w' => $weekData['id'], 'd' => $currentDayNum, 'p' => '?']],
+                    ['text' => '🙋' . self::locale('I will!'), 'callback_data' => ['c' => 'booking', 'w' => $weekData['id'], 'd' => $currentDayNum]],
+                    ['text' => self::locale('I want!') . '🥹', 'callback_data' => ['c' => 'booking', 'w' => $weekData['id'], 'd' => $currentDayNum, 'p' => '?']],
                 ],
             ],
         ];

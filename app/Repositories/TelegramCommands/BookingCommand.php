@@ -19,7 +19,6 @@ class BookingCommand extends ChatCommand
         TelegramBotRepository::parseDayNum(static::$arguments['dayName']);
 
         $userId = static::$requester['id'];
-        static::$arguments['userId'] = self::$requester['id'];
         static::$arguments['userName'] = self::$requester['name'];
         static::$arguments['userStatus'] = empty(self::$requester['privilege']['status']) ? 'user' : self::$requester['privilege']['status'];
 
@@ -46,7 +45,7 @@ class BookingCommand extends ChatCommand
         }
 
         foreach ($weekData['data'][static::$arguments['dayNum']]['participants'] as $index => $userData) {
-            if ($userData['id'] !== static::$arguments['userId']) continue;
+            if ($userData['id'] !== self::$requester['id']) continue;
 
             if (!empty(static::$arguments['arrive']) && static::$arguments['arrive'] !== $userData['arrive']) {
                 $slot = $index;
@@ -108,13 +107,19 @@ class BookingCommand extends ChatCommand
         $replyMarkup = [
             'inline_keyboard' => [
                 [
-                    ['text' => '🙋' . self::locale('I will too!'), 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => static::$arguments['dayNum']]],
-                    ['text' => self::locale('I want too!') . '🥹', 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => static::$arguments['dayNum'], 'p' => '?']],
+                    ['text' => '🙋' . self::locale('I will!'), 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => static::$arguments['dayNum']]],
+                    ['text' => self::locale('I want!') . '🥹', 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => static::$arguments['dayNum'], 'p' => '?']],
                 ],
             ],
         ];
 
-        // if ()
+        if (TelegramBotRepository::isDirect() && in_array(self::$requester['id'], array_column($newDayData['participants'], 'id'))) {
+            $replyMarkup['inline_keyboard'] = [
+                [
+                    ['text' => '❌' . Locale::phrase('Opt-out'), 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => $dayNum, 'r' => 1]]
+                ]
+            ];
+        }
 
         $result['send'][] = [
             'message' => Days::getFullDescription($weekData, static::$arguments['dayNum']),
