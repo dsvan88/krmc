@@ -15,7 +15,7 @@ use Exception;
 
 class TelegramBotRepository
 {
-    public static $message = '';
+    public static $message = [];
     public static $userData = [];
     public static $arguments = [];
 
@@ -33,8 +33,8 @@ class TelegramBotRepository
         if (!empty(static::$userData)) {
             if (empty(static::$userData['privilege']['status']) || !in_array(static::$userData['privilege']['status'], ['manager', 'admin', 'root'], true))
                 return static::answer('You don’t have enough rights to change information about other users!');
-            static::$arguments['ci'] = static::$message['callback_query']['message']['chat']['id'];
-            static::$arguments['mi'] = static::$message['callback_query']['message']['message_id'];
+            static::$arguments['ci'] = static::getChatId();
+            static::$arguments['mi'] = static::getMessageId();
             return static::nickApprove();
         }
 
@@ -481,9 +481,9 @@ class TelegramBotRepository
     {
         if (empty($message))
             $message = static::$message;
-        
+
         if (empty($message))
-            throw new Exception(__METHOD__.': $message can\'t be empty!');
+            throw new Exception(__METHOD__ . ': $message can\'t be empty!');
 
         return empty($message['callback_query']) ?
             $message['message']['message_id'] :
@@ -493,9 +493,9 @@ class TelegramBotRepository
     {
         if (empty($message))
             $message = static::$message;
-        
+
         if (empty($message))
-            throw new Exception(__METHOD__.': $message can\'t be empty!');
+            throw new Exception(__METHOD__ . ': $message can\'t be empty!');
 
         return empty($message['callback_query']) ?
             $message['message']['chat']['id'] :
@@ -507,7 +507,7 @@ class TelegramBotRepository
             $message = static::$message;
 
         if (empty($message))
-            throw new Exception(__METHOD__.': $message can\'t be empty!');
+            throw new Exception(__METHOD__ . ': $message can\'t be empty!');
 
         return empty($message['callback_query']) ?
             $message['message']['chat']['type'] === 'private' :
