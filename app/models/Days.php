@@ -228,7 +228,7 @@ class Days extends Model
                 }
             }
 
-            if ($participants[$x]['arrive'] !== '' && $participants[$x]['arrive'] !== $weekData['data'][$day]['time']) {
+            if (!empty($participants[$x]['arrive']) && $participants[$x]['arrive'] !== $weekData['data'][$day]['time']) {
                 $modsData .= DayRepository::getTimeEmoji($participants[$x]['arrive']) . ' ' . $participants[$x]['arrive'];
                 if ($participants[$x]['prim'] != '') {
                     $modsData .= ', ';
