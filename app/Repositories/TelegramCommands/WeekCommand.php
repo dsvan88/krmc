@@ -19,7 +19,7 @@ class WeekCommand extends ChatCommand
 
         if (empty($weeksData)) {
             $message = self::locale('{{ Tg_Command_Games_Not_Set }}');
-            return false;
+            return static::result($message);
         }
         foreach ($weeksData as $weekData) {
 
@@ -44,6 +44,6 @@ class WeekCommand extends ChatCommand
         }
 
         $reaction = '👌';
-        return true;
+        return static::result($message, $reaction, true);
     }
 }

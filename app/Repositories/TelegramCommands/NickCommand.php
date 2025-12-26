@@ -11,6 +11,7 @@ use app\models\TelegramChats;
 use app\models\Users;
 use app\Repositories\AccountRepository;
 use app\Repositories\ContactRepository;
+use app\Repositories\TelegramBotRepository;
 use app\Repositories\TelegramChatsRepository;
 
 class NickCommand extends ChatCommand
@@ -102,13 +103,20 @@ class NickCommand extends ChatCommand
 
         if (!$isAvailable || $isChatExists) {
             $message .= PHP_EOL;
-            $message = self::locale('If it is your, then contact the Administrators to make changes!');
-            $reaction = '🤷‍♂️';
-            return false;
+            $message .= self::locale('If it is your, then contact the Administrators to make changes!');
+            return [
+                'result' => false,
+                'reaction' => '🤷‍♂️',
+                'send' => [
+                    [
+                        'message' => $message,
+                    ]
+                ]
+            ];
         }
 
         if (!$isChatExists) {
-            $message = self::locale(['string' => 'The nickname <b>%s</b> is already registered by another member of the group!', 'vars' => [$username]]);
+            // $message = self::locale(['string' => 'The nickname <b>%s</b> is already registered by another member of the group!', 'vars' => [$username]]);
             $message .= PHP_EOL;
             $message .= self::locale('But... I can’t find his TelegramID🤷‍♂️');
             $message .= PHP_EOL;
@@ -123,11 +131,19 @@ class NickCommand extends ChatCommand
                     ],
                 ],
             ];
-            $reaction = '🤔';
-            return true;
+            return [
+                'result' => true,
+                'reaction' => '🤔',
+                'send' => [
+                    [
+                        'message' => $message,
+                        'replyMarkup' => $replyMarkup,
+                    ]
+                ]
+            ];
         }
 
-        $message = self::locale(['string' => 'The nickname <b>%s</b> is already registered by another member of the group!', 'vars' => [$username]]);
+        // $message = self::locale(['string' => 'The nickname <b>%s</b> is already registered by another member of the group!', 'vars' => [$username]]);
         $message .= PHP_EOL;
         $message .= self::locale("But... We didn’t saw him for quite time🤷‍♂️");
         $message .= PHP_EOL;
@@ -142,7 +158,15 @@ class NickCommand extends ChatCommand
                 ],
             ],
         ];
-        $reaction = '🤔';
-        return true;
+        return [
+            'result' => true,
+            'reaction' => '🤔',
+            'send' => [
+                [
+                    'message' => $message,
+                    'replyMarkup' => $replyMarkup,
+                ]
+            ]
+        ];
     }
 }

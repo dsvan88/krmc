@@ -21,14 +21,14 @@ class RegCommand extends ChatCommand
     {
         if (empty($arguments)) {
             $message = self::locale('{{ Tg_Command_Without_Arguments }}');
-            return false;
+            return static::result($message);
         }
 
         $requestData = TelegramBotRepository::parseArguments($arguments);
 
         if (!isset($requestData['nonames']) && $requestData['userId'] < 2) {
             $message = self::locale(['string' => 'No users found with nickname: <b>%s</b>!', 'vars' => [$requestData['probableUserName']]]);
-            return false;
+            return static::result($message);
         }
 
         $weekId = Weeks::currentId();
@@ -71,7 +71,7 @@ class RegCommand extends ChatCommand
         if ($requestData['method'] === '+') {
             if ($participantId !== -1) {
                 $message = self::locale('{{ Tg_Command_User_Already_Booked }}');
-                return false;
+                return static::result($message);
             }
             if (isset($requestData['nonames'])) {
                 $newDayData = Days::addNonamesToDayData($newDayData, $slot, $requestData['nonames'], $requestData['prim']);
@@ -84,7 +84,7 @@ class RegCommand extends ChatCommand
             } else {
                 if ($participantId === -1) {
                     $message = self::locale('{{ Tg_Command_User_Not_Booked }}');
-                    return false;
+                    return static::result($message);
                 }
                 unset($newDayData['participants'][$participantId]);
                 $newDayData['participants'] = array_values($newDayData['participants']);
@@ -103,6 +103,16 @@ class RegCommand extends ChatCommand
             ]
         ];
         $reaction = '👌';
-        return true;
+
+        return [
+            'result' => true,
+            'reaction' => $reaction,
+            'send' => [
+                [
+                    'message' => $message,
+                    'replyMarkup' => $replyMarkup,
+                ]
+            ]
+        ];
     }
 }

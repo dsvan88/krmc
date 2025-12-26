@@ -40,10 +40,18 @@ class RecallCommand extends ChatCommand
         $reaction = '😢';
         $message = '{{ Tg_Command_Set_Day_Not_Found }}';
 
-        if (!empty($result)){
+        if (!empty($result)) {
             $reaction = '👌';
             $message = '{{ Tg_Command_Successfully_Canceled }}';
         }
-        return $result;
+        return [
+            'result' => true,
+            'reaction' => $reaction,
+            'send' => [
+                [
+                    'message' => $message,
+                ]
+            ]
+        ];
     }
 }

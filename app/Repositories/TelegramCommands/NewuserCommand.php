@@ -32,6 +32,6 @@ class NewuserCommand extends ChatCommand
 
         Users::add($username);
 
-        return static::result(['string' => '{{ Tg_Command_New_User_Save_Success }}', 'vars' => [$username]], '👌');;
+        return static::result(['string' => '{{ Tg_Command_New_User_Save_Success }}', 'vars' => [$username]], '👌', true);
     }
 }

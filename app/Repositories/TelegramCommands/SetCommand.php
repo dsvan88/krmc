@@ -20,7 +20,7 @@ class SetCommand extends ChatCommand
     {
         if (empty($arguments)) {
             $message = self::locale('{{ Tg_Command_Without_Arguments }}');
-            return false;
+            return static::result($message);
         }
 
         $requestData = $arguments;
@@ -140,11 +140,11 @@ class SetCommand extends ChatCommand
 
         if (!$result) {
             $message = json_encode($weekData['data'][$dayNum], JSON_UNESCAPED_UNICODE);
-            return false;
+            static::result($message);
         }
 
         $message = $method === '-' ? self::locale('{{ Tg_Command_Successfully_Canceled }}') : Days::getFullDescription($weekData, $dayNum);
         $reaction = '👌';
-        return true;
+        return static::result($message, $reaction, true);
     }
 }

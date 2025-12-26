@@ -38,8 +38,8 @@ class DayCommand extends ChatCommand
             ],
         ];
 
-        if (!TelegramBotRepository::isDirect()){
-            $replyMarkup['inline_keyboard'][0][] = ['text' => '❌' . Locale::phrase('Opt-out'), 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => $dayNum, 'r' => 1]];
+        if (!TelegramBotRepository::isDirect()) {
+            $replyMarkup['inline_keyboard'][0][] = ['text' => '❌' . self::locale('Opt-out'), 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => static::$arguments['dayNum'], 'r' => 1]];
         }
 
         $result = [
@@ -57,7 +57,7 @@ class DayCommand extends ChatCommand
         if (TelegramBotRepository::isDirect() && in_array(self::$requester['id'], array_column($weekData['data'][static::$arguments['dayNum']]['participants'], 'id'))) {
             $result['send'][0]['replyMarkup']['inline_keyboard'] = [
                 [
-                    ['text' => '❌' . Locale::phrase('Opt-out'), 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => $dayNum, 'r' => 1]]
+                    ['text' => '❌' . self::locale('Opt-out'), 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => static::$arguments['dayNum'], 'r' => 1]]
                 ]
             ];
         }

@@ -5,6 +5,7 @@ namespace app\Repositories\TelegramCommands;
 use app\core\ChatCommand;
 use app\models\Days;
 use app\models\Weeks;
+use app\Repositories\TelegramBotRepository;
 
 class TodayCommand extends ChatCommand
 {
@@ -15,25 +16,48 @@ class TodayCommand extends ChatCommand
     public static function execute(array $arguments = [], string &$message = '', string &$reaction = '', array &$replyMarkup = [])
     {
         $weekData = Weeks::weekDataByTime();
+        $weekId = $weekData['id'];
 
         $currentDayNum = Days::current();
 
         $message = Days::getFullDescription($weekData, $currentDayNum);
 
         if (empty($message)) {
-            $message = self::locale('{{ Tg_Command_Games_Not_Set }}');
-            return false;
+            return static::result('{{ Tg_Command_Games_Not_Set }}');
         }
 
-        $reaction = '👌';
         $replyMarkup = [
             'inline_keyboard' => [
                 [
-                    ['text' => '🙋' . self::locale('I will!'), 'callback_data' => ['c' => 'booking', 'w' => $weekData['id'], 'd' => $currentDayNum]],
-                    ['text' => self::locale('I want!') . '🥹', 'callback_data' => ['c' => 'booking', 'w' => $weekData['id'], 'd' => $currentDayNum, 'p' => '?']],
+                    ['text' => '🙋' . self::locale('I will!'), 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => static::$arguments['dayNum']]],
+                    ['text' => self::locale('I want!') . '🥹', 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => static::$arguments['dayNum'], 'p' => '?']],
                 ],
             ],
         ];
-        return true;
+
+        if (!TelegramBotRepository::isDirect()) {
+            $replyMarkup['inline_keyboard'][0][] = ['text' => '❌' . self::locale('Opt-out'), 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => static::$arguments['dayNum'], 'r' => 1]];
+        }
+
+        $result = [
+            'reaction' => '👌',
+            'send' => [
+                [
+                    'message' => $message,
+                    'replyMarkup' => $replyMarkup,
+                ]
+            ]
+        ];
+
+        if (empty(self::$requester['id'])) return $result;
+
+        if (TelegramBotRepository::isDirect() && in_array(self::$requester['id'], array_column($weekData['data'][static::$arguments['dayNum']]['participants'], 'id'))) {
+            $result['send'][0]['replyMarkup']['inline_keyboard'] = [
+                [
+                    ['text' => '❌' . self::locale('Opt-out'), 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => static::$arguments['dayNum'], 'r' => 1]]
+                ]
+            ];
+        }
+        return $result;
     }
 }

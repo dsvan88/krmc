@@ -4,6 +4,7 @@ namespace app\Repositories\TelegramCommands;
 
 use app\core\ChatCommand;
 use app\models\News;
+use app\Repositories\TelegramBotRepository;
 
 class PromoCommand extends ChatCommand
 {
@@ -55,6 +56,14 @@ class PromoCommand extends ChatCommand
 
         $reaction = '👌';
         $message = self::locale('{{ Tg_Command_Promo_Saved }}');
-        return true;
+        return [
+            'result' => true,
+            'reaction' => $reaction,
+            'send' => [
+                [
+                    'message' => $message,
+                ]
+            ]
+        ];
     }
 }

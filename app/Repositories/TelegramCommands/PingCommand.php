@@ -18,10 +18,10 @@ class PingCommand extends ChatCommand
     {
         return self::locale('<u>/ping (week day)</u> <i>// Ping users from current activity to get their attention.</i>');
     }
-    public static function execute(array $arguments = [], string &$message = '', string &$reaction = '', array &$replyMarkup = [])
+    public static function execute()
     {
         $weekId = Weeks::currentId();
-        $requestData = $arguments;
+        $requestData = static::$arguments;
 
         $daySlug = isset($requestData[0]) ? $requestData[0] : 'tod';
         TelegramBotRepository::parseDayNum($daySlug, $requestData);
@@ -53,7 +53,8 @@ class PingCommand extends ChatCommand
             }
         } while (--$offset > 0);
 
-        if (empty($bookedIds)) return false;
+        if (empty($bookedIds))
+            return static::result('');
 
         $userIds = [];
         foreach ($bookedIds as $userId) {
@@ -69,8 +70,7 @@ class PingCommand extends ChatCommand
         }
 
         if (empty($tgNames)) {
-            // $message = self::locale('{{ Tg_Command_Games_Not_Set }}');
-            return false;
+            return static::result('');;
         }
 
         $gameNames = GameTypes::names();
@@ -80,9 +80,16 @@ class PingCommand extends ChatCommand
         $link = "<a href='$proto://{$_SERVER['SERVER_NAME']}/game/{$game}/?lang=$lang'>{$gameNames[$game]}</a>";
 
         $list = '@' . implode(', @', $tgNames);
-        
-        $reaction = '👌';
+
         $message =  self::locale(['string' => "Dear players: %s!\n%s at %s we're going to play in %s!\nAre you in?😉", 'vars' => [$list, $date, $currentDay['time'], $link]]);
-        return true;
+        return [
+            'result' => true,
+            'reaction' => '👌',
+            'send' => [
+                [
+                    'message' => $message,
+                ]
+            ]
+        ];
     }
 }

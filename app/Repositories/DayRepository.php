@@ -157,6 +157,6 @@ class DayRepository
             '12' => '🕛',
             '1230' => '🕧',
         ];
-        return $clocks[$hour . $mins];
+        return isset($clocks[$hour . $mins]) ? $clocks[$hour . $mins] : '';
     }
 }
