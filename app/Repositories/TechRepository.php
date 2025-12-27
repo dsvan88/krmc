@@ -117,7 +117,7 @@ class TechRepository
     public static function rowsCount(array $array)
     {
         $count = 0;
-        foreach ($array as $table => $rows) {
+        foreach ($array as $rows) {
             $count += count($rows);
         }
         return $count;
@@ -125,6 +125,8 @@ class TechRepository
 
     public static function scheduleBackup(): void
     {
+        if (APP_LOC === 'local') return;
+        
         $settings = Settings::get('backup');
 
         if (empty($settings['email']['value']) || $settings['last']['value'] > $_SERVER['REQUEST_TIME'] - BACKUP_FREQ) exit();

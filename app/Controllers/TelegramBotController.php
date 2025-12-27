@@ -209,7 +209,8 @@ class TelegramBotController extends Controller
             throw new Exception(__METHOD__ . ': $result can’t be empty!');
         }
 
-        if (!empty($result['reaction'])) {
+        // if (!empty($result['reaction'])) {
+        if (!empty($result['reaction']) && APP_LOC !== 'local') {
             Sender::setMessageReaction(self::$chatId, TelegramBotRepository::getMessageId(), $result['reaction']);
         }
 
@@ -231,7 +232,7 @@ class TelegramBotController extends Controller
         }
         if (!empty($result['send'])) {
             foreach ($result['send'] as $item) {
-                if (!empty($send['replyMarkup']['inline_keyboard']))
+                if (!empty($item['replyMarkup']['inline_keyboard']))
                     TelegramBotRepository::encodeInlineKeyboard($item['replyMarkup']['inline_keyboard']);
                 $botResult = Sender::message(
                     empty($item['chatId']) ? self::$chatId : $item['chatId'],

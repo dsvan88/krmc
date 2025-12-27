@@ -43,6 +43,7 @@ class DayCommand extends ChatCommand
         }
 
         $result = [
+            'result' => true,
             'reaction' => '👌',
             'send' => [
                 [

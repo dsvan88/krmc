@@ -5,7 +5,7 @@
     "keywords": ["framework"],
     "type": "project",
     "require": {
-        "php": "8.4.15",
+        "php": "8.4.16",
         "ext-mbstring": "*",
         "ext-exif": "*",
         "ext-gd": "*",
@@ -15,7 +15,7 @@
     "minimum-stability": "stable",
     "extra": {
         "heroku": {
-            "php-version": "8.4.15"
+            "php-version": "8.4.16"
         }
     }
 }

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9c5e60f313a65e4f7f03274da0a0e9a6",
+    "content-hash": "a1b3fb05a29becc2df074ded97b64d27",
     "packages": [
         {
             "name": "firebase/php-jwt",
@@ -140,16 +140,16 @@
         },
         {
             "name": "google/apiclient-services",
-            "version": "v0.423.0",
+            "version": "v0.425.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/googleapis/google-api-php-client-services.git",
-                "reference": "c8f2e8a92e2848987db421175eaaf7602ef30c33"
+                "reference": "3dc7a1bf23d0fee0f701d9a249c8f2ed622c16ec"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/googleapis/google-api-php-client-services/zipball/c8f2e8a92e2848987db421175eaaf7602ef30c33",
-                "reference": "c8f2e8a92e2848987db421175eaaf7602ef30c33",
+                "url": "https://api.github.com/repos/googleapis/google-api-php-client-services/zipball/3dc7a1bf23d0fee0f701d9a249c8f2ed622c16ec",
+                "reference": "3dc7a1bf23d0fee0f701d9a249c8f2ed622c16ec",
                 "shasum": ""
             },
             "require": {
@@ -178,9 +178,9 @@
             ],
             "support": {
                 "issues": "https://github.com/googleapis/google-api-php-client-services/issues",
-                "source": "https://github.com/googleapis/google-api-php-client-services/tree/v0.423.0"
+                "source": "https://github.com/googleapis/google-api-php-client-services/tree/v0.425.0"
             },
-            "time": "2025-12-08T01:10:26+00:00"
+            "time": "2025-12-22T01:06:21+00:00"
         },
         {
             "name": "google/auth",
@@ -793,16 +793,16 @@
         },
         {
             "name": "phpseclib/phpseclib",
-            "version": "3.0.47",
+            "version": "3.0.48",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpseclib/phpseclib.git",
-                "reference": "9d6ca36a6c2dd434765b1071b2644a1c683b385d"
+                "reference": "64065a5679c50acb886e82c07aa139b0f757bb89"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/9d6ca36a6c2dd434765b1071b2644a1c683b385d",
-                "reference": "9d6ca36a6c2dd434765b1071b2644a1c683b385d",
+                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/64065a5679c50acb886e82c07aa139b0f757bb89",
+                "reference": "64065a5679c50acb886e82c07aa139b0f757bb89",
                 "shasum": ""
             },
             "require": {
@@ -883,7 +883,7 @@
             ],
             "support": {
                 "issues": "https://github.com/phpseclib/phpseclib/issues",
-                "source": "https://github.com/phpseclib/phpseclib/tree/3.0.47"
+                "source": "https://github.com/phpseclib/phpseclib/tree/3.0.48"
             },
             "funding": [
                 {
@@ -899,7 +899,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-10-06T01:07:24+00:00"
+            "time": "2025-12-15T11:51:42+00:00"
         },
         {
             "name": "psr/cache",
@@ -1279,7 +1279,7 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": "8.4.15",
+        "php": "8.4.16",
         "ext-mbstring": "*",
         "ext-exif": "*",
         "ext-gd": "*",
