@@ -3,7 +3,7 @@
 namespace app\Repositories\TelegramCommands;
 
 use app\Controllers\TelegramBotController;
-use app\core\ChatCommand;
+use app\core\Telegram\ChatCommand;
 use app\Repositories\TelegramBotRepository;
 
 class HelpCommand extends ChatCommand

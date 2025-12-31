@@ -2,7 +2,7 @@
 
 namespace app\Repositories\TelegramCommands;
 
-use app\core\ChatCommand;
+use app\core\Telegram\ChatCommand;
 use app\models\Contacts;
 use app\models\TelegramChats;
 use app\models\Users;

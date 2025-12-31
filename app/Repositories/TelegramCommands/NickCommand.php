@@ -2,7 +2,7 @@
 
 namespace app\Repositories\TelegramCommands;
 
-use app\core\ChatCommand;
+use app\core\Telegram\ChatCommand;
 use app\core\Locale;
 use app\core\Sender;
 use app\models\Contacts;
