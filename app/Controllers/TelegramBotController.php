@@ -159,7 +159,6 @@ class TelegramBotController extends Controller
             $class = str_replace('/', '\\', static::$AnswerNamespace . '\\' . ucfirst($command) . 'Answer');
         }
 
-
         if (!class_exists($class)) {
             return [];
         }
