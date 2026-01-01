@@ -13,13 +13,6 @@ class ChatAction implements Command
     public static $message = [];
     public static $arguments = [];
 
-    // public static function set(array $arguments = []): bool
-    // {
-    //     foreach ($arguments as $k => $v) {
-    //         static::$$k = $v;
-    //     }
-    //     return true;
-    // }
     public static function getAccessLevel(): string
     {
         return static::$accessLevel;

@@ -164,13 +164,10 @@ class TelegramBotController extends Controller
             return [];
         }
 
-        $ready = $class::set();
+        $status = '';
+        if (!empty(ChatAction::$requester['privilege']['status']))
+            $status = ChatAction::$requester['privilege']['status'];
 
-        if (empty($ready)) return [
-            'message' => $class::$status,
-        ];
-
-        $status = empty(ChatAction::$requester['privilege']['status']) ? '' : ChatAction::$requester['privilege']['status'];
         if (!TelegramBotRepository::hasAccess($status, $class::getAccessLevel())) {
             return [];
         }
