@@ -129,8 +129,11 @@ class TelegramBotController extends Controller
                 return true;
             }
             $result = static::execute();
-            if ($result['result'])
-                static::resolveResult($result);
+            
+            if (empty($result['result'])) return false;
+            
+            static::resolveResult($result);
+
         } catch (\Throwable $th) {
             $_SESSION['debug'][] = 'commonError: ' . $th->__toString();
             $_SESSION['debug'][] = 'messageData: ' . json_encode(ChatAction::$message, JSON_UNESCAPED_UNICODE);

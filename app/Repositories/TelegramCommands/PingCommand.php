@@ -81,7 +81,7 @@ class PingCommand extends ChatCommand
 
         $list = '@' . implode(', @', $tgNames);
 
-        $message =  self::locale(['string' => "Dear players: %s!\n%s at %s we're going to play in %s!\nAre you in?😉", 'vars' => [$list, $date, $currentDay['time'], $link]]);
+        $message =  self::locale(['string' => "Dear players: %s!\n%s at %s we’re going to play in %s!\nAre you in?😉", 'vars' => [$list, $date, $currentDay['time'], $link]]);
         return [
             'result' => true,
             'reaction' => '👌',

@@ -17,7 +17,7 @@ class NickAnswer extends ChatAnswer
         if (empty(static::$requester) || empty(static::$arguments))
             throw new Exception(__METHOD__ . ': Requester or Arguments is empty!');
 
-        if (empty(static::$userData['privilege']['status']) || !in_array(static::$requester['privilege']['status'], ['admin', 'root'], true))
+        if (empty(static::$requester['privilege']['status']) || !in_array(static::$requester['privilege']['status'], ['admin', 'root'], true))
             return static::result('You don’t have enough rights to change information about other users!');
 
         if (empty(static::$arguments['u']) || empty(static::$arguments['t'])) {

@@ -12,10 +12,10 @@ class NickAnswer extends ChatAnswer
 {
     public static function execute():array
     {
-        if (empty(static::$userData) || empty(static::$arguments))
+        if (empty(static::$requester) || empty(static::$arguments))
             throw new Exception(__METHOD__ . ': UserData or Arguments is empty!');
 
-        if (empty(static::$userData['privilege']['status']) || !in_array(static::$requester['privilege']['status'], ['manager', 'admin', 'root'], true))
+        if (empty(static::$requester['privilege']['status']) || !in_array(static::$requester['privilege']['status'], ['manager', 'admin', 'root'], true))
             return static::result('You don’t have enough rights!');
 
         $weekId = (int) trim(static::$arguments['w']);
