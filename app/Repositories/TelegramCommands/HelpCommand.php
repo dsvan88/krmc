@@ -2,7 +2,6 @@
 
 namespace app\Repositories\TelegramCommands;
 
-use app\Controllers\TelegramBotController;
 use app\core\Telegram\ChatCommand;
 use app\Repositories\TelegramBotRepository;
 

@@ -6,6 +6,7 @@ use app\core\Telegram\ChatCommand;
 use app\models\Days;
 use app\models\Weeks;
 use app\Repositories\TelegramBotRepository;
+use Google\Service\CloudControlsPartnerService\Console;
 
 class BookingCommand extends ChatCommand
 {
@@ -18,7 +19,7 @@ class BookingCommand extends ChatCommand
     {
         TelegramBotRepository::parseDayNum(static::$arguments['dayName']);
 
-        $userId = static::$requester['id'];
+        static::$arguments['userId'] = self::$requester['id'];
         static::$arguments['userName'] = self::$requester['name'];
         static::$arguments['userStatus'] = empty(self::$requester['privilege']['status']) ? 'user' : self::$requester['privilege']['status'];
 
@@ -55,7 +56,6 @@ class BookingCommand extends ChatCommand
             $participantId = $index;
             break;
         }
-
         $result = ['result' => true];
         $newDayData = $weekData['data'][static::$arguments['dayNum']];
         if (static::$arguments['method'] === '+') {
@@ -108,7 +108,7 @@ class BookingCommand extends ChatCommand
             'inline_keyboard' => [
                 [
                     ['text' => '🙋' . self::locale('I will!'), 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => static::$arguments['dayNum']]],
-                    ['text' => self::locale('I want!') . '🥹', 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => static::$arguments['dayNum'], 'p' => '?']],
+                    ['text' => self::locale('I want!') .'(?)'. '🥹', 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => static::$arguments['dayNum'], 'p' => '?']],
                 ],
             ],
         ];

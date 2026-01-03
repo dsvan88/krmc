@@ -5,6 +5,7 @@ namespace app\Repositories\TelegramCommands;
 use app\core\Telegram\ChatCommand;
 use app\core\Locale;
 use app\core\Sender;
+use app\core\Telegram\ChatAction;
 use app\models\Contacts;
 use app\models\Settings;
 use app\models\TelegramChats;
@@ -48,8 +49,8 @@ class NickCommand extends ChatCommand
             return static::result(['string' => "Invalid nickname format!\nPlease use <b>Cyrillic</b> or <b>Latin</b> alphabet, <b>spaces</b> and <b>digits</b>!\nWrong simbols: %s", 'vars' => ["\"<i>$wrong</i>\""]]);
         }
 
-        $telegramId = TelegramBotRepository::$message['message']['from']['id'];
-        $telegram = TelegramBotRepository::$message['message']['from']['username'];
+        $telegramId = ChatAction::$message['message']['from']['id'];
+        $telegram = ChatAction::$message['message']['from']['username'];
 
         $userExistsData = Users::getDataByName($username);
 
@@ -57,7 +58,7 @@ class NickCommand extends ChatCommand
             $userId = Users::add($username);
 
             Contacts::new(['telegramid' => $telegramId, 'telegram' => $telegram], $userId);
-            TelegramChats::save(TelegramBotRepository::$message);
+            TelegramChats::save(ChatAction::$message);
             TelegramChatsRepository::getAndSaveTgAvatar($userId, true);
 
             $message = self::locale(['string' => "So... we remember you under the nickname <b>%s</b>. Right?\nNice to meet you!", 'vars' => [$username]]) . PHP_EOL;

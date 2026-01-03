@@ -129,9 +129,7 @@ class TelegramBotController extends Controller
                 return true;
             }
             $result = static::execute();
-            
-            if (empty($result['result'])) return false;
-            
+
             static::resolveResult($result);
 
         } catch (\Throwable $th) {
@@ -179,7 +177,6 @@ class TelegramBotController extends Controller
             throw new Exception(__METHOD__ . ': $result can’t be empty!');
         }
 
-        // if (!empty($result['reaction'])) {
         if (!empty($result['reaction']) && APP_LOC !== 'local') {
             Sender::setMessageReaction(self::$chatId, TelegramBotRepository::getMessageId(), $result['reaction']);
         }
@@ -228,7 +225,7 @@ class TelegramBotController extends Controller
 
         if (!$result['result']) return false;
 
-        $message = $result['senf'][0]['message'];
+        $message = $result['send'][0]['message'];
         $chatData = TelegramChats::getChatsWithPinned();
         foreach ($chatData as $chatId => $pinned) {
             Sender::edit($chatId, $pinned, $message);
