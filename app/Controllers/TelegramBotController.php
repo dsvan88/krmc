@@ -19,7 +19,6 @@ class TelegramBotController extends Controller
 {
     public static $chatId = null;
     public static $command = '';
-    public static $commandArguments = [];
     public static $guestCommands = ['help', 'nick', 'nickRelink', 'week', 'day', 'today'];
     public static $CommandNamespace = '\\app\\Repositories\\TelegramCommands';
     public static $AnswerNamespace = '\\app\\Repositories\\TelegramCbAnswers';
@@ -78,7 +77,7 @@ class TelegramBotController extends Controller
 
         if (static::$type === 'message') {
             static::$command = TelegramBotRepository::parseChatCommand(trim($message['message']['text']));
-            
+
             if (empty(static::$command)) return false;
 
             if (empty($userId) && !in_array(self::$command, self::$guestCommands)) {
@@ -132,7 +131,8 @@ class TelegramBotController extends Controller
                 return true;
             }
             $result = static::execute();
-
+            error_log(static::$command);
+            error_log(json_encode($result));
             static::resolveResult($result);
 
         } catch (\Throwable $th) {
@@ -159,7 +159,8 @@ class TelegramBotController extends Controller
         else {
             $class = str_replace('/', '\\', static::$AnswerNamespace . '\\' . ucfirst($command) . 'Answer');
         }
-
+        error_log($class);
+        
         if (!class_exists($class)) {
             return [];
         }
