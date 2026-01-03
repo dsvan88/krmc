@@ -131,8 +131,7 @@ class TelegramBotController extends Controller
                 return true;
             }
             $result = static::execute();
-            error_log(static::$command);
-            error_log(json_encode($result));
+
             static::resolveResult($result);
 
         } catch (\Throwable $th) {
@@ -159,9 +158,9 @@ class TelegramBotController extends Controller
         else {
             $class = str_replace('/', '\\', static::$AnswerNamespace . '\\' . ucfirst($command) . 'Answer');
         }
-        error_log($class);
         
         if (!class_exists($class)) {
+            error_log('Class dont exists');
             return [];
         }
 
