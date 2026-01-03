@@ -78,7 +78,10 @@ class TelegramBotController extends Controller
 
         if (static::$type === 'message') {
             static::$command = TelegramBotRepository::parseChatCommand(trim($message['message']['text']));
-            if (empty($userId) && !empty(static::$command) && !in_array(self::$command, self::$guestCommands)) {
+            
+            if (empty(static::$command)) return false;
+
+            if (empty($userId) && !in_array(self::$command, self::$guestCommands)) {
                 Sender::message(self::$chatId, Locale::phrase('{{ Tg_Unknown_Requester }}'), $message['message']['message_id']);
                 return false;
             }
