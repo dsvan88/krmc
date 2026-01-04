@@ -39,7 +39,7 @@ class DayCommand extends ChatCommand
         ];
 
         if (!TelegramBotRepository::isDirect()) {
-            $replyMarkup['inline_keyboard'][0][] = ['text' => '❌' . self::locale('Opt-out'), 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => static::$arguments['dayNum'], 'r' => 1]];
+            $replyMarkup['inline_keyboard'][0][] = ['text' => '❌', 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => static::$arguments['dayNum'], 'r' => 1]];
         }
 
         $result = [

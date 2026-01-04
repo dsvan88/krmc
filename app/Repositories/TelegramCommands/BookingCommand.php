@@ -115,7 +115,7 @@ class BookingCommand extends ChatCommand
 
         if (!TelegramBotRepository::isDirect()){
             if (count($weekData['data'][static::$arguments['dayNum']]['participants']) > 0) {
-                $replyMarkup['inline_keyboard'][0][] = ['text' => '❌' . self::locale('Opt-out'), 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => static::$arguments['dayNum'], 'r' => '1']];
+                $replyMarkup['inline_keyboard'][0][] = ['text' => '❌', 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => static::$arguments['dayNum'], 'r' => '1']];
             }
         }
         elseif (in_array(self::$requester['id'], array_column($newDayData['participants'], 'id'))) {

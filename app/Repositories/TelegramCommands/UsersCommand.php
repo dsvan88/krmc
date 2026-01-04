@@ -12,11 +12,12 @@ class UsersCommand extends ChatCommand
     {
         return self::locale("<u>/users range|#userId|nickname</u> <i>// Users list, registered in system (first 100).</i>. Examples:</i>\n\t/users 0-100\n\t/users #14\n\t/users Example");
     }
-    public static function execute(array $arguments = [], string &$message = '', string &$reaction = '', array &$replyMarkup = [])
+    public static function execute()
     {
-        $usersList = self::getUsersList($arguments);
+        $usersList = self::getUsersList(static::$arguments);
         $usersList = Users::contacts($usersList);
 
+        $message = '';
         $count = min(count($usersList), 100);
         for ($i = 0; $i < $count; $i++) {
             if (empty($usersList[$i]['name'])) continue;

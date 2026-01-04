@@ -16,14 +16,14 @@ class SetCommand extends ChatCommand
     {
         return self::locale("<u>/set</u> <i>// Set data for a specific day. Example:</i>\n\t\t/set sun, mafia, 18:00, (Good luck, have fun!)\n");
     }
-    public static function execute(array $arguments = [], string &$message = '', string &$reaction = '', array &$replyMarkup = [])
+    public static function execute()
     {
-        if (empty($arguments)) {
+        if (empty(static::$arguments)) {
             $message = self::locale('{{ Tg_Command_Without_Arguments }}');
             return static::result($message);
         }
 
-        $requestData = $arguments;
+        $requestData = static::$arguments;
         $days = DayRepository::getDayNamesForCommand();
 
         $gameName = $dayName = $time = '';
@@ -59,7 +59,7 @@ class SetCommand extends ChatCommand
             }
         }
 
-        foreach ($arguments as $value) {
+        foreach ($requestData as $value) {
             $value = trim($value);
             if ($gameName === '' && preg_match("/^($pattern)/ui", mb_strtolower($value, 'UTF-8'), $gamesPattern) > 0) {
                 $gameName = $gamesPattern[0];

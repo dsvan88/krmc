@@ -12,7 +12,6 @@ use app\models\TelegramChats;
 use app\models\Users;
 use app\Repositories\AccountRepository;
 use app\Repositories\ContactRepository;
-use app\Repositories\TelegramBotRepository;
 use app\Repositories\TelegramChatsRepository;
 
 class NickCommand extends ChatCommand
@@ -21,13 +20,13 @@ class NickCommand extends ChatCommand
     {
         return self::locale('<u>/nick Your nickname</u> <i>// Register your nickname</i>');
     }
-    public static function execute(array $arguments = [], string &$message = '', string &$reaction = '', array &$replyMarkup = [])
+    public static function execute()
     {
         if (!empty(self::$requester)) {
             return static::result(['string' => '{{ Tg_Command_Name_Already_Set }}', 'vars' => [self::$requester['name']]]);
         }
 
-        $_username = implode(' ', $arguments);
+        $_username = implode(' ', static::$arguments);
 
         if (empty(trim($_username))) {
             return static::result("Your nickname can’t be empty!\nPlease, use that format:\n/nick <b>Your nickname</b>");
@@ -123,7 +122,7 @@ class NickCommand extends ChatCommand
             $message .= PHP_EOL;
             $message .= self::locale('Is it your?*');
             $message .= PHP_EOL . PHP_EOL;
-            $message .= '<i>' . self::locale("*This nickname will be your, after Administrators’s approve.") . '</i>';
+            $message .= '<i>' . self::locale('*This nickname will be your, after Administrators’s approve.') . '</i>';
             $replyMarkup = [
                 'inline_keyboard' => [
                     [
@@ -146,16 +145,16 @@ class NickCommand extends ChatCommand
 
         // $message = self::locale(['string' => 'The nickname <b>%s</b> is already registered by another member of the group!', 'vars' => [$username]]);
         $message .= PHP_EOL;
-        $message .= self::locale("But... We didn’t saw him for quite time🤷‍♂️");
+        $message .= self::locale('But... We didn’t saw him for quite time🤷‍♂️');
         $message .= PHP_EOL;
-        $message .= self::locale("Do you wanna to make it your?*");
+        $message .= self::locale('Do you wanna to make it your?*');
         $message .= PHP_EOL . PHP_EOL;
-        $message .= '<i>' . self::locale("*This nickname will be your, after Administrators’s approve.") . '</i>';
+        $message .= '<i>' . self::locale('*This nickname will be your, after Administrators’s approve.') . '</i>';
         $replyMarkup = [
             'inline_keyboard' => [
                 [
                     ['text' => '✅' . self::locale('Yes'), 'callback_data' => ['c' => 'nickRelink', 'u' => $userExistsData['id'], 't' => $telegramId, 'y' => 1]],
-                    ['text' => '❌' . self::locale('No'), 'callback_data' => ['c' => 'nickRelink', 'u' => $userExistsData['id'], 't' => $telegramId, 'y' => 0]],
+                    ['text' => '❌' . self::locale('No'), 'callback_data' => ['c' => 'nickRelink', 'u' => $userExistsData['id'], 't' => $telegramId]],
                 ],
             ],
         ];

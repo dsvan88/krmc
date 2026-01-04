@@ -13,7 +13,7 @@ class TodayCommand extends ChatCommand
     {
         return self::locale('<u>/today</u> <i>// Booking information for today.</i>');
     }
-    public static function execute(array $arguments = [], string &$message = '', string &$reaction = '', array &$replyMarkup = [])
+    public static function execute()
     {
         $weekData = Weeks::weekDataByTime();
         $weekId = $weekData['id'];
@@ -36,7 +36,7 @@ class TodayCommand extends ChatCommand
         ];
 
         if (!TelegramBotRepository::isDirect()) {
-            $replyMarkup['inline_keyboard'][0][] = ['text' => '❌' . self::locale('Opt-out'), 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => static::$arguments['dayNum'], 'r' => 1]];
+            $replyMarkup['inline_keyboard'][0][] = ['text' => '❌', 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => static::$arguments['dayNum'], 'r' => 1]];
         }
 
         $result = [

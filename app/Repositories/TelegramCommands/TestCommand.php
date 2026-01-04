@@ -17,9 +17,8 @@ class TestCommand extends ChatCommand
     {
         return self::locale('<u>/test</u> //<i>Command for testing new functions.</i>');
     }
-    public static function execute(array $arguments = [], string &$message = '', string &$reaction = '', array &$replyMarkup = [])
+    public static function execute()
     {
-        $reaction = '🤔';
-        return true;
+        return static::result('Done!', '🤔', true);
     }
 }
