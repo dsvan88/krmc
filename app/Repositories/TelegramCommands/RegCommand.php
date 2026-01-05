@@ -90,7 +90,8 @@ class RegCommand extends ChatCommand
             }
         }
 
-        $result = Days::setDayData($weekId, $requestData['dayNum'], $newDayData);
+        error_log(json_encode($requestData, JSON_UNESCAPED_UNICODE));
+        // $result = Days::setDayData($weekId, $requestData['dayNum'], $newDayData);
 
         $weekData['data'][$requestData['dayNum']] = $newDayData;
         $message = Days::getFullDescription($weekData, $requestData['dayNum']);
