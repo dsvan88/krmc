@@ -111,12 +111,9 @@ class TelegramBotRepository
                 }
             } elseif (preg_match('/^(\+|-)\d{1,2}/', $value, $match) === 1) {
                 ChatAction::$arguments['nonames'] = substr($match[0], 1);
-            } elseif (ChatAction::$arguments['userId'] < 2) {
+            } elseif (empty(ChatAction::$arguments['userId']) || ChatAction::$arguments['userId'] < 2) {
                 // $value = str_ireplace(['m', 'c', 'o', 'p', 'x', 'a'], ['м', 'с', 'о', 'р', 'х', 'а'], $value);
-                error_log(__METHOD__ . '$value name = ' . $value);
                 $value = Users::formatName($value);
-                error_log(__METHOD__ . '$value2 name = ' . $value);
-
                 if (empty($value)) continue;
 
                 $userData = Users::getDataByName($value);
