@@ -28,6 +28,7 @@ class PromoCommand extends ChatCommand
                 'strikethrough' => 's',
                 'spoiler' => 'tg-spoiler',
             ];
+            
             for ($i = 0; $i < count(ChatAction::$message['message']['entities']); $i++) {
                 if (ChatAction::$message['message']['entities'][$i]['type'] === 'bot_command') {
                     $offset = ChatAction::$message['message']['entities'][$i]['offset'] + ChatAction::$message['message']['entities'][$i]['length'];
@@ -53,10 +54,7 @@ class PromoCommand extends ChatCommand
         ];
 
         News::edit($data, 'promo');
-
-        $reaction = '👌';
-        $message = self::locale('{{ Tg_Command_Promo_Saved }}');
-        
-        return static::result($message, $reaction, true);
+       
+        return static::result('{{ Tg_Command_Promo_Saved }}', '👌', true);
     }
 }

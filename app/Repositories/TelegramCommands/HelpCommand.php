@@ -23,8 +23,7 @@ class HelpCommand extends ChatCommand
         $list = scandir($folder);
 
         if (empty($list)) {
-            $message = 'Something went wrong! List is empty.';
-            return static::result($message);
+            return static::result('Something went wrong! List is empty.');
         }
 
         $self = self::class;
@@ -38,8 +37,7 @@ class HelpCommand extends ChatCommand
         $message .= implode("\n", $commandsList);
         $message .= self::locale("\n\nFeel free to ask the admins or community, if something is not clear!");
 
-        $reaction = '👌';
-        return static::result($message, $reaction, true);
+        return static::result($message, '👌', true);
     }
     public static function getCommandDescriptions(string $filename)
     {

@@ -24,7 +24,8 @@ class RegCommand extends ChatCommand
             return static::result($message);
         }
 
-        $requestData = TelegramBotRepository::parseArguments(static::$arguments);
+        TelegramBotRepository::parseArguments(static::$arguments);
+        $requestData = static::$arguments;
 
         if (!isset($requestData['nonames']) && $requestData['userId'] < 2) {
             $message = self::locale(['string' => 'No users found with nickname: <b>%s</b>!', 'vars' => [$requestData['probableUserName']]]);

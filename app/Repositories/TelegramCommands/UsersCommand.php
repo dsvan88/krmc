@@ -31,8 +31,7 @@ class UsersCommand extends ChatCommand
             $message .= "\n";
         }
         $message .= "______________________________\n✅ - " . self::locale('{{ Tg_User_With_Telegramid }}');
-        $reaction = '👌';
-        return static::result($message, $reaction, true);
+        return static::result($message, '👌', true);
     }
     public static function getUsersList(array $arguments = []): array
     {

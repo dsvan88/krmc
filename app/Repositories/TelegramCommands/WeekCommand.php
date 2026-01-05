@@ -43,7 +43,6 @@ class WeekCommand extends ChatCommand
             }
         }
 
-        $reaction = '👌';
-        return static::result($message, $reaction, true);
+        return static::result($message, '👌', true);
     }
 }

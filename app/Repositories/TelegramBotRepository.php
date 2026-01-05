@@ -2,15 +2,12 @@
 
 namespace app\Repositories;
 
-use app\core\Telegram\ChatCommand;
 use app\core\Locale;
 use app\core\Router;
-use app\models\Contacts;
+use app\core\Telegram\ChatAction;
 use app\models\Days;
 use app\models\Users;
-use app\models\Weeks;
 use app\models\Settings;
-use app\models\TelegramChats;
 use Exception;
 
 class TelegramBotRepository
@@ -33,7 +30,7 @@ class TelegramBotRepository
             } elseif (preg_match('/\?/', $_text) === 1) {
                 $arguments['prim'] = '?';
             }
-            ChatCommand::$arguments = $arguments;
+            ChatAction::$arguments = $arguments;
             return 'booking';
         }
 
@@ -50,7 +47,7 @@ class TelegramBotRepository
             if (preg_match('/\([^)]+\)/', $text, $prim) === 1) {
                 $arguments['prim'] = mb_substr($prim[0], 1, -1, 'UTF-8');
             }
-            ChatCommand::$arguments = $arguments;
+            ChatAction::$arguments = $arguments;
             return 'booking';
         }
 
@@ -80,79 +77,79 @@ class TelegramBotRepository
             if (preg_match('/\([^)]+\)/', $text, $prim) === 1) {
                 $arguments['prim'] = mb_substr($prim[0], 1, -1, 'UTF-8');
             }
-            ChatCommand::$arguments = $arguments;
+            ChatAction::$arguments = $arguments;
             return $command;
         }
         $symbols = Locale::$cyrillicPattern;
         preg_match_all("/([a-z$symbols.0-9#-]+)/ui", trim(mb_substr($text, $commandLen + 1, NULL, 'UTF-8')), $matches);
 
-        ChatCommand::$arguments = $matches[0];
+        ChatAction::$arguments = $matches[0];
         return $command;
     }
     public static function parseArguments($arguments): void
     {
         if (isset($arguments['prim'])) {
-            ChatCommand::$arguments['prim'] = $arguments['prim'];
+            ChatAction::$arguments['prim'] = $arguments['prim'];
             unset($arguments['prim']);
         }
         foreach ($arguments as $value) {
             $value = trim($value);
             if (preg_match('/^[+-][^0-9]/', $value)) {
 
-                ChatCommand::$arguments['method'] = $value[0];
+                ChatAction::$arguments['method'] = $value[0];
                 $withoutMethod = trim(mb_substr($value, 1, 6, 'UTF-8'));
                 $dayName = mb_strtolower(mb_substr($withoutMethod, 0, 3, 'UTF-8'), 'UTF-8');
 
-                static::parseDayNum($dayName, ChatCommand::$arguments);
-            } elseif (preg_match('/^\d{2}:\d{2}$/', $value) === 1 && empty(ChatCommand::$arguments['arrive'])) {
-                ChatCommand::$arguments['arrive'] = $value;
+                static::parseDayNum($dayName, ChatAction::$arguments);
+            } elseif (preg_match('/^\d{2}:\d{2}$/', $value) === 1 && empty(ChatAction::$arguments['arrive'])) {
+                ChatAction::$arguments['arrive'] = $value;
             } elseif (preg_match('/\#(\d)*$/', $value, $match) === 1) {
                 $userRegData = Users::find($match[0]);
                 if ($userRegData) {
-                    ChatCommand::$arguments['userId'] = $userRegData['id'];
-                    ChatCommand::$arguments['userName'] = $userRegData['name'];
+                    ChatAction::$arguments['userId'] = $userRegData['id'];
+                    ChatAction::$arguments['userName'] = $userRegData['name'];
                 }
             } elseif (preg_match('/^(\+|-)\d{1,2}/', $value, $match) === 1) {
-                ChatCommand::$arguments['nonames'] = substr($match[0], 1);
-            } elseif (ChatCommand::$arguments['userId'] < 2) {
+                ChatAction::$arguments['nonames'] = substr($match[0], 1);
+            } elseif (ChatAction::$arguments['userId'] < 2) {
                 // $value = str_ireplace(['m', 'c', 'o', 'p', 'x', 'a'], ['м', 'с', 'о', 'р', 'х', 'а'], $value);
                 $value = Users::formatName($value);
 
                 if (empty($value)) continue;
 
                 $userRegData = Users::getDataByName($value);
-                ChatCommand::$arguments['probableUserName'] = $value;
+                ChatAction::$arguments['probableUserName'] = $value;
                 if (!empty($userRegData)) {
-                    ChatCommand::$arguments['userId'] = $userRegData['id'];
-                    ChatCommand::$arguments['userName'] = $userRegData['name'];
+                    ChatAction::$arguments['userId'] = $userRegData['id'];
+                    ChatAction::$arguments['userName'] = $userRegData['name'];
                 }
             }
         }
 
-        if (empty(ChatCommand::$arguments['currentDay']))
-            static::parseDayNum('tod', ChatCommand::$arguments);
+        if (empty(ChatAction::$arguments['currentDay']))
+            static::parseDayNum('tod', ChatAction::$arguments);
     }
     public static function parseDayNum(string $daySlug): bool
     {
-        ChatCommand::$arguments['currentDay'] = Days::current();
+        ChatAction::$arguments['currentDay'] = Days::current();
 
         $daySlug = mb_strtolower($daySlug, 'UTF-8');
         if (mb_strlen($daySlug, 'UTF-8') > 3) {
             $daySlug = mb_substr($daySlug, 0, 3);
         }
         if (in_array($daySlug, DayRepository::$techDaysArray['today'], true)) {
-            ChatCommand::$arguments['dayNum'] = ChatCommand::$arguments['currentDay'];
+            ChatAction::$arguments['dayNum'] = ChatAction::$arguments['currentDay'];
             return true;
         } elseif (in_array($daySlug, DayRepository::$techDaysArray['tomorrow'], true)) {
-            ChatCommand::$arguments['dayNum'] = ChatCommand::$arguments['currentDay'] + 1;
+            ChatAction::$arguments['dayNum'] = ChatAction::$arguments['currentDay'] + 1;
 
-            if (ChatCommand::$arguments['dayNum'] === 7) ChatCommand::$arguments['dayNum'] = 0;
+            if (ChatAction::$arguments['dayNum'] === 7) ChatAction::$arguments['dayNum'] = 0;
 
             return true;
         } else {
             foreach (DayRepository::$daysArray as $num => $daysNames) {
                 if (in_array($daySlug, $daysNames, true)) {
-                    ChatCommand::$arguments['dayNum'] = $num;
+                    ChatAction::$arguments['dayNum'] = $num;
                     return true;
                 }
             }
@@ -174,7 +171,7 @@ class TelegramBotRepository
     public static function getMessageId(array $message = []): int
     {
         if (empty($message))
-            $message = ChatCommand::$message;
+            $message = ChatAction::$message;
 
         if (empty($message))
             throw new Exception(__METHOD__ . ': $message can\'t be empty!');
@@ -186,7 +183,7 @@ class TelegramBotRepository
     public static function getChatId(array $message = []): int
     {
         if (empty($message))
-            $message = ChatCommand::$message;
+            $message = ChatAction::$message;
 
         if (empty($message))
             throw new Exception(__METHOD__ . ': $message can\'t be empty!');
@@ -198,7 +195,7 @@ class TelegramBotRepository
     public static function isDirect(array $message = []): bool
     {
         if (empty($message))
-            $message = ChatCommand::$message;
+            $message = ChatAction::$message;
 
         if (empty($message))
             throw new Exception(__METHOD__ . ': $message can\'t be empty!');
