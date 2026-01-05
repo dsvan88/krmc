@@ -24,6 +24,7 @@ class RegCommand extends ChatCommand
         }
 
         TelegramBotRepository::parseArguments(static::$arguments);
+        error_log(__METHOD__.json_encode(static::$arguments));
         $requestData = static::$arguments;
 
         if (!isset($requestData['nonames']) && $requestData['userId'] < 2) {
