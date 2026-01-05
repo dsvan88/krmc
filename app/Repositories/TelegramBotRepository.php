@@ -104,10 +104,10 @@ class TelegramBotRepository
             } elseif (preg_match('/^\d{2}:\d{2}$/', $value) === 1 && empty(ChatAction::$arguments['arrive'])) {
                 ChatAction::$arguments['arrive'] = $value;
             } elseif (preg_match('/\#(\d)*$/', $value, $match) === 1) {
-                $userRegData = Users::find($match[0]);
-                if ($userRegData) {
-                    ChatAction::$arguments['userId'] = $userRegData['id'];
-                    ChatAction::$arguments['userName'] = $userRegData['name'];
+                $userData = Users::find($match[0]);
+                if ($userData) {
+                    ChatAction::$arguments['userId'] = $userData['id'];
+                    ChatAction::$arguments['userName'] = $userData['name'];
                 }
             } elseif (preg_match('/^(\+|-)\d{1,2}/', $value, $match) === 1) {
                 ChatAction::$arguments['nonames'] = substr($match[0], 1);
@@ -119,11 +119,11 @@ class TelegramBotRepository
 
                 if (empty($value)) continue;
 
-                $userRegData = Users::getDataByName($value);
+                $userData = Users::getDataByName($value);
                 ChatAction::$arguments['probableUserName'] = $value;
-                if (!empty($userRegData)) {
-                    ChatAction::$arguments['userId'] = $userRegData['id'];
-                    ChatAction::$arguments['userName'] = $userRegData['name'];
+                if (!empty($userData)) {
+                    ChatAction::$arguments['userId'] = $userData['id'];
+                    ChatAction::$arguments['userName'] = $userData['name'];
                 }
             }
         }

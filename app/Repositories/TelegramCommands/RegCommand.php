@@ -24,7 +24,6 @@ class RegCommand extends ChatCommand
         }
 
         TelegramBotRepository::parseArguments(static::$arguments);
-        error_log(__METHOD__.json_encode(static::$arguments));
         $requestData = static::$arguments;
 
         if (!isset($requestData['nonames']) && $requestData['userId'] < 2) {
@@ -60,7 +59,7 @@ class RegCommand extends ChatCommand
             foreach ($weekData['data'][$requestData['dayNum']]['participants'] as $index => $userData) {
                 if ($userData['id'] !== $requestData['userId']) continue;
 
-                if ($requestData['arrive'] !== '' && $requestData['arrive'] !== $userData['arrive']) {
+                if (!empty($requestData['arrive']) && $requestData['arrive'] !== $userData['arrive']) {
                     $slot = $index;
                     break;
                 }
@@ -95,9 +94,6 @@ class RegCommand extends ChatCommand
 
         $weekData['data'][$requestData['dayNum']] = $newDayData;
         $message = Days::getFullDescription($weekData, $requestData['dayNum']);
-
-        error_log('$message' . $message);
-        error_log('dayNum' . $requestData['dayNum']);
 
         $replyMarkup = [
             'inline_keyboard' => [
