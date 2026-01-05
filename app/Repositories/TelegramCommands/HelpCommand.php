@@ -13,11 +13,11 @@ class HelpCommand extends ChatCommand
     }
     public static function execute()
     {
-        $folder = str_replace('\\', '/', $_SERVER['DOCUMENT_ROOT'] . __NAMESPACE__);
+        $folder = str_replace('\\', '/', $_SERVER['DOCUMENT_ROOT'] . '/' . __NAMESPACE__);
 
         if (!is_dir($folder) || !file_exists($folder)) {
-            $message = 'Something went wrong!';
-            return static::result($message);
+            error_log($folder);
+            return static::result('Something went wrong!');
         }
 
         $list = scandir($folder);
