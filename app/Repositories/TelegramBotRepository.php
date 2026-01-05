@@ -124,7 +124,7 @@ class TelegramBotRepository
             }
         }
 
-        if (empty(ChatAction::$arguments['currentDay']) && ChatAction::$arguments['currentDay'] != 0)
+        if (!isset(ChatAction::$arguments['currentDay']))
             static::parseDayNum('tod', ChatAction::$arguments);
     }
     public static function parseDayNum(string $daySlug): bool

@@ -47,7 +47,7 @@ class RegCommand extends ChatCommand
             if (!isset($weekData['data'][$requestData['dayNum']]['game']))
                 $weekData['data'][$requestData['dayNum']] = Days::$dayDataDefault;
 
-            if ($requestData['arrive'] !== '')
+            if (!empty($requestData['arrive']))
                 $weekData['data'][$requestData['dayNum']]['time'] = $requestData['arrive'];
             $requestData['arrive'] = '';
             $weekData['data'][$requestData['dayNum']]['status'] = 'set';
@@ -90,7 +90,6 @@ class RegCommand extends ChatCommand
             }
         }
 
-        error_log(json_encode($requestData, JSON_UNESCAPED_UNICODE));
         $result = Days::setDayData($weekId, $requestData['dayNum'], $newDayData);
 
         $weekData['data'][$requestData['dayNum']] = $newDayData;

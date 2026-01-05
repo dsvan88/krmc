@@ -29,7 +29,7 @@ class Days extends Model
         'day_prim' => ''
     ];
 
-    public static function current()
+    public static function current(): int
     {
         if (!empty(self::$currentDay)) {
             return self::$currentDay;

@@ -16,7 +16,6 @@ class HelpCommand extends ChatCommand
         $folder = str_replace('\\', '/', $_SERVER['DOCUMENT_ROOT'] . '/' . __NAMESPACE__);
 
         if (!is_dir($folder) || !file_exists($folder)) {
-            error_log($folder);
             return static::result('Something went wrong!');
         }
 
