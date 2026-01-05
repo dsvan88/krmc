@@ -20,8 +20,7 @@ class RegCommand extends ChatCommand
     public static function execute()
     {
         if (empty(static::$arguments)) {
-            $message = self::locale('{{ Tg_Command_Without_Arguments }}');
-            return static::result($message);
+            return static::result('{{ Tg_Command_Without_Arguments }}');
         }
 
         TelegramBotRepository::parseArguments(static::$arguments);
@@ -71,8 +70,7 @@ class RegCommand extends ChatCommand
         $newDayData = $weekData['data'][$requestData['dayNum']];
         if ($requestData['method'] === '+') {
             if ($participantId !== -1) {
-                $message = self::locale('{{ Tg_Command_User_Already_Booked }}');
-                return static::result($message);
+                return static::result('{{ Tg_Command_User_Already_Booked }}');
             }
             if (isset($requestData['nonames'])) {
                 $newDayData = Days::addNonamesToDayData($newDayData, $slot, $requestData['nonames'], $requestData['prim']);
@@ -96,6 +94,10 @@ class RegCommand extends ChatCommand
 
         $weekData['data'][$requestData['dayNum']] = $newDayData;
         $message = Days::getFullDescription($weekData, $requestData['dayNum']);
+
+        error_log('$message' . $message);
+        error_log('dayNum' . $requestData['dayNum']);
+
         $replyMarkup = [
             'inline_keyboard' => [
                 [
@@ -103,11 +105,10 @@ class RegCommand extends ChatCommand
                 ],
             ]
         ];
-        $reaction = '👌';
 
         return [
             'result' => true,
-            'reaction' => $reaction,
+            'reaction' => '👌',
             'send' => [
                 [
                     'message' => $message,
