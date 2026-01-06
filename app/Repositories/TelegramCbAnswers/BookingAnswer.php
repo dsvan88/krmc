@@ -26,9 +26,14 @@ class BookingAnswer extends ChatAnswer
         $dayNum = (int) trim(static::$arguments['d']);
 
         $weekData = Weeks::weekDataById($weekId);
-        $dayEnd = $weekData['start'] + (TIMESTAMP_DAY * ($dayNum + 1));
-        if ($dayEnd < $_SERVER['REQUEST_TIME'])
+
+        $dayTimestamp = $weekData['start'] + (TIMESTAMP_DAY * $dayNum);
+        $format = 'd.m.Y ' . $weekData['data'][$dayNum]['time'];
+        $dayEnd = strtotime(date($format, $dayTimestamp)) + DATE_MARGE;
+        
+        if ($_SERVER['REQUEST_TIME'] > $dayEnd || in_array($weekData['data'][$dayNum]['status'], ['', 'recalled'])) {
             return static::result('This day is over🤷‍♂️');
+        }
 
         if ($weekData['data'][$dayNum]['status'] !== 'set') {
             if (!TelegramBotRepository::hasAccess(static::$requester['status'], 'trusted')) {

@@ -8,7 +8,6 @@ use app\Interfaces\Command;
 class ChatAction implements Command
 {
     public static $accessLevel = 'all';
-    // public static $status = '';
     public static $requester = [];
     public static $message = [];
     public static $arguments = [];

@@ -3,9 +3,6 @@
 namespace app\Repositories\TelegramCommands;
 
 use app\core\Telegram\ChatCommand as TgChatCommand;
-use app\models\Days;
-use app\models\Weeks;
-use app\Repositories\DayRepository;
 use app\Repositories\TelegramBotRepository;
 
 class ChatCommand extends TgChatCommand
@@ -13,33 +10,31 @@ class ChatCommand extends TgChatCommand
     public static $accessLevel = 'admin';
     public static function description()
     {
-        return self::locale("<u>/chat (chat type)</u> <i>// Set current chat as Main chat, Admin chat or Tech Log chat</i>");
+        return self::locale("<u>/chat (type: main | admin | log)</u> <i>// Mark current chat as Main chat, Admin chat or Tech Log chat. Leave clear if you wanna to get options</i>");
     }
     public static function execute()
     {
-
-        $dayName = '';
-        $days = DayRepository::getDayNamesForCommand();
-        if (!empty(static::$arguments)) {
-            if (preg_match("/^($days)/ui", mb_strtolower(static::$arguments[0], 'UTF-8'), $daysPattern) === 1) {
-                $dayName = $daysPattern[0];
-            }
+        if (empty(static::$arguments)){
+            return [
+                'result' => true,
+                'reaction' => '👌',
+                'send'  => [
+                    'message' => self::locale('Choose chats type:'),
+                    'inline_keyboard' => [
+                        [['text' => 'Main - main group chat', 'callback_data' => ['c'=> 'chat', 't' => 'main']]],
+                        [['text' => 'Admin - admin group chat', 'callback_data' => ['c'=> 'chat', 't' => 'admin']]],
+                        [['text' => 'Log - tech log chat', 'callback_data' => ['c'=> 'chat', 't' => 'log']]],
+                    ]
+                ]
+            ];
         }
-        if ($dayName === '')
-            $dayName = 'tod';
+        $type = trim(static::$arguments[0]);
 
-        TelegramBotRepository::parseDayNum($dayName, static::$arguments);
-
-        $weekId = Weeks::currentId();
-
-        if (static::$arguments['dayNum'] < static::$arguments['currentDay']) {
-            ++$weekId;
+        if (!in_array($type, ['main', 'admin', 'log', 'tech'], true)){
+            return static::result('Please, use one of next types: main, admin or log. Or leave field empty.');
         }
+        // TelegramBotRepository
 
-        // $message = "Не можу очистити цей день.😥\nВін й досі запланований! Я можу очистити лише дні, по яким стався \"відбій\"";
-        if (!Days::clear($weekId, static::$arguments['dayNum']))
-            return static::result("Can’t clear this day.😥\nIt’s still \"set\". I can only clear \"recalled\"!");
-
-        return static::result('This day’s settings have been cleared.', '👌', true);
+        return static::result('Success', '👌', true);
     }
 }
