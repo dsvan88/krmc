@@ -41,7 +41,7 @@ class RenickCommand extends ChatCommand
 
         $userExistsData = Users::getDataByName($username);
 
-        if (empty($userExistsData['id']) || empty(Contacts::getByUserId($userExistsData['id']))) {
+        if (empty($userExistsData['id'])) {
 
             $personal = static::$requester['personal'];
             $personal['newName'] = $username;
@@ -53,7 +53,7 @@ class RenickCommand extends ChatCommand
                 'inline_keyboard' => [
                     [
                         ['text' => '✅' . self::locale('Yes'), 'callback_data' => ['c' => 'renick', 'u' => static::$requester['id'], 'y' => 1]],
-                        ['text' => '❌' . self::locale('No'), 'callback_data' => ['c' => 'renick', 'u' => static::$requester['id'],]],
+                        ['text' => '❌' . self::locale('No'), 'callback_data' => ['c' => 'renick', 'u' => static::$requester['id']]],
                     ],
                 ],
             ];
@@ -69,7 +69,7 @@ class RenickCommand extends ChatCommand
             ];
         }
 
-        $message = self::locale(['string' => '{{ Tg_Command_Name_Already_Set_By_Other }}', 'vars' => [$username]]) . PHP_EOL;
+        $message = self::locale(['string' => '{{ Tg_Command_New_User_Already_Set }}', 'vars' => [$username]]) . PHP_EOL;
         $message .= self::locale('If it is your, then contact the Administrators to make changes!');
         
         return [

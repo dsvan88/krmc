@@ -214,6 +214,9 @@ class TelegramBotController extends Controller
                 );
             }
         }
+        if (!empty(ChatAction::$report)) {
+            Sender::message(Settings::getTechTelegramId(), Locale::phrase(ChatAction::$report));
+        }
 
         if (self::$command === 'week') {
             self::unpinWeekMessage();

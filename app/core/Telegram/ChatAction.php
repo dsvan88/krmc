@@ -8,18 +8,15 @@ use app\Interfaces\Command;
 class ChatAction implements Command
 {
     public static $accessLevel = 'all';
-    public static $status = '';
+    // public static $status = '';
     public static $requester = [];
     public static $message = [];
     public static $arguments = [];
+    public static $report = '';
 
     public static function getAccessLevel(): string
     {
         return static::$accessLevel;
-    }
-    public static function description()
-    {
-        return static::class . ' - ' . self::locale('Here isn’t description yet');
     }
     public static function execute()
     {

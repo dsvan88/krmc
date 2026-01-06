@@ -39,7 +39,6 @@ class BookingAnswer extends ChatAnswer
 
             $weekData['data'][$dayNum]['status'] = 'set';
         }
-        $send = [];
 
         foreach ($weekData['data'][$dayNum]['participants'] as $index => $participant) {
             if ($participant['id'] != static::$requester['id']) continue;
@@ -49,10 +48,7 @@ class BookingAnswer extends ChatAnswer
             unset($weekData['data'][$dayNum]['participants'][$index]);
             $weekData['data'][$dayNum]['participants'] = array_values($weekData['data'][$dayNum]['participants']);
 
-            $send = [
-                'chatId' => Settings::getTechTelegramId(),
-                'message' => static::locale(['string' => 'User <b>%s</b> is opted-out from <b>%s</b>.', 'vars' => [static::$requester['name'], date('d.m.Y', $dayEnd - TIMESTAMP_DAY)]]),
-            ];
+            self::$report = static::locale(['string' => 'User <b>%s</b> is opted-out from <b>%s</b>.', 'vars' => [static::$requester['name'], date('d.m.Y', $dayEnd - TIMESTAMP_DAY)]]);
             break;
         }
 
@@ -64,10 +60,7 @@ class BookingAnswer extends ChatAnswer
                 'prim' => empty(static::$arguments['p']) ? '' : static::$arguments['p'],
             ];
             $newDayData = Days::addParticipantToDayData($newDayData, $data);
-            $send = [
-                'chatId' => Settings::getTechTelegramId(),
-                'message' => static::locale(['string' => 'User <b>%s</b> is opted-in on <b>%s</b>.', 'vars' => [static::$requester['name'], date('d.m.Y', $dayEnd - TIMESTAMP_DAY)]]),
-            ];
+            self::$report = static::locale(['string' => 'User <b>%s</b> is opted-in on <b>%s</b>.', 'vars' => [static::$requester['name'], date('d.m.Y', $dayEnd - TIMESTAMP_DAY)]]);
         }
 
         Days::setDayData($weekId, $dayNum, $newDayData);
@@ -80,7 +73,7 @@ class BookingAnswer extends ChatAnswer
                 'inline_keyboard' => [
                     [
                         ['text' => '🙋' . static::locale('I will!'), 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => $dayNum]],
-                        ['text' => static::locale('I want!') .'(?)'. '🥹', 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => $dayNum, 'p' => '?']],
+                        ['text' => static::locale('I want!') . '🥹', 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => $dayNum, 'p' => '?']],
                     ],
                 ],
             ],
@@ -97,6 +90,6 @@ class BookingAnswer extends ChatAnswer
             ];
         }
 
-        return array_merge(static::result('Success', true), ['update' => [$update]], ['send' => [$send]]);
+        return array_merge(static::result('Success', true), ['update' => [$update]]);
     }
 }

@@ -1,0 +1,45 @@
+<?
+
+namespace app\Repositories\TelegramCommands;
+
+use app\core\Telegram\ChatCommand as TgChatCommand;
+use app\models\Days;
+use app\models\Weeks;
+use app\Repositories\DayRepository;
+use app\Repositories\TelegramBotRepository;
+
+class ChatCommand extends TgChatCommand
+{
+    public static $accessLevel = 'admin';
+    public static function description()
+    {
+        return self::locale("<u>/chat (chat type)</u> <i>// Set current chat as Main chat, Admin chat or Tech Log chat</i>");
+    }
+    public static function execute()
+    {
+
+        $dayName = '';
+        $days = DayRepository::getDayNamesForCommand();
+        if (!empty(static::$arguments)) {
+            if (preg_match("/^($days)/ui", mb_strtolower(static::$arguments[0], 'UTF-8'), $daysPattern) === 1) {
+                $dayName = $daysPattern[0];
+            }
+        }
+        if ($dayName === '')
+            $dayName = 'tod';
+
+        TelegramBotRepository::parseDayNum($dayName, static::$arguments);
+
+        $weekId = Weeks::currentId();
+
+        if (static::$arguments['dayNum'] < static::$arguments['currentDay']) {
+            ++$weekId;
+        }
+
+        // $message = "Не можу очистити цей день.😥\nВін й досі запланований! Я можу очистити лише дні, по яким стався \"відбій\"";
+        if (!Days::clear($weekId, static::$arguments['dayNum']))
+            return static::result("Can’t clear this day.😥\nIt’s still \"set\". I can only clear \"recalled\"!");
+
+        return static::result('This day’s settings have been cleared.', '👌', true);
+    }
+}
