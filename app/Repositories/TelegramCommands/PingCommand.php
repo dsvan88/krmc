@@ -21,26 +21,26 @@ class PingCommand extends ChatCommand
     public static function execute()
     {
         $weekId = Weeks::currentId();
-        $requestData = static::$arguments;
 
-        $daySlug = isset($requestData[0]) ? $requestData[0] : 'tod';
-        TelegramBotRepository::parseDayNum($daySlug, $requestData);
-        if ($requestData['dayNum'] < $requestData['currentDay'])
+        $daySlug = isset(static::$arguments[0]) ? static::$arguments[0] : 'tod';
+
+        TelegramBotRepository::parseDayNum($daySlug, static::$arguments);
+        if (static::$arguments['dayNum'] < static::$arguments['currentDay'])
             $weekId++;
 
         $weekData = Weeks::weekDataById($weekId);
-        $currentDay = $weekData['data'][$requestData['dayNum']];
+        $currentDay = $weekData['data'][static::$arguments['dayNum']];
         $existsIds = array_column($currentDay['participants'], 'id');
         $game = $currentDay['game'];
 
         $bookedIds = [];
         foreach ($weekData['data'] as $num => $day) {
-            if ($num == $requestData['dayNum'] || $day['game'] !== $game) continue;
+            if ($num == static::$arguments['dayNum'] || $day['game'] !== $game) continue;
             $bookedIds = array_column($day['participants'], 'id');
         }
 
-        $dayTimestamp = $weekData['start'] + (TIMESTAMP_DAY * $requestData['dayNum']);
-        $format = 'd.m.Y ' . $weekData['data'][$requestData['dayNum']]['time'];
+        $dayTimestamp = $weekData['start'] + (TIMESTAMP_DAY * static::$arguments['dayNum']);
+        $format = 'd.m.Y ' . $weekData['data'][static::$arguments['dayNum']]['time'];
         $dayDate = strtotime(date($format, $dayTimestamp));
         $date = date('d.m.Y', $dayDate);
 
@@ -48,7 +48,7 @@ class PingCommand extends ChatCommand
         do {
             $weekData = Weeks::find($weekId - $offset);
             foreach ($weekData['data'] as $num => $day) {
-                if ($num == $requestData['dayNum'] || $day['game'] !== $game) continue;
+                if ($num == static::$arguments['dayNum'] || $day['game'] !== $game) continue;
                 $bookedIds = array_merge($bookedIds, array_column($day['participants'], 'id'));
             }
         } while (--$offset > 0);
