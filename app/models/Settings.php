@@ -120,26 +120,22 @@ class Settings extends Model
     }
     public static function save(string $type = '', string $slug, $value = ''): bool
     {
-        if (is_array($value)) $value  =  json_encode($value, JSON_UNESCAPED_UNICODE);
+        if (is_array($value)) $value = json_encode($value, JSON_UNESCAPED_UNICODE);
         $setting = [
             'slug' => $slug,
+            'name' => $slug,
             'value' => $value,
         ];
         try {
             $prevSetting = self::findBy('type', $type)[0];
             if (empty($prevSetting)) {
-                return self::insert(['type' => $type, 'setting' => $setting]);
+                return self::insert(['type' => $type, 'setting' => json_encode([$setting], JSON_UNESCAPED_UNICODE)]);
             }
-            $exists = false;
-            foreach ($prevSetting['setting'] as $index => $set) {
-                if ($set['slug'] !== $slug) continue;
-                $prevSetting['setting'][$index]['value'] = $value;
-                $exists = true;
-                break;
-            }
-            if (!$exists) {
-                $prevSetting['setting'][] = $setting;
-            }
+
+            $index = array_search($slug, array_column($prevSetting['setting'], 'slug'), true);
+            if ($index === false) $prevSetting['setting'][] = $setting;
+            else $prevSetting['setting'][$index]['value'] = $value;
+
             self::update(['setting' => json_encode($prevSetting['setting'], JSON_UNESCAPED_UNICODE)], ['id' => $prevSetting['id']]);
         } catch (\Throwable $th) {
             error_log($th->__toString());
