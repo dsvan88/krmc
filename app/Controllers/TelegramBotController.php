@@ -205,17 +205,20 @@ class TelegramBotController extends Controller
             foreach ($result['send'] as $item) {
                 if (!empty($item['replyMarkup']['inline_keyboard']))
                     TelegramBotRepository::encodeInlineKeyboard($item['replyMarkup']['inline_keyboard']);
-                error_log(json_encode($result, JSON_UNESCAPED_UNICODE));
-                $botResult = Sender::message(
-                    empty($item['chatId']) ? self::$chatId : $item['chatId'],
-                    empty($item['message']) ? '' : Locale::phrase($item['message']),
-                    empty($item['replyOn']) ? 0 : $item['replyOn'],
-                    empty($item['replyMarkup']) ? [] : $item['replyMarkup']
-                );
+                if (empty($item['message'])) {
+                    Sender::message(Settings::getTechTelegramId(), 'I don’t know why, but a Chat Action returned an empty message.');
+                } else {
+                    $botResult = Sender::message(
+                        empty($item['chatId']) ? self::$chatId : $item['chatId'],
+                        empty($item['message']) ? '' : Locale::phrase($item['message']),
+                        empty($item['replyOn']) ? 0 : $item['replyOn'],
+                        empty($item['replyMarkup']) ? [] : $item['replyMarkup']
+                    );
+                }
             }
         }
         if (!empty(ChatAction::$report)) {
-            Sender::message(Settings::getTechTelegramId(), Locale::phrase(ChatAction::$report));
+            Sender::message(Settings::getAdminChatTelegramId(), Locale::phrase(ChatAction::$report));
         }
 
         if (self::$command === 'week') {

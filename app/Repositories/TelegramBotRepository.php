@@ -99,7 +99,7 @@ class TelegramBotRepository
                 ChatAction::$arguments['method'] = $value[0];
                 $withoutMethod = trim(mb_substr($value, 1, 6, 'UTF-8'));
                 $dayName = mb_strtolower(mb_substr($withoutMethod, 0, 3, 'UTF-8'), 'UTF-8');
-                static::parseDayNum($dayName, ChatAction::$arguments);
+                static::parseDayNum($dayName);
             } elseif (preg_match('/^\d{2}:\d{2}$/', $value) === 1 && empty(ChatAction::$arguments['arrive'])) {
                 ChatAction::$arguments['arrive'] = $value;
             } elseif (preg_match('/\#(\d)*$/', $value, $match) === 1) {
@@ -125,7 +125,7 @@ class TelegramBotRepository
         }
 
         if (!isset(ChatAction::$arguments['currentDay']))
-            static::parseDayNum('tod', ChatAction::$arguments);
+            static::parseDayNum('tod');
     }
     public static function parseDayNum(string $daySlug): bool
     {

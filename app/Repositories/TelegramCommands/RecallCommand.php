@@ -18,25 +18,24 @@ class RecallCommand extends ChatCommand
     public static function execute()
     {
         $dayName = '';
-        $requestData = static::$arguments;
         $days = DayRepository::getDayNamesForCommand();
-        if (!empty($requestData)) {
-            if (preg_match("/^($days)/ui", mb_strtolower($requestData[0], 'UTF-8'), $daysPattern) === 1) {
+        if (!empty(static::$arguments)) {
+            if (preg_match("/^($days)/ui", mb_strtolower(static::$arguments[0], 'UTF-8'), $daysPattern) === 1) {
                 $dayName = $daysPattern[0];
             }
         }
         if ($dayName === '')
             $dayName = 'сг';
 
-        TelegramBotRepository::parseDayNum($dayName, $requestData);
+        TelegramBotRepository::parseDayNum($dayName);
 
         $weekId = Weeks::currentId();
 
-        if ($requestData['dayNum'] < $requestData['currentDay']) {
+        if (static::$arguments['dayNum'] < static::$arguments['currentDay']) {
             ++$weekId;
         }
 
-        $result = Days::recall($weekId, $requestData['dayNum']);
+        $result = Days::recall($weekId, static::$arguments['dayNum']);
         $reaction = '😢';
         $message = '{{ Tg_Command_Set_Day_Not_Found }}';
 

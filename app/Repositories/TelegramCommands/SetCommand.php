@@ -23,7 +23,6 @@ class SetCommand extends ChatCommand
             return static::result($message);
         }
 
-        $requestData = static::$arguments;
         $days = DayRepository::getDayNamesForCommand();
 
         $gameName = $dayName = $time = '';
@@ -59,7 +58,7 @@ class SetCommand extends ChatCommand
             }
         }
 
-        foreach ($requestData as $value) {
+        foreach (static::$arguments as $value) {
             $value = trim($value);
             if ($gameName === '' && preg_match("/^($pattern)/ui", mb_strtolower($value, 'UTF-8'), $gamesPattern) > 0) {
                 $gameName = $gamesPattern[0];
@@ -87,7 +86,7 @@ class SetCommand extends ChatCommand
             $dayName = mb_substr($dayName, 1, null, 'UTF-8');
         }
 
-        TelegramBotRepository::parseDayNum($dayName, $requestData);
+        TelegramBotRepository::parseDayNum($dayName);
 
         if ($gameName !== '') {
             foreach ($gamesArray as $name => $gameNames) {
@@ -99,9 +98,9 @@ class SetCommand extends ChatCommand
         }
 
         $weekId = Weeks::currentId();
-        $dayNum = $requestData['dayNum'];
+        $dayNum = static::$arguments['dayNum'];
 
-        if ($requestData['dayNum'] < $requestData['currentDay']) {
+        if (static::$arguments['dayNum'] < static::$arguments['currentDay']) {
             ++$weekId;
         }
         $weekData = Weeks::weekDataById($weekId);
@@ -144,7 +143,6 @@ class SetCommand extends ChatCommand
         }
 
         $message = $method === '-' ? self::locale('{{ Tg_Command_Successfully_Canceled }}') : Days::getFullDescription($weekData, $dayNum);
-        $reaction = '👌';
-        return static::result($message, $reaction, true);
+        return static::result($message, '👌', true);
     }
 }

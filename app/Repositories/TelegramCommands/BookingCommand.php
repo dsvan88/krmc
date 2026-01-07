@@ -6,7 +6,6 @@ use app\core\Telegram\ChatCommand;
 use app\models\Days;
 use app\models\Weeks;
 use app\Repositories\TelegramBotRepository;
-use Google\Service\CloudControlsPartnerService\Console;
 
 class BookingCommand extends ChatCommand
 {

@@ -24,7 +24,7 @@ class PingCommand extends ChatCommand
 
         $daySlug = isset(static::$arguments[0]) ? static::$arguments[0] : 'tod';
 
-        TelegramBotRepository::parseDayNum($daySlug, static::$arguments);
+        TelegramBotRepository::parseDayNum($daySlug);
         if (static::$arguments['dayNum'] < static::$arguments['currentDay'])
             $weekId++;
 

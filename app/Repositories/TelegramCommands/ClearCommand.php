@@ -28,7 +28,7 @@ class ClearCommand extends ChatCommand
         if ($dayName === '')
             $dayName = 'tod';
 
-        TelegramBotRepository::parseDayNum($dayName, static::$arguments);
+        TelegramBotRepository::parseDayNum($dayName);
 
         $weekId = Weeks::currentId();
 
