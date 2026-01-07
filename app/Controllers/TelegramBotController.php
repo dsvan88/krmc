@@ -210,7 +210,7 @@ class TelegramBotController extends Controller
                 } else {
                     $botResult = Sender::message(
                         empty($item['chatId']) ? self::$chatId : $item['chatId'],
-                        empty($item['message']) ? '' : Locale::phrase($item['message']),
+                        Locale::phrase($item['message']),
                         empty($item['replyOn']) ? 0 : $item['replyOn'],
                         empty($item['replyMarkup']) ? [] : $item['replyMarkup']
                     );
