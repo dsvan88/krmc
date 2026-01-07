@@ -127,7 +127,6 @@ class Settings extends Model
         ];
         try {
             $prevSetting = self::findBy('type', $type)[0];
-            Tech::dump($prevSetting);
             if (empty($prevSetting)) {
                 return self::insert(['type' => $type, 'setting' => $setting]);
             }
@@ -141,8 +140,7 @@ class Settings extends Model
             if (!$exists) {
                 $prevSetting['setting'][] = $setting;
             }
-            Tech::dump($prevSetting);
-            // self::update(['setting' => json_encode($prevSetting['setting'], JSON_UNESCAPED_UNICODE)], ['id' => $prevSetting['id']]);
+            self::update(['setting' => json_encode($prevSetting['setting'], JSON_UNESCAPED_UNICODE)], ['id' => $prevSetting['id']]);
         } catch (\Throwable $th) {
             error_log($th->__toString());
             return false;
