@@ -14,9 +14,7 @@ class ChatCommand extends ChatAction
             'result' => $ok,
             'reaction' => $reaction,
             'send' => [
-                [
-                    'message' => static::locale($message),
-                ],
+                ['message' => static::locale($message)],
             ]
         ];
     }

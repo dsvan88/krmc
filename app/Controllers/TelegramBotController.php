@@ -135,7 +135,6 @@ class TelegramBotController extends Controller
             if (empty($result)) return false;
 
             static::resolveResult($result);
-
         } catch (\Throwable $th) {
             $_SESSION['debug'][] = 'commonError: ' . $th->__toString();
             $_SESSION['debug'][] = 'messageData: ' . json_encode(ChatAction::$message, JSON_UNESCAPED_UNICODE);
@@ -150,17 +149,16 @@ class TelegramBotController extends Controller
     }
     public static function execute(string $command = ''): array
     {
-        if (empty($command)){
+        if (empty($command)) {
             $command = static::$command;
         }
 
-        if (static::$type === 'message'){
+        if (static::$type === 'message') {
             $class = str_replace('/', '\\', static::$CommandNamespace . '\\' . ucfirst($command) . 'Command');
-        }
-        else {
+        } else {
             $class = str_replace('/', '\\', static::$AnswerNamespace . '\\' . ucfirst($command) . 'Answer');
         }
-        
+
         if (!class_exists($class)) {
             error_log($class . ' doesnt exists!');
             return [];
@@ -176,7 +174,7 @@ class TelegramBotController extends Controller
 
         return [];
     }
-        
+
     public static function resolveResult(array $result = []): void
     {
         if (empty($result)) {
@@ -207,6 +205,7 @@ class TelegramBotController extends Controller
             foreach ($result['send'] as $item) {
                 if (!empty($item['replyMarkup']['inline_keyboard']))
                     TelegramBotRepository::encodeInlineKeyboard($item['replyMarkup']['inline_keyboard']);
+                error_log(json_encode($result, JSON_UNESCAPED_UNICODE));
                 $botResult = Sender::message(
                     empty($item['chatId']) ? self::$chatId : $item['chatId'],
                     empty($item['message']) ? '' : Locale::phrase($item['message']),
@@ -222,8 +221,7 @@ class TelegramBotController extends Controller
         if (self::$command === 'week') {
             self::unpinWeekMessage();
             self::pinMessage($botResult[0]['result']['message_id']);
-        }
-        elseif (in_array(self::$command, ['booking', 'reg', 'set', 'recall', 'promo'], true)) {
+        } elseif (in_array(self::$command, ['booking', 'reg', 'set', 'recall', 'promo'], true)) {
             self::updateWeekMessages();
         }
     }

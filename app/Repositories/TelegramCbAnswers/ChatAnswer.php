@@ -27,6 +27,9 @@ class ChatAnswer extends TgChatAnswer
         }
 
         TelegramChatsRepository::setChatsType(TelegramBotRepository::getChatId(), $type);
-        return static::result(['string' => 'Current chat is successfully marked as <b>%s</b>', 'vars' => [ucfirst($type)]], true);
+        $update = [
+            'message' => static::locale(['string' => 'Current chat is successfully marked as <b>%s</b>.', 'vars' => [ucfirst($type)]]),
+        ];
+        return array_merge(static::result('Success', true), ['update' => $update]);
     }
 }

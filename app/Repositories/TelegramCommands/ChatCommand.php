@@ -20,11 +20,15 @@ class ChatCommand extends TgChatCommand
                 'result' => true,
                 'reaction' => '👌',
                 'send'  => [
-                    'message' => self::locale('Choose chats type:'),
-                    'inline_keyboard' => [
-                        [['text' => 'Main - main group chat', 'callback_data' => ['c' => 'chat', 't' => 'main']]],
-                        [['text' => 'Admin - admin group chat', 'callback_data' => ['c' => 'chat', 't' => 'admin']]],
-                        [['text' => 'Log - tech log chat', 'callback_data' => ['c' => 'chat', 't' => 'log']]],
+                    [
+                        'message' => self::locale('Choose chats type:'),
+                        'replyMarkup' => [
+                            'inline_keyboard' => [
+                                [['text' => 'Main - main group chat', 'callback_data' => ['c' => 'chat', 't' => 'main']]],
+                                [['text' => 'Admin - admin group chat', 'callback_data' => ['c' => 'chat', 't' => 'admin']]],
+                                [['text' => 'Log - tech log chat', 'callback_data' => ['c' => 'chat', 't' => 'log']]],
+                            ],
+                        ]
                     ]
                 ]
             ];
