@@ -64,7 +64,7 @@ class Settings extends Model
 
         return self::$settings['telegram']['bot_token']['value'];
     }
-    public static function getTechTelegramId()
+    public static function getTechTelegramId(): int
     {
         if (!isset(self::$settings['telegram'])) {
             self::load('telegram');
@@ -75,17 +75,35 @@ class Settings extends Model
 
         return self::$settings['telegram']['tech_chat']['value'];
     }
-    /* 
-    Get main telegram group ID
-    @return string|false
+    /**
+     * Get main telegram group ID
+     * 
+     * @return string|false
      */
-    public static function getMainTelegramId()
+    public static function getAdminChatTelegramId(): int
     {
         if (!isset(self::$settings['telegram'])) {
             self::load('telegram');
         }
 
-        if (empty(self::$settings['telegram']))
+        if (empty(self::$settings['telegram']['admin']['value']))
+            return false;
+
+        return self::$settings['telegram']['admin']['value'];
+    }
+
+    /**
+     * Get main telegram group ID
+     * 
+     * @return string|false
+     */
+    public static function getMainTelegramId(): int
+    {
+        if (!isset(self::$settings['telegram'])) {
+            self::load('telegram');
+        }
+
+        if (empty(self::$settings['telegram']['main_group_chat']['value']))
             return false;
 
         return self::$settings['telegram']['main_group_chat']['value'];
@@ -100,29 +118,31 @@ class Settings extends Model
         }
         return self::update($setting, ['id' => $settingId]);
     }
-    public static function save(array $data)
+    public static function save(string $type = '', string $slug, $value = ''): bool
     {
-        $table = self::$table;
-        $setting = [];
+        if (is_array($value)) $value  =  json_encode($value, JSON_UNESCAPED_UNICODE);
+        $setting = [
+            'slug' => $slug,
+            'value' => $value,
+        ];
         try {
-            $queryCond = ['type' => $data['type'], 'slug' => $data['slug']];
-            foreach ($data as $column => $value) {
-                if (empty($value)) continue;
-
-                if (is_array($value)) {
-                    $value = json_encode($value, JSON_UNESCAPED_UNICODE);
-                }
-                if (Tech::json_validate($value) && mb_strlen($value, 'UTF-8') > 499) {
-                    $setting['options'] = $value;
-                    continue;
-                }
-                $setting[$column] = $value;
+            $prevSetting = self::findBy('type', $type)[0];
+            Tech::dump($prevSetting);
+            if (empty($prevSetting)) {
+                return self::insert(['type' => $type, 'setting' => $setting]);
             }
-            $id = self::query("SELECT id FROM $table WHERE type = :type AND slug = :slug", $queryCond, 'Column');
-            if (!$id) {
-                return self::insert($setting);
+            $exists = false;
+            foreach ($prevSetting['setting'] as $index => $set) {
+                if ($set['slug'] !== $slug) continue;
+                $prevSetting['setting'][$index]['value'] = $value;
+                $exists = true;
+                break;
             }
-            self::update($setting, ['id' => $id]);
+            if (!$exists) {
+                $prevSetting['setting'][] = $setting;
+            }
+            Tech::dump($prevSetting);
+            // self::update(['setting' => json_encode($prevSetting['setting'], JSON_UNESCAPED_UNICODE)], ['id' => $prevSetting['id']]);
         } catch (\Throwable $th) {
             error_log($th->__toString());
             return false;
@@ -167,6 +187,7 @@ class Settings extends Model
                 [
                     ['slug' => 'bot_token', 'name' => 'Токен Бота', 'value' => ''],
                     ['slug' => 'tech_chat', 'name' => 'Технический чат (лог ошибок)', 'value' => ''],
+                    ['slug' => 'admin_chat', 'name' => 'Чат адмінів', 'value' => ''],
                     ['slug' => 'main_group_chat', 'name' => 'Основной груповой чат', 'value' => ''],
                 ]
             ],

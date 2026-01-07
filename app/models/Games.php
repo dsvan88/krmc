@@ -11,7 +11,7 @@ class Games extends Model
 {
 
     public static $table = SQL_TBL_GAMES;
-    public static $foreign = [ 'users' => Users::class];
+    public static $foreign = ['users' => Users::class];
     public static $jsonFields = ['players', 'state', 'prevstates'];
 
     public static function create($post)
@@ -28,14 +28,13 @@ class Games extends Model
             'players' => json_encode(Users::assingIds($post['player']), JSON_UNESCAPED_UNICODE),
             'started_at' => $_SERVER['REQUEST_TIME'],
         ];
-        
-        if (!empty($post['default'])){
-            $setting = [
-                'type' => 'mafia_config',
-                'slug' => 'mafia-config',
-                'options' => $state['config'],
-            ];
-            Settings::save($setting);
+
+        if (!empty($post['default'])) {
+            Settings::save(
+                'config',
+                'mafia',
+                $state['config']
+            );
         }
         return self::insert($data);
     }
@@ -47,24 +46,25 @@ class Games extends Model
             'prevstates' => $post['prevstates'],
         ];
         $state = json_decode($data['state'], true);
-        if (!empty($state['winners'])){
+        if (!empty($state['winners'])) {
             [$data['state'], $data['players']] = GameRepository::formResult($state);
             $data['win'] = $state['winners'];
         }
         self::update($data, ['id' => $id]);
     }
-    public static function load(int $gameId){
+    public static function load(int $gameId)
+    {
         $gameData = Games::find($gameId);
 
         $gameData['players'] = Users::addNames($gameData['players']);
-        
+
         $gameData['players'] = json_encode($gameData['players'], JSON_UNESCAPED_UNICODE);
         return $gameData;
     }
     public static function init()
     {
         $table = self::$table;
-        foreach(self::$foreign as $key=>$class){
+        foreach (self::$foreign as $key => $class) {
             $$key = $class::$table;
         }
 

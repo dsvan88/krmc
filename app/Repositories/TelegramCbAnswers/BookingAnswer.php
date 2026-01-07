@@ -11,7 +11,7 @@ use Exception;
 
 class BookingAnswer extends ChatAnswer
 {
-    public static function execute():array
+    public static function execute(): array
     {
         if (empty(static::$arguments))
             throw new Exception(__METHOD__ . ': arguments is empty');
@@ -27,11 +27,9 @@ class BookingAnswer extends ChatAnswer
 
         $weekData = Weeks::weekDataById($weekId);
 
-        $dayTimestamp = $weekData['start'] + (TIMESTAMP_DAY * $dayNum);
-        $format = 'd.m.Y ' . $weekData['data'][$dayNum]['time'];
-        $dayEnd = strtotime(date($format, $dayTimestamp)) + DATE_MARGE;
-        
-        if ($_SERVER['REQUEST_TIME'] > $dayEnd || in_array($weekData['data'][$dayNum]['status'], ['', 'recalled'])) {
+        $dayTimestamp = $weekData['start'] + (TIMESTAMP_DAY * $dayNum) - 7200;
+
+        if (Days::isExpired($dayTimestamp) || in_array($weekData['data'][$dayNum]['status'], ['', 'recalled'])) {
             return static::result('This day is over🤷‍♂️');
         }
 
@@ -53,7 +51,7 @@ class BookingAnswer extends ChatAnswer
             unset($weekData['data'][$dayNum]['participants'][$index]);
             $weekData['data'][$dayNum]['participants'] = array_values($weekData['data'][$dayNum]['participants']);
 
-            self::$report = static::locale(['string' => 'User <b>%s</b> is opted-out from <b>%s</b>.', 'vars' => [static::$requester['name'], date('d.m.Y', $dayEnd - TIMESTAMP_DAY)]]);
+            self::$report = static::locale(['string' => 'User <b>%s</b> is opted-out from <b>%s</b>.', 'vars' => [static::$requester['name'], date('d.m.Y', $dayTimestamp)]]);
             break;
         }
 
@@ -65,7 +63,7 @@ class BookingAnswer extends ChatAnswer
                 'prim' => empty(static::$arguments['p']) ? '' : static::$arguments['p'],
             ];
             $newDayData = Days::addParticipantToDayData($newDayData, $data);
-            self::$report = static::locale(['string' => 'User <b>%s</b> is opted-in on <b>%s</b>.', 'vars' => [static::$requester['name'], date('d.m.Y', $dayEnd - TIMESTAMP_DAY)]]);
+            self::$report = static::locale(['string' => 'User <b>%s</b> is opted-in on <b>%s</b>.', 'vars' => [static::$requester['name'], date('d.m.Y', $dayTimestamp)]]);
         }
 
         Days::setDayData($weekId, $dayNum, $newDayData);

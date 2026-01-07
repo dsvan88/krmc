@@ -6,11 +6,13 @@ use app\core\Telegram\ChatAnswer as TgChatAnswer;
 use app\models\Days;
 use app\models\Settings;
 use app\models\Weeks;
+use app\Repositories\TelegramBotRepository;
+use app\Repositories\TelegramChatsRepository;
 use Exception;
 
 class ChatAnswer extends TgChatAnswer
 {
-    public static function execute():array
+    public static function execute(): array
     {
         if (empty(static::$requester) || empty(static::$arguments))
             throw new Exception(__METHOD__ . ': UserData or Arguments is empty!');
@@ -20,10 +22,11 @@ class ChatAnswer extends TgChatAnswer
 
         $type = trim(static::$arguments['t']);
 
-        if (!in_array($type, ['main', 'admin', 'log', 'tech'], true)){
+        if (!in_array($type, ['main', 'admin', 'log', 'tech'], true)) {
             return static::result('Please, use one of next types: main, admin or log.');
         }
 
+        TelegramChatsRepository::setChatsType(TelegramBotRepository::getChatId(), $type);
         return static::result(['string' => 'Current chat is successfully marked as <b>%s</b>', 'vars' => [ucfirst($type)]], true);
     }
 }

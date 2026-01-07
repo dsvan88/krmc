@@ -72,14 +72,14 @@ class TelegramChatsRepository
         $userData = Users::find($userId);
         Users::contacts($userData);
 
-        if (empty($userData['contacts']['telegramid'])){
+        if (empty($userData['contacts']['telegramid'])) {
             if ($silent) return false;
             throw new Exception("Telegram ID is empty!\nLink your Telegram account first.");
         }
 
         $avatar = Sender::getUserProfileAvatar($userData['contacts']['telegramid']);
 
-        if (!$avatar){
+        if (!$avatar) {
             if ($silent) return false;
             throw new Exception("Profile avatar is empty!");
         }
@@ -87,7 +87,7 @@ class TelegramChatsRepository
         $filename = $userData['id'] . '_avatar.jpg';
         $image = ImageProcessing::saveRawImage($avatar, $filename);
 
-        if ($image === false){
+        if ($image === false) {
             if ($silent) return false;
             throw new Exception("Image didn’t saved successfully!");
         }
@@ -101,11 +101,26 @@ class TelegramChatsRepository
 
         return (bool) Users::edit(['personal' => $userData['personal']], ['id' => $userId]);
     }
-    public static function isChatExists(int $chatId){
+    public static function isChatExists(int $chatId)
+    {
 
         $tgBot = new TelegramBot;
         $tgBot->getChat($chatId);
 
         return $tgBot::$result['ok'] || $tgBot::$result['error_code'] !== 400;
+    }
+    public static function setChatsType(int $chatId = 0, string $type = 'main'): bool
+    {
+        $slug = 'main_group_chat';
+
+        if ($type !== 'main') {
+            if ($type === 'log' || $type === 'tech') {
+                $slug = 'tech_chat';
+            } elseif ($type === 'admin') {
+                $slug = 'admin_chat';
+            }
+        }
+        Settings::save('telegram', $slug, $chatId);
+        return true;
     }
 }

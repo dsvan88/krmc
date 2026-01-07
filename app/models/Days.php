@@ -155,7 +155,7 @@ class Days extends Model
 
         $game = $weekData['data'][$day]['game'];
 
-        if ($_SERVER['REQUEST_TIME'] > $dayDate + DATE_MARGE || in_array($weekData['data'][$day]['status'], ['', 'recalled'])) {
+        if (Days::isExpired($dayTimestamp - 7200) || in_array($weekData['data'][$day]['status'], ['', 'recalled'])) {
             return '';
         }
 
