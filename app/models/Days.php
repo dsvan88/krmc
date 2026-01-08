@@ -97,13 +97,13 @@ class Days extends Model
         }
         return self::setDayData($weekId, $dayId, $newData);
     }
-    public static function setStatus($weekId, $dayNum, string $status = 'set'){
+    public static function setStatus(int $weekId, int $dayNum, string $status = 'set'){
         $weekData = Weeks::weekDataById($weekId);
         if (!isset($weekData['data'][$dayNum]) || $weekData['data'][$dayNum]['status'] === $status) {
             return false;
         }
         $weekData['data'][$dayNum]['status'] = $status;
-        return self::update(['data' => json_encode($weekData, JSON_UNECAPED_UNICODE)]);
+        return self::update(['data' => json_encode($weekData, JSON_UNESCAPED_UNICODE)], ['id' => $weekId]);
     }
     public static function setDayData($weekId, $dayId, $data)
     {

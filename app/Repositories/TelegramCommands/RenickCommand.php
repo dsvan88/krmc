@@ -4,12 +4,13 @@ namespace app\Repositories\TelegramCommands;
 
 use app\core\Telegram\ChatCommand;
 use app\core\Locale;
-use app\models\Contacts;;
+use app\models\SocialPoints;
 use app\models\Users;
 
 class RenickCommand extends ChatCommand
 {
     public static $accessLevel = 'user';
+    public static $costs = 50;
 
     public static function description()
     {
@@ -17,6 +18,10 @@ class RenickCommand extends ChatCommand
     }
     public static function execute()
     {
+        if (SocialPoints::get(static::$requester['id']) < static::$costs){
+            return static::result('I’m deeply sorry, but you can’t to do this action yet! Social Points isn’t enough.');
+        }
+        
         $_username = implode(' ', static::$arguments);
 
         if (empty(trim($_username))) {

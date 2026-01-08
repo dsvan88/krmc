@@ -4,10 +4,8 @@ namespace app\Repositories\TelegramCommands;
 
 use app\core\Telegram\ChatCommand;
 use app\core\Locale;
-use app\core\Sender;
 use app\core\Telegram\ChatAction;
 use app\models\Contacts;
-use app\models\Settings;
 use app\models\TelegramChats;
 use app\models\Users;
 use app\Repositories\AccountRepository;

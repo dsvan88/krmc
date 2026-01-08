@@ -12,6 +12,7 @@ class ChatAction implements Command
     public static $message = [];
     public static $arguments = [];
     public static $report = '';
+    public static $costs = 0;
 
     public static function getAccessLevel(): string
     {

@@ -29,13 +29,15 @@ class SocialPointsRepository
 
             if ($day['game'] === 'mafia' && $count < 11 || $count < 5) continue;
 
-            array_walk(
-                $day['participants'],
-                function (array $user){
-                    $points = empty($user['prim']) || strpos($user['prim'], '?') === false ? 5 : 3; 
-                    SocialPoints::add($user['id'], $points);
-                }
-            );
+            $starter = empty($day['stater']) ? 0 : $day['stater'];
+
+            for ($i=0; $i < $count; $i++) { 
+                $points = empty($day['participants'][$i]['prim']) || strpos($day['participants'][$i]['prim'], '?') === false ? 5 : 3;
+                
+                if ($day['participants'][$i]['id'] == $starter) $points += 2;
+                
+                SocialPoints::add($day['participants'][$i]['id'], $points);
+            }
             Days::setStatus($weekId, $num, 'finished');
         }
     }
@@ -45,8 +47,8 @@ class SocialPointsRepository
 
         SocialPoints::add($userId, 1);
     }
-    public static function evaluateBooking(int $userId, string $message): void
+    public static function evaluateFirstBooking(int $userId, string $prim): void
     {
-        SocialPoints::add($userId, 1);
+        SocialPoints::add($userId, 2);
     }
 }

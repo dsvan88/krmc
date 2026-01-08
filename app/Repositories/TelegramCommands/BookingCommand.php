@@ -41,6 +41,12 @@ class BookingCommand extends ChatCommand
                 $weekData['data'][static::$arguments['dayNum']]['time'] = static::$arguments['arrive'];
 
             static::$arguments['arrive'] = '';
+
+            // For social points of day started non-admin
+            if (in_array(static::$arguments['userStatus'], ['trusted', 'activist']) && empty($weekData['data'][static::$arguments['dayNum']]['status'])){
+                $weekData['data'][static::$arguments['dayNum']]['starter'] = self::$requester['id'];
+            }
+            
             $weekData['data'][static::$arguments['dayNum']]['status'] = 'set';
         }
 
