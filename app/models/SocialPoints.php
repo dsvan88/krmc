@@ -8,7 +8,7 @@ use Exception;
 class SocialPoints extends Model
 {
 
-    public static $table = 'users';
+    public static $table = SQL_TBL_USERS;
 
     public static function set(int $userId = 0, int $point = 0): int
     {

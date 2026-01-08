@@ -19,7 +19,7 @@ class RenickCommand extends ChatCommand
     public static function execute()
     {
         if (SocialPoints::get(static::$requester['id']) < static::$costs){
-            return static::result('I’m deeply sorry, but you can’t to do this action yet! Social Points isn’t enough.');
+            return static::result(['string'=> 'I’m deeply sorry, but you can’t do this action yet! Social Points isn’t enough. Need <b>%s</b>.', 'vars' => [static::$costs]]);
         }
         
         $_username = implode(' ', static::$arguments);
