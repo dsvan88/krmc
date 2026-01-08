@@ -7,6 +7,7 @@ use app\core\Tech;
 use app\core\View;
 use app\libs\Db;
 use app\models\Settings;
+use app\Repositories\SocialPointsRepository;
 use app\Repositories\TechRepository;
 use app\Repositories\TelegramChatsRepository;
 
@@ -71,6 +72,8 @@ class TechController extends Controller
         ignore_user_abort(true);
         error_reporting(0);
         set_time_limit(90);
+
+        SocialPointsRepository::applyBookingPoints();
 
         $settings = Settings::findBy('type', 'backup')[0];
 

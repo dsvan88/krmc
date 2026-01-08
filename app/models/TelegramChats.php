@@ -4,6 +4,8 @@ namespace app\models;
 
 use app\core\Model;
 use app\core\Sender;
+use app\Repositories\SocialPointsRepository;
+use app\Repositories\TelegramBotRepository;
 
 class TelegramChats extends Model
 {
@@ -35,6 +37,9 @@ class TelegramChats extends Model
             $userId = Contacts::getUserIdByContact('telegramid', $chatId);
             if (!empty($userId)) {
                 $chatData['user_id'] = $userId;
+                if (TelegramBotRepository::getChatId($messageArray) === Settings::getMainTelegramId()) {
+                    SocialPointsRepository::evaluateMessage($userId, $messageArray['message']['text']);
+                }
             }
 
             $chatData['personal'] = json_encode($chatData['personal'], JSON_UNESCAPED_UNICODE);

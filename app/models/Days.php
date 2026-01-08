@@ -101,7 +101,7 @@ class Days extends Model
         try {
             if ($weekId == 0) {
                 if (Weeks::currentId()) {
-                    $weekId = Weeks::$currentWeekId;
+                    $weekId = Weeks::$currentId;
                 }
             }
             if ($weekId > 0) {

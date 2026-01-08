@@ -6,8 +6,8 @@ use app\core\Model;
 
 class Weeks extends Model
 {
-    public static $currentWeek;
-    public static $currentWeekId = -1;
+    public static $currentData;
+    public static $currentId = -1;
     public static $table = SQL_TBL_WEEKS;
     public static $jsonFields = ['data'];
 
@@ -23,20 +23,31 @@ class Weeks extends Model
         }
         return false;
     }
+    // Отримати й зберегти дані поточного тижня
+    public static function current()
+    {
+        if (!empty(static::$currentData))
+            return static::$currentData;
+
+        static::$currentData = static::find(static::currentId());
+
+        return static::$currentData;
+    }
     // Отримати й зберегти id поточного тижня
     public static function currentId()
     {
-        if (self::$currentWeekId !== -1)
-            return self::$currentWeekId;
+        if (self::$currentId !== -1)
+            return self::$currentId;
 
         $table = self::$table;
-        self::$currentWeekId = self::query("SELECT id FROM $table WHERE start < :time AND finish > :time LIMIT 1", ['time' => $_SERVER['REQUEST_TIME']], 'Column');
+        self::$currentId = self::query("SELECT id FROM $table WHERE start < :time AND finish > :time LIMIT 1", ['time' => $_SERVER['REQUEST_TIME']], 'Column');
 
-        if (empty(self::$currentWeekId))
-            self::$currentWeekId = self::create();
+        if (empty(self::$currentId))
+            self::$currentId = self::create();
 
-        return self::$currentWeekId;
+        return self::$currentId;
     }
+
     // Получить настройки недели по id недели
     public static function weekDataById(int $id = 0)
     {
