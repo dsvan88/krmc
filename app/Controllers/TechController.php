@@ -74,7 +74,7 @@ class TechController extends Controller
         error_reporting(0);
         set_time_limit(90);
 
-        if (Days::current() === 6){
+        if (Days::current() < 3){
             SocialPointsRepository::applyBookingPoints();
         }
 
