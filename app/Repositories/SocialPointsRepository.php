@@ -4,7 +4,6 @@ namespace app\Repositories;
 
 use app\models\SocialPoints;
 use app\models\Weeks;
-use Exception;
 
 class SocialPointsRepository
 {
