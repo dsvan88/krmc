@@ -139,7 +139,7 @@ class Db
         return true;
     }
     // Проверка наличия записей в базе по критериям
-    public static function isExists($criteria, string $table = '', $criteriaType = 'OR')
+    public static function isExists($criteria, string $table = '', $criteriaType = 'OR'):bool
     {
         if (empty($table)) $table = static::$table;
 

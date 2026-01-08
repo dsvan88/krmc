@@ -27,7 +27,7 @@ class SocialPoints extends Model
 
         return $point;
     }
-    public static function get(int $userId = 0)
+    public static function get(int $userId = 0): int
     {
         if (empty($userId))
             throw new Exception(__METHOD__ . ' UserID can’t be empty.');

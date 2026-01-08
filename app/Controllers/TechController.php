@@ -6,6 +6,7 @@ use app\core\Controller;
 use app\core\Tech;
 use app\core\View;
 use app\libs\Db;
+use app\models\Days;
 use app\models\Settings;
 use app\Repositories\SocialPointsRepository;
 use app\Repositories\TechRepository;
@@ -73,7 +74,9 @@ class TechController extends Controller
         error_reporting(0);
         set_time_limit(90);
 
-        SocialPointsRepository::applyBookingPoints();
+        if (Days::current() === 6){
+            SocialPointsRepository::applyBookingPoints();
+        }
 
         $settings = Settings::findBy('type', 'backup')[0];
 

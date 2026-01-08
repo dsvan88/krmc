@@ -9,6 +9,7 @@ use app\Repositories\DayRepository;
 
 class Days extends Model
 {
+    public static $table = SQL_TBL_WEEKS;
     public static $currentDay;
 
     public static $days = [
@@ -96,14 +97,20 @@ class Days extends Model
         }
         return self::setDayData($weekId, $dayId, $newData);
     }
+    public static function setStatus($weekId, $dayNum, string $status = 'set'){
+        $weekData = Weeks::weekDataById($weekId);
+        if (!isset($weekData['data'][$dayNum]) || $weekData['data'][$dayNum]['status'] === $status) {
+            return false;
+        }
+        $weekData['data'][$dayNum]['status'] = $status;
+        return self::update(['data' => json_encode($weekData, JSON_UNECAPED_UNICODE)]);
+    }
     public static function setDayData($weekId, $dayId, $data)
     {
         try {
-            if ($weekId == 0) {
-                if (Weeks::currentId()) {
-                    $weekId = Weeks::$currentId;
-                }
-            }
+            if (empty($weekId))
+                $weekId = Weeks::currentId();
+            
             if ($weekId > 0) {
                 $weekData = Weeks::weekDataById($weekId);
             } else {
@@ -118,10 +125,10 @@ class Days extends Model
             $weekData['data'] = json_encode($weekData['data'], JSON_UNESCAPED_UNICODE);
 
             if ($weekId > 0) {
-                self::update($weekData, ['id' => $weekId], SQL_TBL_WEEKS);
+                self::update($weekData, ['id' => $weekId]);
                 return $weekId;
             } else {
-                return self::insert($weekData, SQL_TBL_WEEKS);
+                return self::insert($weekData);
             }
         } catch (\Throwable $th) {
             error_log(__METHOD__ . $th->__toString());
@@ -155,7 +162,7 @@ class Days extends Model
 
         $game = $weekData['data'][$day]['game'];
 
-        if (Days::isExpired($dayTimestamp - 7200) || in_array($weekData['data'][$day]['status'], ['', 'recalled'])) {
+        if ($_SERVER['REQUEST_TIME'] > $dayDate + DATE_MARGE || in_array($weekData['data'][$day]['status'], ['', 'recalled'])) {
             return '';
         }
 

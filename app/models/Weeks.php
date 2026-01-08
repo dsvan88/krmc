@@ -158,10 +158,16 @@ class Weeks extends Model
     {
         if (Users::checkAccess('manager')) return $strict ? false : true;
 
+        if (empty($weekId))
+            $weekId = Weeks::currentId();
+
         return self::isExists(['id' => $weekId + 1]);
     }
-    public static function checkPrevWeek(int $weekId)
+    public static function checkPrevWeek($weekId = false): bool
     {
+        if ($weekId === false)
+            $weekId = Weeks::currentId();
+        
         return self::isExists(['id' => $weekId - 1]);
     }
     public static function init()
