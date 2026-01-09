@@ -11,7 +11,7 @@ class SocialPointsRepository
     public static function applyBookingPoints(int $weekId = 0): void
     {
 
-        if (empty($weekId)){
+        if (empty($weekId)) {
             $weekId = Weeks::currentId();
 
             if (!Weeks::checkPrevWeek($weekId)) return;
@@ -21,21 +21,21 @@ class SocialPointsRepository
 
         $weekData = Weeks::weekDataById($weekId);
 
-        foreach($weekData['data'] as $num=>$day){
+        foreach ($weekData['data'] as $num => $day) {
 
             if ($day['status'] !== 'set') continue;
-            
+
             $count = count($day['participants']);
 
             if ($day['game'] === 'mafia' && $count < 11 || $count < 5) continue;
 
             $starter = empty($day['stater']) ? 0 : $day['stater'];
 
-            for ($i=0; $i < $count; $i++) { 
+            for ($i = 0; $i < $count; $i++) {
                 $points = empty($day['participants'][$i]['prim']) || strpos($day['participants'][$i]['prim'], '?') === false ? 5 : 3;
-                
+
                 if ($day['participants'][$i]['id'] == $starter) $points += 2;
-                
+
                 SocialPoints::add($day['participants'][$i]['id'], $points);
             }
             Days::setStatus($weekId, $num, 'finished');
@@ -46,9 +46,5 @@ class SocialPointsRepository
         if (mb_strlen($message, 'UTF-8') < 100) return;
 
         SocialPoints::add($userId, 1);
-    }
-    public static function evaluateFirstBooking(int $userId, string $prim): void
-    {
-        SocialPoints::add($userId, 2);
     }
 }
