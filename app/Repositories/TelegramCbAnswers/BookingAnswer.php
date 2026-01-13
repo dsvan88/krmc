@@ -11,6 +11,7 @@ use Exception;
 
 class BookingAnswer extends ChatAnswer
 {
+    public static $timestamp = 0;
     public static function execute(): array
     {
         if (empty(static::$arguments))
@@ -27,9 +28,9 @@ class BookingAnswer extends ChatAnswer
 
         $weekData = Weeks::weekDataById($weekId);
 
-        $dayTimestamp = $weekData['start'] + (TIMESTAMP_DAY * $dayNum) - 7200;
+        static::$timestamp = $weekData['start'] + (TIMESTAMP_DAY * $dayNum) - 7200;
 
-        if (Days::isExpired($dayTimestamp) || in_array($weekData['data'][$dayNum]['status'], ['', 'recalled'])) {
+        if (Days::isExpired(static::$timestamp) || in_array($weekData['data'][$dayNum]['status'], ['', 'recalled'])) {
             return static::result('This day is over🤷‍♂️');
         }
 
@@ -43,32 +44,31 @@ class BookingAnswer extends ChatAnswer
             $weekData['data'][$dayNum]['status'] = 'set';
         }
 
+        $pIndex = -1;
         foreach ($weekData['data'][$dayNum]['participants'] as $index => $participant) {
             if ($participant['id'] != static::$requester['id']) continue;
-            if (empty(static::$arguments['r']))
-                return static::result('{{ Tg_Command_Requester_Already_Booked }}');
 
-            unset($weekData['data'][$dayNum]['participants'][$index]);
-            $weekData['data'][$dayNum]['participants'] = array_values($weekData['data'][$dayNum]['participants']);
-
-            self::$report = static::locale(['string' => 'User <b>%s</b> is opted-out from <b>%s</b>.', 'vars' => [static::$requester['name'], date('d.m.Y', $dayTimestamp)]]);
+            $pIndex = $index;
             break;
         }
 
-        $newDayData = $weekData['data'][$dayNum];
-
-        if (empty(static::$arguments['r'])) {
-            $data = [
-                'userId' => static::$requester['id'],
-                'prim' => empty(static::$arguments['p']) ? '' : static::$arguments['p'],
-            ];
-            $newDayData = Days::addParticipantToDayData($newDayData, $data);
-            self::$report = static::locale(['string' => 'User <b>%s</b> is opted-in on <b>%s</b>.', 'vars' => [static::$requester['name'], date('d.m.Y', $dayTimestamp)]]);
+        if ($pIndex === -1){
+            static::addParticipant($weekData['data'][$dayNum]);
         }
+        else {
 
-        Days::setDayData($weekId, $dayNum, $newDayData);
+            if (!empty(static::$arguments['r']))
+                return static::result('{{ Tg_Command_Requester_Already_Booked }}');
 
-        $weekData['data'][$dayNum] = $newDayData;
+            if (empty(static::$arguments['r'])){
+                static::changePrim($weekData['data'][$dayNum]['participants'], $pIndex);
+            }
+            else {
+                static::removeParticipant($weekData['data'][$dayNum]['participants'], $pIndex);
+            }
+        }
+        
+        Days::setDayData($weekId, $dayNum, $weekData['data'][$dayNum]);
 
         $update = [
             'message' => Days::getFullDescription($weekData, $dayNum),
@@ -94,5 +94,34 @@ class BookingAnswer extends ChatAnswer
         }
 
         return array_merge(static::result('Success', true), ['update' => [$update]]);
+    }
+    public static function addParticipant(array &$day = []): void
+    {
+        if (empty($day)){
+            throw new Exception(__METHOD__.': $day, cant be empty!');
+        }
+        $data = [
+            'userId' => static::$requester['id'],
+            'prim' => empty(static::$arguments['p']) ? '' : static::$arguments['p'],
+        ];
+        $day = Days::addParticipantToDayData($day, $data);
+        self::$report = static::locale(['string' => 'User <b>%s</b> is opted-in on <b>%s</b>.', 'vars' => [static::$requester['name'], date('d.m.Y', static::$timestamp)]]);
+    }
+    public static function changePrim(array &$participants = [], int $index = 0): void
+    {
+        if ($index < 0 || empty($participants)){
+            throw new Exception(__METHOD__.': $index or $participants, cant be empty!');
+        }
+        $participants[$index]['prim'] = static::$arguments['prim'];
+        self::$report = static::locale(['string' => 'User <b>%s</b> is changed prim on <b>%s</b>.', 'vars' => [static::$requester['name'], date('d.m.Y', static::$timestamp)]]);
+    }
+    public static function removeParticipant(array &$participants = [], int $index = 0): void
+    {
+        if ($index < 0 || empty($participants)){
+            throw new Exception(__METHOD__.': $index or $participants, cant be empty!');
+        }
+        unset($participants[$index]);
+        $participants = array_values($participants);
+        self::$report = static::locale(['string' => 'User <b>%s</b> is opted-out from <b>%s</b>.', 'vars' => [static::$requester['name'], date('d.m.Y', static::$timestamp)]]);
     }
 }

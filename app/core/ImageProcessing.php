@@ -17,7 +17,7 @@ class ImageProcessing
             imagesavealpha($image, true);
         }
         imagewebp($image, $output);
-        imagedestroy($image);
+        $image = null;
     }
     public static function getAdditionalImage($source, $format, $type = 'webp')
     {
