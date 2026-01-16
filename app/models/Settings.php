@@ -118,7 +118,7 @@ class Settings extends Model
         }
         return self::update($setting, ['id' => $settingId]);
     }
-    public static function save(string $type = '', string $slug, $value = ''): bool
+    public static function save(string $type = '', string $slug = '', $value = ''): bool
     {
         if (is_array($value)) $value = json_encode($value, JSON_UNESCAPED_UNICODE);
         $setting = [
