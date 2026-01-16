@@ -190,6 +190,18 @@ class TelegramBotRepository
             $message['message']['chat']['id'] :
             $message['callback_query']['message']['chat']['id'];
     }
+    public static function getUserTelegramId(array $message = []): int
+    {
+        if (empty($message))
+            $message = ChatAction::$message;
+
+        if (empty($message))
+            throw new Exception(__METHOD__ . ': $message can\'t be empty!');
+
+        return empty($message['callback_query']) ?
+            $message['message']['from']['id']:
+            $message['callback_query']['from']['id'];
+    }
     public static function isDirect(array $message = []): bool
     {
         if (empty($message))

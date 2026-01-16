@@ -5,6 +5,7 @@ namespace app\models;
 use app\core\Model;
 use app\core\Locale;
 use app\core\Tech;
+use app\Repositories\AccountRepository;
 use app\Repositories\GameRepository;
 
 class Games extends Model
@@ -56,7 +57,8 @@ class Games extends Model
     {
         $gameData = Games::find($gameId);
 
-        $gameData['players'] = Users::addNames($gameData['players']);
+        // $gameData['players'] = AccountRepository::addNames($gameData['players']);
+        AccountRepository::addNames($gameData['players']);
 
         $gameData['players'] = json_encode($gameData['players'], JSON_UNESCAPED_UNICODE);
         return $gameData;

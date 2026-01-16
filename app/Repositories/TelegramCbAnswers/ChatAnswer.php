@@ -3,9 +3,6 @@
 namespace app\Repositories\TelegramCommands;
 
 use app\core\Telegram\ChatAnswer as TgChatAnswer;
-use app\models\Days;
-use app\models\Settings;
-use app\models\Weeks;
 use app\Repositories\TelegramBotRepository;
 use app\Repositories\TelegramChatsRepository;
 use Exception;

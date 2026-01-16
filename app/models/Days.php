@@ -5,6 +5,7 @@ namespace app\models;
 use app\core\Model;
 use app\core\Locale;
 use app\core\Tech;
+use app\Repositories\AccountRepository;
 use app\Repositories\DayRepository;
 
 class Days extends Model
@@ -145,7 +146,8 @@ class Days extends Model
 
         if (empty($weekData['data'][$dayId]['participants'])) return $weekData['data'][$dayId];
 
-        $weekData['data'][$dayId]['participants'] = Users::addNames($weekData['data'][$dayId]['participants']);
+        // $weekData['data'][$dayId]['participants'] = Users::addNames($weekData['data'][$dayId]['participants']);
+        AccountRepository::addNames($weekData['data'][$dayId]['participants']);
         $count = count($weekData['data'][$dayId]['participants']);
         for ($x = 0; $x < $count; $x++) {
             if (!empty($weekData['data'][$dayId]['participants'][$x]['id'])) continue;
@@ -203,7 +205,8 @@ class Days extends Model
         $participantsToEnd = [];
         $noNames = [];
 
-        $weekData['data'][$day]['participants'] = Users::addNames($weekData['data'][$day]['participants']);
+        // $weekData['data'][$day]['participants'] = AccountRepository::addNames($weekData['data'][$day]['participants']);
+        AccountRepository::addNames($weekData['data'][$day]['participants']);
         $count = count($weekData['data'][$day]['participants']);
         for ($x = 0; $x < $count; $x++) {
             if (empty($weekData['data'][$day]['participants'][$x]['id'])) {

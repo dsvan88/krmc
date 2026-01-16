@@ -72,7 +72,7 @@ class TelegramBotController extends Controller
 
         self::$chatId = TelegramBotRepository::getChatId();
 
-        $userTelegramId = $message[static::$type]['from']['id'];
+        $userTelegramId = TelegramBotRepository::getUserTelegramId();
         $userId = Contacts::getUserIdByContact('telegramid', $userTelegramId);
 
         if (static::$type === 'message') {

@@ -67,7 +67,8 @@ class WeekRepository
                 }
             }
 
-            $days[$i]['participants'] = Users::addNames($days[$i]['participants']);
+            // $days[$i]['participants'] = AccountRepository::addNames($days[$i]['participants']);
+            AccountRepository::addNames($days[$i]['participants']);
             $days[$i]['playersCount'] = min(count($days[$i]['participants']), 10);
             for ($x = 0; $x < $days[$i]['playersCount']; $x++) {
                 if (!empty($days[$i]['participants'][$x]['id'])) continue;

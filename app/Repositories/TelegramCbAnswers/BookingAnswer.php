@@ -21,6 +21,23 @@ class BookingAnswer extends ChatAnswer
             return static::result("I can’t to recognize you!\nPlease, register in our system!");
         }
 
+        // if (empty(self::$requester['id']))
+        // {
+        //     $chatId = TelegramBotRepository::getUserTelegramId();
+        //     $tgChat = TelegramChats::getChat($chatId);
+        //     if (empty($tgChat) || empty($tgChat['personal']['username'])){
+        //         return static::result('{{ Tg_Unknown_Requester }}', '🤷‍♂');
+        //     }
+        //     static::$arguments['userId'] = 't'.$chatId;
+        //     static::$arguments['userName'] = $tgChat['personal']['username'];
+        //     static::$arguments['userStatus'] = 'guest';
+        // }
+        // else {
+        //     static::$arguments['userId'] = self::$requester['id'];
+        //     static::$arguments['userName'] = self::$requester['name'];
+        //     static::$arguments['userStatus'] = empty(self::$requester['privilege']['status']) ? 'user' : self::$requester['privilege']['status'];
+        // }
+
         static::$requester['status'] = empty($requester['privilege']['status']) ? 'user' : static::$requester['privilege']['status'];
 
         $weekId = (int) trim(static::$arguments['w']);

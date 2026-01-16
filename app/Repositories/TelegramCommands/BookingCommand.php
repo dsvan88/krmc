@@ -4,6 +4,7 @@ namespace app\Repositories\TelegramCommands;
 
 use app\core\Telegram\ChatCommand;
 use app\models\Days;
+use app\models\TelegramChats;
 use app\models\Weeks;
 use app\Repositories\TelegramBotRepository;
 
@@ -17,9 +18,22 @@ class BookingCommand extends ChatCommand
     {
         TelegramBotRepository::parseDayNum(static::$arguments['dayName']);
 
-        static::$arguments['userId'] = self::$requester['id'];
-        static::$arguments['userName'] = self::$requester['name'];
-        static::$arguments['userStatus'] = empty(self::$requester['privilege']['status']) ? 'user' : self::$requester['privilege']['status'];
+        if (empty(self::$requester['id']))
+        {
+            $chatId = TelegramBotRepository::getUserTelegramId();
+            $tgChat = TelegramChats::getChat($chatId);
+            if (empty($tgChat) || empty($tgChat['personal']['username'])){
+                return static::result('{{ Tg_Unknown_Requester }}', '🤷‍♂');
+            }
+            static::$arguments['userId'] = 't'.$chatId;
+            static::$arguments['userName'] = $tgChat['personal']['username'];
+            static::$arguments['userStatus'] = 'guest';
+        }
+        else {
+            static::$arguments['userId'] = self::$requester['id'];
+            static::$arguments['userName'] = self::$requester['name'];
+            static::$arguments['userStatus'] = empty(self::$requester['privilege']['status']) ? 'user' : self::$requester['privilege']['status'];
+        }
 
         $weekId = Weeks::currentId();
         if (static::$arguments['currentDay'] > static::$arguments['dayNum']) {

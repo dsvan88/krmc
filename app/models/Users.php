@@ -524,48 +524,6 @@ class Users extends Model
         }
         return $source;
     }
-    public static function addNames(array &$source): array
-    {
-        if (empty($source))
-            return $source;
-
-        if (!empty($source['id'])) {
-            $userData = self::find($source['id']);
-            $source['name'] = empty($userData) ? '&lt; Deleted &gt;' : $userData['name'];
-
-            $source['status'] = empty($userData['privilege']['status']) ? '' : $userData['privilege']['status'];
-            $source['gender'] = empty($userData['personal']['gender']) ? '' : $userData['personal']['gender'];
-            $source['emoji'] = empty($userData['personal']['emoji']) ? '' : $userData['personal']['emoji'];
-
-            return $source;
-        }
-
-        $countSource = count($source);
-        $ids = array_column($source,'id');
-
-        if (empty($ids))
-            return $source;
-
-        $data = self::findGroup('id', $ids);
-        $countData = count($data);
-        for ($x = 0; $x < $countData; $x++) {
-            for ($y = 0; $y < $countSource; $y++) {
-                if ($source[$y]['id'] != $data[$x]['id']) continue;
-                $source[$y]['name'] = $data[$x]['name'];
-
-                $source[$y]['status'] = empty($data[$x]['privilege']['status']) ? '' : $data[$x]['privilege']['status'];
-                $source[$y]['gender'] = empty($data[$x]['personal']['gender']) ? '' : $data[$x]['personal']['gender'];
-                $source[$y]['emoji'] = empty($data[$x]['personal']['emoji']) ? '' : $data[$x]['personal']['emoji'];
-                break;
-            }
-        }
-
-        for ($x = 0; $x < $countSource; $x++) {
-            if (empty($source[$x]['id']) || !empty($source[$x]['name'])) continue;
-            $element['name'] = '&lt; Deleted &gt;';
-        }
-        return $source;
-    }
     /**
      * @param string $name  - user's nickname
      * 
