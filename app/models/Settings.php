@@ -3,7 +3,6 @@
 namespace app\models;
 
 use app\core\Model;
-use app\core\Tech;
 
 class Settings extends Model
 {

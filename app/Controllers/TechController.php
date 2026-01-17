@@ -8,6 +8,7 @@ use app\core\View;
 use app\libs\Db;
 use app\models\Days;
 use app\models\Settings;
+use app\models\TelegramChats;
 use app\Repositories\SocialPointsRepository;
 use app\Repositories\TechRepository;
 use app\Repositories\TelegramChatsRepository;
@@ -256,8 +257,8 @@ class TechController extends Controller
                 // 'text' => '+ на 18',
                 // 'text' => '/dice',
                 // 'text' => '/reg +ср,Джокер',
-                'text' => '/chat main',
-                // 'text' => '+сб 18:00',
+                // 'text' => '/chat main',
+                'text' => '+сб 18:00',
                 // 'text' => '+пт?',
                 // 'text' => '+ на четвер, десь на 18:45, звісно, що підстрахую, але поки що (під ?)',
                 // 'text' => '/?',
@@ -285,6 +286,8 @@ class TechController extends Controller
     }
     public static function testAction()
     {
+        $result = TelegramChats::findByUserName('dsvan88');
+        Tech::dump($result);
         // TelegramChatsRepository::setChatsType('9006691681111', 'admin');
         // ignore_user_abort(true);
         // set_time_limit(900);

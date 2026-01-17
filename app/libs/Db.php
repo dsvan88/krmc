@@ -28,6 +28,9 @@ class Db
         if (!empty(self::$connection)) return self::$connection;
 
         try {
+            if (SQL_TYPE === 'mariadb'){
+                self::$type = 'mysql';
+            }
             $connection = new PDO(self::$type . ':host=' . self::$host . ';port=' . self::$port . ';dbname=' . self::$db, self::$user, self::$password);
             $connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         } catch (\Throwable $th) {
@@ -71,6 +74,13 @@ class Db
     public static function checkQuery(string $query)
     {
         if (SQL_TYPE === 'mysql') return $query;
+        if (SQL_TYPE === 'mariadb') {
+            return preg_replace(
+                "/([a-z0-9_-]+)->'\\$\.([a-z0-9_-]+)'/",
+                "JSON_VALUE($1, '$.$2')",
+                $query
+            );
+        }
         if (SQL_TYPE === 'pgsql') {
             return str_replace(
                 [
@@ -97,6 +107,8 @@ class Db
         // error_log($query);
         // error_log(json_encode($params, JSON_UNESCAPED_UNICODE));
         $query = self::checkQuery($query);
+        // echo ($query);
+        // return true;
         // error_log($query);
         $stmt = self::connect()->prepare($query);
         try {

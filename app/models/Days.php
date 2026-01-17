@@ -76,6 +76,11 @@ class Days extends Model
         for ($i = 0; $i < $count; $i++) {
             if ($data['participant'][$i] === '+1') {
                 $id = null;
+            } elseif ($data['participant'][$i][0] === '@') {
+                $tgName = substr($data['participant'][$i], 1);
+                $chatData = TelegramChats::findByUserName($tgName);
+                $tId = $chatData['uid'];
+                
             } else {
                 $name = $data['participant'][$i];
                 $id = Users::getId($name);
@@ -90,6 +95,7 @@ class Days extends Model
                     }
                 }
             }
+
             $newData['participants'][] = [
                 'id' => $id,
                 'arrive' => trim($data['arrive'][$i]),

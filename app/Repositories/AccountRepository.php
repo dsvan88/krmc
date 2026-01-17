@@ -119,7 +119,7 @@ class AccountRepository
         //     if (empty($source[$x]['id']) || !empty($source[$x]['name'])) continue;
         //     $element['name'] = '&lt; Deleted &gt;';
         // }
-        return $source;
+        // return $source;
     }
     public static function addParticipantToDay(string $name, int $day = -1)
     {

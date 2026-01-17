@@ -151,10 +151,22 @@ class TelegramChats extends Model
         }
         return $result;
     }
+    public static function findByUserName(string $username = '')
+    {
+        if (empty($username)) {
+            return [];
+        }
+        $table = self::$table;
+        $result = self::query("SELECT * FROM $table WHERE personal->'$.username' = ? LIMIT 1", [$username], 'Assoc');
+        if (empty($result)) {
+            return [];
+        }
+        return self::decodeJson($result[0]);
+    }
     public static function getDirectChats()
     {
         $table = self::$table;
-        $result = self::query("SELECT * FROM $table WHERE data->'$.direct' = ? LIMIT 1", ['true'], 'Assoc');
+        $result = self::query("SELECT * FROM $table WHERE data->'$.direct' = ?", ['true'], 'Assoc');
         if (empty($result)) {
             return [];
         }
