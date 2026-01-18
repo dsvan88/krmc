@@ -57,14 +57,14 @@ class BookingCommand extends ChatCommand
 
             // For social points of day started non-admin
             if (in_array(static::$arguments['userStatus'], ['trusted', 'activist']) && empty($weekData['data'][static::$arguments['dayNum']]['status'])){
-                $weekData['data'][static::$arguments['dayNum']]['starter'] = self::$requester['id'];
+                $weekData['data'][static::$arguments['dayNum']]['starter'] = static::$arguments['userId'];
             }
             
             $weekData['data'][static::$arguments['dayNum']]['status'] = 'set';
         }
 
         foreach ($weekData['data'][static::$arguments['dayNum']]['participants'] as $index => $userData) {
-            if ($userData['id'] !== self::$requester['id']) continue;
+            if ($userData['id'] !== static::$arguments['userId']) continue;
 
             if (!empty(static::$arguments['arrive']) && static::$arguments['arrive'] !== $userData['arrive']) {
                 $slot = $index;
@@ -136,7 +136,7 @@ class BookingCommand extends ChatCommand
                 $replyMarkup['inline_keyboard'][0][] = ['text' => '❌' . static::locale('Opt-out'), 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => static::$arguments['dayNum'], 'r' => '1']];
             }
         }
-        elseif (in_array(self::$requester['id'], array_column($newDayData['participants'], 'id'))) {
+        elseif (in_array(static::$arguments['userId'], array_column($newDayData['participants'], 'id'))) {
             $replyMarkup['inline_keyboard'] = [
                 [
                     ['text' => '❌' . self::locale('Opt-out'), 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => static::$arguments['dayNum'], 'r' => 1]]

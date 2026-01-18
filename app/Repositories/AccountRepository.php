@@ -71,7 +71,7 @@ class AccountRepository
             return $source;
 
         if (!empty($source['id'])) {
-            if ($source['id'][0] === 't'){
+            if (!is_numeric($source['id']) && $source['id'][0] === 't'){
                 $chatData = TelegramChats::getChat(substr($source['id'],1));
                 $source['name'] = '@'.$chatData['personal']['username'];
                 $source['status'] = 'guest';

@@ -79,7 +79,10 @@ class Days extends Model
             } elseif ($data['participant'][$i][0] === '@') {
                 $tgName = substr($data['participant'][$i], 1);
                 $chatData = TelegramChats::findByUserName($tgName);
-                $tId = $chatData['uid'];
+
+                if (empty($chatData)) continue;
+
+                $id = 't'.$chatData['uid'];
                 
             } else {
                 $name = $data['participant'][$i];

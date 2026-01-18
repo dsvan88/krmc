@@ -19,7 +19,7 @@ class TelegramBotController extends Controller
 {
     public static $chatId = null;
     public static $command = '';
-    public static $guestCommands = ['help', 'nick', 'nickRelink', 'week', 'day', 'today'];
+    public static $guestCommands = ['help', 'booking', 'nick', 'nickRelink', 'week', 'day', 'today'];
     public static $CommandNamespace = '\\app\\Repositories\\TelegramCommands';
     public static $AnswerNamespace = '\\app\\Repositories\\TelegramCbAnswers';
 
@@ -104,7 +104,9 @@ class TelegramBotController extends Controller
             return false;
         }
 
-        if (static::$type === 'message') {
+        if (empty(ChatAction::$requester)) return true;
+        
+        if (static::$type === 'message' && empty(ChatAction::$requester)) {
             if (self::$command === 'booking' && Users::isBanned('booking', ChatAction::$requester['ban'])) {
                 Sender::delete(self::$chatId, $message['message']['message_id']);
                 Sender::message($userTelegramId, Locale::phrase(['string' => "I’m deeply sorry, but you banned for that action:(...\nYour ban will be lifted at: <b>%s</b>", 'vars' => [date('d.m.Y', ChatAction::$requester['ban']['expired'] + TIME_MARGE)]]));
@@ -211,7 +213,8 @@ class TelegramBotController extends Controller
                     $botResult = Sender::message(
                         empty($item['chatId']) ? self::$chatId : $item['chatId'],
                         Locale::phrase($item['message']),
-                        empty($item['replyOn']) ? 0 : $item['replyOn'],
+                        // empty($item['replyOn']) ? 0 : $item['replyOn'],
+                        0,
                         empty($item['replyMarkup']) ? [] : $item['replyMarkup']
                     );
                 }
