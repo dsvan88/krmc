@@ -87,7 +87,7 @@ class BookingAnswer extends ChatAnswer
         ];
 
         if (count($weekData['data'][$dayNum]['participants']) > 0) {
-            $update['replyMarkup']['inline_keyboard'][0][] = ['text' => '❌', 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => $dayNum, 'r' => '1']];
+            $update['replyMarkup']['inline_keyboard'][0][] = ['text' => '❌' . static::locale('Opt-out'), 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => $dayNum, 'r' => '1']];
         }
         if (TelegramBotRepository::isDirect() && in_array(static::$arguments['userId'], array_column($weekData['data'][$dayNum]['participants'], 'id'))) {
             $update['replyMarkup']['inline_keyboard'] = [
