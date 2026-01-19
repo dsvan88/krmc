@@ -53,7 +53,7 @@ class RenickAnswer extends ChatAnswer
                 PHP_EOL . PHP_EOL .
                 static::locale('If you made a mistake - don’t worry! Just tell the Administrator about it and he will quickly fix it😏'),
         ];
-        static::$report = ['string' => "User <b>%s</b>, successfully changed a nickname to <b>%s</b>.", 'vars' => [static::$requester['name'], $name]];
+        self::$report = ['string' => "User <b>%s</b>, successfully changed a nickname to <b>%s</b>.", 'vars' => [static::$requester['name'], $name]];
 
         SocialPoints::minus(static::$requester['id'], RenickCommand::$costs);
 
