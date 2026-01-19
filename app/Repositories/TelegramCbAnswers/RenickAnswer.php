@@ -9,7 +9,7 @@ use Exception;
 
 class RenickAnswer extends ChatAnswer
 {
-    public static function execute():array
+    public static function execute(): array
     {
         if (empty(static::$arguments['u']))
             throw new Exception(__METHOD__ . ': Arguments is empty');
@@ -23,8 +23,8 @@ class RenickAnswer extends ChatAnswer
             return static::result('You don’t have enough rights to change information about other users!');
         }
 
-        if (SocialPoints::get($uId) < RenickCommand::$costs){
-            return static::result(['string'=> 'I’m deeply sorry, but you can’t do this action yet! Social Points isn’t enough. Need <b>%s</b>.', 'vars' => [static::$costs]]);
+        if (SocialPoints::get($uId) < RenickCommand::$costs) {
+            return static::result(['string' => 'I’m deeply sorry, but you can’t do this action yet! Social Points isn’t enough. Need <b>%s</b>.', 'vars' => [static::$costs]]);
         }
 
         if (empty(static::$arguments['y'])) {
@@ -34,7 +34,7 @@ class RenickAnswer extends ChatAnswer
 
             $personal = static::$requester['personal'];
             unset($personal['newName']);
-            Users::edit(['personal'=> $personal], ['id' => static::$requester['id']]);
+            Users::edit(['personal' => $personal], ['id' => static::$requester['id']]);
 
             $update = [
                 'message' => static::locale('Okay! Let’s try again later!')
@@ -45,7 +45,7 @@ class RenickAnswer extends ChatAnswer
         $name = static::$requester['personal']['newName'];
         $personal = static::$requester['personal'];
         unset($personal['newName']);
-        Users::edit(['name' => $name, 'personal'=> $personal], ['id' => static::$requester['id']]);
+        Users::edit(['name' => $name, 'personal' => $personal], ['id' => static::$requester['id']]);
 
         $update = [
             'message' =>
@@ -53,7 +53,7 @@ class RenickAnswer extends ChatAnswer
                 PHP_EOL . PHP_EOL .
                 static::locale('If you made a mistake - don’t worry! Just tell the Administrator about it and he will quickly fix it😏'),
         ];
-        self::$report = ['string' => "User <b>%s</b>, successfully changed a nickname to <b>%s</b>.", 'vars' => [static::$requester['name'], $name]];
+        static::$report = ['string' => "User <b>%s</b>, successfully changed a nickname to <b>%s</b>.", 'vars' => [static::$requester['name'], $name]];
 
         SocialPoints::minus(static::$requester['id'], RenickCommand::$costs);
 
