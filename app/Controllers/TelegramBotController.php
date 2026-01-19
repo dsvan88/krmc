@@ -105,7 +105,7 @@ class TelegramBotController extends Controller
         }
 
         if (empty(ChatAction::$requester)) return true;
-        
+
         if (static::$type === 'message' && empty(ChatAction::$requester)) {
             if (self::$command === 'booking' && Users::isBanned('booking', ChatAction::$requester['ban'])) {
                 Sender::delete(self::$chatId, $message['message']['message_id']);
@@ -220,8 +220,9 @@ class TelegramBotController extends Controller
                 }
             }
         }
-        if (!empty(ChatAction::$report)) {
-            Sender::message(Settings::getAdminChatTelegramId(), Locale::phrase(ChatAction::$report));
+        $report = ChatAction::getReport();
+        if (!empty($report)) {
+            Sender::message(Settings::getAdminChatTelegramId(), Locale::phrase($report));
         }
 
         if (self::$command === 'week') {

@@ -9,4 +9,5 @@ interface Command
     // public static function description();
     public static function execute();
     public static function locale($phrase);
+    public static function getReport();
 }

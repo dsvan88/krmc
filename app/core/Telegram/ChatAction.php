@@ -33,4 +33,9 @@ class ChatAction implements Command
             return Locale::apply($phrase);
         return Locale::phrase($phrase);
     }
+
+    public static function getReport()
+    {
+        return static::$report;
+    }
 }
