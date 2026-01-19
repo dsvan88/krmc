@@ -1,6 +1,6 @@
 <?
 
-namespace app\Repositories\TelegramCommands;
+namespace app\Repositories\TelegramCbAnswers;
 
 use app\core\Telegram\ChatAnswer as TgChatAnswer;
 use app\Repositories\TelegramBotRepository;
