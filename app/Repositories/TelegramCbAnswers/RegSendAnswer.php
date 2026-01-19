@@ -1,6 +1,6 @@
 <?
 
-namespace app\Repositories\TelegramCommands;
+namespace app\Repositories\TelegramCbAnswers;
 
 use app\core\Telegram\ChatAnswer;
 use app\models\Days;
@@ -8,7 +8,7 @@ use app\models\Settings;
 use app\models\Weeks;
 use Exception;
 
-class NickAnswer extends ChatAnswer
+class RegSendAnswer extends ChatAnswer
 {
     public static function execute():array
     {

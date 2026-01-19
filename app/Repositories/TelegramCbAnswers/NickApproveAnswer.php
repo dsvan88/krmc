@@ -1,6 +1,6 @@
 <?
 
-namespace app\Repositories\TelegramCommands;
+namespace app\Repositories\TelegramCbAnswers;
 
 use app\core\Telegram\ChatAnswer;
 use app\models\Contacts;

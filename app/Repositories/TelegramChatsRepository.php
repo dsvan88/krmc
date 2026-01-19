@@ -4,13 +4,11 @@ namespace app\Repositories;
 
 use app\core\GoogleDrive;
 use app\core\ImageProcessing;
-use app\core\Locale;
 use app\core\Sender;
 use app\models\Settings;
 use app\models\TelegramChats;
 use app\models\Users;
 use app\core\TelegramBot;
-use app\core\Tech;
 use Exception;
 
 class TelegramChatsRepository
@@ -122,5 +120,21 @@ class TelegramChatsRepository
         }
         Settings::save('telegram', $slug, $chatId);
         return true;
+    }
+    public static function setPendingState(string $command = ''): void
+    {
+        $chatData = TelegramChats::getChat( TelegramBotRepository::getUserTelegramId() );
+        
+        if (empty($command))
+            unset($chatData['personal']['pending']);
+        else 
+            $chatData['personal']['pending'] = $command;
+        
+        TelegramChats::edit(['personal' => $chatData['personal']], $chatData['id']);
+    }
+    public static function isPendingState(): string
+    {
+        $chatData = TelegramChats::getChat( TelegramBotRepository::getUserTelegramId() );
+        return empty($chatData['personal']['pending']) ? '' : $chatData['personal']['pending'];
     }
 }

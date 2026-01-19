@@ -1,10 +1,11 @@
 <?
 
-namespace app\Repositories\TelegramCommands;
+namespace app\Repositories\TelegramCbAnswers;
 
 use app\core\Telegram\ChatAnswer;
 use app\models\SocialPoints;
 use app\models\Users;
+use app\Repositories\TelegramCommands\RenickCommand;
 use Exception;
 
 class RenickAnswer extends ChatAnswer

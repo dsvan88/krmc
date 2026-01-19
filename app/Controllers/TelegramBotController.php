@@ -13,6 +13,7 @@ use app\models\Settings;
 use app\models\TelegramChats;
 use app\models\Users;
 use app\Repositories\TelegramBotRepository;
+use app\Repositories\TelegramChatsRepository;
 use Exception;
 
 class TelegramBotController extends Controller
@@ -76,9 +77,17 @@ class TelegramBotController extends Controller
         $userId = Contacts::getUserIdByContact('telegramid', $userTelegramId);
 
         if (static::$type === 'message') {
-            static::$command = TelegramBotRepository::parseChatCommand(trim($message['message']['text']));
+            static::$command = TelegramBotRepository::parseChatCommand($message['message']['text']);
 
-            if (empty(static::$command)) return false;
+            if (empty(static::$command)) {
+                $pending = TelegramChatsRepository::isPendingState();
+
+                if (empty($pending)) return false;
+
+                static::$command = $pending;
+
+                TelegramBotRepository::getCommonArguments($message['message']['text']);
+            }
 
             if (empty($userId) && !in_array(self::$command, self::$guestCommands)) {
                 Sender::message(self::$chatId, Locale::phrase('{{ Tg_Unknown_Requester }}'), $message['message']['message_id']);

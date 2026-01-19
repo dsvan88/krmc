@@ -12,8 +12,9 @@ use Exception;
 
 class TelegramBotRepository
 {
-    public static function parseChatCommand(string $text): string
+    public static function parseChatCommand(string $text = ''): string
     {
+        $text = trim($text);
         $_text = mb_strtolower(str_replace('на ', '', $text), 'UTF-8');
         $days = DayRepository::getDayNamesForCommand();
         if (preg_match("/^([+-])\s{0,3}($days)/ui", $_text, $match) === 1) {
@@ -80,12 +81,16 @@ class TelegramBotRepository
             ChatAction::$arguments = $arguments;
             return $command;
         }
-        $symbols = Locale::$cyrillicPattern;
-        preg_match_all("/([a-z$symbols.0-9#-]+)/ui", trim(mb_substr($text, $commandLen + 1, NULL, 'UTF-8')), $matches);
-
-        ChatAction::$arguments = $matches[0];
+        static::getCommonArguments(mb_substr($text, $commandLen + 1, NULL, 'UTF-8'));
         return $command;
     }
+    public static function getCommonArguments(string $text = ''){
+        $text = trim($text);
+        $symbols = Locale::$cyrillicPattern;
+        preg_match_all("/([a-z$symbols.0-9#-]+)/ui", $text, $matches);
+
+        ChatAction::$arguments = $matches[0];
+    } 
     public static function parseArguments($arguments): void
     {
         if (isset($arguments['prim'])) {
