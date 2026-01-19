@@ -116,7 +116,7 @@ class BookingAnswer extends ChatAnswer
         if ($index < 0 || empty($participants)) {
             throw new Exception(__METHOD__ . ': $index or $participants, cant be empty!');
         }
-        $participants[$index]['prim'] = static::$arguments['p'];
+        $participants[$index]['prim'] = empty(static::$arguments['p']) ? '' : static::$arguments['p'];
         self::$report = static::locale(['string' => 'User <b>%s</b> is changed prim on <b>%s</b>.', 'vars' => [static::$arguments['userName'], date('d.m.Y', static::$timestamp)]]);
     }
     public static function removeParticipant(array &$participants = [], int $index = 0): void
