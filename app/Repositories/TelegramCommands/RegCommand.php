@@ -75,7 +75,7 @@ class RegCommand extends ChatCommand
             if (isset($requestData['nonames'])) {
                 $newDayData = Days::addNonamesToDayData($newDayData, $slot, $requestData['nonames'], $requestData['prim']);
             } else {
-                $newDayData = Days::addParticipantToDayData($newDayData, $requestData, $slot);
+                Days::addParticipantToDayData($newDayData, $requestData, $slot);
             }
         } else {
             if (isset($requestData['nonames'])) {

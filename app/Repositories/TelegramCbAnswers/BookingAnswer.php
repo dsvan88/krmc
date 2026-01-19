@@ -5,6 +5,7 @@ namespace app\Repositories\TelegramCbAnswers;
 use app\core\Telegram\ChatAnswer;
 use app\models\Days;
 use app\models\Settings;
+use app\models\TelegramChats;
 use app\models\Weeks;
 use app\Repositories\TelegramBotRepository;
 use Exception;
@@ -17,28 +18,20 @@ class BookingAnswer extends ChatAnswer
         if (empty(static::$arguments))
             throw new Exception(__METHOD__ . ': arguments is empty');
 
-        if (empty(static::$requester)) {
-            return static::result("I can’t to recognize you!\nPlease, register in our system!");
+        if (empty(self::$requester['id'])) {
+            $chatId = TelegramBotRepository::getUserTelegramId();
+            $tgChat = TelegramChats::getChat($chatId);
+            if (empty($tgChat) || empty($tgChat['personal']['username'])) {
+                return static::result("I can’t to recognize you!\nPlease, register in our system!");
+            }
+            static::$arguments['userId'] = 't' . $chatId;
+            static::$arguments['userName'] = '@' . $tgChat['personal']['username'];
+            static::$arguments['userStatus'] = 'all';
+        } else {
+            static::$arguments['userId'] = self::$requester['id'];
+            static::$arguments['userName'] = self::$requester['name'];
+            static::$arguments['userStatus'] = empty(self::$requester['privilege']['status']) ? 'user' : self::$requester['privilege']['status'];
         }
-
-        // if (empty(self::$requester['id']))
-        // {
-        //     $chatId = TelegramBotRepository::getUserTelegramId();
-        //     $tgChat = TelegramChats::getChat($chatId);
-        //     if (empty($tgChat) || empty($tgChat['personal']['username'])){
-        //         return static::result('{{ Tg_Unknown_Requester }}', '🤷‍♂');
-        //     }
-        //     static::$arguments['userId'] = 't'.$chatId;
-        //     static::$arguments['userName'] = $tgChat['personal']['username'];
-        //     static::$arguments['userStatus'] = 'guest';
-        // }
-        // else {
-        //     static::$arguments['userId'] = self::$requester['id'];
-        //     static::$arguments['userName'] = self::$requester['name'];
-        //     static::$arguments['userStatus'] = empty(self::$requester['privilege']['status']) ? 'user' : self::$requester['privilege']['status'];
-        // }
-
-        static::$requester['status'] = empty($requester['privilege']['status']) ? 'user' : static::$requester['privilege']['status'];
 
         $weekId = (int) trim(static::$arguments['w']);
         $dayNum = (int) trim(static::$arguments['d']);
@@ -52,7 +45,7 @@ class BookingAnswer extends ChatAnswer
         }
 
         if ($weekData['data'][$dayNum]['status'] !== 'set') {
-            if (!TelegramBotRepository::hasAccess(static::$requester['status'], 'trusted')) {
+            if (!TelegramBotRepository::hasAccess(static::$arguments['userStatus'], 'trusted')) {
                 return static::result('{{ Tg_Gameday_Not_Set }}');
             }
             if (!isset($weekData['data'][$dayNum]['game']))
@@ -63,28 +56,26 @@ class BookingAnswer extends ChatAnswer
 
         $pIndex = -1;
         foreach ($weekData['data'][$dayNum]['participants'] as $index => $participant) {
-            if ($participant['id'] != static::$requester['id']) continue;
+            if ($participant['id'] != static::$arguments['userId']) continue;
 
             $pIndex = $index;
             break;
         }
 
-        if ($pIndex === -1){
+        if ($pIndex === -1) {
             static::addParticipant($weekData['data'][$dayNum]);
-        }
-        else {
+        } else {
 
             if (!empty(static::$arguments['r']))
                 return static::result('{{ Tg_Command_Requester_Already_Booked }}');
 
-            if (empty(static::$arguments['r'])){
+            if (empty(static::$arguments['r'])) {
                 static::changePrim($weekData['data'][$dayNum]['participants'], $pIndex);
-            }
-            else {
+            } else {
                 static::removeParticipant($weekData['data'][$dayNum]['participants'], $pIndex);
             }
         }
-        
+
         Days::setDayData($weekId, $dayNum, $weekData['data'][$dayNum]);
 
         $update = [
@@ -102,7 +93,7 @@ class BookingAnswer extends ChatAnswer
         if (count($weekData['data'][$dayNum]['participants']) > 0) {
             $update['replyMarkup']['inline_keyboard'][0][] = ['text' => '❌', 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => $dayNum, 'r' => '1']];
         }
-        if (TelegramBotRepository::isDirect() && in_array(static::$requester['id'], array_column($weekData['data'][$dayNum]['participants'], 'id'))) {
+        if (TelegramBotRepository::isDirect() && in_array(static::$arguments['userId'], array_column($weekData['data'][$dayNum]['participants'], 'id'))) {
             $update['replyMarkup']['inline_keyboard'] = [
                 [
                     ['text' => '❌' . static::locale('Opt-out'), 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => $dayNum, 'r' => 1]]
@@ -114,31 +105,31 @@ class BookingAnswer extends ChatAnswer
     }
     public static function addParticipant(array &$day = []): void
     {
-        if (empty($day)){
-            throw new Exception(__METHOD__.': $day, cant be empty!');
+        if (empty($day)) {
+            throw new Exception(__METHOD__ . ': $day, cant be empty!');
         }
         $data = [
-            'userId' => static::$requester['id'],
+            'userId' => static::$arguments['userId'],
             'prim' => empty(static::$arguments['p']) ? '' : static::$arguments['p'],
         ];
-        $day = Days::addParticipantToDayData($day, $data);
-        self::$report = static::locale(['string' => 'User <b>%s</b> is opted-in on <b>%s</b>.', 'vars' => [static::$requester['name'], date('d.m.Y', static::$timestamp)]]);
+        Days::addParticipantToDayData($day, $data);
+        self::$report = static::locale(['string' => 'User <b>%s</b> is opted-in on <b>%s</b>.', 'vars' => [static::$arguments['userName'], date('d.m.Y', static::$timestamp)]]);
     }
     public static function changePrim(array &$participants = [], int $index = 0): void
     {
-        if ($index < 0 || empty($participants)){
-            throw new Exception(__METHOD__.': $index or $participants, cant be empty!');
+        if ($index < 0 || empty($participants)) {
+            throw new Exception(__METHOD__ . ': $index or $participants, cant be empty!');
         }
-        $participants[$index]['prim'] = static::$arguments['prim'];
-        self::$report = static::locale(['string' => 'User <b>%s</b> is changed prim on <b>%s</b>.', 'vars' => [static::$requester['name'], date('d.m.Y', static::$timestamp)]]);
+        $participants[$index]['prim'] = static::$arguments['p'];
+        self::$report = static::locale(['string' => 'User <b>%s</b> is changed prim on <b>%s</b>.', 'vars' => [static::$arguments['userName'], date('d.m.Y', static::$timestamp)]]);
     }
     public static function removeParticipant(array &$participants = [], int $index = 0): void
     {
-        if ($index < 0 || empty($participants)){
-            throw new Exception(__METHOD__.': $index or $participants, cant be empty!');
+        if ($index < 0 || empty($participants)) {
+            throw new Exception(__METHOD__ . ': $index or $participants, cant be empty!');
         }
         unset($participants[$index]);
         $participants = array_values($participants);
-        self::$report = static::locale(['string' => 'User <b>%s</b> is opted-out from <b>%s</b>.', 'vars' => [static::$requester['name'], date('d.m.Y', static::$timestamp)]]);
+        self::$report = static::locale(['string' => 'User <b>%s</b> is opted-out from <b>%s</b>.', 'vars' => [static::$arguments['userName'], date('d.m.Y', static::$timestamp)]]);
     }
 }

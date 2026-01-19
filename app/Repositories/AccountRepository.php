@@ -71,10 +71,10 @@ class AccountRepository
             return $source;
 
         if (!empty($source['id'])) {
-            if (!is_numeric($source['id']) && $source['id'][0] === 't'){
-                $chatData = TelegramChats::getChat(substr($source['id'],1));
-                $source['name'] = '@'.$chatData['personal']['username'];
-                $source['status'] = 'guest';
+            if (!is_numeric($source['id']) && $source['id'][0] === 't') {
+                $chatData = TelegramChats::getChat(substr($source['id'], 1));
+                $source['name'] = '@' . $chatData['personal']['username'];
+                $source['status'] = 'all';
                 $source['gender'] = '';
                 $source['emoji'] = '';
                 return $source;
@@ -90,7 +90,7 @@ class AccountRepository
         }
 
         $count = count($source);
-        for($x = 0; $x < $count; $x++){
+        for ($x = 0; $x < $count; $x++) {
             static::addNames($source[$x]);
         }
         return $source;
@@ -149,7 +149,7 @@ class AccountRepository
             'userName' => $userData['name'],
         ];
 
-        $weekData['data'][$day] = Days::addParticipantToDayData($weekData['data'][$day], $userData);
+        Days::addParticipantToDayData($weekData['data'][$day], $userData);
         $weekData['data'] = json_encode($weekData['data'], JSON_UNESCAPED_UNICODE);
         Weeks::update(['data' => $weekData['data']], ['id' => $weekId]);
 
@@ -303,22 +303,22 @@ class AccountRepository
 
         return Users::auth($userId);
     }
-    public static function checkAvailable(int $userId = 0) : bool
+    public static function checkAvailable(int $userId = 0): bool
     {
         if (empty($userId)) return false;
 
         $userData = Users::find($userId);
-        
+
         if (!empty($userData['login'])) return false;
-        
+
         $tgChat = TelegramChats::findBy('user_id', $userId)[0];
 
-        if ($tgChat['data']['last_seems'] > $_SERVER['REQUEST_TIME']-TIMESTAMP_DAY*365) return false;
+        if ($tgChat['data']['last_seems'] > $_SERVER['REQUEST_TIME'] - TIMESTAMP_DAY * 365) return false;
 
         $lastGameDay = DayRepository::findLastGameOfPlayer($userId);
 
-        if ($lastGameDay > $_SERVER['REQUEST_TIME']-TIMESTAMP_DAY*600) return false;
-        
+        if ($lastGameDay > $_SERVER['REQUEST_TIME'] - TIMESTAMP_DAY * 600) return false;
+
         return true;
     }
 }

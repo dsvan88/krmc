@@ -18,18 +18,16 @@ class BookingCommand extends ChatCommand
     {
         TelegramBotRepository::parseDayNum(static::$arguments['dayName']);
 
-        if (empty(self::$requester['id']))
-        {
+        if (empty(self::$requester['id'])) {
             $chatId = TelegramBotRepository::getUserTelegramId();
             $tgChat = TelegramChats::getChat($chatId);
-            if (empty($tgChat) || empty($tgChat['personal']['username'])){
+            if (empty($tgChat) || empty($tgChat['personal']['username'])) {
                 return static::result('{{ Tg_Unknown_Requester }}', '🤷‍♂');
             }
-            static::$arguments['userId'] = 't'.$chatId;
-            static::$arguments['userName'] = $tgChat['personal']['username'];
-            static::$arguments['userStatus'] = 'guest';
-        }
-        else {
+            static::$arguments['userId'] = 't' . $chatId;
+            static::$arguments['userName'] = '@' . $tgChat['personal']['username'];
+            static::$arguments['userStatus'] = 'all';
+        } else {
             static::$arguments['userId'] = self::$requester['id'];
             static::$arguments['userName'] = self::$requester['name'];
             static::$arguments['userStatus'] = empty(self::$requester['privilege']['status']) ? 'user' : self::$requester['privilege']['status'];
@@ -56,10 +54,10 @@ class BookingCommand extends ChatCommand
             static::$arguments['arrive'] = '';
 
             // For social points of day started non-admin
-            if (in_array(static::$arguments['userStatus'], ['trusted', 'activist']) && empty($weekData['data'][static::$arguments['dayNum']]['status'])){
+            if (in_array(static::$arguments['userStatus'], ['trusted', 'activist']) && empty($weekData['data'][static::$arguments['dayNum']]['status'])) {
                 $weekData['data'][static::$arguments['dayNum']]['starter'] = static::$arguments['userId'];
             }
-            
+
             $weekData['data'][static::$arguments['dayNum']]['status'] = 'set';
         }
 
@@ -80,7 +78,7 @@ class BookingCommand extends ChatCommand
             if ($participantId !== -1) {
                 return static::result('{{ Tg_Command_Requester_Already_Booked }}');
             }
-            $newDayData = Days::addParticipantToDayData($newDayData, static::$arguments, $slot);
+            Days::addParticipantToDayData($newDayData, static::$arguments, $slot);
             $reactions = [
                 '👍',
                 '🤩',
@@ -131,12 +129,11 @@ class BookingCommand extends ChatCommand
             ],
         ];
 
-        if (!TelegramBotRepository::isDirect()){
+        if (!TelegramBotRepository::isDirect()) {
             if (count($weekData['data'][static::$arguments['dayNum']]['participants']) > 0) {
                 $replyMarkup['inline_keyboard'][0][] = ['text' => '❌' . static::locale('Opt-out'), 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => static::$arguments['dayNum'], 'r' => '1']];
             }
-        }
-        elseif (in_array(static::$arguments['userId'], array_column($newDayData['participants'], 'id'))) {
+        } elseif (in_array(static::$arguments['userId'], array_column($newDayData['participants'], 'id'))) {
             $replyMarkup['inline_keyboard'] = [
                 [
                     ['text' => '❌' . self::locale('Opt-out'), 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => static::$arguments['dayNum'], 'r' => 1]]

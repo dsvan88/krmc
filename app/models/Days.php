@@ -82,8 +82,7 @@ class Days extends Model
 
                 if (empty($chatData)) continue;
 
-                $id = 't'.$chatData['uid'];
-                
+                $id = 't' . $chatData['uid'];
             } else {
                 $name = $data['participant'][$i];
                 $id = Users::getId($name);
@@ -107,7 +106,8 @@ class Days extends Model
         }
         return self::setDayData($weekId, $dayId, $newData);
     }
-    public static function setStatus(int $weekId, int $dayNum, string $status = 'set'){
+    public static function setStatus(int $weekId, int $dayNum, string $status = 'set')
+    {
         $weekData = Weeks::weekDataById($weekId);
         if (!isset($weekData['data'][$dayNum]) || $weekData['data'][$dayNum]['status'] === $status) {
             return false;
@@ -120,7 +120,7 @@ class Days extends Model
         try {
             if (empty($weekId))
                 $weekId = Weeks::currentId();
-            
+
             if ($weekId > 0) {
                 $weekData = Weeks::weekDataById($weekId);
             } else {
@@ -155,7 +155,6 @@ class Days extends Model
 
         if (empty($weekData['data'][$dayId]['participants'])) return $weekData['data'][$dayId];
 
-        // $weekData['data'][$dayId]['participants'] = Users::addNames($weekData['data'][$dayId]['participants']);
         AccountRepository::addNames($weekData['data'][$dayId]['participants']);
         $count = count($weekData['data'][$dayId]['participants']);
         for ($x = 0; $x < $count; $x++) {
@@ -200,7 +199,6 @@ class Days extends Model
 
         if (!empty($weekData['data'][$day]['cost']))
             $result .= "💲 - <u>{$weekData['data'][$day]['cost']}</u>\n";
-        // $result .= Locale::phrase('Costs') . ": <u>{$weekData['data'][$day]['cost']}</u>\n";
         if (!empty($weekData['data'][$day]['day_prim']))
             $result .= "<u>{$weekData['data'][$day]['day_prim']}</u>\n";
 
@@ -214,7 +212,6 @@ class Days extends Model
         $participantsToEnd = [];
         $noNames = [];
 
-        // $weekData['data'][$day]['participants'] = AccountRepository::addNames($weekData['data'][$day]['participants']);
         AccountRepository::addNames($weekData['data'][$day]['participants']);
         $count = count($weekData['data'][$day]['participants']);
         for ($x = 0; $x < $count; $x++) {
@@ -279,10 +276,10 @@ class Days extends Model
     public static function addParticipant(int $weekId, int $dayId, int $userId): bool
     {
         $dayData = self::weekDayData($weekId, $dayId);
-        $dayData = self::addParticipantToDayData($dayData, ['userId' => $userId]);
+        self::addParticipantToDayData($dayData, ['userId' => $userId]);
         return self::setDayData($weekId, $dayId, $dayData);
     }
-    public static function addParticipantToDayData(array $dayData, array $userData, int $slot = -1): array
+    public static function addParticipantToDayData(array &$dayData, array $userData, int $slot = -1): void
     {
         if ($slot === -1) {
             while (isset($dayData['participants'][++$slot])) {
@@ -291,11 +288,9 @@ class Days extends Model
 
         $dayData['participants'][$slot] = [
             'id'        =>    $userData['userId'],
-            'arrive'    =>    !empty($userData['arrive']) ? $userData['arrive'] : '',
-            'prim'      =>    !empty($userData['prim']) ? $userData['prim'] : '',
+            'arrive'    =>    empty($userData['arrive']) ? '' : $userData['arrive'],
+            'prim'      =>    empty($userData['prim']) ? '' : $userData['prim'],
         ];
-
-        return $dayData;
     }
     public static function addNonamesToDayData($dayData, $slot, $count, $prim = '')
     {
