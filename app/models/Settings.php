@@ -85,10 +85,10 @@ class Settings extends Model
             self::load('telegram');
         }
 
-        if (empty(self::$settings['telegram']['admin']['value']))
+        if (empty(self::$settings['telegram']['admin_chat']['value']))
             return false;
 
-        return self::$settings['telegram']['admin']['value'];
+        return self::$settings['telegram']['admin_chat']['value'];
     }
 
     /**

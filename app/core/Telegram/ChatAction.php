@@ -36,8 +36,6 @@ class ChatAction implements Command
 
     public static function getReport()
     {
-        error_log('static:Report: ' . static::$report);
-        error_log('self:Report: ' . self::$report);
         return static::$report;
     }
 }
