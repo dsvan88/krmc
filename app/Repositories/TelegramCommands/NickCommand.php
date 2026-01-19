@@ -27,8 +27,8 @@ class NickCommand extends ChatCommand
         $_username = implode(' ', static::$arguments);
 
         if (empty(trim($_username))) {
-            return static::result("Your nickname can’t be empty!\nPlease, use that format:\n/nick <b>Your nickname</b>");
-            
+            // return static::result("Your nickname can’t be empty!\nPlease, use that format:\n/nick <b>Your nickname</b>");
+
             TelegramChatsRepository::setPendingState('nick');
 
             $message = self::locale('Okay, Im ready to get your beautiful nickname!'). PHP_EOL;
