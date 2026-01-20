@@ -13,6 +13,8 @@ use Exception;
 
 class TelegramChatsRepository
 {
+    public static $pending = null;
+
     public static function chatTitle(array $chat = []): string
     {
         if (isset($chat['personal']['title'])) {
@@ -123,18 +125,24 @@ class TelegramChatsRepository
     }
     public static function setPendingState(string $command = ''): void
     {
-        $chatData = TelegramChats::getChat( TelegramBotRepository::getUserTelegramId() );
-        
+        $chatData = TelegramChats::getChat(TelegramBotRepository::getUserTelegramId());
+
         if (empty($command))
             unset($chatData['personal']['pending']);
-        else 
+        else
             $chatData['personal']['pending'] = $command;
-        
+
         TelegramChats::edit(['personal' => $chatData['personal']], $chatData['id']);
     }
     public static function isPendingState(): string
     {
-        $chatData = TelegramChats::getChat( TelegramBotRepository::getUserTelegramId() );
-        return empty($chatData['personal']['pending']) ? '' : $chatData['personal']['pending'];
+        if (!is_null(static::$pending)) {
+            return static::$pending;
+        }
+
+        $chatData = TelegramChats::getChat(TelegramBotRepository::getUserTelegramId());
+        static::$pending = empty($chatData['personal']['pending']) ? '' : $chatData['personal']['pending'];
+
+        return static::$pending;
     }
 }

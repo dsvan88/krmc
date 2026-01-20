@@ -60,6 +60,7 @@ class TelegramBotController extends Controller
             die('{"error":"1","title":"Error!","text":"Error: Nothing to get."}');
         }
 
+        ChatAction::$message = $message;
         if (static::$type === 'message' && empty($message[static::$type]['from']['is_bot'])) {
             TelegramChats::save($message);
         }
@@ -69,7 +70,6 @@ class TelegramBotController extends Controller
             $langCode = $message[static::$type]['from']['language_code'];
         }
         Locale::change($langCode);
-        ChatAction::$message = $message;
 
         self::$chatId = TelegramBotRepository::getChatId();
 
@@ -80,11 +80,9 @@ class TelegramBotController extends Controller
             static::$command = TelegramBotRepository::parseChatCommand($message['message']['text']);
 
             if (empty(static::$command)) {
-                $pending = TelegramChatsRepository::isPendingState();
+                if (empty(TelegramChatsRepository::$pending)) return false;
 
-                if (empty($pending)) return false;
-
-                static::$command = $pending;
+                static::$command = TelegramChatsRepository::$pending;
 
                 TelegramBotRepository::getCommonArguments($message['message']['text']);
             }

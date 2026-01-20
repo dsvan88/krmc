@@ -84,13 +84,14 @@ class TelegramBotRepository
         static::getCommonArguments(mb_substr($text, $commandLen + 1, NULL, 'UTF-8'));
         return $command;
     }
-    public static function getCommonArguments(string $text = ''){
+    public static function getCommonArguments(string $text = '')
+    {
         $text = trim($text);
         $symbols = Locale::$cyrillicPattern;
         preg_match_all("/([a-z$symbols.0-9#-]+)/ui", $text, $matches);
 
         ChatAction::$arguments = $matches[0];
-    } 
+    }
     public static function parseArguments($arguments): void
     {
         if (isset($arguments['prim'])) {
@@ -204,7 +205,7 @@ class TelegramBotRepository
             throw new Exception(__METHOD__ . ': $message can\'t be empty!');
 
         return empty($message['callback_query']) ?
-            $message['message']['from']['id']:
+            $message['message']['from']['id'] :
             $message['callback_query']['from']['id'];
     }
     public static function isDirect(array $message = []): bool

@@ -4,8 +4,10 @@ namespace app\models;
 
 use app\core\Model;
 use app\core\Sender;
+use app\core\Telegram\ChatAction;
 use app\Repositories\SocialPointsRepository;
 use app\Repositories\TelegramBotRepository;
+use app\Repositories\TelegramChatsRepository;
 
 class TelegramChats extends Model
 {
@@ -13,32 +15,33 @@ class TelegramChats extends Model
     public static $foreign = ['users' => Users::class];
     public static $jsonFields = ['personal', 'data'];
 
-    public static function save($messageArray)
+    public static function save()
     {
-        $chatId = $messageArray['message']['from']['id'];
+        $chatId = TelegramBotRepository::getChatId();
+        $message = ChatAction::$message;
 
         $result = self::getChat($chatId);
-        if (!$result) {
-            $chatData = ['uid' => $chatId, 'personal' => ['id' => $chatId], 'data' => ['last_seems' => $messageArray['message']['date']]];
+        if (empty($result)) {
+            $chatData = ['uid' => $chatId, 'personal' => ['id' => $chatId], 'data' => ['last_seems' => $message['message']['date']]];
 
-            if (!empty($messageArray['message']['from']['first_name'])) {
-                $chatData['personal']['first_name'] = $messageArray['message']['from']['first_name'];
+            if (!empty($message['message']['from']['first_name'])) {
+                $chatData['personal']['first_name'] = $message['message']['from']['first_name'];
             }
-            if (!empty($messageArray['message']['from']['last_name'])) {
-                $chatData['personal']['last_name'] = $messageArray['message']['from']['last_name'];
+            if (!empty($message['message']['from']['last_name'])) {
+                $chatData['personal']['last_name'] = $message['message']['from']['last_name'];
             }
-            if (!empty($messageArray['message']['from']['username'])) {
-                $chatData['personal']['username'] = $messageArray['message']['from']['username'];
+            if (!empty($message['message']['from']['username'])) {
+                $chatData['personal']['username'] = $message['message']['from']['username'];
             }
-            if ($messageArray['message']['chat']['type'] === 'private') {
+            if ($message['message']['chat']['type'] === 'private') {
                 $chatData['data']['direct'] = true;
             }
 
             $userId = Contacts::getUserIdByContact('telegramid', $chatId);
             if (!empty($userId)) {
                 $chatData['user_id'] = $userId;
-                if (TelegramBotRepository::getChatId($messageArray) === Settings::getMainTelegramId()) {
-                    SocialPointsRepository::evaluateMessage($userId, $messageArray['message']['text']);
+                if (TelegramBotRepository::getChatId() === Settings::getMainTelegramId()) {
+                    SocialPointsRepository::evaluateMessage($userId, $message['message']['text']);
                 }
             }
 
@@ -50,16 +53,18 @@ class TelegramChats extends Model
         $savedChatId = $result['id'];
 
         $chatData = $result;
-        if (empty($chatData['personal']['first_name']) && !empty($messageArray['message']['from']['first_name'])) {
-            $chatData['personal']['first_name'] = $messageArray['message']['from']['first_name'];
+        if (empty($chatData['personal']['first_name']) && !empty($message['message']['from']['first_name'])) {
+            $chatData['personal']['first_name'] = $message['message']['from']['first_name'];
         }
-        if (empty($chatData['personal']['last_name']) && !empty($messageArray['message']['from']['last_name'])) {
-            $chatData['personal']['last_name'] = $messageArray['message']['from']['last_name'];
+        if (empty($chatData['personal']['last_name']) && !empty($message['message']['from']['last_name'])) {
+            $chatData['personal']['last_name'] = $message['message']['from']['last_name'];
         }
-        if ($messageArray['message']['chat']['type'] === 'private') {
+        if ($message['message']['chat']['type'] === 'private') {
             $chatData['data']['direct'] = true;
         }
-        $chatData['personal']['username'] = empty($messageArray['message']['from']['username']) ? '' : $messageArray['message']['from']['username'];
+        $chatData['personal']['username'] = empty($message['message']['from']['username']) ? '' : $message['message']['from']['username'];
+
+        TelegramChatsRepository::$pending = empty($chatData['personal']['pending']) ? '' : $chatData['personal']['pending'];
 
         $userId = Contacts::getUserIdByContact('telegramid', $chatId);
         if (!empty($userId)) {
@@ -74,7 +79,7 @@ class TelegramChats extends Model
                 }
             }
         }
-        $chatData['data']['last_seems'] = $messageArray['message']['date'];
+        $chatData['data']['last_seems'] = $message['message']['date'];
 
         $chatData['personal'] = json_encode($chatData['personal'], JSON_UNESCAPED_UNICODE);
         $chatData['data'] = json_encode($chatData['data'], JSON_UNESCAPED_UNICODE);
@@ -84,6 +89,7 @@ class TelegramChats extends Model
             $saveData['user_id'] = $chatData['user_id'];
         }
         self::update($saveData, ['id' => $savedChatId]);
+
         return true;
     }
     public static function getPinnedMessage(int $chatId = 0): int
@@ -224,16 +230,16 @@ class TelegramChats extends Model
 
         return $chatsData;
     }
-    public static function createPinned(int $chatId, array $messageArray = [], int $messageId = 0)
+    public static function createPinned(int $chatId, array $message = [], int $messageId = 0)
     {
         $chatData = [
             'uid' => $chatId,
             'personal' => json_encode([
-                'id' => $messageArray['message']['chat']['id'],
-                'title' => $messageArray['message']['chat']['title'],
+                'id' => $message['message']['chat']['id'],
+                'title' => $message['message']['chat']['title'],
             ], JSON_UNESCAPED_UNICODE),
             'data' => json_encode([
-                'last_seems' =>  $messageArray['message']['date'],
+                'last_seems' =>  $message['message']['date'],
                 'pinned' => $messageId,
             ], JSON_UNESCAPED_UNICODE)
         ];
