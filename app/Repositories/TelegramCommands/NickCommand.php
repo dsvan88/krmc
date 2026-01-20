@@ -10,6 +10,7 @@ use app\models\TelegramChats;
 use app\models\Users;
 use app\Repositories\AccountRepository;
 use app\Repositories\ContactRepository;
+use app\Repositories\TelegramBotRepository;
 use app\Repositories\TelegramChatsRepository;
 
 class NickCommand extends ChatCommand
@@ -36,7 +37,7 @@ class NickCommand extends ChatCommand
             $replyMarkup = [
                 'inline_keyboard' => [
                     [
-                        ['text' => '❌' . self::locale('Cancel'), 'callback_data' => ['c' => 'prenick']],
+                        ['text' => '❌' . self::locale('Cancel'), 'callback_data' => ['c' => 'pending', 'p' => 'nick', 'ci' => TelegramBotRepository::getChatId()]],
                     ],
                 ],
             ];
@@ -52,6 +53,8 @@ class NickCommand extends ChatCommand
             ];
         }
 
+        TelegramChatsRepository::setPendingState();
+        
         $username = Users::formatName($_username);
 
         if (empty($username)) {

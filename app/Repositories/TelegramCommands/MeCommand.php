@@ -5,8 +5,6 @@ namespace app\Repositories\TelegramCommands;
 use app\core\Telegram\ChatCommand;
 use app\models\SocialPoints;
 
-use app\models\Users;
-
 class RenickCommand extends ChatCommand
 {
     public static $accessLevel = 'user';
