@@ -58,7 +58,7 @@ class PingCommand extends ChatCommand
 
         $userIds = [];
         foreach ($bookedIds as $userId) {
-            if (empty($userId) || in_array($userId, $userIds, true) || in_array($userId, $existsIds, true)) continue;
+            if (empty($userId) || !is_numeric($userId) || in_array($userId, $userIds, true) || in_array($userId, $existsIds, true)) continue;
             $userIds[] = $userId;
         }
 

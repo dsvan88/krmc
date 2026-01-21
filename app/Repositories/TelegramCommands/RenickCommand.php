@@ -6,6 +6,7 @@ use app\core\Telegram\ChatCommand;
 use app\core\Locale;
 use app\models\SocialPoints;
 use app\models\Users;
+use app\Repositories\TelegramBotRepository;
 use app\Repositories\TelegramChatsRepository;
 
 class RenickCommand extends ChatCommand
@@ -35,7 +36,7 @@ class RenickCommand extends ChatCommand
             $replyMarkup = [
                 'inline_keyboard' => [
                     [
-                        ['text' => '❌' . self::locale('Cancel'), 'callback_data' => ['c' => 'prenick']],
+                        ['text' => '❌' . self::locale('Cancel'), 'callback_data' => ['c' => 'pending', 'p' => 'renick', 'ci' => TelegramBotRepository::getChatId()]],
                     ],
                 ],
             ];
@@ -50,7 +51,9 @@ class RenickCommand extends ChatCommand
                 ]
             ];
         }
-
+        
+        TelegramChatsRepository::setPendingState();
+        
         $username = Users::formatName($_username);
 
         if (empty($username)) {

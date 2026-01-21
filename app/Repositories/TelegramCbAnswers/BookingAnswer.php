@@ -63,7 +63,10 @@ class BookingAnswer extends ChatAnswer
         }
 
         if ($pIndex === -1) {
-            static::addParticipant($weekData['data'][$dayNum]);
+            if (empty(static::$arguments['r']))
+                static::addParticipant($weekData['data'][$dayNum]);
+            else
+                return static::result('{{ Tg_Command_Requester_Not_Booked }}');
         } else {
             if (empty(static::$arguments['r'])) {
                 static::changePrim($weekData['data'][$dayNum]['participants'], $pIndex);
