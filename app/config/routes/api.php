@@ -152,6 +152,11 @@ return  [
         'action' => 'personalEdit',
         'access' => ['category' => 'user']
     ],
+    'api/account/is_exists' => [
+        'controller' => 'account',
+        'action' => 'isExists',
+        'access' => ['category' => 'manager']
+    ],
 
     'api/autocomplete/users-names' =>
     [

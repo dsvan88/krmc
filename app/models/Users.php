@@ -313,7 +313,6 @@ class Users extends Model
     {
         $table = self::$table;
         $name = mb_strtolower($name, 'UTF-8');
-        // $result = self::query("SELECT id FROM $table WHERE name ILIKE ? LIMIT 1", [$name], 'Column');
         $result = self::query("SELECT id FROM $table WHERE LOWER( name ) = ? LIMIT 1", [$name], 'Column');
 
         return empty($result) ? 0 : $result;
@@ -449,7 +448,7 @@ class Users extends Model
     {
         $table = self::$table;
         $nickname = self::formatName($name);
-        
+
         if (empty($nickname)) return false;
 
         return self::insert(['name' => $nickname], $table);
@@ -529,8 +528,10 @@ class Users extends Model
      * 
      * @return mixed        - new, formated nickname
      */
-    public static function formatName(string $name)
+    public static function formatName(string $name = '')
     {
+        if (empty($name)) return false;
+
         $name = trim($name);
         $symbols = 'a-z';
         $lun = preg_replace(['/\s+/', "/[^$symbols.0-9 ]+/ui"], [' ', ''], $name);

@@ -27,18 +27,36 @@ actionHandler.participantFieldClear = function (target, event) {
         arriveInput.value = '';
     }
 }
-actionHandler.participantCheckChange = function (event) {
-    const newName = event.target.value.trim();
-    if (newName === '') {
+actionHandler.participantCheckChange = async function (e) {
+    const name = e.target.value.trim();
+    if (name === '') return false;
+    if (name === '+1') return true;
+
+    const participantsList = [];
+    e.target.closest('form').querySelectorAll("input[name='participant[]']").forEach(i => i.value !== '' && i !== e.target ? participantsList.push(i.value) : false);
+    if (participantsList.includes(name)) {
+        alert('Гравець з таким іменем - вже зареєстрований на поточний вечір!');
+        e.target.value = '';
         return false;
     }
 
-    let participantsList = [];
-    event.target.closest('form').querySelectorAll("input[name='participant[]']").forEach(item => item.value !== '' && item !== event.target ? participantsList.push(item.value) : false);
-    if (newName !== '+1' && participantsList.includes(newName)) {
-        alert('Гравець з таким іменем - вже зареєстрований на поточний вечір!');
-        event.target.value = '';
+    if (!name.startsWith('@')) {
+        const formData = new FormData;
+        formData.append('name',)
+        const r = await this.request({
+            url: '/account/is_exists',
+            data: formData,
+        }, modal);
+
+        if (r) {
+            if (customConfirm($r))
+                return true;
+
+            e.target.value = '';
+            return false;
+        }
     }
+    return true;
 }
 actionHandler.bookingFormSubmit = function (event) {
     event.preventDefault();

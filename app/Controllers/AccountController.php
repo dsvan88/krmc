@@ -304,7 +304,7 @@ class AccountController extends Controller
         } else {
             Users::edit([$field => $value], ['id' => $userId]);
         }
-        if ($category === 'contacts'){
+        if ($category === 'contacts') {
             Contacts::reLink([$field => $value], $userId);
         }
         return View::notice(['message' => 'Success', 'time' => 1500, 'location' => 'reload']);
@@ -580,7 +580,7 @@ class AccountController extends Controller
         $userData['personal']['avatar'] = $fileId;
 
         Users::edit(['personal' =>  $userData['personal']], ['id' => $uid]);
-        
+
         unlink($image['fullpath']);
 
         return View::notice(['message' => 'Success', 'time' => 1500, 'location' => 'reload']);
@@ -785,6 +785,15 @@ class AccountController extends Controller
             return View::message($result);
         }
         return View::message('Success');
+    }
+    public function isExistsAction()
+    {
+        $name = Users::formatName($_POST['name']);
+
+        if (empty($name) || Users::getId($name)) exit();
+
+        exit();
+        // return View::notice(['']);
     }
     public function registerFormAction()
     {
