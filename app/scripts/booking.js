@@ -39,23 +39,21 @@ actionHandler.participantCheckChange = async function (e) {
         return false;
     }
 
-    if (!name.startsWith('@')) {
-        const fd = new FormData;
-        fd.append('name', name);
-        const r = await this.request({
-            url: '/day/validate/name',
-            data: fd,
-        });
+    const fd = new FormData;
+    fd.append('name', name);
+    const r = await this.request({
+        url: '/day/validate/name',
+        data: fd,
+    });
 
-        if (r['result'] || r['confirm'] && await customConfirm(r['confirm'])) return true;
+    if (r['result'] || r['confirm'] && await customConfirm(r['confirm'])) return true;
 
-        if (r['alert']) {
-            new Alert(r['alert']);
-        }
-
-        e.target.value = '';
-        return false;
+    if (r['alert']) {
+        new Alert(r['alert']);
     }
+
+    e.target.value = '';
+    return false;
 }
 actionHandler.bookingFormSubmit = function (event) {
     event.preventDefault();

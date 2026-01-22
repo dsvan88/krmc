@@ -788,6 +788,19 @@ class AccountController extends Controller
     }
     public function validateNameAction()
     {
+        if ($_POST['name'][0] === '@') {
+            $tgChat = TelegramChats::findByUserName(substr($_POST['name'], 1));
+            if (empty($tgChat)) {
+                return View::response([
+                    'result' => false,
+                    'alert' => [
+                        'title' => Locale::phrase('Checking...'),
+                        'text' => Locale::phrase(['string' => "Something wrong with the nickname %s!\nLet’s try it again.", 'vars' => [$_POST['name']]]),
+                    ]
+                ]);
+            }
+            return View::response(['result' => true]);
+        }
         $name = Validator::validate('name', $_POST['name']);
 
         if (empty($name))
@@ -799,16 +812,16 @@ class AccountController extends Controller
                 ]
             ]);
 
-        if (Users::getId($name) > 0)
-            return View::response(['result' => true]);
+        if (Users::getId($name) === 0)
+            return View::response([
+                'result' => false,
+                'confirm' => [
+                    'title' => Locale::phrase('Checking...'),
+                    'text' => Locale::phrase(['string' => "The nickname %s - isn’t found in the base!\nIs it a new user?", 'vars' => [$name]]),
+                ]
+            ]);
 
-        return View::response([
-            'result' => false,
-            'confirm' => [
-                'title' => Locale::phrase('Checking...'),
-                'text' => Locale::phrase(['string' => "The nickname %s - isn’t found in the base!\nIs it a new user?", 'vars' => [$name]]),
-            ]
-        ]);
+        return View::response(['result' => true]);
     }
     public function registerFormAction()
     {
