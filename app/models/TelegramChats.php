@@ -164,10 +164,8 @@ class TelegramChats extends Model
         }
         $table = self::$table;
         $result = self::query("SELECT * FROM $table WHERE personal->'$.username' = ? LIMIT 1", [$username], 'Assoc');
-        if (empty($result)) {
-            return [];
-        }
-        return self::decodeJson($result[0]);
+
+        return empty($result) ? [] : self::decodeJson($result[0]);
     }
     public static function getDirectChats()
     {
