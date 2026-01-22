@@ -453,7 +453,7 @@ class AccountController extends Controller
 
         if (!empty($_POST)) {
 
-            $name = Users::formatName(trim($_POST['name']));
+            $name = Validator::validate('name', $_POST['name']);
 
             if (empty($name)) View::message('Fail!');
 
@@ -786,11 +786,20 @@ class AccountController extends Controller
         }
         return View::message('Success');
     }
-    public function isExistsDayAction()
+    public function validateNameAction()
     {
-        $name = Users::formatName($_POST['name']);
+        $name = Validator::validate('name', $_POST['name']);
 
-        if (empty($name) || Users::getId($name) > 0)
+        if (empty($name))
+            return View::response([
+                'result' => false,
+                'alert' => [
+                    'title' => Locale::phrase('Checking...'),
+                    'text' => Locale::phrase(['string' => "Something wrong with the nickname %s!\nLet’s try it again.", 'vars' => [$_POST['name']]]),
+                ]
+            ]);
+
+        if (Users::getId($name) > 0)
             return View::response(['result' => true]);
 
         return View::response([
@@ -846,7 +855,7 @@ class AccountController extends Controller
     public function doubles($post)
     {
 
-        $name = Users::formatName($post['name']);
+        $name = Validator::validate('name', $post['name']);
         if (empty($name)) {
             return View::message(['error' => 404, 'message' => 'Not found!']);
         }

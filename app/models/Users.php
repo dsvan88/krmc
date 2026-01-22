@@ -6,6 +6,7 @@ use app\core\GoogleDrive;
 use app\core\Locale;
 use app\core\Model;
 use app\core\Tech;
+use app\core\Validator;
 use app\Repositories\ContactRepository;
 
 class Users extends Model
@@ -447,7 +448,7 @@ class Users extends Model
     public static function add(string $name = '', bool $tmp = false)
     {
         $table = self::$table;
-        $nickname = self::formatName($name);
+        $nickname = Validator::validate('name', $name);
 
         if (empty($nickname)) return false;
 
@@ -522,34 +523,6 @@ class Users extends Model
             }
         }
         return $source;
-    }
-    /**
-     * @param string $name  - user's nickname
-     * 
-     * @return mixed        - new, formated nickname
-     */
-    public static function formatName(string $name = '')
-    {
-        if (empty($name)) return false;
-
-        $name = trim($name);
-        $symbols = 'a-z';
-        $lun = preg_replace(['/\s+/', "/[^$symbols.0-9 ]+/ui"], [' ', ''], $name);
-        $symbols = Locale::$cyrillicPattern;
-        $cun = preg_replace(['/\s+/', "/[^$symbols.0-9 ]+/ui"], [' ', ''], $name);
-
-        $name = strlen($lun) > strlen($cun) ? $lun : $cun;
-
-        if (empty($name)) return false;
-
-        $nickname = '';
-        $_name = explode(' ', $name);
-
-        foreach ($_name as $slug) {
-            $nickname .= Locale::mb_ucfirst($slug) . ' ';
-        }
-
-        return mb_substr($nickname, 0, -1, 'UTF-8');
     }
     public static function init()
     {

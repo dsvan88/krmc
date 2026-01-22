@@ -43,19 +43,19 @@ actionHandler.participantCheckChange = async function (e) {
         const fd = new FormData;
         fd.append('name', name);
         const r = await this.request({
-            url: '/day/account/is_exists',
+            url: '/day/validate/name',
             data: fd,
         });
 
-        if (r['confirm']) {
-            if (await customConfirm(r['confirm']))
-                return true;
+        if (r['result'] || r['confirm'] && await customConfirm(r['confirm'])) return true;
 
-            e.target.value = '';
-            return false;
+        if (r['alert']) {
+            new Alert(r['alert']);
         }
+
+        e.target.value = '';
+        return false;
     }
-    return true;
 }
 actionHandler.bookingFormSubmit = function (event) {
     event.preventDefault();

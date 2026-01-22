@@ -297,9 +297,9 @@ return  [
         'access' => ['category' => 'manager']
     ],
 
-    'api/day/account/is_exists' => [
+    'api/day/validate/name' => [
         'controller' => 'account',
-        'action' => 'isExistsDay',
+        'action' => 'validateName',
         'access' => ['category' => 'manager']
     ],
 ];

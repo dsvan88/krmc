@@ -4,6 +4,7 @@ namespace app\Repositories\TelegramCommands;
 
 use app\core\Telegram\ChatCommand;
 use app\core\Locale;
+use app\core\Validator;
 use app\models\Users;
 use app\Repositories\TelegramBotRepository;
 use app\Repositories\TelegramChatsRepository;
@@ -48,7 +49,7 @@ class NewuserCommand extends ChatCommand
             $username .= Locale::mb_ucfirst($string) . ' ';
         }
 
-        $username = Users::formatName(mb_substr($username, 0, -1, 'UTF-8'));
+        $username = Validator::validate('name', mb_substr($username, 0, -1, 'UTF-8'));
 
         if (mb_strlen(trim($username), 'UTF-8') < 2) {
             return static::result('{{ Tg_Command_Name_Too_Short }}');

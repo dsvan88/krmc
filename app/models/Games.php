@@ -5,6 +5,7 @@ namespace app\models;
 use app\core\Model;
 use app\core\Locale;
 use app\core\Tech;
+use app\core\Validator;
 use app\Repositories\AccountRepository;
 use app\Repositories\GameRepository;
 
@@ -17,7 +18,7 @@ class Games extends Model
 
     public static function create($post)
     {
-        $manager = Users::getDataByName(Users::formatName($post['manager']));
+        $manager = Users::getDataByName(Validator::validate('name', $post['manager']));
         $state = [
             'config' => GameRepository::formConfig($post)
         ];

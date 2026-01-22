@@ -4,6 +4,7 @@ namespace app\Repositories\TelegramCommands;
 
 use app\core\Telegram\ChatCommand;
 use app\core\Locale;
+use app\core\Validator;
 use app\models\SocialPoints;
 use app\models\Users;
 use app\Repositories\TelegramBotRepository;
@@ -20,10 +21,10 @@ class RenickCommand extends ChatCommand
     }
     public static function execute()
     {
-        if (SocialPoints::get(static::$requester['id']) < static::$costs){
-            return static::result(['string'=> 'I’m deeply sorry, but you can’t do this action yet! Social Points isn’t enough. Need <b>%s</b>.', 'vars' => [static::$costs]]);
+        if (SocialPoints::get(static::$requester['id']) < static::$costs) {
+            return static::result(['string' => 'I’m deeply sorry, but you can’t do this action yet! Social Points isn’t enough. Need <b>%s</b>.', 'vars' => [static::$costs]]);
         }
-        
+
         $_username = implode(' ', static::$arguments);
 
         if (empty(trim($_username))) {
@@ -31,7 +32,7 @@ class RenickCommand extends ChatCommand
 
             TelegramChatsRepository::setPendingState('renick');
 
-            $message = self::locale('Okay, Im ready to get your beautiful nickname!'). PHP_EOL;
+            $message = self::locale('Okay, Im ready to get your beautiful nickname!') . PHP_EOL;
             $message .= self::locale('Your next message - will be your nickname!');
             $replyMarkup = [
                 'inline_keyboard' => [
@@ -51,10 +52,10 @@ class RenickCommand extends ChatCommand
                 ]
             ];
         }
-        
+
         TelegramChatsRepository::setPendingState();
-        
-        $username = Users::formatName($_username);
+
+        $username = Validator::validate('name', $_username);
 
         if (empty($username)) {
             return static::result("Invalid nickname format!\nPlease use <b>Cyrillic</b> or <b>Latin</b> alphabet, <b>spaces</b> and <b>digits</b> in the nickname!");
@@ -76,7 +77,7 @@ class RenickCommand extends ChatCommand
 
             $personal = static::$requester['personal'];
             $personal['newName'] = $username;
-            Users::edit(['personal'=> $personal], ['id' => static::$requester['id']]);
+            Users::edit(['personal' => $personal], ['id' => static::$requester['id']]);
 
             $message = self::locale(['string' => "So... you wanna to change your nickname <b>%s</b> to a nickname <b>%s</b>. Right?", 'vars' => [static::$requester['name'], $username]]);
 
@@ -102,7 +103,7 @@ class RenickCommand extends ChatCommand
 
         $message = self::locale(['string' => '{{ Tg_Command_New_User_Already_Set }}', 'vars' => [$username]]) . PHP_EOL;
         $message .= self::locale('If it is your, then contact the Administrators to make changes!');
-        
+
         return [
             'result' => false,
             'reaction' => '🤷‍♂️',

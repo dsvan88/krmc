@@ -5,6 +5,7 @@ namespace app\models;
 use app\core\Model;
 use app\core\Locale;
 use app\core\Tech;
+use app\core\Validator;
 use app\Repositories\AccountRepository;
 use app\Repositories\DayRepository;
 
@@ -87,7 +88,7 @@ class Days extends Model
                 $name = $data['participant'][$i];
                 $id = Users::getId($name);
                 if ($id < 2) {
-                    $name = Users::formatName($name);
+                    $name = Validator::validate('name', $name);
 
                     if (empty($name)) continue;
 

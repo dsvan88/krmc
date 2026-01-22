@@ -99,4 +99,27 @@ class Validator
         $hmac = hash_hmac('sha256', Settings::getBotToken(), 'WebAppData', true);
         return hash_hmac('sha256', $check_string, $hmac) === $hash;
     }
+    private static function name(string $name = '')
+    {
+        $name = trim($name);
+        if (empty($name)) return false;
+
+        $symbols = 'a-z';
+        $lun = preg_replace(['/\s+/', "/[^$symbols.0-9 ]+/ui"], [' ', ''], $name);
+        $symbols = Locale::$cyrillicPattern;
+        $cun = preg_replace(['/\s+/', "/[^$symbols.0-9 ]+/ui"], [' ', ''], $name);
+
+        $name = strlen($lun) > strlen($cun) ? $lun : $cun;
+
+        if (empty($name)) return false;
+
+        $nickname = '';
+        $_name = explode(' ', $name);
+
+        foreach ($_name as $slug) {
+            $nickname .= Locale::mb_ucfirst($slug) . ' ';
+        }
+
+        return mb_substr($nickname, 0, -1, 'UTF-8');
+    }
 }

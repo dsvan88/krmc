@@ -5,6 +5,7 @@ namespace app\Repositories\TelegramCommands;
 use app\core\Telegram\ChatCommand;
 use app\core\Locale;
 use app\core\Telegram\ChatAction;
+use app\core\Validator;
 use app\models\Contacts;
 use app\models\TelegramChats;
 use app\models\Users;
@@ -55,7 +56,7 @@ class NickCommand extends ChatCommand
 
         TelegramChatsRepository::setPendingState();
         
-        $username = Users::formatName($_username);
+        $username = Validator::validate('name', $_username);
 
         if (empty($username)) {
             return static::result("Invalid nickname format!\nPlease use <b>Cyrillic</b> or <b>Latin</b> alphabet, <b>spaces</b> and <b>digits</b> in the nickname!");

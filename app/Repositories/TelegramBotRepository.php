@@ -5,6 +5,7 @@ namespace app\Repositories;
 use app\core\Locale;
 use app\core\Router;
 use app\core\Telegram\ChatAction;
+use app\core\Validator;
 use app\models\Days;
 use app\models\Users;
 use app\models\Settings;
@@ -118,7 +119,7 @@ class TelegramBotRepository
                 ChatAction::$arguments['nonames'] = substr($match[0], 1);
             } elseif (empty(ChatAction::$arguments['userId']) || ChatAction::$arguments['userId'] < 2) {
                 // $value = str_ireplace(['m', 'c', 'o', 'p', 'x', 'a'], ['м', 'с', 'о', 'р', 'х', 'а'], $value);
-                $value = Users::formatName($value);
+                $value = Validator::validate('name', $value);
                 if (empty($value)) continue;
 
                 $userData = Users::getDataByName($value);
