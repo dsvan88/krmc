@@ -84,6 +84,13 @@ class Days extends Model
                 if (empty($chatData)) continue;
 
                 $id = 't' . $chatData['uid'];
+            }elseif ($data['participant'][$i][0] === '_') {
+                $tgChatId = substr($data['participant'][$i], 1);
+                $chatData = TelegramChats::getChat($tgChatId);
+
+                if (empty($chatData)) continue;
+
+                $id = '_' . $chatData['uid'];
             } else {
                 $name = $data['participant'][$i];
                 $id = Users::getId($name);
@@ -216,6 +223,11 @@ class Days extends Model
         AccountRepository::addNames($weekData['data'][$day]['participants']);
         $count = count($weekData['data'][$day]['participants']);
         for ($x = 0; $x < $count; $x++) {
+            if ($weekData['data'][$day]['participants'][$x]['name'][0] === '_') {
+                $weekData['data'][$day]['participants'][$x]['name'] = '+1';
+                $noNames[] = $weekData['data'][$day]['participants'][$x];
+                continue;
+            }
             if (empty($weekData['data'][$day]['participants'][$x]['id'])) {
                 $noNames[] = $weekData['data'][$day]['participants'][$x];
                 continue;
@@ -234,8 +246,11 @@ class Days extends Model
         for ($x = 0; $x < $count; $x++) {
             $modsData = '';
             $userName = '+1';
+ 
+            if (!is_numeric($participants[$x]['id']) && $participants[$x]['id'] === '_'){
 
-            if (!empty($participants[$x]['name'])) {
+            }
+            elseif (!empty($participants[$x]['name'])) {
                 $userName = $participants[$x]['name'];
                 if (!empty($participants[$x]['emoji'])) {
                     $userName .= $participants[$x]['emoji'];

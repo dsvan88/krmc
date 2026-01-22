@@ -21,11 +21,15 @@ class BookingAnswer extends ChatAnswer
         if (empty(self::$requester['id'])) {
             $chatId = TelegramBotRepository::getUserTelegramId();
             $tgChat = TelegramChats::getChat($chatId);
-            if (empty($tgChat) || empty($tgChat['personal']['username'])) {
-                return static::result("I can’t to recognize you!\nPlease, register in our system!");
+            if (empty($tgChat))
+                return static::result('{{ Tg_Unknown_Requester }}', '🤷‍♂');
+            if (empty($tgChat['personal']['username'])) {
+                static::$arguments['userId'] = '_' . $chatId;
+                static::$arguments['userName'] = '+1';
+            } else {
+                static::$arguments['userId'] = 't' . $chatId;
+                static::$arguments['userName'] = '@' . $tgChat['personal']['username'];
             }
-            static::$arguments['userId'] = 't' . $chatId;
-            static::$arguments['userName'] = '@' . $tgChat['personal']['username'];
             static::$arguments['userStatus'] = 'all';
         } else {
             static::$arguments['userId'] = self::$requester['id'];

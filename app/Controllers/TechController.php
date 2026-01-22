@@ -236,12 +236,12 @@ class TechController extends Controller
             'message' => [
                 'message_id' => 189,
                 'from' => [
-                    'id' => 9006691681,
+                    'id' => 9006691682,
                     // 'id' => 412223734,
-                    'is_bot' => false,
+                    // 'is_bot' => false,
                     'first_name' => 'Dmytro',
                     'last_name' => 'Vankevych',
-                    'username' => 'dsvan88',
+                    // 'username' => 'dsvan88',
                     'language_code' => 'uk',
                 ],
                 'chat' => [
@@ -258,7 +258,7 @@ class TechController extends Controller
                 // 'text' => '/dice',
                 // 'text' => '/reg +ср,Джокер',
                 // 'text' => '/chat main',
-                'text' => '+вс 18:00',
+                'text' => '/day сб',
                 // 'text' => '+пт?',
                 // 'text' => '+ на четвер, десь на 18:45, звісно, що підстрахую, але поки що (під ?)',
                 // 'text' => '/?',

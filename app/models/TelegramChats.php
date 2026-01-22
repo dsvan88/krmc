@@ -17,10 +17,11 @@ class TelegramChats extends Model
 
     public static function save()
     {
-        $chatId = TelegramBotRepository::getChatId();
+        $chatId = TelegramBotRepository::getUserTelegramId();
         $message = ChatAction::$message;
 
         $result = self::getChat($chatId);
+
         if (empty($result)) {
             $chatData = ['uid' => $chatId, 'personal' => ['id' => $chatId], 'data' => ['last_seems' => $message['message']['date']]];
 
@@ -89,7 +90,6 @@ class TelegramChats extends Model
             $saveData['user_id'] = $chatData['user_id'];
         }
         self::update($saveData, ['id' => $savedChatId]);
-
         return true;
     }
     public static function getPinnedMessage(int $chatId = 0): int

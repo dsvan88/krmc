@@ -795,12 +795,13 @@ class AccountController extends Controller
                     'result' => false,
                     'alert' => [
                         'title' => Locale::phrase('Checking...'),
-                        'text' => Locale::phrase(['string' => "Something wrong with the nickname %s!\nLet’s try it again.", 'vars' => [$_POST['name']]]),
+                        'text' => Locale::phrase(['string' => "Cant find a telegram user @%s!\nLet’s try it again.", 'vars' => [$_POST['name']]]),
                     ]
                 ]);
             }
             return View::response(['result' => true]);
         }
+
         $name = Validator::validate('name', $_POST['name']);
 
         if (empty($name))

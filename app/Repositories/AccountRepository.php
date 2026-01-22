@@ -71,9 +71,9 @@ class AccountRepository
             return $source;
 
         if (!empty($source['id'])) {
-            if (!is_numeric($source['id']) && $source['id'][0] === 't') {
+            if (!is_numeric($source['id']) && in_array($source['id'][0], ['t', '_'], true)) {
                 $chatData = TelegramChats::getChat(substr($source['id'], 1));
-                $source['name'] = '@' . $chatData['personal']['username'];
+                $source['name'] = empty($chatData['personal']['username']) ? $source['id'] : '@' . $chatData['personal']['username'];
                 $source['status'] = 'all';
                 $source['gender'] = '';
                 $source['emoji'] = '';
@@ -94,32 +94,6 @@ class AccountRepository
             static::addNames($source[$x]);
         }
         return $source;
-
-        // $countSource = count($source);
-        // $ids = array_column($source,'id');
-
-        // if (empty($ids))
-        //     return $source;
-
-        // $data = Users::findGroup('id', $ids);
-        // $countData = count($data);
-        // for ($x = 0; $x < $countData; $x++) {
-        //     for ($y = 0; $y < $countSource; $y++) {
-        //         if ($source[$y]['id'] != $data[$x]['id']) continue;
-        //         $source[$y]['name'] = $data[$x]['name'];
-
-        //         $source[$y]['status'] = empty($data[$x]['privilege']['status']) ? '' : $data[$x]['privilege']['status'];
-        //         $source[$y]['gender'] = empty($data[$x]['personal']['gender']) ? '' : $data[$x]['personal']['gender'];
-        //         $source[$y]['emoji'] = empty($data[$x]['personal']['emoji']) ? '' : $data[$x]['personal']['emoji'];
-        //         break;
-        //     }
-        // }
-
-        // for ($x = 0; $x < $countSource; $x++) {
-        //     if (empty($source[$x]['id']) || !empty($source[$x]['name'])) continue;
-        //     $element['name'] = '&lt; Deleted &gt;';
-        // }
-        // return $source;
     }
     public static function addParticipantToDay(string $name, int $day = -1)
     {
