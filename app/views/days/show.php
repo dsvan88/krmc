@@ -33,7 +33,11 @@
                         <label class="participant__num"><?= ($x + 1) ?>.</label>
                         <div class="participant__info">
                             <? if (isset($day['participants'][$x])) : ?>
-                                <div class="participant__name"><?= empty($day['participants'][$x]['name']) ? '' : $day['participants'][$x]['name'] ?></div>
+                                <div class="participant__name">
+                                    <? if (!empty($day['participants'][$x]['name'])): ?>
+                                        <?= $day['participants'][$x]['name'][0] === '_' ? '+1' : $day['participants'][$x]['name'] ?>
+                                    <? endif ?>
+                                </div>
                                 <div class="participant__details">
                                     <span><?= empty($day['participants'][$x]['arrive']) ? '' : $day['participants'][$x]['arrive'] ?></span>
                                     <span><?= empty($day['participants'][$x]['prim']) ? '' : " (<em>{$day['participants'][$x]['prim']}</em>)" ?></span>
