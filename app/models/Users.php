@@ -309,7 +309,7 @@ class Users extends Model
         return empty($result) ? [] : $result;
     }
     // Получение ID в системе по никнейму в игре
-    public static function getId($name, $free = false)
+    public static function getId($name, $free = false): int
     {
         $table = self::$table;
         $name = mb_strtolower($name, 'UTF-8');

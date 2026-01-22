@@ -3,7 +3,6 @@ actionHandler.participantFieldGet = function (target, event) {
     const newID = participantsFields.querySelectorAll(".participant").length;
     let data = new FormData();
     data.append('id', newID);
-    console.log(newID);
     request({
         url: 'participant-field-get',
         data: data,
@@ -41,15 +40,15 @@ actionHandler.participantCheckChange = async function (e) {
     }
 
     if (!name.startsWith('@')) {
-        const formData = new FormData;
-        formData.append('name',)
+        const fd = new FormData;
+        fd.append('name', name);
         const r = await this.request({
-            url: '/account/is_exists',
-            data: formData,
-        }, modal);
+            url: '/day/account/is_exists',
+            data: fd,
+        });
 
-        if (r) {
-            if (customConfirm($r))
+        if (r['confirm']) {
+            if (await customConfirm(r['confirm']))
                 return true;
 
             e.target.value = '';
@@ -60,8 +59,8 @@ actionHandler.participantCheckChange = async function (e) {
 }
 actionHandler.bookingFormSubmit = function (event) {
     event.preventDefault();
-    let url = event.target.action.slice(window.location.length);
-    let formData = new FormData(event.target);
+    const url = event.target.action.slice(window.location.length);
+    const formData = new FormData(event.target);
     request({
         url: url,
         data: formData,

@@ -786,14 +786,20 @@ class AccountController extends Controller
         }
         return View::message('Success');
     }
-    public function isExistsAction()
+    public function isExistsDayAction()
     {
         $name = Users::formatName($_POST['name']);
 
-        if (empty($name) || Users::getId($name)) exit();
+        if (empty($name) || Users::getId($name) > 0)
+            return View::response(['result' => true]);
 
-        exit();
-        // return View::notice(['']);
+        return View::response([
+            'result' => false,
+            'confirm' => [
+                'title' => Locale::phrase('Checking...'),
+                'text' => Locale::phrase(['string' => "The nickname %s - isn’t found in the base!\nIs it a new user?", 'vars' => [$name]]),
+            ]
+        ]);
     }
     public function registerFormAction()
     {
