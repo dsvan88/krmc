@@ -71,7 +71,7 @@ class WeekRepository
             AccountRepository::addNames($days[$i]['participants']);
             $days[$i]['playersCount'] = min(count($days[$i]['participants']), 10);
             for ($x = 0; $x < $days[$i]['playersCount']; $x++) {
-                if (empty($days[$i]['participants'][$x]['id']) || !is_numeric($days[$i]['participants'][$x]['id']) && $days[$i]['participants'][$x]['id'][0] === '_')
+                if (empty($days[$i]['participants'][$x]['id']) || $days[$i]['participants'][$x]['name'][0] === '_')
                     $days[$i]['participants'][$x]['name'] = '+1';
             }
         }

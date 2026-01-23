@@ -800,6 +800,19 @@ class AccountController extends Controller
                 ]);
             }
             return View::response(['result' => true]);
+        } elseif ($_POST['name'][0] === '_') {
+            $chatId = substr($_POST['name'], 1);
+            $tgChat = TelegramChats::find($chatId);
+            if (empty($tgChat)) {
+                return View::response([
+                    'result' => false,
+                    'alert' => [
+                        'title' => Locale::phrase('Checking...'),
+                        'text' => Locale::phrase(['string' => "Cant find a telegram userwith chat ID @%s!\nLet’s try it again.", 'vars' => [$chatId]]),
+                    ]
+                ]);
+            }
+            return View::response(['result' => true]);
         }
 
         $name = Validator::validate('name', $_POST['name']);

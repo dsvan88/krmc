@@ -23,13 +23,8 @@ class BookingAnswer extends ChatAnswer
             $tgChat = TelegramChats::getChat($chatId);
             if (empty($tgChat))
                 return static::result('{{ Tg_Unknown_Requester }}', '🤷‍♂');
-            if (empty($tgChat['personal']['username'])) {
-                static::$arguments['userId'] = '_' . $chatId;
-                static::$arguments['userName'] = '+1';
-            } else {
-                static::$arguments['userId'] = 't' . $chatId;
-                static::$arguments['userName'] = '@' . $tgChat['personal']['username'];
-            }
+            static::$arguments['userId'] = '_' . $chatId;
+            static::$arguments['userName'] = empty($tgChat['personal']['username']) ? '+1' : '@' . $tgChat['personal']['username'];
             static::$arguments['userStatus'] = 'all';
         } else {
             static::$arguments['userId'] = self::$requester['id'];
