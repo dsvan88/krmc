@@ -4,6 +4,9 @@ namespace app\Repositories\TelegramCbAnswers;
 
 use app\core\Telegram\ChatAnswer;
 use app\models\Users;
+use app\Repositories\DayRepository;
+use app\Repositories\TelegramBotRepository;
+use app\Repositories\WeekRepository;
 use Exception;
 
 class NickAnswer extends ChatAnswer
@@ -39,6 +42,10 @@ class NickAnswer extends ChatAnswer
                     PHP_EOL . PHP_EOL .
                     static::locale('If you made a mistake - don’t worry! Just tell the Administrator about it and he will quickly fix it😏'),
             ];
+            $records = DayRepository::findBookedDays('_'.TelegramBotRepository::getUserTelegramId(), 5);
+            if (!empty($limitWeeks)){
+                //Do something with this information :P
+            }
         }
 
         return array_merge(static::result('Okay', true), ['update' => [$update]]);

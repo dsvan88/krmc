@@ -96,23 +96,53 @@ class DayRepository
             $result .= Locale::phrase("<b>Tournament</b>!\nBecome a champion in a glorious and fair competition!\n");
         return $result;
     }
-    public static function findLastGameOfPlayer(int $userId = 0)
+    public static function findLastGameOfPlayer( $userId = 0)
     {
         if (empty($userId)) return 0;
 
         $weeks = Weeks::getAll();
         $weeks = array_reverse($weeks);
+        $statuses = ['set', 'finished'];
         foreach ($weeks as $week) {
             foreach ($week['data'] as $num => $day) {
-                if ($day['status'] !== 'set') continue;
+                if (!in_array($day['status'],  $statuses, true)) continue;
                 foreach ($day['participants'] as $player) {
                     if ($player['id'] == $userId)
-                        return $week['start'] + TIME_MARGE * ($num + 1);
+                        return $week['start'] + TIMESTAMP_DAY * $num;
                 }
             }
         }
 
         return 0;
+    }
+    public static function findBookedDays( $userId = 0, int $limitWeeks = 0): array
+    {
+        if (empty($userId)) return [];
+
+        $currentWeekId = Weeks::currentId();
+
+        $weeks = Weeks::getAll();
+        $weeks = array_reverse($weeks);
+        $statuses = ['set', 'finished'];
+        $result = [];
+        foreach ($weeks as $week) {
+            if (!empty($limitWeeks) && $week['id'] < $currentWeekId - $limitWeeks) break;
+            foreach ($week['data'] as $num => $day) {
+                if (!in_array($day['status'],  $statuses, true)) continue;
+                foreach ($day['participants'] as $index => $player) {
+                    if ($player['id'] == $userId){
+                        $result[] = [
+                            'week' => $week['id'],
+                            'day' => $num,
+                            'index' => $index,
+                        ];
+                        break;
+                    }
+                }
+            }
+        }
+
+        return $result;
     }
     public static function getTimeEmoji(string $time = ''): string
     {

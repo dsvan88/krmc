@@ -229,7 +229,6 @@ class TelegramBotController extends Controller
                 }
             }
         }
-        // $report = ChatAction::getReport();
         if (!empty(ChatAction::$report)) {
             Sender::message(Settings::getAdminChatTelegramId(), Locale::phrase(ChatAction::$report));
         }
