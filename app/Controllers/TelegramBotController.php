@@ -200,6 +200,7 @@ class TelegramBotController extends Controller
 
         if (!empty($result['update'])) {
             foreach ($result['update'] as $item) {
+                if (empty($item)) continue;
                 if (!empty($item['replyMarkup']['inline_keyboard']))
                     TelegramBotRepository::encodeInlineKeyboard($item['replyMarkup']['inline_keyboard']);
                 Sender::edit(
@@ -212,6 +213,7 @@ class TelegramBotController extends Controller
         }
         if (!empty($result['send'])) {
             foreach ($result['send'] as $item) {
+                if (empty($item)) continue;
                 if (!empty($item['replyMarkup']['inline_keyboard']))
                     TelegramBotRepository::encodeInlineKeyboard($item['replyMarkup']['inline_keyboard']);
                 if (empty($item['message'])) {
