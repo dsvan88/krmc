@@ -57,7 +57,7 @@ class Days extends Model
     }
     public static function isExpired(int $timestamp): bool
     {
-        return $timestamp + TIMESTAMP_DAY < $_SERVER['REQUEST_TIME'];
+        return $timestamp + TIMESTAMP_DAY < $_SERVER['REQUEST_TIME'] - 3600;
     }
     public static function edit($weekId, $dayId, $data)
     {

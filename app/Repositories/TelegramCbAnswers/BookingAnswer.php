@@ -13,6 +13,7 @@ use Exception;
 class BookingAnswer extends ChatAnswer
 {
     public static $timestamp = 0;
+    public static $game = 0;
     public static function execute(): array
     {
         if (empty(static::$arguments))
@@ -37,7 +38,7 @@ class BookingAnswer extends ChatAnswer
 
         $weekData = Weeks::weekDataById($weekId);
 
-        static::$timestamp = $weekData['start'] + (TIMESTAMP_DAY * $dayNum) - 7200;
+        static::$timestamp = $weekData['start'] + (TIMESTAMP_DAY * $dayNum);
 
         if (Days::isExpired(static::$timestamp) || in_array($weekData['data'][$dayNum]['status'], ['', 'recalled'])) {
             return static::result('This day is over🤷‍♂️');
@@ -76,6 +77,8 @@ class BookingAnswer extends ChatAnswer
 
         Days::setDayData($weekId, $dayNum, $weekData['data'][$dayNum]);
 
+        static::$game = static::locale(ucfirst($weekData['data'][$dayNum]['game']));
+
         $update = [
             'message' => Days::getFullDescription($weekData, $dayNum),
             'replyMarkup' => [
@@ -111,7 +114,7 @@ class BookingAnswer extends ChatAnswer
             'prim' => empty(static::$arguments['p']) ? '' : static::$arguments['p'],
         ];
         Days::addParticipantToDayData($day, $data);
-        self::$report = static::locale(['string' => 'User <b>%s</b> is opted-in on <b>%s</b>.', 'vars' => [static::$arguments['userName'], date('d.m.Y', static::$timestamp)]]);
+        self::$report = static::locale(['string' => 'User <b>%s</b> is opted-in on a game <b>%s</b> at <b>%s</b>.', 'vars' => [static::$arguments['userName'], static::$game, date('d.m.Y', static::$timestamp)]]);
     }
     public static function changePrim(array &$participants = [], int $index = 0): void
     {
@@ -128,6 +131,6 @@ class BookingAnswer extends ChatAnswer
         }
         unset($participants[$index]);
         $participants = array_values($participants);
-        self::$report = static::locale(['string' => 'User <b>%s</b> is opted-out from <b>%s</b>.', 'vars' => [static::$arguments['userName'], date('d.m.Y', static::$timestamp)]]);
+        self::$report = static::locale(['string' => 'User <b>%s</b> is opted-out from a game <b>%s</b> at <b>%s</b>.', 'vars' => [static::$arguments['userName'], static::$game, date('d.m.Y', static::$timestamp)]]);
     }
 }
