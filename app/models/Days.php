@@ -75,6 +75,7 @@ class Days extends Model
         $newData['participants'] = [];
         $count = count($data['participant']);
         for ($i = 0; $i < $count; $i++) {
+            if (empty($data['participant'][$i])) continue;
             if ($data['participant'][$i] === '+1') {
                 $id = null;
             } elseif ($data['participant'][$i][0] === '@') {

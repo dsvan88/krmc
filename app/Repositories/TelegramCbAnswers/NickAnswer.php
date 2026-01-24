@@ -43,8 +43,8 @@ class NickAnswer extends ChatAnswer
                     static::locale('If you made a mistake - don’t worry! Just tell the Administrator about it and he will quickly fix it😏'),
             ];
             $records = DayRepository::findBookedDays('_'.TelegramBotRepository::getUserTelegramId(), 5);
-            if (!empty($limitWeeks)){
-                //Do something with this information :P
+            if (!empty($records)){
+                DayRepository::changeParticipantId($records, $uId);
             }
         }
 

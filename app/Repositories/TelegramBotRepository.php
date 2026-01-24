@@ -134,7 +134,7 @@ class TelegramBotRepository
         if (!isset(ChatAction::$arguments['currentDay']))
             static::parseDayNum('tod');
     }
-    public static function parseDayNum(string $daySlug): bool
+    public static function parseDayNum(string $daySlug): void
     {
         ChatAction::$arguments['currentDay'] = Days::current();
 
@@ -144,22 +144,26 @@ class TelegramBotRepository
         }
         if (in_array($daySlug, DayRepository::$techDaysArray['today'], true)) {
             ChatAction::$arguments['dayNum'] = ChatAction::$arguments['currentDay'];
-            return true;
-        } elseif (in_array($daySlug, DayRepository::$techDaysArray['tomorrow'], true)) {
+            return;
+        }
+        if (in_array($daySlug, DayRepository::$techDaysArray['tomorrow'], true)) {
             ChatAction::$arguments['dayNum'] = ChatAction::$arguments['currentDay'] + 1;
 
             if (ChatAction::$arguments['dayNum'] === 7) ChatAction::$arguments['dayNum'] = 0;
 
-            return true;
-        } else {
-            foreach (DayRepository::$daysArray as $num => $daysNames) {
-                if (in_array($daySlug, $daysNames, true)) {
-                    ChatAction::$arguments['dayNum'] = $num;
-                    return true;
-                }
+            return;
+        }
+        foreach (DayRepository::$daysArray as $num => $daysNames) {
+            if (in_array($daySlug, $daysNames, true)) {
+                ChatAction::$arguments['dayNum'] = $num;
+                return;
             }
         }
-        return false;
+        
+        if (empty(ChatAction::$arguments['dayNum']))
+            ChatAction::$arguments['dayNum'] = ChatAction::$arguments['currentDay'];
+
+        return;
     }
 
     public static function hasAccess(string $status = '', string $level = 'all'): bool

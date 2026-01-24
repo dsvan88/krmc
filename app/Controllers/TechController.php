@@ -9,8 +9,11 @@ use app\libs\Db;
 use app\models\Days;
 use app\models\Settings;
 use app\models\TelegramChats;
+use app\models\Weeks;
+use app\Repositories\DayRepository;
 use app\Repositories\SocialPointsRepository;
 use app\Repositories\TechRepository;
+use app\Repositories\TelegramBotRepository;
 use app\Repositories\TelegramChatsRepository;
 
 class TechController extends Controller
@@ -127,9 +130,15 @@ class TechController extends Controller
     }
     public static function dbrebuildAction()
     {
-        return View::redirect('/');
+        // return View::redirect('/');
 
-        // $contacts = Contacts::getAll();
+        $weeks = Weeks::getAll();
+        foreach($weeks as $week){
+            if (!isset($week['data'][-1])) continue;
+            Tech::dump($week['data'][-1]);
+            unset($week['data'][-1]);
+            Weeks::update(['data' => json_encode($week['data'], JSON_UNESCAPED_UNICODE)], ['id' => $week['id']]);
+        }
 
         // $result = [];
         // $exists = [];
@@ -286,8 +295,11 @@ class TechController extends Controller
     }
     public static function testAction()
     {
-        $result = TelegramChats::findByUserName('dsvan88');
-        Tech::dump($result);
+
+        // $records = DayRepository::findBookedDays(17, 10);
+        // DayRepository::changeParticipantId($records, 15);
+        // $records = DayRepository::findBookedDays(15, 10);
+        // Tech::dump($records);
         // TelegramChatsRepository::setChatsType('9006691681111', 'admin');
         // ignore_user_abort(true);
         // set_time_limit(900);

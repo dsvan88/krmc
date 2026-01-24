@@ -79,7 +79,13 @@ class AccountRepository
                 $source['emoji'] = '';
                 return $source;
             }
-            $userData = Users::find($source['id']);
+            try{
+                $userData = Users::find($source['id']);
+
+            }
+            catch(\Throwable $error){
+                error_log($source['id']);
+            }
             $source['name'] = empty($userData) ? '&lt; Deleted &gt;' : $userData['name'];
 
             $source['status'] = empty($userData['privilege']['status']) ? '' : $userData['privilege']['status'];

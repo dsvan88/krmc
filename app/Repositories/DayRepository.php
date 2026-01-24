@@ -144,6 +144,17 @@ class DayRepository
 
         return $result;
     }
+    public static function changeParticipantId(array $data = [], int $userId = 0): void
+    {
+        if (empty($data) || empty($userId)) return;
+
+        $count = count($data);
+        for ($i=0; $i < $count; $i++) {
+            $week = Weeks::find($data[$i]['week']);
+            $week['data'][$data[$i]['day']]['participants'][$data[$i]['index']]['id'] = $userId;
+            Weeks::update(['data' => json_encode($week['data'], JSON_UNESCAPED_UNICODE)], ['id' => $week['id']]);
+        }
+    }
     public static function getTimeEmoji(string $time = ''): string
     {
         if (empty($time)) return '';
