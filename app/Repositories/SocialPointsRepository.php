@@ -34,7 +34,7 @@ class SocialPointsRepository
             for ($i = 0; $i < $count; $i++) {
                 $points = empty($day['participants'][$i]['prim']) || strpos($day['participants'][$i]['prim'], '?') === false ? SocialPoints::$points['booking'] : SocialPoints::$points['unsureBooking'];
 
-                if ($day['participants'][$i]['id'] == $starter) $points += 2;
+                if ($day['participants'][$i]['id'] == $starter) $points += SocialPoints::$points['dayStarter'];
 
                 SocialPoints::add($day['participants'][$i]['id'], $points);
             }

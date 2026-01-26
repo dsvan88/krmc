@@ -14,6 +14,7 @@ class SocialPoints extends Model
         'longMessage' => 1,
         'booking' => 5,
         'unsureBooking' => 3,
+        'dayStarter' => 2,
     ];
     public static function set(int $userId = 0, int $point = 0): int
     {
