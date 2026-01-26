@@ -32,7 +32,7 @@ class SocialPointsRepository
             $starter = empty($day['stater']) ? 0 : $day['stater'];
 
             for ($i = 0; $i < $count; $i++) {
-                $points = empty($day['participants'][$i]['prim']) || strpos($day['participants'][$i]['prim'], '?') === false ? 5 : 3;
+                $points = empty($day['participants'][$i]['prim']) || strpos($day['participants'][$i]['prim'], '?') === false ? SocialPoints::$points['booking'] : SocialPoints::$points['unsureBooking'];
 
                 if ($day['participants'][$i]['id'] == $starter) $points += 2;
 
@@ -45,6 +45,6 @@ class SocialPointsRepository
     {
         if (mb_strlen($message, 'UTF-8') < 100) return;
 
-        SocialPoints::add($userId, 1);
+        SocialPoints::add($userId, SocialPoints::$points['longMessage']);
     }
 }

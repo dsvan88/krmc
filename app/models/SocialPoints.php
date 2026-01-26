@@ -10,6 +10,11 @@ class SocialPoints extends Model
 
     public static $table = SQL_TBL_USERS;
 
+    public static $points = [
+        'longMessage' => 1,
+        'booking' => 5,
+        'unsureBooking' => 3,
+    ];
     public static function set(int $userId = 0, int $point = 0): int
     {
         if (empty($userId))

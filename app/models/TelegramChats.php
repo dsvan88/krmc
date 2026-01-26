@@ -79,6 +79,9 @@ class TelegramChats extends Model
                     Contacts::update(['contact' => $chatData['personal']['username']], ['id' => $contact['id']]);
                 }
             }
+            if (TelegramBotRepository::getChatId() === Settings::getMainTelegramId()) {
+                SocialPointsRepository::evaluateMessage($userId, $message['message']['text']);
+            }
         }
         $chatData['data']['last_seems'] = $message['message']['date'];
 
@@ -90,6 +93,7 @@ class TelegramChats extends Model
             $saveData['user_id'] = $chatData['user_id'];
         }
         self::update($saveData, ['id' => $savedChatId]);
+
         return true;
     }
     public static function getPinnedMessage(int $chatId = 0): int

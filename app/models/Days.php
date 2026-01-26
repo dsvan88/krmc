@@ -8,6 +8,7 @@ use app\core\Tech;
 use app\core\Validator;
 use app\Repositories\AccountRepository;
 use app\Repositories\DayRepository;
+use app\Repositories\TelegramChatsRepository;
 
 class Days extends Model
 {
@@ -224,12 +225,7 @@ class Days extends Model
         AccountRepository::addNames($weekData['data'][$day]['participants']);
         $count = count($weekData['data'][$day]['participants']);
         for ($x = 0; $x < $count; $x++) {
-            // if ($weekData['data'][$day]['participants'][$x]['name'][0] === '_') {
-            //     $weekData['data'][$day]['participants'][$x]['name'] = '+1';
-            //     $noNames[] = $weekData['data'][$day]['participants'][$x];
-            //     continue;
-            // }
-            if (empty($weekData['data'][$day]['participants'][$x]['id'])) {
+            if (!is_numeric($weekData['data'][$day]['participants'][$x]['id'])) {
                 $noNames[] = $weekData['data'][$day]['participants'][$x];
                 continue;
             }
@@ -264,6 +260,13 @@ class Days extends Model
                     $modsData .= ', ';
                 }
             }
+            if ($userName === '+1' && !empty($participants[$x]['id'])) {
+                $tgChat = TelegramChats::find(substr($participants[$x]['id'], 1));
+                $chatTitle = TelegramChatsRepository::chatTitle($tgChat);
+                if (!empty($chatTitle)) {
+                    $modsData .= $chatTitle;
+                }
+            }
             if ($participants[$x]['prim'] != '') {
                 $modsData .= $participants[$x]['prim'];
             }
@@ -273,7 +276,7 @@ class Days extends Model
         }
         return $result;
     }
-    public static function removeParticipant(int $weekId, int $dayId, int $userId): bool
+    public static function removeParticipant(int $weekId, int $dayId, $userId): bool
     {
         $dayData = self::weekDayData($weekId, $dayId);
         $slot = -1;

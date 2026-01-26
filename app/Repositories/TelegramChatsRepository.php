@@ -17,7 +17,7 @@ class TelegramChatsRepository
 
     public static function chatTitle(array $chat = []): string
     {
-        if (isset($chat['personal']['title'])) {
+        if (!empty($chat['personal']['title'])) {
             return $chat['personal']['title'];
         }
         $titleParts = [];
