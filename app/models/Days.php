@@ -260,11 +260,12 @@ class Days extends Model
                     $modsData .= ', ';
                 }
             }
-            if ($userName === '+1' && !empty($participants[$x]['id'])) {
-                $tgChat = TelegramChats::find(substr($participants[$x]['id'], 1));
+            if ($userName[0] === '_') {
+                $tgChat = TelegramChats::getChat(substr($userName, 1));
+                $userName = '+1';
                 $chatTitle = TelegramChatsRepository::chatTitle($tgChat);
                 if (!empty($chatTitle)) {
-                    $modsData .= $chatTitle;
+                    $modsData .= $chatTitle.', ';
                 }
             }
             if ($participants[$x]['prim'] != '') {

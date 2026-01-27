@@ -73,7 +73,9 @@ class NickCommand extends ChatCommand
         }
 
         $telegramId = ChatAction::$message['message']['from']['id'];
-        $telegram = ChatAction::$message['message']['from']['username'];
+        $telegram = '';
+        if (empty(ChatAction::$message['message']['from']['username']))
+            $telegram = ChatAction::$message['message']['from']['username'];
 
         $userExistsData = Users::getDataByName($username);
 

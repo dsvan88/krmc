@@ -27,7 +27,7 @@ class TelegramChatsRepository
         if (isset($chat['personal']['last_name'])) {
             $titleParts[] = $chat['personal']['last_name'];
         }
-        if (isset($chat['personal']['username'])) {
+        if (!empty($chat['personal']['username'])) {
             $titleParts[] = "(@{$chat['personal']['username']})";
         }
         $title = implode(' ', $titleParts);
@@ -49,17 +49,6 @@ class TelegramChatsRepository
         if (empty($post['image_link'])) {
             return Sender::message($targets, $message)[0]['ok'];
         }
-
-        // $symbols = Locale::$cyrillicPattern;
-        // $filename = preg_replace("/([^a-z$symbols.,;0-9_-]+)/ui", '', trim($post['filename']));
-
-        // if (empty($post['image']))
-        //     return Sender::message($targets, $message)[0]['ok'];
-
-        // $image = ImageProcessing::saveBase64Image($post['image'], $filename);
-        // if (!$image) {
-        //     throw new Exception('Image didn’t saved');
-        // }
         return Sender::photo($targets, $message, $post['image_link'])[0]['ok'];
     }
     public static function getAndSaveTgAvatar(int $userId = 0, $silent = false): bool
