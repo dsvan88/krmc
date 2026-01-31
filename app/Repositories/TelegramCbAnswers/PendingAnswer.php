@@ -30,7 +30,7 @@ class PendingAnswer extends ChatAnswer
             return array_merge(static::result('This command is expired.'), ['update' => [$update]]);
         }
 
-        TelegramChatsRepository::setPendingState();
+        TelegramChatsRepository::clearUserPendingState($cId);
 
         return static::result('Okay', true);
     }

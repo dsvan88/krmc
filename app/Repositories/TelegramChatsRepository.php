@@ -112,6 +112,17 @@ class TelegramChatsRepository
         Settings::save('telegram', $slug, $chatId);
         return true;
     }
+    public static function clearUserPendingState(int $chatId = 0): void
+    {
+        $chatData = TelegramChats::getChat($chatId);
+
+        if (empty($command))
+            unset($chatData['personal']['pending']);
+        else
+            $chatData['personal']['pending'] = $command;
+
+        TelegramChats::edit(['personal' => $chatData['personal']], $chatData['id']);
+    }
     public static function setPendingState(string $command = ''): void
     {
         $chatData = TelegramChats::getChat(TelegramBotRepository::getUserTelegramId());

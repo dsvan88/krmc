@@ -38,7 +38,7 @@ class NickCommand extends ChatCommand
             $replyMarkup = [
                 'inline_keyboard' => [
                     [
-                        ['text' => '❌' . self::locale('Cancel'), 'callback_data' => ['c' => 'pending', 'p' => 'nick', 'ci' => TelegramBotRepository::getChatId()]],
+                        ['text' => '❌' . self::locale('Cancel'), 'callback_data' => ['c' => 'pending', 'p' => 'nick', 'ci' => TelegramBotRepository::getUserTelegramId()]],
                     ],
                 ],
             ];
