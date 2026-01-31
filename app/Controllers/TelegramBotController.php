@@ -139,8 +139,6 @@ class TelegramBotController extends Controller
                 $tbBot->sendDice(self::$chatId, self::$command === 'd64' ? '🎰' : '🎲');
                 return true;
             }
-
-                error_log(__METHOD__.' '.self::$command);
             $result = static::execute();
 
             if (empty($result)) return false;
@@ -174,8 +172,6 @@ class TelegramBotController extends Controller
             error_log($class . ' doesnt exists!');
             return [];
         }
-
-        error_log(__METHOD__.' '.$class);
         
         $status = '';
         if (!empty(ChatAction::$requester['privilege']['status']))
