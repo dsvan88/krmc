@@ -66,7 +66,7 @@ class TelegramBotController extends Controller
         }
         else
             {
-                error_log(json_encode($message));
+                error_log(json_encode(TelegramBotRepository::replyButtonDecode($message[static::$type]['data'])));
             }
 
         $langCode = 'uk';
