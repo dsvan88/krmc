@@ -262,7 +262,7 @@ class Days extends Model
                 $userName = '+1';
                 $chatTitle = TelegramChatsRepository::chatTitle($tgChat);
                 if (!empty($chatTitle)) {
-                    $modsParts[] = $chatTitle.', ';
+                    $modsParts[] = $chatTitle;
                 }
             }
             if ($participants[$x]['prim'] != '') {
