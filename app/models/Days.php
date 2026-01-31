@@ -268,8 +268,8 @@ class Days extends Model
             if ($participants[$x]['prim'] != '') {
                 $modsParts[] = $participants[$x]['prim'];
             }
-            if (!empty($modsParts))
-                $modsParts = ' (<i>'.implode(', ',$modsParts). '</i>)';
+            
+            $modsParts = empty($modsParts) ? '' : ' (<i>'.implode(', ',$modsParts). '</i>)';
             $result .= ($x + 1) . ". <b>$userName</b>$modsParts\r\n";
         }
         return $result;
