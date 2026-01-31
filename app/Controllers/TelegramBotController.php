@@ -64,10 +64,6 @@ class TelegramBotController extends Controller
         if (static::$type === 'message' && empty($message[static::$type]['from']['is_bot'])) {
             TelegramChats::save($message);
         }
-        else
-            {
-                error_log(json_encode(TelegramBotRepository::replyButtonDecode($message[static::$type]['data'])));
-            }
 
         $langCode = 'uk';
         if (isset($message[static::$type]['from']['language_code']) && in_array($message[static::$type]['from']['language_code'], ['en', 'ru'])) {
@@ -177,6 +173,8 @@ class TelegramBotController extends Controller
             return [];
         }
 
+        error_log(__METHOD__.' '.$class);
+        
         $status = '';
         if (!empty(ChatAction::$requester['privilege']['status']))
             $status = ChatAction::$requester['privilege']['status'];

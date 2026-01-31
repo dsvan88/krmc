@@ -134,13 +134,13 @@ class TelegramChatsRepository
 
         TelegramChats::edit(['personal' => $chatData['personal']], $chatData['id']);
     }
-    public static function isPendingState(): string
+    public static function isPendingState(int $chatId = 0): string
     {
         if (!is_null(static::$pending)) {
             return static::$pending;
         }
 
-        $chatData = TelegramChats::getChat(TelegramBotRepository::getUserTelegramId());
+        $chatData = TelegramChats::getChat(empty($chatId) ? TelegramBotRepository::getUserTelegramId() : $chatId);
         static::$pending = empty($chatData['personal']['pending']) ? '' : $chatData['personal']['pending'];
 
         return static::$pending;

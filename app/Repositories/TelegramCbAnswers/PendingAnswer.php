@@ -11,6 +11,7 @@ class PendingAnswer extends ChatAnswer
 {
     public static function execute():array
     {
+        error_log(__METHOD__.' '.static::$arguments['ci']);
         if (empty(static::$arguments['ci']))
             throw new Exception(__METHOD__ . ': ChatId is empty');
 
@@ -23,7 +24,7 @@ class PendingAnswer extends ChatAnswer
 
         $param = trim(static::$arguments['p']);
 
-        if ($param !== TelegramChatsRepository::isPendingState()){
+        if ($param !== TelegramChatsRepository::isPendingState($cId)){
             $update = [
                 'message' => 'This command is expired.',
             ];
