@@ -241,7 +241,7 @@ class Days extends Model
 
         $count = count($participants);
         for ($x = 0; $x < $count; $x++) {
-            $modsData = '';
+            $modsParts = [];
             $userName = '+1';
 
             if (!empty($participants[$x]['name'])) {
@@ -255,25 +255,22 @@ class Days extends Model
             }
 
             if (!empty($participants[$x]['arrive']) && $participants[$x]['arrive'] !== $weekData['data'][$day]['time']) {
-                $modsData .= DayRepository::getTimeEmoji($participants[$x]['arrive']) . ' ' . $participants[$x]['arrive'];
-                if ($participants[$x]['prim'] != '') {
-                    $modsData .= ', ';
-                }
+                $modsParts[] = DayRepository::getTimeEmoji($participants[$x]['arrive']) . ' ' . $participants[$x]['arrive'];
             }
             if ($userName[0] === '_') {
                 $tgChat = TelegramChats::getChat(substr($userName, 1));
                 $userName = '+1';
                 $chatTitle = TelegramChatsRepository::chatTitle($tgChat);
                 if (!empty($chatTitle)) {
-                    $modsData .= $chatTitle.', ';
+                    $modsParts[] = $chatTitle.', ';
                 }
             }
             if ($participants[$x]['prim'] != '') {
-                $modsData .= $participants[$x]['prim'];
+                $modsParts[] = $participants[$x]['prim'];
             }
-            if ($modsData !== '')
-                $modsData = " (<i>$modsData</i>)";
-            $result .= ($x + 1) . ". <b>$userName</b>{$modsData}\r\n";
+            if (!empty($modsParts))
+                $modsParts = ' (<i>'.implode(', ',$modsParts). '</i>)';
+            $result .= ($x + 1) . ". <b>$userName</b>$modsParts\r\n";
         }
         return $result;
     }

@@ -63,6 +63,8 @@ class BookingAnswer extends ChatAnswer
             break;
         }
 
+        static::$game = static::locale(ucfirst($weekData['data'][$dayNum]['game']));
+
         if ($pIndex === -1) {
             if (empty(static::$arguments['r']))
                 static::addParticipant($weekData['data'][$dayNum]);
@@ -78,7 +80,6 @@ class BookingAnswer extends ChatAnswer
 
         Days::setDayData($weekId, $dayNum, $weekData['data'][$dayNum]);
 
-        static::$game = static::locale(ucfirst($weekData['data'][$dayNum]['game']));
 
         $update = [
             'message' => Days::getFullDescription($weekData, $dayNum),
