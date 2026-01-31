@@ -111,7 +111,7 @@ class NickCommand extends ChatCommand
 
         $userContacts = Contacts::getByUserId($userExistsData['id']);
 
-        if (empty($userContacts)) {
+        if (empty($userContacts['telegramid'])) {
             Contacts::new(['telegramid' => $telegramId, 'telegram' => $telegram], $userExistsData['id']);
             TelegramChatsRepository::getAndSaveTgAvatar($userExistsData['id'], true);
             $message = self::locale(['string' => "So... we remember you under the nickname <b>%s</b>. Right?\nNice to meet you!", 'vars' => [$username]]);
