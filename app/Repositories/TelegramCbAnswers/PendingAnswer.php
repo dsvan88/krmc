@@ -33,6 +33,9 @@ class PendingAnswer extends ChatAnswer
 
         TelegramChatsRepository::clearUserPendingState($cId);
 
-        return static::result('Okay', true);
+        $update = [
+                'message' => 'This command is canceled.',
+            ];
+        return array_merge(static::result('Okay', true, true), ['update' => [$update]]);
     }
 }
