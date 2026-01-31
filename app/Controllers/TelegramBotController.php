@@ -20,7 +20,7 @@ class TelegramBotController extends Controller
 {
     public static $chatId = null;
     public static $command = '';
-    public static $guestCommands = ['help', 'booking', 'nick', 'nickRelink', 'week', 'day', 'today'];
+    public static $guestCommands = ['help', 'booking', 'nick', 'nickRelink', 'week', 'day', 'today', 'pending'];
     public static $CommandNamespace = '\\app\\Repositories\\TelegramCommands';
     public static $AnswerNamespace = '\\app\\Repositories\\TelegramCbAnswers';
 
@@ -99,7 +99,7 @@ class TelegramBotController extends Controller
             self::$command =  ChatAction::$arguments['c'];
 
             if (empty($userId) && !in_array(self::$command, self::$guestCommands)) {
-                Sender::callbackAnswer($message[static::$type]['id'], Locale::phrase('{{ Tg_Unknown_Requester }}'), true);
+                Sender::callbackAnswer(ChatAction::$message['callback_query']['id'], Locale::phrase('{{ Tg_Unknown_Requester }}'), true);
                 return false;
             }
         }
@@ -125,7 +125,7 @@ class TelegramBotController extends Controller
                 return false;
             }
         } elseif (self::$command === 'booking' && Users::isBanned('booking', ChatAction::$requester['ban'])) {
-            Sender::callbackAnswer($message[static::$type]['id'], Locale::phrase(['string' => "I’m deeply sorry, but you banned for that action:(...\nYour ban will be lifted at: <b>%s</b>", 'vars' => [date('d.m.Y', ChatAction::$requester['ban']['expired'] + TIME_MARGE)]]), true);
+            Sender::callbackAnswer(ChatAction::$message['callback_query']['id'], Locale::phrase(['string' => "I’m deeply sorry, but you banned for that action:(...\nYour ban will be lifted at: <b>%s</b>", 'vars' => [date('d.m.Y', ChatAction::$requester['ban']['expired'] + TIME_MARGE)]]), true);
             return false;
         }
         return true;
@@ -139,6 +139,8 @@ class TelegramBotController extends Controller
                 $tbBot->sendDice(self::$chatId, self::$command === 'd64' ? '🎰' : '🎲');
                 return true;
             }
+
+                error_log(__METHOD__.' '.self::$command);
             $result = static::execute();
 
             if (empty($result)) return false;
