@@ -40,7 +40,7 @@ class NickAnswer extends ChatAnswer
                 'message' =>
                 static::locale(['string' => "<b>%s</b>, nice to meet you!\nYou successfully registered in our system!", 'vars' => [static::$requester['name']]]) .
                     PHP_EOL . PHP_EOL .
-                    static::locale('If you made a mistake - don’t worry! Just tell the Administrator about it and he will quickly fix it😏'),
+                    static::locale('If you made a mistake, don’t worry, tell the administrator about it and he will quickly fix it😏'),
             ];
             $records = DayRepository::findBookedDays('_'.TelegramBotRepository::getUserTelegramId(), 5);
             if (!empty($records)){
