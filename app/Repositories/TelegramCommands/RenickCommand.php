@@ -22,13 +22,13 @@ class RenickCommand extends ChatCommand
     public static function execute()
     {
         if (SocialPoints::get(static::$requester['id']) < static::$costs) {
-            return static::result(['string' => 'I’m deeply sorry, but you can’t do this action yet! Social Points isn’t enough. Need <b>%s</b>.', 'vars' => [static::$costs]]);
+            return static::result(['string' => 'I’m deeply sorry, but you can’t do this command yet. Social Points isn’t enough. Need <b>%s</b>..', 'vars' => [static::$costs]]);
         }
 
         $_username = implode(' ', static::$arguments);
 
         if (empty(trim($_username))) {
-            
+
             TelegramChatsRepository::setPendingState('renick');
 
             $message = self::locale('Okay, Im ready to get your beautiful nickname!') . PHP_EOL;
