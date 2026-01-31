@@ -17,7 +17,7 @@ class PendingAnswer extends ChatAnswer
         $cId = (int) trim(static::$arguments['ci']);
 
         $status = empty(static::$requester['privilege']['status']) ? '' : static::$requester['privilege']['status'];
-        if ($cId !== TelegramBotRepository::getChatId() && !in_array($status, ['admin', 'root'], true)){
+        if ($cId !== TelegramBotRepository::getUserTelegramId() && !in_array($status, ['admin', 'root'], true)){
             return static::result('You don’t have enough rights to change information about other users!');
         }
 
