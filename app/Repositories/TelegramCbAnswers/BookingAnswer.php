@@ -14,6 +14,7 @@ class BookingAnswer extends ChatAnswer
 {
     public static $timestamp = 0;
     public static $game = 0;
+    public static $text = '';
     public static function execute(): array
     {
         if (empty(static::$arguments))
@@ -104,20 +105,21 @@ class BookingAnswer extends ChatAnswer
             ];
         }
 
-        $send = [];
-        if (empty(static::$arguments['r']) && TelegramBotRepository::getChatId() === Settings::getMainTelegramId()){
-            $send = [
-                'chatId' => $chatId,
-                'message' => static::locale(['string' => 'Yow was opted-in on a game <b>%s</b> at <b>%s</b>.', 'vars' => [static::$game, date('d.m.Y', static::$timestamp)]]),
-                'replyMarkup' => [
-                    'inline_keyboard' => [
-                        [$optout]
-                    ]
-                ]
-            ];
-        }
+        // $send = [];
+        // if (empty(static::$arguments['r']) && TelegramBotRepository::getChatId() === Settings::getMainTelegramId()){
+        //     $send = [
+        //         'chatId' => $chatId,
+        //         'message' => static::locale(['string' => 'Yow was opted-in on a game <b>%s</b> at <b>%s</b>.', 'vars' => [static::$game, date('d.m.Y', static::$timestamp)]]),
+        //         'replyMarkup' => [
+        //             'inline_keyboard' => [
+        //                 [$optout]
+        //             ]
+        //         ]
+        //     ];
+        // }
 
-        return array_merge(static::result('Success', true), ['update' => [$update]], ['send' => [$send]]);
+        // return array_merge(static::result('Success', true), ['update' => [$update]], ['send' => [$send]]);
+        return array_merge(static::result(static::$text, true, true), ['update' => [$update]]);
     }
     public static function addParticipant(array &$day = []): void
     {
@@ -129,6 +131,7 @@ class BookingAnswer extends ChatAnswer
             'prim' => empty(static::$arguments['p']) ? '' : static::$arguments['p'],
         ];
         Days::addParticipantToDayData($day, $data);
+        static::$text = static::locale(['string' => 'You’re successfully opted-in on a game <b>%s</b> at <b>%s</b>.', 'vars' => [static::$game, date('d.m.Y', static::$timestamp)]]);
         self::$report = static::locale(['string' => 'User <b>%s</b> is opted-in on a game <b>%s</b> at <b>%s</b>.', 'vars' => [static::$arguments['userName'], static::$game, date('d.m.Y', static::$timestamp)]]);
     }
     public static function changePrim(array &$participants = [], int $index = 0): void
@@ -137,6 +140,7 @@ class BookingAnswer extends ChatAnswer
             throw new Exception(__METHOD__ . ': $index or $participants, cant be empty!');
         }
         $participants[$index]['prim'] = empty(static::$arguments['p']) ? '' : static::$arguments['p'];
+        static::$text = static::locale('Success');
         self::$report = static::locale(['string' => 'User <b>%s</b> is changed prim on <b>%s</b>.', 'vars' => [static::$arguments['userName'], date('d.m.Y', static::$timestamp)]]);
     }
     public static function removeParticipant(array &$participants = [], int $index = 0): void
@@ -146,6 +150,7 @@ class BookingAnswer extends ChatAnswer
         }
         unset($participants[$index]);
         $participants = array_values($participants);
+        static::$text = static::locale(['string' => 'You’re successfully opted-out from a game <b>%s</b> at <b>%s</b>.', 'vars' => [static::$game, date('d.m.Y', static::$timestamp)]]);
         self::$report = static::locale(['string' => 'User <b>%s</b> is opted-out from a game <b>%s</b> at <b>%s</b>.', 'vars' => [static::$arguments['userName'], static::$game, date('d.m.Y', static::$timestamp)]]);
     }
 }
