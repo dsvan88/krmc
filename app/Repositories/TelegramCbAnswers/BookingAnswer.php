@@ -131,7 +131,7 @@ class BookingAnswer extends ChatAnswer
             'prim' => empty(static::$arguments['p']) ? '' : static::$arguments['p'],
         ];
         Days::addParticipantToDayData($day, $data);
-        static::$text = static::locale(['string' => 'You’re successfully opted-in on a game %s at %s.', 'vars' => [static::$game, date('d.m.Y', static::$timestamp)]]);
+        static::$text = static::locale(['string' => 'You’re successfully opted-in on a game <b>%s</b> at <b>%s</b>.', 'vars' => [static::$game, date('d.m.Y', static::$timestamp)]]);
         self::$report = static::locale(['string' => 'User <b>%s</b> is opted-in on a game <b>%s</b> at <b>%s</b>.', 'vars' => [static::$arguments['userName'], static::$game, date('d.m.Y', static::$timestamp)]]);
     }
     public static function changePrim(array &$participants = [], int $index = 0): void
