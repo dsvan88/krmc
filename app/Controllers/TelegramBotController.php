@@ -195,7 +195,7 @@ class TelegramBotController extends Controller
         }
 
         if (!empty($result['answer'])) {
-            Sender::callbackAnswer(ChatAction::$message['callback_query']['id'], Locale::phrase($result['answer'], $result['alert']));
+            Sender::callbackAnswer(ChatAction::$message['callback_query']['id'], Locale::phrase($result['answer']), $result['alert']);
         }
 
         if (!empty($result['update'])) {
