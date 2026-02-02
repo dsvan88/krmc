@@ -48,7 +48,7 @@ class PingCommand extends ChatCommand
         do {
             $weekData = Weeks::find($weekId - $offset);
             foreach ($weekData['data'] as $num => $day) {
-                if ($num == static::$arguments['dayNum'] || $day['game'] !== $game) continue;
+                if (empty($day['game']) || $day['game'] !== $game) continue;
                 $bookedIds = array_merge($bookedIds, array_column($day['participants'], 'id'));
             }
         } while (--$offset > 0);
