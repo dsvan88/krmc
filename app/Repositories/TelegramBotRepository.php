@@ -159,7 +159,7 @@ class TelegramBotRepository
                 return;
             }
         }
-        
+
         if (empty(ChatAction::$arguments['dayNum']))
             ChatAction::$arguments['dayNum'] = ChatAction::$arguments['currentDay'];
 
@@ -172,7 +172,7 @@ class TelegramBotRepository
 
         if (empty($status)) $status = 'user';
 
-        if (!static::isDirect() && static::getChatId() != Settings::getTechTelegramId()) {
+        if (!static::isDirect() && static::getChatId() != Settings::getAdminChatTelegramId()) {
             $status = $levels[$status] > 1 ? 'trusted' : 'user';
         }
         return $levels[$level] <= $levels[$status];
