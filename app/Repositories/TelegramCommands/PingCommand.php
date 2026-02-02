@@ -40,7 +40,7 @@ class PingCommand extends ChatCommand
         }
 
         $dayTimestamp = $weekData['start'] + (TIMESTAMP_DAY * static::$arguments['dayNum']);
-        $format = 'd.m.Y ' . $weekData['data'][static::$arguments['dayNum']]['time'];
+        $format = 'd.m.Y ' . $currentDay['time'];
         $dayDate = strtotime(date($format, $dayTimestamp));
         $date = date('d.m.Y', $dayDate);
 
@@ -48,7 +48,7 @@ class PingCommand extends ChatCommand
         do {
             $weekData = Weeks::find($weekId - $offset);
             foreach ($weekData['data'] as $num => $day) {
-                if (empty($day['game']) || $day['game'] !== $game) continue;
+                if ($day['game'] !== $game) continue;
                 $bookedIds = array_merge($bookedIds, array_column($day['participants'], 'id'));
             }
         } while (--$offset > 0);
