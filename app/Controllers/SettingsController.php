@@ -5,6 +5,8 @@ namespace app\Controllers;
 
 use app\models\Settings;
 use app\core\Controller;
+use app\core\TelegramBot;
+use app\core\TelegramInfoBot;
 use app\core\View;
 
 class SettingsController extends Controller
@@ -43,20 +45,27 @@ class SettingsController extends Controller
     {
         $type = trim($_POST['type']);
         $slug = trim($_POST['slug']);
+        $value = str_replace('\\n', "\n", trim($_POST['value']));
 
         $setting = Settings::findBy('type', $type, 1)[0];
 
         foreach ($setting['setting'] as $index => $set) {
             if ($set['slug'] !== $slug) continue;
-            $setting['setting'][$index]['value'] = str_replace('\\n', "\n", trim($_POST['value']));
+            $setting['setting'][$index]['value'] = $value;
             break;
         }
 
         $result = Settings::edit($setting['id'], ['setting' => $setting['setting']]);
 
-        return $result ?
-            View::notice(['message' => 'Success', 'location' => '/settings/section/index/' . $type]) :
-            View::notice(['type' => 'error', 'message' => 'Fail!']);
+        if ($result) {
+            if (strpos($slug, 'bot_token') !== false) {
+                $tgBot = $slug === 'bot_token' ? new TelegramBot() : new TelegramInfoBot();
+                $tgBot->webhookSet($value);
+            }
+            return View::notice(['message' => 'Success', 'location' => '/settings/section/index/' . $type]);
+        }
+
+        return View::notice(['type' => 'error', 'message' => 'Fail!']);
     }
     // public function editFormAction()
     // {

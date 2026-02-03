@@ -5,6 +5,7 @@ namespace app\Repositories;
 use app\core\Locale;
 use app\core\Router;
 use app\core\Telegram\ChatAction;
+use app\core\TelegramBot;
 use app\core\Validator;
 use app\models\Days;
 use app\models\Users;

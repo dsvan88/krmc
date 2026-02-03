@@ -240,6 +240,12 @@ return  [
         'action' => 'webhook',
         'access' => ['category' => 'all']
     ],
+    'api/telegram/info-webhook' =>
+    [
+        'controller' => 'telegramInfoBot',
+        'action' => 'webhook',
+        'access' => ['category' => 'all']
+    ],
 
 
     'api/image/add' =>

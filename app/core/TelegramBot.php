@@ -204,7 +204,7 @@ class TelegramBot
     {
         return self::send('deleteWebhook');
     }
-    public static function webhookSet($botToken)
+    public static function webhookSet(string $botToken)
     {
         if (strtolower($_SERVER['HTTP_X_FORWARDED_PROTO']) !== 'https')
             return false;
