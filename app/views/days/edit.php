@@ -75,6 +75,15 @@
                         ]);
                         self::component('forms/checkbox-icon', [
                             'prefix' => 'game',
+                            'id' => 'sales',
+                            'name' => 'mods[]',
+                            'value' => 'sales',
+                            'icon' => 'fa-star-half-o',
+                            'checked' => $day['sales'],
+                            'title' => 'Акціна'
+                        ]);
+                        self::component('forms/checkbox-icon', [
+                            'prefix' => 'game',
                             'id' => 'close',
                             'name' => 'mods[]',
                             'value' => 'close',
@@ -99,6 +108,17 @@
                             <input type="text" name="day_cost" value="<?= $day['cost'] ?>" placeholder="<?= $texts['dayCosts'] ?>" id="day-time" />
                         </div>
                     </div>
+                    <?php
+                    /*<div class="booking__row" id="sales_options">
+                        <div class="booking__row">
+                            <label for="day-game" class="booking__label"><?= $texts['salesWinners'] ?>:</label>
+                            <div class="booking__value">
+                                <input type="text" name="day_cost" value="<?= $day['sales'] ?>" placeholder="<?= $texts['salesWinners'] ?>" id="day-time" />
+                            </div>
+                        </div>
+                    </div>
+                    */
+                    ?>
                     <div class="booking__row">
                         <div class="booking__value">
                             <textarea

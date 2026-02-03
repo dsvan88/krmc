@@ -24,7 +24,8 @@ class DayRepository
         'night' => '',
         'close' => '',
         'theme' => '',
-        'funs' => ''
+        'funs' => '',
+        'sales' => '',
     ];
     public static $techDaysArray = [
         'today' => ['tod', 'td', 'сг', 'сег', 'сьо'],
@@ -92,6 +93,8 @@ class DayRepository
             $result .= Locale::phrase("*<b>Themes</b>!\nPrepeare yourself and your image!\nIt’s time to dive into a different world!😁\n");
         if (in_array('close', $mods, true))
             $result .= Locale::phrase("*<b>Close</b>!\nOn invitation only!\n");
+        if (in_array('sales', $mods, true))
+            $result .= Locale::phrase("*<b>Sales</b>!\nThrow a dice!\nWin a dicount on evening's costs!\n");
         if (in_array('tournament', $mods, true))
             $result .= Locale::phrase("<b>Tournament</b>!\nBecome a champion in a glorious and fair competition!\n");
         return $result;
