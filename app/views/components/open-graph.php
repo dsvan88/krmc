@@ -1,9 +1,9 @@
-<? foreach ($og as $property => $content) : ?>
-    <? if (is_array($content)) :?>
-        <? foreach ($content as $key => $value) : ?>
+<?php foreach ($og as $property => $content) : ?>
+    <?php if (is_array($content)) :?>
+        <?php foreach ($content as $key => $value) : ?>
             <meta property="<?=$property?>:<?=$key?>" content="<?=$value?>" >
         <?endforeach?>
-    <? else: ?>
+    <?php else: ?>
         <meta property="og:<?=$property?>" content="<?=$content?>" >
-    <? endif ?>
-<? endforeach ?>
+    <?php endif ?>
+<?php endforeach ?>

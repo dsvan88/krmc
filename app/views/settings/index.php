@@ -17,9 +17,9 @@
                 </tr>
             </thead>
             <tbody>
-                <? foreach ($settings as $setting) : ?>
-                    <? self::component('settings/row', compact('setting', 'section')) ?>
-                <? endforeach ?>
+                <?php foreach ($settings as $setting) : ?>
+                    <?php self::component('settings/row', compact('setting', 'section')) ?>
+                <?php endforeach ?>
             </tbody>
         </table>
     </div>

@@ -1,4 +1,4 @@
-<?
+<?php
 
 namespace app\models;
 
@@ -190,6 +190,7 @@ class Settings extends Model
                 'telegram',
                 [
                     ['slug' => 'bot_token', 'name' => 'Токен Бота', 'value' => ''],
+                    ['slug' => 'info_bot_token', 'name' => 'Токен Бота Довідки', 'value' => ''],
                     ['slug' => 'tech_chat', 'name' => 'Технический чат (лог ошибок)', 'value' => ''],
                     ['slug' => 'admin_chat', 'name' => 'Чат адмінів', 'value' => ''],
                     ['slug' => 'main_group_chat', 'name' => 'Основной груповой чат', 'value' => ''],

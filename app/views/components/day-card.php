@@ -4,14 +4,14 @@
     <div class="day__participants">
         <!-- <div class="day__list"> -->
             <ol class="day__list-column">
-                <?
+                <?php
                 for ($x = 0; $x < $day['playersCount']; $x++) :
                     if ($x !== 0 && $x % 5 === 0) : ?>
             </ol>
             <ol class="day__list-column" start="6">
-                <? endif ?>
+                <?php endif ?>
                 <li class="day__participant"><?= $day['participants'][$x]['name'] ?></li>
-                <? endfor ?>
+                <?php endfor ?>
             </ol>
         <!-- </div> -->
     </div>

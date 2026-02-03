@@ -1,15 +1,15 @@
 <section class="section">
     <div class="images__wrapper">
         <div class="images">
-            <? self::component('list/image/new', ['type' => 'gallery']) ?>
-            <? foreach ($gallery as $file): ?>
-                <? self::component('list/image/item', compact('file')) ?>
-            <? endforeach ?>
-            <? if (!empty($nextPageToken)) : ?>
+            <?php self::component('list/image/new', ['type' => 'gallery']) ?>
+            <?php foreach ($gallery as $file): ?>
+                <?php self::component('list/image/item', compact('file')) ?>
+            <?php endforeach ?>
+            <?php if (!empty($nextPageToken)) : ?>
                 <div class="image get-more" data-action-click="images/get-more" data-type="gallery" type data-page-token="<?= $nextPageToken ?>">
                     <span class="label fa fa-refresh"></span>
                 </div>
-            <? endif ?>
+            <?php endif ?>
         </div>
         <div class="images__details">
             <div class="images__dashboard">

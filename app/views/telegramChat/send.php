@@ -13,15 +13,15 @@
                         <option value="all"><?= $texts['sendAll'] ?></option>
                         <option value="groups"><?= $texts['sendGroups'] ?></option>
                         <option value="main" selected><?= $texts['sendMain'] ?></option>
-                        <? for ($x = 0; $x < $chatsCount; $x++) : ?>
+                        <?php for ($x = 0; $x < $chatsCount; $x++) : ?>
                             <option value="<?= $chats[$x]['uid'] ?>"><?= $chats[$x]['title'] ?></option>
-                        <? endfor ?>
+                        <?php endfor ?>
                     </select>
                 </div>
             </div>
             <div class="form__column">
                 <div class="form__row">
-                    <? self::component('forms/images-pad') ?>
+                    <?php self::component('forms/images-pad') ?>
                 </div>
             </div>
         </div>

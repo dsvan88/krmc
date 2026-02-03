@@ -1,18 +1,18 @@
 <section class="section day">
     <form class="day__form">
         <header class="day__header">
-            <? if (empty($yesterday['link'])) : ?>
+            <?php if (empty($yesterday['link'])) : ?>
                 <span class="day__navlink"><?= $yesterday['label'] ?></span>
-            <? else : ?>
+            <?php else : ?>
                 <span class="day__navlink"><a href="<?= $yesterday['link'] ?>"><i class="fa fa-angle-double-left"></i>&nbsp;<?= $yesterday['label'] ?></a></span>
-            <? endif ?>
+            <?php endif ?>
             <h3 class="day__title"><?= $day['dateTime'] ?></h3>
             <h3 class="day__title tablet"><?= $day['dateDayTime'] ?></h3>
-            <? if (empty($tomorrow['link'])) : ?>
+            <?php if (empty($tomorrow['link'])) : ?>
                 <span class="day__navlink"><?= $tomorrow['label'] ?></span>
-            <? else : ?>
+            <?php else : ?>
                 <span class="day__navlink"><a href="<?= $tomorrow['link'] ?>"><?= $tomorrow['label'] ?>&nbsp;<i class="fa fa-angle-double-right"></i></a></span>
-            <? endif ?>
+            <?php endif ?>
         </header>
         <div class="day__body">
             <h2 class="day__event"><a href="/game/<?= $day['game'] ?>/"><?= $day['gameName'] ?></a></h2>
@@ -28,35 +28,35 @@
             </div>
             <div class="day__participants">
                 <h2 class="day__subtitle"><?= $texts['daysBlockParticipantsTitle'] ?></h2>
-                <? for ($x = 0; $x < $playersCount; $x++) : ?>
+                <?php for ($x = 0; $x < $playersCount; $x++) : ?>
                     <div class="participant">
                         <label class="participant__num"><?= ($x + 1) ?>.</label>
                         <div class="participant__info">
-                            <? if (isset($day['participants'][$x])) : ?>
+                            <?php if (isset($day['participants'][$x])) : ?>
                                 <div class="participant__name">
-                                    <? if (!empty($day['participants'][$x]['name'])): ?>
+                                    <?php if (!empty($day['participants'][$x]['name'])): ?>
                                         <?= $day['participants'][$x]['name'][0] === '_' ? '+1' : $day['participants'][$x]['name'] ?>
-                                    <? endif ?>
+                                    <?php endif ?>
                                 </div>
                                 <div class="participant__details">
                                     <span><?= empty($day['participants'][$x]['arrive']) ? '' : $day['participants'][$x]['arrive'] ?></span>
                                     <span><?= empty($day['participants'][$x]['prim']) ? '' : " (<em>{$day['participants'][$x]['prim']}</em>)" ?></span>
                                 </div>
-                            <? else : ?>
+                            <?php else : ?>
                                 <div class="participant__name"></div>
                                 <div class="participant__details">
                                     <span></span>
                                     <span></span>
                                 </div>
-                            <? endif ?>
+                            <?php endif ?>
                         </div>
                     </div>
-                <? endfor ?>
-                <? if (!empty($selfBooking)) : ?>
+                <?php endfor ?>
+                <?php if (!empty($selfBooking)) : ?>
                     <div class="day__self">
                         <a href="<?= $selfBooking['link'] ?>" class="button"><?= $selfBooking['label'] ?></a>
                     </div>
-                <? endif; ?>
+                <?php endif; ?>
             </div>
         </div>
     </form>

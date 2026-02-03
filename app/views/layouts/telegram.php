@@ -4,70 +4,70 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <? if (!empty($description)) : ?>
+    <?php if (!empty($description)) : ?>
         <meta name="description" content="<?= $description ?>">
-    <? endif ?>
+    <?php endif ?>
     <meta name="author" content="<?= CFG_AUTHOR ?>">
-    <? if (!empty($styles)) : ?>
-        <? if (is_string($styles)) : ?>
+    <?php if (!empty($styles)) : ?>
+        <?php if (is_string($styles)) : ?>
             <link rel="stylesheet" href="<?= STYLES_STORAGE . "$styles.css?v={$_SERVER['REQUEST_TIME']}" ?>">
-        <? else : ?>
-            <? for ($x = 0; $x < count($styles); $x++) : ?>
+        <?php else : ?>
+            <?php for ($x = 0; $x < count($styles); $x++) : ?>
                 <link rel="stylesheet" href="<?= STYLES_STORAGE . "{$styles[$x]}.css?v={$_SERVER['REQUEST_TIME']}" ?>">
-            <? endfor ?>
-        <? endif ?>
-    <? endif ?>
+            <?php endfor ?>
+        <?php endif ?>
+    <?php endif ?>
     <link rel="stylesheet" href="/public/css/style-tg.css?v=<?= $_SERVER['REQUEST_TIME'] ?>">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+Pro">
 
     <script defer="" src="https://telegram.org/js/telegram-web-app.js"></script>
-    <? if (!empty($scripts)) : ?>
-        <? if (is_string($scripts)) : ?>
+    <?php if (!empty($scripts)) : ?>
+        <?php if (is_string($scripts)) : ?>
             <script defer="" src="<?= static::$scriptsPath . $scripts ?>"></script>
-            <? else :
+            <?php else :
             for ($x = 0; $x < count($scripts); $x++) : ?>
                 <script defer="" src="<?= static::$scriptsPath . $scripts[$x] ?>"></script>
-            <? endfor ?>
-        <? endif ?>
-    <? endif ?>
+            <?php endfor ?>
+        <?php endif ?>
+    <?php endif ?>
     <?/*<script defer="" src="<?= static::$scriptsPath . $scripts ?>"></script>*/ ?>
     <link rel="icon" type="image/x-icon" href="/public/images/mafia-vintage-logo-short.svg">
     <?= $locales ?>
     <title><?= (isset($pageTitle) ? $pageTitle  : $title) . ' | ' . CLUB_SNAME . ' v' . APP_VERSION ?></title>
-    <? if (!empty($og)) self::component('open-graph', ['og' => $og]) ?>
+    <?php if (!empty($og)) self::component('open-graph', ['og' => $og]) ?>
 
 </head>
 
 <body>
     <div class="body">
-        <? self::component('notices', ['notices' => $notices]) ?>
+        <?php self::component('notices', ['notices' => $notices]) ?>
         <div class="wrapper">
             <header class="header">
                 <div class="header__content">
-                    <? if (!empty($_SESSION['id'])) : ?>
+                    <?php if (!empty($_SESSION['id'])) : ?>
                         <div class="header__line">
                             <div class="profile">
                                 <a href="/account/profile/<?= $_SESSION['id'] ?>/" alt="<?= $_SESSION['name'] ?>" title="<?= $_SESSION['name'] ?>"><?= $_SESSION['name'] ?></a>
                             </div>
                         </div>
                         <menu class="header__menu">
-                            <? self::icon('gradient') ?>
-                            <? foreach ($headerMenu as $index => $item) : ?>
+                            <?php self::icon('gradient') ?>
+                            <?php foreach ($headerMenu as $index => $item) : ?>
                                 <li class="header__menu-item">
                                     <a href="/<?= $item['path'] ?>/" <?= empty($item['active']) ? '' : 'class="active"' ?>>
-                                        <? self::icon($item['icon']) ?>
+                                        <?php self::icon($item['icon']) ?>
                                         <span><?= $item['label'] ?></span>
                                     </a>
                                 </li>
-                            <? endforeach ?>
+                            <?php endforeach ?>
                         </menu>
-                    <? endif ?>
+                    <?php endif ?>
                 </div>
-                <? if (!empty($headerDashboard)) : ?>
+                <?php if (!empty($headerDashboard)) : ?>
                     <div class="header__dashboard">
-                        <? self::component('header/dashboard', ['dashboard' => $headerDashboard]) ?>
+                        <?php self::component('header/dashboard', ['dashboard' => $headerDashboard]) ?>
                     </div>
-                <? endif ?>
+                <?php endif ?>
             </header>
             <div class="header-for-auto-scroll" id="start-page"></div>
             <main class="main <?= $mainClass ?>">

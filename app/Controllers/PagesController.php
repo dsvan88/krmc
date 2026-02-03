@@ -1,12 +1,10 @@
 <?php
 
-
 namespace app\Controllers;
 
 use app\core\Controller;
 use app\core\GoogleDrive;
 use app\core\Locale;
-use app\core\Noticer;
 use app\core\View;
 use app\models\Pages;
 use app\models\Users;
@@ -124,7 +122,7 @@ class PagesController extends Controller
         if (!empty($_POST)) {
             $array = $_POST;
             Pages::create($array);
-            return View::message(['error' => 0, 'message' => 'Changes saved successfully!']);
+            return View::notice(['message' => 'Changes saved successfully!']);
         }
         $vars = [
             'title' => 'Add page form',

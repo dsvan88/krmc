@@ -6,11 +6,11 @@
         Бан <?= !empty($data['ban']) ? " дійсний до <u>{$data['ban']['expired']}</u>" : ''?>
     </h5>
     <div class="profile__card-value">
-        <? if (empty($data['ban']['options'])): ?>
+        <?php if (empty($data['ban']['options'])): ?>
             <span class="text-accent">Відсутній</span>
-        <? else: ?>
+        <?php else: ?>
             <span class="text-accent"><?= $data['ban']['options'] ?></span>
-        <? endif ?>
+        <?php endif ?>
     </div>
 </div>
 <div class="profile__card-row">

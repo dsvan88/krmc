@@ -4,11 +4,11 @@
     </label>
     <input type='checkbox' id='profile-menu-checkbox' class='profile__checkbox'>
     <menu class='profile__menu'>
-        <? foreach ($profileMenu as $item) : ?>
+        <?php foreach ($profileMenu as $item) : ?>
             <li class='profile__menu-item'>
                 <a href='/<?= $item['link'] ?>'><?= $item['label'] ?></a>
                 <div class='profile__menu-bar'></div>
             </li>
-        <? endforeach ?>
+        <?php endforeach ?>
     </menu>
 </div>

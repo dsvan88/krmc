@@ -13,7 +13,7 @@
             </div>
             <div class="form__column">
                 <div class="form__row image__place">
-                    <? self::component('forms/images-pad', ['link' => empty($page['image_link']) ? '' : $page['image_link']]) ?>
+                    <?php self::component('forms/images-pad', ['link' => empty($page['image_link']) ? '' : $page['image_link']]) ?>
                 </div>
             </div>
         </div>

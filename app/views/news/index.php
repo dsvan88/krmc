@@ -5,9 +5,9 @@ use app\core\ImageProcessing;
 ?>
 <section class="section news-list">
     <h2 class="news-preview__title section__title"><?= $title ?>
-        <? if ($setDashBoard) : ?>
+        <?php if ($setDashBoard) : ?>
             <a href="/news/add"><i class="fa fa-plus-square"></i></a>
-        <? endif ?>
+        <?php endif ?>
     </h2>
     <div class="news-preview__list">
         <?php
@@ -19,7 +19,7 @@ use app\core\ImageProcessing;
             <div class="news-preview__item">
                 <div class="news-preview__item-title">
                     <div class="news-preview__item-logo">
-                        <?
+                        <?php
                         if (!empty($newsAll[$i]['logo']))
                             echo ImageProcessing::inputImage(FILE_MAINGALL . 'news/' . $newsAll[$i]['logo'], ['title' => $newsAll[$i]['title']]);
                         else
@@ -31,7 +31,7 @@ use app\core\ImageProcessing;
                 <h4 class="news-preview__item-subtitle"><?= $newsAll[$i]['title'] ?></h4>
                 <div class="news-preview__item-content"><?= $newsAll[$i]['html'] ?></div>
                 <div class="news-preview__read-more">
-                    <? if ($setDashBoard) : ?>
+                    <?php if ($setDashBoard) : ?>
                         <span class='news-preview__dashboard'>
                             <a href='/news/edit/<?= $newsAll[$i]['id'] ?>'>
                                 <i class='fa fa-pencil-square-o news-dashboard__button' title='Редагувати новину'></i>
@@ -40,15 +40,15 @@ use app\core\ImageProcessing;
                                 <i class='fa fa-trash-o news-dashboard__button' title='Видалити новину'></i>
                             </a>
                         </span>
-                    <? endif ?>
+                    <?php endif ?>
                     <a class="news-preview__read-more-link" href="/news/show/<?= $newsAll[$i]['id'] ?>"><?= $texts['ReadMore'] ?></a>
                 </div>
             </div>
-        <? endfor; ?>
+        <?php endfor; ?>
     </div>
-    <? if ($newsCount > CFG_NEWS_PER_PAGE) : ?>
+    <?php if ($newsCount > CFG_NEWS_PER_PAGE) : ?>
         <div class="paginator">
             <div class="paginator__links"><?= $paginator ?></div>
         </div>
-    <? endif; ?>
+    <?php endif; ?>
 </section>

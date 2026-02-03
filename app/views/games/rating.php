@@ -3,21 +3,21 @@
         <?= $texts['BlockTitle'] ?>
     </h1>
     <h2 class="schelude__title section__subtitle">
-        <? if ($prevWeek) : ?>
+        <?php if ($prevWeek) : ?>
             <span>
                 <a class="schelude__title-link" href="/activity/rating/<?= $prevWeek['id'] ?>"><?= date('d.m', $prevWeek['start']) . ' - ' . date('d.m', $prevWeek['finish'] - 3600 * 5) ?></a>
             </span>
-        <? else : ?>
+        <?php else : ?>
             <span class="schelude__title-dummy">&lt;&nbsp;No Data&nbsp;&gt;</span>
-        <? endif;?>
+        <?php endif;?>
         <span><?= date('d.m', $week['start']) . ' - ' . date('d.m', $week['finish'] - 3600 * 5) ?></span>
-        <? if ($nextWeek) : ?>
+        <?php if ($nextWeek) : ?>
             <span>
                 <a class="schelude__title-link" href="/activity/rating/<?= $nextWeek['id'] ?>"><?= date('d.m', $nextWeek['start']) . ' - ' . date('d.m', $nextWeek['finish'] - 3600 * 5) ?></a>
             </span>
-        <? else : ?>
+        <?php else : ?>
             <span class="schelude__title-dummy">&lt;&nbsp;No Data&nbsp;&gt;</span>
-        <? endif ?>
+        <?php endif ?>
     </h2>
     <div class="games__rating">
         <table class="game__table">
@@ -44,7 +44,7 @@
                 </tr>
             </thead>
             <tbody class="game__table-body">
-                <? foreach($rating as $id=>$player):?>
+                <?php foreach($rating as $id=>$player):?>
                     <tr>
                         <td><?=($id+1)?></td>
                         <td class="player__name">
@@ -63,7 +63,7 @@
                             <?= empty($player['win']['peace']) ? '-' : $player['win']['peace'] ?>
                         </td>
                         <td>
-                            <?=$player['points'] ?><? // Бали за перемогу*Коєфіцієнт перемог + (Кращій Хід + Доп бали (плюсові) + Доп бали (негайтивні)) ?>
+                            <?=$player['points'] ?><?php // Бали за перемогу*Коєфіцієнт перемог + (Кращій Хід + Доп бали (плюсові) + Доп бали (негайтивні)) ?>
                         </td>
                         <td>
                             <?= $player['games'] ?>
@@ -87,7 +87,7 @@
                             <?= empty($player['pointTypes']['negative']) ? '-' : $player['pointTypes']['negative'] ?>
                         </td>
                     </tr>
-                <? endforeach ?>
+                <?php endforeach ?>
             </tbody>
         </table>
     </div>

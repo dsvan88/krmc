@@ -14,7 +14,7 @@
             </tr>
         </thead>
         <tbody>
-            <? for ($x = 0; $x < count($usersData); $x++) : ?>
+            <?php for ($x = 0; $x < count($usersData); $x++) : ?>
                 <tr>
                     <td><?= ($x + 1) ?>.</td>
                     <td title="Псевдонім" class="users-list__name">
@@ -33,7 +33,7 @@
                         <span class='fa fa-user-times' data-action-click='account/delete' data-user-id="<?= $usersData[$x]['id'] ?>" data-verification="verification/root" title='Видалити'></span>
                     </td>
                 </tr>
-            <? endfor; ?>
+            <?php endfor; ?>
         </tbody>
     </table>
 </section>

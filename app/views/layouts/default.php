@@ -4,51 +4,51 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <? if (!empty($description)) : ?>
+    <?php if (!empty($description)) : ?>
         <meta name="description" content="<?= $description ?>">
-    <? endif ?>
+    <?php endif ?>
     <meta name="author" content="<?= CFG_AUTHOR ?>">
-    <? if (!empty($styles)) : ?>
-        <? if (is_string($styles)) : ?>
+    <?php if (!empty($styles)) : ?>
+        <?php if (is_string($styles)) : ?>
             <link rel="stylesheet" href="<?= STYLES_STORAGE . "$styles.css?v={$_SERVER['REQUEST_TIME']}" ?>">
-        <? else : ?>
-            <? for ($x = 0; $x < count($styles); $x++) : ?>
+        <?php else : ?>
+            <?php for ($x = 0; $x < count($styles); $x++) : ?>
                 <link rel="stylesheet" href="<?= STYLES_STORAGE . "{$styles[$x]}.css?v={$_SERVER['REQUEST_TIME']}" ?>">
-            <? endfor ?>
-        <? endif ?>
-    <? endif ?>
+            <?php endfor ?>
+        <?php endif ?>
+    <?php endif ?>
     <link rel="stylesheet" href="/public/css/style.css?v=<?= $_SERVER['REQUEST_TIME'] ?>">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+Pro">
-    <? if (!empty($scripts)) : ?>
-        <? if (is_string($scripts)) : ?>
+    <?php if (!empty($scripts)) : ?>
+        <?php if (is_string($scripts)) : ?>
             <script defer="" src="<?= static::$scriptsPath . $scripts ?>"></script>
-            <? else :
+            <?php else :
             for ($x = 0; $x < count($scripts); $x++) : ?>
                 <script defer="" src="<?= static::$scriptsPath . $scripts[$x] ?>"></script>
-            <? endfor ?>
-        <? endif ?>
-    <? endif ?>
+            <?php endfor ?>
+        <?php endif ?>
+    <?php endif ?>
     <link rel="icon" type="image/x-icon" href="/public/images/mafia-vintage-logo-short.svg">
     <?= $locales ?>
     <title><?= (isset($pageTitle) ? $pageTitle  : $title) . ' | ' . CLUB_SNAME . ' v' . APP_VERSION ?></title>
-    <? if (!empty($og)) self::component('open-graph', ['og' => $og]) ?>
+    <?php if (!empty($og)) self::component('open-graph', ['og' => $og]) ?>
 </head>
 
 <body>
     <div class="body">
-        <? self::component('notices', compact('notices')) ?>
+        <?php self::component('notices', compact('notices')) ?>
         <div class="wrapper">
-            <? if (!empty($backdroundImages)) : ?>
+            <?php if (!empty($backdroundImages)) : ?>
                 <aside class="images">
-                    <? foreach ($backdroundImages as $index => $imageId): ?>
-                        <? if ($index === 4): ?>
+                    <?php foreach ($backdroundImages as $index => $imageId): ?>
+                        <?php if ($index === 4): ?>
                             </aside>
                             <aside class="images right">
-                        <? endif ?>
+                        <?php endif ?>
                             <img class="image" src="https://lh3.googleusercontent.com/d/<?= $imageId ?>" loading="lazy" alt="Background Image #<?= $index ?>">
-                        <? endforeach ?>
+                        <?php endforeach ?>
                 </aside>
-            <? endif ?>
+            <?php endif ?>
             <header class="header">
                 <div class="header__content">
                     <div class="header__logo">
@@ -65,30 +65,30 @@
                             <input type="checkbox" name="toggle-navigation" id="navigation__checkbox" class="navigation-for-small-display-chechbox">
                             <nav class="navigation" id="navigation">
                                 <label for="navigation__checkbox" class="navigation-for-small-display menu-hide fa fa-times"></label>
-                                <? foreach ($headerMenu as $headerMenuItem) : ?>
-                                    <? self::component('header/menu-item', ['menuItem' => $headerMenuItem]) ?>
-                                <? endforeach ?>
+                                <?php foreach ($headerMenu as $headerMenuItem) : ?>
+                                    <?php self::component('header/menu-item', ['menuItem' => $headerMenuItem]) ?>
+                                <?php endforeach ?>
                             </nav>
                         </div>
                     </div>
                     <div class="profile">
-                        <? if (empty($_SESSION['id'])) : ?>
-                            <? self::component('header/profile/login', ['headerLoginLabel' => $headerLoginLabel]) ?>
-                        <? else : ?>
-                            <? self::component('header/profile/profile', ['profileImage' => $profileImage, 'profile' => $profileMenu[0]]) ?>
-                            <? if (count($profileMenu) > 2) : ?>
-                                <? self::component('header/profile/menu', ['profileMenu' => $profileMenu]) ?>
-                            <? else : ?>
-                                <? self::component('header/profile/logout', ['headerLogoutLabel' => $headerLogoutLabel]) ?>
-                            <? endif ?>
-                        <? endif; ?>
+                        <?php if (empty($_SESSION['id'])) : ?>
+                            <?php self::component('header/profile/login', ['headerLoginLabel' => $headerLoginLabel]) ?>
+                        <?php else : ?>
+                            <?php self::component('header/profile/profile', ['profileImage' => $profileImage, 'profile' => $profileMenu[0]]) ?>
+                            <?php if (count($profileMenu) > 2) : ?>
+                                <?php self::component('header/profile/menu', ['profileMenu' => $profileMenu]) ?>
+                            <?php else : ?>
+                                <?php self::component('header/profile/logout', ['headerLogoutLabel' => $headerLogoutLabel]) ?>
+                            <?php endif ?>
+                        <?php endif; ?>
                     </div>
                 </div>
-                <? if (!empty($headerDashboard)) : ?>
+                <?php if (!empty($headerDashboard)) : ?>
                     <div class="header__dashboard">
-                        <? self::component('header/dashboard', ['dashboard' => $headerDashboard]) ?>
+                        <?php self::component('header/dashboard', ['dashboard' => $headerDashboard]) ?>
                     </div>
-                <? endif ?>
+                <?php endif ?>
             </header>
             <div class="header-for-auto-scroll" id="start-page"></div>
             <main class="main <?= $mainClass ?>">

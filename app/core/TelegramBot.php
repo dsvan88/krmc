@@ -15,31 +15,29 @@ class TelegramBot
     public static $result = [];
     public static $curl = null;
     public static $close = true;
+    public static $webhookLink = 'api/telegram/webhook';
 
-    public function __construct($text = '')
+    public function __construct(string $token = '')
     {
-        self::set($text);
+        static::set($token);
     }
-    public static function set($text = '')
+    public static function set(string $token)
     {
-        self::$botToken = self::getAuthData();
-        if (empty(self::$options)) {
-            self::$options = [
+        static::$botToken = empty($token) ? static::getAuthData() : $token;
+        if (empty(static::$options)) {
+            static::$options = [
                 CURLOPT_RETURNTRANSFER => true,
                 // CURLOPT_RETURNTRANSFER => false,
                 CURLOPT_POST => true,       // отправка данных методом POST
                 CURLOPT_TIMEOUT => 10,      // максимальное время выполнения запроса
             ];
         }
-        if ($text !== '') {
-            self::$params['text'] = $text;
-        }
-        self::$curl = curl_init();
+        static::$curl = curl_init();
     }
     private static function getAuthData()
     {
-        if (!empty(self::$botToken))
-            return self::$botToken;
+        if (!empty(static::$botToken))
+            return static::$botToken;
         return Settings::getBotToken();
     }
 
@@ -48,19 +46,19 @@ class TelegramBot
         $params['chat_id'] = $chatId; // id получателя сообщения
         $params['emoji'] = $emoji; // emoji: 🎲, 🎯, 🎳, 🎰, 🏀, ⚽
 
-        return self::send('sendDice', $params);
+        return static::send('sendDice', $params);
     }
 
     public static function getChat(int $chatId)
     {
         $params['chat_id'] = $chatId; // id получателя сообщения
 
-        return self::send('getChat', $params);
+        return static::send('getChat', $params);
     }
     public static function sendMessage($userId, string $message = '', int $messageId = -1, array $replyMarkup = [])
     {
-        $botToken = self::$botToken;
-        $params = self::$params;
+        $botToken = static::$botToken;
+        $params = static::$params;
         $params['chat_id'] = is_array($userId) ? $userId[0] : $userId; // id получателя сообщения
         if ($message !== '') {
             $params['text'] = $message;
@@ -73,7 +71,7 @@ class TelegramBot
             $params['reply_markup'] = json_encode($replyMarkup);
         }
 
-        $options = self::$options;
+        $options = static::$options;
         $options[CURLOPT_URL] = "https://api.telegram.org/bot$botToken/sendMessage"; // адрес api телеграмм-бота
         $options[CURLOPT_POSTFIELDS] = $params;
 
@@ -92,7 +90,7 @@ class TelegramBot
         }
         static::$result = json_decode(curl_exec($curl), true);
 
-        self::end();
+        static::end();
 
         if (static::$result['ok']) {
             return [static::$result];
@@ -101,10 +99,11 @@ class TelegramBot
     }
     public static function sendMessageWithImage($userId, $message = '', $image = '', $messageId = -1)
     {
-        $botToken = self::$botToken;
-        $params = self::$params;
-        $params['chat_id'] = is_array($userId) ? $userId[0] : $userId; // id получателя сообщения
-        if ($message !== '') {
+        $botToken = static::$botToken;
+        $params = [
+            'chat_id' => is_array($userId) ? $userId[0] : $userId, // id получателя сообщения
+        ];
+        if (!empty($message)) {
             $params['text'] = $message;
             $params['parse_mode'] = 'HTML';
         }
@@ -117,7 +116,7 @@ class TelegramBot
             $params['disable_web_page_preview'] = false;
         }
 
-        $options = self::$options;
+        $options = static::$options;
         $options[CURLOPT_URL] = "https://api.telegram.org/bot$botToken/sendMessage"; // адрес api телеграмм-бота
         $options[CURLOPT_POSTFIELDS] = $params; // адрес api телеграмм-бота
 
@@ -136,7 +135,7 @@ class TelegramBot
         }
         static::$result = json_decode(curl_exec($curl), true);
 
-        self::end();
+        static::end();
 
         if (static::$result['ok']) {
             return [static::$result];
@@ -145,9 +144,10 @@ class TelegramBot
     }
     public static function sendPhoto($userId, string $caption = '', string $image = '', $type = 'image/jpeg', $messageId = -1)
     {
-        $botToken = self::$botToken;
-        $params = self::$params;
-        $params['chat_id'] = is_array($userId) ? $userId[0] : (int) $userId; // id получателя сообщения
+        $botToken = static::$botToken;
+        $params = [
+            'chat_id' => is_array($userId) ? $userId[0] : $userId, // id получателя сообщения
+        ];
         if (!empty($caption)) {
             $params['caption'] = $caption;
             $params['parse_mode'] = 'HTML';
@@ -161,7 +161,7 @@ class TelegramBot
                 curl_file_create($image, $type, 'image') :
                 $image;
         }
-        $options = self::$options;
+        $options = static::$options;
         $options[CURLOPT_URL] = "https://api.telegram.org/bot$botToken/sendPhoto"; // адрес api телеграмм-бота
         $options[CURLOPT_POSTFIELDS] = $params; // адрес api телеграмм-бота
 
@@ -181,7 +181,7 @@ class TelegramBot
         }
         static::$result = json_decode(curl_exec($curl), true);
 
-        self::end();
+        static::end();
 
         if (static::$result['ok']) {
             return [static::$result];
@@ -193,33 +193,33 @@ class TelegramBot
         $params['chat_id'] = $chatId; // id получателя сообщения
         $params['message_id'] = $messageId;
 
-        return self::send('deleteMessage', $params);
+        return static::send('deleteMessage', $params);
     }
     public static function getMe()
     {
-        self::send('getMe', []);
+        static::send('getMe', []);
         return static::$result;
     }
     public static function webhookDelete()
     {
-        return self::send('deleteWebhook');
+        return static::send('deleteWebhook');
     }
     public static function webhookSet(string $botToken)
     {
         if (strtolower($_SERVER['HTTP_X_FORWARDED_PROTO']) !== 'https')
             return false;
 
-        $options = self::$options;
-        $options[CURLOPT_URL] = "https://api.telegram.org/bot$botToken/setWebhook?url=https://$_SERVER[HTTP_HOST]/api/telegram/webhook";
+        $options = static::$options;
+        $options[CURLOPT_URL] = "https://api.telegram.org/bot$botToken/setWebhook?url=https://$_SERVER[HTTP_HOST]/".static::$webhookLink;
 
         $curl = curl_init();
         curl_setopt_array($curl, $options);
         static::$result = json_decode(curl_exec($curl), true);
 
-        self::end();
+        static::end();
 
         if (static::$result['ok']) {
-            self::$botToken = $botToken;
+            static::$botToken = $botToken;
             return true;
         }
         return false;
@@ -232,7 +232,7 @@ class TelegramBot
             'disable_notification' => true, // "Тихий" метод закрепления, без оповещения
         ];
 
-        return self::send('pinChatMessage', $params);
+        return static::send('pinChatMessage', $params);
     }
     public static function unpinMessage($chatId, $messageId)
     {
@@ -241,7 +241,7 @@ class TelegramBot
             'message_id' => $messageId
         ];
 
-        return self::send('unpinChatMessage', $params);
+        return static::send('unpinChatMessage', $params);
     }
     public static function editMessage($chatId, $messageId, $message, array $replyMarkup = [])
     {
@@ -255,7 +255,7 @@ class TelegramBot
             $params['reply_markup'] = json_encode($replyMarkup);
         }
         // error_log($params['reply_markup']);
-        return self::send('editMessageText', $params);
+        return static::send('editMessageText', $params);
     }
     public static function getUserProfilePhotos($userId = 0, $offset = 0, $limit = 1)
     {
@@ -268,7 +268,7 @@ class TelegramBot
             'limit' => $limit, // кількість фото користувача
         ];
 
-        self::send('getUserProfilePhotos', $params);
+        static::send('getUserProfilePhotos', $params);
 
         return static::$result;
     }
@@ -281,7 +281,7 @@ class TelegramBot
             'file_id' => $file_id, // id файлу
         ];
 
-        self::send('getFile', $params);
+        static::send('getFile', $params);
 
         return static::$result;
     }
@@ -292,31 +292,31 @@ class TelegramBot
             throw new Exception(__METHOD__ . ': UserID can’t be empty.');
         }
 
-        self::$close = false;
-        $profilePhotos = self::getUserProfilePhotos($userId);
+        static::$close = false;
+        $profilePhotos = static::getUserProfilePhotos($userId);
 
         if (!$profilePhotos['ok'] || $profilePhotos['result']['total_count'] < 1) return false;
 
-        $mainPhotoData = self::getFile($profilePhotos['result']['photos'][0][0]['file_id']);
+        $mainPhotoData = static::getFile($profilePhotos['result']['photos'][0][0]['file_id']);
 
         if (empty($mainPhotoData['result']['file_path'])) return false;
 
-        $botToken = self::$botToken;
+        $botToken = static::$botToken;
         $file_path = $mainPhotoData['result']['file_path'];
         $url = "https://api.telegram.org/file/bot$botToken/$file_path";
 
-        self::$curl = curl_init();
+        static::$curl = curl_init();
 
         $options = [
             CURLOPT_URL => $url,
             CURLOPT_RETURNTRANSFER => true
         ];
-        curl_setopt_array(self::$curl, $options);
+        curl_setopt_array(static::$curl, $options);
 
-        $fileContent = curl_exec(self::$curl);
+        $fileContent = curl_exec(static::$curl);
 
-        self::$close = true;
-        self::end();
+        static::$close = true;
+        static::end();
 
         return empty($fileContent) ? false : $fileContent;
     }
@@ -338,7 +338,7 @@ class TelegramBot
             ]),
             'is_big' => true,
         ];
-        return self::send('setMessageReaction', $params);
+        return static::send('setMessageReaction', $params);
     }
     public static function answerCallbackQuery(int $cqId = 0, string $text = '', bool $alert = false)
     {
@@ -347,36 +347,36 @@ class TelegramBot
             'text' => $text, // Текст повідомлення
             'show_alert' => $alert, // Показати як alert повідомлення, замість зникаючого.
         ];
-        return self::send('answerCallbackQuery', $params);
+        return static::send('answerCallbackQuery', $params);
     }
 
     public static function send(string $method = '', $params = [])
     {
         if (empty($method)) return false;
 
-        $botToken = self::$botToken;
-        $options = self::$options;
+        $botToken = static::$botToken;
+        $options = static::$options;
 
         if (!empty($params)) {
             $options[CURLOPT_POSTFIELDS] = $params;
         }
         $options[CURLOPT_URL] = "https://api.telegram.org/bot$botToken/$method";
 
-        if (empty(self::$curl)) {
-            self::$curl = curl_init();
+        if (empty(static::$curl)) {
+            static::$curl = curl_init();
         }
-        curl_setopt_array(self::$curl, $options);
-        static::$result = json_decode(curl_exec(self::$curl), true);
+        curl_setopt_array(static::$curl, $options);
+        static::$result = json_decode(curl_exec(static::$curl), true);
         // error_log(json_encode(static::$result,JSON_UNESCAPED_UNICODE));
 
 
-        self::end();
+        static::end();
 
         return !empty(static::$result['ok']);
     }
 
     public static function end()
     {
-        if (self::$close) curl_close(self::$curl);
+        if (static::$close) curl_close(static::$curl);
     }
 }

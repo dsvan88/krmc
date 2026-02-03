@@ -1,4 +1,4 @@
-<? $idPrefix = mt_rand(0, 10000) ?>
+<?php $idPrefix = mt_rand(0, 10000) ?>
 <form enctype='multipart/form-data'>
     <!-- <h2 class="modal__subtitle"><?= $title ?></h2> -->
     <div class="input_row big-avatar">

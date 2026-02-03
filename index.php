@@ -1,4 +1,4 @@
-<?
+<?php
 require_once $_SERVER['DOCUMENT_ROOT'] . '/app/config/bootstrap.php';
 
 use app\core\Locale;

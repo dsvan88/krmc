@@ -16,8 +16,8 @@
             </tr>
         </thead>
         <tbody class="game__table-body">
-            <? foreach($game['players'] as $index=>$player):?>
-                <?
+            <?php foreach($game['players'] as $index=>$player):?>
+                <?php
                 $class = ['player'];
                 if (!empty($player['out']))
                     $class[] = 'out';
@@ -30,20 +30,20 @@
                         <?=$player['name']?>
                     </td>
                     <td><?=$player['points'] ?></td>
-                    <? if ($game['daysCount'] > 0): ?>
-                    <? for ($x=0; $x < $game['daysCount']; $x++) :?>
+                    <?php if ($game['daysCount'] > 0): ?>
+                    <?php for ($x=0; $x < $game['daysCount']; $x++) :?>
                         <td>
                             <?=$player['puted'][$x] < 0 ? '' : $player['puted'][$x]+1?>
                             /
                             <?=$player['voted'][$x] < 0 ? '' : substr($player['voted'][$x], 0, -2)?>
                         </td>
-                    <? endfor ?>
-                    <? else :?>
+                    <?php endfor ?>
+                    <?php else :?>
                         <td></td>
-                    <? endif ?>
+                    <?php endif ?>
                     <td><?= (empty($player['fouls']) ? '' : $player['fouls'])?></td>
                     <td><?= (empty($player['_prim']) ? '' : $player['_prim'])?></td>
-            <? endforeach ?>
+            <?php endforeach ?>
         </tbody>
     </table>
     <details class="game__log">

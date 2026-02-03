@@ -1,7 +1,7 @@
 <section class="section section-users-list">
-    <? if (empty($chatsData)) : ?>
+    <?php if (empty($chatsData)) : ?>
         There is no data yet:)
-    <? else : ?>
+    <?php else : ?>
         <table class="users-list" style="width:100%">
             <thead>
                 <tr>
@@ -13,7 +13,7 @@
                 </tr>
             </thead>
             <tbody>
-                <? for ($x = 0; $x < count($chatsData); $x++) :
+                <?php for ($x = 0; $x < count($chatsData); $x++) :
                     $chatTitle = '';
                     if (isset($chatsData[$x]['personal']['title'])) {
                         $chatTitle = $chatsData[$x]['personal']['title'];
@@ -42,8 +42,8 @@
                         <td title="TelegramID"><?= $chatsData[$x]['uid'] ?></td>
                         <td title="Остання активність"><?= date('d.m.Y H:i:s', $chatsData[$x]['data']['last_seems']) ?></td>
                     </tr>
-                <? endfor; ?>
+                <?php endfor; ?>
             </tbody>
         </table>
-    <? endif ?>
+    <?php endif ?>
 </section>

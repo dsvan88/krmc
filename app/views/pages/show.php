@@ -1,15 +1,15 @@
 <section class='section'>
     <header>
-        <h1 class='title'><?= $page['title'] ?> <? empty($dashboard) ? '' : self::component('page-dashboard', ['dashboard' => $dashboard]) ?></h1>
+        <h1 class='title'><?= $page['title'] ?> <?php empty($dashboard) ? '' : self::component('page-dashboard', ['dashboard' => $dashboard]) ?></h1>
         <h2 class='subtitle'><?= $page['subtitle'] ?></h2>
     </header>
     <div class='content'>
         
-        <? if (!empty($page['logoLink'])): ?>
+        <?php if (!empty($page['logoLink'])): ?>
             <div class="page__image-place">
                 <img src="<?= $page['logoLink'] ?>" alt="" class="page__image">
             </div>
-        <? endif ?>
+        <?php endif ?>
         <?= $page['html'] ?>
     </div>
 </section>

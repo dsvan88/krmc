@@ -1,4 +1,4 @@
-<?
+<?php
 if (empty($type)) $type = 'images';
 ?>
 

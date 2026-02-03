@@ -51,51 +51,26 @@ class SettingsController extends Controller
 
         foreach ($setting['setting'] as $index => $set) {
             if ($set['slug'] !== $slug) continue;
+
+            if ($setting['setting'][$index]['value'] == $value)
+                return View::notice(['message' => 'Success']);
+
             $setting['setting'][$index]['value'] = $value;
             break;
         }
-
-        $result = Settings::edit($setting['id'], ['setting' => $setting['setting']]);
-
-        if ($result) {
-            if (strpos($slug, 'bot_token') !== false) {
-                $tgBot = $slug === 'bot_token' ? new TelegramBot() : new TelegramInfoBot();
-                $tgBot->webhookSet($value);
-            }
-            return View::notice(['message' => 'Success', 'location' => '/settings/section/index/' . $type]);
+        
+        if (strpos($slug, 'bot_token') !== false) {
+            $tgBot = $slug === 'bot_token' ? new TelegramBot() : new TelegramInfoBot();
+            $tgBot->webhookDelete();
+            $tgBot->webhookSet($value);
         }
-
-        return View::notice(['type' => 'error', 'message' => 'Fail!']);
+            
+        $result = Settings::edit($setting['id'], ['setting' => $setting['setting']]);
+            
+        return $result ?
+            View::notice(['message' => 'Success', 'location' => '/settings/section/index/' . $type]) :
+            View::notice(['type' => 'error', 'message' => 'Fail!']);
     }
-    // public function editFormAction()
-    // {
-    //     $type = trim($_POST['type']);
-    //     $slug = trim($_POST['slug']);
-
-    //     $settings = Settings::get($type);
-
-    //     $setting = [];
-    //     foreach ($settings as $_slug => $set) {
-    //         if ($_slug !== $slug) continue;
-    //         $setting = $set;
-    //         break;
-    //     }
-
-    //     if (empty($setting))
-    //         return View::notice(['type' => 'error', 'message' => 'Fail!']);
-
-    //     $vars = [
-    //         'title' => '{{ Settings_Edit_Title }}',
-    //         'texts' => [
-    //             'SubmitLabel' => 'Save',
-    //         ],
-    //         'type' => $type,
-    //         'slug' => $slug,
-    //         'setting' => $setting,
-    //     ];
-    //     View::$route['vars'] = array_merge(View::$route['vars'], $vars);
-    //     return View::modal();
-    // }
     public function deleteAction()
     {
         extract(self::$route['vars']);

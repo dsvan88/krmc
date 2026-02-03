@@ -1,4 +1,4 @@
-<? 
+<?php
 if (empty($id))         $id = mt_rand(1000, 10000);
 if (!empty($prefix))    $id = $prefix.'_'.$id;
 if (empty($checked))    $checked = '';

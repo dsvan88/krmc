@@ -1,6 +1,6 @@
 <section class='section'>
     <header>
-        <h1 class='title'><?= $title ?> <? empty($dashboard) ? '' : self::component('page-dashboard', ['dashboard' => $dashboard]) ?></h1>
+        <h1 class='title'><?= $title ?> <?php empty($dashboard) ? '' : self::component('page-dashboard', ['dashboard' => $dashboard]) ?></h1>
         <h2 class='subtitle'><?= $contacts['tg-name']['value'] ?></h2>
     </header>
     <div class='content contacts'>
@@ -30,23 +30,23 @@
             </div>
         </div>
         <hr>
-        <? if (!empty($socials['youtube']['value'])) : ?>
+        <?php if (!empty($socials['youtube']['value'])) : ?>
             <div class="contacts__item">
                 <h3 class="contacts__label"><?= $socials['youtube']['name'] ?></h3>
                 <p><a class="contacts__link" href="<?= $socials['youtube']['value'] ?>"><?= $socials['youtube']['name'] ?></a></p>
             </div>
-        <? endif ?>
-        <? if (!empty($socials['instagram']['value'])) : ?>
+        <?php endif ?>
+        <?php if (!empty($socials['instagram']['value'])) : ?>
             <div class="contacts__item">
                 <h3 class="contacts__label"><?= $socials['instagram']['name'] ?></h3>
                 <p><a class="contacts__link" href="<?= $socials['instagram']['value'] ?>"><?= $socials['instagram']['name'] ?></a></p>
             </div>
-        <? endif ?>
-        <? if (!empty($socials['facebook']['value'])) : ?>
+        <?php endif ?>
+        <?php if (!empty($socials['facebook']['value'])) : ?>
             <div class="contacts__item">
                 <h3 class="contacts__label"><?= $socials['facebook']['name'] ?></h3>
                 <p><a class="contacts__link" href="<?= $socials['facebook']['value'] ?>"><?= $socials['facebook']['name'] ?></a></p>
             </div>
-        <? endif ?>
+        <?php endif ?>
     </div>
 </section>

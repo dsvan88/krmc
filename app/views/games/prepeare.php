@@ -123,7 +123,7 @@
                 <button class="fa fa-eraser" data-action-click="players-clear"></button>
             </div>
             <ol class="game-form__players-list">
-                <? for ($i = 0; $i < $maxPlayers; $i++) :
+                <?php for ($i = 0; $i < $maxPlayers; $i++) :
                     $playerName = '';
                     if (!empty($shuffled))
                         $playerName = array_shift($shuffled);
@@ -133,14 +133,14 @@
                             <input name="player[<?= $i ?>]" type="text" class="game-form__input" value="<?= $playerName ?>" placeholder="<?= $texts['playerPlaceholder'] ?>" data-action-change="check-player" data-action-input="autocomplete-users-names" list="users-names-list" autocomplete="off" />
                         </div>
                     </li>
-                <? endfor ?>
+                <?php endfor ?>
             </ol>
             <div class="game-form__row">
                 <button type="submit" class="game-form__button"><?= $texts['Start'] ?></button>
             </div>
         </form>
         <div class="pool">
-            <? for ($i = 0; $i < $playersCount; $i++) :
+            <?php for ($i = 0; $i < $playersCount; $i++) :
                 $class = [];
                 if ($day['participants'][$i]['name'] === $manager)
                     $class[] = 'manager';
@@ -152,7 +152,7 @@
                     <span class="pool__name <?= implode(' ', $class) ?>" data-action-click="toggle-player"><?= $day['participants'][$i]['name'] ?></span>
                     <span class="pool__remove fa fa-times" data-action-click="remove-participant"></span>
                 </span>
-            <? endfor ?>
+            <?php endfor ?>
             <span class="pool__unit add" data-action-click="add/participant/form">
                 <span class="fa fa-plus"><?= $texts['addPlayer'] ?></span>
             </span>

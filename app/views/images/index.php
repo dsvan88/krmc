@@ -1,19 +1,19 @@
 <section class="section">
     <div class="images__wrapper">
         <div class="images">
-            <? self::component('list/image/new') ?>
-            <? foreach ($files as $file): ?>
-                <? if (empty($file['thumbnailLink'])) :?>
-                    <? self::component('list/image/folder', compact('file')) ?>
-                <? else :?>
-                    <? self::component('list/image/item', compact('file', 'backgrounds')) ?>
-                <? endif ?>
-            <? endforeach ?>
-            <? if (!empty($nextPageToken)) : ?>
+            <?php self::component('list/image/new') ?>
+            <?php foreach ($files as $file): ?>
+                <?php if (empty($file['thumbnailLink'])) :?>
+                    <?php self::component('list/image/folder', compact('file')) ?>
+                <?php else :?>
+                    <?php self::component('list/image/item', compact('file', 'backgrounds')) ?>
+                <?php endif ?>
+            <?php endforeach ?>
+            <?php if (!empty($nextPageToken)) : ?>
                 <div class="image get-more" data-action-click="images/get-more" data-page-token="<?= $nextPageToken ?>"<?= $folderName === 'root' ? '' : " data-folder='$folderName'" ?>>
                     <span class="label fa fa-refresh"></span>
                 </div>
-            <? endif ?>
+            <?php endif ?>
         </div>
         <div class="images__details">
             <div class="images__dashboard">

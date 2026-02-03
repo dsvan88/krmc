@@ -2,18 +2,18 @@
     <div class="booking">
         <form class="booking__form" action="/week/<?= $day['weekId'] ?>/day/<?= $day['dayId'] ?>/" method="POST">
             <header class="booking__header">
-                <? if (empty($yesterday['link'])) : ?>
+                <?php if (empty($yesterday['link'])) : ?>
                     <span class="booking__navlink"><?= $yesterday['label'] ?></span>
-                <? else : ?>
+                <?php else : ?>
                     <span class="booking__navlink"><a href="<?= $yesterday['link'] ?>"><i class="fa fa-angle-double-left"></i>&nbsp;<?= $yesterday['label'] ?></a></span>
-                <? endif ?>
+                <?php endif ?>
                 <h3 class="booking__title"><?= $day['dateTime'] ?></h3>
                 <h3 class="booking__title tablet"><?= $day['dateDayTime'] ?></h3>
-                <? if (empty($tomorrow['link'])) : ?>
+                <?php if (empty($tomorrow['link'])) : ?>
                     <span class="booking__navlink"><?= $tomorrow['label'] ?></span>
-                <? else : ?>
+                <?php else : ?>
                     <span class="booking__navlink"><a href="<?= $tomorrow['link'] ?>"><?= $tomorrow['label'] ?>&nbsp;<i class="fa fa-angle-double-right"></i></a></span>
-                <? endif ?>
+                <?php endif ?>
             </header>
             <div class="booking__body">
                 <fieldset class="booking__settings">
@@ -28,15 +28,15 @@
                         <label for="day-game" class="booking__label"><?= $texts['dayEvent'] ?>:</label>
                         <div class="booking__value">
                             <select name="game" id="day-game">
-                                <? foreach ($gameTypes as $num => $gameType) : ?>
+                                <?php foreach ($gameTypes as $num => $gameType) : ?>
                                     <option value="<?= $gameType['slug'] ?>" <?= ($day['game'] === $gameType['slug'] ? 'selected' : '') ?>><?= $gameType['name'] ?></option>
-                                <? endforeach ?>
+                                <?php endforeach ?>
                             </select>
                         </div>
                     </div>
                     <div class="booking__row">
                         <label for="day-game" class="booking__label"><?= $texts['dayMods'] ?>:</label>
-                        <?
+                        <?php
                         self::component('forms/checkbox-icon', [
                             'prefix' => 'game',
                             'id' => 'beginners',
@@ -108,7 +108,7 @@
                     </div>
                     <div class="booking__row submit">
                         <button type="submit" class="positive fa fa-save"></button>
-                        <? self::component('forms/checkbox-icon', [
+                        <?php self::component('forms/checkbox-icon', [
                             'prefix' => 'game',
                             'name' => 'send',
                             'value' => '1',
@@ -120,7 +120,7 @@
                 </fieldset>
                 <fieldset class="booking__participants">
                     <legend><?= $texts['daysBlockParticipantsTitle'] ?>:</legend>
-                    <? for ($x = 0; $x < $playersCount; $x++)
+                    <?php for ($x = 0; $x < $playersCount; $x++)
                         self::component('participants-field', ['participantId' => $x, 'participant' => empty($day['participants'][$x]) ? [] : $day['participants'][$x]])
                     ?>
                     <button class="fa fa-plus cicrle" data-action-click="participant-field-get"></button>
@@ -133,11 +133,11 @@
     </div>
     <datalist id="users-names-list"> </datalist>
     <datalist id="time-list">
-        <?
+        <?php
         $min = (int) substr($day['time'], 0, 2);
         for (; $min < 23; $min++) : ?>
             <option value="<?= $min ?>:00"></option>
             <option value="<?= $min ?>:30"></option>
-        <? endfor ?>
+        <?php endfor ?>
     </datalist>
 </section>
