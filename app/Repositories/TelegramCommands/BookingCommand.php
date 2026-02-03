@@ -17,6 +17,7 @@ class BookingCommand extends ChatCommand
     public static function execute(): array
     {
         TelegramBotRepository::parseDayNum(static::$arguments['dayName']);
+        $dayNum = static::$arguments['dayNum'];
 
         if (empty(self::$requester['id'])) {
             $chatId = TelegramBotRepository::getUserTelegramId();
@@ -34,34 +35,34 @@ class BookingCommand extends ChatCommand
         }
 
         $weekId = Weeks::currentId();
-        if (static::$arguments['currentDay'] > static::$arguments['dayNum']) {
+        if ($dayNum < static::$arguments['currentDay']) {
             ++$weekId;
         }
 
         $weekData = Weeks::weekDataById($weekId);
 
         $participantId = $slot = -1;
-        if ($weekData['data'][static::$arguments['dayNum']]['status'] !== 'set') {
+        if ($weekData['data'][$dayNum]['status'] !== 'set') {
             if (!in_array(static::$arguments['userStatus'], ['trusted', 'activist', 'manager', 'admin'])) {
                 return static::result('{{ Tg_Gameday_Not_Set }}');
             }
-            if (!isset($weekData['data'][static::$arguments['dayNum']]['game']))
-                $weekData['data'][static::$arguments['dayNum']] = Days::$dayDataDefault;
+            if (!isset($weekData['data'][$dayNum]['game']))
+                $weekData['data'][$dayNum] = Days::$dayDataDefault;
 
             if (!empty(static::$arguments['arrive']))
-                $weekData['data'][static::$arguments['dayNum']]['time'] = static::$arguments['arrive'];
+                $weekData['data'][$dayNum]['time'] = static::$arguments['arrive'];
 
             static::$arguments['arrive'] = '';
 
             // For social points of day started non-admin
-            if (in_array(static::$arguments['userStatus'], ['trusted', 'activist']) && empty($weekData['data'][static::$arguments['dayNum']]['status'])) {
-                $weekData['data'][static::$arguments['dayNum']]['starter'] = static::$arguments['userId'];
+            if (in_array(static::$arguments['userStatus'], ['trusted', 'activist']) && empty($weekData['data'][$dayNum]['status'])) {
+                $weekData['data'][$dayNum]['starter'] = static::$arguments['userId'];
             }
 
-            $weekData['data'][static::$arguments['dayNum']]['status'] = 'set';
+            $weekData['data'][$dayNum]['status'] = 'set';
         }
 
-        foreach ($weekData['data'][static::$arguments['dayNum']]['participants'] as $index => $userData) {
+        foreach ($weekData['data'][$dayNum]['participants'] as $index => $userData) {
             if ($userData['id'] !== static::$arguments['userId']) continue;
 
             if (!empty(static::$arguments['arrive']) && static::$arguments['arrive'] !== $userData['arrive']) {
@@ -73,7 +74,7 @@ class BookingCommand extends ChatCommand
             break;
         }
         $result = ['result' => true];
-        $newDayData = $weekData['data'][static::$arguments['dayNum']];
+        $newDayData = $weekData['data'][$dayNum];
         if (static::$arguments['method'] === '+') {
             if ($participantId !== -1) {
                 return static::result('{{ Tg_Command_Requester_Already_Booked }}');
@@ -112,37 +113,39 @@ class BookingCommand extends ChatCommand
             ];
         }
 
-        Days::setDayData($weekId, static::$arguments['dayNum'], $newDayData);
+        Days::setDayData($weekId, $dayNum, $newDayData);
 
         if (!empty($reactions)) {
             $result['reaction'] = $reactions[mt_rand(0, count($reactions) - 1)];
         }
 
-        $weekData['data'][static::$arguments['dayNum']] = $newDayData;
+        $weekData['data'][$dayNum] = $newDayData;
 
-        $replyMarkup = [
-            'inline_keyboard' => [
-                [
-                    ['text' => '🙋' . self::locale('I will!'), 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => static::$arguments['dayNum']]],
-                    ['text' => self::locale('I want!') . '🥹', 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => static::$arguments['dayNum'], 'p' => '?']],
-                ],
-            ],
-        ];
+        $replyMarkup = TelegramBotRepository::getBookingMarkup($weekId, $dayNum, array_column($weekData['data'][$dayNum]['participants'], 'id'));
 
-        if (!TelegramBotRepository::isDirect()) {
-            if (count($weekData['data'][static::$arguments['dayNum']]['participants']) > 0) {
-                $replyMarkup['inline_keyboard'][0][] = ['text' => '❌' . static::locale('Opt-out'), 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => static::$arguments['dayNum'], 'r' => '1']];
-            }
-        } elseif (in_array(static::$arguments['userId'], array_column($newDayData['participants'], 'id'))) {
-            $replyMarkup['inline_keyboard'] = [
-                [
-                    ['text' => '❌' . self::locale('Opt-out'), 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => static::$arguments['dayNum'], 'r' => 1]]
-                ]
-            ];
-        }
+        // $replyMarkup = [
+        //     'inline_keyboard' => [
+        //         [
+        //             ['text' => '🙋' . self::locale('I will!'), 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => $dayNum]],
+        //             ['text' => self::locale('I want!') . '🥹', 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => $dayNum, 'p' => '?']],
+        //         ],
+        //     ],
+        // ];
+
+        // if (!TelegramBotRepository::isDirect()) {
+        //     if (count($weekData['data'][$dayNum]['participants']) > 0) {
+        //         $replyMarkup['inline_keyboard'][0][] = ['text' => '❌' . static::locale('Opt-out'), 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => $dayNum, 'r' => '1']];
+        //     }
+        // } elseif (in_array(static::$arguments['userId'], array_column($newDayData['participants'], 'id'))) {
+        //     $replyMarkup['inline_keyboard'] = [
+        //         [
+        //             ['text' => '❌' . self::locale('Opt-out'), 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => $dayNum, 'r' => 1]]
+        //         ]
+        //     ];
+        // }
 
         $result['send'][] = [
-            'message' => Days::getFullDescription($weekData, static::$arguments['dayNum']),
+            'message' => Days::getFullDescription($weekData, $dayNum),
             'replyMarkup' => $replyMarkup,
         ];
 

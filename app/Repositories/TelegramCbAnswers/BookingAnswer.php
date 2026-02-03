@@ -81,29 +81,39 @@ class BookingAnswer extends ChatAnswer
 
         Days::setDayData($weekId, $dayNum, $weekData['data'][$dayNum]);
 
+        $replyMarkup = TelegramBotRepository::getBookingMarkup($weekId, $dayNum, array_column($weekData['data'][$dayNum]['participants'], 'id'));
 
         $update = [
             'message' => Days::getFullDescription($weekData, $dayNum),
-            'replyMarkup' => [
-                'inline_keyboard' => [
-                    [
-                        ['text' => '🙋' . static::locale('I will!'), 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => $dayNum]],
-                        ['text' => static::locale('I want!') . '🥹', 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => $dayNum, 'p' => '?']],
-                    ],
-                ],
-            ],
+            'replyMarkup' => $replyMarkup,
         ];
-        $optout = ['text' => '❌' . static::locale('Opt-out'), 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => $dayNum, 'r' => '1']];
-        if (count($weekData['data'][$dayNum]['participants']) > 0) {
-            $update['replyMarkup']['inline_keyboard'][0][] = $optout;
-        }
-        if (TelegramBotRepository::isDirect() && in_array(static::$arguments['userId'], array_column($weekData['data'][$dayNum]['participants'], 'id'))) {
-            $update['replyMarkup']['inline_keyboard'] = [
-                [
-                    $optout
-                ]
-            ];
-        }
+        // $update = [
+        //     'message' => Days::getFullDescription($weekData, $dayNum),
+        //     'replyMarkup' => [
+        //         'inline_keyboard' => [
+        //             [
+        //                 ['text' => '🙋' . static::locale('I will!'), 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => $dayNum]],
+        //                 ['text' => static::locale('I want!') . '🥹', 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => $dayNum, 'p' => '?']],
+        //             ],
+        //         ],
+        //     ],
+        // ];
+        // $optout = ['text' => '❌' . static::locale('Opt-out'), 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => $dayNum, 'r' => '1']];
+        // if (count($weekData['data'][$dayNum]['participants']) > 0) {
+        //     $update['replyMarkup']['inline_keyboard'][0][] = $optout;
+        // }
+        // if (TelegramBotRepository::isDirect() && in_array(static::$arguments['userId'], array_column($weekData['data'][$dayNum]['participants'], 'id'))) {
+        //     $update['replyMarkup']['inline_keyboard'] = [
+        //         [
+        //             $optout
+        //         ]
+        //     ];
+        // }
+
+
+
+
+
 
         // $send = [];
         // if (empty(static::$arguments['r']) && TelegramBotRepository::getChatId() === Settings::getMainTelegramId()){

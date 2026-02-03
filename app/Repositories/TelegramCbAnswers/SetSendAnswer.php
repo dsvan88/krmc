@@ -9,7 +9,7 @@ use app\models\Weeks;
 use app\Repositories\TelegramBotRepository;
 use Exception;
 
-class RegSendAnswer extends ChatAnswer
+class SetSendAnswer extends ChatAnswer
 {
     public static function execute():array
     {

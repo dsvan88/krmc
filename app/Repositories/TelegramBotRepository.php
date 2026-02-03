@@ -226,6 +226,36 @@ class TelegramBotRepository
             $message['message']['chat']['type'] === 'private' :
             $message['callback_query']['message']['chat']['type'] === 'private';
     }
+
+
+    public static function getBookingMarkup(int $weekId, int $dayNum, array $ids = []): array
+    {
+
+        if (TelegramBotRepository::isDirect() && !empty(ChatAction::$requester['id']) && in_array(ChatAction::$requester['id'], $ids)) {
+            return [
+                [
+                    ['text' => '❌' . Locale::phrase('Opt-out'), 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => $dayNum, 'r' => 1]]
+                ]
+            ];
+        }
+
+        $result = [
+            'inline_keyboard' => [
+                [
+                    ['text' => '🙋' . Locale::phrase('I will!'), 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => $dayNum]],
+                    ['text' => Locale::phrase('I want!') . '🥹', 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => $dayNum, 'p' => '?']],
+                    ['text' => '❌' . Locale::phrase('Opt-out'), 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => $dayNum, 'r' => 1]], // check it
+                ],
+            ],
+        ];
+
+        // if (!TelegramBotRepository::isDirect()) {
+        //     $result['inline_keyboard'][0][] = ['text' => '❌' . Locale::phrase('Opt-out'), 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => $dayNum, 'r' => 1]];
+        // }
+
+        return $result;
+    }
+
     public static function encodeInlineKeyboard(array &$data): void
     {
         foreach ($data as $i => $row) {

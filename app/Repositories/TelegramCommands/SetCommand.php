@@ -139,10 +139,28 @@ class SetCommand extends ChatCommand
 
         if (!$result) {
             $message = json_encode($weekData['data'][$dayNum], JSON_UNESCAPED_UNICODE);
-            static::result($message);
+            static::$report = $message;
         }
 
         $message = $method === '-' ? self::locale('{{ Tg_Command_Successfully_Canceled }}') : Days::getFullDescription($weekData, $dayNum);
-        return static::result($message, '👌', true);
+        $replyMarkup = [
+            'inline_keyboard' => [
+                [
+                    ['text' => 'Send to the group?', 'callback_data' => ['c' => 'setSend', 'w' => $weekId, 'd' => $dayNum]],
+                ],
+            ]
+        ];
+
+        return [
+            'result' => true,
+            'reaction' => '👌',
+            'send' => [
+                [
+                    'message' => $message,
+                    'replyMarkup' => $replyMarkup,
+                ]
+            ]
+        ];
+        // return static::result($message, '👌', true);
     }
 }
