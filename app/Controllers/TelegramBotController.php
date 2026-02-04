@@ -51,8 +51,7 @@ class TelegramBotController extends Controller
             }
         }
 
-        $data = trim(file_get_contents('php://input'));
-        $message = json_decode($data, true);
+        $message = json_decode(trim(file_get_contents('php://input')), true);
 
         static::$type = empty($message['callback_query']) ? 'message' : 'callback_query';
 
@@ -113,7 +112,7 @@ class TelegramBotController extends Controller
 
         if (empty(ChatAction::$requester)) return true;
 
-        if (static::$type === 'message' && empty(ChatAction::$requester)) {
+        if (static::$type === 'message') {
             if (self::$command === 'booking' && Users::isBanned('booking', ChatAction::$requester['ban'])) {
                 Sender::delete(self::$chatId, $message['message']['message_id']);
                 Sender::message($userTelegramId, Locale::phrase(['string' => "I’m deeply sorry, but you banned for that action:(...\nYour ban will be lifted at: <b>%s</b>", 'vars' => [date('d.m.Y', ChatAction::$requester['ban']['expired'] + TIME_MARGE)]]));
@@ -172,7 +171,7 @@ class TelegramBotController extends Controller
             error_log($class . ' doesnt exists!');
             return [];
         }
-        
+
         $status = '';
         if (!empty(ChatAction::$requester['privilege']['status']))
             $status = ChatAction::$requester['privilege']['status'];

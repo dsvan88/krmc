@@ -48,25 +48,26 @@ class SettingsController extends Controller
         $value = str_replace('\\n', "\n", trim($_POST['value']));
 
         $setting = Settings::findBy('type', $type, 1)[0];
-
+        $prev = '';
         foreach ($setting['setting'] as $index => $set) {
             if ($set['slug'] !== $slug) continue;
 
             if ($setting['setting'][$index]['value'] == $value)
                 return View::notice(['message' => 'Success']);
 
+            $prev = $setting['setting'][$index]['value'];
             $setting['setting'][$index]['value'] = $value;
             break;
         }
-        
-        if (strpos($slug, 'bot_token') !== false) {
-            $tgBot = $slug === 'bot_token' ? new TelegramBot() : new TelegramInfoBot();
+
+        if (APP_LOC !== 'local' && strpos($slug, 'bot_token') !== false) {
+            $tgBot = $slug === 'bot_token' ? new TelegramBot($prev) : new TelegramInfoBot($prev);
             $tgBot->webhookDelete();
             $tgBot->webhookSet($value);
         }
-            
+
         $result = Settings::edit($setting['id'], ['setting' => $setting['setting']]);
-            
+
         return $result ?
             View::notice(['message' => 'Success', 'location' => '/settings/section/index/' . $type]) :
             View::notice(['type' => 'error', 'message' => 'Fail!']);

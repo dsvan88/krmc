@@ -210,7 +210,7 @@ class TelegramBot
             return false;
 
         $options = static::$options;
-        $options[CURLOPT_URL] = "https://api.telegram.org/bot$botToken/setWebhook?url=https://$_SERVER[HTTP_HOST]/".static::$webhookLink;
+        $options[CURLOPT_URL] = "https://api.telegram.org/bot$botToken/setWebhook?url=https://$_SERVER[HTTP_HOST]/" . static::$webhookLink;
 
         $curl = curl_init();
         curl_setopt_array($curl, $options);
@@ -369,7 +369,6 @@ class TelegramBot
         static::$result = json_decode(curl_exec(static::$curl), true);
         // error_log(json_encode(static::$result,JSON_UNESCAPED_UNICODE));
 
-
         static::end();
 
         return !empty(static::$result['ok']);
@@ -377,6 +376,6 @@ class TelegramBot
 
     public static function end()
     {
-        if (static::$close) curl_close(static::$curl);
+        if (static::$close) static::$curl = null;
     }
 }
