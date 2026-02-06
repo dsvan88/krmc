@@ -236,7 +236,7 @@ return  [
 
     'api/telegram/webhook' =>
     [
-        'controller' => 'telegramBot',
+        'controller' => 'telegramMainBot',
         'action' => 'webhook',
         'access' => ['category' => 'all']
     ],

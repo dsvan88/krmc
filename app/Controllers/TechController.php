@@ -3,6 +3,7 @@
 namespace app\Controllers;
 
 use app\core\Controller;
+use app\core\Entities\Requester;
 use app\core\Tech;
 use app\core\View;
 use app\libs\Db;
@@ -78,7 +79,7 @@ class TechController extends Controller
         error_reporting(0);
         set_time_limit(90);
 
-        if (Days::current() < 3){
+        if (Days::current() < 3) {
             SocialPointsRepository::applyBookingPoints();
         }
 
@@ -133,7 +134,7 @@ class TechController extends Controller
         // return View::redirect('/');
 
         $weeks = Weeks::getAll();
-        foreach($weeks as $week){
+        foreach ($weeks as $week) {
             if (!isset($week['data'][-1])) continue;
             Tech::dump($week['data'][-1]);
             unset($week['data'][-1]);
@@ -295,7 +296,6 @@ class TechController extends Controller
     }
     public static function testAction()
     {
-
         // $records = DayRepository::findBookedDays(17, 10);
         // DayRepository::changeParticipantId($records, 15);
         // $records = DayRepository::findBookedDays(15, 10);
