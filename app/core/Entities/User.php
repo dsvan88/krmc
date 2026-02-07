@@ -3,27 +3,25 @@
 namespace  app\core\Entities;
 
 use app\models\Users;
-use Exception;
 
 class User extends Entity
 {
-    public static $profile = [];
+    public array $profile = [];
 
-    public function __construct(int $id = 0)
+    public static function find(int $id)
     {
-        if (empty($id) && empty($_SESSION['id']))
-            throw new Exception(__METHOD__ . ': UserID can’t be empty');
-
-        return $this->init(empty($id) ? $_SESSION['id'] : $id);
+        $_profile =  Users::find($id);
+        if (empty($_profile))
+            return null;
+        
+        static::$cache[$id]['profile'] = $_profile;
+        return true;
     }
-    public function getProps(int $id)
-    {
-        static::$profile =  Users::find($id);
-
-        if (empty(static::$profile))
-            throw new Exception(__METHOD__ . ": Can’t find a user with the userId $id.");
-
-        static::$id = $id;
+    public static function validate(int $id){
+        if (empty($id)){
+            return empty($_SESSION['id']) ? false : $_SESSION['id'];
+        }
+        return $id;
     }
     public function __toString()
     {
@@ -33,6 +31,9 @@ class User extends Entity
     {
         if (isset($this->$name))
             return $this->$name;
+
+        if (isset($this->profile[$name]))
+            return $this->profile[$name];
 
         if (isset($this->profile['personal'][$name]))
             return $this->profile['personal'][$name];

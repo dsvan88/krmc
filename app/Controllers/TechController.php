@@ -4,6 +4,7 @@ namespace app\Controllers;
 
 use app\core\Controller;
 use app\core\Entities\Requester;
+use app\core\Entities\User;
 use app\core\Tech;
 use app\core\View;
 use app\libs\Db;
@@ -296,6 +297,13 @@ class TechController extends Controller
     }
     public static function testAction()
     {
+        $user = User::create();
+        Tech::dump($user->fio);
+        echo "User: $user<br>";
+
+        $req = Requester::create(900669168);
+        Tech::dump($req->profile->email);
+        echo "Requester: $req<br>";
         // $records = DayRepository::findBookedDays(17, 10);
         // DayRepository::changeParticipantId($records, 15);
         // $records = DayRepository::findBookedDays(15, 10);

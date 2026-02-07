@@ -161,6 +161,5 @@ class SetCommand extends ChatCommand
                 ]
             ]
         ];
-        // return static::result($message, '👌', true);
     }
 }
