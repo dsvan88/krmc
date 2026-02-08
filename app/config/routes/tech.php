@@ -50,6 +50,6 @@ return  [
     [
         'controller' => 'tech',
         'action' => 'test',
-        'access' => ['category' => 'all']
+        'access' => ['category' => 'admin']
     ],
 ];

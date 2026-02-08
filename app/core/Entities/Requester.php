@@ -2,35 +2,42 @@
 
 namespace  app\core\Entities;
 
+use app\core\Tech;
 use app\models\TelegramChats;
 use app\Repositories\TelegramBotRepository;
 use app\Repositories\TelegramChatsRepository;
 
 /**
+ * @property Chat|null $chat
  * @property User|null $profile
  */
 class Requester extends Entity
 {
-    public $chat = [];
+    public ?Chat $chat = null;
     public $userId = 0;
     public ?User $profile = null;
 
     public static function find(int $id):bool
     {
-        $_chat = TelegramChats::getChat($id);
+        $data = Chat::create($id);
 
-        if (empty($_chat)) return false;
+        if (empty($data)) return false;
         
-        static::$cache['chat'] = $_chat;
+        $_cache['chat'] = $data;
+        
+        Tech::dump($data->user_id);
 
-        if (empty($_chat['user_id'])) return true;
+        if (empty($data->user_id))
+            return (bool) static::$cache = $_cache;
 
-        $_profile = User::create($_chat['user_id']);
-        if (!empty($_profile)){
-            static::$cache['userId'] = $_profile->id;
-            static::$cache['profile'] = $_profile;
+        Tech::dump($data->user_id);
+        
+        $data = User::create($data->user_id);
+        if (!empty($data)){
+            $_cache['userId'] = $data->id;
+            $_cache['profile'] = $data;
         }
-        return true;
+        return (bool) static::$cache = $_cache;
     }
     public static function validate(int $id){
         if (empty($id)){
@@ -41,8 +48,7 @@ class Requester extends Entity
     }
     public function __toString()
     {
-        $title = TelegramChatsRepository::chatTitle($this->chat);
-        return $title ?? '';
+        return $this->chat->title ?? '';
     }
     public function __get($name)
     {

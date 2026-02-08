@@ -12,15 +12,17 @@ abstract class Entity
     public static array $cache = [];
     public static array $instances = [];
     public static $model = null;
+    private static $classId = '';
 
     private function __construct(int $id)
     {
+        static::$classId = get_class($this) . "_$id";
         if ($this->init($id))
-            static::$instances[$id] = $this;
+            static::$instances[static::$classId] = $this;
         else 
             throw new Exception(__METHOD__ . ' New instance of ' . static::class . ' with id: ' . $id . ' - cant be create!');
     }
-    public function init(int $id)
+    public function init(int $id):bool
     {
         $props = array_keys(
             array_filter(
@@ -29,8 +31,16 @@ abstract class Entity
                 ARRAY_FILTER_USE_KEY
             )
         );
-        $this->{$props[0]} = static::$cache;
+        
         $this->id = $id;
+
+        if (count($props) === 1)
+            return (bool) $this->{$props[0]} = static::$cache;
+            
+        foreach($props as $v){
+            $this->$v = static::$cache[$v];
+        }
+        
         return true;
     }
     public static function create(int $id = 0){
@@ -38,8 +48,8 @@ abstract class Entity
 
         if (empty($id)) return null;
 
-        if (!empty(static::$instances[$id]))
-            return static::$instances[$id];
+        if (!empty(static::$instances[static::$classId]))
+            return static::$instances[static::$classId];
 
         return static::find($id)
             ? new static($id)

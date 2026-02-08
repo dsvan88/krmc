@@ -175,6 +175,16 @@ class TelegramChats extends Model
         };
         return $names;
     }
+    public static function findByUserId(int $id = 0)
+    {
+        if (empty($id)) {
+            return [];
+        }
+        
+        $result = static::findBy('user_id', $id, 1);
+    
+        return empty($result) ? [] : self::decodeJson($result[0]);
+    }
     public static function findByUserName(string $username = '')
     {
         if (empty($username)) {
@@ -210,7 +220,7 @@ class TelegramChats extends Model
     public static function nicknames(array $chatsData)
     {
         if (!empty($chatsData['user_id'])) {
-            $userData = Users::findBy('id', $chatsData['user_id']);
+            $userData = static::findByUserId();
             $chatsData['nickname'] = $userData['name'];
             return $chatsData;
         }

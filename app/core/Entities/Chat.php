@@ -3,6 +3,7 @@
 namespace  app\core\Entities;
 
 use app\models\TelegramChats;
+use app\Repositories\TelegramChatsRepository;
 
 class Chat extends Entity
 {
@@ -10,28 +11,43 @@ class Chat extends Entity
     public static $model = TelegramChats::class;
 
     public static function validate(int $id){
-        if (empty($id)){
-            return empty($_SESSION['id']) ? false : $_SESSION['id'];
-        }
-        return $id;
+        if (!empty($id)) return $id;
+
+        if (empty($_SESSION['id'])) return false;
+
+        $chat = static::$model::findByUserId($_SESSION['id']);
+        return empty($chat) ? false : $chat['uid'];
+    }
+    public static function find(int $id): bool
+    {
+        $data =  static::$model::getChat($id);
+
+        if (empty($data)) return false;
+        
+        static::$cache = $data;
+        return true;
     }
     public function __toString()
     {
-        return $this->name ?? '';
+        return $this->username ?? '';
     }
     public function __get($name)
     {
         if (isset($this->$name))
             return $this->$name;
 
-        if (isset($this->profile[$name]))
-            return $this->profile[$name];
+        if ($name === 'title'){
+            return TelegramChatsRepository::chatTitle($this->chat);
+        }
 
-        if (isset($this->profile['personal'][$name]))
-            return $this->profile['personal'][$name];
+        if (isset($this->chat[$name]))
+            return $this->chat[$name];
 
-        if (isset($this->profile['contacts'][$name]))
-            return $this->profile['contacts'][$name];
+        if (isset($this->chat['personal'][$name]))
+            return $this->chat['personal'][$name];
+
+        if (isset($this->chat['data'][$name]))
+            return $this->chat['data'][$name];
 
         return null;
     }
