@@ -29,7 +29,7 @@ class SocialPoints extends Model
 
         $privelege = $userData['privilege'];
         $privelege['points'] = $point;
-        static::update(['privilege' => $privelege], ['id' => $userId]);
+        static::update(['privilege' => json_encode($privelege)], ['id' => $userId]);
 
         return $point;
     }
