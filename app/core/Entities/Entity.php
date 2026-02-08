@@ -2,26 +2,34 @@
 
 namespace  app\core\Entities;
 
+use app\core\Model;
 use app\core\Tech;
 use Exception;
 
-class Entity
+abstract class Entity
 {
     public int $id = 0;
     public static array $cache = [];
     public static array $instances = [];
+    public static $model = null;
 
     private function __construct(int $id)
     {
-        $this->init($id);
-        static::$instances[$id] = $this;
+        if ($this->init($id))
+            static::$instances[$id] = $this;
+        else 
+            throw new Exception(__METHOD__ . ' New instance of ' . static::class . ' with id: ' . $id . ' - cant be create!');
     }
     public function init(int $id)
     {
-        foreach(static::$cache[$id] as $k=>$v){
-            if (!property_exists($this, $k)) continue;
-            $this->$k = $v;
-        }
+        $props = array_keys(
+            array_filter(
+                get_object_vars($this),
+                fn($k) => $k !== 'id',
+                ARRAY_FILTER_USE_KEY
+            )
+        );
+        $this->{$props[0]} = static::$cache;
         $this->id = $id;
         return true;
     }
@@ -33,17 +41,21 @@ class Entity
         if (!empty(static::$instances[$id]))
             return static::$instances[$id];
 
-        static::find($id);
-
-        return empty(static::$cache[$id])
-            ? null
-            : new static($id);
+        return static::find($id)
+            ? new static($id)
+            : null;
     }
     public static function validate(int $id){
         return empty($id) ? false : $id;
     }
-    public static function find(int $id){
-        return empty($id) ? null : ['id' => $id];
+    public static function find(int $id): bool
+    {
+        $data =  static::$model::find($id);
+
+        if (empty($data)) return false;
+        
+        static::$cache = $data;
+        return true;
     }
     public function __get($name)
     {

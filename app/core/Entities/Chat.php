@@ -2,12 +2,12 @@
 
 namespace  app\core\Entities;
 
-use app\models\Users;
+use app\models\TelegramChats;
 
-class User extends Entity
+class Chat extends Entity
 {
-    public array $profile = [];
-    public static $model = Users::class;
+    public array $chat = [];
+    public static $model = TelegramChats::class;
 
     public static function validate(int $id){
         if (empty($id)){

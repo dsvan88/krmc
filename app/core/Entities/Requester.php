@@ -5,7 +5,6 @@ namespace  app\core\Entities;
 use app\models\TelegramChats;
 use app\Repositories\TelegramBotRepository;
 use app\Repositories\TelegramChatsRepository;
-use Exception;
 
 /**
  * @property User|null $profile
@@ -16,20 +15,20 @@ class Requester extends Entity
     public $userId = 0;
     public ?User $profile = null;
 
-    public static function find(int $id)
+    public static function find(int $id):bool
     {
         $_chat = TelegramChats::getChat($id);
 
-        if (empty($_chat)) return null;
+        if (empty($_chat)) return false;
         
-        static::$cache[$id]['chat'] = $_chat;
+        static::$cache['chat'] = $_chat;
 
         if (empty($_chat['user_id'])) return true;
 
         $_profile = User::create($_chat['user_id']);
         if (!empty($_profile)){
-            static::$cache[$id]['userId'] = $_profile->id;
-            static::$cache[$id]['profile'] = $_profile;
+            static::$cache['userId'] = $_profile->id;
+            static::$cache['profile'] = $_profile;
         }
         return true;
     }

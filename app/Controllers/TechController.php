@@ -298,12 +298,12 @@ class TechController extends Controller
     public static function testAction()
     {
         $user = User::create();
-        Tech::dump($user->fio);
+        Tech::dump(date('d.m.Y', $user->birthday));
         echo "User: $user<br>";
 
-        $req = Requester::create(900669168);
-        Tech::dump($req->profile->email);
-        echo "Requester: $req<br>";
+        // $req = Requester::create(900669168);
+        // Tech::dump($req->profile->email);
+        // echo "Requester: $req<br>";
         // $records = DayRepository::findBookedDays(17, 10);
         // DayRepository::changeParticipantId($records, 15);
         // $records = DayRepository::findBookedDays(15, 10);
