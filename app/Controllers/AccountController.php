@@ -795,7 +795,7 @@ class AccountController extends Controller
                     'result' => false,
                     'alert' => [
                         'title' => Locale::phrase('Checking...'),
-                        'text' => Locale::phrase(['string' => "Cant find a telegram user @%s!\nLet’s try it again.", 'vars' => [$_POST['name']]]),
+                        'text' => Locale::phrase(['string' => "Cant find a telegram user %s!\nLet’s try it again.", 'vars' => [$_POST['name']]]),
                     ]
                 ]);
             }

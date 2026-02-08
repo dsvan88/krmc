@@ -161,13 +161,27 @@ class TelegramChats extends Model
         }
         return $result;
     }
+    public static function getListUserNames(string $name = ''): array
+    {
+        if (empty($name)) {
+            return [];
+        }
+        $table = self::$table;
+        $results = self::query("SELECT personal->'$.username' FROM $table WHERE LOWER( personal->'$.username' ) LIKE ? ORDER BY id", ["%$name%"], 'Num');
+        if (empty($results)) return [];
+        $names = [];
+        foreach($results as $result){
+            $names[] = '@'.$result[0]; 
+        };
+        return $names;
+    }
     public static function findByUserName(string $username = '')
     {
         if (empty($username)) {
             return [];
         }
         $table = self::$table;
-        $result = self::query("SELECT * FROM $table WHERE personal->'$.username' = ? LIMIT 1", [$username], 'Assoc');
+        $result = self::query("SELECT * FROM $table WHERE LOWER ( personal->'$.username' ) = ? LIMIT 1", [strtolower($username)], 'Assoc');
 
         return empty($result) ? [] : self::decodeJson($result[0]);
     }

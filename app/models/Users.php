@@ -305,7 +305,6 @@ class Users extends Model
     {
         $table = self::$table;
         $name = mb_strtolower($name, 'UTF-8');
-        // $result = self::query("SELECT name FROM $table WHERE name ILIKE ? ORDER BY id", ["%$name%"], 'Num');
         $result = self::query("SELECT name FROM $table WHERE LOWER( name ) LIKE ? ORDER BY id", ["%$name%"], 'Num');
         return empty($result) ? [] : $result;
     }

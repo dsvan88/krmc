@@ -67,9 +67,6 @@ class AccountRepository
     }
     public static function addNames(array &$source): array
     {
-        if (empty($source))
-            return $source;
-
         if (!empty($source['id'])) {
             if (!is_numeric($source['id']) && $source['id'][0] === '_') {
                 $chatData = TelegramChats::getChat(substr($source['id'], 1));
@@ -81,7 +78,6 @@ class AccountRepository
             }
             try{
                 $userData = Users::find($source['id']);
-
             }
             catch(\Throwable $error){
                 error_log($source['id']);
@@ -97,6 +93,7 @@ class AccountRepository
 
         $count = count($source);
         for ($x = 0; $x < $count; $x++) {
+            if (is_null($source[$x]['id'])) continue;
             static::addNames($source[$x]);
         }
         return $source;
