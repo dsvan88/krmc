@@ -1,8 +1,18 @@
 <?php
+if (empty($_ENV['ROOT_PASS_DEFAULT'])) {
+    throw new RuntimeException('ROOT_PASS_DEFAULT not set');
+}
+
 if (!session_id()) {
+    session_set_cookie_params([
+        'httponly' => true,
+        'secure' => true,
+        'samesite' => 'Strict'
+    ]);
     session_start();
+    session_regenerate_id(true);
     if (!empty($_SERVER['HTTP_USER_AGENT']))
-        $_SESSION['csrf'] = sha1($_SERVER['HTTP_USER_AGENT'] . session_id());
+        $_SESSION['csrf'] = bin2hex(random_bytes(32));
 }
 
 if (!defined('SQL_HOST')) {
@@ -43,7 +53,7 @@ if (!defined('SQL_HOST')) {
     define('CFG_NEWS_PER_PAGE', 6);
     define('CFG_MAX_SESSION_AGE', TIMESTAMP_WEEK); // 60*60*24*7 == 1 week
 
-    define('ROOT_PASS_DEFAULT', empty($_ENV['ROOT_PASS_DEFAULT'])  ? 'admin1234' : $_ENV['ROOT_PASS_DEFAULT']);
+    define('ROOT_PASS_DEFAULT', $_ENV['ROOT_PASS_DEFAULT']);
     define('BACKUP_FREQ',   empty($_ENV['BACKUP_FREQ']) ? TIMESTAMP_DAY * 2 : $_ENV['BACKUP_FREQ']);
     define('APP_VERSION',   empty($_ENV['APP_VERSION'])     ? '0.1' :     $_ENV['APP_VERSION']);
     define('APP_LOC', empty($_ENV['APP_LOC'])  ? 'product' : $_ENV['APP_LOC']);

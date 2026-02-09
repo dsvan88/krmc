@@ -37,3 +37,7 @@ RewriteRule ^(.*)$ index.php
   BrowserMatch \bMSIE !no-gzip !gzip-only-text/html
   Header append Vary User-Agent
 </IfModule>
+
+<Files ".env*">
+  Deny from all
+</Files>

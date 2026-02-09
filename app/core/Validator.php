@@ -26,7 +26,8 @@ class Validator
     {
         $value = trim($value);
         if (empty($value)) return false;
-        return $value === $_SESSION['csrf'] && $value === sha1($_SERVER['HTTP_USER_AGENT'] . session_id());
+        return hash_equals($_SESSION['csrf'], $value);
+        // return $value === $_SESSION['csrf'] && $value === sha1($_SERVER['HTTP_USER_AGENT'] . session_id());
     }
     private static function email(string $value)
     {
@@ -63,6 +64,14 @@ class Validator
         if (empty($value)) return '';
         return in_array($value, ['male', 'female', 'secret'], true) ? $value : false;
     }
+    private static function telegramToken(string $token = ''): bool
+    {
+        $secret = $_ENV['TG_SECRET_TOKEN'] ?? '';
+
+        if (empty($secret)) return true;
+
+        return hash_equals($secret, $token);
+    }
     private static function telegramIp(string $ip): string
     {
         $ranges = [
@@ -76,7 +85,7 @@ class Validator
             ],
         ];
         $ip = ip2long($ip);
-        foreach ($ranges as $index => $range) {
+        foreach ($ranges as $range) {
             if ($ip >= $range['min'] && $ip <= $range['max']) return true;
         }
         return false;

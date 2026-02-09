@@ -210,7 +210,7 @@ class TelegramBot
             return false;
 
         $options = static::$options;
-        $options[CURLOPT_URL] = "https://api.telegram.org/bot$botToken/setWebhook?url=https://$_SERVER[HTTP_HOST]/" . static::$webhookLink;
+        $options[CURLOPT_URL] = "https://api.telegram.org/bot$botToken/setWebhook?url=https://$_SERVER[HTTP_HOST]/" . static::$webhookLink . '&secret_token=' . $_ENV['TG_SECRET_TOKEN'] ?? '';
 
         $curl = curl_init();
         curl_setopt_array($curl, $options);

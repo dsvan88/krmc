@@ -36,19 +36,23 @@ class TelegramBotController extends Controller
         if (strpos($contentType, 'application/json') ===  false) return false;
 
         if (APP_LOC !== 'local') {
+
+            if (!Validator::validate('telegramToken', $_SERVER['HTTP_X_TELEGRAM_BOT_API_SECRET_TOKEN'] ?? '')) {
+                http_response_code(403);
+                return false;
+            }
+
             $ip = substr($_SERVER['REMOTE_ADDR'], 0, 4) === substr($_SERVER['SERVER_ADDR'], 0, 4) ? $_SERVER['HTTP_X_REAL_IP'] : $_SERVER['REMOTE_ADDR'];
             if (!Validator::validate('telegramIp', $ip) && $ip !== '127.0.0.1') {
                 $techTgId = Settings::getTechTelegramId();
-                $message = json_encode([
-                    'REMOTE_ADDR' => $_SERVER['REMOTE_ADDR'],
-                    'SERVER_ADDR' => $_SERVER['SERVER_ADDR'],
-                    'HTTP_X_REAL_IP' => $_SERVER['HTTP_X_REAL_IP'],
-                ]);
+                $message = "DEBUG:\nWrong Telegram IP:" . PHP_EOL
+                    . 'REMOTE_ADDR: ' . (empty($_SERVER['REMOTE_ADDR']) ? '' : $_SERVER['REMOTE_ADDR']) . PHP_EOL
+                    . 'SERVER_ADDR: ' . (empty($_SERVER['SERVER_ADDR']) ? '' : $_SERVER['SERVER_ADDR']) . PHP_EOL
+                    . 'HTTP_X_REAL_IP: ' . (empty($_SERVER['HTTP_X_REAL_IP']) ? '' : $_SERVER['HTTP_X_REAL_IP']);
                 if (empty($techTgId))
                     error_log($message);
                 else
                     Sender::message($techTgId, $message);
-                return false;
             }
         }
 
