@@ -25,10 +25,15 @@ class HelpCommand extends ChatCommand
             return static::result('Something went wrong! List is empty.');
         }
 
-        $self = self::class;
-        $commandsList = array_map(function ($element) use ($self) {
-            return $self::getCommandDescriptions($element);
-        }, $list);
+        $commandsList = [];
+        foreach ($list as $command) {
+            $commandsList[] = static::getCommandDescriptions($command);
+        }
+
+        // $self = self::class;
+        // $commandsList = array_map(function ($element) use ($self) {
+        //     return $self::getCommandDescriptions($element);
+        // }, $list);
 
         $commandsList = array_values(array_filter($commandsList));
 

@@ -95,12 +95,18 @@ class Validator
         $string = urldecode($string);
 
         $array = explode('&', $string);
-        $size = count($array);
-        for ($i = 0; $i < $size; $i++) {
-            if (strpos($array[$i], 'hash=') === false) continue;
-            $hash = substr(array_splice($array, $i, 1)[0], 5);
+        foreach ($array as $el) {
+            if (strpos($el, 'hash=') === false) continue;
+            $hash = substr($string, 5);
             break;
         }
+
+        // $size = count($array);
+        // for ($i = 0; $i < $size; $i++) {
+        //     if (strpos($array[$i], 'hash=') === false) continue;
+        //     $hash = substr(array_splice($array, $i, 1)[0], 5);
+        //     break;
+        // }
 
         sort($array);
         $check_string = implode("\n", $array);

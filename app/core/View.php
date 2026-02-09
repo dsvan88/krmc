@@ -91,8 +91,14 @@ class View
             'title' => $title,
         ];
 
-        if (isset($scripts))
-            $response['jsFile'] = array_map(fn($e) => SCRIPTS_PUBLIC . $e, ViewRepository::compressModalScripts($scripts));
+        if (isset($scripts)) {
+            $response['jsFile'] = [];
+            $scripts = ViewRepository::compressModalScripts($scripts);
+            foreach ($scripts as $script) {
+                $response['jsFile'][] =  SCRIPTS_PUBLIC . $script;
+            }
+            // $response['jsFile'] = array_map(fn($e) => SCRIPTS_PUBLIC . $e, ViewRepository::compressModalScripts($scripts));
+        }
 
         if (isset($css))
             $response['cssFile'] = $css;
