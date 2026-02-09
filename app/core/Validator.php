@@ -84,7 +84,7 @@ class Validator
                 'max' => 2509942783, //ip2long('149.154.175.255'),
             ],
         ];
-        $ip = ip2long($ip);
+        $ip = sprintf('%u', ip2long($ip)); // Protect from x32 Systems (result can be negative)
         foreach ($ranges as $range) {
             if ($ip >= $range['min'] && $ip <= $range['max']) return true;
         }
