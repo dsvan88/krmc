@@ -297,13 +297,15 @@ class TechController extends Controller
     }
     public static function testAction()
     {
-        // $user = User::create();
-        // Tech::dump(date('d.m.Y', $user->birthday));
-        // echo "User: $user<br>";
+        $user = User::create();
+        Tech::dump($user->ban);
+        echo "User: $user<br>";
 
         $req = Requester::create(900669168);
-        Tech::dump($req->profile->email);
+        Tech::dump($req->chat->username);
         echo "Requester: $req<br>";
+
+        Tech::dump(User::$instances);
         // $records = DayRepository::findBookedDays(17, 10);
         // DayRepository::changeParticipantId($records, 15);
         // $records = DayRepository::findBookedDays(15, 10);

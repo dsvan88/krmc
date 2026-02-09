@@ -3,6 +3,7 @@
 namespace app\Controllers;
 
 use app\core\Controller;
+use app\core\Entities\Requester;
 use app\core\Locale;
 use app\core\Sender;
 use app\core\Telegram\ChatAction;
@@ -70,23 +71,21 @@ class TelegramBotController extends Controller
         }
         Locale::change($langCode);
 
+        $requester = Requester::create();
         static::$chatId = TelegramBotRepository::getChatId();
-
-        $userTelegramId = TelegramBotRepository::getUserTelegramId();
-        $userId = Contacts::getUserIdByContact('telegramid', $userTelegramId);
 
         if (static::$type === 'message') {
             static::$command = TelegramBotRepository::parseChatCommand($message['message']['text']);
 
             if (empty(static::$command)) {
-                if (empty(TelegramChatsRepository::$pending)) return false;
+                if (empty(TelegramChatsRepository::isPendingState())) return false;
 
                 static::$command = TelegramChatsRepository::$pending;
 
                 TelegramBotRepository::getCommonArguments($message['message']['text']);
             }
 
-            if (empty($userId) && !in_array(static::$command, static::$guestCommands)) {
+            if (empty($requester->profile) && !in_array(static::$command, static::$guestCommands)) {
                 Sender::message(static::$chatId, Locale::phrase('{{ Tg_Unknown_Requester }}'), $message['message']['message_id']);
                 return false;
             }
@@ -97,34 +96,35 @@ class TelegramBotController extends Controller
 
             static::$command =  ChatAction::$arguments['c'];
 
-            if (empty($userId) && !in_array(static::$command, static::$guestCommands)) {
+            if (empty($requester->profile) && !in_array(static::$command, static::$guestCommands)) {
                 Sender::callbackAnswer(ChatAction::$message['callback_query']['id'], Locale::phrase('{{ Tg_Unknown_Requester }}'), true);
                 return false;
             }
         }
 
-        ChatAction::$requester = Users::find($userId);
 
-        if (!empty(CFG_MAINTENCE) && !empty(static::$command) && !TelegramBotRepository::hasAccess(ChatAction::$requester['privilege']['status'], 'admin')) {
+        if (!empty(CFG_MAINTENCE) && !empty(static::$command) && !TelegramBotRepository::hasAccess($requester->privilege['status'], 'admin')) {
             Sender::message(static::$chatId, Locale::phrase("I offer my deepest apologies, but I’m in the maintance mode 🧑‍💻 right now...\nPlease return to us a little later."));
             return false;
         }
 
-        if (empty(ChatAction::$requester)) return true;
+        if (empty($requester)) return true;
+
+        ChatAction::$requester = $requester;
 
         if (static::$type === 'message') {
-            if (static::$command === 'booking' && Users::isBanned('booking', ChatAction::$requester['ban'])) {
+            if (static::$command === 'booking' && Users::isBanned('booking', $requester->ban)) {
                 Sender::delete(static::$chatId, $message['message']['message_id']);
-                Sender::message($userTelegramId, Locale::phrase(['string' => "I’m deeply sorry, but you banned for that action:(...\nYour ban will be lifted at: <b>%s</b>", 'vars' => [date('d.m.Y', ChatAction::$requester['ban']['expired'] + TIME_MARGE)]]));
+                Sender::message($requester->chat->uid, Locale::phrase(['string' => "I’m deeply sorry, but you banned for that action:(...\nYour ban will be lifted at: <b>%s</b>", 'vars' => [date('d.m.Y', $requester->ban['expired'] + TIME_MARGE)]]));
                 return false;
             }
-            if (static::$chatId == Settings::getMainTelegramId() && Users::isBanned('chat', ChatAction::$requester['ban'])) {
+            if (static::$chatId == Settings::getMainTelegramId() && Users::isBanned('chat', $requester->ban)) {
                 Sender::delete(static::$chatId, $message['message']['message_id']);
-                Sender::message($userTelegramId, Locale::phrase(['string' => "I’m deeply sorry, but you banned for that action:(...\nYour ban will be lifted at: <b>%s</b>", 'vars' => [date('d.m.Y', ChatAction::$requester['ban']['expired'] + TIME_MARGE)]]));
+                Sender::message($requester->chat->uid, Locale::phrase(['string' => "I’m deeply sorry, but you banned for that action:(...\nYour ban will be lifted at: <b>%s</b>", 'vars' => [date('d.m.Y', $requester->ban['ban']['expired'] + TIME_MARGE)]]));
                 return false;
             }
-        } elseif (static::$command === 'booking' && Users::isBanned('booking', ChatAction::$requester['ban'])) {
-            Sender::callbackAnswer(ChatAction::$message['callback_query']['id'], Locale::phrase(['string' => "I’m deeply sorry, but you banned for that action:(...\nYour ban will be lifted at: <b>%s</b>", 'vars' => [date('d.m.Y', ChatAction::$requester['ban']['expired'] + TIME_MARGE)]]), true);
+        } elseif (static::$command === 'booking' && Users::isBanned('booking', $requester->ban)) {
+            Sender::callbackAnswer(ChatAction::$message['callback_query']['id'], Locale::phrase(['string' => "I’m deeply sorry, but you banned for that action:(...\nYour ban will be lifted at: <b>%s</b>", 'vars' => [date('d.m.Y', $requester->ban['ban']['expired'] + TIME_MARGE)]]), true);
             return false;
         }
         return true;

@@ -2,13 +2,18 @@
 
 namespace  app\core\Telegram;
 
+use app\core\Entities\Requester;
 use app\core\Locale;
 use app\Interfaces\Command;
 
+
+/**
+ * @property Requester|null $requester
+ */
 class ChatAction implements Command
 {
     public static $accessLevel = 'all';
-    public static $requester = [];
+    public static ?Requester $requester = null;
     public static $message = [];
     public static $arguments = [];
     public static $report = '';

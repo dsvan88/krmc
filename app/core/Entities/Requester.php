@@ -3,9 +3,7 @@
 namespace  app\core\Entities;
 
 use app\core\Tech;
-use app\models\TelegramChats;
 use app\Repositories\TelegramBotRepository;
-use app\Repositories\TelegramChatsRepository;
 
 /**
  * @property Chat|null $chat
@@ -17,29 +15,29 @@ class Requester extends Entity
     public $userId = 0;
     public ?User $profile = null;
 
-    public static function find(int $id):bool
+    public static function find(int $id): bool
     {
         $_chat = Chat::create($id);
 
         if (empty($_chat)) return false;
-        
+
         $_cache['chat'] = $_chat;
-        
+
         $uId = $_chat->user_id;
 
         if (empty($uId))
             return (bool) static::$cache = $_cache;
 
         $_profile = User::create($uId);
-
-        if (!empty($_profile)){
+        if (!empty($_profile)) {
             $_cache['userId'] = $uId;
             $_cache['profile'] = $_profile;
         }
         return (bool) static::$cache = $_cache;
     }
-    public static function validate(int $id){
-        if (empty($id)){
+    public static function validate(int $id)
+    {
+        if (empty($id)) {
             $id = TelegramBotRepository::getUserTelegramId();
             if (empty($id)) return false;
         }
@@ -51,15 +49,6 @@ class Requester extends Entity
     }
     public function __get($name)
     {
-        if (property_exists($this, $name)){
-            return $this->$name;
-        }
-        if (isset($this->chat['personal'][$name]))
-            return $this->chat['personal'][$name];
-
-        if (isset($this->chat['data'][$name]))
-            return $this->chat['data'][$name];
-
-        return null;
+        return $this->$name ?? null;
     }
 }
