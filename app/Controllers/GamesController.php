@@ -26,8 +26,7 @@ class GamesController extends Controller
         if (!empty($_POST)) {
             try {
                 $gameId = Games::create($_POST);
-            }
-            catch(\Throwable $th){
+            } catch (\Throwable $th) {
                 Tech::dump($th->__toString());
                 return View::message('Fail!');
             }
@@ -69,13 +68,17 @@ class GamesController extends Controller
         }
 
         $shuffled = [];
-        array_walk($day['participants'], function ($element) use (&$shuffled, $manager): string {
-            if (in_array($element['name'], [$manager, '+1', '&lt; Deleted &gt;'])) return false;
-            $shuffled[] = $element['name'];
-            return true;
-        });
+        foreach ($day['participants'] as $user) {
+            if (in_array($user['name'], [$manager, '+1', '&lt; Deleted &gt;'])) continue;
+            $shuffled[] = $user['name'];
+        }
+        // array_walk($day['participants'], function ($element) use (&$shuffled, $manager): string {
+        //     if (in_array($element['name'], [$manager, '+1', '&lt; Deleted &gt;'])) return false;
+        //     $shuffled[] = $element['name'];
+        //     return true;
+        // });
 
-        usort($day['participants'], function ($participantA, $participantB){
+        usort($day['participants'], function ($participantA, $participantB) {
             return $participantA['name'] > $participantB['name'] ? 1 : -1;
         });
 
@@ -105,9 +108,9 @@ class GamesController extends Controller
                 "voteInSherif" => -0.1,
             ],
         ];
-        
+
         $settings = Settings::get('mafia_config');
-        if (!empty($settings)){
+        if (!empty($settings)) {
             $settings['mafia-config']['options']['points'] = array_merge($config['points'], $settings['mafia-config']['options']['points']);
             $config = array_merge($config, $settings['mafia-config']['options']);
         }
@@ -127,7 +130,7 @@ class GamesController extends Controller
         ];
 
         View::$route['vars'] = array_merge(View::$route['vars'], $vars);
-    
+
         return View::render();
     }
     public function playAction()
@@ -157,7 +160,7 @@ class GamesController extends Controller
             ],
         ];
         View::$route['vars'] = array_merge(View::$route['vars'], $vars);
-    
+
         return View::render();
     }
     public function saveAction()
@@ -176,13 +179,14 @@ class GamesController extends Controller
         $game = Games::load($gameId);
         return View::response(json_encode($game, JSON_UNESCAPED_UNICODE));
     }
-    public function historyAction(){
+    public function historyAction()
+    {
 
         extract(self::$route['vars']);
 
         $weekCurrentId = Weeks::currentId();
 
-        if (empty($weekId)){
+        if (empty($weekId)) {
             $weekId = $weekCurrentId;
         }
 
@@ -195,21 +199,19 @@ class GamesController extends Controller
 
         $games = Games::getAll(['week_id' => $weekId]);
 
-        usort($games, function ($gameA, $gameB){
+        usort($games, function ($gameA, $gameB) {
             return $gameA['id'] > $gameB['id'] ? -1 : 1;
         });
 
         $countGames = count($games);
-        for ($x=0; $x < $countGames; $x++) { 
+        for ($x = 0; $x < $countGames; $x++) {
             $games[$x] = Games::decodeJson($games[$x]);
             $games[$x]['class'] = '';
-            if ($games[$x]['win'] === '1'){
+            if ($games[$x]['win'] === '1') {
                 $games[$x]['class'] = 'peace';
-            }
-            else if ($games[$x]['win'] === '2'){
+            } else if ($games[$x]['win'] === '2') {
                 $games[$x]['class'] = 'mafia';
-            }
-            elseif ($games[$x]['win'] === '3'){
+            } elseif ($games[$x]['win'] === '3') {
                 $games[$x]['class'] = 'even';
             }
         }
@@ -226,7 +228,7 @@ class GamesController extends Controller
             'scripts' => 'games-history.js',
             'teams' => ['In progress', 'Peace', 'Mafia', 'Even'],
         ];
-        
+
         View::$route['vars']['prevWeek'] = false;
         View::$route['vars']['nextWeek'] = false;
 
@@ -238,7 +240,8 @@ class GamesController extends Controller
         View::$route['vars'] = array_merge(View::$route['vars'], $vars);
         return View::render();
     }
-    public function historyItemAction(){
+    public function historyItemAction()
+    {
         extract(self::$route['vars']);
         $game = Games::find($gameId);
         if (!$game) {
@@ -249,7 +252,8 @@ class GamesController extends Controller
         View::$route['vars']['path'] = 'components/game-card';
         return View::html();
     }
-    public function showAction(){
+    public function showAction()
+    {
         extract(self::$route['vars']);
         $game = Games::find($gameId);
         if (!$game) {
@@ -260,16 +264,18 @@ class GamesController extends Controller
         View::$route['vars']['players'] = $game['players'];
         return View::render();
     }
-    public function peekAction(){
+    public function peekAction()
+    {
         $game = Games::last();
-        return View::redirect('/game/show/mafia/'.$game['id']);
+        return View::redirect('/game/show/mafia/' . $game['id']);
     }
-    public function ratingAction(){
+    public function ratingAction()
+    {
         extract(self::$route['vars']);
 
         $weekCurrentId = Weeks::currentId();
 
-        if (empty($weekId)){
+        if (empty($weekId)) {
             $weekId = $weekCurrentId;
         }
 
@@ -302,9 +308,9 @@ class GamesController extends Controller
             'games' => 0,
         ];
         $countGames = count($games);
-        for ($x=0; $x < $countGames; $x++) { 
+        for ($x = 0; $x < $countGames; $x++) {
             $games[$x] = Games::decodeJson($games[$x]);
-            foreach($games[$x]['players'] as $player){
+            foreach ($games[$x]['players'] as $player) {
                 if (empty($games[$x]['win'])) continue;
                 if (empty($rating[$player['id']]))
                     $rating[$player['id']] = $ratingDefault;
@@ -314,32 +320,31 @@ class GamesController extends Controller
                 $points = $player['points'] + $player['adds'];
                 $rating[$player['id']]['points'] += $points;
                 $rating[$player['id']]['pointsLog'][] = $player['pointsLog'];
-                if ($games[$x]['win'] === '1' && in_array($player['role'], ['peace', 'sherif'], true) || $games[$x]['win'] === '2' && in_array($player['role'], ['mafia', 'don'], true)){
+                if ($games[$x]['win'] === '1' && in_array($player['role'], ['peace', 'sherif'], true) || $games[$x]['win'] === '2' && in_array($player['role'], ['mafia', 'don'], true)) {
                     $rating[$player['id']]['win'][$player['role']]++;
                     $rating[$player['id']]['win']['all']++;
                 }
                 $countLogs = count($player['pointsLog']);
-                for ($y=0; $y < $countLogs; $y++) { 
-                    foreach($player['pointsLog'][$y] as $index=>$value){
-                        if (in_array($index, ['Winners', 'BestMove'])){
+                for ($y = 0; $y < $countLogs; $y++) {
+                    foreach ($player['pointsLog'][$y] as $index => $value) {
+                        if (in_array($index, ['Winners', 'BestMove'])) {
                             $rating[$player['id']]['pointTypes'][$index] += $value;
                             continue;
                         }
-                        if (in_array($index, ['AliveMafia', 'AliveRed', 'FirstKillSherifDynamic', 'FirstKillSherifStatic'], true)){
+                        if (in_array($index, ['AliveMafia', 'AliveRed', 'FirstKillSherifDynamic', 'FirstKillSherifStatic'], true)) {
                             $rating[$player['id']]['pointTypes']['positive'] += $value;
                             continue;
                         }
-                        if (in_array($index, ['Disqualification', 'FourFouls', 'VotedInSherif'])){
+                        if (in_array($index, ['Disqualification', 'FourFouls', 'VotedInSherif'])) {
                             $rating[$player['id']]['pointTypes']['negative'] += $value;
                             continue;
                         }
                     }
                 }
-                
             }
         }
 
-        usort($rating, function ($playerA, $playerB){
+        usort($rating, function ($playerA, $playerB) {
             return $playerA['points'] > $playerB['points'] ? -1 : 1;
         });
 
@@ -353,7 +358,7 @@ class GamesController extends Controller
                 'BlockTitle' => 'Games rating',
             ],
         ];
-        
+
         View::$route['vars']['prevWeek'] = false;
         View::$route['vars']['nextWeek'] = false;
 
@@ -365,14 +370,15 @@ class GamesController extends Controller
         View::$route['vars'] = array_merge(View::$route['vars'], $vars);
         return View::render();
     }
-    public function lastAction(){
+    public function lastAction()
+    {
         $game = Games::last();
-        
+
         if (empty($game)) View::redirect();
 
         if ($game['win'] < 1 && Users::checkAccess('trusted'))
-            return View::redirect('/game/mafia/'.$game['id']);
+            return View::redirect('/game/mafia/' . $game['id']);
 
-        return View::redirect('/game/show/mafia/'.$game['id']);
+        return View::redirect('/game/show/mafia/' . $game['id']);
     }
 }

@@ -46,10 +46,14 @@ class Tech
         if (empty($array)) return;
 
         $result = [];
-        array_walk($array, function ($element) use (&$result) {
-            if (empty($element['id'])) return false;
-            $result[$element['id']] = $element;
-        });
+        foreach ($array as $el) {
+            if (empty($el['id'])) continue;
+            $result[$el['id']] = $el;
+        }
+        // array_walk($array, function ($element) use (&$result) {
+        //     if (empty($element['id'])) return false;
+        //     $result[$element['id']] = $element;
+        // });
         $array = $result;
     }
     public static function json_validate(string $string): bool

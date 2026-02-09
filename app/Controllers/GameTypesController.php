@@ -30,7 +30,10 @@ class GameTypesController extends Controller
 
         $games = GameTypes::all();
 
-        array_walk($games, fn(&$game) => $game['data']['logo'] = empty($game['data']['logo']) ? '' : GoogleDrive::getLink($game['data']['logo']));
+        foreach ($games as $n => $game) {
+            $games[$n]['data']['logo'] = empty($game['data']['logo']) ? '' : GoogleDrive::getLink($game['data']['logo']);
+        }
+        // array_walk($games, fn(&$game) => $game['data']['logo'] = empty($game['data']['logo']) ? '' : GoogleDrive::getLink($game['data']['logo']));
 
         $vars = [
             'title' => 'Games',
