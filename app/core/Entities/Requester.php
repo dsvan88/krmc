@@ -19,23 +19,22 @@ class Requester extends Entity
 
     public static function find(int $id):bool
     {
-        $data = Chat::create($id);
+        $_chat = Chat::create($id);
 
-        if (empty($data)) return false;
+        if (empty($_chat)) return false;
         
-        $_cache['chat'] = $data;
+        $_cache['chat'] = $_chat;
         
-        Tech::dump($data->user_id);
+        $uId = $_chat->user_id;
 
-        if (empty($data->user_id))
+        if (empty($uId))
             return (bool) static::$cache = $_cache;
 
-        Tech::dump($data->user_id);
-        
-        $data = User::create($data->user_id);
-        if (!empty($data)){
-            $_cache['userId'] = $data->id;
-            $_cache['profile'] = $data;
+        $_profile = User::create($uId);
+
+        if (!empty($_profile)){
+            $_cache['userId'] = $uId;
+            $_cache['profile'] = $_profile;
         }
         return (bool) static::$cache = $_cache;
     }

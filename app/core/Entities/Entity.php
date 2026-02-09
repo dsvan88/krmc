@@ -17,8 +17,10 @@ abstract class Entity
     private function __construct(int $id)
     {
         static::$classId = get_class($this) . "_$id";
-        if ($this->init($id))
+        Tech::dump(static::$classId);
+        if ($this->init($id)){
             static::$instances[static::$classId] = $this;
+        }
         else 
             throw new Exception(__METHOD__ . ' New instance of ' . static::class . ' with id: ' . $id . ' - cant be create!');
     }
@@ -44,6 +46,7 @@ abstract class Entity
         return true;
     }
     public static function create(int $id = 0){
+
         $id = static::validate($id);
 
         if (empty($id)) return null;
