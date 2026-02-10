@@ -79,6 +79,7 @@ class Users extends Model
         if (!empty($_SESSION['login_fails'])) {
             unset($_SESSION['login_fails']);
         }
+
         return true;
     }
     public static function logout()
@@ -147,6 +148,7 @@ class Users extends Model
         if (empty($_SESSION['privilege']['status']))
             $_SESSION['privilege']['status'] = 'user';
 
+        $_SESSION['csrf'] = bin2hex(random_bytes(32));
         return true;
     }
     public static function setToken()

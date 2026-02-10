@@ -99,7 +99,7 @@ class DayRepository
             $result .= Locale::phrase("<b>Tournament</b>!\nBecome a champion in a glorious and fair competition!\n");
         return $result;
     }
-    public static function findLastGameOfPlayer( $userId = 0)
+    public static function findLastGameOfPlayer($userId = 0)
     {
         if (empty($userId)) return 0;
 
@@ -118,7 +118,7 @@ class DayRepository
 
         return 0;
     }
-    public static function findBookedDays( $userId = 0, int $limitWeeks = 0): array
+    public static function findBookedDays($userId = 0, int $limitWeeks = 0): array
     {
         if (empty($userId)) return [];
 
@@ -133,7 +133,7 @@ class DayRepository
             foreach ($week['data'] as $num => $day) {
                 if (!in_array($day['status'],  $statuses, true)) continue;
                 foreach ($day['participants'] as $index => $player) {
-                    if ($player['id'] == $userId){
+                    if ($player['id'] == $userId) {
                         $result[] = [
                             'week' => $week['id'],
                             'day' => $num,
@@ -152,7 +152,7 @@ class DayRepository
         if (empty($data) || empty($userId)) return;
 
         $count = count($data);
-        for ($i=0; $i < $count; $i++) {
+        for ($i = 0; $i < $count; $i++) {
             $week = Weeks::find($data[$i]['week']);
             $week['data'][$data[$i]['day']]['participants'][$data[$i]['index']]['id'] = $userId;
             Weeks::update(['data' => json_encode($week['data'], JSON_UNESCAPED_UNICODE)], ['id' => $week['id']]);
@@ -166,7 +166,7 @@ class DayRepository
         $hour = (int) substr($time, 0, $offset);
         if ($hour > 12) $hour -= 12;
         $mins = (int) substr($time, $offset + 1);
-        if (empty($mins) || $mins > 0 && $mins < 15) $mins = '';
+        if (empty($mins) || $mins > 0 && $mins <= 15) $mins = '';
         elseif ($mins > 15 && $mins <= 45) $mins = 30;
         elseif ($mins > 45 && $mins <= 59) {
             ++$hour;
