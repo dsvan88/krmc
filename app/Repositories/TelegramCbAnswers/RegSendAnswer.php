@@ -16,7 +16,7 @@ class RegSendAnswer extends ChatAnswer
         if (empty(static::$requester) || empty(static::$arguments))
             throw new Exception(__METHOD__ . ': UserData or Arguments is empty!');
 
-        if (empty(static::$requester['privilege']['status']) || !in_array(static::$requester['privilege']['status'], ['manager', 'admin', 'root'], true))
+        if (!in_array(static::$requester->profile->status, ['manager', 'admin', 'root'], true))
             return static::result('You don’t have enough rights!');
 
         $weekId = (int) trim(static::$arguments['w']);

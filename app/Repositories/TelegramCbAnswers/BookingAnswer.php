@@ -4,8 +4,6 @@ namespace app\Repositories\TelegramCbAnswers;
 
 use app\core\Telegram\ChatAnswer;
 use app\models\Days;
-use app\models\Settings;
-use app\models\TelegramChats;
 use app\models\Weeks;
 use app\Repositories\TelegramBotRepository;
 use Exception;
@@ -19,21 +17,31 @@ class BookingAnswer extends ChatAnswer
     {
         if (empty(static::$arguments))
             throw new Exception(__METHOD__ . ': arguments is empty');
-
-        $chatId = TelegramBotRepository::getUserTelegramId();
         
-        if (empty(self::$requester['id'])) {
-            $tgChat = TelegramChats::getChat($chatId);
-            if (empty($tgChat))
+        if (empty(static::$requester->profile)) {
+            if (empty(static::$requester))
                 return static::result('{{ Tg_Unknown_Requester }}', '🤷‍♂');
-            static::$arguments['userId'] = '_' . $chatId;
-            static::$arguments['userName'] = empty($tgChat['personal']['username']) ? '+1' : '@' . $tgChat['personal']['username'];
+            static::$arguments['userId'] = '_' . static::$requester->id;
+            static::$arguments['userName'] = empty(static::$requester->chat->username) ? '+1' : '@' . static::$requester->chat->username;
             static::$arguments['userStatus'] = 'all';
         } else {
-            static::$arguments['userId'] = self::$requester['id'];
-            static::$arguments['userName'] = self::$requester['name'];
-            static::$arguments['userStatus'] = empty(self::$requester['privilege']['status']) ? 'user' : self::$requester['privilege']['status'];
+            static::$arguments['userId'] = static::$requester->profile->id;
+            static::$arguments['userName'] = static::$requester->profile->name;
+            static::$arguments['userStatus'] = empty(static::$requester->profile->status) ? 'user' : static::$requester->profile->status;
         }
+        // $chatId = TelegramBotRepository::getUserTelegramId();
+        // if (empty(static::$requester['id'])) {
+        //     $tgChat = TelegramChats::getChat($chatId);
+        //     if (empty($tgChat))
+        //         return static::result('{{ Tg_Unknown_Requester }}', '🤷‍♂');
+        //     static::$arguments['userId'] = '_' . $chatId;
+        //     static::$arguments['userName'] = empty($tgChat['personal']['username']) ? '+1' : '@' . $tgChat['personal']['username'];
+        //     static::$arguments['userStatus'] = 'all';
+        // } else {
+        //     static::$arguments['userId'] = static::$requester['id'];
+        //     static::$arguments['userName'] = static::$requester['name'];
+        //     static::$arguments['userStatus'] = empty(static::$requester['privilege']['status']) ? 'user' : static::$requester['privilege']['status'];
+        // }
 
         $weekId = (int) trim(static::$arguments['w']);
         $dayNum = (int) trim(static::$arguments['d']);
@@ -142,7 +150,7 @@ class BookingAnswer extends ChatAnswer
         ];
         Days::addParticipantToDayData($day, $data);
         static::$text = static::locale(['string' => 'You’re successfully opted-in on a game %s at %s.', 'vars' => [static::$game, date('d.m.Y', static::$timestamp)]]);
-        self::$report = static::locale(['string' => 'User <b>%s</b> is opted-in on a game <b>%s</b> at <b>%s</b>.', 'vars' => [static::$arguments['userName'], static::$game, date('d.m.Y', static::$timestamp)]]);
+        static::$report = static::locale(['string' => 'User <b>%s</b> is opted-in on a game <b>%s</b> at <b>%s</b>.', 'vars' => [static::$arguments['userName'], static::$game, date('d.m.Y', static::$timestamp)]]);
     }
     public static function changePrim(array &$participants = [], int $index = 0): void
     {
@@ -151,7 +159,7 @@ class BookingAnswer extends ChatAnswer
         }
         $participants[$index]['prim'] = empty(static::$arguments['p']) ? '' : static::$arguments['p'];
         static::$text = static::locale('Success');
-        self::$report = static::locale(['string' => 'User <b>%s</b> is changed prim on <b>%s</b>.', 'vars' => [static::$arguments['userName'], date('d.m.Y', static::$timestamp)]]);
+        static::$report = static::locale(['string' => 'User <b>%s</b> is changed prim on <b>%s</b>.', 'vars' => [static::$arguments['userName'], date('d.m.Y', static::$timestamp)]]);
     }
     public static function removeParticipant(array &$participants = [], int $index = 0): void
     {
@@ -161,6 +169,6 @@ class BookingAnswer extends ChatAnswer
         unset($participants[$index]);
         $participants = array_values($participants);
         static::$text = static::locale(['string' => 'You’re successfully opted-out from a game %s at %s.', 'vars' => [static::$game, date('d.m.Y', static::$timestamp)]]);
-        self::$report = static::locale(['string' => 'User <b>%s</b> is opted-out from a game <b>%s</b> at <b>%s</b>.', 'vars' => [static::$arguments['userName'], static::$game, date('d.m.Y', static::$timestamp)]]);
+        static::$report = static::locale(['string' => 'User <b>%s</b> is opted-out from a game <b>%s</b> at <b>%s</b>.', 'vars' => [static::$arguments['userName'], static::$game, date('d.m.Y', static::$timestamp)]]);
     }
 }

@@ -2,7 +2,6 @@
 
 namespace app\Repositories\TelegramCommands;
 
-use app\core\Telegram\ChatAction;
 use app\core\Telegram\ChatCommand;
 use app\models\News;
 
@@ -15,10 +14,10 @@ class PromoCommand extends ChatCommand
     }
     public static function execute()
     {
-        $text = ChatAction::$message['message']['text'];
+        $text = static::$message['message']['text'];
         $promoText = trim(mb_substr($text, mb_strpos($text, ' ', 0, 'UTF-8') + 1, NULL, 'UTF-8'));
 
-        if (isset(ChatAction::$message['message']['entities'])) {
+        if (isset(static::$message['message']['entities'])) {
 
             $newString = '';
             $offset = 0;
@@ -29,14 +28,14 @@ class PromoCommand extends ChatCommand
                 'spoiler' => 'tg-spoiler',
             ];
             
-            for ($i = 0; $i < count(ChatAction::$message['message']['entities']); $i++) {
-                if (ChatAction::$message['message']['entities'][$i]['type'] === 'bot_command') {
-                    $offset = ChatAction::$message['message']['entities'][$i]['offset'] + ChatAction::$message['message']['entities'][$i]['length'];
+            for ($i = 0; $i < count(static::$message['message']['entities']); $i++) {
+                if (static::$message['message']['entities'][$i]['type'] === 'bot_command') {
+                    $offset = static::$message['message']['entities'][$i]['offset'] + static::$message['message']['entities'][$i]['length'];
                     continue;
                 }
-                $newString .= mb_substr($text, $offset, ChatAction::$message['message']['entities'][$i]['offset'] - $offset, 'UTF-8');
-                $newString .= "<{$formattings[ChatAction::$message['message']['entities'][$i]['type']]}>" . mb_substr($text, ChatAction::$message['message']['entities'][$i]['offset'], ChatAction::$message['message']['entities'][$i]['length'], 'UTF-8') . "</{$formattings[ChatAction::$message['message']['entities'][$i]['type']]}>";
-                $offset = ChatAction::$message['message']['entities'][$i]['offset'] + ChatAction::$message['message']['entities'][$i]['length'];
+                $newString .= mb_substr($text, $offset, static::$message['message']['entities'][$i]['offset'] - $offset, 'UTF-8');
+                $newString .= "<{$formattings[static::$message['message']['entities'][$i]['type']]}>" . mb_substr($text, static::$message['message']['entities'][$i]['offset'], static::$message['message']['entities'][$i]['length'], 'UTF-8') . "</{$formattings[static::$message['message']['entities'][$i]['type']]}>";
+                $offset = static::$message['message']['entities'][$i]['offset'] + static::$message['message']['entities'][$i]['length'];
             }
             $newString .= mb_substr($text, $offset, null, 'UTF-8');
 

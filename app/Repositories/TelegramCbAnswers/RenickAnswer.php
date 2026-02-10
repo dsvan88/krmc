@@ -20,7 +20,7 @@ class RenickAnswer extends ChatAnswer
         if (empty($uId))
             throw new Exception(__METHOD__ . ': UserID can’t be empty!');
 
-        if (empty(static::$requester) || static::$requester['id'] != $uId) {
+        if (static::$requester->profile->id != $uId) {
             return static::result('You don’t have enough rights to change information about other users!');
         }
 
@@ -30,12 +30,12 @@ class RenickAnswer extends ChatAnswer
 
         if (empty(static::$arguments['y'])) {
 
-            if (empty(static::$requester['personal']['newName']))
+            if (empty(static::$requester->profile->newName))
                 return static::result("I don't know why, but I can't find your new nick name... I'm deeply sorry...");
 
-            $personal = static::$requester['personal'];
+            $personal = static::$requester->profile->personal;
             unset($personal['newName']);
-            Users::edit(['personal' => $personal], ['id' => static::$requester['id']]);
+            Users::edit(['personal' => $personal], ['id' => static::$requester->profile->id]);
 
             $update = [
                 'message' => static::locale('Okay! Let’s try again later!')
@@ -43,10 +43,10 @@ class RenickAnswer extends ChatAnswer
             return array_merge(static::result('Okay', true), ['update' => [$update]]);
         }
 
-        $name = static::$requester['personal']['newName'];
-        $personal = static::$requester['personal'];
+        $name = static::$requester->profile->newName;
+        $personal = static::$requester->profile->personal;
         unset($personal['newName']);
-        Users::edit(['name' => $name, 'personal' => $personal], ['id' => static::$requester['id']]);
+        Users::edit(['name' => $name, 'personal' => $personal], ['id' => static::$requester->profile->id]);
 
         $update = [
             'message' =>
@@ -54,9 +54,9 @@ class RenickAnswer extends ChatAnswer
                 PHP_EOL . PHP_EOL .
                 static::locale('If you made a mistake - don’t worry! Just tell the Administrator about it and he will quickly fix it😏'),
         ];
-        self::$report = ['string' => "User <b>%s</b>, successfully changed a nickname to <b>%s</b>.", 'vars' => [static::$requester['name'], $name]];
+        self::$report = ['string' => "User <b>%s</b>, successfully changed a nickname to <b>%s</b>.", 'vars' => [static::$requester->profile->name, $name]];
 
-        SocialPoints::minus(static::$requester['id'], RenickCommand::$costs);
+        SocialPoints::minus(static::$requester->profile->id, RenickCommand::$costs);
 
         return array_merge(static::result('Okay', true), ['update' => [$update]]);
     }

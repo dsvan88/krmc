@@ -21,7 +21,7 @@ class RenickCommand extends ChatCommand
     }
     public static function execute()
     {
-        if (SocialPoints::get(static::$requester['id']) < static::$costs) {
+        if (static::$requester->profile->points < static::$costs) {
             return static::result(['string' => 'I’m deeply sorry, but you can’t do this command yet. Social Points isn’t enough. Need <b>%s</b>.', 'vars' => [static::$costs]]);
         }
 
@@ -74,17 +74,17 @@ class RenickCommand extends ChatCommand
 
         if (empty($userExistsData['id'])) {
 
-            $personal = static::$requester['personal'];
+            $personal = static::$requester->profile->personal;
             $personal['newName'] = $username;
-            Users::edit(['personal' => $personal], ['id' => static::$requester['id']]);
+            Users::edit(['personal' => $personal], ['id' => static::$requester->profile->id]);
 
-            $message = self::locale(['string' => "So... you wanna to change your nickname <b>%s</b> to a nickname <b>%s</b>. Right?", 'vars' => [static::$requester['name'], $username]]);
+            $message = self::locale(['string' => "So... you wanna to change your nickname <b>%s</b> to a nickname <b>%s</b>. Right?", 'vars' => [static::$requester->profile->name, $username]]);
 
             $replyMarkup = [
                 'inline_keyboard' => [
                     [
-                        ['text' => '✅' . self::locale('Yes'), 'callback_data' => ['c' => 'renick', 'u' => static::$requester['id'], 'y' => 1]],
-                        ['text' => '❌' . self::locale('No'), 'callback_data' => ['c' => 'renick', 'u' => static::$requester['id']]],
+                        ['text' => '✅' . self::locale('Yes'), 'callback_data' => ['c' => 'renick', 'u' => static::$requester->profile->id, 'y' => 1]],
+                        ['text' => '❌' . self::locale('No'), 'callback_data' => ['c' => 'renick', 'u' => static::$requester->profile->id]],
                     ],
                 ],
             ];

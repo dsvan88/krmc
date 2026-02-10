@@ -15,6 +15,6 @@ class MeCommand extends ChatCommand
     }
     public static function execute()
     {
-        return static::result(['string' => 'Your summ of social points is: <b>%s</b>', 'vars' => [SocialPoints::get(static::$requester['id'])]]);
+        return static::result(['string' => 'Your summ of social points is: <b>%s</b>', 'vars' => [static::$requester->points]]);
     }
 }

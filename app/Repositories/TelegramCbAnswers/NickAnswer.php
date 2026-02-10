@@ -25,7 +25,7 @@ class NickAnswer extends ChatAnswer
         if (empty($uId))
             throw new Exception(__METHOD__ . ': UserID can’t be empty!');
 
-        if (static::$requester['id'] != $uId && (empty(static::$requester['privilege']['status']) || !in_array(static::$requester['privilege']['status'], ['manager', 'admin', 'root'], true)))
+        if (static::$requester->profile->id != $uId && !in_array(static::$requester->profile->status, ['manager', 'admin', 'root'], true))
             return static::result('You don’t have enough rights to change information about other users!');
 
         if (empty(static::$arguments['y'])) {
@@ -33,12 +33,12 @@ class NickAnswer extends ChatAnswer
             Users::delete($uId);
 
             $update = [
-                'message' => static::locale(['string' => "Okay! Let’s try again!\nUse the next command to register your nickname:\n/nick <b>%s</b>\n\nTry to avoid characters of different languages.", 'vars' => [static::$requester['name']]])
+                'message' => static::locale(['string' => "Okay! Let’s try again!\nUse the next command to register your nickname:\n/nick <b>%s</b>\n\nTry to avoid characters of different languages.", 'vars' => [static::$requester->profile->name]])
             ];
         } else {
             $update = [
                 'message' =>
-                static::locale(['string' => "<b>%s</b>, nice to meet you!\nYou successfully registered in our system!", 'vars' => [static::$requester['name']]]) .
+                static::locale(['string' => "<b>%s</b>, nice to meet you!\nYou successfully registered in our system!", 'vars' => [static::$requester->profile->name]]) .
                     PHP_EOL . PHP_EOL .
                     static::locale('If you made a mistake, don’t worry, tell the administrator about it and he will quickly fix it😏'),
             ];

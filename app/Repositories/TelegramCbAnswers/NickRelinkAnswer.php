@@ -27,8 +27,8 @@ class NickAnswer extends ChatAnswer
         if (empty($uId) || empty($tId))
             throw new Exception(__METHOD__ . ': UserID or TelegramID can’t be empty!');
 
-        if (static::$requester['id'] != $uId) {
-            if (empty(static::$requester['privilege']['status']) || !in_array(static::$requester['privilege']['status'], ['manager', 'admin', 'root'], true))
+        if (static::$requester->profile->id != $uId) {
+            if (!in_array(static::$requester->profile->status, ['manager', 'admin', 'root'], true))
                 return static::result('You don’t have enough rights to change information about other users!');
             static::$arguments['ci'] = TelegramBotRepository::getChatId();
             static::$arguments['mi'] = TelegramBotRepository::getMessageId();

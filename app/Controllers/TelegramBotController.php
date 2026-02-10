@@ -117,17 +117,17 @@ class TelegramBotController extends Controller
         ChatAction::$requester = $requester;
 
         if (static::$type === 'message') {
-            if (static::$command === 'booking' && Users::isBanned('booking', $requester->ban)) {
+            if (static::$command === 'booking' && Users::isBanned('booking', $requester->profile->ban)) {
                 Sender::delete(static::$chatId, $message['message']['message_id']);
                 Sender::message($requester->chat->uid, Locale::phrase(['string' => "I’m deeply sorry, but you banned for that action:(...\nYour ban will be lifted at: <b>%s</b>", 'vars' => [date('d.m.Y', $requester->ban['expired'] + TIME_MARGE)]]));
                 return false;
             }
-            if (static::$chatId == Settings::getMainTelegramId() && Users::isBanned('chat', $requester->ban)) {
+            if (static::$chatId == Settings::getMainTelegramId() && Users::isBanned('chat', $requester->profile->ban)) {
                 Sender::delete(static::$chatId, $message['message']['message_id']);
                 Sender::message($requester->chat->uid, Locale::phrase(['string' => "I’m deeply sorry, but you banned for that action:(...\nYour ban will be lifted at: <b>%s</b>", 'vars' => [date('d.m.Y', $requester->ban['ban']['expired'] + TIME_MARGE)]]));
                 return false;
             }
-        } elseif (static::$command === 'booking' && Users::isBanned('booking', $requester->ban)) {
+        } elseif (static::$command === 'booking' && Users::isBanned('booking', $requester->profile->ban)) {
             Sender::callbackAnswer(ChatAction::$message['callback_query']['id'], Locale::phrase(['string' => "I’m deeply sorry, but you banned for that action:(...\nYour ban will be lifted at: <b>%s</b>", 'vars' => [date('d.m.Y', $requester->ban['ban']['expired'] + TIME_MARGE)]]), true);
             return false;
         }
@@ -177,8 +177,8 @@ class TelegramBotController extends Controller
         }
 
         $status = '';
-        if (!empty(ChatAction::$requester['privilege']['status']))
-            $status = ChatAction::$requester['privilege']['status'];
+        if (!empty(ChatAction::$requester->profile->status))
+            $status = ChatAction::$requester->profile->status;
 
         if (TelegramBotRepository::hasAccess($status, $class::getAccessLevel()) || ($status === 'admin' && $command === 'chat')) {
             return $class::execute();

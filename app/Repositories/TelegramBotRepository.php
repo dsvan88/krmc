@@ -231,7 +231,8 @@ class TelegramBotRepository
     public static function getBookingMarkup(int $weekId, int $dayNum, array $ids = []): array
     {
 
-        if (TelegramBotRepository::isDirect() && !empty(ChatAction::$requester['id']) && in_array(ChatAction::$requester['id'], $ids)) {
+        // if (TelegramBotRepository::isDirect() && !empty(ChatAction::$requester->profile->id) && in_array(ChatAction::$requester->profile->id, $ids)) {
+        if (TelegramBotRepository::isDirect() && in_array(ChatAction::$requester->profile->id, $ids)) {
             return [
                 [
                     ['text' => '❌' . Locale::phrase('Opt-out'), 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => $dayNum, 'r' => 1]]
@@ -244,14 +245,14 @@ class TelegramBotRepository
                 [
                     ['text' => '🙋' . Locale::phrase('I will!'), 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => $dayNum]],
                     ['text' => Locale::phrase('I want!') . '🥹', 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => $dayNum, 'p' => '?']],
-                    ['text' => '❌' . Locale::phrase('Opt-out'), 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => $dayNum, 'r' => 1]], // check it
+                    // ['text' => '❌' . Locale::phrase('Opt-out'), 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => $dayNum, 'r' => 1]], // check it
                 ],
             ],
         ];
 
-        // if (!TelegramBotRepository::isDirect()) {
-        //     $result['inline_keyboard'][0][] = ['text' => '❌' . Locale::phrase('Opt-out'), 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => $dayNum, 'r' => 1]];
-        // }
+        if (!TelegramBotRepository::isDirect()) {
+            $result['inline_keyboard'][0][] = ['text' => '❌' . Locale::phrase('Opt-out'), 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => $dayNum, 'r' => 1]];
+        }
 
         return $result;
     }

@@ -52,7 +52,7 @@ class HelpCommand extends ChatCommand
         $class = ucfirst($command) . 'Command';
         $class = str_replace('/', '\\', __NAMESPACE__ . "\\$class");
 
-        $status = empty(static::$requester['privilege']['status']) ? '' : static::$requester['privilege']['status'];
+        $status = empty(static::$requester->profile->status) ? '' : static::$requester->profile->status;
 
         if (!class_exists($class) || !TelegramBotRepository::hasAccess($status, $class::$accessLevel)) {
             return false;

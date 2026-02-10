@@ -22,7 +22,7 @@ class NewuserAnswer extends ChatAnswer
         if (empty($uId))
             throw new Exception(__METHOD__ . ': UserID can’t be empty!');
 
-        if (empty(static::$requester['privilege']['status']) || !in_array(static::$requester['privilege']['status'], ['manager', 'admin', 'root'], true))
+        if (!in_array(static::$requester->profile->status, ['manager', 'admin', 'root'], true))
             return static::result('You don’t have enough rights to change information about other users!');
 
         if (empty(static::$arguments['y'])) {
@@ -30,7 +30,7 @@ class NewuserAnswer extends ChatAnswer
             Users::delete($uId);
 
             $update = [
-                'message' => static::locale(['string' => "Okay! Let’s try again!\nUse the next command to register a new user:\n/newuser <b>%s</b>\n\nTry to avoid characters of different languages.", 'vars' => [static::$requester['name']]])
+                'message' => static::locale(['string' => "Okay! Let’s try again!\nUse the next command to register a new user:\n/newuser <b>%s</b>\n\nTry to avoid characters of different languages.", 'vars' => [static::$requester->profile->name]])
             ];
         } else {
             $userData = Users::find($uId);

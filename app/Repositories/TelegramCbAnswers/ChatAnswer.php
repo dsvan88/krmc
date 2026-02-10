@@ -14,7 +14,7 @@ class ChatAnswer extends TgChatAnswer
         if (empty(static::$requester) || empty(static::$arguments))
             throw new Exception(__METHOD__ . ': UserData or Arguments is empty!');
 
-        if (empty(static::$requester['privilege']['status']) || !in_array(static::$requester['privilege']['status'], ['admin', 'root'], true))
+        if (!in_array(static::$requester->profile->status, ['admin', 'root'], true))
             return static::result('You don’t have enough rights!');
 
         $type = trim(static::$arguments['t']);

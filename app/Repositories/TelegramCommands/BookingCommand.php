@@ -12,27 +12,39 @@ class BookingCommand extends ChatCommand
 {
     public static function description()
     {
-        return self::locale("<u>+ (week day)</u> <i>// Booking for the scheduled games of the current week, examples:</i>\n\t\t+вс\n\t\t+ на сегодня, на 19:30 (отсижу 1-2 игры, под ?)\n<u>- (week day)</u> <i>// Unsubscribe from games on a specific day that you previously signed up for, examples:</i>\n\t\t-вс\n\t\t- завтра\n");
+        return static::locale("<u>+ (week day)</u> <i>// Booking for the scheduled games of the current week, examples:</i>\n\t\t+вс\n\t\t+ на сегодня, на 19:30 (отсижу 1-2 игры, под ?)\n<u>- (week day)</u> <i>// Unsubscribe from games on a specific day that you previously signed up for, examples:</i>\n\t\t-вс\n\t\t- завтра\n");
     }
     public static function execute(): array
     {
         TelegramBotRepository::parseDayNum(static::$arguments['dayName']);
         $dayNum = static::$arguments['dayNum'];
 
-        if (empty(self::$requester['id'])) {
-            $chatId = TelegramBotRepository::getUserTelegramId();
-            $tgChat = TelegramChats::getChat($chatId);
-            if (empty($tgChat))
+        if (empty(static::$requester->profile)) {
+            if (empty(static::$requester->chat))
                 return static::result('{{ Tg_Unknown_Requester }}', '🤷‍♂');
 
-            static::$arguments['userId'] = '_' . $chatId;
-            static::$arguments['userName'] = empty($tgChat['personal']['username']) ? '+1' : '@' . $tgChat['personal']['username'];
+            static::$arguments['userId'] = '_' . static::$requester->chat->uid;
+            static::$arguments['userName'] = empty(static::$requester->chat->username) ? '+1' : '@' . static::$requester->chat->username;
             static::$arguments['userStatus'] = 'all';
         } else {
-            static::$arguments['userId'] = self::$requester['id'];
-            static::$arguments['userName'] = self::$requester['name'];
-            static::$arguments['userStatus'] = empty(self::$requester['privilege']['status']) ? 'user' : self::$requester['privilege']['status'];
+            static::$arguments['userId'] = static::$requester->profile->id;
+            static::$arguments['userName'] = static::$requester->profile->name;
+            static::$arguments['userStatus'] = empty(static::$requester->profile->status) ? 'user' : static::$requester->profile->status;
         }
+        // if (empty(self::$requester['id'])) {
+        //     $chatId = TelegramBotRepository::getUserTelegramId();
+        //     $tgChat = TelegramChats::getChat($chatId);
+        //     if (empty($tgChat))
+        //         return static::result('{{ Tg_Unknown_Requester }}', '🤷‍♂');
+
+        //     static::$arguments['userId'] = '_' . $chatId;
+        //     static::$arguments['userName'] = empty($tgChat['personal']['username']) ? '+1' : '@' . $tgChat['personal']['username'];
+        //     static::$arguments['userStatus'] = 'all';
+        // } else {
+        //     static::$arguments['userId'] = self::$requester['id'];
+        //     static::$arguments['userName'] = self::$requester['name'];
+        //     static::$arguments['userStatus'] = empty(self::$requester['privilege']['status']) ? 'user' : self::$requester['privilege']['status'];
+        // }
 
         $weekId = Weeks::currentId();
         if ($dayNum < static::$arguments['currentDay']) {

@@ -22,8 +22,8 @@ class NickCommand extends ChatCommand
     }
     public static function execute()
     {
-        if (!empty(self::$requester)) {
-            return static::result(['string' => '{{ Tg_Command_Name_Already_Set }}', 'vars' => [self::$requester['name']]]);
+        if (!empty(self::$requester->profile)) {
+            return static::result(['string' => '{{ Tg_Command_Name_Already_Set }}', 'vars' => [self::$requester->profile->name]]);
         }
 
         $_username = implode(' ', static::$arguments);
