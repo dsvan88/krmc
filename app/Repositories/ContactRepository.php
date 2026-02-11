@@ -7,19 +7,24 @@ use app\models\Contacts;
 
 class ContactRepository
 {
-    public static function updateUserContacts(int $userId = 0, array $contacts = []): void
+    public static function updateUserContacts(int $userId = 0, array $newContacts = []): void
     {
         if (empty($userId) || empty($contacts)) return;
 
         $contacts = Contacts::getByUserId($userId);
 
         $newContacts = [
-            'telegram' => empty($contacts['telegram']) ? null : $contacts['telegram'],
-            'telegramid' => empty($contacts['telegramid']) ? null : $contacts['telegramid'],
-            'phone' => empty($contacts['phone']) ? null : $contacts['id'],
+            'telegram' => empty($newContacts['telegram']) ? null : $newContacts['telegram'],
+            'telegramid' => empty($newContacts['telegramid']) ? null : $newContacts['telegramid'],
+            'phone' => empty($newContacts['phone']) ? null : $newContacts['id'],
+            'email' => empty($newContacts['email']) ? null : $newContacts['email'],
         ];
 
-        // foreach()
+        // foreach ($contacts as $contact) {
+        //     if (!isset($newContacts[$contact['type']])
+        //         || $newContacts[$contact['type']] == ) continue;
+        // }
+
         // if (empty($username) && !empty($contact['telegram'])){
         //     Contacts::remove($contact['telegram']['id']);
         // }
