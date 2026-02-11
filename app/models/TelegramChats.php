@@ -5,6 +5,7 @@ namespace app\models;
 use app\core\Model;
 use app\core\Sender;
 use app\core\Telegram\ChatAction;
+use app\Repositories\ContactRepository;
 use app\Repositories\SocialPointsRepository;
 use app\Repositories\TelegramBotRepository;
 use app\Repositories\TelegramChatsRepository;
@@ -20,23 +21,21 @@ class TelegramChats extends Model
         $chatId = TelegramBotRepository::getUserTelegramId();
         $message = ChatAction::$message;
 
-        $result = self::getChat($chatId);
+        $result = self::find($chatId);
 
         if (empty($result)) {
-            $chatData = ['uid' => $chatId, 'personal' => ['id' => $chatId], 'data' => ['last_seems' => $message['message']['date']]];
-
-            if (!empty($message['message']['from']['first_name'])) {
-                $chatData['personal']['first_name'] = $message['message']['from']['first_name'];
-            }
-            if (!empty($message['message']['from']['last_name'])) {
-                $chatData['personal']['last_name'] = $message['message']['from']['last_name'];
-            }
-            if (!empty($message['message']['from']['username'])) {
-                $chatData['personal']['username'] = $message['message']['from']['username'];
-            }
-            if ($message['message']['chat']['type'] === 'private') {
-                $chatData['data']['direct'] = true;
-            }
+            $chatData = [
+                'id' => $chatId,
+                'personal' => json_encode([
+                    'first_name' => empty($message['message']['from']['first_name']) ? '' : $message['message']['from']['first_name'],
+                    'last_name' => empty($message['message']['from']['last_name']) ? '' : $message['message']['from']['last_name'],
+                    'username' => empty($message['message']['from']['username']) ? '' : $message['message']['from']['username'],
+                ], JSON_UNESCAPED_UNICODE),
+                'data' => json_encode([
+                    'last_seems' => $message['message']['date'],
+                    'direct' => ($message['message']['chat']['type'] === 'private'),
+                ], JSON_UNESCAPED_UNICODE),
+            ];
 
             $userId = Contacts::getUserIdByContact('telegramid', $chatId);
             if (!empty($userId)) {
@@ -45,44 +44,30 @@ class TelegramChats extends Model
                     SocialPointsRepository::evaluateMessage($userId, $message['message']['text']);
                 }
             }
-
-            $chatData['personal'] = json_encode($chatData['personal'], JSON_UNESCAPED_UNICODE);
-            $chatData['data'] = json_encode($chatData['data'], JSON_UNESCAPED_UNICODE);
-
             return self::insert($chatData);
         }
-        $savedChatId = $result['id'];
 
         $chatData = $result;
-        if (empty($chatData['personal']['first_name']) && !empty($message['message']['from']['first_name'])) {
-            $chatData['personal']['first_name'] = $message['message']['from']['first_name'];
-        }
-        if (empty($chatData['personal']['last_name']) && !empty($message['message']['from']['last_name'])) {
-            $chatData['personal']['last_name'] = $message['message']['from']['last_name'];
-        }
-        if ($message['message']['chat']['type'] === 'private') {
-            $chatData['data']['direct'] = true;
-        }
+        $chatData['personal']['first_name'] = empty($message['message']['from']['first_name']) ? '' : $message['message']['from']['first_name'];
+        $chatData['personal']['last_name'] = empty($message['message']['from']['last_name']) ? '' : $message['message']['from']['last_name'];
         $chatData['personal']['username'] = empty($message['message']['from']['username']) ? '' : $message['message']['from']['username'];
+        $chatData['data']['direct'] = ($message['message']['chat']['type'] === 'private');
 
         TelegramChatsRepository::$pending = empty($chatData['personal']['pending']) ? '' : $chatData['personal']['pending'];
 
         $userId = Contacts::getUserIdByContact('telegramid', $chatId);
+
         if (!empty($userId)) {
             $chatData['user_id'] = $userId;
 
-            if (!empty($chatData['personal']['username'])) {
-                $contact = Contacts::getUserContact($userId, 'telegram');
-                if (empty($contact['contact'])) {
-                    Contacts::new(['telegram' => $chatData['personal']['username']], $userId);
-                } elseif ($contact['contact'] !== $chatData['personal']['username']) {
-                    Contacts::update(['contact' => $chatData['personal']['username']], ['id' => $contact['id']]);
-                }
-            }
+            ContactRepository::updateUserContacts();
             if (TelegramBotRepository::getChatId() === Settings::getMainTelegramId()) {
                 SocialPointsRepository::evaluateMessage($userId, $message['message']['text']);
             }
+        } elseif (!empty($result['user_id'])) {
+            $chatData['user_id'] = null;
         }
+
         $chatData['data']['last_seems'] = $message['message']['date'];
 
         $chatData['personal'] = json_encode($chatData['personal'], JSON_UNESCAPED_UNICODE);
@@ -92,7 +77,7 @@ class TelegramChats extends Model
         if (!empty($chatData['user_id'])) {
             $saveData['user_id'] = $chatData['user_id'];
         }
-        self::update($saveData, ['id' => $savedChatId]);
+        self::update($saveData, ['id' => $chatId]);
 
         return true;
     }
@@ -170,8 +155,8 @@ class TelegramChats extends Model
         $results = self::query("SELECT personal->'$.username' FROM $table WHERE LOWER( personal->'$.username' ) LIKE ? ORDER BY id", ["%$name%"], 'Num');
         if (empty($results)) return [];
         $names = [];
-        foreach($results as $result){
-            $names[] = '@'.$result[0]; 
+        foreach ($results as $result) {
+            $names[] = '@' . $result[0];
         };
         return $names;
     }
@@ -180,9 +165,9 @@ class TelegramChats extends Model
         if (empty($id)) {
             return [];
         }
-        
+
         $result = static::findBy('user_id', $id, 1);
-    
+
         return empty($result) ? [] : self::decodeJson($result[0]);
     }
     public static function findByUserName(string $username = '')
@@ -297,9 +282,8 @@ class TelegramChats extends Model
 
         self::query(
             "CREATE TABLE IF NOT EXISTS $table (
-                id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+                id INT NOT NULL PRIMARY KEY,
                 user_id INT DEFAULT NULL,
-                uid CHARACTER VARYING(250) NOT NULL DEFAULT '',
                 personal JSON DEFAULT NULL,
                 data JSON DEFAULT NULL,
                 CONSTRAINT fk_user_chat

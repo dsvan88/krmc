@@ -7,6 +7,31 @@ use app\models\Contacts;
 
 class ContactRepository
 {
+    public static function updateUserContacts(int $userId = 0, array $contacts = []): void
+    {
+        if (empty($userId) || empty($contacts)) return;
+
+        $contacts = Contacts::getByUserId($userId);
+
+        $newContacts = [
+            'telegram' => empty($contacts['telegram']) ? null : $contacts['telegram'],
+            'telegramid' => empty($contacts['telegramid']) ? null : $contacts['telegramid'],
+            'phone' => empty($contacts['phone']) ? null : $contacts['id'],
+        ];
+
+        // foreach()
+        // if (empty($username) && !empty($contact['telegram'])){
+        //     Contacts::remove($contact['telegram']['id']);
+        // }
+        //     if (empty($contact['telegram'])) {
+        //         Contacts::new(['telegram' => $chatData['personal']['username']], $userId);
+        //     } elseif ($contact['contact'] !== $chatData['personal']['username']) {
+        //         Contacts::update(['contact' => $chatData['personal']['username']], ['id' => $contact['id']]);
+        //     }
+        // }
+        // if (!empty($chatData['personal']['username'])) {
+        // }
+    }
     public static function getFields(int $userId, $default = ''): array
     {
         $contactsData = Contacts::getAll(['user_id' => $userId]);
@@ -24,7 +49,7 @@ class ContactRepository
     public static function formatUserContacts(array $contacts)
     {
         $result = [];
-        foreach ($contacts as $num => $contact) {
+        foreach ($contacts as $contact) {
             $result[$contact['type']] = $contact['contact'];
         }
         return $result;
@@ -32,11 +57,11 @@ class ContactRepository
     public static function wrapLinks(array $data): array
     {
         foreach ($data as $type => $value) {
-            $data[$type.'__value'] = '';
+            $data[$type . '__value'] = '';
             if (empty($value) || $value === 'No data')
                 continue;
 
-            $data[$type.'__value'] = $value;
+            $data[$type . '__value'] = $value;
 
             if ($type === 'email') {
                 $data[$type] = "<a href='mailto:$value' target='_blank'>$value</a>";

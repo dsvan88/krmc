@@ -14,17 +14,17 @@ class Contacts extends Model
     {
         return self::findBy('user_id', $userId);
     }
-    public static function getUserContact(int $userId, string $contactType)
+    public static function getUserContact(int $userId, string $contactType): ?array
     {
         $table = self::$table;
         $contact = Contacts::query("SELECT * FROM $table WHERE user_id = ? AND type = ? LIMIT 1", [$userId, $contactType], 'Assoc');
-        return empty($contact) ? false : $contact[0];
+        return empty($contact) ? null : $contact[0];
     }
-    public static function getUserIdByContact(string $contactType, string $value): mixed
+    public static function getUserIdByContact(string $contactType, string $value): ?int
     {
         $table = self::$table;
         $userId = Contacts::query("SELECT user_id FROM $table WHERE type = ? AND contact = ? LIMIT 1", [$contactType, $value], 'Column');
-        return empty($userId) ? false : $userId;
+        return empty($userId) ? null : $userId;
     }
     public static function isContactExists($contact)
     {
