@@ -12,30 +12,22 @@ class ContactRepository
         if (empty($userId) || empty($contacts)) return;
 
         $contacts = Contacts::getByUserId($userId);
+        $types = array_column($contacts, 'type');
+        foreach ($newContacts as $t => $c) {
+            $k = array_search($t, $types);
+            if ($k === false) {
+                if (is_null($c)) continue;
 
-        $newContacts = [
-            'telegram' => empty($newContacts['telegram']) ? null : $newContacts['telegram'],
-            'telegramid' => empty($newContacts['telegramid']) ? null : $newContacts['telegramid'],
-            'phone' => empty($newContacts['phone']) ? null : $newContacts['id'],
-            'email' => empty($newContacts['email']) ? null : $newContacts['email'],
-        ];
+                Contacts::add(['user_id' => $userId, 'type' => $t, 'contact' => $c]);
+                continue;
+            }
 
-        // foreach ($contacts as $contact) {
-        //     if (!isset($newContacts[$contact['type']])
-        //         || $newContacts[$contact['type']] == ) continue;
-        // }
-
-        // if (empty($username) && !empty($contact['telegram'])){
-        //     Contacts::remove($contact['telegram']['id']);
-        // }
-        //     if (empty($contact['telegram'])) {
-        //         Contacts::new(['telegram' => $chatData['personal']['username']], $userId);
-        //     } elseif ($contact['contact'] !== $chatData['personal']['username']) {
-        //         Contacts::update(['contact' => $chatData['personal']['username']], ['id' => $contact['id']]);
-        //     }
-        // }
-        // if (!empty($chatData['personal']['username'])) {
-        // }
+            if (is_null($c)) {
+                Contacts::remove($contacts[$k]['id']);
+                continue;
+            }
+            Contacts::update([$t => $c], ['id' => $contacts[$k]['id']]);
+        }
     }
     public static function getFields(int $userId, $default = ''): array
     {

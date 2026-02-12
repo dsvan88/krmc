@@ -4,11 +4,6 @@ namespace app\models;
 
 use app\core\Model;
 use app\core\Sender;
-use app\core\Telegram\ChatAction;
-use app\Repositories\ContactRepository;
-use app\Repositories\SocialPointsRepository;
-use app\Repositories\TelegramBotRepository;
-use app\Repositories\TelegramChatsRepository;
 
 class TelegramChats extends Model
 {
@@ -16,71 +11,6 @@ class TelegramChats extends Model
     public static $foreign = ['users' => Users::class];
     public static $jsonFields = ['personal', 'data'];
 
-    public static function save()
-    {
-        $chatId = TelegramBotRepository::getUserTelegramId();
-        $message = ChatAction::$message;
-
-        $result = self::find($chatId);
-
-        if (empty($result)) {
-            $chatData = [
-                'id' => $chatId,
-                'personal' => json_encode([
-                    'first_name' => empty($message['message']['from']['first_name']) ? '' : $message['message']['from']['first_name'],
-                    'last_name' => empty($message['message']['from']['last_name']) ? '' : $message['message']['from']['last_name'],
-                    'username' => empty($message['message']['from']['username']) ? '' : $message['message']['from']['username'],
-                ], JSON_UNESCAPED_UNICODE),
-                'data' => json_encode([
-                    'last_seems' => $message['message']['date'],
-                    'direct' => ($message['message']['chat']['type'] === 'private'),
-                ], JSON_UNESCAPED_UNICODE),
-            ];
-
-            $userId = Contacts::getUserIdByContact('telegramid', $chatId);
-            if (!empty($userId)) {
-                $chatData['user_id'] = $userId;
-                if (TelegramBotRepository::getChatId() === Settings::getMainTelegramId()) {
-                    SocialPointsRepository::evaluateMessage($userId, $message['message']['text']);
-                }
-            }
-            return self::insert($chatData);
-        }
-
-        $chatData = $result;
-        $chatData['personal']['first_name'] = empty($message['message']['from']['first_name']) ? '' : $message['message']['from']['first_name'];
-        $chatData['personal']['last_name'] = empty($message['message']['from']['last_name']) ? '' : $message['message']['from']['last_name'];
-        $chatData['personal']['username'] = empty($message['message']['from']['username']) ? '' : $message['message']['from']['username'];
-        $chatData['data']['direct'] = ($message['message']['chat']['type'] === 'private');
-
-        TelegramChatsRepository::$pending = empty($chatData['personal']['pending']) ? '' : $chatData['personal']['pending'];
-
-        $userId = Contacts::getUserIdByContact('telegramid', $chatId);
-
-        if (!empty($userId)) {
-            $chatData['user_id'] = $userId;
-
-            ContactRepository::updateUserContacts();
-            if (TelegramBotRepository::getChatId() === Settings::getMainTelegramId()) {
-                SocialPointsRepository::evaluateMessage($userId, $message['message']['text']);
-            }
-        } elseif (!empty($result['user_id'])) {
-            $chatData['user_id'] = null;
-        }
-
-        $chatData['data']['last_seems'] = $message['message']['date'];
-
-        $chatData['personal'] = json_encode($chatData['personal'], JSON_UNESCAPED_UNICODE);
-        $chatData['data'] = json_encode($chatData['data'], JSON_UNESCAPED_UNICODE);
-
-        $saveData = ['personal' => $chatData['personal'], 'data' => $chatData['data']];
-        if (!empty($chatData['user_id'])) {
-            $saveData['user_id'] = $chatData['user_id'];
-        }
-        self::update($saveData, ['id' => $chatId]);
-
-        return true;
-    }
     public static function getPinnedMessage(int $chatId = 0): int
     {
         if (empty($chatId)) return false;

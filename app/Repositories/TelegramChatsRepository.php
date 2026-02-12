@@ -5,10 +5,12 @@ namespace app\Repositories;
 use app\core\GoogleDrive;
 use app\core\ImageProcessing;
 use app\core\Sender;
+use app\core\Telegram\ChatAction;
 use app\models\Settings;
 use app\models\TelegramChats;
 use app\models\Users;
 use app\core\TelegramBot;
+use app\models\Contacts;
 use Exception;
 
 class TelegramChatsRepository
@@ -112,13 +114,80 @@ class TelegramChatsRepository
         Settings::save('telegram', $slug, $chatId);
         return true;
     }
+    public static function save()
+    {
+        $chatId = TelegramBotRepository::getUserTelegramId();
+        $message = ChatAction::$message;
+        $contacts = [
+            'telegramid' => $chatId,
+            'telegram' => empty($message['message']['from']['username']) ? null : $message['message']['from']['username'],
+        ];
+
+        $chat = TelegramChats::find($chatId);
+
+        if (empty($chat)) {
+            $newChatData = [
+                'id' => $chatId,
+                'personal' => json_encode([
+                    'first_name' => empty($message['message']['from']['first_name']) ? '' : $message['message']['from']['first_name'],
+                    'last_name' => empty($message['message']['from']['last_name']) ? '' : $message['message']['from']['last_name'],
+                    'username' => empty($message['message']['from']['username']) ? '' : $message['message']['from']['username'],
+                ], JSON_UNESCAPED_UNICODE),
+                'data' => json_encode([
+                    'last_seems' => $message['message']['date'],
+                    'direct' => ($message['message']['chat']['type'] === 'private'),
+                ], JSON_UNESCAPED_UNICODE),
+            ];
+
+            $userId = Contacts::getUserIdByContact('telegramid', $chatId);
+            if (empty($userId)) {
+                $newChatData['user_id'] = null;
+            } else {
+                $newChatData['user_id'] = $userId;
+                if (TelegramBotRepository::getChatId() === Settings::getMainTelegramId()) {
+                    SocialPointsRepository::evaluateMessage($userId, $message['message']['text']);
+                }
+                ContactRepository::updateUserContacts($userId, $contacts);
+            }
+            return TelegramChats::insert($newChatData);
+        }
+
+        $newChatData = $chat;
+        $newChatData['personal']['first_name'] = empty($message['message']['from']['first_name']) ? '' : $message['message']['from']['first_name'];
+        $newChatData['personal']['last_name'] = empty($message['message']['from']['last_name']) ? '' : $message['message']['from']['last_name'];
+        $newChatData['personal']['username'] = empty($message['message']['from']['username']) ? '' : $message['message']['from']['username'];
+        $newChatData['data']['direct'] = ($message['message']['chat']['type'] === 'private');
+
+        TelegramChatsRepository::$pending = empty($chat['personal']['pending']) ? '' : $chat['personal']['pending'];
+
+        $userId = Contacts::getUserIdByContact('telegramid', $chatId);
+        if (empty($userId)) {
+            $newChatData['user_id'] = null;
+        } else {
+            $newChatData['user_id'] = $userId;
+            if (TelegramBotRepository::getChatId() === Settings::getMainTelegramId()) {
+                SocialPointsRepository::evaluateMessage($userId, $message['message']['text']);
+            }
+            ContactRepository::updateUserContacts($userId, $contacts);
+        }
+
+        $newChatData['data']['last_seems'] = $message['message']['date'];
+
+        $newChatData['personal'] = json_encode($newChatData['personal'], JSON_UNESCAPED_UNICODE);
+        $newChatData['data'] = json_encode($newChatData['data'], JSON_UNESCAPED_UNICODE);
+        unset($newChatData['id']);
+
+        TelegramChats::update($newChatData, ['id' => $chatId]);
+
+        return true;
+    }
     public static function clearUserPendingState(int $chatId = 0): void
     {
-        $chatData = TelegramChats::getChat($chatId);
-        
-        unset($chatData['personal']['pending']);
+        $chat = TelegramChats::getChat($chatId);
 
-        TelegramChats::edit(['personal' => $chatData['personal']], $chatData['id']);
+        unset($chat['personal']['pending']);
+
+        TelegramChats::edit(['personal' => $chat['personal']], $chat['id']);
     }
     public static function setPendingState(string $command = ''): void
     {

@@ -66,7 +66,7 @@ class TelegramBotController extends Controller
 
         ChatAction::$message = $message;
         if (static::$type === 'message' && empty($message[static::$type]['from']['is_bot'])) {
-            TelegramChats::save($message);
+            TelegramChatsRepository::save($message);
         }
 
         $langCode = 'uk';
