@@ -10,20 +10,21 @@ class Chat extends Entity
     public array $chat = [];
     public static $model = TelegramChats::class;
 
-    public static function validate(int $id){
+    public static function validate(int $id)
+    {
         if (!empty($id)) return $id;
 
         if (empty($_SESSION['id'])) return false;
 
         $chat = static::$model::findByUserId($_SESSION['id']);
-        return empty($chat) ? false : $chat['uid'];
+        return empty($chat) ? false : $chat['id'];
     }
     public static function find(int $id): bool
     {
-        $data =  static::$model::getChat($id);
+        $data =  static::$model::find($id);
 
         if (empty($data)) return false;
-        
+
         static::$cache = $data;
         return true;
     }
@@ -36,7 +37,7 @@ class Chat extends Entity
         if (isset($this->$name))
             return $this->$name;
 
-        if ($name === 'title'){
+        if ($name === 'title') {
             return TelegramChatsRepository::chatTitle($this->chat);
         }
 

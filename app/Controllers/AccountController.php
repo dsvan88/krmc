@@ -373,7 +373,7 @@ class AccountController extends Controller
         }
 
         $cid = (int) $_POST['cid'];
-        $chatData = TelegramChats::getChat($cid);
+        $chatData = TelegramChats::find($cid);
 
         $chatTitle = '';
         if (isset($chatData['personal']['title'])) {
@@ -585,38 +585,6 @@ class AccountController extends Controller
 
         return View::notice(['message' => 'Success', 'time' => 1500, 'location' => 'reload']);
     }
-    // public function profileAvatarFormAction()
-    // {
-    //     $uid = (int) $_POST['uid'];
-    //     if (!isset($_SESSION['privilege']['status'])) {
-    //         return View::errorCode(403, ['message' => 'Forbidden!']);
-    //     }
-    //     if (!Users::checkAccess('manager')) {
-    //         $uid = (int) $_SESSION['id'];
-    //     }
-    //     $userData = Users::find($uid);
-
-    //     if ($userData['personal']['avatar'] === '') {
-    //         $vars = ['error' => 0, 'modal' => true, 'jsFile' => 'avatar-get-new.js?v=' . $_SERVER['REQUEST_TIME']];
-    //         return View::message($vars);
-    //     }
-
-    //     $userData['avatar'] = ImageProcessing::inputImage(FILE_USRGALL . "{$userData['id']}/{$userData['personal']['avatar']}", ['title' => Locale::phrase(['string' => '{{ Account_Profile_Form_User_Avatar }}', 'vars' => [$userData['name']]])]);
-
-    //     $vars = [
-    //         'title' => [
-    //             'string' => 'Avatar of %s',
-    //             'vars' => [$userData['name']],
-    //         ],
-    //         'texts' => [
-    //             'ReCropLabel' => 'Replace',
-    //             'CancelLabel' => 'Cancel'
-    //         ],
-    //         'userData' => $userData
-    //     ];
-    //     View::$route['vars'] = array_merge(View::$route['vars'], $vars);
-    //     return View::modal();
-    // }
     public function passwordChange($userData, $post)
     {
         if ($post['new_password'] != $post['new_password_confirmation']) {
@@ -808,7 +776,7 @@ class AccountController extends Controller
                     'result' => false,
                     'alert' => [
                         'title' => Locale::phrase('Checking...'),
-                        'text' => Locale::phrase(['string' => "Cant find a telegram userwith chat ID @%s!\nLet’s try it again.", 'vars' => [$chatId]]),
+                        'text' => Locale::phrase(['string' => "Cant find a telegram userwith chat ID %s!\nLet’s try it again.", 'vars' => [$chatId]]),
                     ]
                 ]);
             }

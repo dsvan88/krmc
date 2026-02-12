@@ -17,7 +17,7 @@ class BookingAnswer extends ChatAnswer
     {
         if (empty(static::$arguments))
             throw new Exception(__METHOD__ . ': arguments is empty');
-        
+
         if (empty(static::$requester->profile)) {
             if (empty(static::$requester))
                 return static::result('{{ Tg_Unknown_Requester }}', '🤷‍♂');
@@ -31,7 +31,7 @@ class BookingAnswer extends ChatAnswer
         }
         // $chatId = TelegramBotRepository::getUserTelegramId();
         // if (empty(static::$requester['id'])) {
-        //     $tgChat = TelegramChats::getChat($chatId);
+        //     $tgChat = TelegramChats::find($chatId);
         //     if (empty($tgChat))
         //         return static::result('{{ Tg_Unknown_Requester }}', '🤷‍♂');
         //     static::$arguments['userId'] = '_' . $chatId;

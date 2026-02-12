@@ -12,7 +12,7 @@ use Exception;
 
 class NickAnswer extends ChatAnswer
 {
-    public static function execute():array
+    public static function execute(): array
     {
         if (empty(static::$requester) || empty(static::$arguments))
             throw new Exception(__METHOD__ . ': Requester or Arguments is empty!');
@@ -48,7 +48,7 @@ class NickAnswer extends ChatAnswer
             throw new Exception(__METHOD__ . ': UserID or TelegramID can’t be empty!');
 
         $userData = Users::find($uId);
-        $thChat = TelegramChats::getChat($tId);
+        $thChat = TelegramChats::find($tId);
         $contacts = ['telegramid' => $tId, 'telegram' => $thChat['personal']['username']];
         Contacts::reLink($contacts, $uId);
         TelegramChatsRepository::getAndSaveTgAvatar($uId, true);

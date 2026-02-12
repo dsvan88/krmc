@@ -33,7 +33,7 @@ class BookingCommand extends ChatCommand
         }
         // if (empty(self::$requester['id'])) {
         //     $chatId = TelegramBotRepository::getUserTelegramId();
-        //     $tgChat = TelegramChats::getChat($chatId);
+        //     $tgChat = TelegramChats::find($chatId);
         //     if (empty($tgChat))
         //         return static::result('{{ Tg_Unknown_Requester }}', '🤷‍♂');
 

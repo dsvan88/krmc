@@ -15,14 +15,14 @@ class TelegramChats extends Model
     {
         if (empty($chatId)) return false;
 
-        $chatData = self::getChat($chatId);
+        $chatData = self::find($chatId);
 
         return empty($chatData['data']['pinned']) ? false : $chatData['data']['pinned'];
     }
     public static function savePinned(array $incomeMessage, int $messageId = 0): void
     {
         $chatId = $incomeMessage['message']['chat']['id'];
-        $chatData = self::getChat($chatId);
+        $chatData = self::find($chatId);
         if (!$chatData) {
             self::createPinned($chatId, $incomeMessage, $messageId);
             return;
@@ -37,15 +37,10 @@ class TelegramChats extends Model
     }
     public static function clearPinned(int $chatId): void
     {
-        $chatData = self::getChat($chatId);
+        $chatData = self::find($chatId);
         unset($chatData['data']['pinned']);
         self::edit(['data' => $chatData['data']], $chatData['id']);
         return;
-    }
-    public static function getChat($uid)
-    {
-        $result = self::findBy('uid', $uid);
-        return empty($result) ? false : $result[0];
     }
     public static function getChatsList(int $limit = 0, int $offset = 0)
     {
@@ -67,7 +62,7 @@ class TelegramChats extends Model
     public static function getGroupChatsList()
     {
         $table = self::$table;
-        $result = self::query("SELECT * FROM $table WHERE uid LIKE '-%' ORDER BY id", [], 'Assoc');
+        $result = self::query("SELECT * FROM $table WHERE id LIKE '-%' ORDER BY id", [], 'Assoc');
         if (empty($result)) {
             return [];
         }
@@ -128,7 +123,7 @@ class TelegramChats extends Model
         $result = [];
         for ($i = 0; $i < count($chats); $i++) {
             if (empty($chats[$i]['data']['pinned'])) continue;
-            $result[$chats[$i]['uid']] = $chats[$i]['data']['pinned'];
+            $result[$chats[$i]['id']] = $chats[$i]['data']['pinned'];
         }
         return $result;
     }
@@ -159,14 +154,14 @@ class TelegramChats extends Model
     }
     public static function avatars(array $chatsData)
     {
-        if (!empty($chatsData['uid'])) {
-            $chatsData['avatar'] = Sender::getUserProfileAvatar($chatsData['uid']);
+        if (!empty($chatsData['id'])) {
+            $chatsData['avatar'] = Sender::getUserProfileAvatar($chatsData['id']);
         }
 
         $countChats = count($chatsData);
         for ($x = 0; $x < $countChats; $x++) {
-            if (empty($chatsData[$x]['uid']) || $chatsData[$x]['uid'] < 0) continue;
-            $chatsData[$x]['avatar'] = Sender::getUserProfileAvatar($chatsData[$x]['uid']);
+            if (empty($chatsData[$x]['id']) || $chatsData[$x]['id'] < 0) continue;
+            $chatsData[$x]['avatar'] = Sender::getUserProfileAvatar($chatsData[$x]['id']);
         }
 
         return $chatsData;
@@ -174,7 +169,7 @@ class TelegramChats extends Model
     public static function createPinned(int $chatId, array $message = [], int $messageId = 0)
     {
         $chatData = [
-            'uid' => $chatId,
+            'id' => $chatId,
             'personal' => json_encode([
                 'id' => $message['message']['chat']['id'],
                 'title' => $message['message']['chat']['title'],

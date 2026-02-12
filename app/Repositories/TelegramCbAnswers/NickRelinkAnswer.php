@@ -13,7 +13,7 @@ use Exception;
 
 class NickAnswer extends ChatAnswer
 {
-    public static function execute():array
+    public static function execute(): array
     {
         if (empty(static::$arguments))
             throw new Exception(__METHOD__ . ': Arguments is empty!');
@@ -32,7 +32,7 @@ class NickAnswer extends ChatAnswer
                 return static::result('You don’t have enough rights to change information about other users!');
             static::$arguments['ci'] = TelegramBotRepository::getChatId();
             static::$arguments['mi'] = TelegramBotRepository::getMessageId();
-            
+
             return static::nickApprove();
         }
 
@@ -80,8 +80,9 @@ class NickAnswer extends ChatAnswer
         return array_merge(static::result('Success', true), ['update' => [$update]], ['send' => [$send]]);
     }
 
-    public static function nickApprove(){
-        
+    public static function nickApprove()
+    {
+
         if (empty(static::$arguments['u']) || empty(static::$arguments['t'])) {
 
             if (static::$arguments['ci'] != Settings::getMainTelegramId()) {
@@ -110,7 +111,7 @@ class NickAnswer extends ChatAnswer
             throw new Exception(__METHOD__ . ': UserID or TelegramID can’t be empty!');
 
         $userData = Users::find($uId);
-        $thChat = TelegramChats::getChat($tId);
+        $thChat = TelegramChats::find($tId);
         $contacts = ['telegramid' => $tId, 'telegram' => $thChat['personal']['username']];
         Contacts::reLink($contacts, $uId);
         TelegramChatsRepository::getAndSaveTgAvatar($uId, true);

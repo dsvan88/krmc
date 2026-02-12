@@ -85,14 +85,14 @@ class Days extends Model
 
                 if (empty($chatData)) continue;
 
-                $id = '_' . $chatData['uid'];
+                $id = '_' . $chatData['id'];
             } elseif ($data['participant'][$i][0] === '_') {
                 $tgChatId = substr($data['participant'][$i], 1);
-                $chatData = TelegramChats::getChat($tgChatId);
+                $chatData = TelegramChats::find($tgChatId);
 
                 if (empty($chatData)) continue;
 
-                $id = '_' . $chatData['uid'];
+                $id = '_' . $chatData['id'];
             } else {
                 $name = $data['participant'][$i];
                 $id = Users::getId($name);
@@ -258,7 +258,7 @@ class Days extends Model
                 $modsParts[] = DayRepository::getTimeEmoji($participants[$x]['arrive']) . ' ' . $participants[$x]['arrive'];
             }
             if ($userName[0] === '_') {
-                $tgChat = TelegramChats::getChat(substr($userName, 1));
+                $tgChat = TelegramChats::find(substr($userName, 1));
                 $userName = '+1';
                 $chatTitle = TelegramChatsRepository::chatTitle($tgChat);
                 if (!empty($chatTitle)) {
@@ -268,8 +268,8 @@ class Days extends Model
             if ($participants[$x]['prim'] != '') {
                 $modsParts[] = $participants[$x]['prim'];
             }
-            
-            $modsParts = empty($modsParts) ? '' : ' (<i>'.implode(', ',$modsParts). '</i>)';
+
+            $modsParts = empty($modsParts) ? '' : ' (<i>' . implode(', ', $modsParts) . '</i>)';
             $result .= ($x + 1) . ". <b>$userName</b>$modsParts\r\n";
         }
         return $result;

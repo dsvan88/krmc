@@ -69,17 +69,16 @@ class AccountRepository
     {
         if (!empty($source['id'])) {
             if (!is_numeric($source['id']) && $source['id'][0] === '_') {
-                $chatData = TelegramChats::getChat(substr($source['id'], 1));
+                $chatData = TelegramChats::find(substr($source['id'], 1));
                 $source['name'] = empty($chatData['personal']['username']) ? $source['id'] : '@' . $chatData['personal']['username'];
                 $source['status'] = 'all';
                 $source['gender'] = '';
                 $source['emoji'] = '';
                 return $source;
             }
-            try{
+            try {
                 $userData = Users::find($source['id']);
-            }
-            catch(\Throwable $error){
+            } catch (\Throwable $error) {
                 error_log($source['id']);
             }
             $source['name'] = empty($userData) ? '&lt; Deleted &gt;' : $userData['name'];
@@ -135,7 +134,7 @@ class AccountRepository
     public static function unlinkTelegram(int $chatId)
     {
 
-        $chatData =  TelegramChats::getChat($chatId);
+        $chatData =  TelegramChats::find($chatId);
         $chatId = (int) $chatData['id'];
         unset($chatData['id']);
 
@@ -164,7 +163,7 @@ class AccountRepository
     public static function linkTelegram(int $chatId, string $name)
     {
 
-        $chatData =  TelegramChats::getChat($chatId);
+        $chatData =  TelegramChats::find($chatId);
         $chatId = (int) $chatData['id'];
         unset($chatData['id']);
 
@@ -187,7 +186,7 @@ class AccountRepository
         Users::edit($userData, ['id' => $userId]);
         TelegramChats::edit($chatData, $chatId);
 
-        $contacts = ['telegramid' => $chatData['uid']];
+        $contacts = ['telegramid' => $chatData['id']];
         if (!empty($telegram)) {
             $contacts['telegram'] = $telegram;
         }

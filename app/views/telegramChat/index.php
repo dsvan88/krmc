@@ -38,8 +38,8 @@
                     <tr>
                         <td><?= ($x + 1) ?>.</td>
                         <td title="Чат з"><?= $chatTitle ?></td>
-                        <td title="Псевдонім" data-action-dblclick="account/set/nickname" data-cid="<?= $chatsData[$x]['uid'] ?>" data-value="<?= $nickname ?>" data-title="<?= $chatTitle ?>" ><?= $nickname ?></td>
-                        <td title="TelegramID"><?= $chatsData[$x]['uid'] ?></td>
+                        <td title="Псевдонім" data-action-dblclick="account/set/nickname" data-cid="<?= $chatsData[$x]['id'] ?>" data-value="<?= $nickname ?>" data-title="<?= $chatTitle ?>"><?= $nickname ?></td>
+                        <td title="TelegramID"><?= $chatsData[$x]['id'] ?></td>
                         <td title="Остання активність"><?= date('d.m.Y H:i:s', $chatsData[$x]['data']['last_seems']) ?></td>
                     </tr>
                 <?php endfor; ?>

@@ -43,9 +43,9 @@ class TelegramChatsRepository
         } elseif ($post['target'] === 'main') {
             $targets = Settings::getMainTelegramId();
         } elseif ($post['target'] === 'groups') {
-            $targets = array_column(TelegramChats::getGroupChatsList(), 'uid');
+            $targets = array_column(TelegramChats::getGroupChatsList(), 'id');
         } else {
-            $targets = array_column(TelegramChats::getChatsList(), 'uid');
+            $targets = array_column(TelegramChats::getChatsList(), 'id');
         }
 
         if (empty($post['image_link'])) {
@@ -183,7 +183,7 @@ class TelegramChatsRepository
     }
     public static function clearUserPendingState(int $chatId = 0): void
     {
-        $chat = TelegramChats::getChat($chatId);
+        $chat = TelegramChats::find($chatId);
 
         unset($chat['personal']['pending']);
 
@@ -191,7 +191,7 @@ class TelegramChatsRepository
     }
     public static function setPendingState(string $command = ''): void
     {
-        $chatData = TelegramChats::getChat(TelegramBotRepository::getUserTelegramId());
+        $chatData = TelegramChats::find(TelegramBotRepository::getUserTelegramId());
 
         if (empty($command))
             unset($chatData['personal']['pending']);
@@ -206,7 +206,7 @@ class TelegramChatsRepository
             return static::$pending;
         }
 
-        $chatData = TelegramChats::getChat(empty($chatId) ? TelegramBotRepository::getUserTelegramId() : $chatId);
+        $chatData = TelegramChats::find(empty($chatId) ? TelegramBotRepository::getUserTelegramId() : $chatId);
         static::$pending = empty($chatData['personal']['pending']) ? '' : $chatData['personal']['pending'];
 
         return static::$pending;
