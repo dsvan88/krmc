@@ -1,11 +1,5 @@
 <?php
-
-namespace app\Repositories;
-
-class EmojiRepository
-{
-    public static $list = [
-        0 => [
+return [
             '😀',
             '😄',
             '😁',
@@ -246,6 +240,4 @@ class EmojiRepository
             '👩‍🍳',
             '🧑‍🍳',
             '👨‍🍳'
-        ], //'👮‍♀️', '👮', '👮‍♂️', '👩‍🎓', '🧑‍🎓', '👨‍🎓'
-    ];
-}
+        ];

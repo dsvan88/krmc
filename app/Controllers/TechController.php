@@ -294,7 +294,7 @@ class TechController extends Controller
                 'date' => 1652025484,
                 // 'text' => '+ на 18',
                 // 'text' => '/dice',
-                'text' => '+пт',
+                'text' => '/emoji',
                 // 'text' => '/reg +ср,Джокер',
                 // 'text' => '/chat main',
                 // 'text' => 'Checker',

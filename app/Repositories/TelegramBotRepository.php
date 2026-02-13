@@ -260,6 +260,7 @@ class TelegramBotRepository
 
     public static function encodeInlineKeyboard(array &$data): void
     {
+        error_log(json_encode($data, JSON_UNESCAPED_UNICODE));
         foreach ($data as $i => $row) {
             foreach ($row as $k => $v) {
                 $data[$i][$k]['text'] = Locale::phrase($v['text']);

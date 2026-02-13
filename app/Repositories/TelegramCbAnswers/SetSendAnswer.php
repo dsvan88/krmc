@@ -26,16 +26,6 @@ class SetSendAnswer extends ChatAnswer
 
         $replyMarkup = TelegramBotRepository::getBookingMarkup($weekId, $dayNum);
 
-        // $replyMarkup = [
-        //     'inline_keyboard' => [
-        //         [
-        //             ['text' => '🙋' . static::locale('I will!'), 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => $dayNum]],
-        //             ['text' => static::locale('I want!') . '🥹', 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => $dayNum, 'p' => '?']],
-        //             ['text' => '❌' . static::locale('Opt-out'), 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => $dayNum, 'r' => '1']],
-        //         ],
-        //     ],
-        // ];
-
         $send = [
             'chatId' => Settings::getMainTelegramId(),
             'message' => $message,
