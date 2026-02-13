@@ -256,7 +256,7 @@ class Db
         return self::query($query);
     }
     //Удаляет таблицу/таблицы
-    public static function dbDropTables($tables = null)
+    public static function dbDropTables(mixed $tables = null)
     {
         if (empty($tables)) {
             $_tables = self::getTables();

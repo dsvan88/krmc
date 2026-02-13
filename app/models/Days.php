@@ -123,7 +123,7 @@ class Days extends Model
             return false;
         }
         $weekData['data'][$dayNum]['status'] = $status;
-        return self::update(['data' => json_encode($weekData, JSON_UNESCAPED_UNICODE)], ['id' => $weekId]);
+        return self::update(['data' => json_encode($weekData['data'], JSON_UNESCAPED_UNICODE)], ['id' => $weekId]);
     }
     public static function setDayData($weekId, $dayId, $data)
     {
