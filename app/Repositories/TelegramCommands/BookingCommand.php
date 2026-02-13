@@ -134,7 +134,8 @@ class BookingCommand extends ChatCommand
 
         $weekData['data'][$dayNum] = $newDayData;
 
-        $replyMarkup = TelegramBotRepository::getBookingMarkup($weekId, $dayNum, array_column($weekData['data'][$dayNum]['participants'], 'id'));
+        $booked = in_array(static::$requester->profile->id, array_column($weekData['data'][$dayNum]['participants'], 'id'));
+        $replyMarkup = TelegramBotRepository::getBookingMarkup($weekId, $dayNum, $booked);
 
         $result['send'][] = [
             'message' => Days::getFullDescription($weekData, $dayNum),

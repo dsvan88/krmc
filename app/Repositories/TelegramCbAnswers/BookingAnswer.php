@@ -89,7 +89,8 @@ class BookingAnswer extends ChatAnswer
 
         Days::setDayData($weekId, $dayNum, $weekData['data'][$dayNum]);
 
-        $replyMarkup = TelegramBotRepository::getBookingMarkup($weekId, $dayNum, array_column($weekData['data'][$dayNum]['participants'], 'id'));
+        $booked = in_array(static::$requester->profile->id, array_column($weekData['data'][$dayNum]['participants'], 'id'));
+        $replyMarkup = TelegramBotRepository::getBookingMarkup($weekId, $dayNum, $booked);
 
         $update = [
             'message' => Days::getFullDescription($weekData, $dayNum),

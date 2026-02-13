@@ -228,11 +228,10 @@ class TelegramBotRepository
     }
 
 
-    public static function getBookingMarkup(int $weekId, int $dayNum, array $ids = []): array
+    public static function getBookingMarkup(int $weekId, int $dayNum, bool $booked = false): array
     {
 
-        // if (TelegramBotRepository::isDirect() && !empty(ChatAction::$requester->profile->id) && in_array(ChatAction::$requester->profile->id, $ids)) {
-        if (TelegramBotRepository::isDirect() && in_array(ChatAction::$requester->profile->id, $ids)) {
+        if (TelegramBotRepository::isDirect() && $booked) {
             return [
                 'inline_keyboard' => [
                     [

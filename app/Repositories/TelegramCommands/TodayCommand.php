@@ -26,7 +26,8 @@ class TodayCommand extends ChatCommand
             return static::result('{{ Tg_Command_Games_Not_Set }}');
         }
 
-        $replyMarkup = TelegramBotRepository::getBookingMarkup($weekId, $currentDayNum, array_column($weekData['data'][$currentDayNum]['participants'], 'id'));
+        $booked = in_array(static::$requester->profile->id, array_column($weekData['data'][$currentDayNum]['participants'], 'id'));
+        $replyMarkup = TelegramBotRepository::getBookingMarkup($weekId, $currentDayNum, $booked);
 
         $result = [
             'reaction' => '👌',
