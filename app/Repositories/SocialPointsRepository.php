@@ -23,7 +23,7 @@ class SocialPointsRepository
 
         foreach ($weekData['data'] as $num => $day) {
 
-            // if ($day['status'] !== 'set') continue;
+            if ($day['status'] !== 'set') continue;
 
             $count = count($day['participants']);
 

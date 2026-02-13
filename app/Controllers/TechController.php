@@ -135,7 +135,7 @@ class TechController extends Controller
     public static function dbrebuildAction()
     {
         // return View::redirect('/');
-        set_time_limit(360);
+        set_time_limit(720);
         $users = Users::getAll();
         foreach ($users as $user) {
             SocialPoints::set(0, $user['id']);
@@ -154,20 +154,20 @@ class TechController extends Controller
         }
         echo 'Weeks rebuilded.<br>';
 
-        // $chats = TelegramChats::getAll();
-        // TelegramChats::dbDropTables(TelegramChats::$table);
-        // TelegramChats::init();
-        // foreach ($chats as $chat) {
-        //     unset($chat['personal']['id']);
-        //     $newChat = [
-        //         'id' => $chat['uid'],
-        //         'user_id' => $chat['user_id'],
-        //         'personal' => json_encode($chat['personal'], JSON_UNESCAPED_UNICODE),
-        //         'data' => json_encode($chat['data'], JSON_UNESCAPED_UNICODE),
-        //     ];
-        //     TelegramChats::insert($newChat);
-        // }
-        // echo 'Chats rebuilded.<br>';
+        $chats = TelegramChats::getAll();
+        TelegramChats::dbDropTables(TelegramChats::$table);
+        TelegramChats::init();
+        foreach ($chats as $chat) {
+            unset($chat['personal']['id']);
+            $newChat = [
+                'id' => $chat['uid'] ?? $chat['id'],
+                'user_id' => $chat['user_id'],
+                'personal' => json_encode($chat['personal'], JSON_UNESCAPED_UNICODE),
+                'data' => json_encode($chat['data'], JSON_UNESCAPED_UNICODE),
+            ];
+            TelegramChats::insert($newChat);
+        }
+        echo 'Chats rebuilded.<br>';
 
         // $result = [];
         // $exists = [];
