@@ -207,7 +207,7 @@ class TelegramChats extends Model
 
         self::query(
             "CREATE TABLE IF NOT EXISTS $table (
-                id INT NOT NULL PRIMARY KEY,
+                id BIGINT NOT NULL PRIMARY KEY,
                 user_id INT DEFAULT NULL,
                 personal JSON DEFAULT NULL,
                 data JSON DEFAULT NULL,
@@ -218,4 +218,25 @@ class TelegramChats extends Model
             );"
         );
     }
+    // public static function oldinit()
+    // {
+    //     $table = self::$table;
+    //     foreach (self::$foreign as $key => $class) {
+    //         $$key = $class::$table;
+    //     }
+
+    //     self::query(
+    //         "CREATE TABLE IF NOT EXISTS $table (
+    //             id INT NOT NULL PRIMARY KEY,
+    //             uid BIGINT DEFAULT NULL,
+    //             user_id INT DEFAULT NULL,
+    //             personal JSON DEFAULT NULL,
+    //             data JSON DEFAULT NULL,
+    //             CONSTRAINT fk_user_chat
+    //                 FOREIGN KEY(user_id) 
+    //                 REFERENCES $users(id)
+    //                 ON DELETE CASCADE
+    //         );"
+    //     );
+    // }
 }

@@ -137,8 +137,6 @@ class TechController extends Controller
         foreach ($weeks as $week) {
             if (isset($week['data']['data']))
                 $week['data'] = $week['data']['data'];
-            // if (!isset($week['data'][-1])) continue;
-            // Tech::dump($week['data'][-1]);
             unset($week['data'][-1]);
             unset($week['data']['']);
             Weeks::update(['data' => json_encode($week['data'], JSON_UNESCAPED_UNICODE)], ['id' => $week['id']]);
@@ -148,16 +146,19 @@ class TechController extends Controller
         $chats = TelegramChats::getAll();
         TelegramChats::dbDropTables(TelegramChats::$table);
         TelegramChats::init();
-        foreach($chats as $chat){
+        foreach ($chats as $chat) {
+            unset($chat['personal']['id']);
             $newChat = [
                 'id' => $chat['uid'],
                 'user_id' => $chat['user_id'],
                 'personal' => json_encode($chat['personal'], JSON_UNESCAPED_UNICODE),
                 'data' => json_encode($chat['data'], JSON_UNESCAPED_UNICODE),
             ];
-            echo json_encode($newChat, JSON_UNESCAPED_UNICODE).'<br>';
             TelegramChats::insert($newChat);
         }
+        echo 'Chats rebuilded.<br>';
+
+
         // $result = [];
         // $exists = [];
         // usort($contacts, function ($elemA, $elemB){

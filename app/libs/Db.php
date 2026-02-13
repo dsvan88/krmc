@@ -28,7 +28,7 @@ class Db
         if (!empty(self::$connection)) return self::$connection;
 
         try {
-            if (SQL_TYPE === 'mariadb'){
+            if (SQL_TYPE === 'mariadb') {
                 self::$type = 'mysql';
             }
             $connection = new PDO(self::$type . ':host=' . self::$host . ';port=' . self::$port . ';dbname=' . self::$db, self::$user, self::$password);
@@ -122,6 +122,8 @@ class Db
             } catch (\Throwable $error) {
                 error_log($error);
                 error_log($query);
+                if ($stmt->errorCode() !== '00000')
+                    error_log($stmt->errorInfo()[2]);
                 error_log(json_encode($params, JSON_UNESCAPED_UNICODE));
                 return false;
             }
@@ -151,7 +153,7 @@ class Db
         return true;
     }
     // Проверка наличия записей в базе по критериям
-    public static function isExists($criteria, string $table = '', $criteriaType = 'OR'):bool
+    public static function isExists($criteria, string $table = '', $criteriaType = 'OR'): bool
     {
         if (empty($table)) $table = static::$table;
 
@@ -190,6 +192,7 @@ class Db
             self::massQuery("INSERT INTO $table ($keys) VALUES ($preKeys)", $data);
             return true;
         }
+        return false;
     }
     // Обновляет запись в базе
     // $data - ассоциативный массив со значениями записи: array('column_name'=>'column_value',...)
@@ -324,5 +327,9 @@ class Db
                 $class::init();
             }
         }
+    }
+    public static function lastError()
+    {
+        return self::$connection->errorInfo();
     }
 }
