@@ -28,19 +28,6 @@ class TodayCommand extends ChatCommand
 
         $replyMarkup = TelegramBotRepository::getBookingMarkup($weekId, $currentDayNum, array_column($weekData['data'][$currentDayNum]['participants'], 'id'));
 
-        // $replyMarkup = [
-        //     'inline_keyboard' => [
-        //         [
-        //             ['text' => '🙋' . self::locale('I will!'), 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => $currentDayNum]],
-        //             ['text' => self::locale('I want!') . '(?)' . '🥹', 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => $currentDayNum, 'p' => '?']],
-        //         ],
-        //     ],
-        // ];
-
-        // if (!TelegramBotRepository::isDirect()) {
-        //     $replyMarkup['inline_keyboard'][0][] = ['text' => '❌' . static::locale('Opt-out'), 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => $currentDayNum, 'r' => 1]];
-        // }
-
         $result = [
             'reaction' => '👌',
             'send' => [
@@ -50,16 +37,6 @@ class TodayCommand extends ChatCommand
                 ]
             ]
         ];
-
-        // if (empty(self::$requester['id'])) return $result;
-
-        // if (TelegramBotRepository::isDirect() && in_array(self::$requester['id'], array_column($weekData['data'][$currentDayNum]['participants'], 'id'))) {
-        //     $result['send'][0]['replyMarkup']['inline_keyboard'] = [
-        //         [
-        //             ['text' => '❌' . self::locale('Opt-out'), 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => $currentDayNum, 'r' => 1]]
-        //         ]
-        //     ];
-        // }
         return $result;
     }
 }

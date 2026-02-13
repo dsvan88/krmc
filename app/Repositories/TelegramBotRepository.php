@@ -234,8 +234,10 @@ class TelegramBotRepository
         // if (TelegramBotRepository::isDirect() && !empty(ChatAction::$requester->profile->id) && in_array(ChatAction::$requester->profile->id, $ids)) {
         if (TelegramBotRepository::isDirect() && in_array(ChatAction::$requester->profile->id, $ids)) {
             return [
-                [
-                    ['text' => '❌' . Locale::phrase('Opt-out'), 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => $dayNum, 'r' => 1]]
+                'inline_keyboard' => [
+                    [
+                        ['text' => '❌' . Locale::phrase('Opt-out'), 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => $dayNum, 'r' => 1]]
+                    ]
                 ]
             ];
         }

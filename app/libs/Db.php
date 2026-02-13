@@ -153,19 +153,20 @@ class Db
         return true;
     }
     // Проверка наличия записей в базе по критериям
-    public static function isExists($criteria, string $table = '', $criteriaType = 'OR'): bool
+    public static function isExists(array $criteria = [], string $orAnd = 'OR', string $table = ''): bool
     {
+        if (empty($criteria)) return false;
+
         if (empty($table)) $table = static::$table;
 
         $keys = array_keys($criteria);
         $query = "SELECT COUNT(id) FROM $table WHERE ";
 
-        for ($x = 0; $x < count($keys); $x++) {
-            if (trim($criteria[$keys[$x]]) !== '') {
-                $query .= $keys[$x] . " = :$keys[$x] $criteriaType ";
-            }
+        foreach ($keys as $key) {
+            if (empty(trim($criteria[$key]))) continue;
+            $query .= " $key = :$key $orAnd ";
         }
-        return (self::query(substr($query, 0, -2 - strlen($criteriaType)), $criteria, 'Column')) > 0 ? true : false;
+        return self::query(substr($query, 0, -2 - strlen($orAnd)), $criteria, 'Column');
     }
     // Добавляет запись в SQL базу
     // $data - ассоциативный массив со значениями записи: array('column_name'=>'column_value',...)

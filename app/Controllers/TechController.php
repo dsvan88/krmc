@@ -10,7 +10,9 @@ use app\core\View;
 use app\libs\Db;
 use app\models\Days;
 use app\models\Settings;
+use app\models\SocialPoints;
 use app\models\TelegramChats;
+use app\models\Users;
 use app\models\Weeks;
 use app\Repositories\DayRepository;
 use app\Repositories\SocialPointsRepository;
@@ -133,31 +135,39 @@ class TechController extends Controller
     public static function dbrebuildAction()
     {
         // return View::redirect('/');
+        set_time_limit(360);
+        $users = Users::getAll();
+        foreach ($users as $user) {
+            SocialPoints::set(0, $user['id']);
+        }
         $weeks = Weeks::getAll();
+        $time = strtotime('01.01.2025');
         foreach ($weeks as $week) {
             if (isset($week['data']['data']))
                 $week['data'] = $week['data']['data'];
             unset($week['data'][-1]);
             unset($week['data']['']);
             Weeks::update(['data' => json_encode($week['data'], JSON_UNESCAPED_UNICODE)], ['id' => $week['id']]);
+
+            if ($week['finish'] > $time)
+                SocialPointsRepository::applyBookingPoints($week['id']);
         }
         echo 'Weeks rebuilded.<br>';
 
-        $chats = TelegramChats::getAll();
-        TelegramChats::dbDropTables(TelegramChats::$table);
-        TelegramChats::init();
-        foreach ($chats as $chat) {
-            unset($chat['personal']['id']);
-            $newChat = [
-                'id' => $chat['uid'],
-                'user_id' => $chat['user_id'],
-                'personal' => json_encode($chat['personal'], JSON_UNESCAPED_UNICODE),
-                'data' => json_encode($chat['data'], JSON_UNESCAPED_UNICODE),
-            ];
-            TelegramChats::insert($newChat);
-        }
-        echo 'Chats rebuilded.<br>';
-
+        // $chats = TelegramChats::getAll();
+        // TelegramChats::dbDropTables(TelegramChats::$table);
+        // TelegramChats::init();
+        // foreach ($chats as $chat) {
+        //     unset($chat['personal']['id']);
+        //     $newChat = [
+        //         'id' => $chat['uid'],
+        //         'user_id' => $chat['user_id'],
+        //         'personal' => json_encode($chat['personal'], JSON_UNESCAPED_UNICODE),
+        //         'data' => json_encode($chat['data'], JSON_UNESCAPED_UNICODE),
+        //     ];
+        //     TelegramChats::insert($newChat);
+        // }
+        // echo 'Chats rebuilded.<br>';
 
         // $result = [];
         // $exists = [];
@@ -264,7 +274,7 @@ class TechController extends Controller
             'message' => [
                 'message_id' => 189,
                 'from' => [
-                    'id' => 90066916821,
+                    'id' => 900669168,
                     // 'id' => 412223734,
                     // 'is_bot' => false,
                     'first_name' => 'Dmytro',
@@ -284,9 +294,10 @@ class TechController extends Controller
                 'date' => 1652025484,
                 // 'text' => '+ на 18',
                 // 'text' => '/dice',
+                'text' => '+пт',
                 // 'text' => '/reg +ср,Джокер',
                 // 'text' => '/chat main',
-                'text' => 'Checker',
+                // 'text' => 'Checker',
                 // 'text' => '+пт?',
                 // 'text' => '+ на четвер, десь на 18:45, звісно, що підстрахую, але поки що (під ?)',
                 // 'text' => '/?',
@@ -314,15 +325,16 @@ class TechController extends Controller
     }
     public static function testAction()
     {
-        $user = User::create();
-        Tech::dump($user->ban);
-        echo "User: $user<br>";
+        // Tech::dump(Users::isExists(['name' => 'Белла Донна']));
+        // $user = User::create();
+        // Tech::dump($user->ban);
+        // echo "User: $user<br>";
 
-        $req = Requester::create(900669168);
-        Tech::dump($req->chat->username);
-        echo "Requester: $req<br>";
+        // $req = Requester::create(900669168);
+        // Tech::dump($req->chat->username);
+        // echo "Requester: $req<br>";
 
-        Tech::dump(User::$instances);
+        // Tech::dump(User::$instances);
         // $records = DayRepository::findBookedDays(17, 10);
         // DayRepository::changeParticipantId($records, 15);
         // $records = DayRepository::findBookedDays(15, 10);

@@ -2,6 +2,7 @@
 
 namespace app\Repositories\TelegramCommands;
 
+use app\core\Tech;
 use app\core\Telegram\ChatCommand;
 use app\models\Days;
 use app\models\TelegramChats;
@@ -134,27 +135,6 @@ class BookingCommand extends ChatCommand
         $weekData['data'][$dayNum] = $newDayData;
 
         $replyMarkup = TelegramBotRepository::getBookingMarkup($weekId, $dayNum, array_column($weekData['data'][$dayNum]['participants'], 'id'));
-
-        // $replyMarkup = [
-        //     'inline_keyboard' => [
-        //         [
-        //             ['text' => '🙋' . self::locale('I will!'), 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => $dayNum]],
-        //             ['text' => self::locale('I want!') . '🥹', 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => $dayNum, 'p' => '?']],
-        //         ],
-        //     ],
-        // ];
-
-        // if (!TelegramBotRepository::isDirect()) {
-        //     if (count($weekData['data'][$dayNum]['participants']) > 0) {
-        //         $replyMarkup['inline_keyboard'][0][] = ['text' => '❌' . static::locale('Opt-out'), 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => $dayNum, 'r' => '1']];
-        //     }
-        // } elseif (in_array(static::$arguments['userId'], array_column($newDayData['participants'], 'id'))) {
-        //     $replyMarkup['inline_keyboard'] = [
-        //         [
-        //             ['text' => '❌' . self::locale('Opt-out'), 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => $dayNum, 'r' => 1]]
-        //         ]
-        //     ];
-        // }
 
         $result['send'][] = [
             'message' => Days::getFullDescription($weekData, $dayNum),

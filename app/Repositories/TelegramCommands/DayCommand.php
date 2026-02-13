@@ -19,8 +19,8 @@ class DayCommand extends ChatCommand
 
         $daySlug = isset(static::$arguments[0]) ? static::$arguments[0] : 'tod';
         TelegramBotRepository::parseDayNum($daySlug);
-        
-        $dayNum =static::$arguments['dayNum'];
+
+        $dayNum = static::$arguments['dayNum'];
         if (static::$arguments['dayNum'] < static::$arguments['currentDay'])
             $weekId++;
 
@@ -33,19 +33,6 @@ class DayCommand extends ChatCommand
 
         $replyMarkup = TelegramBotRepository::getBookingMarkup($weekId, $dayNum, array_column($weekData['data'][$dayNum]['participants'], 'id'));
 
-        // $replyMarkup = [
-        //     'inline_keyboard' => [
-        //         [
-        //             ['text' => '🙋' . self::locale('I will!'), 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => static::$arguments['dayNum']]],
-        //             ['text' => self::locale('I want!') . '🥹', 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => static::$arguments['dayNum'], 'p' => '?']],
-        //         ],
-        //     ],
-        // ];
-
-        // if (!TelegramBotRepository::isDirect()) {
-        //     $replyMarkup['inline_keyboard'][0][] = ['text' => '❌' . static::locale('Opt-out'), 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => static::$arguments['dayNum'], 'r' => 1]];
-        // }
-
         $result = [
             'result' => true,
             'reaction' => '👌',
@@ -57,15 +44,6 @@ class DayCommand extends ChatCommand
             ]
         ];
 
-        // if (empty(self::$requester['id'])) return $result;
-
-        // if (TelegramBotRepository::isDirect() && in_array(self::$requester['id'], array_column($weekData['data'][static::$arguments['dayNum']]['participants'], 'id'))) {
-        //     $result['send'][0]['replyMarkup']['inline_keyboard'] = [
-        //         [
-        //             ['text' => '❌' . self::locale('Opt-out'), 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => static::$arguments['dayNum'], 'r' => 1]]
-        //         ]
-        //     ];
-        // }
-        // return $result;
+        return $result;
     }
 }

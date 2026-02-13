@@ -3,12 +3,14 @@
 namespace app\models;
 
 use app\core\Model;
+use app\core\Tech;
 use Exception;
 
 class SocialPoints extends Model
 {
 
     public static $table = SQL_TBL_USERS;
+    public static $user = [];
 
     public static $points = [
         'longMessage' => 1,
@@ -16,64 +18,70 @@ class SocialPoints extends Model
         'unsureBooking' => 3,
         'dayStarter' => 2,
     ];
-    public static function set(int $userId = 0, int $point = 0): int
+
+    public static function getUserData(int $userId = 0): void
     {
+        if (isset(static::$user['id']) && $userId == static::$user['id'])
+            return;
+
         if (empty($userId))
-            throw new Exception(__METHOD__ . ' UserID can’t be empty.');
+            throw new Exception(__METHOD__ . ': Can’t find a user with a empty id');;
 
-        $userData = Users::find($userId);
+        static::$user = Users::find($userId);
 
-        if (empty($userData)) {
-            throw new Exception(__METHOD__ . ' UserData can’t be empty.');
-        }
+        if (empty(static::$user))
+            throw new Exception(__METHOD__ . ': Can’t find a user with such id: ' . $userId);
 
-        $privelege = $userData['privilege'];
-        $privelege['points'] = $point;
-        static::update(['privilege' => json_encode($privelege)], ['id' => $userId]);
+        return;
+    }
+    public static function set(int $point = 0, int $userId = 0): int
+    {
+        static::getUserData($userId);
+
+        static::$user['privilege']['points'] = $point;
+        static::update(
+            ['privilege' => json_encode(static::$user['privilege'])],
+            ['id' => static::$user['id']]
+        );
 
         return $point;
     }
     public static function get(int $userId = 0): int
     {
-        if (empty($userId))
-            throw new Exception(__METHOD__ . ' UserID can’t be empty.');
+        static::getUserData($userId);
 
-        $userData = Users::find($userId);
-        if (empty($userData['privilege']['points'])) {
-            $userData['privilege']['points'] = 0;
-            return static::set($userId, 0);
+        if (empty(static::$user['privilege']['points'])) {
+            return static::set(0, $userId);
         }
 
-        return $userData['privilege']['points'];
+        return static::$user['privilege']['points'];
     }
     public static function add(int $userId = 0, int $point = 0)
     {
-        if (empty($userId))
-            throw new Exception(__METHOD__ . ' UserID can’t be empty.');
+        static::getUserData($userId);
 
-        $userData = Users::find($userId);
-        if (empty($userData['privilege']['points'])) {
-            return static::set($userId, $point);
+        if (empty(static::$user['privilege']['points'])) {
+            return static::set($point, $userId);
         }
 
-        if ($point < 0 && $userData['privilege']['points'] < abs($point)) {
-            return false;
+        if (static::$user['privilege']['points'] + $point < 0) {
+            return static::set(0, $userId);
         }
-        return $userData['privilege']['points'] += $point;
+
+        return static::set(static::$user['privilege']['points'] + $point, $userId);
     }
     public static function minus(int $userId = 0, int $point = 0)
     {
-        if (empty($userId))
-            throw new Exception(__METHOD__ . ' UserID can’t be empty.');
+        static::getUserData($userId);
 
-        $userData = Users::find($userId);
-        if (empty($userData['privilege']['points'])) {
-            static::set($userId, 0);
-            return false;
+        if (empty(static::$user['privilege']['points'])) {
+            return static::set($point, $userId);
         }
 
-        if ($userData['privilege']['points'] < $point) return false;
+        if (static::$user['privilege']['points'] - $point < 0) {
+            return static::set(0, $userId);
+        }
 
-        return $userData['privilege']['points'] -= $point;
+        return static::set(static::$user['privilege']['points'] - $point, $userId);
     }
 }
