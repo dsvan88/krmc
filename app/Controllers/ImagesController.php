@@ -55,7 +55,7 @@ class ImagesController extends Controller
     }
     public function indexAction()
     {
-        $pageToken = '';
+        $pageToken = $folderName = '';
         extract(self::$route['vars']);
 
         if (!empty($_POST['pageToken']))
