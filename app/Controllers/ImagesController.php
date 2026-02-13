@@ -55,13 +55,14 @@ class ImagesController extends Controller
     }
     public function indexAction()
     {
-        $pageToken = $folderName = '';
+        $pageToken = '';
+        $folderName = 'root';
         extract(self::$route['vars']);
 
         if (!empty($_POST['pageToken']))
             $pageToken = $_POST['pageToken'];
 
-        if (!ImageRepository::getImagesList($pageToken, $files, $nextPageToken)) {
+        if (!ImageRepository::getImagesList($pageToken, $files, $nextPageToken, $folderName)) {
             Noticer::set(['message' => 'Image’s list is empty', 'type' => 'info']);
         }
 
