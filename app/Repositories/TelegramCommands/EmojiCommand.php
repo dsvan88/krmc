@@ -21,12 +21,12 @@ class EmojiCommand extends ChatCommand
         $replyMarkup['inline_keyboard'] = [];
         $row = $i = 0;
         foreach($list as $key=>$item){
-            $replyMarkup['inline_keyboard'][$row][] = ['text' => $item, 'callback_data' => ['c' => 'emoji', 'col' => $collection, 'd' => $key, 'uid' => static::$requester->profile->id]];
+            $replyMarkup['inline_keyboard'][$row][] = ['text' => $item, 'callback_data' => ['c' => 'emoji', 'col' => $collection, 'k' => $key, 'u' => static::$requester->profile->id]];
             if (++$i > 0 && $i%7 === 0) ++$row;
         }
         $replyMarkup['inline_keyboard'][] = [
-                // ['text' => $item, 'callback_data' => ['c' => 'emoji', 'col' => $collection, 'd' => $key, 'uid' => static::$requester->profile->id, 'o' => 0, 'p' => 1]],
-                ['text' => '->', 'callback_data' => ['c' => 'emoji', 'col' => $collection, 'd' => $key, 'uid' => static::$requester->profile->id, 'o' => 0, 'n' => 1]]
+                // ['text' => $item, 'callback_data' => ['c' => 'emoji', 'col' => $collection, 'd' => $key, 'u' => static::$requester->profile->id, 'o' => 0, 'p' => 1]],
+                ['text' => '->', 'callback_data' => ['c' => 'emoji', 'col' => $collection, 'd' => $key, 'u' => static::$requester->profile->id, 'o' => TelegramEmojis::$limit]]
             ];
 
 
