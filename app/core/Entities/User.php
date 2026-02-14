@@ -27,6 +27,9 @@ class User extends Entity
         if (isset($this->profile[$name]))
             return $this->profile[$name];
 
+        if (isset($this->profile['privilege'][$name]))
+            return $this->profile['privilege'][$name];
+
         if (isset($this->profile['personal'][$name]))
             return $this->profile['personal'][$name];
 

@@ -174,9 +174,7 @@ class TelegramBotController extends Controller
             return [];
         }
 
-        $status = '';
-        if (!empty(ChatAction::$requester->profile->status))
-            $status = ChatAction::$requester->profile->status;
+        $status = ChatAction::$requester->profile->status ?? '';
 
         if (TelegramBotRepository::hasAccess($status, $class::getAccessLevel()) || ($status === 'admin' && $command === 'chat')) {
             return $class::execute();

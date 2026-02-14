@@ -27,7 +27,7 @@ class BookingAnswer extends ChatAnswer
         } else {
             static::$arguments['userId'] = static::$requester->profile->id;
             static::$arguments['userName'] = static::$requester->profile->name;
-            static::$arguments['userStatus'] = empty(static::$requester->profile->status) ? 'user' : static::$requester->profile->status;
+            static::$arguments['userStatus'] = static::$requester->profile->status ?? 'user';
         }
         // $chatId = TelegramBotRepository::getUserTelegramId();
         // if (empty(static::$requester['id'])) {

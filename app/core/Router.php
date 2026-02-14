@@ -90,6 +90,10 @@ class Router
                     if (!empty($_SESSION['debug'])) {
                         $message .= PHP_EOL . 'DEBUG:' . PHP_EOL;
                         $message .= PHP_EOL . implode(PHP_EOL, $_SESSION['debug']);
+
+                        if (APP_LOC === 'local')
+                            Tech::dump($message);
+                        
                         unset($_SESSION['debug']);
                     }
                     if (!empty($message)) {

@@ -30,7 +30,7 @@ class BookingCommand extends ChatCommand
         } else {
             static::$arguments['userId'] = static::$requester->profile->id;
             static::$arguments['userName'] = static::$requester->profile->name;
-            static::$arguments['userStatus'] = empty(static::$requester->profile->status) ? 'user' : static::$requester->profile->status;
+            static::$arguments['userStatus'] = static::$requester->profile->status ?? 'user';
         }
         // if (empty(self::$requester['id'])) {
         //     $chatId = TelegramBotRepository::getUserTelegramId();
