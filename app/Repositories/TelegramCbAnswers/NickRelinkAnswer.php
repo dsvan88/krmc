@@ -2,6 +2,8 @@
 
 namespace app\Repositories\TelegramCbAnswers;
 
+use app\core\Entities\Requester;
+use app\core\Entities\User;
 use app\core\Telegram\ChatAnswer;
 use app\models\Contacts;
 use app\models\Settings;
@@ -27,6 +29,9 @@ class NickAnswer extends ChatAnswer
         if (empty($uId) || empty($tId))
             throw new Exception(__METHOD__ . ': UserID or TelegramID can’t be empty!');
 
+        $target = Requester::create($tId);
+        $oldUser = User::create($uId);
+
         if (static::$requester->profile->id != $uId) {
             if (!in_array(static::$requester->profile->status, ['manager', 'admin', 'root'], true))
                 return static::result('You don’t have enough rights to change information about other users!');
@@ -35,20 +40,18 @@ class NickAnswer extends ChatAnswer
 
             return static::nickApprove();
         }
-
-        $userData = Users::find($uId);
-
+        
         if (static::$message['callback_query']['from']['id'] != $tId) {
             return static::result('You don’t have enough rights to change information about other users!');
         }
-
+            
         if (empty(static::$arguments['y'])) {
-            $update['message'] = static::locale(['string' => 'The nickname <b>%s</b> is already registered by another member of the group!', 'vars' => [$userData['name']]]);
+            $update['message'] = static::locale(['string' => 'The nickname <b>%s</b> is already registered by another member of the group!', 'vars' => [$oldUser->name]]);
             $update['message'] .= PHP_EOL;
             $update['message'] .= static::locale('Just come up with a new nickname for yourself!');
             return array_merge(static::result('Success', true), ['update' => [$update]]);
         }
-        $update['message'] = static::locale(['string' => 'The nickname <b>%s</b> is already registered by another member of the group!', 'vars' => [$userData['name']]]) . PHP_EOL;
+        $update['message'] = static::locale(['string' => 'The nickname <b>%s</b> is already registered by another member of the group!', 'vars' => [$oldUser->name]]) . PHP_EOL;
         $update['message'] .= static::locale('But... I can’t find his TelegramID🤷‍♂️') . PHP_EOL;
         $update['message'] .= static::locale('Is it your?*') . PHP_EOL;
         $update['message'] .= PHP_EOL . '⏳<i>' . static::locale('*Just wait a little for Administrators’s approve.') . '</i>';
@@ -65,7 +68,7 @@ class NickAnswer extends ChatAnswer
         $mId = static::$message['callback_query']['message']['id'];
         $send = [];
         if ($cId !== Settings::getMainTelegramId()) {
-            $send['message'] = static::locale(['string' => 'Telegram user with ID <b>%s</b> trying to register the nickname <b>%s</b>.', 'vars' => [$tId, $userData['name']]]) . PHP_EOL;
+            $send['message'] = static::locale(['string' => 'Telegram user with ID <b>%s</b> trying to register the nickname <b>%s</b>.', 'vars' => [$tId, $oldUser->name]]) . PHP_EOL;
             $send['message'] .= static::locale('It’s already registered in our system with another TelegramID, but his TelegramID doesn’t exists anymore or owner didn’t play for quite time.') . PHP_EOL;
             $send['message'] .= static::locale('Do you agree to pass an ownership of the nickname to a new user?');
             $send['replyMarkup'] = [
@@ -110,9 +113,10 @@ class NickAnswer extends ChatAnswer
         if (empty($uId) || empty($tId))
             throw new Exception(__METHOD__ . ': UserID or TelegramID can’t be empty!');
 
-        $userData = Users::find($uId);
-        $thChat = TelegramChats::find($tId);
-        $contacts = ['telegramid' => $tId, 'telegram' => $thChat['personal']['username']];
+        $target = Requester::create($tId);
+        $oldUser = User::create($uId);
+
+        $contacts = ['telegramid' => $tId, 'telegram' => $target->chat->username];
         Contacts::reLink($contacts, $uId);
         TelegramChatsRepository::getAndSaveTgAvatar($uId, true);
 
@@ -124,7 +128,7 @@ class NickAnswer extends ChatAnswer
 
         $message = static::locale('The administrator has approved your request!');
         $message .= PHP_EOL;
-        $message .= static::locale(['string' => 'I’m remember you under nickname <b>%s</b>', 'vars' => [$userData['name']]]);
+        $message .= static::locale(['string' => 'I’m remember you under nickname <b>%s</b>', 'vars' => [$oldUser->name]]);
         $message .= PHP_EOL;
         $message .= static::locale('Nice to meet you!');
 

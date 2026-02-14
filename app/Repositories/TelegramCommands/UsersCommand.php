@@ -49,7 +49,8 @@ class UsersCommand extends ChatCommand
 
         if (preg_match('/\#(\d+)/', $options, $match) === 1) {
             $id = $match[1];
-            return [Users::find($id)];
+            $users = Users::find($id);
+            return empty($users) ? [] : [$users];
         }
 
         if (preg_match('/([а-я0-9]+)/ui', $options, $match) === 1) {

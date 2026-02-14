@@ -117,12 +117,12 @@ class TelegramBotController extends Controller
         if (static::$type === 'message') {
             if (static::$command === 'booking' && Users::isBanned('booking', $requester->profile->ban)) {
                 Sender::delete(static::$chatId, $message['message']['message_id']);
-                Sender::message($requester->chat->uid, Locale::phrase(['string' => "I’m deeply sorry, but you banned for that action:(...\nYour ban will be lifted at: <b>%s</b>", 'vars' => [date('d.m.Y', $requester->ban['expired'] + TIME_MARGE)]]));
+                Sender::message($requester->chat->id, Locale::phrase(['string' => "I’m deeply sorry, but you banned for that action:(...\nYour ban will be lifted at: <b>%s</b>", 'vars' => [date('d.m.Y', $requester->ban['expired'] + TIME_MARGE)]]));
                 return false;
             }
             if (static::$chatId == Settings::getMainTelegramId() && Users::isBanned('chat', $requester->profile->ban)) {
                 Sender::delete(static::$chatId, $message['message']['message_id']);
-                Sender::message($requester->chat->uid, Locale::phrase(['string' => "I’m deeply sorry, but you banned for that action:(...\nYour ban will be lifted at: <b>%s</b>", 'vars' => [date('d.m.Y', $requester->ban['ban']['expired'] + TIME_MARGE)]]));
+                Sender::message($requester->chat->id, Locale::phrase(['string' => "I’m deeply sorry, but you banned for that action:(...\nYour ban will be lifted at: <b>%s</b>", 'vars' => [date('d.m.Y', $requester->ban['ban']['expired'] + TIME_MARGE)]]));
                 return false;
             }
         } elseif (static::$command === 'booking' && Users::isBanned('booking', $requester->profile->ban)) {

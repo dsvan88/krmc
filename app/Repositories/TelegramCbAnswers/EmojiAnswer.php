@@ -57,10 +57,11 @@ class EmojiAnswer extends ChatAnswer
         }
         
         $inlineKeyboard = [];
-        if ($offset-TelegramEmojis::$limit > 0){
-            $inlineKeyboard[0][] = ['text' => '<-', 'callback_data' => ['c' => 'emoji', 'col' => $collection, 'u' => static::$requester->profile->id, 'o' => $offset-TelegramEmojis::$limit]];        
-        }
-        $inlineKeyboard[0][] = ['text' => '->', 'callback_data' => ['c' => 'emoji', 'col' => $collection, 'u' => static::$requester->profile->id, 'o' => $offset+TelegramEmojis::$limit]];
+        if ($offset-TelegramEmojis::$limit > 0)
+            $inlineKeyboard[0][] = ['text' => '<-', 'callback_data' => ['c' => 'emoji', 'col' => $collection, 'u' => static::$requester->profile->id, 'o' => $offset-TelegramEmojis::$limit]];
+
+        if ($offset+TelegramEmojis::$limit < TelegramEmojis::$count)
+            $inlineKeyboard[0][] = ['text' => '->', 'callback_data' => ['c' => 'emoji', 'col' => $collection, 'u' => static::$requester->profile->id, 'o' => $offset+TelegramEmojis::$limit]];
             
         $replyMarkup['inline_keyboard'][] = $inlineKeyboard;
 

@@ -51,8 +51,4 @@ class Requester extends Entity
     {
         return $this->$name ?? null;
     }
-    public function __isset($name)
-    {
-        return true;
-    }
 }
