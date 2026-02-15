@@ -33,6 +33,7 @@ abstract class Entity
             return (bool) $this->{$props[0]} = static::$cache;
 
         foreach ($props as $v) {
+            if (empty(static::$cache[$v])) continue;
             $this->$v = static::$cache[$v];
         }
 

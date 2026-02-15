@@ -12,7 +12,7 @@ use app\Repositories\TelegramBotRepository;
 class Requester extends Entity
 {
     public ?Chat $chat = null;
-    public $userId = 0;
+    public int $userId = 0;
     public ?User $profile = null;
 
     public static function find(int $id): bool

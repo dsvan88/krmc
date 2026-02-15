@@ -19,7 +19,8 @@ class TelegramBotController extends Controller
 {
     public static $chatId = null;
     public static $command = '';
-    public static $guestCommands = ['help', 'booking', 'nick', 'nickRelink', 'week', 'day', 'today', 'pending'];
+    public static $guestCommands = ['help', 'booking', 'nick', 'nickRelink', 'week', 'day', 'today'];
+    public static $guestAnswers = ['help', 'booking', 'nick', 'nickRelink', 'pending'];
     public static $CommandNamespace = '\\app\\Repositories\\TelegramCommands';
     public static $AnswerNamespace = '\\app\\Repositories\\TelegramCbAnswers';
 
@@ -98,12 +99,11 @@ class TelegramBotController extends Controller
 
             static::$command =  ChatAction::$arguments['c'];
 
-            if (empty($requester->profile) && !in_array(static::$command, static::$guestCommands)) {
+            if (empty($requester->profile) && !in_array(static::$command, static::$guestAnswers)) {
                 Sender::callbackAnswer(ChatAction::$message['callback_query']['id'], Locale::phrase('{{ Tg_Unknown_Requester }}'), true);
                 return false;
             }
         }
-
 
         if (!empty(CFG_MAINTENCE) && !empty(static::$command) && !TelegramBotRepository::hasAccess($requester->privilege['status'], 'admin')) {
             Sender::message(static::$chatId, Locale::phrase("I offer my deepest apologies, but I’m in the maintance mode 🧑‍💻 right now...\nPlease return to us a little later."));
@@ -111,8 +111,10 @@ class TelegramBotController extends Controller
         }
 
         if (empty($requester)) return true;
-
+        
         ChatAction::$requester = $requester;
+        
+        if (empty($requester->profile)) return true;
 
         if (static::$type === 'message') {
             if (static::$command === 'booking' && Users::isBanned('booking', $requester->profile->ban)) {

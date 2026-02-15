@@ -2,13 +2,11 @@
 
 namespace app\Repositories\TelegramCbAnswers;
 
-use app\core\Entities\Requester;
+use app\core\Entities\Chat;
 use app\core\Entities\User;
 use app\core\Telegram\ChatAnswer;
 use app\models\Contacts;
 use app\models\Settings;
-use app\models\TelegramChats;
-use app\models\Users;
 use app\Repositories\TelegramBotRepository;
 use app\Repositories\TelegramChatsRepository;
 use Exception;
@@ -29,7 +27,6 @@ class NickAnswer extends ChatAnswer
         if (empty($uId) || empty($tId))
             throw new Exception(__METHOD__ . ': UserID or TelegramID can’t be empty!');
 
-        $target = Requester::create($tId);
         $oldUser = User::create($uId);
 
         if (static::$requester->profile->id != $uId) {
@@ -113,10 +110,10 @@ class NickAnswer extends ChatAnswer
         if (empty($uId) || empty($tId))
             throw new Exception(__METHOD__ . ': UserID or TelegramID can’t be empty!');
 
-        $target = Requester::create($tId);
+        $target = Chat::create($tId);
         $oldUser = User::create($uId);
 
-        $contacts = ['telegramid' => $tId, 'telegram' => $target->chat->username];
+        $contacts = ['telegramid' => $tId, 'telegram' => $target->username];
         Contacts::reLink($contacts, $uId);
         TelegramChatsRepository::getAndSaveTgAvatar($uId, true);
 

@@ -2,6 +2,7 @@
 
 namespace app\Repositories\TelegramCbAnswers;
 
+use app\core\Entities\User;
 use app\core\Telegram\ChatAnswer;
 use app\models\Users;
 use Exception;
@@ -13,9 +14,8 @@ class NewuserAnswer extends ChatAnswer
         if (empty(static::$arguments))
             throw new Exception(__METHOD__ . ': Arguments is empty');
 
-        if (empty(static::$requester)) {
+        if (empty(static::$requester))
             return static::result('You don’t have enough rights to change information about other users!');
-        }
 
         $uId = (int) trim(static::$arguments['u']);
 
@@ -33,10 +33,16 @@ class NewuserAnswer extends ChatAnswer
                 'message' => static::locale(['string' => "Okay! Let’s try again!\nUse the next command to register a new user:\n/newuser <b>%s</b>\n\nTry to avoid characters of different languages.", 'vars' => [static::$requester->profile->name]])
             ];
         } else {
-            $userData = Users::find($uId);
+            $user = User::create($uId);
+            if (empty($user)){
+                $update = [
+                    'message' => static::locale('Can’t find a user with such criteria in our system.'),
+                ];
+                return array_merge(static::result('Fail', true), ['update' => [$update]]);
+            }
             $update = [
                 'message' =>
-                static::locale(['string' => 'The player under the nickname <b>%s</b> is successfully registered in the system!', 'vars' => [$userData['name']]]) .
+                static::locale(['string' => 'The player under the nickname <b>%s</b> is successfully registered in the system!', 'vars' => [$user->name]]) .
                     PHP_EOL . PHP_EOL .
                     static::locale('*Hint him about the desirability of registering this alias, or do it manually in the admin panel😏'),
             ];

@@ -274,7 +274,7 @@ class TechController extends Controller
             'message' => [
                 'message_id' => 189,
                 'from' => [
-                    'id' => 900669168,
+                    'id' => 9006691681,
                     // 'id' => 412223734,
                     // 'is_bot' => false,
                     'first_name' => 'Dmytro',
@@ -294,11 +294,11 @@ class TechController extends Controller
                 'date' => 1652025484,
                 // 'text' => '+ на 18',
                 // 'text' => '/dice',
-                'text' => '/chat',
+                // 'text' => '/chat',
                 // 'text' => '/reg +ср,Джокер',
                 // 'text' => '/chat main',
                 // 'text' => 'Checker',
-                // 'text' => '+пт?',
+                'text' => '+пн',
                 // 'text' => '+ на четвер, десь на 18:45, звісно, що підстрахую, але поки що (під ?)',
                 // 'text' => '/?',
             ]

@@ -2,11 +2,11 @@
 
 namespace app\Repositories\TelegramCbAnswers;
 
+use app\core\Entities\Chat;
+use app\core\Entities\User;
 use app\core\Telegram\ChatAnswer;
 use app\models\Contacts;
 use app\models\Settings;
-use app\models\TelegramChats;
-use app\models\Users;
 use app\Repositories\TelegramChatsRepository;
 use Exception;
 
@@ -47,9 +47,10 @@ class NickAnswer extends ChatAnswer
         if (empty($uId) || empty($tId))
             throw new Exception(__METHOD__ . ': UserID or TelegramID can’t be empty!');
 
-        $userData = Users::find($uId);
-        $thChat = TelegramChats::find($tId);
-        $contacts = ['telegramid' => $tId, 'telegram' => $thChat['personal']['username']];
+        $target = Chat::create($tId);
+        $oldUser = User::create($uId);
+
+        $contacts = ['telegramid' => $tId, 'telegram' => $target->username];
         Contacts::reLink($contacts, $uId);
         TelegramChatsRepository::getAndSaveTgAvatar($uId, true);
 
@@ -61,7 +62,7 @@ class NickAnswer extends ChatAnswer
 
         $message = static::locale('The administrator has approved your request!');
         $message .= PHP_EOL;
-        $message .= static::locale(['string' => 'I’m remember you under nickname <b>%s</b>', 'vars' => [$userData['name']]]);
+        $message .= static::locale(['string' => 'I’m remember you under nickname <b>%s</b>', 'vars' => [$oldUser->name]]);
         $message .= PHP_EOL;
         $message .= static::locale('Nice to meet you!');
 
