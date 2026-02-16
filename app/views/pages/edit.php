@@ -55,13 +55,16 @@
         <div class="form__row">
             <label class="form__label">Контент сторінки:</label>
         </div>
-        <div class="form__row">
-            <div class="editor-block" data-field="html">
-                <div class="toolbar-container"></div>
-                <div class="content-container">
-                    <div class="editor"><?= $page['html'] ?></div>
-                </div>
-            </div>
+        <div>
+        <?php if (is_array($page['html'])): ?>
+            <? foreach($page['html'] as $block):?>
+                <?php self::component('blocks/forms/'.$block['type'], compact('block')) ?>
+                <?php self::component('page-add-block') ?>
+            <?php endforeach ?>
+        <?php else :?>
+            <?php self::component('blocks/forms/text', ['block' => ['html' => $page['html']]]); ?>
+            <?php self::component('page-add-block') ?>
+        <?php endif ?>
         </div>
         <div class="form__button-place">
             <button type="submit" class="form__button"><?= $texts['SubmitLabel'] ?></button>

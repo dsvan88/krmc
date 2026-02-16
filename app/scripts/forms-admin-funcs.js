@@ -104,3 +104,7 @@ actionHandler.settingsEdit = async function (target, event) {
 
 	return await this.apiTalk(target, event, 'actionDblclick', formData);
 }
+
+actionHandler.pageAddBlock = async function (target, event){
+	console.log(target);
+}
