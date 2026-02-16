@@ -29,7 +29,7 @@ class SocialPointsRepository
 
             if ($day['game'] === 'mafia' && $count < 11 || $count < 5) continue;
 
-            $starter = empty($day['starter']) ? 0 : $day['starter'];
+            $starter = $day['starter'] ?? 0;
 
             foreach ($day['participants'] as $participant) {
 

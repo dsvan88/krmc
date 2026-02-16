@@ -49,7 +49,7 @@ class GoogleDrive
             'fields' => 'files(id, name)'
         ]);
 
-        $fId = empty($response->files[0]->id) ? static::createFolder($folder) : $response->files[0]->id;
+        $fId = $response->files[0]->id ?? static::createFolder($folder);
 
         static::$folderIds = [
             $folder => $fId,

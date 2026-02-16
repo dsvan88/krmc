@@ -83,9 +83,9 @@ class AccountRepository
             }
             $source['name'] = empty($userData) ? '&lt; Deleted &gt;' : $userData['name'];
 
-            $source['status'] = empty($userData['privilege']['status']) ? '' : $userData['privilege']['status'];
-            $source['gender'] = empty($userData['personal']['gender']) ? '' : $userData['personal']['gender'];
-            $source['emoji'] = empty($userData['personal']['emoji']) ? '' : $userData['personal']['emoji'];
+            $source['status'] = $userData['privilege']['status']  ?? '';
+            $source['gender'] = $userData['personal']['gender'] ?? '';
+            $source['emoji'] = $userData['personal']['emoji'] ?? '';
 
             return $source;
         }

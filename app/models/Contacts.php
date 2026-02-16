@@ -41,10 +41,10 @@ class Contacts extends Model
             ]);
         }
     }
-    public static function reLink(array $data, int $userId, int $newUserId = 0): void
+    public static function reLink(array $data, int $userId): void
     {
         self::deleteByUserId($userId, array_keys($data));
-        self::new($data, empty($newUserId) ? $userId : $newUserId);
+        self::new($data, $userId);
     }
     public static function edit($data, $where)
     {

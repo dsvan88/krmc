@@ -2,7 +2,6 @@
 
 namespace  app\core\Entities;
 
-use app\core\Tech;
 use Exception;
 
 abstract class Entity

@@ -340,7 +340,7 @@ class AccountController extends Controller
         $texts = Locale::apply($texts);
 
         View::$route['vars']['userId'] = $userId;
-        View::$route['vars']['userStatus'] = empty($data['privilege']['status']) ? '' : $data['privilege']['status'];
+        View::$route['vars']['userStatus'] = $data['privilege']['status'] ?? '';
         View::$route['vars']['data'] = $data;
         View::$route['vars']['texts'] = Locale::apply($texts);
         View::$route['vars']['path'] = 'account/sections/forms/' . $section;

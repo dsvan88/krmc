@@ -8,16 +8,14 @@
             <?= $data['name'] ?>
         </div>
     </div>
-    <?php if (!empty($data['status'])): ?>
-        <div class="profile__card-row">
-            <h5 class="profile__card-label">
-                <?= $texts['emojiLabel'] ?>
-            </h5>
-            <div class="profile__card-value" <?php if ($isAdmin): ?> data-action-dblclick="account/personal/edit" data-user-id="<?= $data['id'] ?>" data-field="personal.emoji" <?php endif ?>>
-                <?= empty($data['personal']['emoji']) ? '&nbsp;' : $data['personal']['emoji'] ?>
-            </div>
+    <div class="profile__card-row">
+        <h5 class="profile__card-label">
+            <?= $texts['emojiLabel'] ?>
+        </h5>
+        <div class="profile__card-value" <?php if ($isAdmin): ?> data-action-dblclick="account/personal/edit" data-user-id="<?= $data['id'] ?>" data-field="personal.emoji" <?php endif ?>>
+            <?= empty($data['personal']['emoji']) ? '&nbsp;' : $data['personal']['emoji'] ?>
         </div>
-    <?php endif ?>
+    </div>
     <div class="profile__card-row">
         <h5 class="profile__card-label">
             <?= $texts['FioLabel'] ?>
@@ -60,19 +58,19 @@
                     <?php endif ?>
                     <?php if ($isSelf && !empty($data['email__value']) && empty($data['approved']['email'])): ?>
                         <span class="text-accent small" data-action-click="verification/email"><?= $texts['approveLabel'] ?></span>
-                    <?endif?>
+                    <? endif ?>
                 </div>
-                <?php else: ?>
-                     <div class="profile__card-value">
+            <?php else: ?>
+                <div class="profile__card-value">
                     <?php if (isset($data['approved']['email'])): ?>
                         <?= $data['email__value'] ?><i class="fa fa-check-circle text-accent"></i>
                     <?php else: ?>
-                        <?php if (!empty($data['email__value']) && empty($data['approved']['email'])) :?> 
+                        <?php if (!empty($data['email__value']) && empty($data['approved']['email'])) : ?>
                             <?= $data['email__value'] ?><span class="text-accent small" data-action-click="verification/email"><?= $texts['approveLabel'] ?></span>
                         <?php endif ?>
                     <?php endif ?>
                 </div>
-                <?endif?>
+            <? endif ?>
         </div>
         <div class="profile__card-row">
             <h5 class="profile__card-label">

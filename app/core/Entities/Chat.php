@@ -17,7 +17,8 @@ class Chat extends Entity
         if (empty($_SESSION['id'])) return false;
 
         $chat = static::$model::findByUserId($_SESSION['id']);
-        return empty($chat) ? false : $chat['id'];
+        
+        return $chat['id'] ?? false;
     }
     public function __toString()
     {

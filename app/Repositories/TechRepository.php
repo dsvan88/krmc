@@ -27,7 +27,7 @@ class TechRepository
 
         $fileContent = curl_exec($curl);
 
-        curl_close($curl);
+        $curl = null;
 
         return empty($fileContent) ? false : $fileContent;
     }
@@ -126,7 +126,7 @@ class TechRepository
     public static function scheduleBackup(): void
     {
         if (APP_LOC === 'local') return;
-        
+
         $settings = Settings::get('backup');
 
         if (empty($settings['email']['value']) || $settings['last']['value'] > $_SERVER['REQUEST_TIME'] - BACKUP_FREQ) exit();

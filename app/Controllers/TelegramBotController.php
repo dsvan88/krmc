@@ -111,9 +111,9 @@ class TelegramBotController extends Controller
         }
 
         if (empty($requester)) return true;
-        
+
         ChatAction::$requester = $requester;
-        
+
         if (empty($requester->profile)) return true;
 
         if (static::$type === 'message') {
@@ -205,9 +205,9 @@ class TelegramBotController extends Controller
                 if (!empty($item['replyMarkup']['inline_keyboard']))
                     TelegramBotRepository::encodeInlineKeyboard($item['replyMarkup']['inline_keyboard']);
                 Sender::edit(
-                    empty($item['chatId']) ? static::$chatId : $item['chatId'],
-                    empty($item['messageId']) ? TelegramBotRepository::getMessageId() : $item['messageId'],
-                    empty($item['message']) ? '' : Locale::phrase($item['message']),
+                    $item['chatId'] ?? static::$chatId,
+                    $item['messageId'] ?? TelegramBotRepository::getMessageId(),
+                    $item['message'] ?? '',
                     empty($item['replyMarkup']) ? [] : $item['replyMarkup']
                 );
             }
@@ -221,7 +221,7 @@ class TelegramBotController extends Controller
                     Sender::message(Settings::getTechTelegramId(), 'I don’t know why, but a Chat Action returned an empty message.');
                 } else {
                     $botResult = Sender::message(
-                        empty($item['chatId']) ? static::$chatId : $item['chatId'],
+                        $item['chatId'] ?? static::$chatId,
                         Locale::phrase($item['message']),
                         // empty($item['replyOn']) ? 0 : $item['replyOn'],
                         0,

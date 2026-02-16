@@ -23,7 +23,7 @@ class TelegramBot
     }
     public static function set(string $token)
     {
-        static::$botToken = empty($token) ? static::getAuthData() : $token;
+        static::$botToken = $token ?? static::getAuthData();
         if (empty(static::$options)) {
             static::$options = [
                 CURLOPT_RETURNTRANSFER => true,

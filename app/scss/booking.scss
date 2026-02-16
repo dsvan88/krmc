@@ -188,7 +188,7 @@
         box-shadow: inset 1px 1px 2px $bg-color-dark-blur;
 
         &::placeholder {
-            color: $color-text-dark-blur;
+            color: rgba($color-text-dark-blur, 0.65);
         }
 
         &:hover {

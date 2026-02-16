@@ -22,8 +22,8 @@
                         <a href="/account/profile/<?= $usersData[$x]['id'] ?>" target="_blank"><?= $usersData[$x]['name'] ?></a>
                     </td>
                     <td title="Реєстрація"><?= empty($usersData[$x]['login']) ? '<i class="fa fa-square-o"></i>' : '<i class="fa fa-check-square-o"></i>' ?></td>
-                    <td title="Статус"><?= empty($usersData[$x]['privilege']['status']) ? '' : $usersData[$x]['privilege']['status'] ?></td>
-                    <td title="Гендер"><?= empty($usersData[$x]['contacts']['gender']) ? '' : $usersData[$x]['contacts']['gender'] ?></td>
+                    <td title="Статус"><?= $usersData[$x]['privilege']['status'] ?? '' ?></td>
+                    <td title="Гендер"><?= $usersData[$x]['contacts']['gender'] ?? '' ?></td>
                     <td title="E-mail"><?= empty($usersData[$x]['contacts']['email']) ? '<i class="fa fa-square-o"></i>' : '<i class="fa fa-check-square-o"></i>' ?></td>
                     <td title="Telegram"><?= empty($usersData[$x]['contacts']['telegramid']) ? '<i class="fa fa-square-o"></i>' : '<i class="fa fa-check-square-o"></i>' ?></td>
                     <td title="Бан"><?= empty($usersData[$x]['ban']) || $usersData[$x]['ban']['expired'] < $_SERVER['REQUEST_TIME'] ? '<i class="fa fa-square-o"></i>' : '<i class="fa fa-check-square-o"></i>' ?></td>
