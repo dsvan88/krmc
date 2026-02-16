@@ -101,13 +101,6 @@ class Validator
             break;
         }
 
-        // $size = count($array);
-        // for ($i = 0; $i < $size; $i++) {
-        //     if (strpos($array[$i], 'hash=') === false) continue;
-        //     $hash = substr(array_splice($array, $i, 1)[0], 5);
-        //     break;
-        // }
-
         sort($array);
         $check_string = implode("\n", $array);
 
