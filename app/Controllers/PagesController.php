@@ -69,13 +69,10 @@ class PagesController extends Controller
         $page['description'] = '<p>' . str_replace("\n", '</p><p>', $page['description']) . '</p>';
 
         $page['keywords'] = '';
-        if (!empty($page['data'])) {
-            if (!empty($page['data']['keywords'])) {
-                if (is_array($page['data']['keywords']))
-                    $page['keywords'] = implode(', ', $page['data']['keywords']);
-                else
-                    $page['keywords'] = $page['data']['keywords'];
-            }
+        if (!empty($page['data']['keywords'])) {
+            $page['keywords'] = is_array($page['data']['keywords'])
+                ? implode(', ', $page['data']['keywords'])
+                : $page['keywords'] = $page['data']['keywords'];
         }
         $page['image_link'] = '';
         if (!empty($page['data']['logo'])) {
@@ -116,6 +113,13 @@ class PagesController extends Controller
 
         Pages::remove($pageId);
         return View::redirect('/');
+    }
+    public function addBlockAction()
+    {
+
+        View::$route['vars']['block'] = [];
+        View::$route['vars']['path'] = 'components/blocks/forms/text';
+        return View::html();
     }
     public function addAction()
     {

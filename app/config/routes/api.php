@@ -248,6 +248,12 @@ return  [
     ],
 
 
+    'api/pages/add-block' =>
+    [
+        'controller' => 'pages',
+        'action' => 'addBlock',
+        'access' => ['category' => 'manager']
+    ],
     'api/image/add' =>
     [
         'controller' => 'images',

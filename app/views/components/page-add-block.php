@@ -1,3 +1,3 @@
 <div class="form__add-block">
-    <i class="fa fa-plus-circle" data-action-click="page-add-block"></i>
+    <i class="fa fa-plus-circle" data-action-click="pages/add-block"></i>
 </div>

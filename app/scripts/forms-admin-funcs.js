@@ -105,6 +105,13 @@ actionHandler.settingsEdit = async function (target, event) {
 	return await this.apiTalk(target, event, 'actionDblclick', formData);
 }
 
-actionHandler.pageAddBlock = async function (target, event){
-	console.log(target);
+actionHandler.pagesAddBlock = async function (target, event){
+	const parent = target.closest('div.form__add-block');
+
+	if (!parent) return false;
+
+	const result = await this.request({url: target.dataset.actionClick});
+	
+	parent.insertAdjacentHTML('beforebegin', result.html);
+	
 }
