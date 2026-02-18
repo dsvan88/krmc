@@ -1,5 +1,5 @@
 <section class='section form'>
-    <form action="/page/edit/<?= $page['slug'] ?>" method="post" enctype="multipart/form-data" class="form__form">
+    <form action="/page/edit/<?= $page['slug'] ?>" method="post" enctype="multipart/form-data" class="form__form" data-action-submit="/page/edit/<?= $page['slug'] ?>">
         <h2 class="form__title"><?= $title ?></h2>
         <div class="form__columns">
             <div class="form__column">
@@ -56,18 +56,20 @@
             <label class="form__label">Контент сторінки:</label>
         </div>
         <div>
-        <?php if (is_array($page['html'])): ?>
-            <? foreach($page['html'] as $block):?>
-                <?php self::component('blocks/forms/'.$block['type'], compact('block')) ?>
+        <div class="blocks">
+            <?php if (is_array($page['html'])): ?>
+                <? foreach($page['html'] as $block):?>
+                    <?php self::component('blocks/forms/'.$block['type'], compact('block')) ?>
+                    <?php self::component('page-add-block') ?>
+                <?php endforeach ?>
+            <?php else :?>
+                <?php self::component('blocks/forms/text', ['block' => ['html' => $page['html']]]); ?>
                 <?php self::component('page-add-block') ?>
-            <?php endforeach ?>
-        <?php else :?>
-            <?php self::component('blocks/forms/text', ['block' => ['html' => $page['html']]]); ?>
-            <?php self::component('page-add-block') ?>
-        <?php endif ?>
-        </div>
-        <div class="form__button-place">
-            <button type="submit" class="form__button"><?= $texts['SubmitLabel'] ?></button>
+            <?php endif ?>
+            </div>
+            <div class="form__button-place">
+                <button type="submit" class="form__button"><?= $texts['SubmitLabel'] ?></button>
+            </div>
         </div>
     </form>
 </section>

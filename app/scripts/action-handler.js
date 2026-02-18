@@ -178,6 +178,20 @@ const actionHandler = {
 		if (!formData) formData = new FormData(event.target);
 		const self = this;
 		let submitResult = false;
+
+		const blocks = document.querySelectorAll('div.block');
+		const len = blocks.length;
+		for (let i = 0; i < len; i++){
+			const blockId = blocks[i].id.substring(6);
+			const block = {type: blocks[i].dataset.blockType};
+			if (window.CKEDITOR.instances[blockId])
+				block.html = window.CKEDITOR.instances[blockId].getData();
+			const image = blocks[i].querySelector('input[name^="image_id"]');
+			if (image)
+				block.image = image.value;
+			formData.append('blocks[]', JSON.stringify(block));
+		}
+
 		await request({
 			url: event.target.action.replace(window.location.origin + '/', ''),
 			data: formData,

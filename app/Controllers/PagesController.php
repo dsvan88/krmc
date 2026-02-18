@@ -57,10 +57,11 @@ class PagesController extends Controller
     {
         extract(self::$route['vars']);
         if (!empty($_POST)) {
-            $result = Pages::edit($_POST, $slug);
-            if ($result === true)
-                return View::notice(['message' => 'Changes saved successfully!', 'location' => 'reload']);
-            return View::notice(['error' => 1, 'message' => $result, 'time' => 3000]);
+            return View::response($_POST); 
+            // $result = Pages::edit($_POST, $slug);
+            // if ($result === true)
+            //     return View::notice(['message' => 'Changes saved successfully!', 'location' => 'reload']);
+            // return View::notice(['error' => 1, 'message' => $result, 'time' => 3000]);
         }
         $page = Pages::getBySlug($slug);
 

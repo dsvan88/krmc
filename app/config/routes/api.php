@@ -247,7 +247,11 @@ return  [
         'access' => ['category' => 'all']
     ],
 
-
+    'api/page/edit/{slug}' => [
+        'controller' => 'pages',
+        'action' => 'edit',
+        'access' => ['category' => 'manager']
+    ],
     'api/pages/add-block' =>
     [
         'controller' => 'pages',

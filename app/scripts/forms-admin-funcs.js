@@ -1,25 +1,24 @@
-actionHandler.commonFormSubmit = function (event) {
-	event.preventDefault();
-	const url = event.target.action.slice(window.location.length);
-	const formData = new FormData(event.target);
-	const self = actionHandler;
-	if (window.CKEDITOR) {
-		const EditorsBlocks = event.target.querySelectorAll("div.editor-block");
-		EditorsBlocks.forEach(block => {
-			formData.append(block.dataset.field, CKEDITOR.instances[block.id].getData());
-		})
-	}
-	request({
-		url: url,
-		data: formData,
-		success: (response) => self.commonResponse.call(self, response),
-	});
-}
+// actionHandler.commonFormSubmit = async function (event) {
+// 	event.preventDefault();
+// 	const url = event.target.action.slice(window.location.length);
+// 	const formData = new FormData(event.target);
+// 	const self = actionHandler;
+// 	if (window.CKEDITOR) {
+// 		const EditorsBlocks = event.target.querySelectorAll("div.editor-block");
+// 		EditorsBlocks.forEach(block => {
+// 			formData.append(block.dataset.field, CKEDITOR.instances[block.id].getData());
+// 		})
+// 	}
+// 	return await this.request({
+// 		url: url,
+// 		data: formData,
+// 	});
+// }
 
-const commonForm = document.body.querySelector('.form .form__form');
-if (commonForm) {
-	commonForm.onsubmit = actionHandler.commonFormSubmit;
-}
+// const commonForm = document.body.querySelector('.form .form__form');
+// if (commonForm) {
+// 	commonForm.onsubmit = actionHandler.commonFormSubmit;
+// }
 
 const editorsBlocks = document.body.querySelectorAll('div.editor-block');
 if (editorsBlocks.length > 0) {
@@ -113,5 +112,9 @@ actionHandler.pagesAddBlock = async function (target, event){
 	const result = await this.request({url: target.dataset.actionClick});
 	
 	parent.insertAdjacentHTML('beforebegin', result.html);
-	
+
+	const editorsBlocks = document.body.querySelectorAll('div.editor-block:not([id])');
+	if (editorsBlocks.length > 0) {
+		CKEditorApply(editorsBlocks);
+	}
 }

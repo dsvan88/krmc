@@ -190,6 +190,11 @@ function CKEditorApply(editors) {
 					};
 				}
 				window.CKEDITOR.instances[randomIndex] = editor;
+				const parent = editors[index].closest('div.block');
+				
+				if (!parent) return;
+
+				parent.id = 'block_' + randomIndex;
 			}
 		)
 	}
