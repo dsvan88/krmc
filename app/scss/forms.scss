@@ -139,5 +139,51 @@
 			box-sizing: border-box;
 			padding: .2em;
 		}
-	} 
+	}
+	.block {
+		.dashboard{
+			display: flex;
+			&__item{
+				max-width: 0;
+				transition: max-width $animation-fast;
+				overflow: hidden;
+				display: flex;
+				&.selected{
+					max-width: 10em;
+				}
+				
+			}
+			&:hover{
+				.dashboard__item{
+					max-width: 10em;
+				}
+			}
+			&__frame{
+				font-size: 2em;
+				padding: .1em;
+				display: flex;
+				box-sizing: border-box;
+				p{
+					display: flex;
+					justify-content: center;
+					align-items: center;
+					color: $bg-color-blue;
+					outline: 1px solid $bg-color-light-blue;
+					background-color: $bg-color-light-blue-blur;
+					border-radius: 2px;
+					width: 1.8em;
+					&.image{
+						color: $bg-color-purple;
+						outline-color: $bg-color-light-purple;
+						background-color: $bg-color-light-purple-blur;
+					}
+				}
+				&.double{
+					p{
+						width: .9em;
+					}
+				}
+			}
+		}
+	}
 }

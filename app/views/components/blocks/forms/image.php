@@ -1,4 +1,5 @@
-<div class="form__row block" data-block-type="image">
+<div class="block" data-block-type="image">
+    <?php self::component('blocks/forms/dashboard', ['selected' => 'image']) ?>
     <div class="image__container">
         <label class="image__label" data-action-click="forms/images/list">
             <?php if (empty($block['imageLink'])) $block['imageLink'] = '/public/images/empty_avatar.webp'; ?>
@@ -8,3 +9,4 @@
         <input type="hidden" name="image_link[]" value="<?= $block['imageLink']  ?? ''?>">
     </div>
 </div>
+<hr>
