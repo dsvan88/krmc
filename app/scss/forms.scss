@@ -145,17 +145,19 @@
 			display: flex;
 			&__item{
 				max-width: 0;
-				transition: max-width $animation-fast;
+				transition: max-width $animation-fast, opacity $animation-fast;
+				opacity: 0;
 				overflow: hidden;
 				display: flex;
 				&.selected{
+					opacity: 1;
 					max-width: 10em;
 				}
-				
 			}
 			&:hover{
 				.dashboard__item{
-					max-width: 10em;
+					opacity: 1;
+					max-width: 15em;
 				}
 			}
 			&__frame{
@@ -171,7 +173,7 @@
 					outline: 1px solid $bg-color-light-blue;
 					background-color: $bg-color-light-blue-blur;
 					border-radius: 2px;
-					width: 1.8em;
+					width: 3em;
 					&.image{
 						color: $bg-color-purple;
 						outline-color: $bg-color-light-purple;
@@ -180,7 +182,7 @@
 				}
 				&.double{
 					p{
-						width: .9em;
+						width: 2em;
 					}
 				}
 			}
