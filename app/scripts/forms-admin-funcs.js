@@ -125,6 +125,8 @@ actionHandler.pagesSetBlockType = async function (target){
 	if (!parent) return false;
 	
 	const block = {};
+	block.title = parent.querySelector('div.block__title input.form__input').value;
+
 	if (window.CKEDITOR.instances[parent.id?.substring(6)]){
 		block.html = window.CKEDITOR.instances[parent.id.substring(6)].getData();
 	}
@@ -135,9 +137,15 @@ actionHandler.pagesSetBlockType = async function (target){
 			'imageId': imageContainer.querySelector('input[name^=image_id]').value,
 		}
 	}
+
+	const blockType = target.dataset.blockType;
+	if (block.html && blockType === 'image' && !confirm('It will delete an text in the editor. Are you sure?'))
+		return false;
+	if (block.image?.imageId && blockType === 'text' && !confirm('It will remove an image from the block. Are you sure?'))
+		return false;
 	
 	const fd = new FormData()
-	fd.append('blockType',  target.dataset.blockType);
+	fd.append('blockType', blockType);
 	const response = await this.request({url: target.dataset.actionClick, data: fd });
 	
 	CKEditorRemove(parent.id.substring(6));
@@ -153,8 +161,9 @@ actionHandler.pagesSetBlockType = async function (target){
 		return false;
 	}
 	
+	newBlock.querySelector('div.block__title input.form__input').value = block.title;
 	const editor = newBlock.querySelector('div.editor');
-	console.log(block);
+
 	if (editor && block.html){
 		editor.innerHTML = block.html;
 	}

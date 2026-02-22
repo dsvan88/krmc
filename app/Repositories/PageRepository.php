@@ -29,6 +29,16 @@ class PageRepository
             $page['description'] = '';
             $page['type'] = 'page';
         }
+        if (empty($page['blocks']))
+            return $page;
+
+        foreach($page['blocks'] as $i=>$block){
+            $page['blocks'][$i] = json_decode($block,true);
+            if ($page['blocks'][$i]['type'] === 'image-text'){
+                $page['blocks'][$i]['type'] = 'text-image';
+            }
+        }
+
         return $page;
     }
     public static function formPageOG(array $page = [])

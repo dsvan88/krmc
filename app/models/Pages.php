@@ -7,6 +7,7 @@ use app\core\ImageProcessing;
 use app\core\Locale;
 use app\core\Model;
 use app\core\Tech;
+use Exception;
 
 class Pages extends Model
 {
@@ -33,7 +34,7 @@ class Pages extends Model
         'en',
         'ru'
     ];
-    public static $jsonFields = ['data'];
+    public static $jsonFields = ['blocks','data'];
 
     public static function getBySlug(string $slug)
     {
@@ -63,34 +64,6 @@ class Pages extends Model
             $pages = self::query($query, $values, 'Assoc');
 
         } while ($continue && empty($pages));
-        
-        // do{
-        //     $query = "SELECT * FROM $table WHERE slug = ?";
-        //     if (empty($_langs)){
-        //         $query .= ' AND lang is NULL';
-        //         $values = [$slug];
-        //     }
-        //     else {
-        //         $query .= ' AND lang = ?';
-        //         $values = [$slug, array_shift($_langs)];
-        //     }
-            
-        //     if (CFG_SOFT_DELETE) {
-        //         $query .= ' AND date_delete IS NULL';
-        //     }
-        //     $query .= ' ORDER BY id DESC LIMIT 1';
-        //     $pages = self::query($query, $values, 'Assoc');
-
-        //     if (empty($_langs)) break;
-        // } while (empty($pages));
-
-        // $query = "SELECT * FROM $table WHERE slug = ? AND ( lang IS NULL OR lang = ? )";
-        // $values = [$slug, Locale::$langCode];
-        // if (CFG_SOFT_DELETE) {
-        //     $query .= ' AND date_delete IS NULL';
-        // }
-        // $query .= ' ORDER BY id DESC LIMIT 2';
-        // $pages = self::query($query, $values, 'Assoc');
 
         if (empty($pages)) return false;
 
@@ -151,19 +124,24 @@ class Pages extends Model
         if ($page['lang'] !== $array['lang']) {
             $array['slug'] = $page['slug'];
             $array['type'] = $page['type'];
-            return (bool) self::insert($array);
+            return true;
         }
         return self::update($array, ['id' => $page['id']]);
     }
     public static function prepDbArray(array &$data, string $slug = '')
     {
-        if (empty($data)) return false;
+        if (empty($data)){
+            throw new Exception('Data can’t be empty');
+        }
 
         $array = [
             'title' => trim($data['title']),
             'subtitle' => trim($data['subtitle']),
-            'html' => trim($data['html']),
+            'blocks' => $data['blocks'],
         ];
+        if (!empty($data['html'])){
+            $array['html'] = trim($data['html']);
+        }
         if (!empty($data['published_at'])){
             $array['published_at'] = date('Y-m-d H:i:s', strtotime($data['published_at']));
         }
@@ -172,7 +150,7 @@ class Pages extends Model
             $replace = ["\n", '', '«', ' «', ' «', '»', '»', '’', '’'];
             $array['description'] = trim(preg_replace($pattern, $replace, $data['description']));
             if (mb_strlen($array['description'], 'UTF-8') > 299) {
-                return 'Description longer than 300 symbols!';
+                throw new Exception('Description longer than 300 symbols!');
             }
         }
         if (!empty($data['type'])) {
@@ -190,8 +168,10 @@ class Pages extends Model
                 $array['data']['keywords'][$index] = trim($keyword);
             }
         }
-        if (!empty($array['data'])) {
-            $array['data'] = json_encode($array['data'], JSON_UNESCAPED_UNICODE);
+
+        foreach(static::$jsonFields as $field){
+            if (empty($array[$field]) || !is_array($array[$field])) continue;
+            $array[$field] = json_encode($array[$field], JSON_UNESCAPED_UNICODE);
         }
 
         $array['slug'] = empty($slug) ? preg_replace(['/[^a-z0-9]+/i', '/--/'], '-', Locale::translitization(trim($array['title']))) : $slug;
@@ -223,6 +203,7 @@ class Pages extends Model
                 subtitle CHARACTER VARYING(250) NOT NULL DEFAULT '',
                 description CHARACTER VARYING(300) NOT NULL DEFAULT '',
                 html TEXT NULL DEFAULT NULL,
+                blocks JSON DEFAULT NULL,
                 data JSON DEFAULT NULL,
                 published_at TIMESTAMP DEFAULT NOW(),
                 created_at TIMESTAMP DEFAULT NOW(),

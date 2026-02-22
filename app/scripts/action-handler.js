@@ -184,6 +184,12 @@ const actionHandler = {
 		for (let i = 0; i < len; i++){
 			const blockId = blocks[i].id.substring(6);
 			const block = {type: blocks[i].dataset.blockType};
+			if (blocks[i].dataset.field){
+				formData.append(blocks[i].dataset.field, window.CKEDITOR.instances[blockId].getData());
+				continue;
+			}
+			
+			block.title = blocks[i].querySelector('div.block__title input.form__input').value;
 			if (window.CKEDITOR.instances[blockId])
 				block.html = window.CKEDITOR.instances[blockId].getData();
 			const image = blocks[i].querySelector('input[name^="image_id"]');

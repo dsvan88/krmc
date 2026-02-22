@@ -1,5 +1,5 @@
 <?php
-$selected = $selected ?? 'image';
+$selected = $selected ?? 'text';
 ?>
 <ul class="block__dashboard dashboard">
     <li class="dashboard__item<?= $selected === 'text' ? ' selected' : '' ?>" data-action-click="pages/set-block-type" data-block-type="text">

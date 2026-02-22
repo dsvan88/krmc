@@ -139,9 +139,25 @@
 			padding: .2em;
 		}
 	}
+	&__add-block{
+		i{
+			font-size: 2em;
+			color:$bg-color-light-green;
+			transition: color $animation-fast;
+			cursor: pointer;
+			border: 1px solid transparent;
+			border-radius: 50%;
+			padding: 0 .07em;
+			&:hover{
+				color:$bg-color-green;
+				border-color: $bg-color-green;
+			}
+		}
+	}
 	.block {
+		margin-bottom: 1em;
 		&__content{
-			min-height: 30em;
+			min-height: 25em;
 		}
 		@include md{
 			&__content{
@@ -165,6 +181,7 @@
 			display: flex;
 			justify-content: center;
 			gap: .3em;
+			margin-bottom: .2em;
 			&__item{
 				max-width: 0;
 				transition: max-width $animation-fast, opacity $animation-fast;
@@ -191,7 +208,7 @@
 				}
 			}
 			&__frame{
-				font-size: 2em;
+				font-size: 1.5em;
 				padding: .1em;
 				display: flex;
 				box-sizing: border-box;

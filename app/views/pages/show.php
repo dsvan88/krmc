@@ -10,9 +10,9 @@
                 <img src="<?= $page['logoLink'] ?>" alt="" class="page__image">
             </div>
         <?php endif ?>
-        <?php if (is_array($page['html'])): ?>
-            <?php foreach ($page['html'] as $block): ?>
-                <?php self::component('blocks/' . $block['type'], compact('block')); ?>
+        <?php if (!empty($page['blocks'])): ?>
+            <?php foreach ($page['blocks'] as $block): ?>
+                 <?php self::component('blocks/' . $block['type'], compact('block')) ?>
             <?php endforeach ?>
         <? else : ?>
             <?= $page['html'] ?>

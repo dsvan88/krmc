@@ -5,6 +5,7 @@ namespace app\Controllers;
 use app\core\Controller;
 use app\core\GoogleDrive;
 use app\core\Locale;
+use app\core\Tech;
 use app\core\Validator;
 use app\core\View;
 use app\models\Pages;
@@ -58,11 +59,14 @@ class PagesController extends Controller
     {
         extract(self::$route['vars']);
         if (!empty($_POST)) {
-            return View::response($_POST); 
-            // $result = Pages::edit($_POST, $slug);
-            // if ($result === true)
-            //     return View::notice(['message' => 'Changes saved successfully!', 'location' => 'reload']);
-            // return View::notice(['error' => 1, 'message' => $result, 'time' => 3000]);
+            try {
+                Pages::edit($_POST, $slug);
+            } catch (\Throwable $error){
+                return View::notice(['error' => 1, 'message' => $error->getMessage(), 'time' => 3000]);
+            }
+            // return View::notice(['message' => 'Changes saved successfully!', 'location' => 'reload']);
+            return View::notice(['message' => 'Changes saved successfully!']);
+            
         }
         $page = Pages::getBySlug($slug);
 

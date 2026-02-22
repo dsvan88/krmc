@@ -27,7 +27,7 @@
                             <label class="form__label">Зтислий опис:</label>
                         </div>
                         <div class="form__row">
-                            <div class="editor-block" data-field="description">
+                            <div class="block editor-block" data-field="description">
                                 <div class="toolbar-container"></div>
                                 <div class="content-container">
                                     <div class="editor"><?= $page['description'] ?></div>
@@ -59,12 +59,11 @@
             <?php if (is_array($page['html'])): ?>
                 <? foreach($page['html'] as $block):?>
                     <?php self::component('blocks/forms/'.$block['type'], compact('block')) ?>
-                    <?php self::component('page-add-block') ?>
                 <?php endforeach ?>
             <?php else :?>
-                <?php self::component('blocks/forms/text', ['block' => ['html' => $page['html']]]); ?>
-                <?php self::component('page-add-block') ?>
+                <?php self::component('blocks/forms/text', ['block' => ['html' => $page['html']]]) ?>
             <?php endif ?>
+            <?php self::component('page-add-block') ?>
             <div class="form__button-place">
                 <button type="submit" class="form__button"><?= $texts['SubmitLabel'] ?></button>
             </div>
