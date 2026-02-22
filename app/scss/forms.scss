@@ -133,7 +133,6 @@
 		}
 
 		&__img {
-			// height: 100%;
 			width: auto;
 			background-color: $bg-color-light-blue-blur;
 			box-sizing: border-box;
@@ -141,6 +140,27 @@
 		}
 	}
 	.block {
+		&__content{
+			min-height: 30em;
+		}
+		@include md{
+			&__content{
+				display: flex;
+				align-items: center;
+				&.reverse{
+					flex-direction: row-reverse;
+				}
+			}
+		}
+
+		.image{
+			&__container{
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				height: 15em;
+			}
+		}
 		.dashboard{
 			display: flex;
 			justify-content: center;
@@ -163,6 +183,7 @@
 					border-color: $bg-color-dark-green;
 				}
 			}
+
 			&:hover{
 				.dashboard__item{
 					opacity: 1;

@@ -5,6 +5,7 @@ namespace app\Controllers;
 use app\core\Controller;
 use app\core\GoogleDrive;
 use app\core\Locale;
+use app\core\Validator;
 use app\core\View;
 use app\models\Pages;
 use app\models\Users;
@@ -120,6 +121,30 @@ class PagesController extends Controller
 
         View::$route['vars']['block'] = [];
         View::$route['vars']['path'] = 'components/blocks/forms/text';
+        return View::html();
+    }
+    public function setBlockTypeAction()
+    {
+        $blockType = Validator::validate('blocks', $_POST['blockType'] ?? '');
+
+        if (!$blockType)
+            return View::notice(['type' => 'error', 'message' => 'Fail']);
+        
+        $block = [
+            'html' => '',
+            'image' => '',
+        ];
+        if (strpos($blockType, '-')){
+            $block['direction'] = '';
+            $block['order'] = '';
+            if ($blockType === 'image-text'){
+                $block['order'] = 'reverse';
+                $blockType= 'text-image';
+            }
+        }
+        View::$route['vars']['blockType'] = $blockType;
+        View::$route['vars']['block'] = $block;
+        View::$route['vars']['path'] = 'components/blocks/forms/'.$blockType;
         return View::html();
     }
     public function addAction()

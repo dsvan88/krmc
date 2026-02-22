@@ -67,8 +67,8 @@ actionHandler.formsImageUpdate = function (target, image = []) {
 	const img = parent.querySelector('.image__img');
 	img.src = image[0]['thumbnailLink'];
 
-	parent.querySelector('input[name="image_link"]').value = image[0]['thumbnailLink'];
-	parent.querySelector('input[name="image_id"]').value = image[0]['id'];
+	parent.querySelector('input[name^="image_link"]').value = image[0]['thumbnailLink'];
+	parent.querySelector('input[name^="image_id"]').value = image[0]['id'];
 }
 actionHandler.formsImagesList = async function (target) {
 
@@ -117,4 +117,58 @@ actionHandler.pagesAddBlock = async function (target, event){
 	if (editorsBlocks.length > 0) {
 		CKEditorApply(editorsBlocks);
 	}
+}
+
+actionHandler.pagesSetBlockType = async function (target){
+	const parent = target.closest('div[data-block-type]');
+	
+	if (!parent) return false;
+	
+	const block = {};
+	if (window.CKEDITOR.instances[parent.id?.substring(6)]){
+		block.html = window.CKEDITOR.instances[parent.id.substring(6)].getData();
+	}
+	const imageContainer = parent.querySelector('div.image__container');
+	if (imageContainer){
+		block.image = {
+			'link': imageContainer.querySelector('img').src,
+			'imageId': imageContainer.querySelector('input[name^=image_id]').value,
+		}
+	}
+	
+	const fd = new FormData()
+	fd.append('blockType',  target.dataset.blockType);
+	const response = await this.request({url: target.dataset.actionClick, data: fd });
+	
+	CKEditorRemove(parent.id.substring(6));
+
+	const parser = new DOMParser();
+	const doc = parser.parseFromString(response.html, 'text/html');
+	const newBlock = doc.querySelector('div[data-block-type]');
+
+	if (newBlock) {
+		parent.replaceWith(newBlock);
+	} else {
+		console.error('Новый блок не найден в ответе сервера');
+		return false;
+	}
+	
+	const editor = newBlock.querySelector('div.editor');
+	console.log(block);
+	if (editor && block.html){
+		editor.innerHTML = block.html;
+	}
+	const imageContainerNew = newBlock.querySelector('div.image__container');
+	if (imageContainerNew && block.image){
+		imageContainerNew.querySelector('img.image__img').src = block.image.link;
+		imageContainerNew.querySelector('input[name^=image_id]').value = block.image.imageId;
+		imageContainerNew.querySelector('input[name^=image_link]').value = block.image.link;
+	}
+
+	const editors = [...newBlock.querySelectorAll('.editor-block')]
+        .filter(el => el.classList?.contains('editor-block') && !el.id);
+
+    if (editors.length > 0) {
+        CKEditorApply(editors);
+    }
 }

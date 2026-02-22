@@ -258,6 +258,12 @@ return  [
         'action' => 'addBlock',
         'access' => ['category' => 'manager']
     ],
+    'api/pages/set-block-type' =>
+    [
+        'controller' => 'pages',
+        'action' => 'setBlockType',
+        'access' => ['category' => 'manager']
+    ],
     'api/image/add' =>
     [
         'controller' => 'images',

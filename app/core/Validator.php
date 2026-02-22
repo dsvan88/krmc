@@ -2,6 +2,7 @@
 
 namespace app\core;
 
+use app\models\Pages;
 use app\models\Settings;
 use app\models\Users;
 
@@ -28,6 +29,11 @@ class Validator
         if (empty($value)) return false;
         return hash_equals($_SESSION['csrf'], $value);
         // return $value === $_SESSION['csrf'] && $value === sha1($_SERVER['HTTP_USER_AGENT'] . session_id());
+    }
+    private static function blocks(string $value){
+        $value = trim($value);
+        if (empty($value)) return false;
+        return in_array($value, Pages::$blocks, true) ? $value : false;
     }
     private static function email(string $value)
     {

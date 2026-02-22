@@ -176,7 +176,7 @@ function applyAttributes(element, attributes) {
 }
 function CKEditorApply(editors) {
 	for (let index = 0; index < editors.length; index++) {
-		let randomIndex = Math.random(321123);
+		const randomIndex = Math.random().toString(36).substring(2, 9);
 		editors[index].id = randomIndex;
 		DecoupledEditor.create(
 			editors[index].querySelector('.editor')
@@ -198,6 +198,10 @@ function CKEditorApply(editors) {
 			}
 		)
 	}
+}
+function CKEditorRemove(eId) {
+	if (!window.CKEDITOR.instances[eId]) return;
+	delete window.CKEDITOR.instances[eId];
 }
 Array.prototype.shuffle = function () {
 	let j;

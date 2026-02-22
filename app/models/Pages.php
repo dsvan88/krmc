@@ -21,6 +21,12 @@ class Pages extends Model
         'html' => '',
         'expired_at' => '',
     ];
+    public static $blocks = [
+        'text',
+        'image',
+        'text-image',
+        'image-text',
+    ];
 
     public static $langsPriority = [
         'uk',
