@@ -169,7 +169,7 @@ const actionHandler = {
 		event.preventDefault();
 		if (!formData) formData = new FormData(event.target);
 		const self = this;
-		let submitResult = false;
+		// let submitResult = false;
 
 		const blocks = document.querySelectorAll('div.block');
 		const len = blocks.length;
@@ -190,12 +190,13 @@ const actionHandler = {
 			formData.append('blocks[]', JSON.stringify(block));
 		}
 
-		await request({
+		const submitResult = await request({
 			url: event.target.action.replace(window.location.origin + '/', ''),
 			data: formData,
 			success: (r) => {
-				submitResult = r;
+				// submitResult = r;
 				self.commonResponse.call(self, r, modal)
+				return r;
 			},
 			error: (r) => self.commonResponse.call(self, r, modal),
 		});
