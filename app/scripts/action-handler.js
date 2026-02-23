@@ -1,6 +1,7 @@
 const actionHandler = {
 	noticer: null,
 	phoneMask: "+38 (0__) ___-__-__",
+	dblClickTimer: null,
 	inputCommonHandler: function (event) {
 		let action = event.target.dataset.actionInput;
 		if (!action.startsWith('autocomplete-') || event.target.value.length <= 2) return false;
@@ -34,37 +35,28 @@ const actionHandler = {
 			alert(`Не существует метода для этого action-type: ${method}... или возникла ошибка. Сообщите администратору!\n${error.name}: ${error.message}`);
 		}
 	},
-	clickCommonHandler: function (event) {
-		let target = event.target;
-		if (!("actionClick" in target.dataset) && !("actionDblclick" in target.dataset)) {
-			target = target.closest(['*[data-action-click],*[data-action-dblclick]']);
-		}
-		if (!target) return false;
+	clickCommonHandler: function (e) {
+		const target = e.target.closest('[data-action-click],[data-action-dblclick]');
+		if (!target) return;
 
-		if ("actionDblclick" in target.dataset) {
-			if (dblclick_func !== false) {
-				clearTimeout(dblclick_func);
-				dblclick_func = false;
-				actionHandler.clickFunc(target, event, 'actionDblclick');
+		const { actionClick, actionDblclick } = target.dataset;
+
+		if (actionDblclick) {
+			if (this.dblClickTimer) {
+				clearTimeout(this.dblClickTimer);
+				this.dblClickTimer = null;
+				return this.clickFunc(target, e, 'actionDblclick');
 			}
-			else {
-				dblclick_func = setTimeout(() => {
-					if (dblclick_func !== false) {
-						clearTimeout(dblclick_func);
-						dblclick_func = false;
-						actionHandler.clickFunc(target, event);
-					};
-				}, 200)
-			}
+			return this.dblClickTimer = setTimeout(() => {
+				this.dblClickTimer = null;
+				if (actionClick) this.clickFunc(target, e);
+			}, 250)
 		}
-		else {
-			actionHandler.clickFunc(target, event);
-		}
+		this.clickFunc(target, e);
 	},
 	clickFunc: async function (target, event, method = 'actionClick') {
 		if (!(method in target.dataset)) return false;
 		event.preventDefault();
-		const self = this;
 
 		if ("mode" in target.dataset) {
 			if (target.dataset['mode'] === 'location') {
@@ -75,10 +67,10 @@ const actionHandler = {
 		let type = camelize(target.dataset[method]);
 		if (debug) console.log(type);
 
-		type = self[type] ? type : 'apiTalk';
+		type = this[type] ? type : 'apiTalk';
 
 		try {
-			self[type](target, event, method);
+			this[type](target, event, method);
 		} catch (error) {
 			alert(`Не существует метода для этого action-click: ${type}... или возникла ошибка. Сообщите администратору!\r\n${error.name}: ${error.message}`);
 			console.log(error);
@@ -113,13 +105,13 @@ const actionHandler = {
 				}
 			}
 			else {
-				let input = { type: 'text' };
+				const input = { type: 'text' };
 				if (/(root|pass)/.test(target.dataset.verification))
-					input = { type: 'password' };
+					input.type = 'password';
 				const verification = await self.verification(null, target.dataset.verification, input);
-				
+
 				if (!verification) return false;
-				
+
 				formData.append('verification', verification);
 			}
 		}
@@ -164,7 +156,7 @@ const actionHandler = {
 
 		return modalWindow;
 	},
-	commonFormEventReady: function ({ modal = null, result = {}}) {
+	commonFormEventReady: function ({ modal = null, result = {} }) {
 		const input = modal.querySelector("input");
 		if (input) {
 			input.focus();
@@ -181,14 +173,14 @@ const actionHandler = {
 
 		const blocks = document.querySelectorAll('div.block');
 		const len = blocks.length;
-		for (let i = 0; i < len; i++){
+		for (let i = 0; i < len; i++) {
 			const blockId = blocks[i].id.substring(6);
-			const block = {type: blocks[i].dataset.blockType};
-			if (blocks[i].dataset.field){
+			const block = { type: blocks[i].dataset.blockType };
+			if (blocks[i].dataset.field) {
 				formData.append(blocks[i].dataset.field, window.CKEDITOR.instances[blockId].getData());
 				continue;
 			}
-			
+
 			block.title = blocks[i].querySelector('div.block__title input.form__input').value;
 			if (window.CKEDITOR.instances[blockId])
 				block.html = window.CKEDITOR.instances[blockId].getData();
