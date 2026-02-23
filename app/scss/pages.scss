@@ -52,4 +52,11 @@
 			margin: 0 1em 2em 0;
 		}
 	}
+	.block{
+		&__content{
+			&.ti{
+				display: flex;
+			}
+		}
+	}
 }

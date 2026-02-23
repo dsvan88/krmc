@@ -4,3 +4,4 @@ composer.phar
 .env.*
 /vendor/*
 app/scripts/_old/*
+sassconfig.json

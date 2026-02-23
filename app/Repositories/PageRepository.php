@@ -34,6 +34,9 @@ class PageRepository
 
         foreach($page['blocks'] as $i=>$block){
             $page['blocks'][$i] = json_decode($block,true);
+            if (!empty($page['blocks'][$i]['image'])){
+                $page['blocks'][$i]['imageLink'] = GoogleDrive::getLink($page['blocks'][$i]['image']);
+            }
             if ($page['blocks'][$i]['type'] === 'image-text'){
                 $page['blocks'][$i]['type'] = 'text-image';
             }
