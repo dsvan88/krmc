@@ -1,15 +1,14 @@
 let dblclick_func = false;
 const body = document.body.querySelector('.body');
 
-body.addEventListener('click', actionHandler.clickCommonHandler);
+body.addEventListener('click', actionHandler.clickCommonHandler.bind(actionHandler));
 body.querySelectorAll('input[data-action-input]').forEach(element =>
 	element.addEventListener('input', (event) => actionHandler.inputCommonHandler.call(actionHandler, event))
 );
 body.querySelectorAll('input[data-action-change]').forEach(element => {
 	element.addEventListener('change', (event) => actionHandler.changeCommonHandler.call(actionHandler, event));
 	element.changeListener = true;
-}
-);
+});
 body.querySelectorAll('form[data-action-submit]').forEach(element =>
 	element.addEventListener('submit', (event) => actionHandler.commonSubmitFormHandler.call(actionHandler, event))
 );

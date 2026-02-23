@@ -11,7 +11,7 @@ const actionHandler = {
 		const type = camelize(event.target.dataset.actionChange);
 		if (debug) console.log(type);
 		try {
-			actionHandler[type](event);
+			this[type](event);
 		} catch (error) {
 			console.log(error);
 			alert(`Не существует метода для этого action-type: ${type}... или возникла ошибка. Сообщите администратору!\n${error.name}: ${error.message}`);
@@ -29,7 +29,7 @@ const actionHandler = {
 
 		if (debug) console.log(method);
 		try {
-			actionHandler[method](event);
+			this[method](event);
 		} catch (error) {
 			console.log(error);
 			alert(`Не существует метода для этого action-type: ${method}... или возникла ошибка. Сообщите администратору!\n${error.name}: ${error.message}`);
@@ -81,7 +81,6 @@ const actionHandler = {
 	apiTalk: async function (target, event, method, formData = null) {
 		const action = target.dataset[method];
 		let modal = false;
-		const self = this;
 		if (action.endsWith('/form')) {
 			modal = new ModalWindow();
 		}
@@ -108,7 +107,7 @@ const actionHandler = {
 				const input = { type: 'text' };
 				if (/(root|pass)/.test(target.dataset.verification))
 					input.type = 'password';
-				const verification = await self.verification(null, target.dataset.verification, input);
+				const verification = await this.verification(null, target.dataset.verification, input);
 
 				if (!verification) return false;
 
@@ -161,9 +160,9 @@ const actionHandler = {
 		if (input) {
 			input.focus();
 		}
-		if (result["javascript"]) {
-			window.eval(result["javascript"]);
-		}
+		// if (result["javascript"]) {
+		// 	window.eval(result["javascript"]);
+		// }
 	},
 	commonSubmitFormHandler: async function (event, formData = null, modal = null, args = null) {
 		event.preventDefault();
@@ -171,7 +170,7 @@ const actionHandler = {
 		const self = this;
 		// let submitResult = false;
 
-		const blocks = document.querySelectorAll('div.block');
+		const blocks = event.target.querySelectorAll('div.block');
 		const len = blocks.length;
 		for (let i = 0; i < len; i++) {
 			const blockId = blocks[i].id.substring(6);
@@ -190,7 +189,7 @@ const actionHandler = {
 			formData.append('blocks[]', JSON.stringify(block));
 		}
 
-		const submitResult = await request({
+		return await request({
 			url: event.target.action.replace(window.location.origin + '/', ''),
 			data: formData,
 			success: (r) => {
@@ -200,12 +199,11 @@ const actionHandler = {
 			},
 			error: (r) => self.commonResponse.call(self, r, modal),
 		});
-		return submitResult;
+		// return submitResult;
 	},
 	commonModalEvent: function (modal, action, data) {
-		const self = this;
 		if (data["error"]) {
-			self.commonFormEventEnd({ modal, data });
+			this.commonFormEventEnd({ modal, data });
 			new Alert({ title: 'Error!', text: data["message"] });
 			return false;
 		}
@@ -220,10 +218,9 @@ const actionHandler = {
 			addCssFile(data["cssFile"]);
 		};
 
-		setTimeout(() => self.commonFormEventEnd({ modal, data, action }), 100);
+		setTimeout(() => this.commonFormEventEnd({ modal, data, action }), 100);
 	},
 	commonResponse: function (response, modal = null) {
-		const self = this;
 		if (response["error"]) {
 			new Alert({ title: 'Error!', text: response["message"] });
 			return false;
