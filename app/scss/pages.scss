@@ -30,7 +30,17 @@
 	.text-big {
 		font-size: 1.5em;
 	}
-}
+	.block{
+		&__content{
+			&.ti{
+				display: flex;
+				div{
+					flex: 0 0 50%;
+				}
+			}
+		}
+	}
+} 
 
 .page {
 	&__image {
@@ -50,13 +60,6 @@
 			text-indent: 0;
 			box-sizing: border-box;
 			margin: 0 1em 2em 0;
-		}
-	}
-	.block{
-		&__content{
-			&.ti{
-				display: flex;
-			}
 		}
 	}
 }
