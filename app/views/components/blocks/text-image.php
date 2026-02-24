@@ -1,7 +1,10 @@
 <div class="block">
-    <h3 class="block__title"><?= $block['title']  ?? ''?></h3>
     <div class="block__content ti <?= $block['direction']  ?? ''?> <?= $block['order']  ?? ''?>">
-        <div class="block__text"><?= $block['html']  ?? ''?></div>
+        <div class="block__text">
+            <h3 class="block__title"><?= $block['title']  ?? ''?></h3>
+            <?= $block['html']  ?? ''?>
+        </div>
         <div class="block__image"><img src="<?= $block['imageLink']  ?? ''?>" alt="" srcset=""></div>
+        <!-- <div class="block__image" style="background-image:url(<?= $block['imageLink']  ?? ''?>)"></div> -->
     </div>
 </div>

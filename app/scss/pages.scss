@@ -1,4 +1,5 @@
 @import "tech/vars";
+@import "tech/mixins_adapt";
 
 .pages {
 	font-size: 1.15em;
@@ -31,12 +32,65 @@
 		font-size: 1.5em;
 	}
 	.block{
+		&__title{
+			margin-top: .1em;
+			margin-bottom: .2em;
+			letter-spacing: .2em;
+			font-size: 1.2em;
+		}
 		&__content{
 			&.ti{
 				display: flex;
+				flex-direction: column;
+				gap: 1em;
+				position: relative;
 				div{
 					flex: 0 0 50%;
 				}
+				&.reverse{
+					flex-direction: column-reverse;
+				}
+			}
+		}
+		&__text{
+			position: relative;
+			z-index: 2;
+			background-color: $bg-color-light;
+		}
+		&__image{
+			width: 100%;
+			position: sticky;
+			z-index: 1;
+			top: $header-height+2vh;
+			img{
+				width: 100%;
+			}
+			
+			// background-size: cover;
+			// background-size: 100% auto
+			// background-repeat: no-repeat;
+			// background-attachment: fixed;
+		}
+		// &__image{
+			// min-height: 20em;
+			// background-size: cover;
+			// background-size: 100% auto
+			// background-repeat: no-repeat;
+			// background-attachment: fixed;
+		// }
+		@include md{
+			margin-bottom: 2em;
+			&__content{
+				&.ti{
+					flex-direction: row;
+
+					&.reverse{
+						flex-direction: row-reverse;
+					}
+				}
+			}
+			&__image{
+				min-height: 10em;
 			}
 		}
 	}

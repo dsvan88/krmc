@@ -3,10 +3,8 @@
 namespace app\models;
 
 use app\core\GoogleDrive;
-use app\core\ImageProcessing;
 use app\core\Locale;
 use app\core\Model;
-use app\core\Tech;
 use Exception;
 
 class Pages extends Model
@@ -68,6 +66,26 @@ class Pages extends Model
         if (empty($pages)) return false;
 
         return static::decodeJson($pages[0]);
+    }
+    public static function decodeJson(array $array = [])
+    {
+        $array = parent::decodeJson($array);
+
+        if (empty($array['blocks'])) return $array;
+
+        foreach($array['blocks'] as $i=>$b){
+            $array['blocks'][$i] = json_decode($b,true);
+            if (!empty($array['blocks'][$i]['image'])){
+                $array['blocks'][$i]['imageId'] = $array['blocks'][$i]['image'];
+                $array['blocks'][$i]['imageLink'] = GoogleDrive::getLink($array['blocks'][$i]['image']);
+            }
+            if ($array['blocks'][$i]['type'] === 'image-text'){
+                $array['blocks'][$i]['type'] = 'text-image';
+                $array['blocks'][$i]['order'] = 'reverse';
+            }
+        }
+
+        return $array;
     }
     public static function getCount(string $type = 'page', bool $all = false)
     {

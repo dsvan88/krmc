@@ -56,12 +56,12 @@
             <label class="form__label">Контент сторінки:</label>
         </div>
         <div class="blocks">
-            <?php if (is_array($page['html'])): ?>
-                <? foreach($page['html'] as $block):?>
+            <?php if (empty($page['blocks'])): ?>
+                <?php self::component('blocks/forms/text', ['block' => ['html' => $page['html']]]) ?>
+            <?php else :?>
+                <? foreach($page['blocks'] as $block):?>
                     <?php self::component('blocks/forms/'.$block['type'], compact('block')) ?>
                 <?php endforeach ?>
-            <?php else :?>
-                <?php self::component('blocks/forms/text', ['block' => ['html' => $page['html']]]) ?>
             <?php endif ?>
             <?php self::component('page-add-block') ?>
             <div class="form__button-place">

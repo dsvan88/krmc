@@ -122,7 +122,6 @@ class PagesController extends Controller
     }
     public function addBlockAction()
     {
-
         View::$route['vars']['block'] = [];
         View::$route['vars']['path'] = 'components/blocks/forms/text';
         return View::html();
@@ -137,16 +136,16 @@ class PagesController extends Controller
         $block = [
             'html' => '',
             'image' => '',
+            'type' => $blockType,
         ];
         if (strpos($blockType, '-')){
             $block['direction'] = '';
             $block['order'] = '';
             if ($blockType === 'image-text'){
-                $block['order'] = 'reverse';
                 $blockType= 'text-image';
+                $block['order'] = 'reverse';
             }
         }
-        View::$route['vars']['blockType'] = $blockType;
         View::$route['vars']['block'] = $block;
         View::$route['vars']['path'] = 'components/blocks/forms/'.$blockType;
         return View::html();
