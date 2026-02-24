@@ -5,6 +5,5 @@
             <?= $block['html']  ?? ''?>
         </div>
         <div class="block__image"><img src="<?= $block['imageLink']  ?? ''?>" alt="" srcset=""></div>
-        <!-- <div class="block__image" style="background-image:url(<?= $block['imageLink']  ?? ''?>)"></div> -->
     </div>
 </div>
