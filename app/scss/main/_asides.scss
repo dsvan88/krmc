@@ -1,50 +1,143 @@
-aside.images {
-    position: fixed;
-    z-index: -1;
-    flex-direction: column;
-    display: none;
-    padding-top: 10vh;
-    opacity: .95;
-    filter: contrast(70%) grayscale(50%);
-
-    &.left {
-        left: 0;
-    }
-
-    .image {
-        max-height: 25vh;
-        width: max-content;
-        background-color: #f6f4f3;
-        padding: .5em .5em 2em .5em;
-        box-sizing: border-box;
-        margin-bottom: -5vh;
-        box-shadow: 2px 2px 5px 0px $bg-color-dark-blur;
-
-        &:nth-of-type(even) {
-            rotate: 5deg;
-        }
-
-        &:nth-of-type(odd) {
-            rotate: -10deg;
-        }
-    }
-
-    &.right {
-        right: 0;
-        align-items: end;
+aside {
+    &.images {
+        position: fixed;
+        z-index: -1;
+        flex-direction: column;
+        display: none;
+        padding-top: 10vh;
+        opacity: .95;
+        filter: contrast(70%) grayscale(50%);
 
         .image {
-            &:nth-of-type(odd) {
-                rotate: 5deg;
-            }
+            max-height: 25vh;
+            width: max-content;
+            background-color: #f6f4f3;
+            padding: .5em .5em 2em .5em;
+            box-sizing: border-box;
+            margin-bottom: -5vh;
+            box-shadow: 2px 2px 5px 0px $bg-color-dark-blur;
+        }
+
+        .images__item {
+            animation: leftEvenImagesItemDealing $animation-normal ease-out forwards;
 
             &:nth-of-type(even) {
-                rotate: -15deg;
+                .image {
+                    animation: leftEvenImagesDealing $animation-normal ease-out forwards;
+                    rotate: 5deg;
+                }
+            }
+
+            &:nth-of-type(odd) {
+                .image {
+                    animation: leftOddImagesDealing $animation-normal ease-out forwards;
+                    rotate: -10deg;
+                }
             }
         }
+
+        &.right {
+            right: 0;
+            align-items: end;
+
+            .images__item {
+                text-align: right;
+                animation: rightEvenImagesItemDealing $animation-normal ease-out forwards;
+
+                &:nth-of-type(even) {
+                    .image {
+                        animation: rightEvenImagesDealing $animation-normal ease-out forwards;
+                        rotate: 5deg;
+                    }
+                }
+
+                &:nth-of-type(odd) {
+                    .image {
+                        animation: rightOddImagesDealing $animation-normal ease-out forwards;
+                        rotate: -15deg;
+                    }
+                }
+            }
+        }
+
+        @include md {
+            display: flex;
+        }
+    }
+}
+
+@keyframes leftEvenImagesItemDealing {
+    0% {
+        transform: translate(-40vw, 45vw);
     }
 
-    @include md {
-        display: flex;
+    100% {
+        transform: translate(0, 0);
+    }
+}
+
+@keyframes rightEvenImagesItemDealing {
+    0% {
+        transform: translate(40vw, 45vw);
+    }
+
+    100% {
+        transform: translate(0, 0);
+    }
+}
+
+@keyframes leftEvenImagesDealing {
+    0% {
+        rotate: -1000deg;
+    }
+
+    80% {
+        rotate: 5deg;
+    }
+
+    100% {
+        rotate: 5deg;
+    }
+}
+
+@keyframes leftOddImagesDealing {
+    0% {
+        rotate: -1000deg;
+    }
+
+    80% {
+        rotate: -10deg;
+    }
+
+    100% {
+        rotate: -10deg;
+    }
+}
+
+@keyframes rightEvenImagesDealing {
+    0% {
+        rotate: -1000deg;
+    }
+
+    80% {
+        rotate: 5deg;
+    }
+
+    100% {
+        rotate: 5deg;
+    }
+}
+
+@keyframes rightOddImagesDealing {
+    0% {
+        rotate: -1000deg;
+    }
+
+    80% {
+        rotate: -15deg;
+    }
+
+    100% {
+        rotate: -15deg;
     }
 }

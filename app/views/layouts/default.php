@@ -42,11 +42,13 @@
                 <aside class="images">
                     <?php foreach ($backdroundImages as $index => $imageId): ?>
                         <?php if ($index === 4): ?>
-                            </aside>
-                            <aside class="images right">
-                        <?php endif ?>
-                            <img class="image" src="https://lh3.googleusercontent.com/d/<?= $imageId ?>" loading="lazy" alt="Background Image #<?= $index ?>">
-                        <?php endforeach ?>
+                </aside>
+                <aside class="images right">
+                <?php endif ?>
+                <div class="images__item">
+                    <img class="image" src="https://lh3.googleusercontent.com/d/<?= $imageId ?>" loading="lazy" alt="Background Image #<?= $index ?>">
+                </div>
+            <?php endforeach ?>
                 </aside>
             <?php endif ?>
             <header class="header">
@@ -121,7 +123,7 @@
                 </div>
             </footer>
         </div>
-    </div>    
+    </div>
 </body>
 
 </html>
