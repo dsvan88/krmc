@@ -36,10 +36,11 @@
 		&__title {
 			margin-top: 0;
 			margin-bottom: .2em;
-			letter-spacing: .2em;
+			letter-spacing: .15em;
 			font-size: 1.2em;
 			padding: 1em .2em .1em .2em;
 			background-color: $bg-color-light;
+			text-shadow: 2px 2px 2px $bg-color-light-odd;
 		}
 
 		&__content {
@@ -63,7 +64,9 @@
 			position: relative;
 			z-index: 2;
 			box-sizing: border-box;
-			background-color: $bg-color-light-odd;
+			// background-color: $bg-color-light-odd;
+			background: linear-gradient(120deg, $bg-color-light 0%, $bg-color-light-odd 100%);
+			box-shadow: .3em .3em 3px 5px $bg-color-light-odd;
 
 			p,
 			ul {
