@@ -19,18 +19,18 @@ aside {
         }
 
         .images__item {
-            animation: leftEvenImagesItemDealing $animation-normal ease-out forwards;
+            animation: leftEvenImagesItemDealing $animation-normal ease forwards;
 
             &:nth-of-type(even) {
                 .image {
-                    animation: leftEvenImagesDealing $animation-normal ease-out forwards;
+                    animation: leftEvenImagesDealing $animation-normal ease forwards;
                     rotate: 5deg;
                 }
             }
 
             &:nth-of-type(odd) {
                 .image {
-                    animation: leftOddImagesDealing $animation-normal ease-out forwards;
+                    animation: leftOddImagesDealing $animation-normal ease forwards;
                     rotate: -10deg;
                 }
             }
@@ -42,18 +42,18 @@ aside {
 
             .images__item {
                 text-align: right;
-                animation: rightEvenImagesItemDealing $animation-normal ease-out forwards;
+                animation: rightEvenImagesItemDealing $animation-normal ease forwards;
 
                 &:nth-of-type(even) {
                     .image {
-                        animation: rightEvenImagesDealing $animation-normal ease-out forwards;
+                        animation: rightEvenImagesDealing $animation-normal ease forwards;
                         rotate: 5deg;
                     }
                 }
 
                 &:nth-of-type(odd) {
                     .image {
-                        animation: rightOddImagesDealing $animation-normal ease-out forwards;
+                        animation: rightOddImagesDealing $animation-normal ease forwards;
                         rotate: -15deg;
                     }
                 }
