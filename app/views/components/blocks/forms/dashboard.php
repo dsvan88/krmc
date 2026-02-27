@@ -24,4 +24,10 @@ $selected = $selected ?? 'text';
             <p>TXT</p>
         </div>
     </li>
+    <li class="dashboard__item<?= $selected === 'text-text' ? ' selected' : '' ?>" data-action-click="pages/set-block-type" data-block-type="text-text">
+        <div class="dashboard__frame double">
+            <p>TXT</p>
+            <p>TXT</p>
+        </div>
+    </li>
 </ul>

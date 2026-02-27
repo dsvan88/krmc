@@ -1,6 +1,7 @@
 class CustomImagesPad extends Prompt {
     checkboxes = [];
     images = [];
+    folders = [];
     addNewInput = null;
     nextPageButton = null;
     mouseOver = null;
@@ -19,7 +20,12 @@ class CustomImagesPad extends Prompt {
         super({ title, text, value, action, cancel })
 
         this.nextPageToken = data['nextPageToken'];
-        this.images = data['files'];
+        const len = data['files'].length;
+        for(let x=0; x<len; x++){
+            const type = data['files'][x]['thumbnailLink'] ? 'images' : 'folders';
+            this[type].push(data['files'][x]);
+        }
+        
         this.urlGet = urlGet;
         this.urlAdd = urlAdd;
         this.modifyForImagesPad().modifyEventsImagesPad();
@@ -46,9 +52,15 @@ class CustomImagesPad extends Prompt {
     }
     showImagesPad() {
         const y = this.checkboxes.length;
-        const len = this.images.length;
+        let len = this.folders.length;
         for (let x = y; x < len; x++) {
-            const tile = this.images[x].thumbnailLink ? this.getImageTile(x) : this.getFolderTile(x);
+            const tile = this.getFolderTile(x);
+            this.nextPageButton.before(tile);
+        }
+
+        len = this.images.length;
+        for (let x = y; x < len; x++) {
+            const tile = this.getImageTile(x);
             this.nextPageButton.before(tile);
         }
     }
@@ -76,19 +88,20 @@ class CustomImagesPad extends Prompt {
         folderIcon.classList.add('folder__icon', 'fa', 'fa-folder-o');
         const folderTitle = document.createElement('div');
         folderTitle.classList.add('folder__title');
-        folderTitle.innerText = this.images[x].name;
+        folderTitle.innerText = this.folders[x].name;
         folderWrapper.append(folderIcon);
         folderWrapper.append(folderTitle);
         return folderWrapper;
     }
     modifyEventsImagesPad() {
-        const s = this;
-        this.addNewInput.addEventListener('change', (e) => s.addNewImage.call(s, e));
-        this.nextPageButton.addEventListener('click', (e) => s.getMoreImages.call(s, e));
-        for (const image of this.images) {
-            image.node.addEventListener('mouseenter', (e) => s.mouseEnterEvent.call(s, e));
-            image.node.addEventListener('mouseleave', (e) => s.mouseLeaveEvent.call(s));
-            image.node.addEventListener('mousemove', (e) => s.mouseMoveEvent.call(s, e));
+        this.addNewInput.addEventListener('change', this.addNewImage.bind(this));
+        this.nextPageButton.addEventListener('click', this.getMoreImages.bind(this));
+        const len = this.images.length;
+        for (let x=0; x<len; x++) {
+            this.images[x].node.addEventListener('dblclick', () => this.mouseDblClickEvent.call(this, x));
+            this.images[x].node.addEventListener('mouseenter', this.mouseEnterEvent.bind(this));
+            this.images[x].node.addEventListener('mouseleave', this.mouseLeaveEvent.bind(this));
+            this.images[x].node.addEventListener('mousemove', this.mouseMoveEvent.bind(this));
         }
     }
     getNewImageForm() {
@@ -130,6 +143,10 @@ class CustomImagesPad extends Prompt {
             this.infoTile.rows.push(row);
         }
         return this.infoTile;
+    }
+    mouseDblClickEvent(x) {
+        this.input.value = JSON.stringify([this.images[x]]);
+        this.agreeButton.click();
     }
     mouseEnterEvent(e) {
         this.mouseOver = e.target;
@@ -206,6 +223,9 @@ class CustomImagesPad extends Prompt {
         return true;
     }
     submit() {
+        if (this.input.value)
+            return super.submit();
+        
         const result = [];
         for (const checkbox of this.checkboxes) {
             if (!checkbox.checked) continue;

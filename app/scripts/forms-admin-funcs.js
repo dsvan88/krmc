@@ -1,25 +1,3 @@
-// actionHandler.commonFormSubmit = async function (event) {
-// 	event.preventDefault();
-// 	const url = event.target.action.slice(window.location.length);
-// 	const formData = new FormData(event.target);
-// 	const self = actionHandler;
-// 	if (window.CKEDITOR) {
-// 		const EditorsBlocks = event.target.querySelectorAll("div.editor-block");
-// 		EditorsBlocks.forEach(block => {
-// 			formData.append(block.dataset.field, CKEDITOR.instances[block.id].getData());
-// 		})
-// 	}
-// 	return await this.request({
-// 		url: url,
-// 		data: formData,
-// 	});
-// }
-
-// const commonForm = document.body.querySelector('.form .form__form');
-// if (commonForm) {
-// 	commonForm.onsubmit = actionHandler.commonFormSubmit;
-// }
-
 const editorsBlocks = document.body.querySelectorAll('div.editor-block');
 if (editorsBlocks.length > 0) {
 	CKEditorApply(editorsBlocks);
@@ -63,6 +41,7 @@ actionHandler.formImageChange = function (event) {
 }
 
 actionHandler.formsImageUpdate = function (target, image = []) {
+	if (!image[0]) return false;
 	const parent = target.closest('.image__container');
 	const img = parent.querySelector('.image__img');
 	img.src = image[0]['thumbnailLink'];

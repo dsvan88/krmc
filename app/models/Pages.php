@@ -25,6 +25,7 @@ class Pages extends Model
         'image',
         'text-image',
         'image-text',
+        'text-text',
     ];
 
     public static $langsPriority = [

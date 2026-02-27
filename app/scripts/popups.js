@@ -68,21 +68,20 @@ class Alert {
         this.overlay.remove();
     }
     attachEvents() {
-        const self = this;
 
-        self.dialog.addEventListener('keydown', (event) => self.keyDownHandler.call(self, event));
-        self.dialog.addEventListener('keyup', (event) => self.keyUpHandler.call(self, event));
+        this.dialog.addEventListener('keydown', this.keyDownHandler.bind(this));
+        this.dialog.addEventListener('keyup', this.keyUpHandler.bind(this));
 
-        self.dialog.addEventListener('close', () => self.close.call(self));
+        this.dialog.addEventListener('close', this.close.bind(this));
 
         if (this.customClose)
-            self.dialog.addEventListener('close', () => self.customClose.call(self));
+            this.dialog.addEventListener('close', this.customClose.bind(this));
 
-        self.dialog.ondragstart = () => false;
+        this.dialog.ondragstart = () => false;
 
-        self.title.addEventListener('mousedown', (event) => self.dragStart.call(self, event));
+        this.title.addEventListener('mousedown', this.dragStart.bind(this));
 
-        self.dialog.addEventListener('touchstart', (event) => self.dragStart.call(self, event));
+        this.dialog.addEventListener('touchstart', this.dragStart.bind(this));
     }
     keyDownHandler(event) {
         if (event.isComposing) return false;
@@ -106,25 +105,23 @@ class Alert {
     }
     dragnDrop(event) {
 
-        const self = this;
+        this.dialog.style.position = 'absolute';
+        this.dialog.style.zIndex = 100;
+        this.dialog.style.margin = 0;
 
-        self.dialog.style.position = 'absolute';
-        self.dialog.style.zIndex = 100;
-        self.dialog.style.margin = 0;
-
-        document.body.append(self.dialog);
+        document.body.append(this.dialog);
 
         const pageX = event.pageX || event.targetTouches[0].pageX;
         const pageY = event.pageY || event.targetTouches[0].pageY;
 
-        self.moveAt(pageX, pageY);
+        this.moveAt(pageX, pageY);
 
-        document.context = self;
-        document.addEventListener('mousemove', self.onMouseMove);
-        document.addEventListener('touchmove', self.onMouseMove);
+        document.context = this;
+        document.addEventListener('mousemove', this.onMouseMove);
+        document.addEventListener('touchmove', this.onMouseMove);
 
-        self.dialog.onmouseup = (event) => self.moveEnd(event, 'mousemove');
-        self.dialog.ontouchend = (event) => self.moveEnd(event, 'touchmove');
+        this.dialog.onmouseup = (e) => this.moveEnd(e, 'mousemove');
+        this.dialog.ontouchend = (e) => this.moveEnd(e, 'touchmove');
 
     }
     moveEnd(event, eventName) {
@@ -175,14 +172,14 @@ class Confirm extends Alert {
         return this;
     }
     modifyEvents() {
-        const self = this;
-        self.form.addEventListener('submit', (e) => self.submit.call(self, e), { once: true });
 
-        self.cancelButton.addEventListener('click', () => self.state = false);
+        this.form.addEventListener('submit', this.submit.bind(this), { once: true });
+
+        this.cancelButton.addEventListener('click', () => this.state = false);
 
         const ua = navigator.userAgent.toLowerCase();
         if (ua.includes('safari') && !ua.includes('chrome'))
-            this.agreeButton.addEventListener('touchend', (e) => self.submit.call(self, e), { once: true } );
+            this.agreeButton.addEventListener('touchend', this.submit.bind(this), { once: true } );
 
         return this;
     }
@@ -251,10 +248,9 @@ class Prompt extends Confirm {
     }
     modifyPromptEvents(){
         if (this.input.type !== 'tel') return this;
-        
-        const s = this;
-        this.input.addEventListener('focus', (e) => s.phoneInputFocus.call(s, e));
-        this.input.addEventListener('input', (e) => this.phoneInputFormat.call(s, e), false);
+
+        this.input.addEventListener('focus', this.phoneInputFocus.bind(this));
+        this.input.addEventListener('input', this.phoneInputFormat.bind(this), false);
         
         return this;
     }
