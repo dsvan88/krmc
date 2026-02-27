@@ -61,6 +61,18 @@ $itemsHeight: 8em;
         transition: box-shadow $animation-very-fast;
     }
 
+    .folder {
+        background-color: $bg-color-light-yellow-blur;
+
+        &__icon {
+            font-size: 6em;
+        }
+
+        &__title {
+            font-size: 1.5em;
+        }
+    }
+
     .new {
         label {
             display: flex;

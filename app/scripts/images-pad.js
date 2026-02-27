@@ -46,24 +46,40 @@ class CustomImagesPad extends Prompt {
     }
     showImagesPad() {
         const y = this.checkboxes.length;
-        for (let x = y; x < this.images.length; x++) {
-            const checkboxWrapper = document.createElement('label');
-            checkboxWrapper.classList.add('images__item');
-            this.checkboxes[x] = document.createElement('input');
-            this.checkboxes[x].type = 'checkbox';
-            this.checkboxes[x].id = `checkbox[${x}]`;
-            this.checkboxes[x].value = x;
-            checkboxWrapper.htmlFor = this.checkboxes[x].id;
-            checkboxWrapper.index = x;
-
-            const img = document.createElement('img');
-            img.src = this.images[x].thumbnailLink;
-            img.classList.add('images__image');
-            checkboxWrapper.append(this.checkboxes[x]);
-            checkboxWrapper.append(img);
-            this.images[x].node = checkboxWrapper;
-            this.nextPageButton.before(checkboxWrapper);
+        const len = this.images.length;
+        for (let x = y; x < len; x++) {
+            const tile = this.images[x].thumbnailLink ? this.getImageTile(x) : this.getFolderTile(x);
+            this.nextPageButton.before(tile);
         }
+    }
+    getImageTile(x) {
+        const checkboxWrapper = document.createElement('label');
+        checkboxWrapper.classList.add('images__item');
+        this.checkboxes[x] = document.createElement('input');
+        this.checkboxes[x].type = 'checkbox';
+        this.checkboxes[x].id = `checkbox[${x}]`;
+        this.checkboxes[x].value = x;
+        checkboxWrapper.htmlFor = this.checkboxes[x].id;
+        checkboxWrapper.index = x;
+        const img = document.createElement('img');
+        img.src = this.images[x].thumbnailLink;
+        img.classList.add('images__image');
+        this.images[x].node = checkboxWrapper;
+        checkboxWrapper.append(this.checkboxes[x]);
+        checkboxWrapper.append(img)
+        return checkboxWrapper;
+    }
+    getFolderTile(x) {
+        const folderWrapper = document.createElement('div');
+        folderWrapper.classList.add('images__item', 'folder')
+        const folderIcon = document.createElement('div');
+        folderIcon.classList.add('folder__icon', 'fa', 'fa-folder-o');
+        const folderTitle = document.createElement('div');
+        folderTitle.classList.add('folder__title');
+        folderTitle.innerText = this.images[x].name;
+        folderWrapper.append(folderIcon);
+        folderWrapper.append(folderTitle);
+        return folderWrapper;
     }
     modifyEventsImagesPad() {
         const s = this;
@@ -203,7 +219,7 @@ class CustomImagesPad extends Prompt {
 async function imagesPad(options = {}) {
 
     options.data = await request({ url: options.urlGet });
-    
+
     return await new Promise((r) => {
         options.action = r;
         new CustomImagesPad(options);
