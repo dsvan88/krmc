@@ -2,6 +2,7 @@ class CustomImagesPad extends Prompt {
     checkboxes = [];
     images = [];
     folders = [];
+    currFolder = '';
     addNewInput = null;
     nextPageButton = null;
     mouseOver = null;
@@ -224,6 +225,7 @@ class CustomImagesPad extends Prompt {
             formData.append('filename', file.name);
             formData.append('image', reader.result);
             formData.append('prompt', 1);
+            formData.append('type', this.currFolder);
             const result = await request({ url: self.urlAdd, data: formData });
             checkbox.value = result.realLink;
             img.src = result.realLink;
@@ -252,7 +254,7 @@ class CustomImagesPad extends Prompt {
 
         this.refreshEvents();
 
-        return true;
+        this.currFolder = folder;
     }
     async getMoreImages() {
 

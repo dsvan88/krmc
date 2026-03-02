@@ -11,11 +11,8 @@ use app\core\Noticer;
 use app\core\Tech;
 use app\core\Validator;
 use app\core\View;
-use app\models\Pages;
 use app\models\Settings;
-use app\models\Users;
 use app\Repositories\ImageRepository;
-use app\Repositories\PageRepository;
 
 class ImagesController extends Controller
 {
