@@ -318,6 +318,12 @@ return  [
         'action' => 'list',
         'access' => ['category' => 'manager']
     ],
+    'api/forms/images/list/folder/{folderName}' =>
+    [
+        'controller' => 'images',
+        'action' => 'list',
+        'access' => ['category' => 'manager']
+    ],
 
     'api/day/validate/name' => [
         'controller' => 'account',

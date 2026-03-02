@@ -32,7 +32,7 @@ class ImagesController extends Controller
 
         if (!empty($_POST['pageToken']))
             $pageToken = $_POST['pageToken'];
-        
+
         $folder = 'root';
         if (!empty($_POST['folder']))
             $folder = preg_replace('/[^a-z0-9_+ -]/ui', '', trim($_POST['folder']));
@@ -78,12 +78,14 @@ class ImagesController extends Controller
     public function listAction()
     {
         $pageToken = '';
+        $folderName = 'root';
         extract(self::$route['vars']);
 
         if (!empty($_POST['pageToken']))
             $pageToken = $_POST['pageToken'];
 
-        if (!ImageRepository::getImagesList($pageToken, $files, $nextPageToken)) {
+
+        if (!ImageRepository::getImagesList($pageToken, $files, $nextPageToken, $folderName)) {
             return View::notice(['message' => 'Image’s list is empty']);
         }
 
@@ -143,7 +145,7 @@ class ImagesController extends Controller
             return View::notice(['type' => 'error', 'message' => 'Fail!']);
 
         $gDrive = new GoogleDrive();
-        
+
         if ($gDrive->isFolder($imageId) && (empty($_POST['verification']) || !Validator::validate('rootpass', $_POST['verification'])))
             return View::notice(['type' => 'error', 'message' => 'You don’t have enough rights to do this action!']);
 
