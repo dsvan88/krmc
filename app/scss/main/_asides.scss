@@ -88,14 +88,10 @@ aside {
 
 @keyframes leftEvenImagesDealing {
     0% {
-        rotate: -1000deg;
+        rotate: 1000deg;
     }
 
     80% {
-        rotate: 5deg;
-    }
-
-    100% {
         rotate: 5deg;
     }
 }
@@ -108,22 +104,14 @@ aside {
     80% {
         rotate: -10deg;
     }
-
-    100% {
-        rotate: -10deg;
-    }
 }
 
 @keyframes rightEvenImagesDealing {
     0% {
-        rotate: -1000deg;
+        rotate: 1000deg;
     }
 
     80% {
-        rotate: 5deg;
-    }
-
-    100% {
         rotate: 5deg;
     }
 }
@@ -134,10 +122,6 @@ aside {
     }
 
     80% {
-        rotate: -15deg;
-    }
-
-    100% {
         rotate: -15deg;
     }
 }
