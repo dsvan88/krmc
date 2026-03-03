@@ -4,7 +4,6 @@
         <h2 class='subtitle'><?= $page['subtitle'] ?></h2>
     </header>
     <div class='content'>
-
         <?php if (!empty($page['logoLink'])): ?>
             <div class="page__image-place">
                 <img src="<?= $page['logoLink'] ?>" alt="" class="page__image">
@@ -12,7 +11,7 @@
         <?php endif ?>
         <?php if (!empty($page['blocks'])): ?>
             <?php foreach ($page['blocks'] as $block): ?>
-                 <?php self::component('blocks/' . $block['type'], compact('block')) ?>
+                <?php self::component('blocks/' . $block['type'], compact('block')) ?>
             <?php endforeach ?>
         <? else : ?>
             <?= $page['html'] ?>

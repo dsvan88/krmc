@@ -64,7 +64,6 @@ class PagesController extends Controller
             } catch (\Throwable $error){
                 return View::notice(['error' => 1, 'message' => $error->getMessage(), 'time' => 3000]);
             }
-            // return View::notice(['message' => 'Changes saved successfully!', 'location' => 'reload']);
             return View::notice(['message' => 'Changes saved successfully!']);
             
         }

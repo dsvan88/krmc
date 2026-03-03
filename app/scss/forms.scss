@@ -126,7 +126,8 @@
 			width: 100%;
 			height: 5em;
 		}
-		&__label{
+
+		&__label {
 			display: flex;
 			justify-content: center;
 			height: 100%;
@@ -139,50 +140,90 @@
 			padding: .2em;
 		}
 	}
-	&__add-block{
-		i{
+
+	&__add-block {
+		i {
 			font-size: 2em;
-			color:$bg-color-light-green;
+			color: $bg-color-light-green;
 			transition: color $animation-fast;
 			cursor: pointer;
 			border: 1px solid transparent;
 			border-radius: 50%;
 			padding: 0 .07em;
-			&:hover{
-				color:$bg-color-green;
+
+			&:hover {
+				color: $bg-color-green;
 				border-color: $bg-color-green;
 			}
 		}
 	}
+
+	&__remove-block {
+		font-size: 2em;
+		position: absolute;
+		right: 1em;
+		transition: color $animation-fast;
+		color: $bg-color-light-purple-blur;
+		cursor: pointer;
+
+		&:hover {
+			color: $bg-color-light-red
+		}
+	}
+
 	.block {
 		margin-bottom: 1em;
-		&__content{
+		transition: margin-bottom $animation-normal, max-height $animation-normal, opacity $animation-normal;
+		overflow: hidden;
+		max-height: 80vh;
+
+		&__content {
 			min-height: 25em;
 		}
-		@include md{
-			&__content{
+
+		@include md {
+			&__content {
 				display: flex;
 				align-items: center;
-				&.reverse{
+
+				&.reverse {
 					flex-direction: row-reverse;
 				}
 			}
 		}
 
-		.image{
-			&__container{
+		&.remove {
+			opacity: 0;
+			max-height: 0;
+			margin-bottom: 0;
+		}
+
+		.image {
+			&__container {
 				display: flex;
 				justify-content: center;
 				align-items: center;
 				height: 15em;
 			}
 		}
-		.dashboard{
+
+		&__dashboard {
+			display: flex;
+			justify-content: center;
+			position: relative;
+
+			&:last-child {
+				float: right;
+			}
+		}
+
+		.dashboard {
 			display: flex;
 			justify-content: center;
 			gap: .3em;
 			margin-bottom: .2em;
-			&__item{
+
+			&__item {
 				max-width: 0;
 				transition: max-width $animation-fast, opacity $animation-fast;
 				transition-delay: $animation-fast;
@@ -191,29 +232,33 @@
 				display: flex;
 				border: 1px solid transparent;
 				border-radius: 3px;
-				&:hover{
+
+				&:hover {
 					border-color: $bg-color-light-green;
 				}
-				&.selected{
+
+				&.selected {
 					opacity: 1;
 					max-width: 10em;
 					border-color: $bg-color-dark-green;
 				}
 			}
 
-			&:hover{
-				.dashboard__item{
+			&:hover {
+				.dashboard__item {
 					opacity: 1;
 					max-width: 15em;
 				}
 			}
-			&__frame{
+
+			&__frame {
 				font-size: 1.5em;
 				padding: .1em;
 				display: flex;
 				box-sizing: border-box;
 				cursor: pointer;
-				p{
+
+				p {
 					display: flex;
 					justify-content: center;
 					align-items: center;
@@ -222,14 +267,16 @@
 					background-color: $bg-color-light-blue-blur;
 					border-radius: 3px;
 					width: 3em;
-					&.image{
+
+					&.image {
 						color: $bg-color-purple;
 						outline-color: $bg-color-light-purple;
 						background-color: $bg-color-light-purple-blur;
 					}
 				}
-				&.double{
-					p{
+
+				&.double {
+					p {
 						width: 2em;
 					}
 				}

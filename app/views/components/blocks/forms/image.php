@@ -4,7 +4,7 @@
     <fieldset>
         <legend>Block:</legend>
         <div class="block__title">
-            <input class="form__input" type="text" value="<?= $block['title']  ?? ''?>" placeholder="Block title">
+            <input class="form__input" type="text" value="<?= $block['title']  ?? '' ?>" placeholder="Block title">
         </div>
         <?php self::component('blocks/forms/dashboard', ['selected' => 'image']) ?>
         <div class="block__content">
@@ -12,9 +12,10 @@
                 <label class="image__label" data-action-click="forms/images/list">
                     <img src="<?= $block['imageLink'] ?>" alt="" class="image__img">
                 </label>
-                <input type="hidden" name="image_id_block" value="<?= $block['imageId']  ?? ''?>">
-                <input type="hidden" name="image_link_block" value="<?= $block['imageLink']  ?? ''?>">
+                <input type="hidden" name="image_id_block" value="<?= $block['imageId']  ?? '' ?>">
+                <input type="hidden" name="image_link_block" value="<?= $block['imageLink']  ?? '' ?>">
             </div>
         </div>
     </fieldset>
 </div>
+<?php self::component('page-add-block') ?>

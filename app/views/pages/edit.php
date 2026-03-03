@@ -63,7 +63,6 @@
                     <?php self::component('blocks/forms/'.$block['type'], compact('block')) ?>
                 <?php endforeach ?>
             <?php endif ?>
-            <?php self::component('page-add-block') ?>
             <div class="form__button-place">
                 <button type="submit" class="form__button"><?= $texts['SubmitLabel'] ?></button>
             </div>

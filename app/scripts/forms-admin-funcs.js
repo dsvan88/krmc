@@ -83,14 +83,29 @@ actionHandler.settingsEdit = async function (target, event) {
 	return await this.apiTalk(target, event, 'actionDblclick', formData);
 }
 
-actionHandler.pagesAddBlock = async function (target, event){
+actionHandler.pagesRemoveBlock = async function (target) {
+	const parent = target.closest('div.block');
+
+	if (!parent) return false;
+
+	const confirm = await customConfirm({ text: 'Are you sure?' });
+
+	if (!confirm) return false;
+
+	parent.classList.add('remove');
+	parent.nextElementSibling.remove();
+	setTimeout(() => {
+		parent.remove();
+	}, 800);
+}
+actionHandler.pagesAddBlock = async function (target) {
 	const parent = target.closest('div.form__add-block');
 
 	if (!parent) return false;
 
-	const result = await this.request({url: target.dataset.actionClick});
-	
-	parent.insertAdjacentHTML('beforebegin', result.html);
+	const result = await this.request({ url: target.dataset.actionClick });
+
+	parent.insertAdjacentHTML('afterend', result.html);
 
 	const editorsBlocks = document.body.querySelectorAll('div.editor-block:not([id])');
 	if (editorsBlocks.length > 0) {
@@ -98,19 +113,19 @@ actionHandler.pagesAddBlock = async function (target, event){
 	}
 }
 
-actionHandler.pagesSetBlockType = async function (target){
+actionHandler.pagesSetBlockType = async function (target) {
 	const parent = target.closest('div[data-block-type]');
-	
+
 	if (!parent) return false;
-	
+
 	const block = {};
 	block.title = parent.querySelector('div.block__title input.form__input').value;
 
-	if (window.CKEDITOR.instances[parent.id?.substring(6)]){
+	if (window.CKEDITOR.instances[parent.id?.substring(6)]) {
 		block.html = window.CKEDITOR.instances[parent.id.substring(6)].getData();
 	}
 	const imageContainer = parent.querySelector('div.image__container');
-	if (imageContainer){
+	if (imageContainer) {
 		block.image = {
 			'link': imageContainer.querySelector('img').src,
 			'imageId': imageContainer.querySelector('input[name^=image_id]').value,
@@ -122,11 +137,11 @@ actionHandler.pagesSetBlockType = async function (target){
 		return false;
 	if (block.image?.imageId && blockType === 'text' && !confirm('It will remove an image from the block. Are you sure?'))
 		return false;
-	
+
 	const fd = new FormData()
 	fd.append('blockType', blockType);
-	const response = await this.request({url: target.dataset.actionClick, data: fd });
-	
+	const response = await this.request({ url: target.dataset.actionClick, data: fd });
+
 	CKEditorRemove(parent.id.substring(6));
 
 	const parser = new DOMParser();
@@ -139,24 +154,24 @@ actionHandler.pagesSetBlockType = async function (target){
 		console.error('Новый блок не найден в ответе сервера');
 		return false;
 	}
-	
+
 	newBlock.querySelector('div.block__title input.form__input').value = block.title;
 	const editor = newBlock.querySelector('div.editor');
 
-	if (editor && block.html){
+	if (editor && block.html) {
 		editor.innerHTML = block.html;
 	}
 	const imageContainerNew = newBlock.querySelector('div.image__container');
-	if (imageContainerNew && block.image){
+	if (imageContainerNew && block.image) {
 		imageContainerNew.querySelector('img.image__img').src = block.image.link;
 		imageContainerNew.querySelector('input[name^=image_id]').value = block.image.imageId;
 		imageContainerNew.querySelector('input[name^=image_link]').value = block.image.link;
 	}
 
 	const editors = [...newBlock.querySelectorAll('.editor-block')]
-        .filter(el => el.classList?.contains('editor-block') && !el.id);
+		.filter(el => el.classList?.contains('editor-block') && !el.id);
 
-    if (editors.length > 0) {
-        CKEditorApply(editors);
-    }
+	if (editors.length > 0) {
+		CKEditorApply(editors);
+	}
 }

@@ -1,18 +1,18 @@
 <?php
-    $block['type'] = empty($block['order']) ? $block['type'] : 'image-text';
+$block['type'] = empty($block['order']) ? $block['type'] : 'image-text';
 ?>
 <div class="block ti__wrapper" data-block-type="<?= $block['type'] ?>">
     <fieldset>
         <legend>Block:</legend>
         <div class="block__title">
-            <input class="form__input" type="text" value="<?= $block['title']  ?? ''?>" placeholder="Block title">
+            <input class="form__input" type="text" value="<?= $block['title']  ?? '' ?>" placeholder="Block title">
         </div>
         <?php self::component('blocks/forms/dashboard', ['selected' => $block['type']]) ?>
-        <div class="block__content <?= $block['direction']  ?? ''?> <?= $block['order']  ?? ''?>">
+        <div class="block__content <?= $block['direction']  ?? '' ?> <?= $block['order']  ?? '' ?>">
             <div class="editor-block">
                 <div class="toolbar-container"></div>
                 <div class="content-container">
-                    <div class="editor"><?= $block['html']  ?? ''?></div>
+                    <div class="editor"><?= $block['html']  ?? '' ?></div>
                 </div>
             </div>
             <div class="image__container">
@@ -20,9 +20,10 @@
                     <?php if (empty($block['imageLink'])) $block['imageLink'] = '/public/images/empty_avatar.webp'; ?>
                     <img src="<?= $block['imageLink'] ?>" alt="" class="image__img">
                 </label>
-                <input type="hidden" name="image_id_block" value="<?= $block['imageId']  ?? ''?>">
-                <input type="hidden" name="image_link_block" value="<?= $block['imageLink']  ?? ''?>">
+                <input type="hidden" name="image_id_block" value="<?= $block['imageId']  ?? '' ?>">
+                <input type="hidden" name="image_link_block" value="<?= $block['imageLink']  ?? '' ?>">
             </div>
         </div>
     </fieldset>
 </div>
+<?php self::component('page-add-block') ?>
