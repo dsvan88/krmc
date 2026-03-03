@@ -4,6 +4,8 @@ namespace app\models;
 
 use app\core\Model;
 use app\core\Sender;
+use app\Repositories\TelegramBotRepository;
+use app\Repositories\TelegramChatsRepository;
 
 class TelegramChats extends Model
 {
@@ -11,13 +13,13 @@ class TelegramChats extends Model
     public static $foreign = ['users' => Users::class];
     public static $jsonFields = ['personal', 'data'];
 
-    public static function getPinnedMessage(int $chatId = 0): int
+    public static function getPinnedMessage(int $chatId = 0): ?int
     {
-        if (empty($chatId)) return false;
+        if (empty($chatId)) return null;
 
         $chatData = self::find($chatId);
 
-        return empty($chatData['data']['pinned']) ? false : $chatData['data']['pinned'];
+        return empty($chatData['data']['pinned']) ? null : $chatData['data']['pinned'];
     }
     public static function savePinned(array $incomeMessage, int $messageId = 0): void
     {
@@ -33,14 +35,22 @@ class TelegramChats extends Model
         $data['pinned'] = $messageId;
 
         self::edit(['data' => $data], $chatData['id']);
-        return;
     }
     public static function clearPinned(int $chatId): void
     {
         $chatData = self::find($chatId);
         unset($chatData['data']['pinned']);
         self::edit(['data' => $chatData['data']], $chatData['id']);
-        return;
+    }
+    public static function getChatsTitle(int $chatId = 0): ?string
+    {
+        if (empty($chatId)) return null;
+
+        $chat = static::find($chatId);
+
+        if (empty($chat)) return null;
+
+        return $chat['title'] ?? TelegramChatsRepository::chatTitle($chat);
     }
     public static function getChatsList(int $limit = 0, int $offset = 0)
     {

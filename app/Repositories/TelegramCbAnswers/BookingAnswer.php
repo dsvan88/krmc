@@ -4,8 +4,11 @@ namespace app\Repositories\TelegramCbAnswers;
 
 use app\core\Telegram\ChatAnswer;
 use app\models\Days;
+use app\models\Settings;
+use app\models\TelegramChats;
 use app\models\Weeks;
 use app\Repositories\TelegramBotRepository;
+use app\Repositories\TelegramChatsRepository;
 use Exception;
 
 class BookingAnswer extends ChatAnswer
@@ -22,7 +25,9 @@ class BookingAnswer extends ChatAnswer
             if (empty(static::$requester))
                 return static::result('{{ Tg_Unknown_Requester }}', '🤷‍♂');
             static::$arguments['userId'] = '_' . static::$requester->id;
-            static::$arguments['userName'] = empty(static::$requester->chat->username) ? '+1' : '@' . static::$requester->chat->username;
+            static::$arguments['userName'] = empty(static::$requester->chat->username)
+                ? static::$requester->chat->title .' (<i>+1</i>)'
+                : '@'.static::$requester->chat->username;
             static::$arguments['userStatus'] = 'all';
         } else {
             static::$arguments['userId'] = static::$requester->profile->id;
@@ -83,48 +88,11 @@ class BookingAnswer extends ChatAnswer
             'message' => Days::getFullDescription($weekData, $dayNum),
             'replyMarkup' => $replyMarkup,
         ];
-        // $update = [
-        //     'message' => Days::getFullDescription($weekData, $dayNum),
-        //     'replyMarkup' => [
-        //         'inline_keyboard' => [
-        //             [
-        //                 ['text' => '🙋' . static::locale('I will!'), 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => $dayNum]],
-        //                 ['text' => static::locale('I want!') . '🥹', 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => $dayNum, 'p' => '?']],
-        //             ],
-        //         ],
-        //     ],
-        // ];
-        // $optout = ['text' => '❌' . static::locale('Opt-out'), 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => $dayNum, 'r' => '1']];
-        // if (count($weekData['data'][$dayNum]['participants']) > 0) {
-        //     $update['replyMarkup']['inline_keyboard'][0][] = $optout;
-        // }
-        // if (TelegramBotRepository::isDirect() && in_array(static::$arguments['userId'], array_column($weekData['data'][$dayNum]['participants'], 'id'))) {
-        //     $update['replyMarkup']['inline_keyboard'] = [
-        //         [
-        //             $optout
-        //         ]
-        //     ];
-        // }
-
-
-
-
-
-
-        // $send = [];
-        // if (empty(static::$arguments['r']) && TelegramBotRepository::getChatId() === Settings::getMainTelegramId()){
-        //     $send = [
-        //         'chatId' => $chatId,
-        //         'message' => static::locale(['string' => 'Yow was opted-in on a game <b>%s</b> at <b>%s</b>.', 'vars' => [static::$game, date('d.m.Y', static::$timestamp)]]),
-        //         'replyMarkup' => [
-        //             'inline_keyboard' => [
-        //                 [$optout]
-        //             ]
-        //         ]
-        //     ];
-        // }
-
-        // return array_merge(static::result('Success', true), ['update' => [$update]], ['send' => [$send]]);
+        
+        $chatId = TelegramBotRepository::getChatId(); 
+        if ($chatId != Settings::getMainTelegramId()){
+            static::$report .= PHP_EOL . static::locale(['string' => 'At Telegram chat: %s (%s).', 'vars' => [TelegramChats::getChatsTitle($chatId), $chatId]]);
+        }
         return array_merge(static::result(static::$text, true, true), ['update' => [$update]]);
     }
     public static function addParticipant(array &$day = []): void
@@ -134,7 +102,7 @@ class BookingAnswer extends ChatAnswer
         }
         $data = [
             'userId' => static::$arguments['userId'],
-            'prim' => empty(static::$arguments['p']) ? '' : static::$arguments['p'],
+            'prim' => static::$arguments['p'] ?? '',
         ];
         Days::addParticipantToDayData($day, $data);
         static::$text = static::locale(['string' => 'You’re successfully opted-in on a game %s at %s.', 'vars' => [static::$game, date('d.m.Y', static::$timestamp)]]);
@@ -145,7 +113,7 @@ class BookingAnswer extends ChatAnswer
         if ($index < 0 || empty($participants)) {
             throw new Exception(__METHOD__ . ': $index or $participants, cant be empty!');
         }
-        $participants[$index]['prim'] = empty(static::$arguments['p']) ? '' : static::$arguments['p'];
+        $participants[$index]['prim'] = static::$arguments['p'] ?? '';
         static::$text = static::locale('Success');
         static::$report = static::locale(['string' => 'User <b>%s</b> is changed prim on <b>%s</b>.', 'vars' => [static::$arguments['userName'], date('d.m.Y', static::$timestamp)]]);
     }
