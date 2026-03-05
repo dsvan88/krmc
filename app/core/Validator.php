@@ -98,17 +98,15 @@ class Validator
     }
     private static function telegramHMAC(string $string): bool
     {
-        $string = urldecode($string);
+        parse_str($string, $array);
+        $hash = $array['hash'];
+        unset($array['hash']);
+        ksort($array);
 
-        $array = explode('&', $string);
-        foreach ($array as $el) {
-            if (strpos($el, 'hash=') === false) continue;
-            $hash = substr($string, 5);
-            break;
-        }
-
-        sort($array);
-        $check_string = implode("\n", $array);
+        $check_string = '';
+        foreach($array as $k=>$v)
+            $check_string .= "$k=$v\n";
+        $check_string = rtrim($check_string, "\n");
 
         $hmac = hash_hmac('sha256', Settings::getBotToken(), 'WebAppData', true);
         return hash_hmac('sha256', $check_string, $hmac) === $hash;

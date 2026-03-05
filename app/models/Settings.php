@@ -58,10 +58,7 @@ class Settings extends Model
             self::load('telegram');
         }
 
-        if (empty(self::$settings['telegram']['bot_token']['value']))
-            return false;
-
-        return self::$settings['telegram']['bot_token']['value'];
+        return self::$settings['telegram']['bot_token']['value'] ?? false;
     }
     public static function getInfoBotToken()
     {
@@ -69,10 +66,7 @@ class Settings extends Model
             self::load('telegram');
         }
 
-        if (empty(self::$settings['telegram']['info_bot_token']['value']))
-            return false;
-
-        return self::$settings['telegram']['info_bot_token']['value'];
+        return self::$settings['telegram']['info_bot_token']['value'] ?? false;
     }
     public static function getTechTelegramId(): int
     {
