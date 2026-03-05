@@ -168,7 +168,6 @@ const actionHandler = {
 		event.preventDefault();
 		if (!formData) formData = new FormData(event.target);
 		const self = this;
-		// let submitResult = false;
 
 		const blocks = event.target.querySelectorAll('div.block');
 		const len = blocks.length;

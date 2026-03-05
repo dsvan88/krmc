@@ -55,16 +55,16 @@ actionHandler.participantCheckChange = async function (e) {
     e.target.value = '';
     return false;
 }
-actionHandler.bookingFormSubmit = function (event) {
-    event.preventDefault();
-    const url = event.target.action.slice(window.location.length);
-    const formData = new FormData(event.target);
-    request({
-        url: url,
-        data: formData,
-        success: actionHandler.commonResponse,
-    });
-}
+// actionHandler.bookingFormSubmit = function (event) {
+//     event.preventDefault();
+//     const url = event.target.action.slice(window.location.length);
+//     const formData = new FormData(event.target);
+//     request({
+//         url: url,
+//         data: formData,
+//         success: actionHandler.commonResponse,
+//     });
+// }
 
 const formBooking = document.body.querySelector('form.booking__form');
 if (formBooking) {
