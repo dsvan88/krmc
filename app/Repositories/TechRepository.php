@@ -186,11 +186,11 @@ class TechRepository
             return strrpos($value, 'users') ? -1 : 1;
         });
 
-        $folderLength = mb_strrpos(str_replace('\\', '/', $files[0]), '/', 0, 'UTF-8') + 1;
-        $dotPlace = $folderLength - mb_strrpos($files[0], '.', 0, 'UTF-8');
+        $folderLength = mb_strlen(dirname($files[0]), 'UTF-8') + 1;
+        $dotPlace = mb_strlen($files[0]) - mb_strrpos($files[0], '.', 0, 'UTF-8');
 
         foreach ($files as $file) {
-            $table = mb_substr($file, $folderLength, $dotPlace, 'UTF-8');
+            $table = mb_substr($file, $folderLength, -$dotPlace, 'UTF-8');
             self::refillTable($table, $file);
         }
         return true;
