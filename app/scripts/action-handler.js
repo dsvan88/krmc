@@ -193,13 +193,11 @@ const actionHandler = {
 			url: url,
 			data: formData,
 			success: (r) => {
-				// submitResult = r;
 				self.commonResponse.call(self, r, modal)
 				return r;
 			},
 			error: (r) => self.commonResponse.call(self, r, modal),
 		});
-		// return submitResult;
 	},
 	commonModalEvent: function (modal, action, data) {
 		if (data["error"]) {

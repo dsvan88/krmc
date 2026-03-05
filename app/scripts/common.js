@@ -3,21 +3,21 @@ const body = document.body.querySelector('.body');
 
 body.addEventListener('click', actionHandler.clickCommonHandler.bind(actionHandler));
 body.querySelectorAll('input[data-action-input]').forEach(element =>
-	element.addEventListener('input', (event) => actionHandler.inputCommonHandler.call(actionHandler, event))
+	element.addEventListener('input', actionHandler.inputCommonHandler.bind(actionHandler))
 );
 body.querySelectorAll('input[data-action-change]').forEach(element => {
-	element.addEventListener('change', (event) => actionHandler.changeCommonHandler.call(actionHandler, event));
+	element.addEventListener('change', actionHandler.changeCommonHandler.bind(actionHandler));
 	element.changeListener = true;
 });
-body.querySelectorAll('form[action,data-action-submit]').forEach(element =>
-	element.addEventListener('submit', (event) => actionHandler.commonSubmitFormHandler.call(actionHandler, event))
+body.querySelectorAll('form').forEach(element =>
+	element.addEventListener('submit', actionHandler.commonSubmitFormHandler.bind(actionHandler))
 );
 body.querySelectorAll('input[type="tel"]').forEach(element => {
-	element.addEventListener('focus', (event) => actionHandler.phoneInputFocus.call(actionHandler, event));
-	element.addEventListener('input', (event) => actionHandler.phoneInputFormat.call(actionHandler, event), false);
+	element.addEventListener('focus', actionHandler.phoneInputFocus.bind(actionHandler));
+	element.addEventListener('input', actionHandler.phoneInputFormat.bind(actionHandler), false);
 });
 document.querySelectorAll('details[data-action-open],details[data-action-close]').forEach(element =>
-	element.addEventListener('toggle', (event) => actionHandler.commonToggleHandler.call(actionHandler, event), false)
+	element.addEventListener('toggle', actionHandler.commonToggleHandler.bind(actionHandler), false)
 );
 
 const menuCheckbox = body.querySelector('#profile-menu-checkbox');
