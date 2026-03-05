@@ -147,6 +147,7 @@ class VerificationController extends Controller
     {
         $_SESSION['TelegramApp'] = 1;
         if (!Validator::validate('telegramHMAC', $_POST['data'])) {
+            error_log(json_encode($_POST['data'], JSON_UNESCAPED_UNICODE));
             $_SESSION['debug'][] = json_encode($_POST['data'], JSON_UNESCAPED_UNICODE);
             return View::notice(['type' => 'error', 'message' => 'Auth error!']);
         }
