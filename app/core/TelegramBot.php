@@ -3,7 +3,6 @@
 namespace app\core;
 
 use app\models\Settings;
-use Error;
 use Exception;
 
 class TelegramBot
@@ -21,9 +20,9 @@ class TelegramBot
     {
         static::set($token);
     }
-    public static function set(string $token)
+    public static function set(?string $token = null)
     {
-        static::$botToken = $token ?? static::getAuthData();
+        static::$botToken = empty($token) ? static::getAuthData() : $token;
         if (empty(static::$options)) {
             static::$options = [
                 CURLOPT_RETURNTRANSFER => true,

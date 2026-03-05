@@ -6,6 +6,7 @@ use app\core\Controller;
 use app\core\Locale;
 use app\core\Noticer;
 use app\core\Sender;
+use app\core\Tech;
 use app\core\View;
 use app\models\Days;
 use app\models\GameTypes;
