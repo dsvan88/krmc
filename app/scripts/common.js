@@ -9,7 +9,7 @@ body.querySelectorAll('input[data-action-change]').forEach(element => {
 	element.addEventListener('change', (event) => actionHandler.changeCommonHandler.call(actionHandler, event));
 	element.changeListener = true;
 });
-body.querySelectorAll('form[data-action-submit]').forEach(element =>
+body.querySelectorAll('form[action,data-action-submit]').forEach(element =>
 	element.addEventListener('submit', (event) => actionHandler.commonSubmitFormHandler.call(actionHandler, event))
 );
 body.querySelectorAll('input[type="tel"]').forEach(element => {

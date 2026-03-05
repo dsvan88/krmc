@@ -188,9 +188,9 @@ const actionHandler = {
 				block.image = image.value;
 			formData.append('blocks[]', JSON.stringify(block));
 		}
-
+		const url = event.target.dataset.actionSubmit ?? event.target.action.replace(window.location.origin + '/', '')
 		return await request({
-			url: event.target.action.replace(window.location.origin + '/', ''),
+			url: url,
 			data: formData,
 			success: (r) => {
 				// submitResult = r;
