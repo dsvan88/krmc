@@ -1,4 +1,4 @@
-<form class="modal__form" method="POST" action="/account/forget">
+<form class="modal__form" method="POST" data-action-submit="/account/forget">
     <fieldset>
         <legend class="modal__subtitle"><?= $subtitle ?></legend>
         <h3 class="modal__form-subtitle">Для отримання посилання, розпочніть спілкування з нашим <a href="<?= $texts['tgBotLink'] ?>" target="_blank">ботом</a>,</br> й зареєструйте собі ім’я, якщо ви цього не зробили раніше.</h3>

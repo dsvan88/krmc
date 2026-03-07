@@ -1,4 +1,4 @@
-<form class="modal__form" method="POST" action="/account/ban/<?=$user['id']?>">
+<form class="modal__form" method="POST" data-action-submit="/account/ban/<?=$user['id']?>">
     <h2 class="modal__form-title"><?= $title ?></h2>
     <fieldset>
         <legend><?=$texts['bannedTo']?>:</legend>

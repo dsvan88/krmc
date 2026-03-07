@@ -1,4 +1,4 @@
-<form class="modal__form" method="POST" action="/account/doubles/<?=$userId?>">
+<form class="modal__form" method="POST" data-action-submit="/account/doubles/<?=$userId?>">
     <h2 class="modal__form-title"><?= $title ?></h2>
     <div class="modal__row">
         <input class="modal__input" required type="text" name="name" placeholder="Псевдонім" autofocus data-action-input="autocomplete-users-names" list="users-names-list" autocomplete="off" />

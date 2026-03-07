@@ -1,4 +1,4 @@
-<form class="modal__form" method="POST" action="/account/register">
+<form class="modal__form" method="POST" data-action-submit="/account/register">
     <fieldset>
         <legend class="modal__subtitle"><?= $subtitle ?></legend>
         <div class="modal__row">
