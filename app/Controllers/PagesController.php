@@ -5,7 +5,6 @@ namespace app\Controllers;
 use app\core\Controller;
 use app\core\GoogleDrive;
 use app\core\Locale;
-use app\core\Tech;
 use app\core\Validator;
 use app\core\View;
 use app\models\Pages;
@@ -64,7 +63,7 @@ class PagesController extends Controller
             } catch (\Throwable $error){
                 return View::notice(['error' => 1, 'message' => $error->getMessage(), 'time' => 3000]);
             }
-            return View::notice(['message' => 'Changes saved successfully!']);
+            return View::notice(['message' => 'Changes saved successfully!', 'time' => 2000, 'location' => 'reload']);
             
         }
         $page = Pages::getBySlug($slug);

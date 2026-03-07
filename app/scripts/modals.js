@@ -253,7 +253,7 @@ class ModalWindow {
 		self.modal.onmouseup = (event) => this.moveEnd(event);
 		self.modal.ontouchend = (event) => this.moveEnd(event);
 	}
-	moveEnd(event) {
+	moveEnd() {
 		document.removeEventListener('mousemove', this.onMouseMove);
 		document.removeEventListener('touchmove', this.onMouseMove);
 		this.dragged = false;
