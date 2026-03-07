@@ -57,12 +57,12 @@ return  [
     ],
     /*    'account' => [
         'redirect' => 'account/login'
-    ], */
+    ],
      'account/login' => [
         'controller' => 'account',
         'action' => 'loginForm',
         'access' => ['category' => 'all']
-    ],
+    ], */
     'account/logout' => [
         'controller' => 'account',
         'action' => 'logout',

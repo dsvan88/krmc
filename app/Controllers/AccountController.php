@@ -57,6 +57,7 @@ class AccountController extends Controller
         }
         $vars = [
             'title' => 'Authorization form',
+            'subtitle' => 'Enter your Authorization data',
             'texts' => [
                 'LoginInputPlaceholder' => 'Login',
                 'PasswordInputPlaceholder' => '{{ Account_Login_Form_Password_Input_Placeholder }}',
@@ -682,6 +683,7 @@ class AccountController extends Controller
         $botData = Sender::getMe();
         $vars = [
             'title' => '{{ Account_Forget_Form_Title }}',
+            'subtitle' => 'Password recovery form',
             'texts' => [
                 'authPlaceholder' => '{{ Account_Login_Form_Login_Input_Placeholder }}',
                 'SubmitLabel' => 'Execute',
@@ -815,6 +817,7 @@ class AccountController extends Controller
         }
         $vars = [
             'title' => 'Registration form',
+            'subtitle' => 'New user’s registration form',
             'texts' => [
                 'LoginLabel' => 'Login',
                 'NameLabel' => 'Nickname (in game)',

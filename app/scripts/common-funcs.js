@@ -111,27 +111,6 @@ async function addScriptFile(src) {
         document.head.appendChild(script);
     });
 }
-// function addScriptFile(src, callback = '') {
-// 	if (Array.isArray(src)) {
-// 		let result = false;
-// 		for (let index = 0; index < src.length; index++) {
-// 			result = addScriptFile(src[index], callback)
-// 		}
-// 		return result;
-// 	}
-
-// 	if (document.head.querySelector(`script[src="${src}"]`)) {
-// 		return false;
-// 	}
-// 	const script = document.createElement('script');
-// 	script.src = src;
-// 	script.async = true;
-// 	script.type = 'module';
-// 	document.head.appendChild(script);
-// 	if (callback !== '')
-// 		script.onload = callback;
-// 	return true;
-// }
 async function addCssFile(src) {
     if (Array.isArray(src)) {
         for (const url of src) {
@@ -156,24 +135,6 @@ async function addCssFile(src) {
         document.head.appendChild(link);
     });
 }
-// function addCssFile(src) {
-// 	if (Array.isArray(src)) {
-// 		for (let index = 0; index < src.length; index++) {
-// 			addCssFile(src[index])
-// 		}
-// 	}
-// 	else {
-// 		if (document.head.querySelector(`link[href="${src}"]`)) {
-// 			return false;
-// 		}
-// 		const link = document.createElement('link');
-// 		link.rel = 'stylesheet';
-// 		link.type = 'text/css';
-// 		link.href = src;
-// 		link.media = 'all';
-// 		document.head.appendChild(link);
-// 	}
-// }
 
 function formDataToJson(data) {
 	const object = {};

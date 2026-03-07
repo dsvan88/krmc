@@ -1,5 +1,6 @@
 let dblclick_func = false;
-const body = document.body.querySelector('.body');
+const body = document.body;
+
 
 body.addEventListener('click', actionHandler.clickCommonHandler.bind(actionHandler));
 body.querySelectorAll('input[data-action-input]').forEach(element =>

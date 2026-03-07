@@ -30,7 +30,7 @@ const actionHandler = {
 	clickCommonHandler: function (e) {
 		const target = e.target.closest('[data-action-click],[data-action-dblclick]');
 		if (!target) return;
-throw Error('Custom Error');
+		
 		const { actionClick, actionDblclick } = target.dataset;
 
 		if (actionDblclick) {
@@ -47,6 +47,7 @@ throw Error('Custom Error');
 		this.clickFunc(target, e);
 	},
 	clickFunc: async function (target, event, method = 'actionClick') {
+
 		if (!(method in target.dataset)) return false;
 		event.preventDefault();
 
@@ -66,7 +67,6 @@ throw Error('Custom Error');
 	},
 	apiTalk: async function (target, event, method, formData = null) {
 		const action = target.dataset[method];
-
 		if (!formData)
 			formData = new FormData;
 
@@ -97,13 +97,25 @@ throw Error('Custom Error');
 		}
 
 		if (action.endsWith('/form')) {
-			return await ModalWindow.create({url:action, data:formData});
+			const _action = camelize(action.replace(/\//g, '-'));
+			const submit = this[_action + "Submit"] ?? this.commonSubmitFormHandler;
+			const ready = this[_action + "Ready"] ?? this.commonFormEventReady;
+
+			const modal = await ModalWindow.create({
+				url:action,
+				data:formData,
+				submit: submit.bind(this),
+				error: this.commonResponse.bind(this),
+				ready: ready.bind(this),
+			});
+			this.handleEvents(modal.content);
+			return true;
 		}
+
 		const r = await this.request({
 			url: action,
 			data: formData,
 		});
-		// }, modal);
 
 		return r;
 	},
@@ -112,43 +124,16 @@ throw Error('Custom Error');
 
 		const r = await request(options)
 
-		// if (modal) this.commonModalEvent(modal, options.url, r);
-
 		this.commonResponse(r);
 		return r;
 	},
-	commonFormEventEnd: function ({ modal, data, action = null, ...args } = {}) {
-
-		if (data['error']) {
-			return modal.fill({ html: data['html'], title: 'Error!', buttons: [{ 'text': 'Okay', 'className': 'modal__close positive' }] });
-		}
-
-		const _action = camelize(action.replace(/\//g, '-'));
-		let submit = _action + "Submit";
-
-		if (!this[submit])
-			submit = 'commonSubmitFormHandler';
-
-		data.context = this;
-		data.submit = this[submit];
-
-		const modalWindow = modal.fill(data);
-
-		if (this[_action + "Ready"])
-			this[_action + "Ready"]({ modal, data: data });
-
-		this.handleEvents(modalWindow);
-
-		return modalWindow;
-	},
-	commonFormEventReady: function ({ modal = null, result = {} }) {
-		const input = modal.querySelector("input");
+	commonFormEventReady: async function (modal = null) {
+		if (!modal)
+			throw Error("Modal is empty");
+		const input = modal.content.querySelector("input");
 		if (input) {
 			input.focus();
 		}
-		// if (result["javascript"]) {
-		// 	window.eval(result["javascript"]);
-		// }
 	},
 	commonSubmitFormHandler: async function (event, formData = null, modal = null, args = null) {
 		event.preventDefault();
@@ -174,10 +159,12 @@ throw Error('Custom Error');
 			formData.append('blocks[]', JSON.stringify(block));
 		}
 
-		let url = event.target.dataset.actionSubmit ?? event.target.action.replace(window.location.origin + '/', '')
-		if (!event.target.dataset.actionSubmit){
-			url = window.location.origin+'/'+url;
-		}
+		let url = event.target.dataset.actionSubmit ?? event.target.action ?? '/'
+		console.log(url);
+		// let url = event.target.dataset.actionSubmit ?? event.target.action.replace(window.location.origin + '/', '')
+		// if (!event.target.dataset.actionSubmit){
+		// 	url = window.location.origin+'/'+url;
+		// }
 
 		return await request({
 			url: url,
@@ -188,25 +175,6 @@ throw Error('Custom Error');
 			},
 			error: (r) => self.commonResponse.call(self, r, modal),
 		});
-	},
-	commonModalEvent: function (modal, action, data) {
-		if (data["error"]) {
-			this.commonFormEventEnd({ modal, data });
-			new Alert({ title: 'Error!', text: data["message"] });
-			return false;
-		}
-
-		if (!data["modal"]) return false;
-
-		if (data["jsFile"]) {
-			addScriptFile(data["jsFile"]);
-		};
-
-		if (data["cssFile"]) {
-			addCssFile(data["cssFile"]);
-		};
-
-		setTimeout(() => this.commonFormEventEnd({ modal, data, action }), 100);
 	},
 	commonResponse: function (response, modal = null) {
 		if (response["error"]) {
@@ -359,22 +327,35 @@ throw Error('Custom Error');
 		window.location = '?lang=' + event.target.value;
 	},
 	handleEvents: function (t) {
-		const s = this;
-		t.querySelectorAll('input[data-action-input]').forEach(i =>
-			i.addEventListener('input', (e) => s.inputCommonHandler.call(s, e))
-		);
-		t.querySelectorAll('input[data-action-change]').forEach(i =>
-			i.addEventListener('change', (e) => s.changeCommonHandler.call(s, e))
-		);
-		t.querySelectorAll('form[data-action-submit]').forEach(i =>
-			i.addEventListener('submit', (e) => s.commonSubmitFormHandler.call(s, e))
-		);
-		t.querySelectorAll('input[type="tel"]').forEach(i => {
-			i.addEventListener('focus', (e) => s.phoneInputFocus.call(s, e));
-			i.addEventListener('input', (e) => s.phoneInputFormat.call(s, e), false);
-		});
-		t.querySelectorAll('details[data-action-open],details[data-action-close]').forEach(i =>
-			i.addEventListener('toggle', (e) => s.commonToggleHandler.call(s, e), false)
-		);
+
+		let els = t.querySelectorAll('input[data-action-input]');
+		let len = els.length;
+		if (len > 0){
+			for (let x = 0; x < len; x++) {
+				els[x].addEventListener('input', this.inputCommonHandler.bind(this));				
+			}
+		}
+		els = t.querySelectorAll('input[data-action-change]');
+		len = els.length;
+		if (len > 0){
+			for (let x = 0; x < len; x++) {
+				els[x].addEventListener('change', this.changeCommonHandler.bind(this));				
+			}
+		}
+		els = t.querySelectorAll('input[type="tel"]');
+		len = els.length;
+		if (len > 0){
+			for (let x = 0; x < len; x++) {
+				els[x].addEventListener('focus', this.phoneInputFocus.bind(this));				
+				els[x].addEventListener('input', this.phoneInputFormat.bind(this));				
+			}
+		}
+		els = t.querySelectorAll('details[data-action-open],details[data-action-close]');
+		len = els.length;
+		if (len > 0){
+			for (let x = 0; x < len; x++) {
+				els[x].addEventListener('toggle', this.commonToggleHandler.bind(this));			
+			}
+		}
 	}
 };

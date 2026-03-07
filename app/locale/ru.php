@@ -55,6 +55,7 @@ return [
     'Last game' => 'Последняя игра',
 
     'Authorization form' => 'Авторизация',
+    'Enter your Authorization data' => 'Введите Ваши данные авторизации',
     '{{ Account_Login_Form_Login_Input_Placeholder }}' => 'Логин/почта',
     '{{ Account_Login_Form_Password_Input_Placeholder }}' => 'Пароль',
     'Forget Password' => 'Забыли пароль?',
@@ -94,12 +95,14 @@ return [
     'Replace' => 'Заменить',
 
     'Registration form' => 'Форма регистрации',
+    'New user’s registration form' => 'Форма регистрации нового пользователя',
 
     'Change Password' => 'Смена пароля',
     'Old password is wrong!' => 'Не верный старый пароль!',
     'Passwords isn’t match!' => 'Пароли не совпадают!',
     '{{ Account_Password_Reset_Title }}' => 'Сброс пароля',
     '{{ Account_Forget_Form_Title }}' => 'Восстановление пароля',
+    'Password recovery form' => 'Форма восстановления пароля',
     '{{ Account_Forget_Check_Succes }}' => "Запрос на восстановление пароля обработан.\nВаша ссылка на восстановление пароля:\n%s",
     "This new name already exists in the base.\nPlease, select another!" => "Такой псевдоним уже есть в записях!\nПожалуйста, виберите другой!",
 

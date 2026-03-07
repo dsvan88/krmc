@@ -8,7 +8,6 @@ class ModalWindow {
 	title = null;
 	formSubmitHandler = null;
 	pauseLayout = null;
-	context = null;
 	content = null;
 	dragged = false;
 
@@ -16,7 +15,7 @@ class ModalWindow {
 		return this.pauseLayout ? true : false;
 	}
 
-	constructor({ divId = "modalWindow", html = "", title = "", buttons = [], submit = null, context = null } = {}) {
+	constructor({ divId = "modalWindow", html = "", title = "", buttons = [], submit = null } = {}) {
 		this.commonOverlay = document.body.querySelector("#overlay");
 		if (this.commonOverlay === null) {
 			this.commonOverlay = document.createElement("div");
@@ -28,7 +27,7 @@ class ModalWindow {
 		this.prepeare(divId);
 
 		if (html) {
-			this.fill({ html, title, buttons, submit, context });
+			this.fill({ html, title, buttons, submit });
 		}
 		this.attachEvents();
 	};
@@ -47,7 +46,7 @@ class ModalWindow {
 		}
 		
 		if (!response['modal'])
-			throw Error('ModalWindow: response isnt a modal.');
+			throw Error('ModalWindow: response isn’t a modal.');
 		
 		if (!response['html'])
 			throw Error('ModalWindow: response.html is empty.');
@@ -60,9 +59,29 @@ class ModalWindow {
 			await addCssFile(data["cssFile"]);
 		};
 
+		modal.fill(response)
+
+		if (submit && modal.content) {
+			modal.formSubmitHandler = submit;
+			let form = modal.content.querySelector('form');
+			if (!form) {
+				form = document.createElement('form');
+				form.action = "/";
+				form.method = "POST";
+				form.innerHTML = modal.content.innerHTML;
+				modal.content.innerHTML = form.outerHTML;
+				form = modal.content.querySelector('form');
+			}
+			form.addEventListener('submit', e => modal.submit(e))
+		}		
+		
+		if (ready) {
+			await ready(modal, response);
+		}
+
 		return modal;
 	}
-	fill({ html = "", title = "", buttons = [], submit = null, context = null }) {
+	fill({ html = "", title = "", buttons = [], submit = null }) {
 		if (html) {
 			this.content.innerHTML = html;
 		}
@@ -88,24 +107,6 @@ class ModalWindow {
 			modalContainer.append(modalButtons)
 			this.content = modalContainer;
 		}
-
-		if (submit && this.content) {
-			this.formSubmitHandler = submit;
-			this.context = context;
-			let form = this.content.querySelector('form');
-			if (!form) {
-				form = document.createElement('form');
-				form.action = "/";
-				form.method = "POST";
-				form.innerHTML = this.content.innerHTML;
-				this.content.innerHTML = form.outerHTML;
-				form = this.content.querySelector('form');
-			}
-			form.addEventListener('submit', e => this.submit(e))
-		}
-		this.attachEvents();
-
-		// this.content.dispatchEvent(new Event('load'));
 
 		return this.content;
 	};
@@ -190,33 +191,32 @@ class ModalWindow {
 			this.commonOverlay.style.opacity = 0;
 			setTimeout(() => this.commonOverlay.remove(), 300);
 		}
-		const _self = this;
 
 		this.modal.style.opacity = 0;
 		this.modal.style.transform = 'translateY(2%)';
-		setTimeout(() => this.currentOverlay.remove(), 300);
+		setTimeout(() => {
+			this.modal.remove()
+			this.currentOverlay.remove()
+		}, 300);
 	}
 	submit(event) {
 		event.preventDefault();
 		this.pause();
 		const formData = new FormData(event.target);
-		if (this.context) {
-			this.formSubmitHandler.call(this.context, event, formData, this);
-		}
-		else {
-			this.formSubmitHandler(event, formData, this);
-		}
+		this.formSubmitHandler(event, formData, this);
 	}
+
 	attachEvents() {
-		const self = this;
+		this.modal.addEventListener("click", this.clickFunc.bind(this))
 
-		self.currentOverlay.querySelectorAll('.modal__close').forEach(element => element.addEventListener("click", (event) => self.close(event)));
+		this.modal.ondragstart = () => false;
 
-		// self.modal.ondragstart = () => false;
+		this.title.addEventListener('mousedown', this.dragStart.bind(this));
 
-		// self.title.addEventListener('mousedown', (event) => self.dragStart.call(self, event));
-
-		// self.modal.addEventListener('touchstart', (event) => self.dragStart.call(self, event));
+		this.modal.addEventListener('touchstart', this.dragStart.bind(this));
+	}
+	clickFunc(e){
+		if (e.target.classList.contains('modal__close')) this.close();
 	}
 	dragStart(event) {
 
@@ -254,11 +254,12 @@ class ModalWindow {
 		self.modal.ontouchend = (event) => this.moveEnd(event);
 	}
 	moveEnd(event) {
-		// console.log(event);
-		document.removeEventListener(event.type, this.onMouseMove);
+		document.removeEventListener('mousemove', this.onMouseMove);
+		document.removeEventListener('touchmove', this.onMouseMove);
 		this.dragged = false;
-		this.modal.ontouchend = null;
 		document.context = null;
+		this.modal.ontouchend = null;
+		this.modal.style.zIndex = 8 + this.modalIndex;;
 	}
 	moveAt(pageX, pageY) {
 		this.modal.style.left = pageX - this.shiftX + 'px';
