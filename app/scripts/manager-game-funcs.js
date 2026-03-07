@@ -1,6 +1,6 @@
 actionHandler.gameFormSubmit = function (event) {
 	event.preventDefault();
-	const self = actionHandler;
+	const self = this;
 	const manager = document.querySelector('input[name="manager"]');
 	if (!manager.value.trim()) {
 		alert('Спочатку оберіть ведучого серед учасників!')

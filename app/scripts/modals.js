@@ -32,6 +32,36 @@ class ModalWindow {
 		}
 		this.attachEvents();
 	};
+	static async create({url= null, data = null, ready = null, submit = null, error = null } = {}){
+		
+		if (!url)
+			throw Error('ModalWindow: url is empty.');
+
+		const modal = new this;
+
+		const response = await request({ url: url, data: data });
+
+		if (response["error"]) {
+			error(response) || new Alert({ title: 'Error!', text: data["message"] });
+			return modal.close();
+		}
+		
+		if (!response['modal'])
+			throw Error('ModalWindow: response isnt a modal.');
+		
+		if (!response['html'])
+			throw Error('ModalWindow: response.html is empty.');
+
+		if (data["jsFile"]) {
+			await addScriptFile(data["jsFile"]);
+		};
+
+		if (data["cssFile"]) {
+			await addCssFile(data["cssFile"]);
+		};
+
+		return modal;
+	}
 	fill({ html = "", title = "", buttons = [], submit = null, context = null }) {
 		if (html) {
 			this.content.innerHTML = html;

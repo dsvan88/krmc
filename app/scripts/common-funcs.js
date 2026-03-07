@@ -87,45 +87,93 @@ function camelize(str) {
 		.join(""); // соединяет ['my', 'Long', 'Word'] в 'myLongWord'
 }
 
-function addScriptFile(src, callback = '') {
-	if (Array.isArray(src)) {
-		let result = false;
-		for (let index = 0; index < src.length; index++) {
-			result = addScriptFile(src[index], callback)
-		}
-		return result;
-	}
+async function addScriptFile(src) {
+    if (Array.isArray(src)) {
+        for (const url of src) {
+            await addScriptFile(url);
+        }
+        return true;
+    }
 
-	if (document.head.querySelector(`script[src="${src}"]`)) {
-		return false;
-	}
-	const script = document.createElement('script');
-	script.src = src;
-	script.async = true;
-	script.type = 'module';
-	document.head.appendChild(script);
-	if (callback !== '')
-		script.onload = callback;
-	return true;
+    return new Promise((resolve, reject) => {
+        if (document.head.querySelector(`script[src="${src}"]`)) {
+            return resolve(false);
+        }
+
+        const script = document.createElement('script');
+        script.src = src;
+		script.async = false; 
+        script.type = 'module';
+
+        script.onload = () => resolve(true);
+        script.onerror = () => reject(new Error(`Помилка завантаження: ${src}`));
+
+        document.head.appendChild(script);
+    });
 }
-function addCssFile(src) {
-	if (Array.isArray(src)) {
-		for (let index = 0; index < src.length; index++) {
-			addCssFile(src[index])
-		}
-	}
-	else {
+// function addScriptFile(src, callback = '') {
+// 	if (Array.isArray(src)) {
+// 		let result = false;
+// 		for (let index = 0; index < src.length; index++) {
+// 			result = addScriptFile(src[index], callback)
+// 		}
+// 		return result;
+// 	}
+
+// 	if (document.head.querySelector(`script[src="${src}"]`)) {
+// 		return false;
+// 	}
+// 	const script = document.createElement('script');
+// 	script.src = src;
+// 	script.async = true;
+// 	script.type = 'module';
+// 	document.head.appendChild(script);
+// 	if (callback !== '')
+// 		script.onload = callback;
+// 	return true;
+// }
+async function addCssFile(src) {
+    if (Array.isArray(src)) {
+        for (const url of src) {
+            await addCssFile(url);
+        }
+        return true;
+    }
+
+    return new Promise((resolve, reject) => {
 		if (document.head.querySelector(`link[href="${src}"]`)) {
-			return false;
+			return resolve(false);
 		}
 		const link = document.createElement('link');
 		link.rel = 'stylesheet';
 		link.type = 'text/css';
 		link.href = src;
 		link.media = 'all';
-		document.head.appendChild(link);
-	}
+
+        link.onload = () => resolve(true);
+        link.onerror = () => reject(new Error(`Помилка завантаження: ${src}`));
+
+        document.head.appendChild(link);
+    });
 }
+// function addCssFile(src) {
+// 	if (Array.isArray(src)) {
+// 		for (let index = 0; index < src.length; index++) {
+// 			addCssFile(src[index])
+// 		}
+// 	}
+// 	else {
+// 		if (document.head.querySelector(`link[href="${src}"]`)) {
+// 			return false;
+// 		}
+// 		const link = document.createElement('link');
+// 		link.rel = 'stylesheet';
+// 		link.type = 'text/css';
+// 		link.href = src;
+// 		link.media = 'all';
+// 		document.head.appendChild(link);
+// 	}
+// }
 
 function formDataToJson(data) {
 	const object = {};

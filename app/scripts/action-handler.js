@@ -9,13 +9,10 @@ const actionHandler = {
 	},
 	changeCommonHandler: function (event) {
 		const type = camelize(event.target.dataset.actionChange);
+
 		if (debug) console.log(type);
-		try {
-			this[type](event);
-		} catch (error) {
-			console.log(error);
-			alert(`Не существует метода для этого action-type: ${type}... или возникла ошибка. Сообщите администратору!\n${error.name}: ${error.message}`);
-		}
+
+		this[type](event);
 	},
 	commonToggleHandler: function (event) {
 		let method = '';
@@ -28,17 +25,12 @@ const actionHandler = {
 		if (!method) return false;
 
 		if (debug) console.log(method);
-		try {
-			this[method](event);
-		} catch (error) {
-			console.log(error);
-			alert(`Не существует метода для этого action-type: ${method}... или возникла ошибка. Сообщите администратору!\n${error.name}: ${error.message}`);
-		}
+		this[method](event);
 	},
 	clickCommonHandler: function (e) {
 		const target = e.target.closest('[data-action-click],[data-action-dblclick]');
 		if (!target) return;
-
+throw Error('Custom Error');
 		const { actionClick, actionDblclick } = target.dataset;
 
 		if (actionDblclick) {
@@ -69,21 +61,11 @@ const actionHandler = {
 
 		type = this[type] ? type : 'apiTalk';
 
-		try {
-			this[type](target, event, method);
-		} catch (error) {
-			alert(`Не существует метода для этого action-click: ${type}... или возникла ошибка. Сообщите администратору!\r\n${error.name}: ${error.message}`);
-			console.log(error);
-			return false;
-		}
+		this[type](target, event, method);
 		return true;
 	},
 	apiTalk: async function (target, event, method, formData = null) {
 		const action = target.dataset[method];
-		let modal = false;
-		if (action.endsWith('/form')) {
-			modal = new ModalWindow();
-		}
 
 		if (!formData)
 			formData = new FormData;
@@ -99,7 +81,6 @@ const actionHandler = {
 		if (target.dataset.verification) {
 			if (target.dataset.verification === 'confirm') {
 				if (!confirm('Are you sure?')) {
-					if (modal) modal.close();
 					return false;
 				}
 			}
@@ -114,19 +95,24 @@ const actionHandler = {
 				formData.append('verification', verification);
 			}
 		}
+
+		if (action.endsWith('/form')) {
+			return await ModalWindow.create({url:action, data:formData});
+		}
 		const r = await this.request({
 			url: action,
 			data: formData,
-		}, modal);
+		});
+		// }, modal);
 
 		return r;
 	},
-	request: async function (options, modal) {
+	request: async function (options) {
 		if (!options.url) return false;
 
 		const r = await request(options)
 
-		if (modal) this.commonModalEvent(modal, options.url, r);
+		// if (modal) this.commonModalEvent(modal, options.url, r);
 
 		this.commonResponse(r);
 		return r;
