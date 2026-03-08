@@ -69,9 +69,12 @@ class ModalWindow {
 				form = document.createElement('form');
 				form.action = "/";
 				form.method = "POST";
-				form.innerHTML = modal.content.innerHTML;
-				modal.content.innerHTML = form.outerHTML;
-				form = modal.content.querySelector('form');
+
+				while (modal.content.firstChild) {
+					form.appendChild(modal.content.firstChild);
+				}
+
+				modal.content.appendChild(form);
 			}
 			form.addEventListener('submit', e => modal.submit(e))
 		}		
