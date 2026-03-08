@@ -101,14 +101,17 @@ const actionHandler = {
 			const submit = this[_action + "Submit"] ?? this.commonSubmitFormHandler;
 			const ready = this[_action + "Ready"] ?? this.commonFormEventReady;
 
-			const modal = await ModalWindow.create({
+			const r = await ModalWindow.create({
 				url:action,
 				data:formData,
 				submit: submit.bind(this),
 				error: this.commonResponse.bind(this),
 				ready: ready.bind(this),
 			});
-			this.handleEvents(modal.content);
+
+			if (!r.modal) return this.commonResponse(r);
+			
+			this.handleEvents(r.content);
 			return true;
 		}
 
@@ -160,7 +163,7 @@ const actionHandler = {
 		}
 
 		let url = event.target.dataset.actionSubmit ?? event.target.action ?? '/'
-		console.log(url);
+		// console.log(url);
 		// let url = event.target.dataset.actionSubmit ?? event.target.action.replace(window.location.origin + '/', '')
 		// if (!event.target.dataset.actionSubmit){
 		// 	url = window.location.origin+'/'+url;

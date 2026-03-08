@@ -42,7 +42,8 @@ class ModalWindow {
 
 		if (response["error"]) {
 			error(response) || new Alert({ title: 'Error!', text: data["message"] });
-			return modal.close();
+			modal.close();
+			return response;
 		}
 		
 		if (!response['modal'])
