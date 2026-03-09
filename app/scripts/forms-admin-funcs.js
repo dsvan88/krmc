@@ -80,7 +80,7 @@ actionHandler.settingsEdit = async function (target, event) {
 	formData.append('slug', target.dataset.slug);
 	formData.append('value', newValue);
 
-	return await this.apiTalk(target, event, 'actionDblclick', formData);
+	return await this.apiTalk(target, 'actionDblclick', formData);
 }
 
 actionHandler.pagesRemoveBlock = async function (target) {

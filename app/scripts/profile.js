@@ -5,7 +5,7 @@ actionHandler.accountProfileSection = async function (target) {
     activeItem.classList.remove('active');
     target.classList.add('active');
 
-    const result = await this.apiTalk(target, null, 'actionClick');
+    const result = await this.apiTalk(target, 'actionClick');
 
     this.changeCardContent(result);
 }
@@ -20,7 +20,7 @@ actionHandler.accountProfileSectionEdit = async function (target) {
 
     const data = getFormDataFromDataset(parent);
 
-    const result = await this.apiTalk(target, null, 'actionClick', data);
+    const result = await this.apiTalk(target, 'actionClick', data);
 
     this.changeCardContent(result);
 }

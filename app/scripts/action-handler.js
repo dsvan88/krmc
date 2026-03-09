@@ -30,7 +30,7 @@ const actionHandler = {
 	clickCommonHandler: function (e) {
 		const target = e.target.closest('[data-action-click],[data-action-dblclick]');
 		if (!target) return;
-		
+
 		const { actionClick, actionDblclick } = target.dataset;
 
 		if (actionDblclick) {
@@ -60,12 +60,12 @@ const actionHandler = {
 		let type = camelize(target.dataset[method]);
 		if (debug) console.log(type);
 
-		type = this[type] ? type : 'apiTalk';
+		if (this[type])
+			return this[type];
+		return this.apiTalk(target, method);
 
-		this[type](target, event, method);
-		return true;
 	},
-	apiTalk: async function (target, event, method, formData = null) {
+	apiTalk: async function (target, method, formData = null) {
 		const action = target.dataset[method];
 		if (!formData)
 			formData = new FormData;
@@ -79,11 +79,8 @@ const actionHandler = {
 		}
 
 		if (target.dataset.verification) {
-			if (target.dataset.verification === 'confirm') {
-				if (!confirm('Are you sure?')) {
-					return false;
-				}
-			}
+			if (target.dataset.verification === 'confirm' && !confirm('Are you sure?'))
+				return false;
 			else {
 				const input = { type: 'text' };
 				if (/(root|pass)/.test(target.dataset.verification))
@@ -102,15 +99,15 @@ const actionHandler = {
 			const ready = this[_action + "Ready"] ?? this.commonFormEventReady;
 
 			const r = await ModalWindow.create({
-				url:action,
-				data:formData,
+				url: action,
+				data: formData,
 				submit: submit.bind(this),
 				error: this.commonResponse.bind(this),
 				ready: ready.bind(this),
 			});
 
 			if (!r.modal) return this.commonResponse(r);
-			
+
 			this.handleEvents(r.content);
 			return true;
 		}
@@ -333,31 +330,31 @@ const actionHandler = {
 
 		let els = t.querySelectorAll('input[data-action-input]');
 		let len = els.length;
-		if (len > 0){
+		if (len > 0) {
 			for (let x = 0; x < len; x++) {
-				els[x].addEventListener('input', this.inputCommonHandler.bind(this));				
+				els[x].addEventListener('input', this.inputCommonHandler.bind(this));
 			}
 		}
 		els = t.querySelectorAll('input[data-action-change]');
 		len = els.length;
-		if (len > 0){
+		if (len > 0) {
 			for (let x = 0; x < len; x++) {
-				els[x].addEventListener('change', this.changeCommonHandler.bind(this));				
+				els[x].addEventListener('change', this.changeCommonHandler.bind(this));
 			}
 		}
 		els = t.querySelectorAll('input[type="tel"]');
 		len = els.length;
-		if (len > 0){
+		if (len > 0) {
 			for (let x = 0; x < len; x++) {
-				els[x].addEventListener('focus', this.phoneInputFocus.bind(this));				
-				els[x].addEventListener('input', this.phoneInputFormat.bind(this));				
+				els[x].addEventListener('focus', this.phoneInputFocus.bind(this));
+				els[x].addEventListener('input', this.phoneInputFormat.bind(this));
 			}
 		}
 		els = t.querySelectorAll('details[data-action-open],details[data-action-close]');
 		len = els.length;
-		if (len > 0){
+		if (len > 0) {
 			for (let x = 0; x < len; x++) {
-				els[x].addEventListener('toggle', this.commonToggleHandler.bind(this));			
+				els[x].addEventListener('toggle', this.commonToggleHandler.bind(this));
 			}
 		}
 	}

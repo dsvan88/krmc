@@ -8,14 +8,14 @@ actionHandler.imageAdd = async function (event) {
 
     for (let x = 0; x < event.target.files.length; x++) {
         readers.push(new FileReader());
-        readers[x].onloadend = async function (e) {
+        readers[x].onloadend = async () => {
             formData.append('filename[]', event.target.files[x].name);
             formData.append('type', event.target.dataset.type);
             formData.append('image[]', readers[x].result);
             for (let y = 0; y < event.target.files.length; y++) {
                 if (!readers[y] || readers[y].readyState !== FileReader.DONE) return true;
             }
-            const result = await self.apiTalk(event.target, event, 'actionChange', formData);
+            const result = await self.apiTalk(event.target, 'actionChange', formData);
             target.insertAdjacentHTML('afterend', result.html);
             self.addChangeListeners();
         }
@@ -28,7 +28,7 @@ actionHandler.imageBackgroundGroup = async function (target, event) {
     }
     const formData = new FormData();
     formData.append('file_ids', JSON.stringify(enumBgImages));
-    return await this.apiTalk(target, event, 'actionClick', formData);
+    return await this.apiTalk(target, 'actionClick', formData);
 }
 actionHandler.imageDeleteGroup = async function (target, event) {
     if (enumBgImages.length === 0) {
@@ -36,7 +36,7 @@ actionHandler.imageDeleteGroup = async function (target, event) {
     }
     const formData = new FormData();
     formData.append('file_ids', JSON.stringify(enumBgImages));
-    return await this.apiTalk(target, event, 'actionClick', formData);
+    return await this.apiTalk(target, 'actionClick', formData);
 }
 actionHandler.imageToogle = function (event) {
     const value = event.target.value;
@@ -49,7 +49,7 @@ actionHandler.imageToogle = function (event) {
     return true;
 }
 actionHandler.imagesGetMore = async function (target, event) {
-    const result = await this.apiTalk(target, event, 'actionClick');
+    const result = await this.apiTalk(target, 'actionClick');
     target.insertAdjacentHTML('beforebegin', result.html);
     target.dataset.pageToken = result.nextPageToken ? result.nextPageToken : '';
     if (!result.nextPageToken) {
@@ -77,9 +77,9 @@ actionHandler.showFolderInfo = function (event) {
     info_value_bytes.innerText = 'Folder';
     info_value_resol.innerText = '-';
 }
-actionHandler.openImagesFolder = function (target){
+actionHandler.openImagesFolder = function (target) {
     // console.log('/images/'+target.dataset.name);
-    return window.location = '/images/'+target.dataset.name;
+    return window.location = '/images/' + target.dataset.name;
 }
 actionHandler.getLink = function (target) {
     try {
