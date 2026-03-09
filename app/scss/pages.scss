@@ -35,15 +35,17 @@
 	.block {
 		&__title {
 			margin-top: 0;
-			margin-bottom: .2em;
+			margin-bottom: .5em;
 			letter-spacing: .15em;
-			font-size: 1.2em;
+			font-size: 1.5em;
 			padding: 1em .2em .1em .2em;
 			background-color: $bg-color-light;
 			text-shadow: 2px 2px 2px $bg-color-light-odd;
 		}
 
 		&__content {
+			font-size: 1.2em;
+
 			&.ti {
 				display: flex;
 				flex-direction: column;
@@ -85,6 +87,7 @@
 				width: 100%;
 			}
 		}
+
 		@include md {
 			margin-bottom: 2em;
 

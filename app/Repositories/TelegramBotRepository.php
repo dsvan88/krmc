@@ -222,7 +222,7 @@ class TelegramBotRepository
     }
 
 
-    public static function getBookingMarkup(int $weekId, int $dayNum, bool $booked = false): array
+    public static function getBookingMarkup(int $weekId, int $dayNum, bool $booked = false, bool $full = false): array
     {
 
         if (TelegramBotRepository::isDirect() && $booked) {
@@ -245,7 +245,7 @@ class TelegramBotRepository
             ],
         ];
 
-        if (!TelegramBotRepository::isDirect()) {
+        if ($full || !TelegramBotRepository::isDirect()) {
             $result['inline_keyboard'][0][] = ['text' => '❌' . Locale::phrase('Opt-out'), 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => $dayNum, 'r' => 1]];
         }
 

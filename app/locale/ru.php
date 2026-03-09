@@ -210,9 +210,13 @@ return [
     'I want!' => 'Я +?',
     'Opt-out' => 'Я -.',
     'This day is over🤷‍♂️' => 'Этот день - уже прошёл🤷‍♂️',
+    'You’re successfully opted-in on a game %s at %s.' => 'Вы успешно записались на игру %s, что состоится %s.',
+    'User <b>%s</b> is changed prim on <b>%s</b>.' => 'Пользователь <b>%s</b> изменил своё примечание на игры, что состоится <b>%s</b>.',
+    'You’re successfully opted-out from a game %s at %s.' => 'Вы успешно отписались от игры %s, что состоится %s.',
     '{{ Tg_Unknown_Requester }}' => "Извините! Я не узнаю Вас в гриме🤷‍♂️\nДавайте знакомиться!😏\nЯ - цифровой бот для записи. Ваш верный друг и помощник в вопросе записи на игра нашего клуба🤗\nТеперь, скажите мне Ваш игровой псевдоним, что бы я смог Вас запомнить!\nНапишите: /nick <b>Ваш Псевдоним</b> (<b>Кириллицей</b>!)\nПример:\n/nick Телеграм Бот",
     '{{ Tg_Command_Without_Arguments }}' => "Эта <b>Команда</b> не может быть исполнена без какх-либо аргументов!",
-    'You don’t have enough rights to change information about other users!' => "У вас не достаточно прав для изменения информации других пользователей!",
+    'You don’t have enoght rights to do this action 🤷‍♂️' => 'У вас не достаточно прав для выполнения этого действия 🤷‍♂️',
+    'You don’t have enough rights to change information about other users!' => 'У вас не достаточно прав для изменения информации других пользователей!',
     'Okay! Let’s try again later!' => 'Хорошо! Давай попробуем ещё раз!',
     'I’m deeply sorry, but you can’t do this command yet. Social Points isn’t enough. Need <b>%s</b>.' => 'Мне очень жаль, но Вы пока не можете использовать эту команду. Не достаточно социальных баллов. Необходимо <b>%s</b>.',
 
@@ -287,5 +291,5 @@ return [
 
     '<u>/me</u> <i>// Get information about your profile.</i>' => '<u>/me</u> <i>// Получить информацию о своём профиле.</i>',
     'Your summ of social points is: <b>%s</b>' => 'Ваше количество социальных баллов: <b>%s</b>',
-    
+
 ];

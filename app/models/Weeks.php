@@ -3,6 +3,7 @@
 namespace app\models;
 
 use app\core\Model;
+use Exception;
 
 class Weeks extends Model
 {
@@ -140,21 +141,19 @@ class Weeks extends Model
 
         return self::insert($weekData);
     }
-    public static function setWeekData(int $weekId, array $weekData): mixed
+    public static function setWeekData(int $weekId = 0, array $weekData = []): ?int
     {
-        try {
-            if (is_array($weekData['data'])) {
-                $weekData['data'] = json_encode($weekData['data'], JSON_UNESCAPED_UNICODE);
-            }
+        if (empty($weekId) || empty($weekData))
+            throw new Exception(__METHOD__ . ' WeekID or WeekData can’t be empty.');
 
-            self::update($weekData, ['id' => $weekId]);
-            return $weekId;
-        } catch (\Throwable $th) {
-            error_log(__METHOD__ . $th->__toString());
-            return false;
+        if (is_array($weekData['data'])) {
+            $weekData['data'] = json_encode($weekData['data'], JSON_UNESCAPED_UNICODE);
         }
+
+        self::update($weekData, ['id' => $weekId]);
+        return $weekId;
     }
-    public static function checkNextWeek(int $weekId, bool $strict = false)
+    public static function checkNextWeek(int $weekId = 0, bool $strict = false)
     {
         if (Users::checkAccess('manager')) return $strict ? false : true;
 
@@ -163,11 +162,13 @@ class Weeks extends Model
 
         return self::isExists(['id' => $weekId + 1]);
     }
-    public static function checkPrevWeek($weekId = false): bool
+    public static function checkPrevWeek(int $weekId = 0): bool
     {
-        if ($weekId === false)
+        if (empty($weekId))
             $weekId = Weeks::currentId();
-        
+
+        if ($weekId === 1) return false;
+
         return self::isExists(['id' => $weekId - 1]);
     }
     public static function init()

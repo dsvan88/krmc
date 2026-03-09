@@ -9,13 +9,11 @@ use Exception;
 
 class NewuserAnswer extends ChatAnswer
 {
-    public static function execute():array
+    public static $accessLevel = 'manager';
+    public static function execute(): array
     {
         if (empty(static::$arguments))
             throw new Exception(__METHOD__ . ': Arguments is empty');
-
-        if (empty(static::$requester))
-            return static::result('You don’t have enough rights to change information about other users!');
 
         $uId = (int) trim(static::$arguments['u']);
 
@@ -34,7 +32,7 @@ class NewuserAnswer extends ChatAnswer
             ];
         } else {
             $user = User::create($uId);
-            if (empty($user)){
+            if (empty($user)) {
                 $update = [
                     'message' => static::locale('Can’t find a user with such criteria in our system.'),
                 ];

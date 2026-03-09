@@ -9,22 +9,21 @@ use app\models\Weeks;
 use app\Repositories\TelegramBotRepository;
 use Exception;
 
-class SetSendAnswer extends ChatAnswer
+class ResendAnswer extends ChatAnswer
 {
-    public static function execute():array
+    public static $accessLevel = 'manager';
+
+    public static function execute(): array
     {
         if (empty(static::$requester) || empty(static::$arguments))
             throw new Exception(__METHOD__ . ': UserData or Arguments is empty!');
-
-        if (!in_array(static::$requester->profile->status, ['manager', 'admin', 'root'], true))
-            return static::result('You don’t have enough rights!');
 
         $weekId = (int) trim(static::$arguments['w']);
         $dayNum = (int) trim(static::$arguments['d']);
 
         $message = Days::getFullDescription(Weeks::weekDataById($weekId), $dayNum);
 
-        $replyMarkup = TelegramBotRepository::getBookingMarkup($weekId, $dayNum);
+        $replyMarkup = TelegramBotRepository::getBookingMarkup($weekId, $dayNum, false, true);
 
         $send = [
             'chatId' => Settings::getMainTelegramId(),

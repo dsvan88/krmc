@@ -10,6 +10,8 @@ use Exception;
 
 class RenickAnswer extends ChatAnswer
 {
+
+    public static $accessLevel = 'user';
     public static function execute(): array
     {
         if (empty(static::$arguments['u']))

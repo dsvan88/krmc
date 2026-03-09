@@ -8,7 +8,6 @@ use app\models\Settings;
 use app\models\TelegramChats;
 use app\models\Weeks;
 use app\Repositories\TelegramBotRepository;
-use app\Repositories\TelegramChatsRepository;
 use Exception;
 
 class BookingAnswer extends ChatAnswer

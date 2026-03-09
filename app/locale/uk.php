@@ -210,9 +210,13 @@ return [
     'I want!' => 'Я +?',
     'Opt-out' => 'Я -.',
     'This day is over🤷‍♂️' => 'Цей день - вже минув🤷‍♂️',
+    'You’re successfully opted-in on a game %s at %s.' => 'Ви успішно записались на гру %s, що відбудеться %s.',
+    'User <b>%s</b> is changed prim on <b>%s</b>.' => 'Користувач <b>%s</b> змынив свою примітку на ігри, що відбудуться <b>%s</b>.',
+    'You’re successfully opted-out from a game %s at %s.' => 'Ви успішно відписалися з ігри %s, що відбудеться %s.',
     '{{ Tg_Unknown_Requester }}' => "Пробачте! Я не впізнаю Вас у гримі🤷‍♂️\nНумо знайомитись!😏\nЯ - цифровий бот для запису. Ваш вірний друг й помічник у питаннях запису на ігри нашого клуба🤗\nТепер, скажіть мені Ваш ігровий псевдонім, аби я зміг Вас запам’ятати!\nНапишіть: /nick <b>Ваш Псевдонім</b> (<b>Кирилліцею</b>!)\nЗразок:\n/nick Телеграм Бот",
-    '{{ Tg_Command_Without_Arguments }}' => "Эта <b>Команда</b> не може бути виконана без яких-небудь аргументів!",
+    '{{ Tg_Command_Without_Arguments }}' => "Ця <b>Команда</b> не може бути виконана без яких-небудь аргументів!",
     'You don’t have enough rights to change information about other users!' => "У вас не достатньо прав для зміни інформації про інших користувачів!",
+    'You don’t have enoght rights to do this action 🤷‍♂️' => 'У вас не достатньо прав для виконання цієї дії 🤷‍♂️',
     'Okay! Let’s try again later!' => 'Добре! Давай спробумо ще раз!',
     'I’m deeply sorry, but you can’t do this command yet. Social Points isn’t enough. Need <b>%s</b>.' => 'Мені дуже шкода, але Ви поки що не можете використати цю команду. Не достатньо соціальних балів. Потрібно <b>%s</b>.',
 
@@ -254,7 +258,7 @@ return [
     '{{ Tg_Command_New_User_Save_Success }}' => "Гравець під пседонімом <b>%s</b> - успішно зареєстрований в системі!\n\n*Нагадайте йому про бажанність зареєструвати за собою цей псевдонім, або зробіть це вручу в адмін-панелі😏",
     '{{ Tg_Command_Promo_Saved }}' => "Промо успішно збережено!",
 
-    
+
     "<u>+ (week day)</u> <i>// Booking for the scheduled games of the current week, examples:</i>\n\t\t+вс\n\t\t+ на сегодня, на 19:30 (отсижу 1-2 игры, под ?)\n<u>- (week day)</u> <i>// Unsubscribe from games on a specific day that you previously signed up for, examples:</i>\n\t\t-вс\n\t\t- завтра\n" =>
     "<u>+ (день тижня)</u> <i>//Записатись на ігри поточного тижня. Зразок:</i>\n\t\t+нд\n\t\t+ на сьогодні, на 19:30 (витримаю кілька ігор, под ?)\n<u>- (день тижня)</u> <i>//Відписатись від ігор, якщо раніше записувались. Зразок:</i>\n\t\t-нд\n\t\t- завтра\n",
 

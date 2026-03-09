@@ -12,13 +12,11 @@ use Exception;
 
 class NickAnswer extends ChatAnswer
 {
+    public static $accessLevel = 'admin';
     public static function execute(): array
     {
         if (empty(static::$requester) || empty(static::$arguments))
             throw new Exception(__METHOD__ . ': Requester or Arguments is empty!');
-
-        if (!in_array(static::$requester->profile->status, ['admin', 'root'], true))
-            return static::result('You don’t have enough rights to change information about other users!');
 
         if (empty(static::$arguments['u']) || empty(static::$arguments['t'])) {
 

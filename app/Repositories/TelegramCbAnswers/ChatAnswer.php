@@ -9,13 +9,12 @@ use Exception;
 
 class ChatAnswer extends TgChatAnswer
 {
+
+    public static $accessLevel = 'admin';
     public static function execute(): array
     {
         if (empty(static::$requester) || empty(static::$arguments))
             throw new Exception(__METHOD__ . ': UserData or Arguments is empty!');
-
-        if (!in_array(static::$requester->profile->status, ['admin', 'root'], true))
-            return static::result('You don’t have enough rights!');
 
         $type = trim(static::$arguments['t']);
 

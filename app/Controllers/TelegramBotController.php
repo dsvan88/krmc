@@ -165,10 +165,10 @@ class TelegramBotController extends Controller
             $command = static::$command;
         }
 
-        if (static::$type === 'message') {
-            $class = str_replace('/', '\\', static::$CommandNamespace . '\\' . ucfirst($command) . 'Command');
-        } else {
+        if (static::$type !== 'message') {
             $class = str_replace('/', '\\', static::$AnswerNamespace . '\\' . ucfirst($command) . 'Answer');
+        } else {
+            $class = str_replace('/', '\\', static::$CommandNamespace . '\\' . ucfirst($command) . 'Command');
         }
 
         if (!class_exists($class)) {
@@ -181,6 +181,8 @@ class TelegramBotController extends Controller
         if (TelegramBotRepository::hasAccess($status, $class::getAccessLevel()) || ($status === 'admin' && $command === 'chat')) {
             return $class::execute();
         }
+        if (static::$type !== 'message')
+            return $class::result('You don’t have enoght rights to do this action 🤷‍♂️');
 
         return [];
     }

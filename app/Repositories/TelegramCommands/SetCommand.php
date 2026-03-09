@@ -146,7 +146,7 @@ class SetCommand extends ChatCommand
         $replyMarkup = [
             'inline_keyboard' => [
                 [
-                    ['text' => 'Send to the group?', 'callback_data' => ['c' => 'setSend', 'w' => $weekId, 'd' => $dayNum]],
+                    ['text' => 'Send to the group?', 'callback_data' => ['c' => 'resend', 'w' => $weekId, 'd' => $dayNum]],
                 ],
             ]
         ];

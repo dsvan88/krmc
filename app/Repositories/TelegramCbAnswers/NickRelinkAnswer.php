@@ -13,13 +13,11 @@ use Exception;
 
 class NickAnswer extends ChatAnswer
 {
+    public static $accessLevel = 'user';
     public static function execute(): array
     {
         if (empty(static::$arguments))
             throw new Exception(__METHOD__ . ': Arguments is empty!');
-
-        if (empty(static::$requester))
-            return static::result('You don’t have enough rights to edit information about other users!');
 
         $uId = (int) trim(static::$arguments['u']);
         $tId = (int) trim(static::$arguments['t']);

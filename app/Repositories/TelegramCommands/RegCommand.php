@@ -98,7 +98,7 @@ class RegCommand extends ChatCommand
         $replyMarkup = [
             'inline_keyboard' => [
                 [
-                    ['text' => 'Send to the group?', 'callback_data' => ['c' => 'regSend', 'w' => $weekId, 'd' => $requestData['dayNum']]],
+                    ['text' => 'Send to the group?', 'callback_data' => ['c' => 'resend', 'w' => $weekId, 'd' => $requestData['dayNum']]],
                 ],
             ]
         ];
