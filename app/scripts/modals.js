@@ -237,25 +237,23 @@ class ModalWindow {
 	}
 	dragnDrop(event) {
 
-		const self = this;
+		this.modal.style.position = 'absolute';
+		this.modal.style.zIndex = 1000;
+		this.modal.style.margin = 0;
 
-		self.modal.style.position = 'absolute';
-		self.modal.style.zIndex = 1000;
-		self.modal.style.margin = 0;
-
-		document.body.append(self.modal);
+		document.body.append(this.modal);
 
 		const pageX = event.pageX || event.targetTouches[0].pageX;
 		const pageY = event.pageY || event.targetTouches[0].pageY;
 
-		self.moveAt(pageX, pageY);
+		this.moveAt(pageX, pageY);
 
-		document.context = self;
-		document.addEventListener('mousemove', self.onMouseMove);
-		document.addEventListener('touchmove', self.onMouseMove);
+		document.context = this;
+		document.addEventListener('mousemove', this.onMouseMove);
+		document.addEventListener('touchmove', this.onMouseMove);
 
-		self.modal.onmouseup = (event) => this.moveEnd(event);
-		self.modal.ontouchend = (event) => this.moveEnd(event);
+		this.modal.onmouseup = (event) => this.moveEnd(event);
+		this.modal.ontouchend = (event) => this.moveEnd(event);
 	}
 	moveEnd() {
 		document.removeEventListener('mousemove', this.onMouseMove);

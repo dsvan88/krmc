@@ -1,6 +1,5 @@
-actionHandler.gameFormSubmit = function (event) {
+actionHandler.gameFormSubmit = async function (event) {
 	event.preventDefault();
-	const self = this;
 	const manager = document.querySelector('input[name="manager"]');
 	if (!manager.value.trim()) {
 		alert('Спочатку оберіть ведучого серед учасників!')
@@ -14,12 +13,10 @@ actionHandler.gameFormSubmit = function (event) {
 		}
 	}
 	const formData = new FormData(event.target);
-	request({
+	return await this.request({
 		url: event.target.action,
-		data: formData,
-		success: result => self.commonResponse.call(self, result),
+		data: formData
 	});
-	return true;
 }
 
 let gameForm = document.body.querySelector('.game-form');
@@ -80,7 +77,6 @@ actionHandler.togglePlayer = async function (target) {
 }
 
 actionHandler.checkPlayer = function (event) {
-	const self = this;
 	const target = event.target;
 	const fields = document.querySelectorAll('input[name^="player"],input[name^="manager"]');
 	for (const field of fields) {
@@ -96,7 +92,7 @@ actionHandler.checkPlayer = function (event) {
 	const playerButtons = document.querySelectorAll('*[data-action-click="toggle-player"]');
 	for (const button of playerButtons) {
 		if (button.innerText === target.value) {
-			self.resetSelectedPoolUnits();
+			this.resetSelectedPoolUnits();
 			return true;
 		}
 	}
@@ -126,8 +122,7 @@ actionHandler.resetSelectedPoolUnits = function () {
 	}
 }
 
-actionHandler.removeParticipant = function (target) {
-	const self = this;
+actionHandler.removeParticipant = async function (target) {
 	const button = target.closest('.pool__unit');
 	const name = button.querySelector('.pool__name').innerText;
 	const answer = prompt(`Are you sure?\nIt will remove ${name}'s progress for today?\nEnter 'Y' or 'Yes' below:`, 'No') || 'No';
@@ -144,12 +139,9 @@ actionHandler.removeParticipant = function (target) {
 
 	const formData = new FormData();
 	formData.append('name', name);
-	request({
+	return await this.request({
 		url: 'game/remove-participant',
-		data: formData,
-		success: (result) => {
-			self.commonResponse.call(self, result);
-		},
+		data: formData
 	});
 
 }
@@ -161,34 +153,30 @@ actionHandler.addParticipantFormSubmit = function (event, modal) {
 	modal.close()
 }
 
-actionHandler.addParticipant = function (name, target = null) {
-	const self = this;
+actionHandler.addParticipant = async function (name, target = null) {
 	const formData = new FormData();
 	formData.append('name', name);
-	request({
+	const result = await this.request({
 		url: 'game/add-participant',
-		data: formData,
-		success: (result) => {
-			self.commonResponse.call(self, result);
-			if (target) {
-				if (result['notice'] && result['notice']['error']) {
-					target.value = '';
-					return false;
-				}
-				target.value = result['name'];
-			}
-
-			const poolUniExpample = document.querySelector('span.pool__unit');
-			if (poolUniExpample) {
-				const poolUnitNew = poolUniExpample.cloneNode(true);
-				poolUnitNew.querySelector('span.pool__name').innerText = result['name'];
-				const parentElement = poolUniExpample.closest('div.pool');
-				parentElement.insertBefore(poolUnitNew, document.querySelector('span.pool__unit.add'));
-
-			}
-			self.resetSelectedPoolUnits();
-		},
+		data: formData
 	});
+	if (target) {
+		if (result['notice'] && result['notice']['error']) {
+			target.value = '';
+			return false;
+		}
+		target.value = result['name'];
+	}
+
+	const poolUniExpample = document.querySelector('span.pool__unit');
+	if (poolUniExpample) {
+		const poolUnitNew = poolUniExpample.cloneNode(true);
+		poolUnitNew.querySelector('span.pool__name').innerText = result['name'];
+		const parentElement = poolUniExpample.closest('div.pool');
+		parentElement.insertBefore(poolUnitNew, document.querySelector('span.pool__unit.add'));
+
+	}
+	this.resetSelectedPoolUnits();
 }
 
 actionHandler.playersShuffle = function () {

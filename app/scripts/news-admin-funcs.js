@@ -4,10 +4,9 @@ actionHandler.newsFormSubmit = function (event) {
 	let formData = new FormData(event.target);
 	let newHTML = CKEDITOR.instances[event.target.querySelector("div.editor-block").id].getData();
 	formData.append('html', newHTML);
-    request({
+    this.request({
         url: url,
-        data: formData,
-        success: actionHandler.commonResponse,
+        data: formData
     });
 }
 

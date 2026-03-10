@@ -2,12 +2,12 @@ class Noticer {
 
 	noticesPlace = null;
 	constructor() {
-		const self = this;
 		this.noticesPlace = document.querySelector('.notices')
 		const notices = this.noticesPlace.querySelectorAll('.notice');
-		notices.forEach(notice => {
-			notice.querySelector('.notice__close').addEventListener('click', (event) => self.close.call(self, notice));
-		});
+		const len = notices.length;
+		for (let x = 0; x < len; x++) {
+			notices[x].querySelector('.notice__close').addEventListener('click', this.close.bind(this, notices[x]));
+		}
 	};
 	add(notice) {
 		if (typeof notice === 'string') {
@@ -42,10 +42,9 @@ class Noticer {
 
 		this.noticesPlace.append(noticeBlock);
 
-		const self = this;
-		noticeCloseBlock.addEventListener('click', (event) => self.close.call(self, noticeBlock))
+		noticeCloseBlock.addEventListener('click', this.close.bind(this, noticeBlock))
 		if (notice['time']) {
-			noticeCloseBlock.timeOut = setTimeout((event) => self.close.call(self, noticeBlock), notice['time']);
+			noticeCloseBlock.timeOut = setTimeout(this.close.bind(this, noticeBlock), notice['time']);
 		}
 		if (notice["location"]) {
 			setTimeout(() => notice["location"] === 'reload' ? window.location.reload() : window.location = notice["location"], notice['time'] ? notice['time'] - 1 : 1000);

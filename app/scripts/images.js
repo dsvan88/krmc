@@ -1,7 +1,6 @@
 const enumBgImages = [];
 
 actionHandler.imageAdd = async function (event) {
-    const self = this;
     const target = event.target.closest('form');
     const formData = new FormData();
     const readers = [];
@@ -15,9 +14,9 @@ actionHandler.imageAdd = async function (event) {
             for (let y = 0; y < event.target.files.length; y++) {
                 if (!readers[y] || readers[y].readyState !== FileReader.DONE) return true;
             }
-            const result = await self.apiTalk(event.target, 'actionChange', formData);
+            const result = await this.apiTalk(event.target, 'actionChange', formData);
             target.insertAdjacentHTML('afterend', result.html);
-            self.addChangeListeners();
+            this.addChangeListeners();
         }
         readers[x].readAsDataURL(event.target.files[x]);
     }
@@ -58,12 +57,11 @@ actionHandler.imagesGetMore = async function (target, event) {
     this.addChangeListeners();
 }
 actionHandler.addChangeListeners = function () {
-    const self = this;
     const inputs = document.querySelectorAll('input[data-action-change]');
     for (const i of inputs) {
         if (i.changeListener) continue;
 
-        i.addEventListener('change', (e) => self.changeCommonHandler.call(self, e));
+        i.addEventListener('change', this.changeCommonHandler.bind(this));
         i.changeListener = true;
     }
 }

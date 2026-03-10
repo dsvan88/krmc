@@ -138,7 +138,6 @@ const actionHandler = {
 	commonSubmitFormHandler: async function (event, formData = null, modal = null, args = null) {
 		event.preventDefault();
 		if (!formData) formData = new FormData(event.target);
-		const self = this;
 
 		const blocks = event.target.querySelectorAll('div.block');
 		const len = blocks.length;
@@ -166,14 +165,9 @@ const actionHandler = {
 		// 	url = window.location.origin+'/'+url;
 		// }
 
-		return await request({
+		return await this.request({
 			url: url,
-			data: formData,
-			success: (r) => {
-				self.commonResponse.call(self, r, modal)
-				return r;
-			},
-			error: (r) => self.commonResponse.call(self, r, modal),
+			data: formData
 		});
 	},
 	commonResponse: function (response, modal = null) {
