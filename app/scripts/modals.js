@@ -203,11 +203,12 @@ class ModalWindow {
 			this.currentOverlay.remove()
 		}, 300);
 	}
-	submit(event) {
+	async submit(event) {
 		event.preventDefault();
 		this.pause();
 		const formData = new FormData(event.target);
-		this.formSubmitHandler(event, formData, this);
+		await this.formSubmitHandler(event, formData, this);
+		this.unpause();
 	}
 
 	attachEvents() {

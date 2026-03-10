@@ -135,7 +135,7 @@ const actionHandler = {
 			input.focus();
 		}
 	},
-	commonSubmitFormHandler: async function (event, formData = null, modal = null, args = null) {
+	commonSubmitFormHandler: async function (event, formData = null) {
 		event.preventDefault();
 		if (!formData) formData = new FormData(event.target);
 
@@ -170,7 +170,7 @@ const actionHandler = {
 			data: formData
 		});
 	},
-	commonResponse: function (response, modal = null) {
+	commonResponse: function (response) {
 		if (response["error"]) {
 			new Alert({ title: 'Error!', text: response["message"] });
 			return false;
@@ -184,8 +184,6 @@ const actionHandler = {
 		if (response["location"]) {
 			setTimeout(() => window.location = response["location"], response["time"] ? response["time"] : 100);
 		}
-		if (modal && modal.paused)
-			setTimeout(() => modal.unpause(), 500);
 	},
 	autocompleteInput: function (target) {
 		const action = target.dataset.actionInput;

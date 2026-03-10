@@ -7,9 +7,8 @@ actionHandler.accountRegisterFormSubmit = async function (event, formData, modal
     if (verification) {
         formData.append('code', verification);
     }
-    await this.request({
+    return await this.request({
         url: 'account/register',
         data: formData,
     });
-    modal.unpause();
 }

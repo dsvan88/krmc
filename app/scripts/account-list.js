@@ -3,5 +3,5 @@ actionHandler.accountDelete = async function (target, event) {
     const formData = new FormData();
     formData.append('root', verification);
     const url = `${target.dataset['actionClick']}/${target.dataset['userId']}`;
-    const result = await this.request({ url: url, data: formData });
+    return await this.request({ url: url, data: formData });
 }
