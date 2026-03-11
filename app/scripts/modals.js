@@ -12,10 +12,10 @@ class ModalWindow {
 	dragged = false;
 
 	get paused() {
-		return this.pauseLayout ? true : false;
+		return !!this.pauseLayout;
 	}
 
-	constructor({ divId = "modalWindow", html = "", title = "", buttons = [], submit = null } = {}) {
+	constructor({ divId = "modalWindow", html = "", title = "", buttons = [] } = {}) {
 		this.commonOverlay = document.body.querySelector("#overlay");
 		if (this.commonOverlay === null) {
 			this.commonOverlay = document.createElement("div");
@@ -27,12 +27,12 @@ class ModalWindow {
 		this.prepeare(divId);
 
 		if (html) {
-			this.fill({ html, title, buttons, submit });
+			this.fill({ html, title, buttons });
 		}
 		this.attachEvents();
 	};
-	static async create({url= null, data = null, ready = null, submit = null, error = null } = {}){
-		
+	static async create({ url = null, data = null, ready = null, submit = null, error = null } = {}) {
+
 		if (!url)
 			throw Error('ModalWindow: url is empty.');
 
@@ -45,10 +45,10 @@ class ModalWindow {
 			modal.close();
 			return response;
 		}
-		
+
 		if (!response['modal'])
 			throw Error('ModalWindow: response isn’t a modal.');
-		
+
 		if (!response['html'])
 			throw Error('ModalWindow: response.html is empty.');
 
@@ -77,15 +77,15 @@ class ModalWindow {
 				modal.content.appendChild(form);
 			}
 			form.addEventListener('submit', e => modal.submit(e))
-		}		
-		
+		}
+
 		if (ready) {
 			await ready(modal, response);
 		}
 
 		return modal;
 	}
-	fill({ html = "", title = "", buttons = [], submit = null }) {
+	fill({ html = "", title = "", buttons = [] } = {}) {
 		if (html) {
 			this.content.innerHTML = html;
 		}
@@ -220,7 +220,7 @@ class ModalWindow {
 
 		this.modal.addEventListener('touchstart', this.dragStart.bind(this));
 	}
-	clickFunc(e){
+	clickFunc(e) {
 		if (e.target.classList.contains('modal__close')) this.close();
 	}
 	dragStart(event) {
