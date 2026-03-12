@@ -14,6 +14,7 @@ class View
     public static $viewsFolder = '/app/views';
     public static $defaultScripts = [
         'request.js',
+        'locale.js',
         'action-handler.js',
         'popups.js',
         'noticer.js',

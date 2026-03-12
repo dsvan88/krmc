@@ -158,7 +158,7 @@ class ModalWindow {
 
 		document.body.append(this.currentOverlay);
 
-		this.currentOverlay.addEventListener("click", (event) => this.close(event));
+		this.currentOverlay.addEventListener("click", this.close.bind(this));
 
 		this.popUp();
 	};
@@ -194,7 +194,7 @@ class ModalWindow {
 			if (!event.target.classList.contains("modal__close"))
 				return;
 
-			if (this.currentOverlay === event.currentTarget && !confirm('Ви впевнені, що бажаєте закрити поточне вікно?'))
+			if (this.currentOverlay === event.target && !confirm('Ви впевнені, що бажаєте закрити поточне вікно?'))
 				return;
 		}
 		if (this.modalIndex === 1) {
@@ -255,8 +255,6 @@ class ModalWindow {
 		this.modal.style.zIndex = 1000;
 		this.modal.style.margin = 0;
 
-		// document.body.append(this.modal);
-
 		const pageX = e.pageX || e.targetTouches[0].pageX;
 		const pageY = e.pageY || e.targetTouches[0].pageY;
 
@@ -274,7 +272,6 @@ class ModalWindow {
 		document.removeEventListener('mousemove', this.onMouseMove);
 		document.removeEventListener('touchmove', this.onMouseMove);
 		this.dragged = false;
-		document.context = null;
 		this.modal.onmouseup = null;
 		this.modal.ontouchend = null;
 		this.modal.style.zIndex = 8 + this.modalIndex;
