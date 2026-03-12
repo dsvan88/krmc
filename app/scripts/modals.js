@@ -10,6 +10,7 @@ class ModalWindow {
 	pauseLayout = null;
 	content = null;
 	dragged = false;
+	static index = 0;
 
 	get paused() {
 		return !!this.pauseLayout;
@@ -24,7 +25,7 @@ class ModalWindow {
 			setTimeout(() => this.commonOverlay.style.opacity = 0.3, 100);
 		}
 
-		this.prepeare(divId);
+		this.prepare(divId);
 
 		if (html) {
 			this.fill({ html, title, buttons });
@@ -41,7 +42,7 @@ class ModalWindow {
 		const response = await request({ url: url, data: data });
 
 		if (response["error"]) {
-			error(response) || new Alert({ title: 'Error!', text: data["message"] });
+			typeof error === "function" ? error(response) : new Alert({ title: 'Error!', text: response["message"] });
 			modal.close();
 			return response;
 		}
@@ -97,17 +98,19 @@ class ModalWindow {
 				this.title.innerText = title;
 			}
 		}
-		if (buttons.length !== 0) {
+		if (buttons.length) {
 			const modalContainer = this.content || this.modal.querySelector('.modal__container');
 			const modalButtons = document.createElement('div');
 			modalButtons.className = 'modal__buttons';
-			buttons.forEach(button => {
+			const len = buttons.length;
+			for (let x = 0; x < len; x++) {
 				const element = document.createElement('button');
-				element.innerText = button.text;
-				element.className = button.className;
-				element.type = button.type ? button.type : 'button';
+				element.innerText = buttons[x].text;
+				element.className = buttons[x].className;
+				element.type = buttons[x].type ? buttons[x].type : 'button';
 				modalButtons.append(element);
-			})
+
+			}
 			modalContainer.append(modalButtons)
 			this.content = modalContainer;
 		}
@@ -117,7 +120,7 @@ class ModalWindow {
 	clear() {
 		this.modal.querySelector('.modal__container').innerHTML = '';
 	};
-	prepeare(divId = "modalWindow") {
+	prepare(divId = "modalWindow") {
 		let modalHeader = document.createElement("div");
 		modalHeader.className = "modal__header";
 
@@ -161,7 +164,8 @@ class ModalWindow {
 	};
 	popUp() {
 
-		this.modalIndex = document.body.querySelectorAll(".modal").length;
+		++ModalWindow.index;
+		this.modalIndex = ModalWindow.index;
 
 		this.currentOverlay.style.zIndex = 7 + this.modalIndex;
 		this.modal.style.opacity = 0;
@@ -181,14 +185,16 @@ class ModalWindow {
 		this.content.append(this.pauseLayout);
 	}
 	unpause() {
+		if (!this.paused) return;
 		this.pauseLayout.remove();
+		this.pauseLayout = null;
 	}
 	close(event) {
 		if (event && event.target) {
 			if (!event.target.classList.contains("modal__close"))
 				return;
 
-			if (this.currentOverlay === event.target && !confirm('Ви впевнені, що бажаєте закрити поточне вікно?'))
+			if (this.currentOverlay === event.currentTarget && !confirm('Ви впевнені, що бажаєте закрити поточне вікно?'))
 				return;
 		}
 		if (this.modalIndex === 1) {
@@ -198,6 +204,10 @@ class ModalWindow {
 
 		this.modal.style.opacity = 0;
 		this.modal.style.transform = 'translateY(2%)';
+
+		document.removeEventListener('mousemove', this.onMouseMove);
+		document.removeEventListener('touchmove', this.onMouseMove);
+
 		setTimeout(() => {
 			this.modal.remove()
 			this.currentOverlay.remove()
@@ -206,9 +216,13 @@ class ModalWindow {
 	async submit(event) {
 		event.preventDefault();
 		this.pause();
-		const formData = new FormData(event.target);
-		await this.formSubmitHandler(event, formData, this);
-		this.unpause();
+
+		try {
+			const formData = new FormData(event.target);
+			await this.formSubmitHandler(event, formData, this);
+		} finally {
+			this.unpause();
+		}
 	}
 
 	attachEvents() {
@@ -242,25 +256,25 @@ class ModalWindow {
 		this.modal.style.zIndex = 1000;
 		this.modal.style.margin = 0;
 
-		document.body.append(this.modal);
+		// document.body.append(this.modal);
 
 		const pageX = event.pageX || event.targetTouches[0].pageX;
 		const pageY = event.pageY || event.targetTouches[0].pageY;
 
 		this.moveAt(pageX, pageY);
 
-		document.context = this;
+		this.onMouseMove = this.onMouseMove.bind(this);
 		document.addEventListener('mousemove', this.onMouseMove);
 		document.addEventListener('touchmove', this.onMouseMove);
 
-		this.modal.onmouseup = (event) => this.moveEnd(event);
-		this.modal.ontouchend = (event) => this.moveEnd(event);
+		this.moveEnd = this.moveEnd.bind(this);
+		this.modal.onmouseup = this.moveEnd;
+		this.modal.ontouchend = this.moveEnd;
 	}
 	moveEnd() {
 		document.removeEventListener('mousemove', this.onMouseMove);
 		document.removeEventListener('touchmove', this.onMouseMove);
 		this.dragged = false;
-		document.context = null;
 		this.modal.ontouchend = null;
 		this.modal.style.zIndex = 8 + this.modalIndex;;
 	}
@@ -269,13 +283,9 @@ class ModalWindow {
 		this.modal.style.top = pageY - this.shiftY + 'px';
 	}
 	onMouseMove(event) {
-		const self = document.context;
-
-		if (!self) return false;
-
 		const pageX = event.pageX || event.targetTouches[0].pageX;
 		const pageY = event.pageY || event.targetTouches[0].pageY;
 
-		self.moveAt(pageX, pageY);
+		this.moveAt(pageX, pageY);
 	}
 }
