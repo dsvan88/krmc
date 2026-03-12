@@ -230,3 +230,17 @@ async function blobToBase64(b) {
 		reader.readAsDataURL(b);
 	}).then();
 }
+
+function getCookie(name) {
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+  if (parts.length === 2) return parts.pop().split(';').shift();
+}
+
+function download(dataurl, filename = 'backup.txt') {
+	let a = document.createElement("a");
+	a.href = dataurl;
+	a.setAttribute("download", filename);
+	a.click();
+	return true;
+}

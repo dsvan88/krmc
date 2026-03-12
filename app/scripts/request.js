@@ -79,11 +79,3 @@ async function request({ url, data, method = 'POST', responseType = 'json', succ
 		error(throwed);
 	}
 }
-
-function download(dataurl, filename = 'backup.txt') {
-	let a = document.createElement("a");
-	a.href = dataurl;
-	a.setAttribute("download", filename);
-	a.click();
-	return true;
-}

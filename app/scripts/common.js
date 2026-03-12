@@ -1,6 +1,6 @@
 const body = document.body;
 
-localeInit();
+localeInit({lang: getCookie('lang')});
 
 body.addEventListener('click', actionHandler.clickCommonHandler.bind(actionHandler));
 body.querySelectorAll('input[data-action-input]').forEach(element =>

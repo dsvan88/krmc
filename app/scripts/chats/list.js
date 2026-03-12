@@ -1,4 +1,4 @@
-actionHandler.accountSetNickname = async function (target, event) {
+actionHandler.accountSetNickname = async function (target) {
     const self = this;
 
     const nickname = await customPrompt({

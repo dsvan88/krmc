@@ -194,7 +194,7 @@ class ModalWindow {
 			if (!event.target.classList.contains("modal__close"))
 				return;
 
-			if (this.currentOverlay === event.target && !confirm('Ви впевнені, що бажаєте закрити поточне вікно?'))
+			if (this.currentOverlay === event.target && !confirm(__('Are you want to close this window?')))
 				return;
 		}
 		if (this.modalIndex === 1) {
@@ -285,5 +285,11 @@ class ModalWindow {
 		const pageY = event.pageY || event.targetTouches[0].pageY;
 
 		this.moveAt(pageX, pageY);
+	}
+}
+
+if (typeof __ !== 'function'){
+	function __(text){
+		return text;
 	}
 }

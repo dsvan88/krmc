@@ -65,7 +65,7 @@ actionHandler.formsImagesList = async function (target) {
 
 	return true;
 }
-actionHandler.settingsEdit = async function (target, event) {
+actionHandler.settingsEdit = async function (target) {
 	const value = target.innerText;
 	const newValue = await customPrompt({
 		title: 'Set a value',
@@ -133,9 +133,9 @@ actionHandler.pagesSetBlockType = async function (target) {
 	}
 
 	const blockType = target.dataset.blockType;
-	if (block.html && blockType === 'image' && !confirm('It will delete an text in the editor. Are you sure?'))
+	if (block.html && blockType === 'image' && !confirm(__('This action will delete an text in the editor. Are you sure?')))
 		return false;
-	if (block.image?.imageId && blockType === 'text' && !confirm('It will remove an image from the block. Are you sure?'))
+	if (block.image?.imageId && blockType === 'text' && !confirm(__('This action will remove an image from the block. Are you sure?')))
 		return false;
 
 	const fd = new FormData()
@@ -151,7 +151,7 @@ actionHandler.pagesSetBlockType = async function (target) {
 	if (newBlock) {
 		parent.replaceWith(newBlock);
 	} else {
-		console.error('Новый блок не найден в ответе сервера');
+		console.error(__('New block can’t be found in the response'));
 		return false;
 	}
 

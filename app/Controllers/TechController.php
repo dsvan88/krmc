@@ -3,8 +3,6 @@
 namespace app\Controllers;
 
 use app\core\Controller;
-use app\core\Entities\Requester;
-use app\core\Entities\User;
 use app\core\Tech;
 use app\core\Validator;
 use app\core\View;
@@ -15,14 +13,27 @@ use app\models\SocialPoints;
 use app\models\TelegramChats;
 use app\models\Users;
 use app\models\Weeks;
-use app\Repositories\DayRepository;
 use app\Repositories\SocialPointsRepository;
 use app\Repositories\TechRepository;
-use app\Repositories\TelegramBotRepository;
-use app\Repositories\TelegramChatsRepository;
 
 class TechController extends Controller
 {
+    public static function localeGetAction()
+    {
+        $lang = 'uk';
+        extract(self::$route['vars']);
+        
+        $module = Validator::validate('localeModule', $_GET['module'] ?? '');
+        if ($module) $lang .= '-'.$module;
+
+        $file ="{$_SERVER['DOCUMENT_ROOT']}/app/locale/js-{$lang}.php";
+
+        if (!file_exists($file)) return View::response([]);
+
+        $dict = require "{$_SERVER['DOCUMENT_ROOT']}/app/locale/js-{$lang}.php";
+
+        return View::response(['dict' => $dict]);
+    }
     public static function sqlAction()
     {
         if (!empty($_POST)) {

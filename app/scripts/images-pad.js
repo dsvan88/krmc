@@ -239,7 +239,7 @@ class CustomImagesPad extends Prompt {
         const data = await request({ url: this.urlGet + '/folder/' + folder, data: formData });
 
         if (!data.files) {
-            return new Alert({ title: "Error", text: "This folder is empty!" });
+            return new Alert({ title: "Error", text: __('This folder is empty.') });
         }
 
         this.clearImagesPad();

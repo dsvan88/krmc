@@ -1,4 +1,4 @@
-actionHandler.accountDelete = async function (target, event) {
+actionHandler.accountDelete = async function (target) {
     const verification = await this.verification(null, 'verification/root', {type:'password'});
     const formData = new FormData();
     formData.append('root', verification);

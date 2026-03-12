@@ -10,6 +10,12 @@ admin = level 2 admin  (admins only)
 root = root level admin (root only)
 */
 return  [
+    'api/get/locale/{lang}' =>
+    [
+        'controller' => 'tech',
+        'action' => 'localeGet',
+        'access' => ['category' => 'all']
+    ],
     'api/account/login' =>
     [
         'controller' => 'account',

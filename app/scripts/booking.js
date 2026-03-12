@@ -1,4 +1,4 @@
-actionHandler.participantFieldGet = function (target, event) {
+actionHandler.participantFieldGet = function (target) {
     const participantsFields = target.closest(".booking__participants");
     const newID = participantsFields.querySelectorAll(".participant").length;
     let data = new FormData();
@@ -15,7 +15,7 @@ actionHandler.participantFieldGet = function (target, event) {
         },
     });
 }
-actionHandler.participantFieldClear = function (target, event) {
+actionHandler.participantFieldClear = function (target) {
     const parent = target.closest('div');
     const nameInput = parent.querySelector('input[name="participant[]"]');
     const arriveInput = parent.querySelector('input[name="arrive[]"]');
@@ -34,7 +34,7 @@ actionHandler.participantCheckChange = async function (e) {
     const participantsList = [];
     e.target.closest('form').querySelectorAll("input[name='participant[]']").forEach(i => i.value !== '' && i !== e.target ? participantsList.push(i.value) : false);
     if (participantsList.includes(name)) {
-        alert('Гравець з таким іменем - вже зареєстрований на поточний вечір!');
+        new Alert(__('Player with that name is opted-in here!'));
         e.target.value = '';
         return false;
     }

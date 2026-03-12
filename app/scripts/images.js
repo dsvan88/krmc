@@ -21,7 +21,7 @@ actionHandler.imageAdd = async function (event) {
         readers[x].readAsDataURL(event.target.files[x]);
     }
 }
-actionHandler.imageBackgroundGroup = async function (target, event) {
+actionHandler.imageBackgroundGroup = async function (target) {
     if (enumBgImages.length === 0) {
         return new Alert({ title: 'Empty list', text: 'List of files is empty.' });
     }
@@ -29,7 +29,7 @@ actionHandler.imageBackgroundGroup = async function (target, event) {
     formData.append('file_ids', JSON.stringify(enumBgImages));
     return await this.apiTalk(target, 'actionClick', formData);
 }
-actionHandler.imageDeleteGroup = async function (target, event) {
+actionHandler.imageDeleteGroup = async function (target) {
     if (enumBgImages.length === 0) {
         return new Alert({ title: 'Empty list', text: 'List of files is empty.' });
     }
@@ -47,7 +47,7 @@ actionHandler.imageToogle = function (event) {
         enumBgImages.splice(index, 1);
     return true;
 }
-actionHandler.imagesGetMore = async function (target, event) {
+actionHandler.imagesGetMore = async function (target) {
     const result = await this.apiTalk(target, 'actionClick');
     target.insertAdjacentHTML('beforebegin', result.html);
     target.dataset.pageToken = result.nextPageToken ? result.nextPageToken : '';

@@ -2,12 +2,16 @@ class i18n {
     static dict = new Map();
     static isLoading = false;
 
-    static async init(lang = 'uk') {
+    static async init({lang = 'uk', module = ''} = {}) {
         if (this.isLoading) return;
         this.isLoading = true;
 
         try {
-            const response = await request({ url: `/locale/get/${lang}` });
+            let url =  `/get/locale/${lang}`;
+            if (module){
+                url += `?module=${module}`;
+            }
+            const response = await request({ url: url });
             if (response.dict) {
                 const _dict = Object.entries(response.dict);
                 for (const [k, v] of _dict) {
@@ -26,10 +30,10 @@ class i18n {
     }
 }
 
-function __(text) {
-    return i18n.translate(text);
+async function localeInit({ lang = 'uk', module = '' } = {}) {
+    return await i18n.init({lang: lang, module: module});
 }
 
-async function localeInit(lang = 'uk') {
-    return await i18n.init(lang);
+function __(text) {
+    return i18n.translate(text);
 }

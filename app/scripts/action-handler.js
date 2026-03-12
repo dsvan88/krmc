@@ -30,9 +30,9 @@ const actionHandler = {
 	clickCommonHandler: function (e) {
 		const target = e.target.closest('[data-action-click],[data-action-dblclick]');
 		if (!target) return;
-
+		
 		const { actionClick, actionDblclick } = target.dataset;
-
+		
 		if (actionDblclick) {
 			if (this.dblClickTimer) {
 				clearTimeout(this.dblClickTimer);
@@ -59,10 +59,8 @@ const actionHandler = {
 		}
 		let type = camelize(target.dataset[method]);
 		if (debug) console.log(type);
-
-		if (this[type])
-			return this[type];
-		return this.apiTalk(target, method);
+		
+		return this[type] ? this[type](target, event) : this.apiTalk(target, method);
 
 	},
 	apiTalk: async function (target, method, formData = null) {
@@ -79,7 +77,7 @@ const actionHandler = {
 		}
 
 		if (target.dataset.verification) {
-			if (target.dataset.verification === 'confirm' && !confirm('Are you sure?'))
+			if (target.dataset.verification === 'confirm' && !confirm(__('Are you sure?')))
 				return false;
 			else {
 				const input = { type: 'text' };

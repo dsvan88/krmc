@@ -134,4 +134,14 @@ class Validator
 
         return mb_substr($nickname, 0, -1, 'UTF-8');
     }
+    private static function localeModule(string $string): ?string
+    {
+        $string = trim($string);
+        
+        if (empty($string)) return null;
+        
+        return in_array($string, ['mafia', 'poker'], true)
+            ? $string
+            : null;
+    }
 }
