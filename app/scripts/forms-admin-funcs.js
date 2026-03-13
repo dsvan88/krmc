@@ -133,7 +133,7 @@ actionHandler.pagesSetBlockType = async function (target) {
 	}
 
 	const blockType = target.dataset.blockType;
-	if (block.html && blockType === 'image' && !confirm(__('This action will delete an text in the editor. Are you sure?')))
+	if (block.html && blockType === 'image' && !confirm(__('This action will delete a text in the editor. Are you sure?')))
 		return false;
 	if (block.image?.imageId && blockType === 'text' && !confirm(__('This action will remove an image from the block. Are you sure?')))
 		return false;
