@@ -3,6 +3,7 @@
 namespace app\Repositories\TelegramCommands;
 
 use app\core\Telegram\ChatCommand;
+use app\models\SocialPoints;
 use app\models\TelegramEmojis;
 use app\Repositories\TelegramBotRepository;
 use app\Repositories\TelegramChatsRepository;
@@ -16,11 +17,17 @@ class EmojiCommand extends ChatCommand
     }
     public static function execute()
     {
-        if (!is_numeric(static::$arguments[0])){
-            $emoji = trim(static::$arguments[0]);
-            $emojiData = TelegramEmojis::findEmojiInCollection($emoji);
+        $arg = trim(static::$arguments[0]);
+        if (!is_numeric($arg)){
+            $emojiData = TelegramEmojis::findEmojiInCollection($arg);
             if (!$emojiData){
                 return static::result('Can’t find this emoji in our collections.', '🤷‍♂️', false, TelegramBotRepository::getMessageId());
+            }
+
+            $sp = SocialPoints::get(static::$requester->profile->id);
+            if ( $sp < $emojiData['collectId']){
+                $emoji = TelegramEmojis::getEmoji($emojiData['collectId'], $emojiData['key']);
+                return static::result(['string' => "Sorry! I can not set an emoji '%s', as your custom emoji:(\t It’s costs %s SPs and you’re have %s", 'vars' => [$emoji, $emojiData['collectId'], $sp]], '🤷‍♂️', false, TelegramBotRepository::getMessageId());
             }
 
             $emoji = TelegramEmojis::set(static::$requester->profile->id, $emojiData['collectId'], $emojiData['key']);
@@ -28,11 +35,13 @@ class EmojiCommand extends ChatCommand
             if (empty($emoji)){
                 return static::result(['string' => "Sorry! I can not set an emoji '%s', as your custom emoji:(\t:Lets try again!", 'vars' => [$emoji]], '🤷‍♂️', false, TelegramBotRepository::getMessageId());
             }
+            
+            SocialPoints::minus(static::$requester->profile->id, $emojiData['collectId']);
 
             return static::result(['string' => 'Okay! We are set an emoji %s, as your custom emoji:)', 'vars' => [$emoji]], '👌', true, TelegramBotRepository::getMessageId());
         }
         $message = 'Get your emoji from a list for free:';
-        $collection = isset(static::$arguments[0]) && is_numeric(static::$arguments[0]) ? static::$arguments[0] : 0;
+        $collection = isset($arg) && is_numeric($arg) ? $arg : 0;
         $list = TelegramEmojis::get($collection);
         $replyMarkup['inline_keyboard'] = [];
         $row = $i = 0;

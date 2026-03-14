@@ -2,14 +2,16 @@
 
 namespace app\models;
 
+use app\core\Entities\User;
 use app\core\Model;
+use app\core\Tech;
 use Exception;
 
 class SocialPoints extends Model
 {
 
     public static $table = SQL_TBL_USERS;
-    public static $user = [];
+    public static ?User $target = null;
 
     public static $points = [
         'longMessage' => 1,
@@ -18,69 +20,69 @@ class SocialPoints extends Model
         'dayStarter' => 2,
     ];
 
-    public static function getUserData(int $userId = 0): void
+    public static function getUserData(int $targetId = 0): void
     {
-        if (isset(static::$user['id']) && $userId == static::$user['id'])
+        if (isset(static::$target->id) && $targetId == static::$target->id)
             return;
 
-        if (empty($userId))
+        if (empty($targetId))
             throw new Exception(__METHOD__ . ': Can’t find a user with a empty id');;
 
-        static::$user = Users::find($userId);
+        static::$target = User::create($targetId);
 
-        if (empty(static::$user))
-            throw new Exception(__METHOD__ . ': Can’t find a user with such id: ' . $userId);
+        if (empty(static::$target))
+            throw new Exception(__METHOD__ . ': Can’t find a user with such id: ' . $targetId);
 
         return;
     }
-    public static function set(int $point = 0, int $userId = 0): int
+    public static function set(int $point = 0, int $targetId = 0): int
     {
-        static::getUserData($userId);
+        static::getUserData($targetId);
 
-        static::$user['privilege']['points'] = $point;
+        $privilege = static::$target->privilege;
+        $privilege['points'] = $point;
+
         static::update(
-            ['privilege' => json_encode(static::$user['privilege'])],
-            ['id' => static::$user['id']]
+            ['privilege' => json_encode($privilege)],
+            ['id' => static::$target->id]
         );
 
         return $point;
     }
-    public static function get(int $userId = 0): int
+    public static function get(int $targetId = 0): int
     {
-        static::getUserData($userId);
+        static::getUserData($targetId);
 
-        if (empty(static::$user['privilege']['points'])) {
-            return static::set(0, $userId);
-        }
+        $points = static::$target->points;
 
-        return static::$user['privilege']['points'];
+        return is_null($points) ? static::set(0, $targetId) : $points;
     }
-    public static function add(int $userId = 0, int $point = 0)
+    public static function add(int $targetId = 0, int $point = 0)
     {
-        static::getUserData($userId);
+        static::getUserData($targetId);
 
-        if (empty(static::$user['privilege']['points'])) {
-            return static::set($point, $userId);
+        $points = static::$target->points;
+
+        if (is_null($points)) {
+            return static::set($point, $targetId);
         }
 
-        if (static::$user['privilege']['points'] + $point < 0) {
-            return static::set(0, $userId);
+        if ($points + $point < 0) {
+            return static::set(0, $targetId);
         }
 
-        return static::set(static::$user['privilege']['points'] + $point, $userId);
+        return static::set($points + $point, $targetId);
     }
-    public static function minus(int $userId = 0, int $point = 0)
+    public static function minus(int $targetId = 0, int $point = 0)
     {
-        static::getUserData($userId);
+        static::getUserData($targetId);
+        
+        $points = static::$target->points;
 
-        if (empty(static::$user['privilege']['points'])) {
-            return static::set($point, $userId);
+        if (is_null($points) || $points - $point < 0) {
+            return static::set(0, $targetId);
         }
 
-        if (static::$user['privilege']['points'] - $point < 0) {
-            return static::set(0, $userId);
-        }
-
-        return static::set(static::$user['privilege']['points'] - $point, $userId);
+        return static::set($points - $point, $targetId);
     }
 }

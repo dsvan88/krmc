@@ -46,7 +46,7 @@ class TelegramEmojis extends Model
     public static function findEmojiInCollection(string $emoji = ''): ?array
     {
         if (empty($emoji)) return null;
-        
+
         foreach(static::$collections as $collectId){
             $path = "{$_SERVER['DOCUMENT_ROOT']}/app/locale/emoji-{$collectId}.php";
         
@@ -62,6 +62,12 @@ class TelegramEmojis extends Model
         }
 
         return null;
+    }
+    public static function getEmoji(int $collectId = 0, int $key = 0): array
+    {
+        $collection = static::findCollection($collectId);
+
+        return $collection[$key] ?? null;
     }
     public static function get(int $collectId = 0, int $offset = 0): array
     {

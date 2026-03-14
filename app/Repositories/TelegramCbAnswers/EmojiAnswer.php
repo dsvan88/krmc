@@ -3,6 +3,7 @@
 namespace app\Repositories\TelegramCbAnswers;
 
 use app\core\Telegram\ChatAnswer;
+use app\models\SocialPoints;
 use app\models\TelegramEmojis;
 use Exception;
 
@@ -29,13 +30,20 @@ class EmojiAnswer extends ChatAnswer
         $collection = (int) static::$arguments['col'];
         
         if (isset(static::$arguments['k'])){
-            
             $key = (int) static::$arguments['k'];
+            $sp = SocialPoints::get(static::$requester->profile->id);
+            if ( $sp < $collection){
+                $emoji = TelegramEmojis::getEmoji($collection, $key);
+                return static::result(['string' => "Sorry! I can not set an emoji '%s', as your custom emoji:(\t It’s costs %s SPs and you’re have %s", 'vars' => [$emoji, $collection, $sp]], false, true);
+            }
+
             $emoji = TelegramEmojis::set(static::$requester->profile->id, $collection, $key);
 
             if (empty($emoji)){
                 return static::result(['string' => "Sorry! I can not set an emoji '%s', as your custom emoji:(\t:Lets try again!", 'vars' => [$emoji]], false, true);
             }
+
+            SocialPoints::minus(static::$requester->profile->id, $collection);
 
             $update = [
                 'message' => static::locale(['string' => 'Okay! We are set an emoji %s, as your custom emoji:)', 'vars' => [$emoji]])

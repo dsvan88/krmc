@@ -337,7 +337,7 @@ class TechController extends Controller
     }
     public static function testAction()
     {
-        echo sha1('admin1234' . '05.03.2026');
+        Tech::dump(SocialPoints::minus(15, 15));
         // Tech::dump(Users::isExists(['name' => 'Белла Донна']));
         // $user = User::create();
         // Tech::dump($user->ban);
