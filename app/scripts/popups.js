@@ -153,7 +153,7 @@ class Confirm extends Alert {
 
         super({ title, text });
 
-        this.action = action || ((data) => console.log('Here is no action for this data: ' + data));
+        this.action = action || ((data) => console.log(__sfp('Here is no action for this data: %s.', [data])));
         this.cancel = cancel;
 
         this.modifyForm().modifyEvents();
@@ -210,7 +210,7 @@ class Prompt extends Confirm {
     }
     modifyPrompt({ value = "No", input = { type: 'text' }, select = null } = {}) {
         this.agreeButton.innerText = 'Ok';
-        this.cancelButton.innerText = 'Cancel';
+        this.cancelButton.innerText = __('Cancel');
 
         this.inputWrapper = document.createElement('div');
         this.inputWrapper.classList.add('popup__input-wrapper');

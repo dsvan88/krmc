@@ -23,7 +23,7 @@ actionHandler.imageAdd = async function (event) {
 }
 actionHandler.imageBackgroundGroup = async function (target) {
     if (enumBgImages.length === 0) {
-        return new Alert({ title: 'Empty list', text: 'List of files is empty.' });
+        return new Alert({ title: __('Empty list'), text: __('List of files is empty.') });
     }
     const formData = new FormData();
     formData.append('file_ids', JSON.stringify(enumBgImages));
@@ -31,7 +31,7 @@ actionHandler.imageBackgroundGroup = async function (target) {
 }
 actionHandler.imageDeleteGroup = async function (target) {
     if (enumBgImages.length === 0) {
-        return new Alert({ title: 'Empty list', text: 'List of files is empty.' });
+        return new Alert({ title: __('Empty list'), text: __('List of files is empty.') });
     }
     const formData = new FormData();
     formData.append('file_ids', JSON.stringify(enumBgImages));
@@ -76,20 +76,19 @@ actionHandler.showFolderInfo = function (event) {
     info_value_resol.innerText = '-';
 }
 actionHandler.openImagesFolder = function (target) {
-    // console.log('/images/'+target.dataset.name);
     return window.location = '/images/' + target.dataset.name;
 }
 actionHandler.getLink = function (target) {
     try {
         navigator.clipboard.writeText(target.dataset.link);
-        if (confirm('Скопійовано до буферу обміну.\nБажаєте відкрити в новому вікні?'))
+        if (confirm(__(`Copied to the buffer.\nAre you wanna to open it in new window`)))
             return window.open(target.dataset.link, '_blank');
     }
     catch (error) {
-        if (confirm(`Не вдалось скопіювати до будеру обміну.\nПерейти за посиланням у новому вікні?`)) {
+        if (confirm(__(`Could not copy to clipboard.\nClick link in new window?`))) {
             return window.open(target.dataset.link, '_blank');
         }
-        return new Alert({ title: "Your link", text: `Your link to this image is:<br><a href="${target.dataset.link}" target="_blank">${target.dataset.link}</a>` });
+        return new Alert({ title: __("Your link"), text: __spf(`Your link to this image is:<br><a href="%s" target="_blank">%s</a>`, [target.dataset.link, __('Link')]) });
     }
 }
 actionHandler.imageShow = function (t) {
@@ -104,13 +103,13 @@ actionHandler.imageGetLink = function (target) {
 
     try {
         navigator.clipboard.writeText(radio.dataset.link);
-        if (confirm('Скопійовано до буферу обміну.\nБажаєте відркити в новому вікні?'))
+        if (confirm(__(`Copied to the buffer.\nAre you wanna to open it in new window`)))
             return window.open(radio.dataset.link, '_blank');
     }
     catch (error) {
-        if (confirm(`Не вдалось скопіювати до буферу обміну.\nПерейти за посиланням у новому вікні?`)) {
+        if (confirm(__(`Could not copy to clipboard.\nClick link in new window?`))) {
             return window.open(radio.dataset.link, '_blank');
         }
-        return new Alert({ title: "Your link", text: `Your link to this image is:<br><a href="${radio.dataset.link}" target="_blank">${radio.dataset.link}</a>` });
+        return new Alert({  title: __("Your link"), text: __spf(`Your link to this image is:<br><a href="%s" target="_blank">%s</a>`, [target.dataset.link, __('Link')]) });
     }
 }

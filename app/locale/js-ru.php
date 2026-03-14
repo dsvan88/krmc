@@ -1,8 +1,18 @@
 <?php
 return [
+    'Error' => 'Ошибка',
+    'Cancel' => 'Отмена',
+    'connection error' => 'ошибка соединения',
+    'Here is no action for this data: %s.' => 'Тут нет действий для этих данных: %s.',
     'Enter a new value:' => 'Введите новое значение:',
     'Are you want to close this window?' => 'Вы уверены, что желаете закрыть текущее окно?',
     'Are you sure?' => 'Вы уверены?',
+    'Empty list' => 'Пустой список',
+    'List of files is empty.' => 'Список файлов - пуст.',
+    "Copied to the buffer.\nAre you wanna to open it in new window?" => "Скопировано в буфер обмена.\nЖелаете открыть в новом окне?",
+    "Could not copy to clipboard.\nClick link in new window?" => "Не удалось скопировать в буфер обмена.\nПерейти по ссылке в новом окне?",
+    'Your link' => 'Ваша ссылка',
+    'Your link to this image is:<br><a href="%s" target="_blank">%s</a>' => 'Ваша ссылка на это изображение:<br><a href="%s" target="_blank">%s</a>',
     'Player with that name is opted-in here!' => 'Игрок с таким именем - уже записан на этот вечер!',
     'This action will delete a text in the editor. Are you sure?' => 'Это действие - удалит текст из редактора. Вы уверены?',
     'This action will remove an image from the block. Are you sure?' => 'Это действие - удалит изображение из блока. Вы уверены?',

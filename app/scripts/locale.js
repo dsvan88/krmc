@@ -28,6 +28,21 @@ class i18n {
     static translate(text) {
         return this.dict.get(text) || text;
     }
+    static sprintf(text, vars = []) {
+        let tmpl = this.dict.get(text) || text;
+        const len = vars.length;
+
+        if (!len) return tmpl;
+        
+        for(let x=0; x < len; x++){
+            const offset = tmpl.indexOf('%s');
+
+            if (offset === -1 || !vars[x]) return tmpl;
+
+            tmpl = tmpl.slice(0, offset) + vars[x] + tmpl.slice(offset + 2);
+        }
+        return tmpl;
+    }
 }
 
 async function localeInit({ lang = 'uk', module = '' } = {}) {
@@ -36,4 +51,8 @@ async function localeInit({ lang = 'uk', module = '' } = {}) {
 
 function __(text) {
     return i18n.translate(text);
+}
+
+function __sfp(text, vars = []) {
+    return i18n.sprintf(text, vars);
 }

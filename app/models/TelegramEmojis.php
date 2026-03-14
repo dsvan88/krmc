@@ -11,6 +11,7 @@ class TelegramEmojis extends Model
     public static $table = SQL_TBL_USERS;
     public static int $count = 0;
     public static int $limit = 35;
+    public static array $collections = [0, 30, 50];
 
     private static function findCollection(int $collectId = 0):array
     {
@@ -41,6 +42,26 @@ class TelegramEmojis extends Model
         Users::update(['personal' => json_encode($personal, JSON_UNESCAPED_UNICODE)], ['id' => $userId]);
 
         return $emoji;
+    }
+    public static function findEmojiInCollection(string $emoji = ''): ?array
+    {
+        if (empty($emoji)) return null;
+        
+        foreach(static::$collections as $collectId){
+            $path = "{$_SERVER['DOCUMENT_ROOT']}/app/locale/emoji-{$collectId}.php";
+        
+            if (!file_exists($path)) continue;
+
+            $collection = require "{$_SERVER['DOCUMENT_ROOT']}/app/locale/emoji-{$collectId}.php";
+            
+            $key = array_search($emoji, $collection, true);
+
+            if ($key === false) continue;
+
+            return compact('collectId', 'key');
+        }
+
+        return null;
     }
     public static function get(int $collectId = 0, int $offset = 0): array
     {

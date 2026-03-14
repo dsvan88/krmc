@@ -5,7 +5,7 @@ async function request({ url, data, method = 'POST', responseType = 'json', succ
 	if (error == undefined) {
 		error = function (result) {
 			console.log(result);
-			console.log(`Error: Ошибка связи с сервером.`);
+			console.log(`${__('Error')}: ${__('connection error')}.`);
 		};
 	}
 
