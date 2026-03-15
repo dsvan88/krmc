@@ -10,7 +10,7 @@ class TelegramEmojis extends Model
 {
     public static $table = SQL_TBL_USERS;
     public static int $count = 0;
-    public static int $limit = 14;
+    public static int $limit = 42;
     public static array $collections = [0, 30, 50, 80];
 
     private static function findCollection(int $collectId = 0):array

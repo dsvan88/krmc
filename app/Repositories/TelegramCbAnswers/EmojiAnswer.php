@@ -75,7 +75,6 @@ class EmojiAnswer extends ChatAnswer
         $replyMarkup['inline_keyboard'][] = $inlineKeyboard;
         $update['replyMarkup'] = $replyMarkup;
 
-        error_log(json_encode($update));
         return array_merge(static::result('Okay', true), ['update' => [$update]]);
     }
 }
