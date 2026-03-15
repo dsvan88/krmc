@@ -337,7 +337,7 @@ class TechController extends Controller
     }
     public static function testAction()
     {
-        Tech::dump(SocialPoints::minus(15, 15));
+        Tech::dump(SocialPoints::add(15, 15));
         // Tech::dump(Users::isExists(['name' => 'Белла Донна']));
         // $user = User::create();
         // Tech::dump($user->ban);
