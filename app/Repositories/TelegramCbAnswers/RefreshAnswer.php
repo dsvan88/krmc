@@ -11,7 +11,7 @@ use Exception;
 
 class RefreshAnswer extends ChatAnswer
 {
-    public static $accessLevel = 'manager';
+    // public static $accessLevel = 'manager';
 
     public static function execute(): array
     {
