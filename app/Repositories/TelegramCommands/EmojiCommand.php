@@ -40,7 +40,7 @@ class EmojiCommand extends ChatCommand
 
             return static::result(['string' => 'Okay! We are set an emoji \'%s\', as your custom emoji:)', 'vars' => [$emoji]], '👌', true, TelegramBotRepository::getMessageId());
         }
-        $collId = trim(static::$arguments[0]);
+        $collId = trim(static::$arguments[0] ?? '');
         $message = 'Get your emoji from a list for free:';
         $collection = isset($collId) && is_numeric($collId) ? $collId : 0;
         $list = TelegramEmojis::get($collection);
