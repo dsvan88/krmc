@@ -4,6 +4,7 @@ namespace app\Controllers;
 
 use app\core\Controller;
 use app\core\Sender;
+use app\core\Tech;
 use app\core\View;
 use app\models\Settings;
 use app\models\TelegramChats;

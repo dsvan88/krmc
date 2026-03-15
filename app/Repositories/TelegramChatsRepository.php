@@ -37,7 +37,7 @@ class TelegramChatsRepository
     }
     public static function sendPhoto(array $post = []): bool
     {
-        $message =  preg_replace('/(<((?!b|u|s|strong|em|i|\/b|\/u|\/s|\/strong|\/em|\/i)[^>]+)>)/i', '', str_replace(['<br />', '<br/>', '<br>', '</p>'], "\n", trim($_POST['html'])));
+        $message =  preg_replace('/(<((?!b|u|s|strong|em|i|\/b|\/u|\/s|\/strong|\/em|\/i)[^>]+)>)/i', '', str_replace(['<br />', '<br/>', '<br>', '</p>'], "\n", trim($post['html'])));
         if (is_numeric($post['target'])) {
             $targets = $post['target'];
         } elseif ($post['target'] === 'main') {
