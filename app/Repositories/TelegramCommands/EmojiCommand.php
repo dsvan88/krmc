@@ -17,11 +17,11 @@ class EmojiCommand extends ChatCommand
     }
     public static function execute()
     {
-        $arg = trim(static::$arguments[0]);
-        if (!is_numeric($arg)){
-            $emojiData = TelegramEmojis::findEmojiInCollection($arg);
+        $emoji = TelegramBotRepository::findEmoji();
+        if ($emoji){
+            $emojiData = TelegramEmojis::findEmojiInCollection($emoji);
             if (!$emojiData){
-                return static::result('Can’t find this emoji in our collections.', '🤷‍♂️', false, TelegramBotRepository::getMessageId());
+                return static::result(['string' => 'Can’t find emoji "%s" in our collections.', 'vars' => [$emoji]], '🤷‍♂️', false, TelegramBotRepository::getMessageId());
             }
 
             $sp = SocialPoints::get(static::$requester->profile->id);
@@ -38,11 +38,15 @@ class EmojiCommand extends ChatCommand
             
             SocialPoints::minus(static::$requester->profile->id, $emojiData['collectId']);
 
-            return static::result(['string' => 'Okay! We are set an emoji %s, as your custom emoji:)', 'vars' => [$emoji]], '👌', true, TelegramBotRepository::getMessageId());
+            return static::result(['string' => 'Okay! We are set an emoji \'%s\', as your custom emoji:)', 'vars' => [$emoji]], '👌', true, TelegramBotRepository::getMessageId());
         }
+        $collId = trim(static::$arguments[0]);
         $message = 'Get your emoji from a list for free:';
-        $collection = isset($arg) && is_numeric($arg) ? $arg : 0;
+        $collection = isset($collId) && is_numeric($collId) ? $collId : 0;
         $list = TelegramEmojis::get($collection);
+        if (empty($list)){
+            return static::result(['string' => 'Can’t find %s as an emoji or collection amoung our collections😔', 'vars' => [$collId]], '👌', true, TelegramBotRepository::getMessageId());
+        }
         $replyMarkup['inline_keyboard'] = [];
         $row = $i = 0;
         foreach($list as $key=>$item){

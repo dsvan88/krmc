@@ -6,6 +6,7 @@ use app\core\Controller;
 use app\core\Entities\Requester;
 use app\core\Locale;
 use app\core\Sender;
+use app\core\Tech;
 use app\core\Telegram\ChatAction;
 use app\core\TelegramBot;
 use app\core\Validator;
@@ -87,7 +88,7 @@ class TelegramBotController extends Controller
 
                 TelegramBotRepository::getCommonArguments($message['message']['text']);
             }
-
+            Tech::dump($requester);
             if (empty($requester->profile) && !in_array(static::$command, static::$guestCommands)) {
                 Sender::message(static::$chatId, Locale::phrase('{{ Tg_Unknown_Requester }}'), $message['message']['message_id']);
                 return false;
@@ -223,8 +224,7 @@ class TelegramBotController extends Controller
                     $botResult = Sender::message(
                         $item['chatId'] ?? static::$chatId,
                         Locale::phrase($item['message']),
-                        // empty($item['replyOn']) ? 0 : $item['replyOn'],
-                        0,
+                        APP_LOC === 'local' || empty($item['replyOn']) ? 0 : $item['replyOn'],
                         empty($item['replyMarkup']) ? [] : $item['replyMarkup']
                     );
                 }

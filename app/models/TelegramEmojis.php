@@ -11,7 +11,7 @@ class TelegramEmojis extends Model
     public static $table = SQL_TBL_USERS;
     public static int $count = 0;
     public static int $limit = 35;
-    public static array $collections = [0, 30, 50];
+    public static array $collections = [0, 30, 50, 80];
 
     private static function findCollection(int $collectId = 0):array
     {
@@ -63,7 +63,7 @@ class TelegramEmojis extends Model
 
         return null;
     }
-    public static function getEmoji(int $collectId = 0, int $key = 0): array
+    public static function getEmoji(int $collectId = 0, int $key = 0): ?string
     {
         $collection = static::findCollection($collectId);
 

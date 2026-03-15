@@ -8,7 +8,7 @@ class ChatCommand extends ChatAction
     {
         return static::class . ' - ' . self::locale('Here isn’t description yet');
     }
-    public static function result($message, string $reaction = '', bool $ok = false, int $messageId = 0): array
+    public static function result($message, string $reaction = '', bool $ok = false, int $replyOn = 0): array
     {
         $result =  [
             'result' => $ok,
@@ -18,7 +18,7 @@ class ChatCommand extends ChatAction
             ]
         ];
         
-        if (!empty($messageId)) $result['send'][0]['messageId'] = $messageId;
+        if (!empty($replyOn)) $result['send'][0]['replyOn'] = $replyOn;
 
         return $result;
     }

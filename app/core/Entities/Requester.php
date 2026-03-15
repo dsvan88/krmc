@@ -47,8 +47,4 @@ class Requester extends Entity
     {
         return $this->chat->title ?? '';
     }
-    public function __get($name)
-    {
-        return $this->$name ?? null;
-    }
 }

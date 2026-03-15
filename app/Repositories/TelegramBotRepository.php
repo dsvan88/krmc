@@ -4,6 +4,7 @@ namespace app\Repositories;
 
 use app\core\Locale;
 use app\core\Router;
+use app\core\Tech;
 use app\core\Telegram\ChatAction;
 use app\core\TelegramBot;
 use app\core\Validator;
@@ -178,6 +179,20 @@ class TelegramBotRepository
         }
         return $levels[$level] <= $levels[$status];
     }
+    public static function findEmoji(string $text = ''): ?string
+    {
+        if (empty($text))
+            $text = ChatAction::$message['message']['text'];
+
+        if (empty($text))
+            throw new Exception(__METHOD__ . ': $message can\'t be empty!');
+
+        $pattern = '/([\x{1F300}-\x{1FAFF}\x{1F1E6}-\x{1F1FF}\x{2600}-\x{26FF}\x{2700}-\x{27BF}\x{FE0F}\x{200D}\x{1F3FB}-\x{1F3FF}\x{E0061}-\x{E007A}]+)/u';
+        $result = preg_match($pattern, $text, $matches, 0, strpos($text, ' ')+1);
+        Tech::dump($result);
+        Tech::dump($matches);
+        return $result === 1 ? $matches[0] : null;
+    }
     public static function getMessageId(array $message = []): int
     {
         if (empty($message))
@@ -186,7 +201,7 @@ class TelegramBotRepository
         if (empty($message))
             throw new Exception(__METHOD__ . ': $message can\'t be empty!');
 
-        return $message['callback_query']['message']['message_id'] ?? $message['message']['message_id'];
+       return $message['callback_query']['message']['message_id'] ?? $message['message']['message_id'];
     }
     public static function getChatId(array $message = []): int
     {
