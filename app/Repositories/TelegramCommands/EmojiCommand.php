@@ -53,7 +53,7 @@ class EmojiCommand extends ChatCommand
             $replyMarkup['inline_keyboard'][$row][] = ['text' => $item, 'callback_data' => ['c' => 'emoji', 'col' => $collection, 'k' => $key, 'u' => static::$requester->profile->id]];
             if (++$i > 0 && $i%7 === 0) ++$row;
         }
-        $replyMarkup['inline_keyboard'][] = [
+        $replyMarkup['inline_keyboard'][$row] = [
                 ['text' => '->', 'callback_data' => ['c' => 'emoji', 'col' => $collection, 'd' => $key, 'u' => static::$requester->profile->id, 'o' => TelegramEmojis::$limit]]
             ];
 

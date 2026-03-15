@@ -64,13 +64,13 @@ class EmojiAnswer extends ChatAnswer
             $replyMarkup['inline_keyboard'][$row][] = ['text' => $item, 'callback_data' => ['c' => 'emoji', 'col' => $collection, 'k' => $key, 'u' => static::$requester->profile->id]];
             if (++$i > 0 && $i%7 === 0) ++$row;
         }
-        
+
         $inlineKeyboard = [];
         if ($offset > 0 && $offset-TelegramEmojis::$limit > 0)
-            $inlineKeyboard[$row][] = ['text' => '<-', 'callback_data' => ['c' => 'emoji', 'col' => $collection, 'u' => static::$requester->profile->id, 'o' => $offset-TelegramEmojis::$limit]];
+            $inlineKeyboard[] = ['text' => '<-', 'callback_data' => ['c' => 'emoji', 'col' => $collection, 'u' => static::$requester->profile->id, 'o' => $offset-TelegramEmojis::$limit]];
 
         if ($offset+TelegramEmojis::$limit < TelegramEmojis::$count)
-            $inlineKeyboard[$row][] = ['text' => '->', 'callback_data' => ['c' => 'emoji', 'col' => $collection, 'u' => static::$requester->profile->id, 'o' => $offset+TelegramEmojis::$limit]];
+            $inlineKeyboard[] = ['text' => '->', 'callback_data' => ['c' => 'emoji', 'col' => $collection, 'u' => static::$requester->profile->id, 'o' => $offset+TelegramEmojis::$limit]];
             
         $replyMarkup['inline_keyboard'][] = $inlineKeyboard;
         $update['replyMarkup'] = $replyMarkup;
