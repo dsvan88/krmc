@@ -32,7 +32,7 @@ class EmojiAnswer extends ChatAnswer
         if (isset(static::$arguments['k'])){
             $key = (int) static::$arguments['k'];
             $sp = SocialPoints::get(static::$requester->profile->id);
-            if ( $sp < $collection){
+            if ($sp < $collection){
                 $emoji = TelegramEmojis::getEmoji($collection, $key);
                 return static::result(['string' => "Sorry! I can not set an emoji '%s', as your custom emoji:(\t It’s costs %s SPs and you’re have %s", 'vars' => [$emoji, $collection, $sp]], false, true);
             }
@@ -67,10 +67,10 @@ class EmojiAnswer extends ChatAnswer
         
         $inlineKeyboard = [];
         if ($offset > 0 && $offset-TelegramEmojis::$limit > 0)
-            $inlineKeyboard[0][] = ['text' => '<-', 'callback_data' => ['c' => 'emoji', 'col' => $collection, 'u' => static::$requester->profile->id, 'o' => $offset-TelegramEmojis::$limit]];
+            $inlineKeyboard[$row][] = ['text' => '<-', 'callback_data' => ['c' => 'emoji', 'col' => $collection, 'u' => static::$requester->profile->id, 'o' => $offset-TelegramEmojis::$limit]];
 
         if ($offset+TelegramEmojis::$limit < TelegramEmojis::$count)
-            $inlineKeyboard[0][] = ['text' => '->', 'callback_data' => ['c' => 'emoji', 'col' => $collection, 'u' => static::$requester->profile->id, 'o' => $offset+TelegramEmojis::$limit]];
+            $inlineKeyboard[$row][] = ['text' => '->', 'callback_data' => ['c' => 'emoji', 'col' => $collection, 'u' => static::$requester->profile->id, 'o' => $offset+TelegramEmojis::$limit]];
             
         $replyMarkup['inline_keyboard'][] = $inlineKeyboard;
         $update[0]['replyMarkup'] = $replyMarkup;
