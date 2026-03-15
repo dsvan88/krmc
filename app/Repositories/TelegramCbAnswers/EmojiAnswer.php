@@ -73,7 +73,7 @@ class EmojiAnswer extends ChatAnswer
             $inlineKeyboard[$row][] = ['text' => '->', 'callback_data' => ['c' => 'emoji', 'col' => $collection, 'u' => static::$requester->profile->id, 'o' => $offset+TelegramEmojis::$limit]];
             
         $replyMarkup['inline_keyboard'][] = $inlineKeyboard;
-        $update[0]['replyMarkup'] = $replyMarkup;
+        $update['replyMarkup'] = $replyMarkup;
 
         static::$report = json_encode($update);
         return array_merge(static::result('Okay', true), ['update' => [$update]]);
