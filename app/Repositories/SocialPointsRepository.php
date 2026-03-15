@@ -2,7 +2,6 @@
 
 namespace app\Repositories;
 
-use app\core\Tech;
 use app\models\SocialPoints;
 use app\models\Weeks;
 use app\models\Days;
@@ -41,7 +40,6 @@ class SocialPointsRepository
                 if ($participant['id'] == $starter) $points += SocialPoints::$points['dayStarter'];
 
                 try {
-                    Tech::dump($points);
                     SocialPoints::add($participant['id'], $points);
                 } catch (\Throwable $e) {
                     $_SESSION['debug'][] = $participant['id'] . ' error -> ' . $e->getMessage();

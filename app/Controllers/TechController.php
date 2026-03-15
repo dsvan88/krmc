@@ -155,14 +155,15 @@ class TechController extends Controller
         $weeks = Weeks::getAll();
         $time = strtotime('01.01.2025');
         foreach ($weeks as $week) {
-            if (isset($week['data']['data']))
-                $week['data'] = $week['data']['data'];
-            unset($week['data'][-1]);
-            unset($week['data']['']);
-            Weeks::update(['data' => json_encode($week['data'], JSON_UNESCAPED_UNICODE)], ['id' => $week['id']]);
+            // if (isset($week['data']['data']))
+            //     $week['data'] = $week['data']['data'];
+            // unset($week['data'][-1]);
+            // unset($week['data']['']);
+            // Weeks::update(['data' => json_encode($week['data'], JSON_UNESCAPED_UNICODE)], ['id' => $week['id']]);
 
-            if ($week['finish'] > $time)
+            if ($week['finish'] > $time){
                 SocialPointsRepository::applyBookingPoints($week['id']);
+            }
         }
         echo 'Weeks rebuilded.<br>';
 

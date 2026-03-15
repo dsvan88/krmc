@@ -39,11 +39,10 @@ class SocialPoints extends Model
     {
         static::getUserData($targetId);
 
-        $privilege = static::$target->privilege;
-        $privilege['points'] = $point;
+        static::$target->profile['privilege']['points'] = $point;
 
         static::update(
-            ['privilege' => json_encode($privilege)],
+            ['privilege' => json_encode(static::$target->profile['privilege'])],
             ['id' => static::$target->id]
         );
 
@@ -66,12 +65,12 @@ class SocialPoints extends Model
         if (is_null($points)) {
             return static::set($point, $targetId);
         }
-
-        if ($points + $point < 0) {
+        $points += $point;
+        if ($points < 0) {
             return static::set(0, $targetId);
         }
 
-        return static::set($points + $point, $targetId);
+        return static::set($points, $targetId);
     }
     public static function minus(int $targetId = 0, int $point = 0)
     {
