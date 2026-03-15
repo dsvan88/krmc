@@ -41,8 +41,9 @@ class EmojiCommand extends ChatCommand
             return static::result(['string' => 'Okay! We are set an emoji \'%s\', as your custom emoji:)', 'vars' => [$emoji]], '👌', true, TelegramBotRepository::getMessageId());
         }
         $collId = trim(static::$arguments[0] ?? '');
-        $message = 'Get your emoji from a list for free:';
+
         $collection = isset($collId) && is_numeric($collId) ? $collId : 0;
+        $message = 'Get your emoji from a list for '.($collection > 0 ? $collection.' SP' : 'free').':';
         $list = TelegramEmojis::get($collection);
         if (empty($list)){
             return static::result(['string' => 'Can’t find %s as an emoji or collection amoung our collections😔', 'vars' => [$collId]], '👌', true, TelegramBotRepository::getMessageId());
