@@ -48,9 +48,12 @@ class SocialPointsRepository
             Days::setStatus($weekId, $num, 'finished');
         }
     }
-    public static function evaluateMessage(int $userId, string $message): void
+    public static function evaluateMessage(int $userId = 0, string $message = ''): void
     {
-        if (mb_strlen($message, 'UTF-8') < 100) return;
+        if (empty($userId) || empty($message)) return;
+
+        $message = str_replace('  ', ' ', $message);
+        if (substr_count($message, ' ') < 50) return;
 
         SocialPoints::add($userId, SocialPoints::$points['longMessage']);
     }

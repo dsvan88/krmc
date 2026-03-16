@@ -83,6 +83,7 @@ return [
     'Male' => 'Господин',
     'Female' => 'Госпожа',
     'secret' => 'Некто',
+    'Mr.(Ms.|Mrs.)' => 'Господин(жа)',
     'Precautions' => 'Меры предосторожности',
 
     'Ban time' => 'Бан до',
@@ -290,6 +291,7 @@ return [
     "Dear players: %s!\n%s at %s we’re going to play in %s!\nAre you in?😉" => "Дорогие игроки: %s!\n%s в %s собираемся поиграть в %s!\nВы с нами?😉",
 
     '<u>/me</u> <i>// Get information about your profile.</i>' => '<u>/me</u> <i>// Получить информацию о своём профиле.</i>',
+    'Here is your profile’s info:' => 'Вот информация о Вашем профиле:',
     'Your summ of social points is: <b>%s</b>' => 'Ваше количество социальных баллов: <b>%s</b>',
 
 ];

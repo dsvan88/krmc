@@ -25,7 +25,7 @@
                 </div>
             </div>
         </div>
-        <div class="editor-block" data-field="html">
+        <div class="editor-block block" data-field="html">
             <div class="toolbar-container"></div>
             <div class="content-container">
                 <div class="editor"></div>
