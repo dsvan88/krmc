@@ -7,6 +7,7 @@ use app\core\Tech;
 use app\core\Validator;
 use app\core\View;
 use app\libs\Db;
+use app\models\Coupons;
 use app\models\Days;
 use app\models\Settings;
 use app\models\SocialPoints;
@@ -22,11 +23,11 @@ class TechController extends Controller
     {
         $lang = 'uk';
         extract(self::$route['vars']);
-        
-        $module = Validator::validate('localeModule', $_GET['module'] ?? '');
-        if ($module) $lang .= '-'.$module;
 
-        $file ="{$_SERVER['DOCUMENT_ROOT']}/app/locale/js-{$lang}.php";
+        $module = Validator::validate('localeModule', $_GET['module'] ?? '');
+        if ($module) $lang .= '-' . $module;
+
+        $file = "{$_SERVER['DOCUMENT_ROOT']}/app/locale/js-{$lang}.php";
 
         if (!file_exists($file)) return View::response([]);
 
@@ -161,7 +162,7 @@ class TechController extends Controller
             // unset($week['data']['']);
             // Weeks::update(['data' => json_encode($week['data'], JSON_UNESCAPED_UNICODE)], ['id' => $week['id']]);
 
-            if ($week['finish'] > $time){
+            if ($week['finish'] > $time) {
                 SocialPointsRepository::applyBookingPoints($week['id']);
             }
         }
@@ -338,7 +339,12 @@ class TechController extends Controller
     }
     public static function testAction()
     {
-        Tech::dump(SocialPoints::add(15, 15));
+        // Coupons::init();
+        $coupon = [
+            'userId' => 15,
+        ];
+        Tech::dump(Coupons::create($coupon));
+        // Tech::dump(SocialPoints::add(15, 15));
         // Tech::dump(Users::isExists(['name' => 'Белла Донна']));
         // $user = User::create();
         // Tech::dump($user->ban);

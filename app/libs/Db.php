@@ -89,6 +89,7 @@ class Db
                     ' RAND() ',
                     ' LONGTEXT ',
                     ' JSON ',
+                    'INT UNSIGNED',
                 ],
                 [
                     "->>'",
@@ -96,6 +97,7 @@ class Db
                     ' RANDOM() ',
                     ' TEXT ',
                     ' JSONB ',
+                    'INT',
                 ],
                 $query
             );

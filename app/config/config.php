@@ -40,6 +40,7 @@ if (!defined('SQL_HOST')) {
     define('SQL_TBL_PAGES', 'pages');
     define('SQL_TBL_CONTACTS', 'contacts');
     define('SQL_TBL_TG_CHATS', 'tgchats');
+    define('SQL_TBL_COUPONS', 'coupons');
 
     define('DATE_MARGE', 36000); //36000 = +10 часов к длительности вечера
     define('TIME_MARGE', 1800); //1800 = за полчаса до официально старта - открывает регистрация игроков на первую игру
