@@ -8,9 +8,8 @@ class Tech
     {
         $keys = ['HTTP_X_FORWARDED_FOR', 'REMOTE_ADDR', 'HTTP_CLIENT_IP'];
         foreach ($keys as $key) {
-            if (array_key_exists($key, $_SERVER)) {
-                return $_SERVER[$key];
-            }
+            if (empty($_SERVER[$key])) continue;
+            return $_SERVER[$key];
         }
         return '';
     }
@@ -32,7 +31,7 @@ class Tech
 
         do {
             $code = preg_replace('/[^0-9]/', '', sha1($seed . microtime()));
-        } while (strlen($code) < 5);
+        } while (strlen($code) < 6);
 
         if (strlen($code) < 8)
             $code = str_pad($code, 8, '0');
@@ -41,20 +40,16 @@ class Tech
 
         return $code;
     }
-    public static function modifyAssocArray(array &$array): void
+    public static function modifyAssocArray(array &$a): void
     {
-        if (empty($array)) return;
+        if (empty($a)) return;
 
-        $result = [];
-        foreach ($array as $el) {
+        $r = [];
+        foreach ($a as $el) {
             if (empty($el['id'])) continue;
-            $result[$el['id']] = $el;
+            $r[$el['id']] = $el;
         }
-        // array_walk($array, function ($element) use (&$result) {
-        //     if (empty($element['id'])) return false;
-        //     $result[$element['id']] = $element;
-        // });
-        $array = $result;
+        $a = $r;
     }
     public static function json_validate(string $string): bool
     {
