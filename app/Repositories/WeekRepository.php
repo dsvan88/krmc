@@ -35,15 +35,7 @@ class WeekRepository
         if (isset($weeksIds[$selectedWeekIndex + 1]))
             $nextWeek = Weeks::find($weeksIds[$selectedWeekIndex + 1]);
 
-        $dayNames = Locale::apply([
-            'Monday',
-            'Tuesday',
-            'Wednesday',
-            'Thursday',
-            'Friday',
-            'Saturday',
-            'Sunday'
-        ]);
+        $dayNames = Locale::apply(Days::$days);
 
         $games = GameTypes::names();
         $days = [];

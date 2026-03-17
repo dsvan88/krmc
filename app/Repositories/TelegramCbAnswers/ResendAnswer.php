@@ -15,8 +15,8 @@ class ResendAnswer extends ChatAnswer
 
     public static function execute(): array
     {
-        if (empty(static::$requester) || empty(static::$arguments))
-            throw new Exception(__METHOD__ . ': UserData or Arguments is empty!');
+        if (empty(static::$arguments))
+            throw new Exception(__METHOD__ . ': Arguments is empty!');
 
         $weekId = (int) trim(static::$arguments['w']);
         $dayNum = (int) trim(static::$arguments['d']);

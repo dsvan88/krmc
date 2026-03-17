@@ -16,6 +16,7 @@ use app\models\Users;
 use app\models\Weeks;
 use app\Repositories\SocialPointsRepository;
 use app\Repositories\TechRepository;
+use app\Repositories\TelegramBotRepository;
 
 class TechController extends Controller
 {
@@ -309,7 +310,7 @@ class TechController extends Controller
                 // 'text' => '+ на 18',
                 // 'text' => '/dice',
                 // 'text' => '/chat',
-                'text' => '/emoji 🖖🏽',
+                'text' => '/unreg вт',
                 // 'text' => '/chat main',
                 // 'text' => 'Checker',
                 // 'text' => '+пн',
@@ -339,41 +340,6 @@ class TechController extends Controller
     }
     public static function testAction()
     {
-        // Coupons::init();
-        $coupon = [
-            'userId' => 15,
-        ];
-        Tech::dump(Coupons::create($coupon));
-        // Tech::dump(SocialPoints::add(15, 15));
-        // Tech::dump(Users::isExists(['name' => 'Белла Донна']));
-        // $user = User::create();
-        // Tech::dump($user->ban);
-        // echo "User: $user<br>";
-
-        // $req = Requester::create(900669168);
-        // Tech::dump($req->chat->username);
-        // echo "Requester: $req<br>";
-
-        // Tech::dump(User::$instances);
-        // $records = DayRepository::findBookedDays(17, 10);
-        // DayRepository::changeParticipantId($records, 15);
-        // $records = DayRepository::findBookedDays(15, 10);
-        // Tech::dump($records);
-        // TelegramChatsRepository::setChatsType('9006691681111', 'admin');
-        // ignore_user_abort(true);
-        // set_time_limit(900);
-        // $checked = [3, 8, 9, 13, 15, 21, 26, 30, 37, 43, 166, 172, 179, 183, 212, 226, 280, 282, 288, 317, 322, 323, 324, 327, 341, 342, 343, 371];
-        // $users = Users::getAll();
-        // foreach ($users as $user) {
-        //     if ($user['id'] < 324) continue;
-        //     // if (empty($user['personal']['avatar'])) continue;
-        //     if (!in_array($user['id'], $checked)) continue;
-        //     try {
-        //         TelegramChatsRepository::getAndSaveTgAvatar($user['id'], true);
-        //         error_log($user['id']);
-        //     } catch (\Throwable $th) {
-        //         Tech::dump($th);
-        //     }
-        // }
+        Tech::dump(TelegramBotRepository::getPaticipantsListMarkup('unreg', 198, 2));
     }
 }

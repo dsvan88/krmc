@@ -9,6 +9,7 @@
                 <th>Гендер</th>
                 <th>E-mail</th>
                 <th>Telegram</th>
+                <th>SP</th>
                 <th>Бан</th>
                 <th class="users-list__dashboard">Меню</th>
             </tr>
@@ -26,6 +27,7 @@
                     <td title="Гендер"><?= $usersData[$x]['contacts']['gender'] ?? '' ?></td>
                     <td title="E-mail"><?= empty($usersData[$x]['contacts']['email']) ? '<i class="fa fa-square-o"></i>' : '<i class="fa fa-check-square-o"></i>' ?></td>
                     <td title="Telegram"><?= empty($usersData[$x]['contacts']['telegramid']) ? '<i class="fa fa-square-o"></i>' : '<i class="fa fa-check-square-o"></i>' ?></td>
+                    <td title="Telegram"><?= $usersData[$x]['privilege']['points'] ?? '-' ?></td>
                     <td title="Бан"><?= empty($usersData[$x]['ban']) || $usersData[$x]['ban']['expired'] < $_SERVER['REQUEST_TIME'] ? '<i class="fa fa-square-o"></i>' : '<i class="fa fa-check-square-o"></i>' ?></td>
                     <td title="Меню" class="users-list__dashboard">
                         <span class='fa fa-ban' data-action-click='/account/ban/form' data-user-id="<?= $usersData[$x]['id'] ?>" title='Забанити користувача'></span>

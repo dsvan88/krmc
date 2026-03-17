@@ -9,8 +9,10 @@ use app\core\Telegram\ChatAction;
 use app\core\TelegramBot;
 use app\core\Validator;
 use app\models\Days;
+use app\models\GameTypes;
 use app\models\Users;
 use app\models\Settings;
+use app\models\Weeks;
 use Exception;
 
 class TelegramBotRepository
@@ -237,6 +239,45 @@ class TelegramBotRepository
     }
 
 
+    public static function getPaticipantsListMarkup(string $callback = 'unreg', int $weekId = 0, int $dayId = 0): array
+    {
+        $day = Days::weekDayData($weekId, $dayId);
+        if (empty($day['participants'])){
+            return [];
+        }
+            
+        $inline_keyboard = [];
+        foreach($day['participants'] as $participant){
+            $inline_keyboard[] = [['text' => $participant['name'], 'callback_data' => ['c' => $callback, 'w' => $weekId, 'd' => $dayId, 'u' => $participant['id']]]];
+        }
+        return compact('inline_keyboard');
+    }
+    public static function getForwardDaysListMarkup(string $callback = 'unreg', bool $set = false): array
+    {
+        $day = $curr = Days::current();
+        $days = [];
+        for($x = 0; $x < 7; $x++){
+            $day = $day++;
+            if ($day === 7) $day = 0;
+            $days[] = $day++;
+        }
+        $dayNames = Locale::apply(Days::$days);
+        $weekId = Weeks::currentId();
+        $week = Weeks::find($weekId);
+        $gameNames = GameTypes::names();
+
+        $inline_keyboard = [];
+        foreach($days as $day){
+            if ($day < $curr){
+                $weekId++;
+                $week = Weeks::find($weekId);
+                if (empty($week)) break;
+            }
+            if ($set && $week['data'][$day]['status'] !== 'set') continue;
+            $inline_keyboard[] = [['text' => $dayNames[$day] . ' - ' .$gameNames[$week['data'][$day]['game']], 'callback_data' => ['c' => $callback, 'w' => $weekId, 'd' => $day]]];
+        }
+        return compact('inline_keyboard');
+    }
     public static function getBookingMarkup(int $weekId, int $dayNum, bool $booked = false, bool $full = false): array
     {
 

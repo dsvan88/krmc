@@ -88,7 +88,7 @@ class TelegramBotController extends Controller
 
                 TelegramBotRepository::getCommonArguments($message['message']['text']);
             }
-            Tech::dump($requester);
+
             if (empty($requester->profile) && !in_array(static::$command, static::$guestCommands)) {
                 Sender::message(static::$chatId, Locale::phrase('{{ Tg_Unknown_Requester }}'), $message['message']['message_id']);
                 return false;
