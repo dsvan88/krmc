@@ -56,7 +56,7 @@ class SocialPoints extends Model
 
         return is_null($points) ? static::set(0, $targetId) : $points;
     }
-    public static function add(int $targetId = 0, int $point = 0)
+    public static function add(int $targetId = 0, int $point = 0): int
     {
         static::getUserData($targetId);
 
@@ -72,7 +72,7 @@ class SocialPoints extends Model
 
         return static::set($points, $targetId);
     }
-    public static function minus(int $targetId = 0, int $point = 0)
+    public static function minus(int $targetId = 0, int $point = 0): int
     {
         static::getUserData($targetId);
 
