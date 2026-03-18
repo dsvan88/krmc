@@ -33,6 +33,7 @@ class UnregAnswer extends ChatAnswer
     public static function coupons(int $userId, int $cId)
     {
         $price = Coupons::$coupons[$cId]['price'];
+        $discount = Coupons::$coupons[$cId]['options']['discount'] . Coupons::$coupons[$cId]['options']['discount_type'];
 
         if ($price > SocialPoints::get($userId))
             return array_merge(static::result('You’re don’t have enough Social Points', false, true));
@@ -41,7 +42,7 @@ class UnregAnswer extends ChatAnswer
 
         if ($code) SocialPoints::minus($userId, $price);
 
-        static::$report = self::locale(['string' => 'User <b>%s</b> is successfully bought a coupon #%s (id - %s) from the shop.', [static::$requester->profile->name, $cId, $code]]);
+        static::$report = self::locale(['string' => 'User <b>%s</b> is successfully bought a coupon #%s (discount - %s) from the shop.', 'vars' => [static::$requester->profile->name, $code, $discount]]);
 
         return static::couponsMenu();
     }
