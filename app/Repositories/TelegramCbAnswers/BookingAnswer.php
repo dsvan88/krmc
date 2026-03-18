@@ -25,8 +25,8 @@ class BookingAnswer extends ChatAnswer
                 return static::result('{{ Tg_Unknown_Requester }}', '🤷‍♂');
             static::$arguments['userId'] = '_' . static::$requester->id;
             static::$arguments['userName'] = empty(static::$requester->chat->username)
-                ? static::$requester->chat->title .' (<i>+1</i>)'
-                : '@'.static::$requester->chat->username;
+                ? static::$requester->chat->title . ' (<i>+1</i>)'
+                : '@' . static::$requester->chat->username;
             static::$arguments['userStatus'] = 'all';
         } else {
             static::$arguments['userId'] = static::$requester->profile->id;
@@ -86,10 +86,11 @@ class BookingAnswer extends ChatAnswer
         $update = [
             'message' => Days::getFullDescription($weekData, $dayNum),
             'replyMarkup' => $replyMarkup,
+            'replyOn' => 0,
         ];
-        
-        $chatId = TelegramBotRepository::getChatId(); 
-        if ($chatId != Settings::getMainTelegramId()){
+
+        $chatId = TelegramBotRepository::getChatId();
+        if ($chatId != Settings::getMainTelegramId()) {
             static::$report .= PHP_EOL . static::locale(['string' => 'At Telegram chat: %s (%s).', 'vars' => [TelegramChats::getChatsTitle($chatId), $chatId]]);
         }
         return array_merge(static::result(static::$text, true, true), ['update' => [$update]]);

@@ -21,24 +21,24 @@ class EmojiCommand extends ChatCommand
         if ($emoji){
             $emojiData = TelegramEmojis::findEmojiInCollection($emoji);
             if (!$emojiData){
-                return static::result(['string' => 'Can’t find emoji "%s" in our collections.', 'vars' => [$emoji]], '🤷‍♂️', false, TelegramBotRepository::getMessageId());
+                return static::result(['string' => 'Can’t find emoji "%s" in our collections.', 'vars' => [$emoji]], '🤷‍♂️', false);
             }
 
             $sp = SocialPoints::get(static::$requester->profile->id);
             if ( $sp < $emojiData['collectId']){
                 $emoji = TelegramEmojis::getEmoji($emojiData['collectId'], $emojiData['key']);
-                return static::result(['string' => "Sorry! I can not set an emoji '%s', as your custom emoji:(\t It’s costs %s SPs and you’re have %s", 'vars' => [$emoji, $emojiData['collectId'], $sp]], '🤷‍♂️', false, TelegramBotRepository::getMessageId());
+                return static::result(['string' => "Sorry! I can not set an emoji '%s', as your custom emoji:(\t It’s costs %s SPs and you’re have %s", 'vars' => [$emoji, $emojiData['collectId'], $sp]], '🤷‍♂️', false);
             }
 
             $emoji = TelegramEmojis::set(static::$requester->profile->id, $emojiData['collectId'], $emojiData['key']);
             
             if (empty($emoji)){
-                return static::result(['string' => "Sorry! I can not set an emoji '%s', as your custom emoji:(\t:Lets try again!", 'vars' => [$emoji]], '🤷‍♂️', false, TelegramBotRepository::getMessageId());
+                return static::result(['string' => "Sorry! I can not set an emoji '%s', as your custom emoji:(\t:Lets try again!", 'vars' => [$emoji]], '🤷‍♂️', false);
             }
             
             SocialPoints::minus(static::$requester->profile->id, $emojiData['collectId']);
 
-            return static::result(['string' => 'Okay! We are set an emoji \'%s\', as your custom emoji:)', 'vars' => [$emoji]], '👌', true, TelegramBotRepository::getMessageId());
+            return static::result(['string' => 'Okay! We are set an emoji \'%s\', as your custom emoji:)', 'vars' => [$emoji]], '👌', true);
         }
         $collId = trim(static::$arguments[0] ?? '');
 
@@ -46,7 +46,7 @@ class EmojiCommand extends ChatCommand
         $message = 'Get your emoji from a list for '.($collection > 0 ? $collection.' SP' : 'free').':';
         $list = TelegramEmojis::get($collection);
         if (empty($list)){
-            return static::result(['string' => 'Can’t find %s as an emoji or collection amoung our collections😔', 'vars' => [$collId]], '👌', true, TelegramBotRepository::getMessageId());
+            return static::result(['string' => 'Can’t find %s as an emoji or collection amoung our collections😔', 'vars' => [$collId]], '👌', true);
         }
         $replyMarkup['inline_keyboard'] = [];
         $row = $i = 0;

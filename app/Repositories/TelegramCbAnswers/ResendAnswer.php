@@ -29,6 +29,7 @@ class ResendAnswer extends ChatAnswer
             'chatId' => Settings::getMainTelegramId(),
             'message' => $message,
             'replyMarkup' => $replyMarkup,
+            'replyOn' => 0,
         ];
         return array_merge(static::result('Success', true), ['send' => [$send]]);
     }

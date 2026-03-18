@@ -224,7 +224,7 @@ class TelegramBotController extends Controller
                     $botResult = Sender::message(
                         $item['chatId'] ?? static::$chatId,
                         Locale::phrase($item['message']),
-                        APP_LOC === 'local' || empty($item['replyOn']) ? 0 : $item['replyOn'],
+                        APP_LOC === 'local' ? 0 : ($item['replyOn'] ?? TelegramBotRepository::getMessageId()),
                         empty($item['replyMarkup']) ? [] : $item['replyMarkup']
                     );
                 }

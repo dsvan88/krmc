@@ -41,6 +41,7 @@ class DayCommand extends ChatCommand
                 [
                     'message' => $message,
                     'replyMarkup' => $replyMarkup,
+                    'replyOn' => 0,
                 ]
             ]
         ];

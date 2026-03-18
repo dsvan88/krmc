@@ -124,8 +124,9 @@ class BookingCommand extends ChatCommand
         $result['send'][] = [
             'message' => Days::getFullDescription($weekData, $dayNum),
             'replyMarkup' => $replyMarkup,
+            'replyOn' => 0,
         ];
-        
+
         return $result;
     }
 }

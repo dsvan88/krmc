@@ -10,7 +10,7 @@ use Exception;
 class EmojiAnswer extends ChatAnswer
 {
     public static $accessLevel = 'user';
-    public static function execute():array
+    public static function execute(): array
     {
         if (empty(static::$arguments))
             throw new Exception(__METHOD__ . ': Arguments is empty');
@@ -25,21 +25,21 @@ class EmojiAnswer extends ChatAnswer
             throw new Exception(__METHOD__ . ': UserID can’t be empty!');
 
         if (static::$requester->profile->id != $uId && !in_array(static::$requester->profile->status, ['manager', 'admin', 'root'], true))
-            return static::result('You don’t have enough rights to change information about other users!');
+            return static::result('You don’t have enough rights to change information about other users!', false, true);
 
         $collection = (int) static::$arguments['col'];
-        
-        if (isset(static::$arguments['k'])){
+
+        if (isset(static::$arguments['k'])) {
             $key = (int) static::$arguments['k'];
             $sp = SocialPoints::get(static::$requester->profile->id);
-            if ($sp < $collection){
+            if ($sp < $collection) {
                 $emoji = TelegramEmojis::getEmoji($collection, $key);
                 return static::result(['string' => "Sorry! I can not set an emoji '%s', as your custom emoji:(\t It’s costs %s SPs and you’re have %s", 'vars' => [$emoji, $collection, $sp]], false, true);
             }
 
             $emoji = TelegramEmojis::set(static::$requester->profile->id, $collection, $key);
 
-            if (empty($emoji)){
+            if (empty($emoji)) {
                 return static::result(['string' => "Sorry! I can not set an emoji '%s', as your custom emoji:(\t:Lets try again!", 'vars' => [$emoji]], false, true);
             }
 
@@ -52,26 +52,26 @@ class EmojiAnswer extends ChatAnswer
             return array_merge(static::result('Success', true), ['update' => [$update]]);
         }
 
-        $update = ['message' => 'Get your emoji from a list for '. ($collection > 0 ? $collection.' SP' : 'free') . ':'];
+        $update = ['message' => 'Get your emoji from a list for ' . ($collection > 0 ? $collection . ' SP' : 'free') . ':'];
         $offset = (int) static::$arguments['o'];
-        
+
         if ($offset < 0) $offset = 0;
-        
+
         $list = TelegramEmojis::get($collection, $offset);
         $replyMarkup['inline_keyboard'] = [];
         $row = $i = 0;
-        foreach($list as $key=>$item){
+        foreach ($list as $key => $item) {
             $replyMarkup['inline_keyboard'][$row][] = ['text' => $item, 'callback_data' => ['c' => 'emoji', 'col' => $collection, 'k' => $key, 'u' => static::$requester->profile->id]];
-            if (++$i > 0 && $i%7 === 0) ++$row;
+            if (++$i > 0 && $i % 7 === 0) ++$row;
         }
 
         $inlineKeyboard = [];
-        if ($offset > 0 && $offset-TelegramEmojis::$limit > 0)
-            $inlineKeyboard[] = ['text' => '<-', 'callback_data' => ['c' => 'emoji', 'col' => $collection, 'u' => static::$requester->profile->id, 'o' => $offset-TelegramEmojis::$limit]];
+        if ($offset > 0 && $offset - TelegramEmojis::$limit > 0)
+            $inlineKeyboard[] = ['text' => '<-', 'callback_data' => ['c' => 'emoji', 'col' => $collection, 'u' => static::$requester->profile->id, 'o' => $offset - TelegramEmojis::$limit]];
 
-        if ($offset+TelegramEmojis::$limit < TelegramEmojis::$count)
-            $inlineKeyboard[] = ['text' => '->', 'callback_data' => ['c' => 'emoji', 'col' => $collection, 'u' => static::$requester->profile->id, 'o' => $offset+TelegramEmojis::$limit]];
-            
+        if ($offset + TelegramEmojis::$limit < TelegramEmojis::$count)
+            $inlineKeyboard[] = ['text' => '->', 'callback_data' => ['c' => 'emoji', 'col' => $collection, 'u' => static::$requester->profile->id, 'o' => $offset + TelegramEmojis::$limit]];
+
         $replyMarkup['inline_keyboard'][] = $inlineKeyboard;
         $update['replyMarkup'] = $replyMarkup;
 

@@ -75,7 +75,7 @@ class SocialPoints extends Model
     public static function minus(int $targetId = 0, int $point = 0)
     {
         static::getUserData($targetId);
-        
+
         $points = static::$target->points;
 
         if (is_null($points) || $points - $point < 0) {

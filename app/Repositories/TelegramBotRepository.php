@@ -2,12 +2,14 @@
 
 namespace app\Repositories;
 
+use app\core\Entities\Requester;
 use app\core\Locale;
 use app\core\Router;
 use app\core\Tech;
 use app\core\Telegram\ChatAction;
 use app\core\TelegramBot;
 use app\core\Validator;
+use app\models\Coupons;
 use app\models\Days;
 use app\models\GameTypes;
 use app\models\Users;
@@ -190,7 +192,7 @@ class TelegramBotRepository
             throw new Exception(__METHOD__ . ': $message can\'t be empty!');
 
         $pattern = '/([\x{1F300}-\x{1FAFF}\x{1F1E6}-\x{1F1FF}\x{2600}-\x{26FF}\x{2700}-\x{27BF}\x{FE0F}\x{200D}\x{1F3FB}-\x{1F3FF}\x{E0061}-\x{E007A}]+)/u';
-        $result = preg_match($pattern, $text, $matches, 0, strpos($text, ' ')+1);
+        $result = preg_match($pattern, $text, $matches, 0, strpos($text, ' ') + 1);
         Tech::dump($result);
         Tech::dump($matches);
         return $result === 1 ? $matches[0] : null;
@@ -203,7 +205,7 @@ class TelegramBotRepository
         if (empty($message))
             throw new Exception(__METHOD__ . ': $message can\'t be empty!');
 
-       return $message['callback_query']['message']['message_id'] ?? $message['message']['message_id'];
+        return $message['callback_query']['message']['message_id'] ?? $message['message']['message_id'];
     }
     public static function getChatId(array $message = []): int
     {
@@ -239,15 +241,28 @@ class TelegramBotRepository
     }
 
 
+    public static function getCouponsListMarkup(bool $avail = false): array
+    {
+        $coupons = Coupons::$coupons;
+
+        $userId = ChatAction::$requester->profile->id;
+        $points = ChatAction::$requester->profile->points;
+        $inline_keyboard = [];
+        foreach ($coupons as $index => $coupon) {
+            if (!$coupon['active'] || $avail && $points < $coupon['price']) continue;
+            $inline_keyboard[] = [['text' => "{$coupon['icon']} - {$coupon['options']['discount']}{$coupon['options']['discount_type']} ({$coupon['price']}SP)", 'callback_data' => ['c' => 'spBuy', 'g' => 'coupon', 'i' => $index, 'u' => $userId]]];
+        }
+        return compact('inline_keyboard');
+    }
     public static function getPaticipantsListMarkup(string $callback = 'unreg', int $weekId = 0, int $dayId = 0): array
     {
         $day = Days::weekDayData($weekId, $dayId);
-        if (empty($day['participants'])){
+        if (empty($day['participants'])) {
             return [];
         }
-            
+
         $inline_keyboard = [];
-        foreach($day['participants'] as $participant){
+        foreach ($day['participants'] as $participant) {
             $inline_keyboard[] = [['text' => $participant['name'], 'callback_data' => ['c' => $callback, 'w' => $weekId, 'd' => $dayId, 'u' => $participant['id']]]];
         }
         return compact('inline_keyboard');
@@ -256,7 +271,7 @@ class TelegramBotRepository
     {
         $day = $curr = Days::current();
         $days = [];
-        for($x = 0; $x < 7; $x++){
+        for ($x = 0; $x < 7; $x++) {
             $day = $day++;
             if ($day === 7) $day = 0;
             $days[] = $day++;
@@ -267,14 +282,14 @@ class TelegramBotRepository
         $gameNames = GameTypes::names();
 
         $inline_keyboard = [];
-        foreach($days as $day){
-            if ($day < $curr){
+        foreach ($days as $day) {
+            if ($day < $curr) {
                 $weekId++;
                 $week = Weeks::find($weekId);
                 if (empty($week)) break;
             }
             if ($set && $week['data'][$day]['status'] !== 'set') continue;
-            $inline_keyboard[] = [['text' => $dayNames[$day] . ' - ' .$gameNames[$week['data'][$day]['game']], 'callback_data' => ['c' => $callback, 'w' => $weekId, 'd' => $day]]];
+            $inline_keyboard[] = [['text' => $dayNames[$day] . ' - ' . $gameNames[$week['data'][$day]['game']], 'callback_data' => ['c' => $callback, 'w' => $weekId, 'd' => $day]]];
         }
         return compact('inline_keyboard');
     }

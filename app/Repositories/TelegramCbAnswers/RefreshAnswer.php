@@ -11,8 +11,6 @@ use Exception;
 
 class RefreshAnswer extends ChatAnswer
 {
-    // public static $accessLevel = 'manager';
-
     public static function execute(): array
     {
         if (empty(static::$requester) || empty(static::$arguments))
@@ -26,8 +24,6 @@ class RefreshAnswer extends ChatAnswer
         $replyMarkup = TelegramBotRepository::getBookingMarkup($weekId, $dayNum, false, true);
 
         $update = [
-            'chatId' => Settings::getMainTelegramId(),
-            'messageId' => TelegramBotRepository::getMessageId(),
             'message' => $message,
             'replyMarkup' => $replyMarkup,
         ];

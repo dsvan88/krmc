@@ -35,6 +35,7 @@ class TodayCommand extends ChatCommand
                 [
                     'message' => $message,
                     'replyMarkup' => $replyMarkup,
+                    'replyOn' => 0,
                 ]
             ]
         ];

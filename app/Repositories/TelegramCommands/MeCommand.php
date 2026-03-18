@@ -25,6 +25,6 @@ class MeCommand extends ChatCommand
         $message .= self::locale('Here is your profile’s info:') . PHP_EOL;
         $message .= self::locale(['string' => 'Your summ of social points is: <b>%s</b>', 'vars' => [static::$requester->profile->points ?? 0]]);
 
-        return static::result($message, '👌', true, TelegramBotRepository::getMessageId());
+        return static::result($message, '👌', true);
     }
 }

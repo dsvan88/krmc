@@ -14,9 +14,82 @@ class Coupons extends Model
         'han', // here and now (for sales on evenings)
     ];
 
-    public static function create(array $data = [])
+    public static $coupons = [
+        [
+            'active' => true,
+            'icon' => '🎫',
+            'type' => 'once',
+            'price' => 150,
+            'options' => [
+                'discount' => 20,
+                'discount_type' => '%',
+            ],
+        ],
+        [
+            'active' => true,
+            'icon' => '🎫',
+            'type' => 'once',
+            'price' => 300,
+            'options' => [
+                'discount' => 50,
+                'discount_type' => '%',
+            ],
+        ],
+        [
+            'active' => true,
+            'icon' => '🎫',
+            'type' => 'once',
+            'price' => 450,
+            'options' => [
+                'discount' => 100,
+                'discount_type' => '%',
+            ],
+        ],
+        [
+            'active' => true,
+            'icon' => '🎟',
+            'type' => 'once',
+            'price' => 150,
+            'options' => [
+                'discount' => 20,
+                'discount_type' => 'hrn',
+            ],
+        ],
+        [
+            'active' => true,
+            'icon' => '🎟',
+            'type' => 'once',
+            'price' => 200,
+            'options' => [
+                'discount' => 30,
+                'discount_type' => 'hrn',
+            ],
+        ],
+        [
+            'active' => true,
+            'icon' => '🎟',
+            'type' => 'once',
+            'price' => 300,
+            'options' => [
+                'discount' => 50,
+                'discount_type' => 'hrn',
+            ],
+        ],
+        [
+            'active' => true,
+            'icon' => '🎟',
+            'type' => 'once',
+            'price' => 400,
+            'options' => [
+                'discount' => 80,
+                'discount_type' => 'hrn',
+            ],
+        ],
+    ];
+
+
+    public static function create(int $userId = 0, int $couponId = 0)
     {
-        extract($data);
 
         if (empty($userId))
             throw new Exception(__METHOD__ . ': owner can’t be empty.');
@@ -24,28 +97,28 @@ class Coupons extends Model
         if (!Users::isExists(['id' => $userId]))
             throw new Exception(__METHOD__ . ': owner doesn’t exists.');
 
-        if (empty($type)) $type = 'once';
-        else if (!in_array($type, static::$types, true))
-            throw new Exception(__METHOD__ . ': unknown coupon’s type.');
+        if (empty(static::$coupons[$couponId]))
+            throw new Exception(__METHOD__ . ': unknown coupon’s data.');
 
+        $coupon = static::$coupons[$couponId];
         $options = [
             'discount' => empty($discount) ? 20 : $discount,
             'discount_type' => empty($discount_type) ? '%' : $discount_type,
         ];
 
-        $coupon = [
+        $_coupon = [
             'owner' => $userId,
-            'type' => $type,
-            'options' => json_encode($options),
-            'expired_at' => date('Y-m-d H:i:s', empty($expired) ? TIMESTAMP_DAY * 366 : $expired),
+            'type' => $coupon['type'],
+            'options' => json_encode($coupon['options']),
+            'expired_at' => date('Y-m-d H:i:s', $coupon['expired'] ?? TIMESTAMP_DAY * 366),
         ];
 
-        $hex = (hash('xxh3', json_encode($coupon) . $_SERVER['REQUEST_TIME']));
-        $coupon['id'] = gmp_strval(gmp_init("0x$hex"), 10);
+        $hex = (hash('xxh3', json_encode($_coupon) . $_SERVER['REQUEST_TIME']));
+        $_coupon['id'] = gmp_strval(gmp_init("0x$hex"), 10);
 
-        static::insert($coupon);
+        static::insert($_coupon);
 
-        return gmp_strval(gmp_init($coupon['id']), 16);
+        return gmp_strval(gmp_init($_coupon['id']), 16);
     }
     public static function decodeJson(array $coupon)
     {
