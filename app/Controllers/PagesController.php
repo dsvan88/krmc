@@ -60,11 +60,11 @@ class PagesController extends Controller
         if (!empty($_POST)) {
             try {
                 Pages::edit($_POST, $slug);
-            } catch (\Throwable $error){
+            } catch (\Throwable $error) {
                 return View::notice(['error' => 1, 'message' => $error->getMessage(), 'time' => 3000]);
             }
+            // return View::notice(['message' => 'Changes saved successfully!']);
             return View::notice(['message' => 'Changes saved successfully!', 'time' => 2000, 'location' => 'reload']);
-            
         }
         $page = Pages::getBySlug($slug);
 
@@ -80,6 +80,7 @@ class PagesController extends Controller
         }
         $page['image_link'] = '';
         if (!empty($page['data']['logo'])) {
+            $page['image_id'] = $page['data']['logo'];
             $page['image_link'] = GoogleDrive::getLink($page['data']['logo']);
         }
         $page['published_at'] = strtotime($page['published_at']);
@@ -130,22 +131,22 @@ class PagesController extends Controller
 
         if (!$blockType)
             return View::notice(['type' => 'error', 'message' => 'Fail']);
-        
+
         $block = [
             'html' => '',
             'image' => '',
             'type' => $blockType,
         ];
-        if (strpos($blockType, '-')){
+        if (strpos($blockType, '-')) {
             $block['direction'] = '';
             $block['order'] = '';
-            if ($blockType === 'image-text'){
-                $blockType= 'text-image';
+            if ($blockType === 'image-text') {
+                $blockType = 'text-image';
                 $block['order'] = 'reverse';
             }
         }
         View::$route['vars']['block'] = $block;
-        View::$route['vars']['path'] = 'components/blocks/forms/'.$blockType;
+        View::$route['vars']['path'] = 'components/blocks/forms/' . $blockType;
         return View::html();
     }
     public function addAction()

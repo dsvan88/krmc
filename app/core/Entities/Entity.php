@@ -65,8 +65,8 @@ abstract class Entity
 
         static::$cache = $data;
         return true;
-    }    
-    public function __isset($name):bool
+    }
+    public function __isset($name): bool
     {
         return $this->$name ?? false;
     }

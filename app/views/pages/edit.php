@@ -13,7 +13,7 @@
             </div>
             <div class="form__column">
                 <div class="form__row image__place">
-                    <?php self::component('forms/images-pad', ['link' => empty($page['image_link']) ? '' : $page['image_link']]) ?>
+                    <?php self::component('forms/images-pad', ['link' => $page['image_link'] ?? '', 'imageId' => $page['image_id'] ?? '']) ?>
                 </div>
             </div>
         </div>
@@ -58,9 +58,9 @@
         <div class="blocks">
             <?php if (empty($page['blocks'])): ?>
                 <?php self::component('blocks/forms/text', ['block' => ['html' => $page['html']]]) ?>
-            <?php else :?>
-                <? foreach($page['blocks'] as $block):?>
-                    <?php self::component('blocks/forms/'.$block['type'], compact('block')) ?>
+            <?php else : ?>
+                <? foreach ($page['blocks'] as $block): ?>
+                    <?php self::component('blocks/forms/' . $block['type'], compact('block')) ?>
                 <?php endforeach ?>
             <?php endif ?>
             <div class="form__button-place">

@@ -3,6 +3,7 @@
 namespace app\Controllers;
 
 use app\core\Controller;
+use app\core\Entities\Day;
 use app\core\Tech;
 use app\core\Validator;
 use app\core\View;
@@ -340,6 +341,6 @@ class TechController extends Controller
     }
     public static function testAction()
     {
-        Tech::dump(TelegramBotRepository::getPaticipantsListMarkup('unreg', 198, 2));
+        $day = Day::create(0, 193);
     }
 }
