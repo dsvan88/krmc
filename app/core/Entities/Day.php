@@ -2,6 +2,7 @@
 
 namespace  app\core\Entities;
 
+use app\core\Tech;
 use app\models\Weeks;
 use app\Repositories\AccountRepository;
 use Exception;
@@ -86,7 +87,7 @@ class Day
     }
     public function __toString()
     {
-        return $this->name ?? '';
+        return "Week: {$this->weekId}, day: {$this->dayId}, game: {$this->game}";
     }
     public function save(): bool
     {
