@@ -3,6 +3,8 @@
 namespace  app\core\Entities;
 
 use app\core\Tech;
+use app\models\Days;
+use app\models\GameTypes;
 use app\models\Weeks;
 use app\Repositories\AccountRepository;
 use Exception;
@@ -18,6 +20,14 @@ class Day
     public string $time = '';
     public string $status = '';
     public string $day_prim = '';
+    
+    public bool $current = false;
+    public int $timestamp = 0;
+    public int $start = 0;
+    public int $finish = 0;
+    public string $dayName = '';
+    public string $type = 'future';
+    public string $gameName = '';
 
     public static array $instances = [];
     public static array $week = [];
@@ -35,12 +45,37 @@ class Day
     {
         $props = get_object_vars($this);
 
-        unset($props['dayId']);
-        unset($props['weekId']);
+        unset($props['dayId'],
+            $props['weekId'],
+            $props['current'],
+            $props['timestamp'],
+            $props['start'],
+            $props['finish'],
+            $props['dayName'],
+            $props['gameName'],
+            $props['type'],
+        );
         $props = array_keys($props);
 
         $this->dayId = $dayId;
         $this->weekId = $weekId;
+        $this->timestamp = static::$week['start']+ TIMESTAMP_DAY * $dayId;
+
+        $dayNames = Days::daysNames();
+        $this->dayName = $dayNames[$dayId];
+
+        $games = GameTypes::names();
+        $this->gameName = $games[static::$week['data'][$dayId]['game']];
+
+        $currWeekId = Weeks::currentId();
+        $currDayId = Days::current();
+        if ($weekId === $currWeekId && $dayId === $currDayId){
+            $this->current = true;
+            $this->type = 'current';
+        }
+        elseif ($weekId < $currWeekId || $weekId === $currWeekId && $dayId < $currDayId) {
+            $this->type = 'expire';
+        }
 
         foreach ($props as $v) {
             if (empty(static::$week['data'][$dayId][$v])) continue;

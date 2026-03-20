@@ -2,6 +2,7 @@
 
 namespace app\Repositories;
 
+use app\core\Entities\Week;
 use app\core\Locale;
 use app\core\Paginator;
 use app\core\Tech;
@@ -15,10 +16,14 @@ class WeekRepository
     public static function getShowData(int $weekId = 0): array
     {
         $weekCurrentId = Weeks::currentId();
+
         if (empty($weekId))
             $weekId = $weekCurrentId;
 
+        $week = Week::create($weekId);
+
         $weeksIds = Weeks::getIds();
+
         $weeksCount = count($weeksIds);
         $weekCurrentIndexInList = array_search($weekCurrentId, $weeksIds);
 
@@ -35,7 +40,7 @@ class WeekRepository
         if (isset($weeksIds[$selectedWeekIndex + 1]))
             $nextWeek = Weeks::find($weeksIds[$selectedWeekIndex + 1]);
 
-        $dayNames = Locale::apply(Days::$days);
+        $dayNames = Days::daysNames();
 
         $games = GameTypes::names();
         $days = [];
@@ -44,7 +49,7 @@ class WeekRepository
 
             $days[$i] = $weekData['data'][$i];
             $days[$i]['timestamp'] = $weekData['start'] + TIMESTAMP_DAY * $i;
-            $days[$i]['date'] = date('d.m.Y', $days[$i]['timestamp']) . ' (<strong>' . $dayNames[$i] . '</strong>) ' . $days[$i]['time'];
+            $days[$i]['date'] = date('d.m.Y', $days[$i]['timestamp']) . ' (<b>' . $dayNames[$i] . '</b>) ' . $days[$i]['time'];
 
             $days[$i]['gameName'] = $games[$days[$i]['game']];
 

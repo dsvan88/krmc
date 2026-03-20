@@ -342,6 +342,6 @@ class TechController extends Controller
     }
     public static function testAction()
     {
-        Tech::dump(Week::create(193)->days[0]->participants[0]);
+        Tech::dump(Week::create(198));
     }
 }

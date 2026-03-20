@@ -24,6 +24,7 @@ class Days extends Model
         'Saturday',
         'Sunday',
     ];
+    public static $daysLocaled = [];
     public static $dayDataDefault = [
         'game' => 'mafia',
         'mods' => [],
@@ -45,6 +46,11 @@ class Days extends Model
             self::$currentDay = 6;
 
         return self::$currentDay;
+    }
+    public static function daysNames(){
+        if (empty(static::$daysLocaled))
+            static::$daysLocaled = Locale::apply(static::$days);
+        return static::$daysLocaled;
     }
     public static function near()
     {

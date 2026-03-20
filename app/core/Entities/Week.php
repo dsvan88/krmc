@@ -13,6 +13,7 @@ class Week
     public int $start = 0;
     public int $finish = 0;
     public array $days = [];
+    public bool $current = false;
 
     public static array $instances = [];
 
@@ -30,18 +31,20 @@ class Week
         $props = get_object_vars($this);
 
         unset($props['id']);
+        unset($props['days']);
+        unset($props['current']);
         $props = array_keys($props);
         $this->id = $weekId;
+        if ($weekId === Weeks::currentId()){
+            $this->current = true;
+        }
 
-        Day::create(0, $weekId);
+        for($x = 0; $x<7;$x++)
+            $this->days[] = Day::create($x, $weekId);
+
         $week = Day::$week;
 
         foreach ($props as $v) {
-            if ($v === 'days'){
-                for($x = 0; $x<7;$x++)
-                    $this->days[] = Day::create($x, $weekId);
-                continue;
-            }
             if (empty($week[$v])) continue;
             $this->$v = $week[$v];
         }

@@ -35,7 +35,7 @@ class Weeks extends Model
         return static::$currentData;
     }
     // Отримати й зберегти id поточного тижня
-    public static function currentId()
+    public static function currentId(): int
     {
         if (self::$currentId !== -1)
             return self::$currentId;
