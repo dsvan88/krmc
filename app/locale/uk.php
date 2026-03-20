@@ -244,6 +244,8 @@ return [
     'So... we remember you under the nickname <b>%s</b>. Right?\nNice to meet you!' => "Так... записываем Вас под именем <b>%s</b>. Верно?\nПриятно познакомиться!",
     'If you made a mistake, don’t worry, tell the administrator about it and he will quickly fix it😏' => 'Якщо Ви допустили помилку - не зважайте! Просто повідомте про це адміністратору, та він швиденько це виправить😏',
     "<b>%s</b>, nice to meet you!\nYou successfully registered in our system!" => "<b>%s</b>, приємно познайомитись!\nВи успішно зареєструвались в нашій системі!",
+    'Okay, Im ready to get your beautiful nickname!' => 'Добре, я готовий дізнатися Ваш чудовий псевдонім!',
+    'Your next message - will be your nickname!' => 'Ваше наступне повідомлення - буде Вашим псевдонімом!',
     'The nickname <b>%s</b> is already registered by another member of the group!' => 'Игрок под пседонимом <b>%s</b> - уже зарегистрирован в системе! Але я не можу знайти його TelegramID🤷‍♂️',
     "But... I can’t find his TelegramID🤷‍♂️" => 'Але я не можу знайти його TelegramID🤷‍♂️',
     "Is it your?*" => "Це Ваш?*",

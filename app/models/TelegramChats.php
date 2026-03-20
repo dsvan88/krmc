@@ -4,7 +4,6 @@ namespace app\models;
 
 use app\core\Model;
 use app\core\Sender;
-use app\Repositories\TelegramBotRepository;
 use app\Repositories\TelegramChatsRepository;
 
 class TelegramChats extends Model

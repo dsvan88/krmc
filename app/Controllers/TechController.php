@@ -150,12 +150,12 @@ class TechController extends Controller
     }
     public static function dbrebuildAction()
     {
-        // return View::redirect('/');
+        return View::redirect('/');
         set_time_limit(720);
-        $users = Users::getAll();
-        foreach ($users as $user) {
-            SocialPoints::set(0, $user['id']);
-        }
+        // $users = Users::getAll();
+        // foreach ($users as $user) {
+        //     SocialPoints::set(0, $user['id']);
+        // }
         $weeks = Weeks::getAll();
         $time = strtotime('01.01.2025');
         foreach ($weeks as $week) {

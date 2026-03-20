@@ -33,7 +33,7 @@ class NickCommand extends ChatCommand
 
             TelegramChatsRepository::setPendingState('nick');
 
-            $message = self::locale('Okay, Im ready to get your beautiful nickname!'). PHP_EOL;
+            $message = self::locale('Okay, Im ready to get your beautiful nickname!') . PHP_EOL;
             $message .= self::locale('Your next message - will be your nickname!');
             $replyMarkup = [
                 'inline_keyboard' => [
@@ -55,7 +55,7 @@ class NickCommand extends ChatCommand
         }
 
         TelegramChatsRepository::setPendingState();
-        
+
         $username = Validator::validate('name', $_username);
 
         if (empty($username)) {
@@ -83,7 +83,7 @@ class NickCommand extends ChatCommand
             $userId = Users::add($username);
 
             Contacts::new(['telegramid' => $telegramId, 'telegram' => $telegram], $userId);
-            TelegramChats::save(ChatAction::$message);
+            TelegramChatsRepository::save();
             TelegramChatsRepository::getAndSaveTgAvatar($userId, true);
 
             $message = self::locale(['string' => "So... we remember you under the nickname <b>%s</b>. Right?\nNice to meet you!", 'vars' => [$username]]) . PHP_EOL;
