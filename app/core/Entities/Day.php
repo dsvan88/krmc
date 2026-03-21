@@ -20,6 +20,7 @@ class Day
     public string $time = '';
     public string $status = '';
     public string $day_prim = '';
+    public string $cost = '';
     
     public bool $current = false;
     public int $timestamp = 0;
@@ -31,6 +32,7 @@ class Day
 
     public static array $instances = [];
     public static array $week = [];
+    public static bool $once = false;
 
     private function __construct(int $dayId = 0, int $weekId = 0)
     {
@@ -100,8 +102,13 @@ class Day
 
         if (!static::find($weekId)) return null;
 
-        for ($x = 0; $x < 7; $x++) {
-            new static($x, $weekId);
+        if (static::$once){
+            new static($dayId, $weekId);
+        }
+        else{
+            for ($x = 0; $x < 7; $x++) {
+                new static($x, $weekId);
+            }
         }
         return static::$instances[get_called_class() . "_$dayId.$weekId"];
     }
@@ -126,7 +133,20 @@ class Day
     }
     public function save(): bool
     {
+        $defs = Days::$dayDataDefault;
+        $day = [];
 
-        return true;
+        foreach($defs as $k=>$v){
+            $day[$k] = $this->$k ?? $v;
+        }
+
+        foreach($day['participants'] as $i=>$p){
+            $day['participants'][$i] = [
+                'id' => $p['id'],
+                'arrive' => $p['arrive'],
+                'prim' => $p['prim'],
+            ];
+        }
+        return Days::setDayData($this->weekId, $this->dayId, $day);
     }
 }

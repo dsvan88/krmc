@@ -31,7 +31,8 @@ class Days extends Model
         'time' => '14:00',
         'status' => '',
         'participants' => [],
-        'day_prim' => ''
+        'day_prim' => '',
+        'cost' => ''
     ];
 
     public static function current(): int
@@ -69,17 +70,14 @@ class Days extends Model
     public static function edit($weekId, $dayId, $data)
     {
         $newData = [
-            'time' => trim($data['day_time']),
             'game' => trim($data['game']),
-            'day_prim' => str_replace('  ', "\n", trim($data['day_prim'])),
+            'mods' => $data['mods'] ?? [],
+            'time' => trim($data['day_time']),
             'status' => 'set',
-            'mods' => [],
+            'participants' => [],
+            'day_prim' => str_replace('  ', "\n", trim($data['day_prim'])),
             'cost' => trim($data['day_cost']),
         ];
-        if (isset($data['mods'])) {
-            $newData['mods'] = $data['mods'];
-        }
-        $newData['participants'] = [];
         $count = count($data['participant']);
         for ($i = 0; $i < $count; $i++) {
             if (empty($data['participant'][$i])) continue;
@@ -351,17 +349,6 @@ class Days extends Model
             return false;
         }
         $weekData['data'][$dayNum]['status'] = 'recalled';
-        return self::setDayData($weekId, $dayNum, $weekData['data'][$dayNum]);
-    }
-    public static function clear($weekId, $dayNum)
-    {
-        $weekData = Weeks::weekDataById($weekId);
-        if (!isset($weekData['data'][$dayNum]) || $weekData['data'][$dayNum]['status'] !== 'recalled') {
-            return false;
-        }
-        $weekData['data'][$dayNum]['day_prim'] = '';
-        $weekData['data'][$dayNum]['participants'] = [];
-
         return self::setDayData($weekId, $dayNum, $weekData['data'][$dayNum]);
     }
 }

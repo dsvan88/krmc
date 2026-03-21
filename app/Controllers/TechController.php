@@ -342,6 +342,12 @@ class TechController extends Controller
     }
     public static function testAction()
     {
-        Tech::dump(Week::create(198));
+        Day::$once = true;
+        $day = Day::create(6);
+        // Tech::dump($day);
+        $day->participants = [];
+        $day->time = '11:00';
+        Tech::dump($day);
+        $day->save();
     }
 }

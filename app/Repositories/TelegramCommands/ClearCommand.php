@@ -2,11 +2,14 @@
 
 namespace app\Repositories\TelegramCommands;
 
+use app\core\Entities\Day;
+use app\core\Entities\Week;
 use app\core\Telegram\ChatCommand;
 use app\models\Days;
 use app\models\Weeks;
 use app\Repositories\DayRepository;
 use app\Repositories\TelegramBotRepository;
+use Exception;
 
 class ClearCommand extends ChatCommand
 {
@@ -30,15 +33,45 @@ class ClearCommand extends ChatCommand
 
         TelegramBotRepository::parseDayNum($dayName);
 
-        $weekId = Weeks::currentId();
+        Day::$once = true;
+        $day = Day::create(static::$arguments['dayNum']);
 
-        if (static::$arguments['dayNum'] < static::$arguments['currentDay']) {
-            ++$weekId;
-        }
+        return !$day || $day->status !== 'recalled'
+            ? static::approve($day->weekId, $day->dayId)
+            : static::clear($day);
+    }
+    public static function approve(int $weekId, int $dayId){
 
-        // $message = "Не можу очистити цей день.😥\nВін й досі запланований! Я можу очистити лише дні, по яким стався \"відбій\"";
-        if (!Days::clear($weekId, static::$arguments['dayNum']))
-            return static::result("Can’t clear this day.😥\nIt’s still \"set\". I can only clear \"recalled\"!");
+        $message = static::locale("Can’t clear this day.😥\nIt’s still \"set\". I can only clear \"recalled\"!").PHP_EOL;
+        $message .= static::locale("Do you wanna to recall and clear this day?");
+
+        $replyMarkup = [
+            'inline_keyboard' => [
+                [
+                    ['text' => '✔' . self::locale('Agree'), 'callback_data' => ['c' => 'clear', 'u' => static::$requester->profile->id, 'w' => $weekId, 'd' => $dayId ]],
+                    ['text' => '❌' . self::locale('Cancel'), 'callback_data' => ['c' => 'cancel', 'u' => static::$requester->profile->id]],
+                ],
+            ],
+        ];
+        return [
+            'result' => false,
+            'reaction' => '🤷‍♂️',
+            'send' => [
+                [
+                    'message' => $message,
+                    'replyMarkup' => $replyMarkup,
+                ]
+            ]
+        ];
+    }
+    public static function clear(?Day $day = null){
+        if (empty($day))
+            throw new Exception(__METHOD__.' $day can’t be empty!');
+
+        $day->participants = [];
+        $day->day_prim = '';
+        $day->status = 'recalled';
+        $day->save();
 
         return static::result('This day’s settings have been cleared.', '👌', true);
     }

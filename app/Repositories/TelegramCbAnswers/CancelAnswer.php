@@ -4,7 +4,7 @@ namespace app\Repositories\TelegramCbAnswers;
 
 use app\core\Telegram\ChatAnswer;
 
-class CloseAnswer extends ChatAnswer
+class CancelAnswer extends ChatAnswer
 {
     public static $accessLevel = 'user';
 
@@ -14,7 +14,7 @@ class CloseAnswer extends ChatAnswer
         if ($userId != static::$requester->profile->id || !in_array(static::$requester->profile->status, ['manager', 'admin', 'root'], true))
             return static::result('You don’t have enough rights to change information about other users!', false, true);
         
-        $update = ['message' => '<i>'.static::locale('This dialog is closed.').'</i>'];
+        $update = ['message' => '<i>'.static::locale('This action is canceled.').'</i>'];
         return array_merge(static::result('Success', true), ['update' => [$update]]);
     }
 }

@@ -145,7 +145,9 @@ class Weeks extends Model
     {
         if (empty($weekId) || empty($weekData))
             throw new Exception(__METHOD__ . ' WeekID or WeekData can’t be empty.');
-
+        
+        unset($weekData['id']);
+        
         if (is_array($weekData['data'])) {
             $weekData['data'] = json_encode($weekData['data'], JSON_UNESCAPED_UNICODE);
         }
