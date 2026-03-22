@@ -32,13 +32,25 @@ class ClearCommand extends ChatCommand
             $dayName = 'tod';
 
         TelegramBotRepository::parseDayNum($dayName);
+        
+        $weekId = Weeks::currentId();
+        $dayId = static::$arguments['dayNum'];
+        if ($dayId < Days::current())
+            $weekId++;
 
         Day::$once = true;
-        $day = Day::create(static::$arguments['dayNum']);
+        $day = Day::create($dayId, $weekId);
 
-        return !$day || $day->status !== 'recalled'
-            ? static::approve($day->weekId, $day->dayId)
-            : static::clear($day);
+        if (!$day)
+            throw new Exception(__METHOD__.' $day can’t be null');
+        
+        if ($day->status !== 'recalled')
+            return  static::approve($day->weekId, $day->dayId);
+
+        $day->clear();
+        $day->save();
+        
+        return static::result('This day’s settings have been cleared.', '👌', true);
     }
     public static function approve(int $weekId, int $dayId){
 
@@ -63,16 +75,5 @@ class ClearCommand extends ChatCommand
                 ]
             ]
         ];
-    }
-    public static function clear(?Day $day = null){
-        if (empty($day))
-            throw new Exception(__METHOD__.' $day can’t be empty!');
-
-        $day->participants = [];
-        $day->day_prim = '';
-        $day->status = 'recalled';
-        $day->save();
-
-        return static::result('This day’s settings have been cleared.', '👌', true);
     }
 }

@@ -26,9 +26,11 @@ class Day
     public int $timestamp = 0;
     public int $start = 0;
     public int $finish = 0;
+    public string $date = '';
     public string $dayName = '';
     public string $type = 'future';
     public string $gameName = '';
+    public int $participantsCount = 0;
 
     public static array $instances = [];
     public static array $week = [];
@@ -53,9 +55,11 @@ class Day
             $props['timestamp'],
             $props['start'],
             $props['finish'],
+            $props['date'],
             $props['dayName'],
-            $props['gameName'],
             $props['type'],
+            $props['gameName'],
+            $props['participantsCount'],
         );
         $props = array_keys($props);
 
@@ -83,10 +87,13 @@ class Day
             if (empty(static::$week['data'][$dayId][$v])) continue;
             if ($v === 'participants') {
                 AccountRepository::addNames(static::$week['data'][$dayId]['participants']);
+                $this->participantsCount = count(static::$week['data'][$dayId]['participants']);
             }
             $this->$v = static::$week['data'][$dayId][$v];
         }
 
+        $this->date = date('d.m.Y', $this->timestamp) . ' (<b>' . $this->dayName . '</b>) ' . $this->time;
+        
         return true;
     }
     public static function create(int $dayId = 0, int $weekId = 0)
@@ -131,11 +138,18 @@ class Day
     {
         return "Week: {$this->weekId}, day: {$this->dayId}, game: {$this->game}";
     }
-    public function save(): bool
+    public function clear()
+    {
+        $this->participants = [];
+        $this->day_prim = '';
+        $this->mods = [];
+        $this->status = 'recalled';
+    }
+    public function save(bool $return = false)
     {
         $defs = Days::$dayDataDefault;
-        $day = [];
 
+        $day = [];
         foreach($defs as $k=>$v){
             $day[$k] = $this->$k ?? $v;
         }
@@ -147,6 +161,6 @@ class Day
                 'prim' => $p['prim'],
             ];
         }
-        return Days::setDayData($this->weekId, $this->dayId, $day);
+        return $return ? $day : Days::setDayData($this->weekId, $this->dayId, $day);
     }
 }

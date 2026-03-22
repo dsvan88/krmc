@@ -3,7 +3,6 @@
 namespace app\Controllers;
 
 use app\core\Controller;
-use app\core\Locale;
 use app\core\View;
 use app\models\Weeks;
 use app\Repositories\WeekRepository;
@@ -19,7 +18,6 @@ class WeeksController extends Controller
 
         $vars['texts'] = [
             'weeksBlockTitle' => 'Weekly schedule',
-            'days' => $vars['dayNames'],
         ];
         $vars['title'] = 'Weekly schedule';
 

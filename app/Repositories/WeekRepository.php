@@ -27,10 +27,6 @@ class WeekRepository
         $weeksCount = count($weeksIds);
         $weekCurrentIndexInList = array_search($weekCurrentId, $weeksIds);
 
-        $weekData = Weeks::weekDataById($weekId);
-
-        $dayId = Days::current();
-
         $prevWeek = $nextWeek = false;
 
         $selectedWeekIndex = array_search($weekId, $weeksIds);
@@ -40,58 +36,29 @@ class WeekRepository
         if (isset($weeksIds[$selectedWeekIndex + 1]))
             $nextWeek = Weeks::find($weeksIds[$selectedWeekIndex + 1]);
 
-        $dayNames = Days::daysNames();
-
-        $games = GameTypes::names();
-        $days = [];
-
         for ($i = 0; $i < 7; $i++) {
+            if (empty($week->days[$i]->participantsCount)) continue;
 
-            $days[$i] = $weekData['data'][$i];
-            $days[$i]['timestamp'] = $weekData['start'] + TIMESTAMP_DAY * $i;
-            $days[$i]['date'] = date('d.m.Y', $days[$i]['timestamp']) . ' (<b>' . $dayNames[$i] . '</b>) ' . $days[$i]['time'];
-
-            $days[$i]['gameName'] = $games[$days[$i]['game']];
-
-            $days[$i]['class'] = 'future';
-            if ($selectedWeekIndex < $weekCurrentIndexInList) {
-                $days[$i]['class'] = 'expire';
-            } elseif ($selectedWeekIndex === $weekCurrentIndexInList) {
-                if ($dayId > $i) {
-                    $days[$i]['class'] = 'expire';
-                } elseif ($dayId === $i) {
-                    $days[$i]['class'] = 'current';
-                }
-            }
-
-            // $days[$i]['participants'] = AccountRepository::addNames($days[$i]['participants']);
-            AccountRepository::addNames($days[$i]['participants']);
-            $days[$i]['playersCount'] = min(count($days[$i]['participants']), 10);
-            for ($x = 0; $x < $days[$i]['playersCount']; $x++) {
-                if (empty($days[$i]['participants'][$x]['id']) || $days[$i]['participants'][$x]['name'][0] === '_')
-                    $days[$i]['participants'][$x]['name'] = '+1';
+            $week->days[$i]->participantsCount = min($week->days[$i]->participantsCount, 10);
+            for ($x = 0; $x < $week->days[$i]->participantsCount; $x++) {
+                if (empty($week->days[$i]->participants[$x]['id']) || $week->days[$i]->participants[$x]['name'][0] === '_')
+                   $week->days[$i]->participants[$x]['name'] = '+1';
             }
         }
-        $description = self::scheludeDescription($days);
+        $description = static::scheludeDescription($week->days);
 
         $paginator = Paginator::weekly(['weeksIds' => $weeksIds, 'currentIndex' => $weekCurrentIndexInList, 'selectedIndex' => $selectedWeekIndex]);
 
         $isManager = Users::checkAccess('manager');
 
         return compact(
-            'weekId',
             'weeksIds',
             'weeksCount',
-            'weekCurrentId',
             'weekCurrentIndexInList',
-            'weekData',
-            'dayId',
+            'week',
             'prevWeek',
             'nextWeek',
             'selectedWeekIndex',
-            'dayNames',
-            'games',
-            'days',
             'isManager',
             'paginator',
             'description',
@@ -101,8 +68,8 @@ class WeekRepository
     {
         if (empty($days)) return false;
         $result = Locale::phrase("Our schelude") . ':' . PHP_EOL;
-        foreach ($days as $index => $day) {
-            $result .= $day['date'] . ' - ' .  $day['gameName'] . ';' . PHP_EOL;
+        foreach ($days as $day) {
+            $result .= $day->date . ' - ' .  $day->gameName . ';' . PHP_EOL;
         }
         $result .= Locale::phrase("Welcome to our club") . '!';
         return preg_replace('/<.*?>/', '', $result);
@@ -117,7 +84,7 @@ class WeekRepository
         $result = [
             'title' => $data['title'],
             'type' => 'article',
-            'url' => "$url/weeks/{$data['weekId']}",
+            'url' => "$url/weeks/".$data['week']->id,
             'image' => $image,
             'og:image:width' => $imageSize[0],
             'og:image:height' => $imageSize[1],

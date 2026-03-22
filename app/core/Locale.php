@@ -15,6 +15,7 @@ class Locale
             return static::phrase($vars);
         }
         foreach ($vars as $key => $value) {
+            if (is_object($value)) continue;
             if (isset($value['string']) && isset($value['vars'])) {
                 if (empty(self::$dictionary[$value['string']])) {
                     $vars[$key] = sprintf($value['string'], ...$value['vars']);

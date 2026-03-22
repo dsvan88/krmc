@@ -2,9 +2,7 @@
 
 namespace  app\core\Entities;
 
-use app\core\Tech;
 use app\models\Weeks;
-use app\Repositories\AccountRepository;
 use Exception;
 
 class Week
@@ -75,8 +73,13 @@ class Week
         $finish = date('d.m.Y H:i:s', $this->finish);
         return "Week: {$this->id}, start: $start, end: $finish";
     }
-    public function save(): bool
+    public function save()
     {
-        return true;
+        $data = [];
+        for($x = 0; $x < 7;$x++){
+            $data[] = $this->days[$x]->save(1);
+        }
+        return (bool) Weeks::update(['data' => $data], $this->id);
     }
+       
 }

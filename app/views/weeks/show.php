@@ -11,7 +11,7 @@
             <?php else : ?>
                 <span class="schelude__title-dummy">&lt;&nbsp;No Data&nbsp;&gt;</span>
             <?php endif ?>
-            <span><?= date('d.m', $weekData['start']) . ' - ' . date('d.m', $weekData['finish'] - 18000) ?></span>
+            <span><?= date('d.m', $week->start) . ' - ' . date('d.m', $week->finish - 18000) ?></span>
             <?php if ($nextWeek) : ?>
                 <span>
                     <a class="schelude__title-link" href="/weeks/<?= $nextWeek['id'] ?>/"><?= date('d.m', $nextWeek['start']) . ' - ' . date('d.m', $nextWeek['finish'] - 18000) ?></a>
@@ -29,8 +29,8 @@
     </header>
     <div class='content'>
         <div class="week__list">
-            <?php foreach ($days as $dayNum => $day) : ?>
-                <?php self::component('day-card', ['day' => $day, 'dayNum' => $dayNum, 'weekId' => $weekId]) ?>
+            <?php foreach ($week->days as $day) : ?>
+                <?php self::component('week/day', ['day' => $day]) ?>
             <?php endforeach ?>
         </div>
     </div>
