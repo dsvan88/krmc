@@ -2,8 +2,13 @@
 
 namespace app\Repositories;
 
+use app\core\Entities\Day;
 use app\core\Locale;
+use app\core\Tech;
 use app\models\Days;
+use app\models\Settings;
+use app\models\TelegramChats;
+use app\models\Users;
 use app\models\Weeks;
 
 class DayRepository
@@ -156,50 +161,5 @@ class DayRepository
             $week['data'][$data[$i]['day']]['participants'][$data[$i]['index']]['id'] = $userId;
             Weeks::update(['data' => json_encode($week['data'], JSON_UNESCAPED_UNICODE)], ['id' => $week['id']]);
         }
-    }
-    public static function getTimeEmoji(string $time = ''): string
-    {
-        if (empty($time)) return '';
-
-        $offset = strpos($time, ':');
-        $hour = (int) substr($time, 0, $offset);
-        if ($hour > 12) $hour -= 12;
-        $mins = (int) substr($time, $offset + 1);
-        if (empty($mins) || $mins > 0 && $mins <= 15) $mins = '';
-        elseif ($mins > 15 && $mins <= 45) $mins = 30;
-        elseif ($mins > 45 && $mins <= 59) {
-            ++$hour;
-            $mins = '';
-        } elseif ($mins >= 60) {
-            $hour += round($mins / 60);
-            $mins = '';
-        }
-        $clocks = [
-            '1' => '🕐',
-            '130' => '🕜',
-            '2' => '🕑',
-            '230' => '🕝',
-            '3' => '🕒',
-            '330' => '🕞',
-            '4' => '🕓',
-            '430' => '🕟',
-            '5' => '🕔',
-            '530' => '🕠',
-            '6' => '🕕',
-            '630' => '🕡',
-            '7' => '🕖',
-            '730' => '🕢',
-            '8' => '🕗',
-            '830' => '🕣',
-            '9' => '🕘',
-            '930' => '🕤',
-            '10' => '🕙',
-            '1030' => '🕥',
-            '11' => '🕚',
-            '1130' => '🕦',
-            '12' => '🕛',
-            '1230' => '🕧',
-        ];
-        return isset($clocks[$hour . $mins]) ? $clocks[$hour . $mins] : '';
     }
 }

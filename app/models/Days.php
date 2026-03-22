@@ -6,6 +6,7 @@ use app\core\Model;
 use app\core\Locale;
 use app\core\Tech;
 use app\core\Validator;
+use app\Formatters\DayFormatter;
 use app\Repositories\AccountRepository;
 use app\Repositories\DayRepository;
 use app\Repositories\TelegramChatsRepository;
@@ -30,6 +31,7 @@ class Days extends Model
         'mods' => [],
         'time' => '14:00',
         'status' => '',
+        'starter' => 0,
         'participants' => [],
         'day_prim' => '',
         'cost' => ''
@@ -191,7 +193,7 @@ class Days extends Model
         }
 
         $result = '🗓 - <u>' . date('d.m.Y', $dayDate) . ' (<b>' . Locale::phrase(self::$days[$day]) . '</b>)</u>' . PHP_EOL;
-        $result .= DayRepository::getTimeEmoji($weekData['data'][$day]['time']) . ' - <u>' . $weekData['data'][$day]['time'] . '</u>' . PHP_EOL;
+        $result .= DayFormatter::getTimeEmoji($weekData['data'][$day]['time']) . ' - <u>' . $weekData['data'][$day]['time'] . '</u>' . PHP_EOL;
 
         $gameNames = [
             'mafia' => '{{ Tg_Mafia }}',
@@ -259,7 +261,7 @@ class Days extends Model
             }
 
             if (!empty($participants[$x]['arrive']) && $participants[$x]['arrive'] !== $weekData['data'][$day]['time']) {
-                $modsParts[] = DayRepository::getTimeEmoji($participants[$x]['arrive']) . ' ' . $participants[$x]['arrive'];
+                $modsParts[] = DayFormatter::getTimeEmoji($participants[$x]['arrive']) . ' ' . $participants[$x]['arrive'];
             }
             if ($userName[0] === '_') {
                 $tgChat = TelegramChats::find(substr($userName, 1));

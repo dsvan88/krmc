@@ -2,7 +2,6 @@
 
 namespace  app\core\Entities;
 
-use app\core\Tech;
 use app\models\Days;
 use app\models\GameTypes;
 use app\models\Weeks;
@@ -13,6 +12,7 @@ class Day
 {
     public int $dayId = 0;
     public int $weekId = 0;
+    public int $starter = 0;
     public array $participants = [];
     public array $coupons = [];
     public string $game = '';
@@ -93,10 +93,10 @@ class Day
         }
 
         $this->date = date('d.m.Y', $this->timestamp) . ' (<b>' . $this->dayName . '</b>) ' . $this->time;
-        
+
         return true;
     }
-    public static function create(int $dayId = 0, int $weekId = 0)
+    public static function create(int $dayId = 0, int $weekId = 0): ?Day
     {
         $validated = static::validate($dayId, $weekId);
 
@@ -140,10 +140,30 @@ class Day
     }
     public function clear()
     {
+        $this->starter = 0;
         $this->participants = [];
         $this->day_prim = '';
         $this->mods = [];
         $this->status = 'recalled';
+    }
+    public function addParticipant(array $participant, int $slot = -1)
+    {
+        if ($slot === -1) {
+            while (isset($this->participants[++$slot])) {
+            }
+        }
+
+        $this->participants[$slot] = [
+            'id'        =>    $participant['userId'],
+            'arrive'    =>    $participant['arrive'] ?? '',
+            'prim'      =>    $participant['prim'] ?? '',
+        ];
+        AccountRepository::addNames($this->participants[$slot]);
+    }
+    public function removeParticipant(int $index)
+    {
+        unset($this->participants[$index]);
+        $this->participants = array_values($this->participants);
     }
     public function save(bool $return = false)
     {

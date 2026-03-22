@@ -49,7 +49,7 @@ class Week
 
         return true;
     }
-    public static function create(int $weekId = 0)
+    public static function create(int $weekId = 0): ?Week
     {
         $weekId = static::validate($weekId);
 

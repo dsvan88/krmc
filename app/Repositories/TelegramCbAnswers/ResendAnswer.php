@@ -3,10 +3,10 @@
 namespace app\Repositories\TelegramCbAnswers;
 
 use app\core\Telegram\ChatAnswer;
+use app\Formatters\TelegramBotFormatter;
 use app\models\Days;
 use app\models\Settings;
 use app\models\Weeks;
-use app\Repositories\TelegramBotRepository;
 use Exception;
 
 class ResendAnswer extends ChatAnswer
@@ -23,7 +23,7 @@ class ResendAnswer extends ChatAnswer
 
         $message = Days::getFullDescription(Weeks::weekDataById($weekId), $dayNum);
 
-        $replyMarkup = TelegramBotRepository::getBookingMarkup($weekId, $dayNum, false, true);
+        $replyMarkup = TelegramBotFormatter::getBookingMarkup($weekId, $dayNum, false, true);
 
         $send = [
             'chatId' => Settings::getMainTelegramId(),

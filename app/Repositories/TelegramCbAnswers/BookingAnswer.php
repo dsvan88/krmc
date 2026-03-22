@@ -3,6 +3,7 @@
 namespace app\Repositories\TelegramCbAnswers;
 
 use app\core\Telegram\ChatAnswer;
+use app\Formatters\TelegramBotFormatter;
 use app\models\Days;
 use app\models\Settings;
 use app\models\TelegramChats;
@@ -81,7 +82,7 @@ class BookingAnswer extends ChatAnswer
         Days::setDayData($weekId, $dayNum, $weekData['data'][$dayNum]);
 
         $booked = in_array(static::$requester->profile->id, array_column($weekData['data'][$dayNum]['participants'], 'id'));
-        $replyMarkup = TelegramBotRepository::getBookingMarkup($weekId, $dayNum, $booked);
+        $replyMarkup = TelegramBotFormatter::getBookingMarkup($weekId, $dayNum, $booked);
 
         $update = [
             'message' => Days::getFullDescription($weekData, $dayNum),

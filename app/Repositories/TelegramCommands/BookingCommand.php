@@ -2,10 +2,14 @@
 
 namespace app\Repositories\TelegramCommands;
 
+use app\core\Entities\Day;
+use app\core\Tech;
 use app\core\Telegram\ChatCommand;
-use app\models\Days;
+use app\Formatters\DayFormatter;
+use app\Formatters\TelegramBotFormatter;
 use app\models\Weeks;
 use app\Repositories\TelegramBotRepository;
+use Exception;
 
 class BookingCommand extends ChatCommand
 {
@@ -35,34 +39,34 @@ class BookingCommand extends ChatCommand
         if ($dayNum < static::$arguments['currentDay']) {
             ++$weekId;
         }
+        $day = Day::create($dayNum, $weekId);
 
-        $weekData = Weeks::weekDataById($weekId);
+        if (empty($day))
+            throw new Exception(__METHOD__.' $day can’t be empty.');
 
         $participantId = $slot = -1;
-        if ($weekData['data'][$dayNum]['status'] !== 'set') {
+        if ($day->status !== 'set') {
             if (!in_array(static::$arguments['userStatus'], ['trusted', 'activist', 'manager', 'admin'])) {
                 return static::result('{{ Tg_Gameday_Not_Set }}');
             }
-            if (!isset($weekData['data'][$dayNum]['game']))
-                $weekData['data'][$dayNum] = Days::$dayDataDefault;
 
             if (!empty(static::$arguments['arrive']))
-                $weekData['data'][$dayNum]['time'] = static::$arguments['arrive'];
+                $day->time = static::$arguments['arrive'];
 
             static::$arguments['arrive'] = '';
 
             // For social points of day started non-admin
-            if (in_array(static::$arguments['userStatus'], ['trusted', 'activist']) && empty($weekData['data'][$dayNum]['status'])) {
-                $weekData['data'][$dayNum]['starter'] = static::$arguments['userId'];
+            if (in_array(static::$arguments['userStatus'], ['trusted', 'activist']) && empty($day->status)) {
+                $day->starter = static::$arguments['userId'];
             }
 
             $weekData['data'][$dayNum]['status'] = 'set';
         }
 
-        foreach ($weekData['data'][$dayNum]['participants'] as $index => $userData) {
-            if ($userData['id'] !== static::$arguments['userId']) continue;
+        foreach ($day->participants as $index => $participant) {
+            if ($participant['id'] !== static::$arguments['userId']) continue;
 
-            if (!empty(static::$arguments['arrive']) && static::$arguments['arrive'] !== $userData['arrive']) {
+            if (!empty(static::$arguments['arrive']) && static::$arguments['arrive'] !== $participant['arrive']) {
                 $slot = $index;
                 break;
             }
@@ -71,58 +75,31 @@ class BookingCommand extends ChatCommand
             break;
         }
         $result = ['result' => true];
-        $newDayData = $weekData['data'][$dayNum];
         if (static::$arguments['method'] === '+') {
             if ($participantId !== -1) {
-                return static::result('{{ Tg_Command_Requester_Already_Booked }}');
+                return static::result('{{ Tg_Command_Requester_Already_Booked }}', '🤷‍♂');
             }
-            Days::addParticipantToDayData($newDayData, static::$arguments, $slot);
-            $reactions = [
-                '👍',
-                '🤩',
-                '🔥',
-                '❤',
-                '🔥',
-                '🥰',
-                '🎉',
-                '👏',
-                '⚡',
-                '🤝',
-                '👌',
-            ];
-            //👍👎❤🔥🥰👏😁🤔🤯😱🤬😢🎉🤩🤮🤣💔💯⚡🤷‍♂🤝👌
+            $day->addParticipant(static::$arguments, $slot);
+            $reactions = [ '👍','🤩','🔥','❤','🔥','🥰','🎉','👏','⚡','🤝','👌',];
         } else {
             if ($participantId === -1) {
-                return static::result('{{ Tg_Command_Requester_Not_Booked }}');
+                return static::result('{{ Tg_Command_Requester_Not_Booked }}', '🤷‍♂');
             }
-            unset($newDayData['participants'][$participantId]);
-            $newDayData['participants'] = array_values($newDayData['participants']);
-            //👍👎❤🔥🥰👏😁🤔🤯😱🤬😢🎉🤩🤮🤣💔💯⚡🤷‍♂🤝👌
-            $reactions = [
-                '👎',
-                '🤔',
-                '😢',
-                '💔',
-                '😱',
-                '🤯',
-                '🤬',
-                '🤷‍♂',
-            ];
+            $day->removeParticipant($participantId);
+            $reactions = ['👎','🤔','😢','💔','😱','🤯','🤬','🤷‍♂',];
         }
 
-        Days::setDayData($weekId, $dayNum, $newDayData);
+        $day->save();
 
         if (!empty($reactions)) {
             $result['reaction'] = $reactions[mt_rand(0, count($reactions) - 1)];
         }
 
-        $weekData['data'][$dayNum] = $newDayData;
-
-        $booked = in_array(static::$requester->profile->id, array_column($weekData['data'][$dayNum]['participants'], 'id'));
-        $replyMarkup = TelegramBotRepository::getBookingMarkup($weekId, $dayNum, $booked);
+        $booked = in_array(static::$requester->profile->id, array_column($day->participants, 'id'));
+        $replyMarkup = TelegramBotFormatter::getBookingMarkup($weekId, $dayNum, $booked);
 
         $result['send'][] = [
-            'message' => Days::getFullDescription($weekData, $dayNum),
+            'message' => DayFormatter::forMessengers($day),
             'replyMarkup' => $replyMarkup,
             'replyOn' => 0,
         ];

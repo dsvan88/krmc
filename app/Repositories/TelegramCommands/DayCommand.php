@@ -2,8 +2,10 @@
 
 namespace app\Repositories\TelegramCommands;
 
+use app\core\Entities\Day;
 use app\core\Telegram\ChatCommand;
-use app\models\Days;
+use app\Formatters\DayFormatter;
+use app\Formatters\TelegramBotFormatter;
 use app\models\Weeks;
 use app\Repositories\TelegramBotRepository;
 
@@ -17,22 +19,22 @@ class DayCommand extends ChatCommand
     {
         $weekId = Weeks::currentId();
 
-        $daySlug = isset(static::$arguments[0]) ? static::$arguments[0] : 'tod';
+        $daySlug = static::$arguments[0] ?? 'tod';
         TelegramBotRepository::parseDayNum($daySlug);
 
         $dayNum = static::$arguments['dayNum'];
         if (static::$arguments['dayNum'] < static::$arguments['currentDay'])
             $weekId++;
 
-        $weekData = Weeks::weekDataById($weekId);
-        $message = Days::getFullDescription($weekData, static::$arguments['dayNum']);
+        $day = Day::create($dayNum, $weekId);
+        $message = DayFormatter::forMessengers($day);
 
         if (empty($message)) {
             return static::result('{{ Tg_Command_Games_Not_Set }}');
         }
 
-        $booked = in_array(static::$requester->profile->id, array_column($weekData['data'][$dayNum]['participants'], 'id'));
-        $replyMarkup = TelegramBotRepository::getBookingMarkup($weekId, $dayNum, $booked);
+        $booked = in_array(static::$requester->profile->id, array_column($day->participants, 'id'));
+        $replyMarkup = TelegramBotFormatter::getBookingMarkup($weekId, $dayNum, $booked);
 
         $result = [
             'result' => true,

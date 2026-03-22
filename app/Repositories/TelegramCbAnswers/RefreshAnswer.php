@@ -2,11 +2,10 @@
 
 namespace app\Repositories\TelegramCbAnswers;
 
+use app\core\Entities\Day;
 use app\core\Telegram\ChatAnswer;
-use app\models\Days;
-use app\models\Settings;
-use app\models\Weeks;
-use app\Repositories\TelegramBotRepository;
+use app\Formatters\DayFormatter;
+use app\Formatters\TelegramBotFormatter;
 use Exception;
 
 class RefreshAnswer extends ChatAnswer
@@ -19,9 +18,9 @@ class RefreshAnswer extends ChatAnswer
         $weekId = (int) trim(static::$arguments['w']);
         $dayNum = (int) trim(static::$arguments['d']);
 
-        $message = Days::getFullDescription(Weeks::weekDataById($weekId), $dayNum);
+        $message = DayFormatter::forMessengers(Day::create($dayNum, $weekId));
 
-        $replyMarkup = TelegramBotRepository::getBookingMarkup($weekId, $dayNum, false, true);
+        $replyMarkup = TelegramBotFormatter::getBookingMarkup($weekId, $dayNum, false, true);
 
         $update = [
             'message' => $message,

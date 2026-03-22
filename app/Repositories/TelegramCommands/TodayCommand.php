@@ -3,9 +3,9 @@
 namespace app\Repositories\TelegramCommands;
 
 use app\core\Telegram\ChatCommand;
+use app\Formatters\TelegramBotFormatter;
 use app\models\Days;
 use app\models\Weeks;
-use app\Repositories\TelegramBotRepository;
 
 class TodayCommand extends ChatCommand
 {
@@ -27,7 +27,7 @@ class TodayCommand extends ChatCommand
         }
 
         $booked = in_array(static::$requester->profile->id, array_column($weekData['data'][$currentDayNum]['participants'], 'id'));
-        $replyMarkup = TelegramBotRepository::getBookingMarkup($weekId, $currentDayNum, $booked);
+        $replyMarkup = TelegramBotFormatter::getBookingMarkup($weekId, $currentDayNum, $booked);
 
         $result = [
             'reaction' => '👌',
