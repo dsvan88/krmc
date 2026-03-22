@@ -2,7 +2,9 @@
 
 namespace app\Repositories\TelegramCommands;
 
+use app\core\Tech;
 use app\core\Telegram\ChatCommand;
+use app\Formatters\TelegramBotFormatter;
 use app\models\Weeks;
 use app\Repositories\TelegramBotRepository;
 
@@ -38,8 +40,8 @@ class UnregCommand extends ChatCommand
     public static function daysMenu()
     {
         $message = 'Choose a day:';
-        $replyMarkup = TelegramBotRepository::getForwardDaysListMarkup('unreg', false);
-        $replyMarkup['inline_keyboard'][] = [['text' => self::locale('Done'), 'callback_data' => ['c' => 'unreg', 'd' => 1]]];
+        $replyMarkup = TelegramBotFormatter::getForwardDaysListMarkup('unreg', true);
+        $replyMarkup['inline_keyboard'][] = [['text' => self::locale('Done'), 'callback_data' => ['c' => 'close', 'u' => static::$requester->profile->id]]];
         return [
             'result' => true,
             'reaction' => '👌',
@@ -54,7 +56,7 @@ class UnregCommand extends ChatCommand
     public static function participantsMenu(int $weekId, int $dayId)
     {
         $message = 'Choose a participant to UnReg:';
-        $replyMarkup = TelegramBotRepository::getPaticipantsListMarkup('unreg', $weekId, $dayId);
+        $replyMarkup = TelegramBotFormatter::getPaticipantsListMarkup('unreg', $weekId, $dayId);
         $replyMarkup['inline_keyboard'][] = [['text' => self::locale('Done'), 'callback_data' => ['c' => 'close', 'u' => static::$requester->profile->id]]];
         return [
             'result' => true,

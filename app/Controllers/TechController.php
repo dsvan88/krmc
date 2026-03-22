@@ -316,7 +316,7 @@ class TechController extends Controller
                 // 'text' => '/day',
                 // 'text' => '/chat main',
                 // 'text' => 'Checker',
-                'text' => '/ping',
+                'text' => '/unreg нд',
                 // 'text' => '+ на четвер, десь на 18:45, звісно, що підстрахую, але поки що (під ?)',
                 // 'text' => '/?',
             ]

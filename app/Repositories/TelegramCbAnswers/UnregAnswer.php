@@ -3,6 +3,7 @@
 namespace app\Repositories\TelegramCbAnswers;
 
 use app\core\Telegram\ChatAnswer;
+use app\Formatters\TelegramBotFormatter;
 use app\models\Days;
 use app\Repositories\TelegramBotRepository;
 use Exception;
@@ -33,7 +34,7 @@ class UnregAnswer extends ChatAnswer
     public static function participantsMenu(int $weekId, int $dayId)
     {
         $message = 'Choose a participant to UnReg:';
-        $replyMarkup = TelegramBotRepository::getPaticipantsListMarkup('unreg', $weekId, $dayId);
+        $replyMarkup = TelegramBotFormatter::getPaticipantsListMarkup('unreg', $weekId, $dayId);
         $replyMarkup['inline_keyboard'][] = [['text' => self::locale('Done'), 'callback_data' => ['c' => 'close', 'u' => static::$requester->profile->id]]];
         $update = [
             'message' => $message,
