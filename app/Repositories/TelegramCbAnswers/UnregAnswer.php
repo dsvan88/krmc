@@ -2,10 +2,9 @@
 
 namespace app\Repositories\TelegramCbAnswers;
 
+use app\core\Entities\Day;
 use app\core\Telegram\ChatAnswer;
 use app\Formatters\TelegramBotFormatter;
-use app\models\Days;
-use app\Repositories\TelegramBotRepository;
 use Exception;
 
 class UnregAnswer extends ChatAnswer
@@ -27,7 +26,24 @@ class UnregAnswer extends ChatAnswer
         if (empty($userId))
             return static::participantsMenu($weekId, $dayId);
 
-        Days::removeParticipant($weekId, $dayId, $userId);
+        Day::$once = true;
+        $day = Day::create($dayId, $weekId);
+
+        if (empty($day))
+            throw new Exception(__METHOD__.' $day can’t be empty.');
+
+        $index = -1;
+        foreach($day->participants as $i=>$p){
+            if ($p['id'] != $userId) continue;
+            $index = $i;
+            break;
+        }
+
+        if ($index === -1)
+            return static::participantsMenu($weekId, $dayId);;
+
+        $day->removeParticipant($index);
+        $day->save();
 
         return static::participantsMenu($weekId, $dayId);
     }
