@@ -54,8 +54,8 @@ class PageRepository
             'type' => 'article',
             'url' =>  "$url/$uri",
             'image' => $image,
-            'og:image:width' => $imageSize[0],
-            'og:image:height' => $imageSize[1],
+            'image:width' => $imageSize[0],
+            'image:height' => $imageSize[1],
             'description' => $page['description'],
             'site_name' => $page['title'] . ' | ' . CLUB_NAME,
             'twitter' => [

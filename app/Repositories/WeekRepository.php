@@ -86,8 +86,8 @@ class WeekRepository
             'type' => 'article',
             'url' => "$url/weeks/".$data['week']->id,
             'image' => $image,
-            'og:image:width' => $imageSize[0],
-            'og:image:height' => $imageSize[1],
+            'image:width' => $imageSize[0],
+            'image:height' => $imageSize[1],
             'description' => $data['description'],
             'site_name' => $data['title'] . ' | ' . CLUB_NAME,
             'twitter' => [
