@@ -122,7 +122,7 @@ class TelegramBotRepository
                     ChatAction::$arguments['userName'] = $userData['name'];
                 }
             } elseif (preg_match('/^(\+|-)\d{1,2}/', $value, $match) === 1) {
-                ChatAction::$arguments['nonames'] = substr($match[0], 1);
+                ChatAction::$arguments['nonames'] = (int) substr($match[0], 1);
             } elseif (empty(ChatAction::$arguments['userId']) || ChatAction::$arguments['userId'] < 2) {
                 // $value = str_ireplace(['m', 'c', 'o', 'p', 'x', 'a'], ['м', 'с', 'о', 'р', 'х', 'а'], $value);
                 $value = Validator::validate('name', $value);

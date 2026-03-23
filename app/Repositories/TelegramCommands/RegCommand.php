@@ -2,10 +2,12 @@
 
 namespace app\Repositories\TelegramCommands;
 
+use app\core\Entities\Day;
 use app\core\Telegram\ChatCommand;
-use app\models\Days;
+use app\Formatters\DayFormatter;
 use app\models\Weeks;
 use app\Repositories\TelegramBotRepository;
+use Exception;
 
 class RegCommand extends ChatCommand
 {
@@ -32,34 +34,33 @@ class RegCommand extends ChatCommand
         }
 
         $weekId = Weeks::currentId();
-        if ($requestData['dayNum'] < 0) {
-            $requestData['dayNum'] = $requestData['currentDay'];
-        } else {
-            if ($requestData['currentDay'] > $requestData['dayNum']) {
-                ++$weekId;
-            }
-        }
-        $weekData = Weeks::weekDataById($weekId);
+        $daySlug = static::$arguments['dayNum'] ?? 'tod';
+        TelegramBotRepository::parseDayNum($daySlug);
+
+        $dayNum = static::$arguments['dayNum'];
+        if (static::$arguments['dayNum'] < static::$arguments['currentDay'])
+            $weekId++;
+
+        Day::$once = true;
+        $day = Day::create($dayNum, $weekId);
+
+        if (!$day)
+            throw new Exception(__METHOD__ . ' $day can’t be null');
 
         $participantId = $slot = -1;
 
-        if ($weekData['data'][$requestData['dayNum']]['status'] !== 'set') {
-            if (!isset($weekData['data'][$requestData['dayNum']]['game']))
-                $weekData['data'][$requestData['dayNum']] = Days::$dayDataDefault;
-
+        if ($day->status !== 'set') {
             if (!empty($requestData['arrive']))
-                $weekData['data'][$requestData['dayNum']]['time'] = $requestData['arrive'];
+                $day->time = $requestData['arrive'];
             $requestData['arrive'] = '';
-            $weekData['data'][$requestData['dayNum']]['status'] = 'set';
+            $day->status = 'set';
         }
 
-        if (isset($requestData['nonames'])) {
-            $slot = count($weekData['data'][$requestData['dayNum']]['participants']);
-        } else {
-            foreach ($weekData['data'][$requestData['dayNum']]['participants'] as $index => $userData) {
-                if ($userData['id'] !== $requestData['userId']) continue;
+        if (!isset($requestData['nonames'])) {
+            foreach ($day->participants as $index => $participant) {
+                if ($participant['id'] !== $requestData['userId']) continue;
 
-                if (!empty($requestData['arrive']) && $requestData['arrive'] !== $userData['arrive']) {
+                if (!empty($requestData['arrive']) && $requestData['arrive'] !== $participant['arrive']) {
                     $slot = $index;
                     break;
                 }
@@ -67,38 +68,35 @@ class RegCommand extends ChatCommand
                 break;
             }
         }
-        $newDayData = $weekData['data'][$requestData['dayNum']];
+
         if ($requestData['method'] === '+') {
             if ($participantId !== -1) {
                 return static::result('{{ Tg_Command_User_Already_Booked }}');
             }
             if (isset($requestData['nonames'])) {
-                $newDayData = Days::addNonamesToDayData($newDayData, $slot, $requestData['nonames'], $requestData['prim']);
+                $day->addNonames($requestData['nonames'], $requestData['prim']);
             } else {
-                Days::addParticipantToDayData($newDayData, $requestData, $slot);
+                $day->addParticipant($requestData, $slot);
             }
         } else {
             if (isset($requestData['nonames'])) {
-                $newDayData = Days::removeNonamesFromDayData($newDayData, $requestData['nonames']);
+                $day->removeNonames($requestData['nonames']);
             } else {
                 if ($participantId === -1) {
-                    $message = self::locale('{{ Tg_Command_User_Not_Booked }}');
-                    return static::result($message);
+                    return static::result('{{ Tg_Command_User_Not_Booked }}');
                 }
-                unset($newDayData['participants'][$participantId]);
-                $newDayData['participants'] = array_values($newDayData['participants']);
+                $day->removeParticipant($participantId);
             }
         }
 
-        $result = Days::setDayData($weekId, $requestData['dayNum'], $newDayData);
+        $day->save();
 
-        $weekData['data'][$requestData['dayNum']] = $newDayData;
-        $message = Days::getFullDescription($weekData, $requestData['dayNum']);
+        $message = DayFormatter::forMessengers($day);
 
         $replyMarkup = [
             'inline_keyboard' => [
                 [
-                    ['text' => 'Send to the group?', 'callback_data' => ['c' => 'resend', 'w' => $weekId, 'd' => $requestData['dayNum']]],
+                    ['text' => 'Send to the group?', 'callback_data' => ['c' => 'resend', 'w' => $weekId, 'd' => $day->dayId]],
                 ],
             ]
         ];
@@ -110,7 +108,6 @@ class RegCommand extends ChatCommand
                 [
                     'message' => $message,
                     'replyMarkup' => $replyMarkup,
-                    'replyOn' => 0,
                 ]
             ]
         ];

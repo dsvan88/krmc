@@ -3,11 +3,12 @@
 namespace app\Controllers;
 
 use app\core\Controller;
+use app\core\Entities\Day;
 use app\core\Locale;
 use app\core\Noticer;
 use app\core\Sender;
-use app\core\Tech;
 use app\core\View;
+use app\Formatters\DayFormatter;
 use app\models\Days;
 use app\models\GameTypes;
 use app\models\Settings;
@@ -25,10 +26,11 @@ class DaysController extends Controller
             if (!empty($_POST)) {
                 $weekId = Days::edit($weekId, $dayId, $_POST);
                 if (!empty($_POST['send'])) {
-                    $weekData = Weeks::weekDataById($weekId);
-                    $result = Sender::message(Settings::getMainTelegramId(), Days::getFullDescription($weekData, $dayId));
+                    Day::$once = true;
+                    $day = Day::create($dayId, $weekId);
+                    Sender::message(Settings::getMainTelegramId(), DayFormatter::forMessengers($day));
                 }
-                return View::message(['message' => 'Changes saved successfully!', 'url' => "/week/$weekId/day/$dayId/"]);
+                return View::notice(['message' => 'Changes saved successfully!', 'location' => 'reload', 'time' => 1500]);
             }
             self::$route['action'] = 'edit';
             View::set(self::$route);

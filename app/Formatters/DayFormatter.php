@@ -58,7 +58,7 @@ class DayFormatter
         ];
         return isset($clocks[$hour . $mins]) ? $clocks[$hour . $mins] : '';
     }
-    public static function forMessengers(?Day $day = null)
+    public static function forMessengers(?Day $day = null): string
     {
         if (empty($day)) return '';
 
@@ -115,7 +115,7 @@ class DayFormatter
         }
         $participants = array_merge($participants, $participantsToEnd, $noNames);
 
-        foreach ($participants as $i=>$participant) {
+        foreach ($participants as $i => $participant) {
             $modsParts = [];
             $userName = '+1';
 

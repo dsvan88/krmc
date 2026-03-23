@@ -205,7 +205,7 @@ return [
     "*<b>Themes</b>!\nPrepeare yourself and your image!\nIt’s time to dive into a different world!😁\n" => "*<b>Тематична</b>!\nПідготуй себя та свій образ!\nЦе час пірнути до іншого світу!😁\n",
     "*<b>Close</b>!\nOn invitation only!\n" => "*<b>Закрита</b>!\nВиключно по запрошенням!\n",
     "*<b>Sales</b>!\nThrow a dice!\nWin a dicount on evening's costs!\n" => "*<b>Акційна</b>!\nКидай кубік!\nВигравай знижку на вартість вечора!\n",
-    "<b>Tournament</b>!\nBecome a champion in a glorious and fair competition!\n" => "<b>Турнір</b>!\nСтаньте чемпіоном у славному та чесному змаганні!\n",
+    "<b>Tournament</b>!\nBecome a champion in a glorious and fair competition!\n" => "<b>Турнір</b>!\nСтаньте чемпіоном у славетному та чесному змаганні!\n",
 
     'I will!' => 'Я +!',
     'I want!' => 'Я +?',

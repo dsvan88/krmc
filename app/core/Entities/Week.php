@@ -33,11 +33,11 @@ class Week
         unset($props['current']);
         $props = array_keys($props);
         $this->id = $weekId;
-        if ($weekId === Weeks::currentId()){
+        if ($weekId === Weeks::currentId()) {
             $this->current = true;
         }
 
-        for($x = 0; $x<7;$x++)
+        for ($x = 0; $x < 7; $x++)
             $this->days[] = Day::create($x, $weekId);
 
         $week = Day::$week;
@@ -61,6 +61,18 @@ class Week
 
         return new static($weekId);
     }
+    public static function fromArray(array $week = []): ?Week
+    {
+        if (empty($week) || empty($week['id'])) return null;
+
+        $classId = get_called_class() . "_{$week['id']}";
+        if (!empty(static::$instances[$classId]))
+            return static::$instances[$classId];
+
+        Day::fromWeekArray($week);
+
+        return new static($week['id']);
+    }
     public static function validate(int $weekId = 0): ?int
     {
         if (!empty($weekId) && !Weeks::isExists(['id' => $weekId]))
@@ -76,10 +88,9 @@ class Week
     public function save()
     {
         $data = [];
-        for($x = 0; $x < 7;$x++){
+        for ($x = 0; $x < 7; $x++) {
             $data[] = $this->days[$x]->save(1);
         }
         return (bool) Weeks::update(['data' => $data], $this->id);
     }
-       
 }

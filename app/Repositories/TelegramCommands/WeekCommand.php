@@ -2,7 +2,9 @@
 
 namespace app\Repositories\TelegramCommands;
 
+use app\core\Entities\Week;
 use app\core\Telegram\ChatCommand;
+use app\Formatters\DayFormatter;
 use app\models\Days;
 use app\models\News;
 use app\models\Weeks;
@@ -20,15 +22,16 @@ class WeekCommand extends ChatCommand
         if (empty($weeksData)) {
             return static::result('{{ Tg_Command_Games_Not_Set }}');
         }
+
         $message = '';
         foreach ($weeksData as $weekData) {
-
+            $week = Week::fromArray($weekData);
             for ($i = 0; $i < 7; $i++) {
-
-                if (!isset($weekData['data'][$i]) || in_array($weekData['data'][$i]['status'], ['', 'recalled'])) {
+                $day = $week->days[$i] ?? null;
+                if (!isset($day) || in_array($day->status, ['', 'recalled'])) {
                     continue;
                 }
-                $dayDescription = Days::getFullDescription($weekData, $i);
+                $dayDescription = DayFormatter::forMessengers($day);
                 if ($dayDescription !== '')
                     $message .=  $dayDescription .
                         "___________________________\n";

@@ -2,7 +2,9 @@
 
 namespace app\Repositories\TelegramCbAnswers;
 
+use app\core\Entities\Day;
 use app\core\Telegram\ChatAnswer;
+use app\Formatters\DayFormatter;
 use app\Formatters\TelegramBotFormatter;
 use app\models\Days;
 use app\models\Settings;
@@ -13,8 +15,7 @@ use Exception;
 
 class BookingAnswer extends ChatAnswer
 {
-    public static $timestamp = 0;
-    public static $game = 0;
+    private static ?Day $day = null;
     public static $text = '';
     public static function execute(): array
     {
@@ -38,56 +39,48 @@ class BookingAnswer extends ChatAnswer
         $weekId = (int) trim(static::$arguments['w']);
         $dayNum = (int) trim(static::$arguments['d']);
 
-        $weekData = Weeks::weekDataById($weekId);
+        static::$day = Day::create($dayNum, $weekId);
 
-        static::$timestamp = $weekData['start'] + (TIMESTAMP_DAY * $dayNum);
-
-        if (Days::isExpired(static::$timestamp) || in_array($weekData['data'][$dayNum]['status'], ['', 'recalled'])) {
+        if (Days::isExpired(static::$day->timestamp) || in_array(static::$day->status, ['', 'recalled'])) {
             return static::result('This day is over🤷‍♂️');
         }
 
-        if ($weekData['data'][$dayNum]['status'] !== 'set') {
+        if (static::$day->status !== 'set') {
             if (!TelegramBotRepository::hasAccess(static::$arguments['userStatus'], 'trusted')) {
                 return static::result('{{ Tg_Gameday_Not_Set }}');
             }
-            if (!isset($weekData['data'][$dayNum]['game']))
-                $weekData['data'][$dayNum] = Days::$dayDataDefault;
-
-            $weekData['data'][$dayNum]['status'] = 'set';
+            static::$day->status = 'set';
         }
 
         $pIndex = -1;
-        foreach ($weekData['data'][$dayNum]['participants'] as $index => $participant) {
+        foreach (static::$day->participants as $index => $participant) {
             if ($participant['id'] != static::$arguments['userId']) continue;
 
             $pIndex = $index;
             break;
         }
 
-        static::$game = static::locale(ucfirst($weekData['data'][$dayNum]['game']));
-
         if ($pIndex === -1) {
             if (empty(static::$arguments['r']))
-                static::addParticipant($weekData['data'][$dayNum]);
+                static::addParticipant();
             else
                 return static::result('{{ Tg_Command_Requester_Not_Booked }}');
         } else {
             if (empty(static::$arguments['r'])) {
-                static::changePrim($weekData['data'][$dayNum]['participants'], $pIndex);
+                static::changePrim($pIndex);
             } else {
-                static::removeParticipant($weekData['data'][$dayNum]['participants'], $pIndex);
+                static::removeParticipant($pIndex);
             }
         }
 
-        Days::setDayData($weekId, $dayNum, $weekData['data'][$dayNum]);
+        static::$day->save();
 
-        $booked = in_array(static::$requester->profile->id, array_column($weekData['data'][$dayNum]['participants'], 'id'));
+        $booked = in_array(static::$requester->profile->id, array_column(static::$day->participants, 'id'));
         $replyMarkup = TelegramBotFormatter::getBookingMarkup($weekId, $dayNum, $booked);
 
         $update = [
-            'message' => Days::getFullDescription($weekData, $dayNum),
+            'message' => DayFormatter::forMessengers(static::$day),
             'replyMarkup' => $replyMarkup,
-            'replyOn' => 0,
         ];
 
         $chatId = TelegramBotRepository::getChatId();
@@ -96,36 +89,35 @@ class BookingAnswer extends ChatAnswer
         }
         return array_merge(static::result(static::$text, true, true), ['update' => [$update]]);
     }
-    public static function addParticipant(array &$day = []): void
+    private static function addParticipant(array &$day = []): void
     {
         if (empty($day)) {
             throw new Exception(__METHOD__ . ': $day, cant be empty!');
         }
-        $data = [
+        $participant = [
             'userId' => static::$arguments['userId'],
             'prim' => static::$arguments['p'] ?? '',
         ];
-        Days::addParticipantToDayData($day, $data);
-        static::$text = static::locale(['string' => 'You’re successfully opted-in on a game %s at %s.', 'vars' => [static::$game, date('d.m.Y', static::$timestamp)]]);
-        static::$report = static::locale(['string' => 'User <b>%s</b> is opted-in on a game <b>%s</b> at <b>%s</b>.', 'vars' => [static::$arguments['userName'], static::$game, date('d.m.Y', static::$timestamp)]]);
+        static::$day->addParticipant($participant);
+        static::$text = static::locale(['string' => 'You’re successfully opted-in on a game %s at %s.', 'vars' => [static::$day->gameName, date('d.m.Y', static::$day->date)]]);
+        static::$report = static::locale(['string' => 'User <b>%s</b> is opted-in on a game <b>%s</b> at <b>%s</b>.', 'vars' => [static::$arguments['userName'], static::$day->game, date('d.m.Y', static::$day->date)]]);
     }
-    public static function changePrim(array &$participants = [], int $index = 0): void
+    private static function changePrim(int $index = 0): void
     {
-        if ($index < 0 || empty($participants)) {
+        if ($index < 0) {
             throw new Exception(__METHOD__ . ': $index or $participants, cant be empty!');
         }
-        $participants[$index]['prim'] = static::$arguments['p'] ?? '';
+        static::$day->participants[$index]['prim'] = static::$arguments['p'] ?? '';
         static::$text = static::locale('Success');
-        static::$report = static::locale(['string' => 'User <b>%s</b> is changed prim on <b>%s</b>.', 'vars' => [static::$arguments['userName'], date('d.m.Y', static::$timestamp)]]);
+        static::$report = static::locale(['string' => 'User <b>%s</b> is changed prim on <b>%s</b>.', 'vars' => [static::$arguments['userName'], date('d.m.Y', static::$day->timestamp)]]);
     }
-    public static function removeParticipant(array &$participants = [], int $index = 0): void
+    private static function removeParticipant(int $index = 0): void
     {
         if ($index < 0 || empty($participants)) {
             throw new Exception(__METHOD__ . ': $index or $participants, cant be empty!');
         }
-        unset($participants[$index]);
-        $participants = array_values($participants);
-        static::$text = static::locale(['string' => 'You’re successfully opted-out from a game %s at %s.', 'vars' => [static::$game, date('d.m.Y', static::$timestamp)]]);
-        static::$report = static::locale(['string' => 'User <b>%s</b> is opted-out from a game <b>%s</b> at <b>%s</b>.', 'vars' => [static::$arguments['userName'], static::$game, date('d.m.Y', static::$timestamp)]]);
+        static::$day->removeParticipant($index);
+        static::$text = static::locale(['string' => 'You’re successfully opted-out from a game %s at %s.', 'vars' => [static::$day->gameName, static::$day->date]]);
+        static::$report = static::locale(['string' => 'User <b>%s</b> is opted-out from a game <b>%s</b> at <b>%s</b>.', 'vars' => [static::$arguments['userName'], static::$day->gameName, static::$day->date]]);
     }
 }

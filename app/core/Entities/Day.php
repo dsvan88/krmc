@@ -21,12 +21,13 @@ class Day
     public string $status = '';
     public string $day_prim = '';
     public string $cost = '';
-    
+
     public bool $current = false;
     public int $timestamp = 0;
     public int $start = 0;
     public int $finish = 0;
     public string $date = '';
+    public string $datetime = '';
     public string $dayName = '';
     public string $type = 'future';
     public string $gameName = '';
@@ -34,6 +35,7 @@ class Day
 
     public static array $instances = [];
     public static array $week = [];
+    public static array $games = [];
     public static bool $once = false;
 
     private function __construct(int $dayId = 0, int $weekId = 0)
@@ -45,17 +47,19 @@ class Day
         } else
             throw new Exception(__METHOD__ . ' New instance of ' . static::class . " with id:  $dayId.$weekId - cant be create!");
     }
-    public function init(int $dayId = 0, int $weekId = 0): bool
+    private function init(int $dayId = 0, int $weekId = 0): bool
     {
         $props = get_object_vars($this);
 
-        unset($props['dayId'],
+        unset(
+            $props['dayId'],
             $props['weekId'],
             $props['current'],
             $props['timestamp'],
             $props['start'],
             $props['finish'],
             $props['date'],
+            $props['datetime'],
             $props['dayName'],
             $props['type'],
             $props['gameName'],
@@ -65,21 +69,17 @@ class Day
 
         $this->dayId = $dayId;
         $this->weekId = $weekId;
-        $this->timestamp = static::$week['start']+ TIMESTAMP_DAY * $dayId;
+        $this->timestamp = static::$week['start'] + TIMESTAMP_DAY * $dayId;
 
         $dayNames = Days::daysNames();
         $this->dayName = $dayNames[$dayId];
 
-        $games = GameTypes::names();
-        $this->gameName = $games[static::$week['data'][$dayId]['game']];
-
         $currWeekId = Weeks::currentId();
         $currDayId = Days::current();
-        if ($weekId === $currWeekId && $dayId === $currDayId){
+        if ($weekId === $currWeekId && $dayId === $currDayId) {
             $this->current = true;
             $this->type = 'current';
-        }
-        elseif ($weekId < $currWeekId || $weekId === $currWeekId && $dayId < $currDayId) {
+        } elseif ($weekId < $currWeekId || $weekId === $currWeekId && $dayId < $currDayId) {
             $this->type = 'expire';
         }
 
@@ -92,6 +92,9 @@ class Day
             $this->$v = static::$week['data'][$dayId][$v];
         }
 
+
+        static::$games = GameTypes::names();
+        $this->gameName = static::$games[$this->game];
         $this->date = date('d.m.Y', $this->timestamp) . ' (<b>' . $this->dayName . '</b>) ' . $this->time;
 
         return true;
@@ -109,10 +112,29 @@ class Day
 
         if (!static::find($weekId)) return null;
 
-        if (static::$once){
+        if (static::$once) {
             new static($dayId, $weekId);
+        } else {
+            for ($x = 0; $x < 7; $x++) {
+                new static($x, $weekId);
+            }
         }
-        else{
+        return static::$instances[get_called_class() . "_$dayId.$weekId"];
+    }
+    public static function fromWeekArray(array $week = [], int $dayId = 0): ?Day
+    {
+        if (empty($week) || empty($week['id'])) return null;
+
+        $weekId = $week['id'];
+        $classId = get_called_class() . "_$dayId.$weekId";
+        if (!empty(static::$instances[$classId]))
+            return static::$instances[$classId];
+
+        static::$week = $week;
+
+        if (static::$once) {
+            new static($dayId, $weekId);
+        } else {
             for ($x = 0; $x < 7; $x++) {
                 new static($x, $weekId);
             }
@@ -165,16 +187,57 @@ class Day
         unset($this->participants[$index]);
         $this->participants = array_values($this->participants);
     }
+    public function addNonames(int $count = 0, ?string $prim = ''): void
+    {
+        if ($count === 0) return;
+
+        for ($x = 0; $x < $count; $x++) {
+            $this->participants[] = [
+                'id'        =>    null,
+                'arrive'    =>    '',
+                'prim'    =>     $prim ?? '',
+            ];
+        }
+    }
+    public function removeNonames(int $count = 0): void
+    {
+        if ($count === 0) return;
+
+        $_participants = [];
+        foreach ($this->participants as $p) {
+            if (!isset($p['id']) && $count-- > 0) continue;
+            $_participants[] = $p;
+        }
+        $this->participants = $_participants;
+    }
+    public function addMod(string $mod = ''): void
+    {
+        if (empty($mod)) return;
+
+        if (empty($this->mods) || !in_array($mod, $this->mods)) {
+            $this->mods[] = $mod;
+        }
+    }
+    public function removeMod(string $mod = ''): void
+    {
+        if (empty($mod)) return;
+
+        $i = array_search($mod, $this->mods, true);
+        if ($i !== false) {
+            unset($day->mods[$i]);
+            $this->mods = array_values($this->mods);
+        }
+    }
     public function save(bool $return = false)
     {
         $defs = Days::$dayDataDefault;
 
         $day = [];
-        foreach($defs as $k=>$v){
+        foreach ($defs as $k => $v) {
             $day[$k] = $this->$k ?? $v;
         }
 
-        foreach($day['participants'] as $i=>$p){
+        foreach ($day['participants'] as $i => $p) {
             $day['participants'][$i] = [
                 'id' => $p['id'],
                 'arrive' => $p['arrive'],

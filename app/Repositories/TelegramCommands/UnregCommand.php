@@ -37,10 +37,10 @@ class UnregCommand extends ChatCommand
         }
         return static::participantsMenu($weekId, $requestData['dayNum']);
     }
-    public static function daysMenu()
+    private static function daysMenu()
     {
         $message = 'Choose a day:';
-        $replyMarkup = TelegramBotFormatter::getForwardDaysListMarkup('unreg', true);
+        $replyMarkup = TelegramBotFormatter::getForwardDaysListMarkup('unreg');
         $replyMarkup['inline_keyboard'][] = [['text' => self::locale('Done'), 'callback_data' => ['c' => 'close', 'u' => static::$requester->profile->id]]];
         return [
             'result' => true,
@@ -53,7 +53,7 @@ class UnregCommand extends ChatCommand
             ]
         ];
     }
-    public static function participantsMenu(int $weekId, int $dayId)
+    private static function participantsMenu(int $weekId, int $dayId)
     {
         $message = 'Choose a participant to UnReg:';
         $replyMarkup = TelegramBotFormatter::getPaticipantsListMarkup('unreg', $weekId, $dayId);

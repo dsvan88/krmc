@@ -2,8 +2,10 @@
 
 namespace app\Repositories\TelegramCommands;
 
+use app\core\Entities\Day;
 use app\core\Telegram\ChatCommand;
-use app\models\Days;
+use app\Formatters\DayFormatter;
+use app\Formatters\TelegramBotFormatter;
 use app\models\GameTypes;
 use app\models\Weeks;
 use app\Repositories\DayRepository;
@@ -18,14 +20,77 @@ class SetCommand extends ChatCommand
     }
     public static function execute()
     {
-        if (empty(static::$arguments)) {
-            $message = self::locale('{{ Tg_Command_Without_Arguments }}');
-            return static::result($message);
+        if (empty(static::$arguments[0])) {
+            return static::daysMenu();
         }
 
+        static::parseArguments();
+
+        $weekId = Weeks::currentId();
+        $dayNum = static::$arguments['dayNum'];
+
+        if (static::$arguments['dayNum'] < static::$arguments['currentDay']) {
+            ++$weekId;
+        }
+        Day::$once = true;
+        $day = Day::create($dayNum, $weekId);
+
+        $day->status = 'set';
+        ////////////////////////////////////////////////////////////////////////////////////
+        if (static::$arguments['method'] === '-') {
+            static::$arguments['method'] = 'recalled';
+        }
+
+        if (!empty(static::$arguments['game'])) {
+            $day->game = static::$arguments['game'];
+            $day->gameName = Day::$games[static::$arguments['game']] ?? '';
+        }
+
+        if (!empty(static::$arguments['time'])) {
+            $day->time = static::$arguments['time'];
+            $day->date = date('d.m.Y', $day->timestamp) . ' (<b>' . $day->dayName . '</b>) ' . $day->time;
+        }
+
+        if (!empty(static::$arguments['prim'])) {
+            $day->day_prim = static::$arguments['prim'];
+        }
+
+        if (!empty(static::$arguments['tournament'])) {
+            $day->addMod('tournament');
+        } elseif (!empty($day->mods)) {
+            $day->removeMod('tournament');
+        }
+
+        $day->save();
+
+        $message = static::$arguments['method'] === '-'
+            ? self::locale('{{ Tg_Command_Successfully_Canceled }}')
+            : DayFormatter::forMessengers($day);
+
+        $replyMarkup = [
+            'inline_keyboard' => [
+                [
+                    ['text' => 'Send to the group?', 'callback_data' => ['c' => 'resend', 'w' => $weekId, 'd' => $dayNum]],
+                ],
+            ]
+        ];
+
+        return [
+            'result' => true,
+            'reaction' => '👌',
+            'send' => [
+                [
+                    'message' => $message,
+                    'replyMarkup' => $replyMarkup,
+                ]
+            ]
+        ];
+    }
+    private static function parseArguments()
+    {
         $days = DayRepository::getDayNamesForCommand();
 
-        $gameName = $dayName = $time = '';
+        $game = $dayName = $time = '';
         $tournament = false;
 
         $pattern = 'maf|маф|наст|board|table|пок|pok|nlh|інш|другое|etc';
@@ -48,7 +113,7 @@ class SetCommand extends ChatCommand
                 $_gamesArray[$slug] = array_slice($keywords, 0, 3);
 
                 foreach ($_gamesArray[$slug] as $index => $keyword) {
-                    $_gamesArray[$slug][$index] = trim($keyword);
+                    $_gamesArray[$slug][$index] = mb_strtolower(trim($keyword), 'UTF-8');
                     $_pattern[] = $_gamesArray[$slug][$index];
                 }
             }
@@ -60,9 +125,9 @@ class SetCommand extends ChatCommand
 
         foreach (static::$arguments as $value) {
             $value = trim($value);
-            if ($gameName === '' && preg_match("/^($pattern)/ui", mb_strtolower($value, 'UTF-8'), $gamesPattern) > 0) {
-                $gameName = $gamesPattern[0];
-                if ($tournament === false && preg_match('/(тур|tour)/ui', mb_strtolower($value, 'UTF-8')) > 0) {
+            if ($game === '' && preg_match("/^($pattern)/ui", mb_strtolower($value, 'UTF-8'), $gamesPattern) > 0) {
+                $game = $gamesPattern[0];
+                if (!$tournament && preg_match('/(тур|tour)/ui', mb_strtolower($value, 'UTF-8')) === 1) {
                     $tournament = true;
                 }
                 continue;
@@ -77,80 +142,32 @@ class SetCommand extends ChatCommand
             }
         }
 
-        if ($dayName === '')
-            $dayName = 'сг';
-
         $method = '+';
         if ($dayName[0] === '+' || $dayName[0] === '-') {
             $method = $dayName[0];
             $dayName = mb_substr($dayName, 1, null, 'UTF-8');
         }
 
-        TelegramBotRepository::parseDayNum($dayName);
+        if ($dayName === '')
+            $dayName = 'tod';
 
-        if ($gameName !== '') {
+        if ($game !== '') {
             foreach ($gamesArray as $name => $gameNames) {
-                if (in_array($gameName, $gameNames, true)) {
-                    $gameName = $name;
+                if (in_array($game, $gameNames, true)) {
+                    $game = $name;
                     break;
                 }
             }
         }
 
-        $weekId = Weeks::currentId();
-        $dayNum = static::$arguments['dayNum'];
-
-        if (static::$arguments['dayNum'] < static::$arguments['currentDay']) {
-            ++$weekId;
-        }
-        $weekData = Weeks::weekDataById($weekId);
-
-        $weekData['data'][$dayNum]['status'] = 'set';
-
-        if ($method === '-') {
-            $weekData['data'][$dayNum]['status'] = 'recalled';
-        }
-
-        if ($gameName !== '') {
-            $weekData['data'][$dayNum]['game'] = $gameName;
-        }
-
-        if ($time !== '') {
-            $weekData['data'][$dayNum]['time'] = $time;
-        }
-
-        if (isset($arguments['prim'])) {
-            $weekData['data'][$dayNum]['day_prim'] = $arguments['prim'];
-        }
-
-        if ($tournament) {
-            if (empty($weekData['data'][$dayNum]['mods']) || !in_array('tournament', $weekData['data'][$dayNum]['mods'])) {
-                $weekData['data'][$dayNum]['mods'][] = 'tournament';
-            }
-        } elseif (!empty($weekData['data'][$dayNum]['mods'])) {
-            $index = array_search('tournament', $weekData['data'][$dayNum]['mods'], true);
-            if ($index !== false) {
-                unset($weekData['data'][$dayNum]['mods'][$index]);
-                $weekData['data'][$dayNum]['mods'][$index] = array_values($weekData['data'][$dayNum]['mods']);
-            }
-        }
-
-        $result = Days::setDayData($weekId, $dayNum, $weekData['data'][$dayNum]);
-
-        if (!$result) {
-            $message = json_encode($weekData['data'][$dayNum], JSON_UNESCAPED_UNICODE);
-            static::$report = $message;
-        }
-
-        $message = $method === '-' ? self::locale('{{ Tg_Command_Successfully_Canceled }}') : Days::getFullDescription($weekData, $dayNum);
-        $replyMarkup = [
-            'inline_keyboard' => [
-                [
-                    ['text' => 'Send to the group?', 'callback_data' => ['c' => 'resend', 'w' => $weekId, 'd' => $dayNum]],
-                ],
-            ]
-        ];
-
+        TelegramBotRepository::parseDayNum($dayName);
+        static::$arguments = array_merge(static::$arguments, compact('game', 'dayName', 'time', 'method', 'tournament'));
+    }
+    private static function daysMenu()
+    {
+        $message = 'Choose a day:';
+        $replyMarkup = TelegramBotFormatter::getForwardDaysListMarkup('set', true);
+        $replyMarkup['inline_keyboard'][] = [['text' => self::locale('Done'), 'callback_data' => ['c' => 'close', 'u' => static::$requester->profile->id]]];
         return [
             'result' => true,
             'reaction' => '👌',

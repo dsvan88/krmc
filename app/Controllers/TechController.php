@@ -159,129 +159,12 @@ class TechController extends Controller
         $weeks = Weeks::getAll();
         $time = strtotime('01.01.2025');
         foreach ($weeks as $week) {
-            // if (isset($week['data']['data']))
-            //     $week['data'] = $week['data']['data'];
-            // unset($week['data'][-1]);
-            // unset($week['data']['']);
-            // Weeks::update(['data' => json_encode($week['data'], JSON_UNESCAPED_UNICODE)], ['id' => $week['id']]);
-
             if ($week['finish'] > $time) {
                 SocialPointsRepository::applyBookingPoints($week['id']);
             }
         }
         echo 'Weeks rebuilded.<br>';
 
-        // $chats = TelegramChats::getAll();
-        // TelegramChats::dbDropTables(TelegramChats::$table);
-        // TelegramChats::init();
-        // foreach ($chats as $chat) {
-        //     unset($chat['personal']['id']);
-        //     $newChat = [
-        //         'id' => $chat['uid'] ?? $chat['id'],
-        //         'user_id' => $chat['user_id'],
-        //         'personal' => json_encode($chat['personal'], JSON_UNESCAPED_UNICODE),
-        //         'data' => json_encode($chat['data'], JSON_UNESCAPED_UNICODE),
-        //     ];
-        //     TelegramChats::insert($newChat);
-        // }
-        // echo 'Chats rebuilded.<br>';
-
-        // $result = [];
-        // $exists = [];
-        // usort($contacts, function ($elemA, $elemB){
-        //     return $elemA['id'] > $elemB['id'] ? 1 : -1;
-        // });
-
-        // foreach($contacts as $contact){
-        //     if ($contact['type'] !== 'telegram'){
-        //         unset($contact['id']);
-        //         $result[] = $contact;
-        //         continue;
-        //     }
-        //     if (array_search($contact['contact'], $exists, true) !== false) continue;
-        //     $exists[] = $contact['contact'];
-
-        //     unset($contact['id']);
-        //     $result[] = $contact;
-        // }
-        // Contacts::dbDropTables(Contacts::$table);
-        // Contacts::init();
-        // Contacts::insert($result);
-
-        // $settings = [
-        //     ['gdrive', 'credentials', 'Credentials JSON',  ''],
-        // ];
-
-        // $array = [];
-        // $keys = ['type', 'slug', 'name', 'value', 'default_value'];
-        // for ($i = 0; $i < count($settings); $i++) {
-        //     foreach ($settings[$i] as $num => $setting) {
-        //         if (!is_array($setting)) continue;
-        //         $settings[$i][$num] = json_encode($setting, JSON_UNESCAPED_UNICODE);
-        //     }
-        //     $settings[$i][] = $settings[$i][3];
-        //     $array[] = array_combine($keys, $settings[$i]);
-        // }
-        // Settings::insert($array);
-
-        // $table = Pages::$table;
-        // Users::query("ALTER TABLE $table ADD COLUMN lang CHARACTER VARYING(5) DEFAULT NULL");
-
-        /*         return View::redirect('/');
-        $table = Games::$table;
-        $games = Games::getAll();
-        Games::query("ALTER TABLE $table ALTER COLUMN manager TYPE CHARACTER VARYING(300)");
-        foreach ($games as $index => $game) {
-            if (empty($game['manager']) || is_numeric($game['manager'])) continue;
-            $game['manager'] = json_decode($game['manager'], true);
-            Games::update([ 'manager' => empty($game['manager']['id']) ? 1 : (int) $game['manager']['id'] ], ['id'=>$game['id']]);
-        } */
-
-        /* 
-        $table = Pages::$table;
-        Pages::query("ALTER TABLE $table ADD COLUMN description CHARACTER VARYING(300) NOT NULL DEFAULT ''");
- */
-        /* $chatsData = TelegramChats::getChatsList();
-        foreach ($chatsData as $index => $chat) {
-            if (empty($chat['personal']['nickname'])) continue;
-            $userData = Users::getDataByName($chat['personal']['nickname']);
-            if (empty($userData['id'])) continue;
-            unset($chat['personal']['nickname']);
-            TelegramChats::edit(['user_id' => $userData['id'], 'personal' => $chat['personal']], $chat['id']);
-        }
-
-
-        if (!Settings::isExists(['type' => 'backup'])){
-            $settings = [
-                ['backup', 'email', 'Backup Email', ''],
-                ['backup', 'last', 'Last backup', ''],
-            ];
-            $array = [];
-            $keys = ['type', 'slug', 'name', 'value', 'default_value'];
-            for ($i = 0; $i < count($settings); $i++) {
-                foreach ($settings[$i] as $num => $setting) {
-                    if (!is_array($setting)) continue;
-                    $settings[$i][$num] = json_encode($setting, JSON_UNESCAPED_UNICODE);
-                }
-                $settings[$i][] = $settings[$i][3];
-                $array[] = array_combine($keys, $settings[$i]);
-            }
-            Settings::insert($array);
-        }
-
-
-        $weeksIds = Weeks::getIds();
-        foreach ($weeksIds as $weekId) {
-            $weekData = Weeks::weekDataById($weekId);
-            foreach ($weekData['data'] as $dayNum => $dayData) {
-                foreach($dayData['participants'] as $playerNum => $player){
-                    unset($weekData['data'][$dayNum]['participants'][$playerNum]['name']);
-                    if ($player['id'] === null || $player['id'] > 0 || !empty($player['name']) && strpos($player['name'], 'tmp_user') === false) continue;
-                    $weekData['data'][$dayNum]['participants'][$playerNum]['id'] = null;
-                }
-            }
-            Weeks::update(['data' => json_encode($weekData['data'], JSON_UNESCAPED_UNICODE)], ['id' => $weekId]);
-        } */
         echo 'Done!';
     }
     public static function selfTestTelegramAction()
@@ -305,18 +188,19 @@ class TechController extends Controller
                     'first_name' => 'Dmytro',
                     'last_name' => 'Vankevych',
                     // 'username' => 'dsvan88',
-                    // 'type' => 'private',
-                    'type' => 'group',
+                    'type' => 'private',
+                    // 'type' => 'group',
                 ],
                 'date' => 1652025484,
                 // 'text' => '+ на 18',
                 // 'text' => '/dice',
                 // 'text' => '/chat',
                 // 'text' => '/spshop',
-                // 'text' => '/day',
+                // 'text' => '/week',
                 // 'text' => '/chat main',
                 // 'text' => 'Checker',
-                'text' => '/unreg нд',
+                'text' => '/unreg',
+                // 'text' => '/reg +сг,Джокер,18:40,(тест)',
                 // 'text' => '+ на четвер, десь на 18:45, звісно, що підстрахую, але поки що (під ?)',
                 // 'text' => '/?',
             ]
