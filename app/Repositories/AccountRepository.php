@@ -2,6 +2,7 @@
 
 namespace app\Repositories;
 
+use app\core\Entities\Day;
 use app\core\Locale;
 use app\core\Tech;
 use app\core\Validator;
@@ -97,39 +98,26 @@ class AccountRepository
         }
         return $source;
     }
-    public static function addParticipantToDay(string $name, int $day = -1)
+    public static function addParticipantToDay(string $name, int $dayId = -1)
     {
         $userData = Users::getDataByName($name);
         if (empty($userData)) {
             $userId = Users::add($name);
             $userData = Users::find($userId);
         }
-        $weekId = Weeks::currentId();
-        $weekData = Weeks::weekDataById($weekId);
 
-        if ($day === -1) {
-            $day = getdate()['wday'] - 1;
+        Day::$once = true;
+        $day = Day::create($dayId === -1 ? Days::current() : $dayId);
 
-            if ($day === -1)
-                $day = 6;
+
+        foreach ($day->participants as $participant) {
+            if ($participant['name'] !== $userData['name']) continue;
+            return ['message' => 'Already in the list.'];
         }
+        $day->addParticipant(['userId' => $userData['id']]);
+        $day->save();
 
-        foreach ($weekData['data'][$day]['participants'] as $index => $participant) {
-            if ($participant['name'] === $userData['name']) {
-                return ['result' => false, 'message' => 'Already in the list.'];
-            }
-        }
-
-        $userData = [
-            'userId' => $userData['id'],
-            'userName' => $userData['name'],
-        ];
-
-        Days::addParticipantToDayData($weekData['data'][$day], $userData);
-        $weekData['data'] = json_encode($weekData['data'], JSON_UNESCAPED_UNICODE);
-        Weeks::update(['data' => $weekData['data']], ['id' => $weekId]);
-
-        return ['result' => true, 'name' => $userData['userName']];
+        return ['name' => $userData['userName']];
     }
     public static function unlinkTelegram(int $chatId)
     {

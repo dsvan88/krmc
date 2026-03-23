@@ -414,10 +414,10 @@ class AccountController extends Controller
 
         $result = AccountRepository::addParticipantToDay($_POST['name']);
 
-        if ($result['result']) {
-            return View::message(['name' => $result['name']]);
+        if (empty($result['name'])) {
+            return View::notice(['error' => 1, 'message' => $result['message']]);
         }
-        return View::notice(['error' => 1, 'message' => $result['message']]);
+        return View::response(['name' => $result['name']]);
     }
     public function removeParticipantAction()
     {

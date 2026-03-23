@@ -159,18 +159,15 @@ class DaysController extends Controller
     {
         extract(self::$route['vars']);
 
-        if ($bookingMode === 'booking') {
-            if (Days::addParticipant($weekId, $dayId, $_SESSION['id']))
-                Noticer::set('Success');
-            else
-                Noticer::set(['type' => 'error', 'message' => 'Fail!']);
-        } else {
-            if (Days::removeParticipant($weekId, $dayId, $_SESSION['id']))
-                Noticer::set('Success');
-            else
-                Noticer::set(['type' => 'error', 'message' => 'Fail!']);
-        }
-        return View::redirect("/week/$weekId/day/$dayId/");
+        $method = $bookingMode === 'booking' ? 'addParticipant' : 'removeParticipant';
+
+        Day::$once = true;
+        $day = Day::create($dayId, $weekId);
+
+        $day->$method($_SESSION['id']);
+        $day->save();
+        
+        return View::notice(['message' => 'Success', 'time' => 1500, 'location' => 'reload']);
     }
     public function addAction()
     {

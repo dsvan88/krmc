@@ -2,6 +2,7 @@
 
 namespace app\Repositories\TelegramCommands;
 
+use app\core\Entities\Day;
 use app\core\Telegram\ChatCommand;
 use app\models\Days;
 use app\models\Weeks;
@@ -25,7 +26,7 @@ class RecallCommand extends ChatCommand
             }
         }
         if ($dayName === '')
-            $dayName = 'сг';
+            $dayName = 'tod';
 
         TelegramBotRepository::parseDayNum($dayName);
 
@@ -35,15 +36,11 @@ class RecallCommand extends ChatCommand
             ++$weekId;
         }
 
-        $result = Days::recall($weekId, static::$arguments['dayNum']);
-        $reaction = '😢';
-        $message = '{{ Tg_Command_Set_Day_Not_Found }}';
+        Day::$once = true;
+        $day = Day::create(static::$arguments['dayNum'], $weekId);
+        $day->status = 'recalled';
+        $day->save();
 
-        if (!empty($result)) {
-            $reaction = '👌';
-            $message = '{{ Tg_Command_Successfully_Canceled }}';
-        }
-
-        return static::result($message, $reaction, true);
+        return static::result('{{ Tg_Command_Successfully_Canceled }}', '👌', true);
     }
 }
