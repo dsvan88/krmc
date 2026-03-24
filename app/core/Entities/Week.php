@@ -19,7 +19,7 @@ class Week
     {
 
         if ($this->init($weekId)) {
-            $classId = get_class($this) . "_$weekId";
+            $classId = get_class($this) . '_' . $weekId;
             static::$instances[$classId] = $this;
         } else
             throw new Exception(__METHOD__ . ' New instance of ' . static::class . " with id: $weekId - cant be create!");
@@ -28,9 +28,7 @@ class Week
     {
         $props = get_object_vars($this);
 
-        unset($props['id']);
-        unset($props['days']);
-        unset($props['current']);
+        unset($props['id'], $props['days'], $props['current']);
         $props = array_keys($props);
         $this->id = $weekId;
         if ($weekId === Weeks::currentId()) {
@@ -65,7 +63,7 @@ class Week
     {
         if (empty($week) || empty($week['id'])) return null;
 
-        $classId = get_called_class() . "_{$week['id']}";
+        $classId = get_called_class() . '_' . $week['id'];
         if (!empty(static::$instances[$classId]))
             return static::$instances[$classId];
 
@@ -81,9 +79,9 @@ class Week
     }
     public function __toString()
     {
-        $start = date('d.m.Y H:i:s', $this->start);
-        $finish = date('d.m.Y H:i:s', $this->finish);
-        return "Week: {$this->id}, start: $start, end: $finish";
+        $start = date('d.m.Y', $this->start);
+        $finish = date('d.m.Y', $this->finish);
+        return "Week: {$this->id}, from $start to $finish";
     }
     public function save()
     {
@@ -91,6 +89,6 @@ class Week
         for ($x = 0; $x < 7; $x++) {
             $data[] = $this->days[$x]->save(1);
         }
-        return (bool) Weeks::update(['data' => $data], $this->id);
+        return (bool) Weeks::update(['data' => json_encode($data, JSON_UNESCAPED_UNICODE)], $this->id);
     }
 }
