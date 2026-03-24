@@ -15,7 +15,7 @@ use app\models\GameTypes;
 use app\models\Settings;
 use app\models\Users;
 use app\models\Weeks;
-use app\Repositories\DayRepository;
+use app\Services\DayService;
 
 class DaysController extends Controller
 {
@@ -27,7 +27,6 @@ class DaysController extends Controller
             if (!empty($_POST)) {
                 $weekId = Days::edit($weekId, $dayId, $_POST);
                 if (!empty($_POST['send'])) {
-                    Day::$once = true;
                     $day = Day::create($dayId, $weekId);
                     Sender::message(Settings::getMainTelegramId(), DayFormatter::forMessengers($day));
                 }
@@ -38,7 +37,6 @@ class DaysController extends Controller
             View::$route['vars']['scripts'] = ['booking.js'];
             View::$route['vars']['styles'] = ['booking'];
         }
-
 
         $vars = [
             'title' => '{{ Day_Set_Page_Title }}',
@@ -60,10 +58,8 @@ class DaysController extends Controller
                 'setDayApprovedLabel' => 'Save',
                 'TimeArrivePlaceholder' => 'Arrive Time',
             ],
-            'gameTypes' => $gameTypes,
         ];
 
-        Day::$once = true;
         $day = Day::create($dayId, $weekId);
 
         $yesterday = WeekFormatter::yesterday($day);
@@ -72,14 +68,14 @@ class DaysController extends Controller
 
         $modsTexts = empty($day->mods) ?
             '' :
-            '<p>' . str_replace("\n", '</p><p>', DayRepository::getModsTexts($day->mods)) . '</p>';
+            '<p>' . str_replace("\n", '</p><p>', DayService::getModsTexts($day->mods)) . '</p>';
 
         $mods = [];
-        foreach (DayRepository::$dayDefaultModsArray as $mod => $value)
+        foreach (DayService::$dayDefaultModsArray as $mod => $value)
             $mods[$mod] = in_array($mod, $day->mods) ?  'checked' : '';
 
         $description = DayFormatter::dayDescription($day);
-        $day->participantsCount = max(count($day->participants), 11);
+        $day->participantsCount = max($day->participantsCount, 11);
 
         $selfBooking = [];
 
@@ -89,7 +85,7 @@ class DaysController extends Controller
                 'link' => "/$url/booking",
                 'label' => 'Booking',
             ];
-            for ($i = 0; $i < $playersCount; $i++) {
+            for ($i = 0; $i < $day->participantsCount; $i++) {
                 if (empty($day->participants[$i])) break;
                 if (empty($day->participants[$i]['id'])) continue;
                 if ($day->participants[$i]['id'] != $_SESSION['id']) continue;
@@ -103,7 +99,7 @@ class DaysController extends Controller
         $gameTypes = GameTypes::menu();
 
         if (empty(View::$route['vars']['styles'])) View::$route['vars']['styles'] = ['day'];
-        View::$route['vars'] = array_merge(View::$route['vars'], $vars, compact('day', 'playersCount', 'description', 'selfBooking', 'yesterday', 'tomorrow', 'mods', 'modsTexts', 'gameTypes'));
+        View::$route['vars'] = array_merge(View::$route['vars'], $vars, compact('day', 'description', 'selfBooking', 'yesterday', 'tomorrow', 'mods', 'modsTexts', 'gameTypes'));
 
         return View::render();
     }
@@ -118,11 +114,9 @@ class DaysController extends Controller
 
         $method = $bookingMode === 'booking' ? 'addParticipant' : 'removeParticipant';
 
-        Day::$once = true;
         $day = Day::create($dayId, $weekId);
 
-        $day->$method($_SESSION['id']);
-        $day->save();
+        $day->$method($_SESSION['id'])->save();
 
         return View::notice(['message' => 'Success', 'time' => 1500, 'location' => 'reload']);
     }

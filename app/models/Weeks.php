@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use app\core\Entities\Day;
 use app\core\Model;
 use Exception;
 
@@ -102,7 +103,7 @@ class Weeks extends Model
             ];
             $weekData['finish'] = $weekData['start'] + TIMESTAMP_WEEK - 2;
             for ($i = 0; $i < 7; $i++) {
-                $weekData['data'][] = Days::$dayDataDefault;
+                $weekData['data'][] = Day::$defaults;
             }
             return $weekData;
         }

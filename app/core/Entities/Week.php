@@ -37,6 +37,7 @@ class Week
         }
         $this->id = $weekId;
 
+        Day::$all = true;
         for ($x = 0; $x < 7; $x++)
             $this->days[] = Day::create($x, $weekId);
 

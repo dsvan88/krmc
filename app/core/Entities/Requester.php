@@ -3,7 +3,7 @@
 namespace  app\core\Entities;
 
 use app\core\Tech;
-use app\Repositories\TelegramBotRepository;
+use app\Services\TelegramBotService;
 
 /**
  * @property Chat|null $chat
@@ -38,7 +38,7 @@ class Requester extends Entity
     public static function validate(int $id)
     {
         if (empty($id)) {
-            $id = TelegramBotRepository::getUserTelegramId();
+            $id = TelegramBotService::getUserTelegramId();
             if (empty($id)) return false;
         }
         return $id;

@@ -8,8 +8,9 @@ use app\core\Tech;
 use app\models\Settings;
 use app\models\TelegramChats;
 use app\models\Users;
-use app\Repositories\DayRepository;
-use app\Repositories\TelegramChatsRepository;
+use app\Services\CouponService;
+use app\Services\DayService;
+use app\Services\TelegramChatsService;
 
 class DayFormatter
 {
@@ -92,7 +93,7 @@ class DayFormatter
         $proto = Tech::getRequestProtocol();
         $result .= "🎮 - <a href='$proto://{$_SERVER['SERVER_NAME']}/game/{$day->game}/?lang=$lang'>{$gameName}</a>\n";
 
-        $result .= DayRepository::getModsTexts($day->mods);
+        $result .= DayService::getModsTexts($day->mods);
 
         if (!empty($day->cost))
             $result .= "💲 - <u>{$day->cost}</u>\n";
@@ -104,6 +105,10 @@ class DayFormatter
 
         $result .= "📍 - <a href='{$contacts['gmap_link']['value']}'>$place</a>\n";
         $result .= "\n";
+
+        if (isset($day->coupons[0])){
+            CouponService::getDayCoupons($day);
+        }
 
         $participants = $participantsToEnd = $noNames = [];
         foreach ($day->participants as $participant) {
@@ -134,6 +139,9 @@ class DayFormatter
                 if (!empty($participant['emoji'])) {
                     $userName .= $participant['emoji'];
                 }
+                if (isset($day->coupons[$participant['id']])){
+                    $userName .=  "💲- <i><u>{$day->coupons[$participant['id']]['options']['discount']}{$day->coupons[$participant['id']]['options']['discount_type']}</u></i>";
+                }
             }
 
             if (!empty($participant['arrive']) && $participant['arrive'] !== $day->time) {
@@ -142,7 +150,7 @@ class DayFormatter
             if ($userName[0] === '_') {
                 $tgChat = TelegramChats::find(substr($userName, 1));
                 $userName = '+1';
-                $chatTitle = TelegramChatsRepository::chatTitle($tgChat);
+                $chatTitle = TelegramChatsService::chatTitle($tgChat);
                 if (!empty($chatTitle)) {
                     $modsParts[] = $chatTitle;
                 }

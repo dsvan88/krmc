@@ -1,0 +1,39 @@
+<?php
+
+namespace app\Services\TelegramCbAnswers;
+
+use app\core\Telegram\ChatAnswer;
+use app\Services\TelegramBotService;
+use app\Services\TelegramChatsService;
+use Exception;
+
+class PendingAnswer extends ChatAnswer
+{
+    public static function execute():array
+    {
+        if (empty(static::$arguments['ci']))
+            throw new Exception(__METHOD__ . ': ChatId is empty');
+
+        $cId = (int) trim(static::$arguments['ci']);
+
+        if ($cId !== static::$requester->id && !in_array(static::$requester->profile->status, ['admin', 'root'], true)){
+            return static::result('You don’t have enough rights to change information about other users!');
+        }
+
+        $param = trim(static::$arguments['p']);
+
+        if ($param !== TelegramChatsService::isPendingState($cId)){
+            $update = [
+                'message' => 'This command is expired.',
+            ];
+            return array_merge(static::result('This command is expired.'), ['update' => [$update]]);
+        }
+
+        TelegramChatsService::clearUserPendingState($cId);
+
+        $update = [
+                'message' => 'This command is canceled.',
+            ];
+        return array_merge(static::result('Okay', true, true), ['update' => [$update]]);
+    }
+}

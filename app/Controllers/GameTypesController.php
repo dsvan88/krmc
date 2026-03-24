@@ -8,7 +8,7 @@ use app\core\Locale;
 use app\core\View;
 use app\models\GameTypes;
 use app\models\Users;
-use app\Repositories\PageRepository;
+use app\Services\PageService;
 
 class GameTypesController extends Controller
 {
@@ -61,12 +61,12 @@ class GameTypesController extends Controller
         if (empty($gameNames[$game]))
             return View::errorCode(404, ['message' => "Game $game isn’t found!"]);
 
-        $page = PageRepository::getPage($game);
+        $page = PageService::getPage($game);
 
         $page['logoLink'] = empty($page['data']['logo']) ? '' : GoogleDrive::getLink($page['data']['logo']);
 
         if (empty($page)) {
-            $page = PageRepository::$defaultData;
+            $page = PageService::$defaultData;
             $page['title'] = $gameNames[$game];
         }
 
@@ -82,7 +82,7 @@ class GameTypesController extends Controller
                 'edit' => 'Edit',
                 'delete' => 'Delete',
             ],
-            'og' => PageRepository::formPageOG($page),
+            'og' => PageService::formPageOG($page),
         ];
 
         if (Users::checkAccess('manager')) {

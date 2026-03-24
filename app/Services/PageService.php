@@ -1,0 +1,76 @@
+<?php
+
+namespace app\Services;
+
+use app\core\GoogleDrive;
+use app\core\Tech;
+use app\models\Pages;
+
+class PageService
+{
+    public static $defaultData = [
+        'decription' => '&ltNo Data&gt;',
+        'title' => '&ltNo Data&gt;',
+        'subtitle' => '&ltNo Data&gt;',
+        'html' => '&ltNo Data&gt;',
+    ];
+
+    public static function getPage(string $slug)
+    {
+        $page = Pages::getBySlug($slug);
+
+        if (empty($page)) {
+
+            if ($slug !== 'home') return false;
+
+            $page = self::$defaultData;
+            $page['id'] = 'home';
+            $page['slug'] = $slug;
+            $page['description'] = '';
+            $page['type'] = 'page';
+        }
+        if (empty($page['blocks']))
+            return $page;
+
+        return $page;
+    }
+    public static function formPageOG(array $page = [])
+    {
+        $url = Tech::getRequestProtocol() . "://{$_SERVER['SERVER_NAME']}";
+        if (empty($page['data']['logo'])){
+            $page['logo'] =  '/public/images/club-logo-w-city.jpg';
+            $image = "$url/{$page['logo']}";
+            $imageSize = getimagesize($_SERVER['DOCUMENT_ROOT'] . $page['logo']);
+        }
+        else {
+            $image = empty($page['logoLink']) ? GoogleDrive::getLink($page['data']['logo']) : $page['logoLink'];
+            $imageSize = getimagesize($image);
+        }
+        
+        
+        $uri = $page['slug'] === 'home' && $page['type'] === 'page' ? '' : "{$page['type']}/{$page['slug']}/";
+        $result = [
+            'title' => $page['title'],
+            'type' => 'article',
+            'url' =>  "$url/$uri",
+            'image' => $image,
+            'image:width' => $imageSize[0],
+            'image:height' => $imageSize[1],
+            'description' => $page['description'],
+            'site_name' => $page['title'] . ' | ' . CLUB_NAME,
+            'twitter' => [
+                'card' => 'summary_large_image',
+                'image' => $image,
+            ],
+        ];
+
+        /*     article:published_time - datetime - When the article was first published.
+    article:modified_time - datetime - When the article was last changed.
+    article:expiration_time - datetime - When the article is out of date after.
+    article:author - profile array - Writers of the article.
+    article:section - string - A high-level section name. E.g. Technology
+    article:tag - string array - Tag words associated with this article. */
+
+        return $result;
+    }
+}

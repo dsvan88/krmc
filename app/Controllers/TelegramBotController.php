@@ -12,8 +12,8 @@ use app\core\TelegramBot;
 use app\core\Validator;
 use app\models\Settings;
 use app\models\Users;
-use app\Repositories\TelegramBotRepository;
-use app\Repositories\TelegramChatsRepository;
+use app\Services\TelegramBotService;
+use app\Services\TelegramChatsService;
 use Exception;
 
 class TelegramBotController extends Controller
@@ -22,8 +22,8 @@ class TelegramBotController extends Controller
     public static $command = '';
     public static $guestCommands = ['help', 'booking', 'nick', 'nickRelink', 'week', 'day', 'today'];
     public static $guestAnswers = ['help', 'booking', 'nick', 'nickRelink', 'pending'];
-    public static $CommandNamespace = '\\app\\Repositories\\TelegramCommands';
-    public static $AnswerNamespace = '\\app\\Repositories\\TelegramCbAnswers';
+    public static $CommandNamespace = '\\app\\Services\\TelegramCommands';
+    public static $AnswerNamespace = '\\app\\Services\\TelegramCbAnswers';
 
     public static $resultMessage = '';
     public static $reaction = '';
@@ -66,7 +66,7 @@ class TelegramBotController extends Controller
 
         ChatAction::$message = $message;
         if (static::$type === 'message' && empty($message[static::$type]['from']['is_bot'])) {
-            TelegramChatsRepository::save($message);
+            TelegramChatsService::save($message);
         }
 
         $langCode = 'uk';
@@ -76,17 +76,17 @@ class TelegramBotController extends Controller
         Locale::change($langCode);
 
         $requester = Requester::create();
-        static::$chatId = TelegramBotRepository::getChatId();
+        static::$chatId = TelegramBotService::getChatId();
 
         if (static::$type === 'message') {
-            static::$command = TelegramBotRepository::parseChatCommand($message['message']['text']);
+            static::$command = TelegramBotService::parseChatCommand($message['message']['text']);
 
             if (empty(static::$command)) {
-                if (empty(TelegramChatsRepository::isPendingState())) return false;
+                if (empty(TelegramChatsService::isPendingState())) return false;
 
-                static::$command = TelegramChatsRepository::$pending;
+                static::$command = TelegramChatsService::$pending;
 
-                TelegramBotRepository::getCommonArguments($message['message']['text']);
+                TelegramBotService::getCommonArguments($message['message']['text']);
             }
 
             if (empty($requester->profile) && !in_array(static::$command, static::$guestCommands)) {
@@ -94,7 +94,7 @@ class TelegramBotController extends Controller
                 return false;
             }
         } else {
-            ChatAction::$arguments = TelegramBotRepository::replyButtonDecode($message[static::$type]['data']);
+            ChatAction::$arguments = TelegramBotService::replyButtonDecode($message[static::$type]['data']);
 
             if (empty(ChatAction::$arguments['c'])) return false;
 
@@ -106,7 +106,7 @@ class TelegramBotController extends Controller
             }
         }
 
-        if (!empty(CFG_MAINTENCE) && !empty(static::$command) && !TelegramBotRepository::hasAccess($requester->privilege['status'], 'admin')) {
+        if (!empty(CFG_MAINTENCE) && !empty(static::$command) && !TelegramBotService::hasAccess($requester->privilege['status'], 'admin')) {
             Sender::message(static::$chatId, Locale::phrase("I offer my deepest apologies, but I’m in the maintance mode 🧑‍💻 right now...\nPlease return to us a little later."));
             return false;
         }
@@ -136,7 +136,7 @@ class TelegramBotController extends Controller
     }
     public static function webhookAction()
     {
-        // exit(json_encode(['message' => TelegramBotRepository::$message], JSON_UNESCAPED_UNICODE));
+        // exit(json_encode(['message' => TelegramBotService::$message], JSON_UNESCAPED_UNICODE));
         try {
             if (in_array(static::$command, ['dice', 'd6', 'd64'])) {
                 $tbBot = new TelegramBot;
@@ -177,7 +177,7 @@ class TelegramBotController extends Controller
 
         $status = ChatAction::$requester->profile->status ?? '';
 
-        if (TelegramBotRepository::hasAccess($status, $class::getAccessLevel()) || ($status === 'admin' && $command === 'chat')) {
+        if (TelegramBotService::hasAccess($status, $class::getAccessLevel()) || ($status === 'admin' && $command === 'chat')) {
             return $class::execute();
         }
         if (static::$type !== 'message')
@@ -193,7 +193,7 @@ class TelegramBotController extends Controller
         }
 
         if (!empty($result['reaction']) && APP_LOC !== 'local') {
-            Sender::setMessageReaction(static::$chatId, TelegramBotRepository::getMessageId(), $result['reaction']);
+            Sender::setMessageReaction(static::$chatId, TelegramBotService::getMessageId(), $result['reaction']);
         }
 
         if (!empty($result['answer'])) {
@@ -204,10 +204,10 @@ class TelegramBotController extends Controller
             foreach ($result['update'] as $item) {
                 if (empty($item)) continue;
                 if (!empty($item['replyMarkup']['inline_keyboard']))
-                    TelegramBotRepository::encodeInlineKeyboard($item['replyMarkup']['inline_keyboard']);
+                    TelegramBotService::encodeInlineKeyboard($item['replyMarkup']['inline_keyboard']);
                 Sender::edit(
                     $item['chatId'] ?? static::$chatId,
-                    $item['messageId'] ?? TelegramBotRepository::getMessageId(),
+                    $item['messageId'] ?? TelegramBotService::getMessageId(),
                     $item['message'] ?? '',
                     empty($item['replyMarkup']) ? [] : $item['replyMarkup']
                 );
@@ -217,14 +217,14 @@ class TelegramBotController extends Controller
             foreach ($result['send'] as $item) {
                 if (empty($item)) continue;
                 if (!empty($item['replyMarkup']['inline_keyboard']))
-                    TelegramBotRepository::encodeInlineKeyboard($item['replyMarkup']['inline_keyboard']);
+                    TelegramBotService::encodeInlineKeyboard($item['replyMarkup']['inline_keyboard']);
                 if (empty($item['message'])) {
                     Sender::message(Settings::getTechTelegramId(), 'I don’t know why, but a Chat Action returned an empty message.');
                 } else {
                     $botResult = Sender::message(
                         $item['chatId'] ?? static::$chatId,
                         Locale::phrase($item['message']),
-                        APP_LOC === 'local' ? 0 : ($item['replyOn'] ?? TelegramBotRepository::getMessageId()),
+                        APP_LOC === 'local' ? 0 : ($item['replyOn'] ?? TelegramBotService::getMessageId()),
                         empty($item['replyMarkup']) ? [] : $item['replyMarkup']
                     );
                 }

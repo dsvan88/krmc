@@ -101,10 +101,6 @@ class Coupons extends Model
             throw new Exception(__METHOD__ . ': unknown coupon’s data.');
 
         $coupon = static::$coupons[$couponId];
-        $options = [
-            'discount' => empty($discount) ? 20 : $discount,
-            'discount_type' => empty($discount_type) ? '%' : $discount_type,
-        ];
 
         $_coupon = [
             'owner' => $userId,
@@ -119,6 +115,14 @@ class Coupons extends Model
         static::insert($_coupon);
 
         return gmp_strval(gmp_init($_coupon['id']), 16);
+    }
+    public static function findCoupon(string $id){
+        return static::find(gmp_strval(gmp_init("0x$id"), 10));
+    }
+    public static function use(string $id, array $usedOn = [] ):void
+    {
+        if (empty($id) || empty($usedOn)) return;
+        static::update(['used_on' => json_encode($usedOn)], ['id' => gmp_strval(gmp_init("0x$id"), 10)]);
     }
     public static function decodeJson(array $coupon)
     {

@@ -3,7 +3,7 @@
 namespace app\core;
 
 use app\models\Settings;
-use app\Repositories\ViewRepository;
+use app\Services\ViewService;
 
 class View
 {
@@ -47,14 +47,14 @@ class View
         self::$route['vars'] = Locale::apply(self::$route['vars']);
         extract(self::$route['vars']);
 
-        extract(ViewRepository::defaultVars());
+        extract(ViewService::defaultVars());
 
         if (empty($styles)) $styles = [];
         if (empty($scripts)) $scripts = [];
         if (!empty($css)) $styles = array_merge($styles, $css);
         if (empty($mainClass)) $mainClass = 'index';
 
-        $scripts = ViewRepository::compressScripts($scripts);
+        $scripts = ViewService::compressScripts($scripts);
 
         $pageTitle = preg_replace('/<.*?>/', '', $title);
 
@@ -94,11 +94,11 @@ class View
 
         if (isset($scripts)) {
             $response['jsFile'] = [];
-            $scripts = ViewRepository::compressModalScripts($scripts);
+            $scripts = ViewService::compressModalScripts($scripts);
             foreach ($scripts as $script) {
                 $response['jsFile'][] =  SCRIPTS_PUBLIC . $script;
             }
-            // $response['jsFile'] = array_map(fn($e) => SCRIPTS_PUBLIC . $e, ViewRepository::compressModalScripts($scripts));
+            // $response['jsFile'] = array_map(fn($e) => SCRIPTS_PUBLIC . $e, ViewService::compressModalScripts($scripts));
         }
 
         if (isset($css))

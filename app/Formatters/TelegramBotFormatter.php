@@ -7,13 +7,13 @@ use app\core\Entities\Week;
 use app\core\Locale;
 use app\models\Days;
 use app\models\Weeks;
-use app\Repositories\TelegramBotRepository;
+use app\Services\TelegramBotService;
 
 class TelegramBotFormatter
 {
     public static function getForwardDaysListMarkup(string $callback = 'unreg', bool $all = false): array
     {
-        $day = $curr = Days::current();
+        $day = $curr = Day::current();
         $days = [];
         for ($x = 0; $x < 7; $x++) {
             $day = $day++;
@@ -38,7 +38,6 @@ class TelegramBotFormatter
     }
     public static function getPaticipantsListMarkup(string $callback = 'unreg', int $weekId = 0, int $dayId = 0): array
     {
-        Day::$once = true;
         $day = Day::create($dayId, $weekId);
         if (empty($day->participants)) {
             return [];
@@ -53,7 +52,7 @@ class TelegramBotFormatter
     }
     public static function getBookingMarkup(int $weekId, int $dayNum, bool $booked = false, bool $full = false): array
     {
-        if (TelegramBotRepository::isDirect() && $booked) {
+        if (TelegramBotService::isDirect() && $booked) {
             return [
                 'inline_keyboard' => [
                     [
@@ -74,7 +73,7 @@ class TelegramBotFormatter
             ],
         ];
 
-        if ($full || !TelegramBotRepository::isDirect()) {
+        if ($full || !TelegramBotService::isDirect()) {
             $result['inline_keyboard'][0][] = ['text' => '❌' . Locale::phrase('Opt-out'), 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => $dayNum, 'r' => 1]];
         }
 

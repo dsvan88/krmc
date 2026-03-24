@@ -12,15 +12,15 @@ use app\models\Contacts;
 use app\models\Settings;
 use app\models\TelegramChats;
 use app\models\Users;
-use app\Repositories\TelegramBotRepository;
-use app\Repositories\TelegramChatsRepository;
+use app\Services\TelegramBotService;
+use app\Services\TelegramChatsService;
 use Exception;
 
 class TelegramMainBotController extends TelegramBotController
 {
     public static $guestCommands = ['help', 'booking', 'nick', 'nickRelink', 'week', 'day', 'today', 'pending'];
-    public static $CommandNamespace = '\\app\\Repositories\\TelegramCommands';
-    public static $AnswerNamespace = '\\app\\Repositories\\TelegramCbAnswers';
+    public static $CommandNamespace = '\\app\\Services\\TelegramCommands';
+    public static $AnswerNamespace = '\\app\\Services\\TelegramCbAnswers';
 
     public static function resolveResult(array $result = []): int
     {

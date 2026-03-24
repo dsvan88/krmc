@@ -4,7 +4,7 @@ namespace app\models;
 
 use app\core\Model;
 use app\core\Sender;
-use app\Repositories\TelegramChatsRepository;
+use app\Services\TelegramChatsService;
 
 class TelegramChats extends Model
 {
@@ -49,7 +49,7 @@ class TelegramChats extends Model
 
         if (empty($chat)) return null;
 
-        return $chat['title'] ?? TelegramChatsRepository::chatTitle($chat);
+        return $chat['title'] ?? TelegramChatsService::chatTitle($chat);
     }
     public static function getChatsList(int $limit = 0, int $offset = 0)
     {

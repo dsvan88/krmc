@@ -8,7 +8,7 @@ use app\core\Tech;
 use app\core\View;
 use app\models\Settings;
 use app\models\TelegramChats;
-use app\Repositories\TelegramChatsRepository;
+use app\Services\TelegramChatsService;
 
 class telegramChatController extends Controller
 {
@@ -46,7 +46,7 @@ class telegramChatController extends Controller
     public static function sendAction()
     {
         if (!empty($_POST)) {
-            $result = TelegramChatsRepository::sendPhoto($_POST);
+            $result = TelegramChatsService::sendPhoto($_POST);
             return $result ?
                 View::notice(['message' =>  'Success']) :
                 View::notice(['type' => 'error', 'message' => 'Fail!']);
@@ -55,7 +55,7 @@ class telegramChatController extends Controller
         $chatsCount = count($chats);
 
         for ($i = 0; $i < $chatsCount; $i++) {
-            $chats[$i]['title'] = TelegramChatsRepository::chatTitle($chats[$i]);
+            $chats[$i]['title'] = TelegramChatsService::chatTitle($chats[$i]);
         }
 
         $vars = [

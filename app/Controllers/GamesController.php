@@ -3,6 +3,7 @@
 namespace app\Controllers;
 
 use app\core\Controller;
+use app\core\Entities\Day;
 use app\core\Locale;
 use app\core\Paginator;
 use app\core\Tech;
@@ -33,8 +34,7 @@ class GamesController extends Controller
             return View::location('/game/mafia/' . $gameId);
         }
 
-        $weekId = Weeks::currentId();
-        $dayId = Days::current();
+        $day = Day::create();
 
         $texts = [
             'title' => 'Title',
@@ -47,39 +47,31 @@ class GamesController extends Controller
             'addPlayer' => 'Add Player',
         ];
 
-        $day = Days::weekDayData($weekId, $dayId);
-
         $needed = 16;
-        $count  = count($day['participants']);
         $manager = '';
 
-        if ($count < $needed) {
+        if ($day->participantsCount < $needed) {
             $participants = [];
-            $_participants = array_merge($day['participants'], Users::random($needed - $count));
-            $day['participants'] = [];
+            $_participants = array_merge($day->participants, Users::random($needed - $count));
+            $day->participants = [];
             foreach ($_participants as $participant) {
                 if (empty($manager) && $participant['id'] === $_SESSION['id']) {
                     $manager = $participant['name'];
                 }
                 if (!empty($participant['id']) && in_array($participant['name'], $participants)) continue;
                 $participants[] = $participant['name'];
-                array_push($day['participants'], $participant);
+                array_push($day->participants, $participant);
             }
         }
 
         $shuffled = [];
-        foreach ($day['participants'] as $user) {
+        foreach ($day->participants as $user) {
             if (in_array($user['name'], [$manager, '+1', '&lt; Deleted &gt;'])) continue;
             $shuffled[] = $user['name'];
         }
-        // array_walk($day['participants'], function ($element) use (&$shuffled, $manager): string {
-        //     if (in_array($element['name'], [$manager, '+1', '&lt; Deleted &gt;'])) return false;
-        //     $shuffled[] = $element['name'];
-        //     return true;
-        // });
 
-        usort($day['participants'], function ($participantA, $participantB) {
-            return $participantA['name'] > $participantB['name'] ? 1 : -1;
+        usort($day->participants, function ($a, $b) {
+            return $a['name'] > $b['name'] ? 1 : -1;
         });
 
         shuffle($shuffled);
@@ -122,7 +114,6 @@ class GamesController extends Controller
             'manager' => $manager,
             'shuffled' => $shuffled,
             'maxPlayers' => 10,
-            'playersCount' => count($day['participants']),
             'config' => $config,
             'scripts' => [
                 'manager-game-funcs.js',

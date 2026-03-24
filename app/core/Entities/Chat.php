@@ -3,7 +3,7 @@
 namespace  app\core\Entities;
 
 use app\models\TelegramChats;
-use app\Repositories\TelegramChatsRepository;
+use app\Services\TelegramChatsService;
 
 class Chat extends Entity
 {
@@ -30,7 +30,7 @@ class Chat extends Entity
             return $this->$name;
 
         if ($name === 'title') {
-            return TelegramChatsRepository::chatTitle($this->chat);
+            return TelegramChatsService::chatTitle($this->chat);
         }
 
         if (isset($this->chat[$name]))

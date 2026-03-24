@@ -18,10 +18,10 @@ use app\models\Days;
 use app\models\TelegramChats;
 use app\models\Settings;
 use app\models\Users;
-use app\Repositories\AccountRepository;
-use app\Repositories\ContactRepository;
-use app\Repositories\TechRepository;
-use app\Repositories\TelegramChatsRepository;
+use app\Services\AccountService;
+use app\Services\ContactService;
+use app\Services\TechService;
+use app\Services\TelegramChatsService;
 use Exception;
 use PDO;
 
@@ -112,9 +112,9 @@ class AccountController extends Controller
             $userData['status'] = $userData['privilege']['status'];
         }
 
-        $data = ContactRepository::getFields($userId, 'No data');
-        $data = ContactRepository::wrapLinks($data);
-        $data['approved'] = ContactRepository::checkApproved($userId);
+        $data = ContactService::getFields($userId, 'No data');
+        $data = ContactService::wrapLinks($data);
+        $data['approved'] = ContactService::checkApproved($userId);
 
         $userData = array_merge($userData, $data);
 
@@ -167,10 +167,10 @@ class AccountController extends Controller
             return View::message(['error' => 1, 'text' => 'You don’t have enough rights to change information about other users!']);
         }
         if ($section === 'security') {
-            $data = ContactRepository::checkApproved($userId);
+            $data = ContactService::checkApproved($userId);
         } else {
-            $data = AccountRepository::getFields($userId);
-            $data['approved'] = ContactRepository::checkApproved($userId);
+            $data = AccountService::getFields($userId);
+            $data['approved'] = ContactService::checkApproved($userId);
         }
         if ($section === 'control' && !empty($data['ban'])) {
             if ($data['ban']['expired'] < $_SERVER['REQUEST_TIME'])
@@ -238,13 +238,13 @@ class AccountController extends Controller
                 'telegram' => Validator::validate('telegram', $_POST['telegram']),
                 'phone' => Validator::validate('phone', $_POST['phone']),
             ];
-            ContactRepository::edit($userId, $contacts);
+            ContactService::edit($userId, $contacts);
         } else if ($section === 'control' && $isAdmin) {
             $name = trim($_POST['name']);
             $status = trim($_POST['status']);
             $userData = Users::find($userId);
             if ($userData['name'] !== $name) {
-                $result = AccountRepository::rename($userId, $name);
+                $result = AccountService::rename($userId, $name);
                 if (!$result['result']) {
                     $result['type'] = 'error';
                     return View::notice($result);
@@ -257,7 +257,7 @@ class AccountController extends Controller
                 Users::edit(['privilege' => $userData['privilege']], ['id' => $userId]);
             }
         } else {
-            AccountRepository::edit($userId, $_POST);
+            AccountService::edit($userId, $_POST);
         }
         return View::notice(['message' => 'Success', 'location' => '/account/profile/' . $userId]);
     }
@@ -321,9 +321,9 @@ class AccountController extends Controller
             $userId = (int) $_SESSION['id'];
         }
         if ($section === 'contacts') {
-            $data = ContactRepository::getFields($userId);
+            $data = ContactService::getFields($userId);
         } else {
-            $data = AccountRepository::getFields($userId);
+            $data = AccountService::getFields($userId);
         }
 
         $texts = [
@@ -359,14 +359,14 @@ class AccountController extends Controller
         }
         $chatId = (int) $_POST['cid'];
 
-        AccountRepository::unlinkTelegram($chatId);
+        AccountService::unlinkTelegram($chatId);
 
         $name = trim($_POST['name']);
         if (empty($name) || $name === '-') {
             return View::notice(['message' => 'Success', 'time' =>  1500, 'location' => 'reload']);
         }
 
-        AccountRepository::linkTelegram($chatId, $name);
+        AccountService::linkTelegram($chatId, $name);
         return View::notice(['message' => 'Success', 'time' =>  1500, 'location' => 'reload']);
     }
     public function setNicknameFormAction()
@@ -414,7 +414,7 @@ class AccountController extends Controller
             return View::errorCode(403, ['message' => 'Something went wrong! How did you get here?']);
         }
 
-        $result = AccountRepository::addParticipantToDay($_POST['name']);
+        $result = AccountService::addParticipantToDay($_POST['name']);
 
         if (empty($result['name'])) {
             return View::notice(['error' => 1, 'message' => $result['message']]);
@@ -428,7 +428,7 @@ class AccountController extends Controller
         }
 
         $userData = Users::getDataByName($_POST['name']);
-        $day = Day::create(Days::current(), Weeks::currentId());
+        $day = Day::create();
 
         foreach ($day->participants as $i => $participant) {
             if ($participant['id'] !== $userData['id']) continue;
@@ -450,7 +450,7 @@ class AccountController extends Controller
 
             if (empty($name)) View::message('Fail!');
 
-            if (AccountRepository::renameDummy($name)) {
+            if (AccountService::renameDummy($name)) {
                 return View::message(['name' => $name, 'message' => 'Success']);
             }
 
@@ -496,7 +496,7 @@ class AccountController extends Controller
         $message = 'Success';
         $type = '';
         try {
-            TelegramChatsRepository::getAndSaveTgAvatar($uid);
+            TelegramChatsService::getAndSaveTgAvatar($uid);
         } catch (\Throwable $th) {
             $message = "Error:\n" . Locale::phrase($th->getMessage());
             $type = 'error';
@@ -852,7 +852,7 @@ class AccountController extends Controller
 
         extract(self::$route['vars']);
 
-        $result = AccountRepository::mergeAccounts($userId, $name);
+        $result = AccountService::mergeAccounts($userId, $name);
 
         if ($result)
             return View::message(['message' => 'Success']);

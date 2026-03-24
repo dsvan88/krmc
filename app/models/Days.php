@@ -2,16 +2,17 @@
 
 namespace app\models;
 
+use app\core\Entities\Day;
 use app\core\Model;
 use app\core\Locale;
 use app\core\Validator;
-use app\Repositories\AccountRepository;
-use app\Repositories\DayRepository;
+use app\Services\AccountService;
+use app\Services\DayService;
 
 class Days extends Model
 {
     public static $table = SQL_TBL_WEEKS;
-    public static $currentDay;
+    public static $currentDay = null;
 
     public static $days = [
         'Monday',
@@ -23,20 +24,10 @@ class Days extends Model
         'Sunday',
     ];
     public static $daysLocaled = [];
-    public static $dayDataDefault = [
-        'game' => 'mafia',
-        'mods' => [],
-        'time' => '14:00',
-        'status' => '',
-        'starter' => 0,
-        'participants' => [],
-        'day_prim' => '',
-        'cost' => ''
-    ];
 
     public static function current(): int
     {
-        if (!empty(self::$currentDay)) {
+        if (!is_null(self::$currentDay)) {
             return self::$currentDay;
         }
 
@@ -61,7 +52,7 @@ class Days extends Model
 
         if ($dayData['status'] === 'set') return [$weekId, $dayId];
 
-        return DayRepository::findNearSetDay($weekId, $dayId);
+        return DayService::findNearSetDay($weekId, $dayId);
     }
     public static function isExpired(int $timestamp): bool
     {
@@ -131,45 +122,39 @@ class Days extends Model
     }
     public static function setDayData($weekId, $dayId, $data)
     {
-        try {
-            if (empty($weekId))
-                $weekId = Weeks::currentId();
+        if (empty($weekId))
+            $weekId = Weeks::currentId();
 
-            if ($weekId > 0) {
-                $weekData = Weeks::weekDataById($weekId);
-            } else {
-                $weekData = Weeks::defaultWeekData();
-                $weekData['start'] = strtotime('last Monday');
-                $weekData['finish'] = strtotime('next Sunday');
-            }
-
-            unset($weekData['id']);
-
-            $weekData['data'][$dayId] = $data;
-            $weekData['data'] = json_encode($weekData['data'], JSON_UNESCAPED_UNICODE);
-
-            if ($weekId > 0) {
-                self::update($weekData, ['id' => $weekId]);
-                return $weekId;
-            } else {
-                return self::insert($weekData);
-            }
-        } catch (\Throwable $th) {
-            error_log(__METHOD__ . $th->__toString());
-            return false;
+        if ($weekId > 0) {
+            $weekData = Weeks::weekDataById($weekId);
+        } else {
+            $weekData = Weeks::defaultWeekData();
+            $weekData['start'] = strtotime('last Monday');
+            $weekData['finish'] = strtotime('next Sunday');
         }
+
+        unset($weekData['id']);
+
+        $weekData['data'][$dayId] = $data;
+        $weekData['data'] = json_encode($weekData['data'], JSON_UNESCAPED_UNICODE);
+
+        if ($weekId < 1)
+            return self::insert($weekData);
+
+        self::update($weekData, ['id' => $weekId]);
+        return $weekId;
     }
     public static function weekDayData($weekId, $dayId)
     {
         $weekData = Weeks::weekDataById($weekId);
 
-        if (!$weekData) return self::$dayDataDefault;
+        if (!$weekData) return Day::$defaults;
 
         $weekData['data'][$dayId]['weekStart'] = $weekData['start'];
 
         if (empty($weekData['data'][$dayId]['participants'])) return $weekData['data'][$dayId];
 
-        AccountRepository::addNames($weekData['data'][$dayId]['participants']);
+        AccountService::addNames($weekData['data'][$dayId]['participants']);
         $count = count($weekData['data'][$dayId]['participants']);
         for ($x = 0; $x < $count; $x++) {
             if (!empty($weekData['data'][$dayId]['participants'][$x]['id'])) continue;

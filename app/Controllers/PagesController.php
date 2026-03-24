@@ -9,7 +9,7 @@ use app\core\Validator;
 use app\core\View;
 use app\models\Pages;
 use app\models\Users;
-use app\Repositories\PageRepository;
+use app\Services\PageService;
 
 class PagesController extends Controller
 {
@@ -26,7 +26,7 @@ class PagesController extends Controller
     public function showAction()
     {
         extract(self::$route['vars']);
-        $page = PageRepository::getPage($slug);
+        $page = PageService::getPage($slug);
 
         if (empty($page))
             return View::errorCode(404, ['message' => "Page $slug isn’t found!"]);
@@ -40,7 +40,7 @@ class PagesController extends Controller
                 'edit' => 'Edit',
                 'delete' => 'Delete',
             ],
-            'og' => PageRepository::formPageOG($page),
+            'og' => PageService::formPageOG($page),
         ];
 
         if (Users::checkAccess('manager')) {

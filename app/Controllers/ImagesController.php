@@ -12,7 +12,7 @@ use app\core\Tech;
 use app\core\Validator;
 use app\core\View;
 use app\models\Settings;
-use app\Repositories\ImageRepository;
+use app\Services\ImageService;
 
 class ImagesController extends Controller
 {
@@ -35,7 +35,7 @@ class ImagesController extends Controller
             $folder = preg_replace('/[^a-z0-9_+ -]/ui', '', trim($_POST['folder']));
 
         $files = [];
-        if (!ImageRepository::getImagesList($pageToken, $files, $nextPageToken, $folder)) {
+        if (!ImageService::getImagesList($pageToken, $files, $nextPageToken, $folder)) {
             return View::notice(['message' => 'Image’s list is empty']);
         }
 
@@ -59,7 +59,7 @@ class ImagesController extends Controller
         if (!empty($_POST['pageToken']))
             $pageToken = $_POST['pageToken'];
 
-        if (!ImageRepository::getImagesList($pageToken, $files, $nextPageToken, $folderName)) {
+        if (!ImageService::getImagesList($pageToken, $files, $nextPageToken, $folderName)) {
             Noticer::set(['message' => 'Image’s list is empty', 'type' => 'info']);
         }
 
@@ -82,7 +82,7 @@ class ImagesController extends Controller
             $pageToken = $_POST['pageToken'];
 
 
-        if (!ImageRepository::getImagesList($pageToken, $files, $nextPageToken, $folderName)) {
+        if (!ImageService::getImagesList($pageToken, $files, $nextPageToken, $folderName)) {
             return View::notice(['message' => 'Image’s list is empty']);
         }
 

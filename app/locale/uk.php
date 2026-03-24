@@ -112,6 +112,7 @@ return [
 
     'Weekly schedule' => 'Тижневий розклад',
     '{{ Week_Set_Block_Title }}' => 'Планування тиждня',
+    'Our schedule for the near future' => 'Наш розклад на найближче майбутнє',
     'Game «%s» - How to play?' => 'Гра «%s» - Як граємо?',
     'Our schelude' => 'Наш розклад',
     'Welcome to our club!' => 'Вітаємо в нашому клубі',

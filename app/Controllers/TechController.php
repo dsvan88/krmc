@@ -16,9 +16,10 @@ use app\models\SocialPoints;
 use app\models\TelegramChats;
 use app\models\Users;
 use app\models\Weeks;
-use app\Repositories\SocialPointsRepository;
-use app\Repositories\TechRepository;
-use app\Repositories\TelegramBotRepository;
+use app\Services\CouponService;
+use app\Services\SocialPointsService;
+use app\Services\TechService;
+use app\Services\TelegramBotService;
 
 class TechController extends Controller
 {
@@ -68,13 +69,13 @@ class TechController extends Controller
                 return View::message(['error' => 1, 'message' => 'Something wrong with your query!']);
 
             $table = trim($_POST['table']);
-            $result = TechRepository::backup($table);
+            $result = TechService::backup($table);
             $archiveName = CLUB_SNAME . ' backup ' . date('d.m.Y', $_SERVER['REQUEST_TIME']);
             if ($table !== 'all') {
                 $result = [$table => array_values($result)];
                 $archiveName = "$table $archiveName";
             }
-            $archive = TechRepository::archive($archiveName, $result);
+            $archive = TechService::archive($archiveName, $result);
             return View::file($archive, basename($archive));
         }
         $vars = [
@@ -99,7 +100,7 @@ class TechController extends Controller
         set_time_limit(90);
 
         if (Days::current() < 3) {
-            SocialPointsRepository::applyBookingPoints();
+            SocialPointsService::applyBookingPoints();
         }
 
         $settings = Settings::findBy('type', 'backup')[0];
@@ -120,7 +121,7 @@ class TechController extends Controller
         header("Content-Length: 0", true);
         flush();
 
-        TechRepository::sendBackup($backup['email']['value']);
+        TechService::sendBackup($backup['email']['value']);
 
         exit();
     }
@@ -129,7 +130,7 @@ class TechController extends Controller
         // View::redirect('/');
         ini_set('max_execution_time', 300);
         if (!empty($_POST)) {
-            if (TechRepository::restore())
+            if (TechService::restore())
                 return View::message('Done!');
             return View::message(['error' => true, 'message' => 'Something wrong with your datafile!']);
         }
@@ -160,7 +161,7 @@ class TechController extends Controller
         $time = strtotime('01.01.2025');
         foreach ($weeks as $week) {
             if ($week['finish'] > $time) {
-                SocialPointsRepository::applyBookingPoints($week['id']);
+                SocialPointsService::applyBookingPoints($week['id']);
             }
         }
         echo 'Weeks rebuilded.<br>';
@@ -193,13 +194,14 @@ class TechController extends Controller
                 ],
                 'date' => 1652025484,
                 // 'text' => '+ на 18',
+                'text' => '/day',
                 // 'text' => '/dice',
                 // 'text' => '/chat',
                 // 'text' => '/spshop',
                 // 'text' => '/week',
                 // 'text' => '/chat main',
                 // 'text' => 'Checker',
-                'text' => '/unreg',
+                // 'text' => '/unreg',
                 // 'text' => '/reg +сг,Джокер,18:40,(тест)',
                 // 'text' => '+ на четвер, десь на 18:45, звісно, що підстрахую, але поки що (під ?)',
                 // 'text' => '/?',
@@ -227,12 +229,9 @@ class TechController extends Controller
     }
     public static function testAction()
     {
-        Day::$once = true;
-        $day = Day::create(6);
-        // Tech::dump($day);
-        $day->participants = [];
-        $day->time = '11:00';
-        Tech::dump($day);
-        $day->save();
+        // Coupons::create(15,1);
+        $day = Day::create();
+        CouponService::getDayCoupons($day);
+        // $day->save();
     }
 }

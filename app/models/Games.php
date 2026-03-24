@@ -2,12 +2,11 @@
 
 namespace app\models;
 
+use app\core\Entities\Day;
 use app\core\Model;
-use app\core\Locale;
-use app\core\Tech;
 use app\core\Validator;
-use app\Repositories\AccountRepository;
-use app\Repositories\GameRepository;
+use app\Services\AccountService;
+use app\Services\GameService;
 
 class Games extends Model
 {
@@ -20,11 +19,11 @@ class Games extends Model
     {
         $manager = Users::getDataByName(Validator::validate('name', $post['manager']));
         $state = [
-            'config' => GameRepository::formConfig($post)
+            'config' => GameService::formConfig($post)
         ];
         $data = [
             'week_id' => Weeks::currentId(),
-            'day_id' => Days::current(),
+            'day_id' => Day::current(),
             'manager' => $manager['id'],
             'state' => json_encode($state, JSON_UNESCAPED_UNICODE),
             'players' => json_encode(Users::assingIds($post['player']), JSON_UNESCAPED_UNICODE),
@@ -49,7 +48,7 @@ class Games extends Model
         ];
         $state = json_decode($data['state'], true);
         if (!empty($state['winners'])) {
-            [$data['state'], $data['players']] = GameRepository::formResult($state);
+            [$data['state'], $data['players']] = GameService::formResult($state);
             $data['win'] = $state['winners'];
         }
         self::update($data, ['id' => $id]);
@@ -58,8 +57,8 @@ class Games extends Model
     {
         $gameData = Games::find($gameId);
 
-        // $gameData['players'] = AccountRepository::addNames($gameData['players']);
-        AccountRepository::addNames($gameData['players']);
+        // $gameData['players'] = AccountService::addNames($gameData['players']);
+        AccountService::addNames($gameData['players']);
 
         $gameData['players'] = json_encode($gameData['players'], JSON_UNESCAPED_UNICODE);
         return $gameData;

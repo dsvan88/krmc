@@ -2,23 +2,26 @@
 
 namespace  app\core\Entities;
 
+use app\core\Tech;
+use app\models\Coupons;
 use app\models\Days;
 use app\models\GameTypes;
 use app\models\Weeks;
-use app\Repositories\AccountRepository;
+use app\Services\AccountService;
+use app\Services\CouponService;
 use Exception;
 
 class Day
 {
     public int $dayId = 0;
     public int $weekId = 0;
-    public int $starter = 0;
+    public string $status = '';
+    public ?int $starter = null;
     public array $participants = [];
     public array $coupons = [];
     public string $game = '';
     public array $mods = [];
     public string $time = '';
-    public string $status = '';
     public string $day_prim = '';
     public string $cost = '';
 
@@ -36,7 +39,19 @@ class Day
     public static array $instances = [];
     public static array $week = [];
     public static array $games = [];
-    public static bool $once = false;
+    public static bool $all = false;
+    public static ?int $currentDay = null;
+    public static $defaults = [
+        'game' => 'mafia',
+        'mods' => [],
+        'coupons' => [],
+        'time' => '14:00',
+        'status' => '',
+        'starter' => null,
+        'participants' => [],
+        'day_prim' => '',
+        'cost' => ''
+    ];
 
     private function __construct(int $dayId = 0, int $weekId = 0)
     {
@@ -49,23 +64,6 @@ class Day
     }
     private function init(int $dayId = 0, int $weekId = 0): bool
     {
-        $props = get_object_vars($this);
-
-        unset(
-            $props['dayId'],
-            $props['weekId'],
-            $props['current'],
-            $props['timestamp'],
-            $props['start'],
-            $props['finish'],
-            $props['date'],
-            $props['datetime'],
-            $props['dayName'],
-            $props['type'],
-            $props['gameName'],
-            $props['participantsCount'],
-        );
-        $props = array_keys($props);
 
         $this->dayId = $dayId;
         $this->weekId = $weekId;
@@ -75,7 +73,7 @@ class Day
         $this->dayName = $dayNames[$dayId];
 
         $currWeekId = Weeks::currentId();
-        $currDayId = Days::current();
+        $currDayId = static::current();
         if ($weekId === $currWeekId && $dayId === $currDayId) {
             $this->current = true;
             $this->type = 'current';
@@ -83,13 +81,12 @@ class Day
             $this->type = 'expire';
         }
 
-        foreach ($props as $v) {
-            if (empty(static::$week['data'][$dayId][$v])) continue;
-            if ($v === 'participants') {
-                AccountRepository::addNames(static::$week['data'][$dayId]['participants']);
+        foreach (static::$defaults as $field=>$v) {
+            if ($field === 'participants') {
+                AccountService::addNames(static::$week['data'][$dayId]['participants']);
                 $this->participantsCount = count(static::$week['data'][$dayId]['participants']);
             }
-            $this->$v = static::$week['data'][$dayId][$v];
+            $this->$field = static::$week['data'][$dayId][$field] ?? $v;
         }
 
 
@@ -100,7 +97,7 @@ class Day
 
         return true;
     }
-    public static function create(int $dayId = 0, int $weekId = 0): ?Day
+    public static function create(int $dayId = -1, int $weekId = 0): ?Day
     {
         $validated = static::validate($dayId, $weekId);
 
@@ -113,13 +110,12 @@ class Day
 
         if (!static::find($weekId)) return null;
 
-        if (static::$once) {
-            new static($dayId, $weekId);
-        } else {
-            for ($x = 0; $x < 7; $x++) {
+        if (static::$all)
+            for ($x = 0; $x < 7; $x++)
                 new static($x, $weekId);
-            }
-        }
+        else
+            new static($dayId, $weekId);
+            
         return static::$instances[get_called_class() . "_$dayId.$weekId"];
     }
     public static function fromWeekArray(array $week = [], int $dayId = 0): ?Day
@@ -133,7 +129,7 @@ class Day
 
         static::$week = $week;
 
-        if (static::$once) {
+        if (static::$all) {
             new static($dayId, $weekId);
         } else {
             for ($x = 0; $x < 7; $x++) {
@@ -151,11 +147,27 @@ class Day
         static::$week = $week;
         return true;
     }
-    public static function validate(int $dayId = 0, int $weekId = 0): ?array
+    public static function validate(int $dayId = -1, int $weekId = 0): ?array
     {
-        if (0 > $dayId || $dayId > 6) return null;
+        if ($dayId === -1)
+            $dayId = static::current();
+        
+        if (0 > $dayId || $dayId > 6)
+            return null;
 
         return [$dayId, empty($weekId) ? Weeks::currentId() : $weekId];
+    }
+    public static function current(){
+        if (!is_null(static::$currentDay)) {
+            return static::$currentDay;
+        }
+
+        static::$currentDay = getdate()['wday'] - 1;
+
+        if (static::$currentDay === -1)
+            static::$currentDay = 6;
+
+        return static::$currentDay;
     }
     public function __toString()
     {
@@ -167,13 +179,14 @@ class Day
     }
     public function clear()
     {
-        $this->starter = 0;
+        $this->starter = null;
         $this->participants = [];
         $this->day_prim = '';
         $this->mods = [];
         $this->status = 'recalled';
+        return $this;
     }
-    public function addParticipant(array $participant, int $slot = -1)
+    public function addParticipant(array $participant, int $slot = -1): Day
     {
         if ($slot === -1) {
             while (isset($this->participants[++$slot])) {
@@ -185,16 +198,31 @@ class Day
             'arrive'    =>    $participant['arrive'] ?? '',
             'prim'      =>    $participant['prim'] ?? '',
         ];
-        AccountRepository::addNames($this->participants[$slot]);
+
+        AccountService::addNames($this->participants[$slot]);
+
+        if (is_numeric($participant['userId'])){
+            return $this->applyCoupons($participant['userId']);
+        }
+        return $this;
     }
-    public function removeParticipant(int $index)
+    public function applyCoupons(int $userId = 0): Day
+    {
+        if (empty($userId)) return $this;
+        
+        CouponService::apply($this, $userId);
+        
+        return $this;
+    }
+    public function removeParticipant(int $index): Day
     {
         unset($this->participants[$index]);
         $this->participants = array_values($this->participants);
+        return $this;
     }
-    public function addNonames(int $count = 0, ?string $prim = ''): void
+    public function addNonames(int $count = 0, ?string $prim = ''): Day
     {
-        if ($count === 0) return;
+        if ($count === 0) return $this;
 
         for ($x = 0; $x < $count; $x++) {
             $this->participants[] = [
@@ -203,10 +231,11 @@ class Day
                 'prim'    =>     $prim ?? '',
             ];
         }
+        return $this;
     }
-    public function removeNonames(int $count = 0): void
+    public function removeNonames(int $count = 0): Day
     {
-        if ($count === 0) return;
+        if ($count === 0) return $this;
 
         $_participants = [];
         foreach ($this->participants as $p) {
@@ -214,31 +243,32 @@ class Day
             $_participants[] = $p;
         }
         $this->participants = $_participants;
+        return $this;
     }
-    public function addMod(string $mod = ''): void
+    public function addMod(string $mod = ''): Day
     {
-        if (empty($mod)) return;
+        if (empty($mod))  return $this;
 
         if (empty($this->mods) || !in_array($mod, $this->mods)) {
             $this->mods[] = $mod;
         }
+        return $this;
     }
-    public function removeMod(string $mod = ''): void
+    public function removeMod(string $mod = ''): Day
     {
-        if (empty($mod)) return;
+        if (empty($mod)) return $this;
 
         $i = array_search($mod, $this->mods, true);
         if ($i !== false) {
-            unset($day->mods[$i]);
+            unset($this->mods[$i]);
             $this->mods = array_values($this->mods);
         }
+        return $this;
     }
     public function save(bool $return = false)
     {
-        $defs = Days::$dayDataDefault;
-
         $day = [];
-        foreach ($defs as $k => $v) {
+        foreach (static::$defaults as $k => $v) {
             $day[$k] = $this->$k ?? $v;
         }
 

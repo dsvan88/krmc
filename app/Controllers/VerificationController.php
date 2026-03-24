@@ -10,9 +10,9 @@ use app\core\Tech;
 use app\core\Validator;
 use app\models\Contacts;
 use app\models\Users;
-use app\Repositories\AccountRepository;
-use app\Repositories\ContactRepository;
-use app\Repositories\VerificationRepository;
+use app\Services\AccountService;
+use app\Services\ContactService;
+use app\Services\VerificationService;
 
 class VerificationController extends Controller
 {
@@ -32,7 +32,7 @@ class VerificationController extends Controller
             return View::errorCode(404, ['message' => '<p>We can’t find your request</p><p>Or</p><p>Link has been expired!</p>']);
         }
 
-        $result = VerificationRepository::setApproved('email', $hash);
+        $result = VerificationService::setApproved('email', $hash);
         if (is_string($result)) {
             return View::errorCode(404, ['message' => $result]);
         }
@@ -43,15 +43,15 @@ class VerificationController extends Controller
         if (!isset($_SESSION['id'])) {
             return View::errorCode(404, ['message' => '<p>Your aren’t authorized yet!</p><p>Please - use browser, where you made your request!</p>']);
         }
-        if (!empty($_POST) && VerificationRepository::check2FAVerification(trim($_POST['approval_code']))) {
-            $result = VerificationRepository::setApproved('email');
+        if (!empty($_POST) && VerificationService::check2FAVerification(trim($_POST['approval_code']))) {
+            $result = VerificationService::setApproved('email');
             if (is_string($result)) {
                 return View::notice(['type' => 'error', 'message' => $result, 'location' => "/account/profile/{$_SESSION['id']}/"]);
             }
             return View::notice(['message' => 'Success', 'location' => "/account/profile/{$_SESSION['id']}/"]);
         }
 
-        if (!VerificationRepository::send2FAVerification('email')) {
+        if (!VerificationService::send2FAVerification('email')) {
             return View::message([
                 'result' => false,
                 'message' => 'Something went wrong!',
@@ -78,7 +78,7 @@ class VerificationController extends Controller
         }
 
         $userId = (int) $userData['id'];
-        $approved = ContactRepository::getApproved($userId);
+        $approved = ContactService::getApproved($userId);
 
         if (empty($approved['telegramid'])) {
             return View::message(['result' => true]);
@@ -151,7 +151,7 @@ class VerificationController extends Controller
             $_SESSION['debug'][] = json_encode($_POST['data'], JSON_UNESCAPED_UNICODE);
             return View::notice(['type' => 'error', 'message' => 'Auth error!']);
         }
-        if (!AccountRepository::telegramAuth($_POST['data']))
+        if (!AccountService::telegramAuth($_POST['data']))
             return View::location('/telegram/account/register');
 
         return View::location('/near/');

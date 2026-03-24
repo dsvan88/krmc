@@ -10,7 +10,7 @@ use app\core\View;
 use app\models\News;
 use app\models\Settings;
 use app\models\Users;
-use app\Repositories\PageRepository;
+use app\Services\PageService;
 
 class NewsController extends Controller
 {
@@ -53,7 +53,7 @@ class NewsController extends Controller
             'newsData' => $page
         ];
 
-        View::$route['vars']['og'] = PageRepository::formPageOG($page);
+        View::$route['vars']['og'] = PageService::formPageOG($page);
         View::$route['vars'] = array_merge(View::$route['vars'], $vars);
 
         return View::render();

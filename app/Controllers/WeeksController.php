@@ -5,7 +5,7 @@ namespace app\Controllers;
 use app\core\Controller;
 use app\core\View;
 use app\models\Weeks;
-use app\Repositories\WeekRepository;
+use app\Services\WeekService;
 
 class WeeksController extends Controller
 {
@@ -14,7 +14,7 @@ class WeeksController extends Controller
         $weekId = 0;
         extract(self::$route['vars']);
 
-        $vars = WeekRepository::getShowData($weekId);
+        $vars = WeekService::getShowData($weekId);
 
         $vars['texts'] = [
             'weeksBlockTitle' => 'Weekly schedule',
@@ -22,7 +22,7 @@ class WeeksController extends Controller
         $vars['title'] = 'Weekly schedule';
 
         View::$route['vars'] = array_merge(View::$route['vars'], $vars);
-        View::$route['vars']['og'] = WeekRepository::formWeekOG($vars);
+        View::$route['vars']['og'] = WeekService::formWeekOG($vars);
         View::$route['vars']['styles'] = ['weeks'];
 
         return View::render();

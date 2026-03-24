@@ -7,7 +7,7 @@ use app\core\Locale;
 use app\core\Model;
 use app\core\Tech;
 use app\core\Validator;
-use app\Repositories\ContactRepository;
+use app\Services\ContactService;
 
 class Users extends Model
 {
@@ -202,7 +202,7 @@ class Users extends Model
             ];
         }
         if (empty($_SESSION['tg-code'])) {
-            $approved = ContactRepository::getApproved($uid);
+            $approved = ContactService::getApproved($uid);
             if (!empty($approved['telegramid']))
                 return [
                     'error' => 1,

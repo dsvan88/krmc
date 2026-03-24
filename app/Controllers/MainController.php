@@ -8,7 +8,7 @@ use app\core\GoogleDrive;
 use app\core\View;
 use app\models\Settings;
 use app\models\Users;
-use app\Repositories\ImageRepository;
+use app\Services\ImageService;
 
 class MainController extends Controller
 {
@@ -63,7 +63,7 @@ class MainController extends Controller
         if (!empty($_POST['pageToken']))
             $pageToken = $_POST['pageToken'];
 
-        ImageRepository::getImagesList($pageToken, $gallery, $nextPageToken, 'gallery');
+        ImageService::getImagesList($pageToken, $gallery, $nextPageToken, 'gallery');
 
         $vars = [
             'title' => 'Gallery',

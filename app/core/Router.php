@@ -3,7 +3,7 @@
 namespace app\core;
 
 use app\models\Settings;
-use app\Repositories\TechRepository;
+use app\Services\TechService;
 
 class Router
 {
@@ -86,7 +86,7 @@ class Router
                             return false;
                         }
                     }
-                    TechRepository::scheduleBackup();
+                    TechService::scheduleBackup();
                     if (!empty($_SESSION['debug'])) {
                         $message .= PHP_EOL . 'DEBUG:' . PHP_EOL;
                         $message .= PHP_EOL . implode(PHP_EOL, $_SESSION['debug']);
