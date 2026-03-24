@@ -3,6 +3,7 @@
 namespace app\Controllers;
 
 use app\core\Controller;
+use app\core\Entities\Day;
 use app\core\GoogleDrive;
 use app\core\ImageProcessing;
 use app\core\View;
@@ -13,6 +14,7 @@ use app\core\TelegramBot;
 use app\core\Validator;
 use app\models\Weeks;
 use app\models\Contacts;
+use app\models\Days;
 use app\models\TelegramChats;
 use app\models\Settings;
 use app\models\Users;
@@ -426,24 +428,14 @@ class AccountController extends Controller
         }
 
         $userData = Users::getDataByName($_POST['name']);
-        $weekId = Weeks::currentId();
-        $weekData = Weeks::weekDataById($weekId);
+        $day = Day::create(Days::current(), Weeks::currentId());
 
-        $today = getdate()['wday'] - 1;
-
-        if ($today === -1)
-            $today = 6;
-
-        foreach ($weekData['data'][$today]['participants'] as $index => $participant) {
+        foreach ($day->participants as $i => $participant) {
             if ($participant['id'] !== $userData['id']) continue;
-            unset($weekData['data'][$today]['participants'][$index]);
+            $day->removeParticipant($i);
             break;
         }
-        $weekData['data'][$today]['participants'] = array_values($weekData['data'][$today]['participants']);
-        $weekData['data'] = json_encode($weekData['data'], JSON_UNESCAPED_UNICODE);
-
-        Weeks::update(['data' => $weekData['data']], ['id' => $weekId]);
-
+        $day->save();
         return View::notice('Done');
     }
     public function dummyRenameFormAction()

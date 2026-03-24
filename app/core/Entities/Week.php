@@ -30,10 +30,12 @@ class Week
 
         unset($props['id'], $props['days'], $props['current']);
         $props = array_keys($props);
-        $this->id = $weekId;
-        if ($weekId === Weeks::currentId()) {
+        $current = Weeks::currentId();
+        if (empty($weekId) || $weekId === $current) {
+            $weekId = $current;
             $this->current = true;
         }
+        $this->id = $weekId;
 
         for ($x = 0; $x < 7; $x++)
             $this->days[] = Day::create($x, $weekId);
