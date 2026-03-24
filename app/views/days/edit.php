@@ -1,14 +1,14 @@
 <section class="section">
     <div class="booking">
-        <form class="booking__form" action="/week/<?= $day['weekId'] ?>/day/<?= $day['dayId'] ?>/" method="POST">
+        <form class="booking__form" action="/week/<?= $day->weekId ?>/day/<?= $day->dayId ?>/" method="POST">
             <header class="booking__header">
                 <?php if (empty($yesterday['link'])) : ?>
                     <span class="booking__navlink"><?= $yesterday['label'] ?></span>
                 <?php else : ?>
                     <span class="booking__navlink"><a href="<?= $yesterday['link'] ?>"><i class="fa fa-angle-double-left"></i>&nbsp;<?= $yesterday['label'] ?></a></span>
                 <?php endif ?>
-                <h3 class="booking__title"><?= $day['dateTime'] ?></h3>
-                <h3 class="booking__title tablet"><?= $day['dateDayTime'] ?></h3>
+                <h3 class="booking__title"><?= $day->datetime ?></h3>
+                <h3 class="booking__title tablet"><?= $day->date ?></h3>
                 <?php if (empty($tomorrow['link'])) : ?>
                     <span class="booking__navlink"><?= $tomorrow['label'] ?></span>
                 <?php else : ?>
@@ -21,7 +21,7 @@
                     <div class="booking__row">
                         <label for="day-time" class="booking__label"> <?= $texts['dayStartTime'] ?>: </label>
                         <div class="booking__value">
-                            <input list="time-list" type="text" name="day_time" value="<?= $day['time'] ?>" placeholder="<?= $texts['dayGameStart'] ?>" id="day-time" />
+                            <input list="time-list" type="text" name="day_time" value="<?= $day->time ?>" placeholder="<?= $texts['dayGameStart'] ?>" id="day-time" />
                         </div>
                     </div>
                     <div class="booking__row">
@@ -29,7 +29,7 @@
                         <div class="booking__value">
                             <select name="game" id="day-game">
                                 <?php foreach ($gameTypes as $num => $gameType) : ?>
-                                    <option value="<?= $gameType['slug'] ?>" <?= ($day['game'] === $gameType['slug'] ? 'selected' : '') ?>><?= $gameType['name'] ?></option>
+                                    <option value="<?= $gameType['slug'] ?>" <?= ($day->game === $gameType['slug'] ? 'selected' : '') ?>><?= $gameType['name'] ?></option>
                                 <?php endforeach ?>
                             </select>
                         </div>
@@ -43,7 +43,7 @@
                             'name' => 'mods[]',
                             'value' => 'beginners',
                             'icon' => 'fa-graduation-cap',
-                            'checked' => $day['beginners'],
+                            'checked' => $mods['beginners'],
                             'title' => 'Навчальна'
                         ]);
                         self::component('forms/checkbox-icon', [
@@ -52,7 +52,7 @@
                             'name' => 'mods[]',
                             'value' => 'night',
                             'icon' => 'fa-moon-o',
-                            'checked' => $day['night'],
+                            'checked' => $mods['night'],
                             'title' => 'Нічна'
                         ]);
                         self::component('forms/checkbox-icon', [
@@ -61,7 +61,7 @@
                             'name' => 'mods[]',
                             'value' => 'theme',
                             'icon' => 'fa-birthday-cake',
-                            'checked' => $day['theme'],
+                            'checked' => $mods['theme'],
                             'title' => 'Тематична'
                         ]);
                         self::component('forms/checkbox-icon', [
@@ -70,7 +70,7 @@
                             'name' => 'mods[]',
                             'value' => 'funs',
                             'icon' => 'fa-child',
-                            'checked' => $day['funs'],
+                            'checked' => $mods['funs'],
                             'title' => 'Фанова'
                         ]);
                         self::component('forms/checkbox-icon', [
@@ -79,7 +79,7 @@
                             'name' => 'mods[]',
                             'value' => 'sales',
                             'icon' => 'fa-star-half-o',
-                            'checked' => $day['sales'],
+                            'checked' => $mods['sales'],
                             'title' => 'Акціна'
                         ]);
                         self::component('forms/checkbox-icon', [
@@ -88,7 +88,7 @@
                             'name' => 'mods[]',
                             'value' => 'close',
                             'icon' => 'fa-lock',
-                            'checked' => $day['close'],
+                            'checked' => $mods['close'],
                             'title' => 'Закрита'
                         ]);
                         self::component('forms/checkbox-icon', [
@@ -97,7 +97,7 @@
                             'name' => 'mods[]',
                             'value' => 'tournament',
                             'icon' => 'fa-trophy',
-                            'checked' => $day['tournament'],
+                            'checked' => $mods['tournament'],
                             'title' => $texts['dayTournamentCheckboxLabel']
                         ]);
                         ?>
@@ -105,7 +105,7 @@
                     <div class="booking__row">
                         <label for="day-game" class="booking__label"><?= $texts['dayCosts'] ?>:</label>
                         <div class="booking__value">
-                            <input type="text" name="day_cost" value="<?= $day['cost'] ?>" placeholder="<?= $texts['dayCosts'] ?>" id="day-time" />
+                            <input type="text" name="day_cost" value="<?= $day->cost ?>" placeholder="<?= $texts['dayCosts'] ?>" id="day-time" />
                         </div>
                     </div>
                     <?php
@@ -123,7 +123,7 @@
                         <div class="booking__value">
                             <textarea
                                 name="day_prim"
-                                placeholder="<?= $texts['RemarkPlaceHolder'] ?>"><?= $day['day_prim'] ?></textarea>
+                                placeholder="<?= $texts['RemarkPlaceHolder'] ?>"><?= $day->day_prim ?></textarea>
                         </div>
                     </div>
                     <div class="booking__row submit">
@@ -140,8 +140,8 @@
                 </fieldset>
                 <fieldset class="booking__participants">
                     <legend><?= $texts['daysBlockParticipantsTitle'] ?>:</legend>
-                    <?php for ($x = 0; $x < $playersCount; $x++)
-                        self::component('participants-field', ['participantId' => $x, 'participant' => empty($day['participants'][$x]) ? [] : $day['participants'][$x]])
+                    <?php for ($x = 0; $x < $day->participantsCount; $x++)
+                        self::component('participants-field', ['participantId' => $x, 'participant' => $day->participants[$x] ?? []])
                     ?>
                     <button class="fa fa-plus cicrle" data-action-click="participant-field-get"></button>
                 </fieldset>
@@ -154,7 +154,7 @@
     <datalist id="users-names-list"> </datalist>
     <datalist id="time-list">
         <?php
-        $min = (int) substr($day['time'], 0, 2);
+        $min = (int) substr($day->time, 0, 2);
         for (; $min < 23; $min++) : ?>
             <option value="<?= $min ?>:00"></option>
             <option value="<?= $min ?>:30"></option>

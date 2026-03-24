@@ -9,6 +9,7 @@ use app\core\Noticer;
 use app\core\Sender;
 use app\core\View;
 use app\Formatters\DayFormatter;
+use app\Formatters\WeekFormatter;
 use app\models\Days;
 use app\models\GameTypes;
 use app\models\Settings;
@@ -37,7 +38,7 @@ class DaysController extends Controller
             View::$route['vars']['scripts'] = ['booking.js'];
             View::$route['vars']['styles'] = ['booking'];
         }
-        $gameTypes = GameTypes::menu();
+
 
         $vars = [
             'title' => '{{ Day_Set_Page_Title }}',
@@ -62,82 +63,36 @@ class DaysController extends Controller
             'gameTypes' => $gameTypes,
         ];
 
-        $day = Days::weekDayData($weekId, $dayId);
+        Day::$once = true;
+        $day = Day::create($dayId, $weekId);
 
-        $day['weekId'] = $weekId;
-        $day['dayId'] = $dayId;
+        $yesterday = WeekFormatter::yesterday($day);
+        $tomorrow = WeekFormatter::tomorrow($day);
 
-        $dayDefaultData = Days::$dayDataDefault;
 
-        if (!isset($day['time'])) {
-            $day['time'] = $dayDefaultData['time'];
-        }
-
-        $gamesCount = count($gameTypes);
-        for ($i = 0; $i < $gamesCount; $i++) {
-            if ($gameTypes[$i]['slug'] !== $day['game']) continue;
-            $day['gameName'] = Locale::phrase($gameTypes[$i]['name']);
-            break;
-        }
-
-        $dayTimestamp = $day['weekStart'] + TIMESTAMP_DAY * $dayId;
-        $day['date'] = empty($day['weekStart']) ? '{{ Day_Date_Not_Set }}' : date('d.m.Y', $dayTimestamp) . ' (<strong>' . Locale::phrase(date('l', $dayTimestamp)) . '</strong>) ';
-        $day['dateTime'] = empty($day['weekStart']) ? '{{ Day_Date_Not_Set }}' : date('d.m.Y', $dayTimestamp) . ' ' . $day['time'];
-        $day['dateDayTime'] = empty($day['weekStart']) ? '{{ Day_Date_Not_Set }}' : $day['date'] . $day['time'];
-
-        if ($dayId == 0 && !Weeks::checkPrevWeek($weekId)) {
-            $yesterday = [
-                'link' => '',
-                'label' => '&lt; No Data &gt;',
-            ];
-        } else {
-            $yesterday = [
-                'link' => $dayId > 0 ? "/week/$weekId/day/" . ($dayId - 1) . '/' : '/week/' . ($weekId - 1) . '/day/6/',
-                'label' => date('d.m', $dayTimestamp - TIMESTAMP_DAY),
-            ];
-        }
-
-        if ($dayId == 6 && !Weeks::checkNextWeek($weekId)) {
-            $tomorrow = [
-                'link' => '',
-                'label' => '&lt; No Data &gt;',
-            ];
-        } else {
-            $tomorrow = [
-                'link' => $dayId < 6 ? "/week/$weekId/day/" . ($dayId + 1) . '/' : '/week/' . ($weekId + 1) . '/day/0/',
-                'label' => date('d.m', $dayTimestamp + TIMESTAMP_DAY),
-            ];
-        }
-
-        if (empty($day['day_prim'])) $day['day_prim'] = '';
-
-        $day['day_mods_text'] = empty($day['mods']) ?
+        $modsTexts = empty($day->mods) ?
             '' :
-            '<p>' . str_replace("\n", '</p><p>', DayRepository::getModsTexts($day['mods'])) . '</p>';
+            '<p>' . str_replace("\n", '</p><p>', DayRepository::getModsTexts($day->mods)) . '</p>';
 
-        if (empty($day['mods']))
-            $day = array_merge($day, DayRepository::$dayDefaultModsArray);
-        else
-            foreach (DayRepository::$dayDefaultModsArray as $mod => $value)
-                $day[$mod] = in_array($mod, $day['mods']) ?  'checked' : '';
+        $mods = [];
+        foreach (DayRepository::$dayDefaultModsArray as $mod => $value)
+            $mods[$mod] = in_array($mod, $day->mods) ?  'checked' : '';
 
-        if (empty($day['cost'])) $day['cost'] = '';
-
-        $description = DayRepository::dayDescription($day);
-        $playersCount = max(count($day['participants']), 11);
+        $description = DayFormatter::dayDescription($day);
+        $day->participantsCount = max(count($day->participants), 11);
 
         $selfBooking = [];
 
-        if (!empty($_SESSION['id']) && !Days::isExpired($dayTimestamp)) {
+        if (!empty($_SESSION['id']) && !$day->isExpired()) {
             $url = self::$route['url'];
             $selfBooking = [
                 'link' => "/$url/booking",
                 'label' => 'Booking',
             ];
             for ($i = 0; $i < $playersCount; $i++) {
-                if (empty($day['participants'][$i])) break;
-                if (empty($day['participants'][$i]['id'])) continue;
-                if ($day['participants'][$i]['id'] != $_SESSION['id']) continue;
+                if (empty($day->participants[$i])) break;
+                if (empty($day->participants[$i]['id'])) continue;
+                if ($day->participants[$i]['id'] != $_SESSION['id']) continue;
                 $selfBooking = [
                     'link' => "/$url/unbooking",
                     'label' => 'Unbooking',
@@ -145,8 +100,10 @@ class DaysController extends Controller
             }
         }
 
+        $gameTypes = GameTypes::menu();
+
         if (empty(View::$route['vars']['styles'])) View::$route['vars']['styles'] = ['day'];
-        View::$route['vars'] = array_merge(View::$route['vars'], $vars, compact('day', 'playersCount', 'description', 'selfBooking', 'yesterday', 'tomorrow'));
+        View::$route['vars'] = array_merge(View::$route['vars'], $vars, compact('day', 'playersCount', 'description', 'selfBooking', 'yesterday', 'tomorrow', 'mods', 'modsTexts', 'gameTypes'));
 
         return View::render();
     }
@@ -166,7 +123,7 @@ class DaysController extends Controller
 
         $day->$method($_SESSION['id']);
         $day->save();
-        
+
         return View::notice(['message' => 'Success', 'time' => 1500, 'location' => 'reload']);
     }
     public function addAction()

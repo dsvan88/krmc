@@ -95,7 +95,8 @@ class Day
 
         static::$games = GameTypes::names();
         $this->gameName = static::$games[$this->game];
-        $this->date = date('d.m.Y', $this->timestamp) . ' (<b>' . $this->dayName . '</b>) ' . $this->time;
+        $this->datetime = date('d.m.Y', $this->timestamp) . " {$this->time}";
+        $this->date = date('d.m.Y', $this->timestamp) . " (<b>{$this->dayName}</b>) {$this->time}";
 
         return true;
     }
@@ -159,6 +160,10 @@ class Day
     public function __toString()
     {
         return "Week: {$this->weekId}, day: {$this->dayId}, game: {$this->game}";
+    }
+    public function isExpired(): bool
+    {
+        return $this->timestamp + TIMESTAMP_DAY < $_SERVER['REQUEST_TIME'] - 3600;
     }
     public function clear()
     {

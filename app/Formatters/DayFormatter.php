@@ -13,6 +13,12 @@ use app\Repositories\TelegramChatsRepository;
 
 class DayFormatter
 {
+    public static function dayDescription(?Day $day = null): string
+    {
+        if (empty($day)) return false;
+        $result = "$day->date - {$day->gameName}\n" . Locale::phrase('Already registered players') . ": $day->participantsCount\n";
+        return preg_replace('/<.*?>/', '', $result);
+    }
     public static function getTimeEmoji(string $time = ''): string
     {
         if (empty($time)) return '';
