@@ -88,10 +88,11 @@ class Coupons extends Model
         ],
     ];
 
-
+    public static function formatId(string $hex){
+        return gmp_strval(gmp_init("0x$hex"), 10);
+    }
     public static function create(int $userId = 0, int $couponId = 0)
     {
-
         if (empty($userId))
             throw new Exception(__METHOD__ . ': owner can’t be empty.');
 
@@ -111,7 +112,7 @@ class Coupons extends Model
         ];
 
         $hex = (hash('xxh3', json_encode($_coupon) . $_SERVER['REQUEST_TIME']));
-        $_coupon['id'] = gmp_strval(gmp_init("0x$hex"), 10);
+        $_coupon['id'] = static::formatId($hex);
 
         static::insert($_coupon);
 
@@ -119,19 +120,13 @@ class Coupons extends Model
     }
     public static function findCoupon(string $id)
     {
-        $result = static::findBy('id', gmp_strval(gmp_init("0x$id"), 10))[0];
+        $result = static::findBy('id', static::formatId($id))[0];
         return $result;
     }
-    public static function use(string $id, array $usedOn = []): void
+    public static function edit(string $id, array $data = []): void
     {
-        if (empty($id) || empty($usedOn)) return;
-        static::update(['used_on' => json_encode($usedOn)], ['id' => gmp_strval(gmp_init("0x$id"), 10)]);
-    }
-    public static function expire(string $id): void
-    {
-        if (empty($id)) return;
-        // $coupon
-        // static::update(['used_on' => json_encode($usedOn)], ['id' => gmp_strval(gmp_init("0x$id"), 10)]);
+        if (empty($id) || empty($data)) return;
+        static::update($data, ['id' => static::formatId($id)]);
     }
     public static function decodeJson(array $coupon)
     {

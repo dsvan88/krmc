@@ -2,8 +2,8 @@
 
 namespace app\Services;
 
+use app\core\Entities\Coupon;
 use app\core\Entities\Day;
-use app\core\Tech;
 use app\models\Coupons;
 
 class CouponService
@@ -11,29 +11,33 @@ class CouponService
     public static function burn(?Day $day = null): void
     {
         if (empty($day) || empty($day->coupons)) return;
-        $ids = [];
+        $coupons = [];
         foreach ($day->coupons as $c) {
-            $ids[] = gmp_strval(gmp_init("0x$c"), 10);
+            $coupons[] = Coupon::create();
         }
-        foreach ($ids as $cId) {
-            if ($day->status === 'finished')
-                Coupons::setExpired($cId);
-            else Coupons::recall($cId);
+
+        $method = 'recall';
+        if ($day->status === 'finished')
+            $method = 'expire';
+
+        foreach ($coupons as $coupon) {
+            $coupon->$method($day);
         }
+        $coupon->save();
     }
     public static function apply(?Day $day = null, int $userId = 0): void
     {
-        if (empty($day)) return;
+        if (empty($day) || empty($userId)) return;
 
         $coupons = Coupons::findBy('owner', $userId);
 
         if (empty($coupons)) return;
 
-        $coupon = '';
+        $coupon = null;
         foreach ($coupons as $c) {
             if (empty($c['used_on'])) {
                 if (empty($coupon)) {
-                    $coupon = $c['id'];
+                    $coupon = Coupon::create($c['id']);
                 }
                 continue;
             }
@@ -43,9 +47,8 @@ class CouponService
 
         if (empty($coupon)) return;
 
-        $day->coupons[] = $coupon;
-        $useOn = ['weekId' => $day->weekId, 'dayId' => $day->dayId];
-        Coupons::use($coupon, $useOn);
+        $day->coupons[] = $coupon->id;
+        $coupon->use($day)->save();
     }
     public static function getDayCoupons(?Day $day = null): void
     {
