@@ -48,6 +48,8 @@ if (!defined('SQL_HOST')) {
     define('PASS_FAIL_MIN', 3); //3 = три спроби невірного введення даних авторизації для початку троттлінга
     define('TIMESTAMP_DAY', 86400);
     define('TIMESTAMP_WEEK', 604800);
+    define('TIMESTAMP_MONTH', 2678400);
+    define('TIMESTAMP_YEAR', 31622400);
     define('MAX_WEEKS_AHEAD', 6);
 
     define('CFG_DEBUG', $_ENV['CFG_DEBUG'] ?? false);

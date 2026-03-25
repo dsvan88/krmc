@@ -253,10 +253,13 @@ class TechController extends Controller
     public static function testAction()
     {
         error_reporting(E_ALL);
-        $id = '9fbea223facb5808';
+        // $id = '9fbea223facb5808';
+        $id = Coupons::create(15,1);
         Tech::dump($id);
         $day = Day::create();
         $coupon = Coupon::create($id);
-        $coupon->expire($day)->save();
+        Tech::dump($coupon->expired_at);
+        Tech::dump(strtotime($coupon->expired_at));
+        $coupon->useOn($day)->save();
     }
 }

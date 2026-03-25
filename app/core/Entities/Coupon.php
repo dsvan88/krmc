@@ -1,8 +1,6 @@
 <?php
 
 namespace  app\core\Entities;
-
-use app\core\Tech;
 use app\models\Coupons;
 
 class Coupon extends Entity
@@ -14,6 +12,7 @@ class Coupon extends Entity
     public ?string $expired_at = null;
     public ?string $created_at = null;
     public ?string $updated_at = null;
+
     public static $model = Coupons::class;
 
     public static $defaults = [
@@ -56,8 +55,9 @@ class Coupon extends Entity
     {
         return $this->$name ?? null;
     }
-    public function use(?Day $day = null): ?Coupon
+    public function useOn(?Day $day = null): ?Coupon
     {
+        if (empty($day)) return $this;
         $this->used_on = ['dayId' => $day->dayId, 'weekId' => $day->weekId];
         return $this;
     }
@@ -70,7 +70,7 @@ class Coupon extends Entity
 
         unset($day->coupons[$i]);
         $day->coupons = array_values($day->coupons);
-        
+
         return $this;
     }
     public function expire(?Day $day = null): ?Coupon
@@ -87,7 +87,7 @@ class Coupon extends Entity
                 continue;
             }
             if ($k === 'owner'){
-                $coupon[$k] = $this->$k->id;
+                $coupon['owner'] = $this->owner->id;
                 continue;
             }
             $coupon[$k] = $this->$k ?? $v;

@@ -34,8 +34,11 @@ class CouponService
         if (empty($coupons)) return;
 
         $coupon = null;
+        $offset = TIMESTAMP_YEAR+TIMESTAMP_DAY;
         foreach ($coupons as $c) {
             if (empty($c['used_on'])) {
+                $expired = strtotime($c['expired_at']);
+                if ($expired > $offset && $day->timestamp > $expired) continue;
                 if (empty($coupon)) {
                     $coupon = Coupon::create($c['id']);
                 }
