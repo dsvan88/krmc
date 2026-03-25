@@ -125,6 +125,7 @@ class TechService
 
     public static function scheduleBackup(): void
     {
+        static::scheduleFinish();
         if (APP_LOC === 'local') return;
 
         $settings = Settings::get('backup');
@@ -132,6 +133,25 @@ class TechService
         if (empty($settings['email']['value']) || $settings['last']['value'] > $_SERVER['REQUEST_TIME'] - BACKUP_FREQ) exit();
 
         $url = Tech::getRequestProtocol() . "://{$_SERVER['SERVER_NAME']}/tech/backup/save";
+        $options = [
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_TIMEOUT_MS => 100,      // максимальное время выполнения запроса
+            CURLOPT_FAILONERROR => true,
+            CURLOPT_URL => $url,
+        ];
+        $curl = curl_init();
+
+        curl_setopt_array($curl, $options);
+        curl_exec($curl);
+        exit();
+    }
+    public static function scheduleFinish(): void
+    {
+        $settings = Settings::get('finish');
+
+        if (($settings['last']['value'] ?? 0) > $_SERVER['REQUEST_TIME'] - (TIMESTAMP_DAY / 3)) exit();
+
+        $url = Tech::getRequestProtocol() . "://{$_SERVER['SERVER_NAME']}/tech/schedule/finish";
         $options = [
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_TIMEOUT_MS => 100,      // максимальное время выполнения запроса

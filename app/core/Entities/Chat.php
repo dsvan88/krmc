@@ -10,14 +10,14 @@ class Chat extends Entity
     public array $chat = [];
     public static $model = TelegramChats::class;
 
-    public static function validate(int $id)
+    public static function validate($id)
     {
         if (!empty($id)) return $id;
 
         if (empty($_SESSION['id'])) return false;
 
         $chat = static::$model::findByUserId($_SESSION['id']);
-        
+
         return $chat['id'] ?? false;
     }
     public function __toString()

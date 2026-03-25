@@ -28,6 +28,12 @@ return  [
         'action' => 'backupSave',
         'access' => ['category' => 'all']
     ],
+    'tech/schedule/finish' =>
+    [
+        'controller' => 'tech',
+        'action' => 'scheduleFinish',
+        'access' => ['category' => 'all']
+    ],
     'tech/restore' =>
     [
         'controller' => 'tech',

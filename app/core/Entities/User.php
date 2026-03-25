@@ -9,7 +9,7 @@ class User extends Entity
     public array $profile = [];
     public static $model = Users::class;
 
-    public static function validate(int $id)
+    public static function validate($id)
     {
         if (empty($id)) {
             return $_SESSION['id'] ?? false;

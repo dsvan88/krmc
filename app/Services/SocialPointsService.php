@@ -2,6 +2,7 @@
 
 namespace app\Services;
 
+use app\core\Entities\Day;
 use app\core\Entities\Week;
 use app\models\SocialPoints;
 use app\models\Weeks;
@@ -23,30 +24,36 @@ class SocialPointsService
         $week = Week::create($weekId);
 
         foreach ($week->days as $day) {
-
-            if ($day->status !== 'set') continue;
-
-            if ($day->game === 'mafia' && $day->participantCounts < 11 || $day->participantCounts < 6) continue;
-
-            $starter = $day->starter ?? 0;
-
-            foreach ($day->participants as $participant) {
-
-                if (!is_numeric($participant['id'])) continue;
-
-                $points = empty($participant['prim']) || strpos($participant['prim'], '?') === false ? SocialPoints::$points['booking'] : SocialPoints::$points['unsureBooking'];
-
-                if ($participant['id'] == $starter) $points += SocialPoints::$points['dayStarter'];
-
-                try {
-                    SocialPoints::add($participant['id'], $points);
-                } catch (\Throwable $e) {
-                    $_SESSION['debug'][] = $participant['id'] . ' error -> ' . $e->getMessage();
-                };
-            }
-            $day->status = 'finished';
+            static::applyOnDay($day);
         }
         $week->save();
+    }
+    public static function applyOnDay(?Day $day): void
+    {
+        if ($day->status !== 'set') return;
+
+        if ($day->game === 'mafia' && $day->participantsCount < 11 || $day->participantsCount < 6) {
+            $day->status = 'recalled';
+            return;
+        }
+
+        $starter = $day->starter ?? 0;
+
+        foreach ($day->participants as $participant) {
+
+            if (!is_numeric($participant['id'])) return;
+
+            $points = empty($participant['prim']) || strpos($participant['prim'], '?') === false ? SocialPoints::$points['booking'] : SocialPoints::$points['unsureBooking'];
+
+            if ($participant['id'] == $starter) $points += SocialPoints::$points['dayStarter'];
+
+            try {
+                SocialPoints::add($participant['id'], $points);
+            } catch (\Throwable $e) {
+                $_SESSION['debug'][] = $participant['id'] . ' error -> ' . $e->getMessage();
+            };
+        }
+        $day->status = 'finished';
     }
     public static function evaluateMessage(int $userId = 0, string $message = ''): void
     {

@@ -3,7 +3,9 @@
 namespace app\Controllers;
 
 use app\core\Controller;
+use app\core\Entities\Coupon;
 use app\core\Entities\Day;
+use app\core\Entities\User;
 use app\core\Entities\week;
 use app\core\Tech;
 use app\core\Validator;
@@ -17,6 +19,7 @@ use app\models\TelegramChats;
 use app\models\Users;
 use app\models\Weeks;
 use app\Services\CouponService;
+use app\Services\DayService;
 use app\Services\SocialPointsService;
 use app\Services\TechService;
 use app\Services\TelegramBotService;
@@ -125,6 +128,26 @@ class TechController extends Controller
 
         exit();
     }
+    public static function scheduleFinishAction()
+    {
+        ignore_user_abort(true);
+        error_reporting(0);
+        set_time_limit(90);
+
+        $settings = Settings::load('finish');
+        if (($settings['last']['value'] ?? 0) > $_SERVER['REQUEST_TIME'] - (TIMESTAMP_DAY / 3)) exit();
+
+        Settings::save('finish', 'last', $_SERVER['REQUEST_TIME']);
+
+        header("Connection: close", true);
+        header("Content-Encoding: none" . PHP_EOL);
+        header("Content-Length: 0", true);
+        flush();
+
+        DayService::finishExpiredDays();
+
+        exit();
+    }
     public static function restoreAction()
     {
         // View::redirect('/');
@@ -229,9 +252,8 @@ class TechController extends Controller
     }
     public static function testAction()
     {
-        // Coupons::create(15,1);
-        $day = Day::create();
-        CouponService::getDayCoupons($day);
-        // $day->save();
+        error_reporting(E_ALL);
+        $id = 'd2dc57eb3a37600b';
+        $coupon = Coupon::create($id);
     }
 }

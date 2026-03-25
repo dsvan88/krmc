@@ -6,12 +6,12 @@ use Exception;
 
 abstract class Entity
 {
-    public int $id = 0;
+    public $id = 0;
     public static array $cache = [];
     public static array $instances = [];
     public static $model = null;
 
-    private function __construct(int $id)
+    private function __construct($id)
     {
 
         if ($this->init($id)) {
@@ -20,7 +20,7 @@ abstract class Entity
         } else
             throw new Exception(__METHOD__ . ' New instance of ' . static::class . ' with id: ' . $id . ' - cant be create!');
     }
-    public function init(int $id): bool
+    public function init($id): bool
     {
         $props = get_object_vars($this);
         unset($props['id']);
@@ -38,9 +38,8 @@ abstract class Entity
 
         return true;
     }
-    public static function create(int $id = 0)
+    public static function create($id = 0)
     {
-
         $id = static::validate($id);
 
         if (empty($id)) return null;
@@ -53,8 +52,9 @@ abstract class Entity
             ? new static($id)
             : null;
     }
-    public static function validate(int $id)
+    public static function validate($id)
     {
+        $id = (int) $id;
         return empty($id) ? false : $id;
     }
     public static function find(int $id): bool

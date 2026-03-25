@@ -35,7 +35,7 @@ class Requester extends Entity
         }
         return (bool) static::$cache = $_cache;
     }
-    public static function validate(int $id)
+    public static function validate($id)
     {
         if (empty($id)) {
             $id = TelegramBotService::getUserTelegramId();

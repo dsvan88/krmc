@@ -246,6 +246,12 @@ class Settings extends Model
                     ['slug' => 'last', 'name' => 'Last backup', 'value' => ''],
                 ]
             ],
+            [
+                'finish',
+                [
+                    ['slug' => 'last', 'name' => 'Last Check', 'value' => ''],
+                ]
+            ],
         ];
 
         $array = [];

@@ -93,7 +93,7 @@ class Router
 
                         if (APP_LOC === 'local')
                             Tech::dump($message);
-                        
+
                         unset($_SESSION['debug']);
                     }
                     if (!empty($message)) {
@@ -114,7 +114,7 @@ class Router
         if (empty($_SESSION['privilege'])) return false;
 
         $levels = array_flip(self::$accessLevels);
-        
+
         if ($levels[$params['access']['category']] > $levels[$_SESSION['privilege']['status']]) {
             return false;
         }

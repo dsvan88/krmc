@@ -3,6 +3,7 @@
 namespace app\models;
 
 use app\core\Model;
+use app\core\Tech;
 use Exception;
 
 class Coupons extends Model
@@ -116,13 +117,21 @@ class Coupons extends Model
 
         return gmp_strval(gmp_init($_coupon['id']), 16);
     }
-    public static function findCoupon(string $id){
-        return static::find(gmp_strval(gmp_init("0x$id"), 10));
+    public static function findCoupon(string $id)
+    {
+        $result = static::findBy('id', gmp_strval(gmp_init("0x$id"), 10))[0];
+        return $result;
     }
-    public static function use(string $id, array $usedOn = [] ):void
+    public static function use(string $id, array $usedOn = []): void
     {
         if (empty($id) || empty($usedOn)) return;
         static::update(['used_on' => json_encode($usedOn)], ['id' => gmp_strval(gmp_init("0x$id"), 10)]);
+    }
+    public static function expire(string $id): void
+    {
+        if (empty($id)) return;
+        // $coupon
+        // static::update(['used_on' => json_encode($usedOn)], ['id' => gmp_strval(gmp_init("0x$id"), 10)]);
     }
     public static function decodeJson(array $coupon)
     {

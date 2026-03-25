@@ -3,6 +3,7 @@
 namespace app\Services;
 
 use app\core\Entities\Day;
+use app\core\Entities\Week;
 use app\core\Locale;
 use app\models\Weeks;
 
@@ -156,5 +157,20 @@ class DayService
             $week['data'][$data[$i]['day']]['participants'][$data[$i]['index']]['id'] = $userId;
             Weeks::update(['data' => json_encode($week['data'], JSON_UNESCAPED_UNICODE)], ['id' => $week['id']]);
         }
+    }
+    public static function finishExpiredDays(): void
+    {
+        $today = Day::current();
+        $weekId = Weeks::currentId();
+        if ($today < 2) {
+            --$weekId;
+        }
+        $week = Week::create($weekId);
+        foreach ($week->days as $i => $day) {
+            if ($weekId === Weeks::currentId() && $i >= $today) break;
+            SocialPointsService::applyOnDay($day);
+            CouponService::burn($day);
+        }
+        $week->save();
     }
 }
