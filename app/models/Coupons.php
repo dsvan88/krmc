@@ -88,8 +88,29 @@ class Coupons extends Model
         ],
     ];
 
-    public static function formatId(string $hex){
+    public static function encodeId(string $int): string
+    {
+        return gmp_strval(gmp_init($int), 16);
+    }
+    public static function decodeId(string $hex): string
+    {
         return gmp_strval(gmp_init("0x$hex"), 10);
+    }
+    public static function getAll(array $coupons = [], string $andOr = 'AND '): array
+    {
+        if (empty($coupons) || empty($copons['id'])) return parent::getAll($coupons, $andOr);
+
+        if (is_array($coupons['id'])){
+            $ids = [];
+            foreach($coupons['id'] as $id)
+                $ids[] = static::decodeId($id);
+        }
+        else {
+            $ids = static::decodeId($coupons['id']);
+        }
+        $coupons['id'] = $ids;
+
+        return parent::getAll($coupons, $andOr);
     }
     public static function create(int $userId = 0, int $couponId = 0)
     {
@@ -112,25 +133,25 @@ class Coupons extends Model
         ];
 
         $hex = (hash('xxh3', json_encode($_coupon) . $_SERVER['REQUEST_TIME']));
-        $_coupon['id'] = static::formatId($hex);
+        $_coupon['id'] = static::decodeId($hex);
 
         static::insert($_coupon);
 
-        return gmp_strval(gmp_init($_coupon['id']), 16);
+        return $hex;
     }
     public static function findCoupon(string $id)
     {
-        $result = static::findBy('id', static::formatId($id))[0];
+        $result = static::findBy('id', static::decodeId($id))[0];
         return $result;
     }
     public static function edit(string $id, array $data = []): void
     {
         if (empty($id) || empty($data)) return;
-        static::update($data, ['id' => static::formatId($id)]);
+        static::update($data, ['id' => static::decodeId($id)]);
     }
     public static function decodeJson(array $coupon)
     {
-        $coupon['id'] = gmp_strval(gmp_init($coupon['id']), 16);
+        $coupon['id'] = static::encodeId($coupon['id']);
         return parent::decodeJson($coupon);
     }
     public static function init()

@@ -51,6 +51,12 @@ class Coupon extends Entity
         static::$cache = $data;
         return true;
     }
+    public static function fromArray(array $data = []): ?Coupon
+    {
+        if (empty($data)) return null;
+        static::$cache = $data;
+        return new static($data['id']);
+    }
     public function __get($name)
     {
         return $this->$name ?? null;

@@ -4,6 +4,7 @@ namespace app\Services;
 
 use app\core\Entities\Coupon;
 use app\core\Entities\Day;
+use app\core\Tech;
 use app\models\Coupons;
 
 class CouponService
@@ -56,19 +57,25 @@ class CouponService
     public static function getDayCoupons(?Day $day = null): void
     {
         if (empty($day) || empty($day->coupons)) return;
-
-        $ids = [];
-        foreach ($day->coupons as $c) {
-            $ids[] = gmp_strval(gmp_init("0x$c"), 10);
-        }
-
+        
         if (empty($ids)) return;
-
-        $coupons = Coupons::getAll(['id' => $ids]);
+        
+        $coupons = Coupons::getAll(['id' => $day->coupons]);
         $_coupons = [];
         foreach ($coupons as $c) {
             $_coupons[$c['owner']] = $c;
         }
         $day->coupons = $_coupons;
+    }
+    public static function getAllCoupons(): array
+    {
+        $coupons = Coupons::getAll();
+        if (empty($coupons)) return [];
+
+        $result = [];
+        foreach ($coupons as $c) {
+            $result[] = Coupon::fromArray($c);
+        }
+        return $result;
     }
 }

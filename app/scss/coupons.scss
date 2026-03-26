@@ -1,0 +1,16 @@
+@import "tech/mixins_adapt";
+@import "tech/vars";
+
+.coupons{
+    background-color: $bg-color-light;
+    .coupon{
+        color: $color-text-black;
+        display: flex;
+        gap: .5em;
+        margin-bottom: 1em;
+        padding: .2em .5em;
+        // &__num{
+            
+        // }
+    }
+}

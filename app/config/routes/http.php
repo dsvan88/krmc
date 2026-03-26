@@ -199,6 +199,17 @@ return  [
         'access' => ['category' => 'admin'],
     ],
 
+    'coupons' => [
+        'controller' => 'coupons',
+        'action' => 'index',
+        'access' => ['category' => 'manager'],
+    ],
+    'coupons/index' => [
+        'controller' => 'coupons',
+        'action' => 'index',
+        'access' => ['category' => 'manager'],
+    ],
+
     'images/index' => [
         'controller' => 'images',
         'action' => 'index',

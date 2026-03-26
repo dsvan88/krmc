@@ -11,7 +11,7 @@ abstract class Entity
     public static array $instances = [];
     public static $model = null;
 
-    private function __construct($id)
+    protected function __construct($id)
     {
 
         if ($this->init($id)) {

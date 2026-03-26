@@ -10,6 +10,7 @@ use app\models\TelegramChats;
 use app\models\Users;
 use app\Services\CouponService;
 use app\Services\DayService;
+use app\Services\TelegramBotService;
 use app\Services\TelegramChatsService;
 
 class DayFormatter
@@ -139,7 +140,7 @@ class DayFormatter
                 if (!empty($participant['emoji'])) {
                     $userName .= $participant['emoji'];
                 }
-                if (isset($day->coupons[$participant['id']])){
+                if (isset($day->coupons[$participant['id']]) && TelegramBotService::getMessageId() === Settings::getAdminChatTelegramId()){
                     $userName .=  "💲- <i><u>{$day->coupons[$participant['id']]['options']['discount']}{$day->coupons[$participant['id']]['options']['discount_type']}</u></i>";
                 }
             }
