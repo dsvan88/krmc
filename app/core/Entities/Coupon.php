@@ -44,7 +44,7 @@ class Coupon extends Entity
     }
     public static function find($id): bool
     {
-        $data = static::$model::findCoupon($id);
+        $data = static::$model::findBy('id', $id, 1);
 
         if (empty($data)) return false;
 

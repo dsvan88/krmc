@@ -88,6 +88,17 @@ class Coupons extends Model
         ],
     ];
 
+    public static function prepeareIds(array &$coupons): void
+    {
+        if (is_array($coupons['id'])) {
+            $ids = [];
+            foreach ($coupons['id'] as $id)
+                $ids[] = static::decodeId($id);
+        } else {
+            $ids = static::decodeId($coupons['id']);
+        }
+        $coupons['id'] = $ids;
+    }
     public static function encodeId(string $int): string
     {
         return gmp_strval(gmp_init($int), 16);
@@ -100,25 +111,14 @@ class Coupons extends Model
     {
         if (empty($coupons) || empty($copons['id'])) return parent::getAll($coupons, $andOr);
 
-        if (is_array($coupons['id'])){
-            $ids = [];
-            foreach($coupons['id'] as $id)
-                $ids[] = static::decodeId($id);
-        }
-        else {
-            $ids = static::decodeId($coupons['id']);
-        }
-        $coupons['id'] = $ids;
+        static::prepeareIds($coupons);
 
         return parent::getAll($coupons, $andOr);
     }
     public static function create(int $userId = 0, int $couponId = 0)
     {
-        if (empty($userId))
-            throw new Exception(__METHOD__ . ': owner can’t be empty.');
-
-        if (!Users::isExists(['id' => $userId]))
-            throw new Exception(__METHOD__ . ': owner doesn’t exists.');
+        if (empty($userId) || !Users::isExists(['id' => $userId]))
+            throw new Exception(__METHOD__ . ': invalid owner.');
 
         if (empty(static::$coupons[$couponId]))
             throw new Exception(__METHOD__ . ': unknown coupon’s data.');
@@ -129,7 +129,7 @@ class Coupons extends Model
             'owner' => $userId,
             'type' => $coupon['type'],
             'options' => json_encode($coupon['options']),
-            'expired_at' => date('Y-m-d H:i:s', $coupon['expired'] ?? TIMESTAMP_DAY * 366),
+            'expired_at' => date('Y-m-d H:i:s', $coupon['expired'] ?? TIMESTAMP_YEAR),
         ];
 
         $hex = (hash('xxh3', json_encode($_coupon) . $_SERVER['REQUEST_TIME']));
@@ -139,9 +139,11 @@ class Coupons extends Model
 
         return $hex;
     }
-    public static function findCoupon(string $id)
+    public static function findBy(string $column, string $data, int $limit = 0): array
     {
-        $result = static::findBy('id', static::decodeId($id))[0];
+        if (empty($column) || $column !== 'id') return parent::findBy($column, $data, $limit);
+
+        $result = parent::findBy($column, static::decodeId($data), $limit)[0];
         return $result;
     }
     public static function edit(string $id, array $data = []): void
