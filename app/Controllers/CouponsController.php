@@ -13,6 +13,9 @@ class CouponsController extends Controller
         $vars = [
             'title' => 'Coupons List',
             'coupons' => CouponService::getAllCoupons(),
+            'scripts' =>[
+                'coupons.js',
+            ],
             'styles' =>[
                 'coupons',
             ]

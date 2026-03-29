@@ -235,6 +235,11 @@ class ViewService
                 'label' => 'Users List',
             ],
             [
+                'link' => 'coupons/index',
+                'icon' => 'ticket',
+                'label' => 'Coupons',
+            ],
+            [
                 'link' => 'chat/index',
                 'icon' => 'comments-o',
                 'label' => 'Chats List',

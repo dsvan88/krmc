@@ -1,6 +1,8 @@
 <?php
 
 namespace  app\core\Entities;
+
+use app\core\Tech;
 use app\models\Coupons;
 
 class Coupon extends Entity
@@ -9,6 +11,7 @@ class Coupon extends Entity
     public string $type = 'once';
     public ?array $used_on = null;
     public array $options = [];
+    public string $class = 'ready';
     public ?string $expired_at = null;
     public ?string $created_at = null;
     public ?string $updated_at = null;
@@ -21,8 +24,6 @@ class Coupon extends Entity
         'used_on' => null,
         'options' => [],
         'expired_at' => null,
-        'created_at' => null,
-        'updated_at' => null,
     ];
     public function init($id): bool
     {
@@ -32,6 +33,11 @@ class Coupon extends Entity
             if (empty(static::$cache[$k]) || $k === 'owner') continue;
             $this->$k = static::$cache[$k];
         }
+        if (!empty($this->used_on))
+            $this->class = 'applied';
+        else if ($this->isExpired())
+            $this->class = 'expired';
+
         $this->owner = User::create(static::$cache['owner']);
 
         return true;
@@ -67,6 +73,10 @@ class Coupon extends Entity
         $this->used_on = ['dayId' => $day->dayId, 'weekId' => $day->weekId];
         return $this;
     }
+    public function isExpired(): bool
+    {
+        return Coupons::isExpired(['expired_at' => $this->expired_at]);
+    }
     public function recall(?Day $day = null): ?Coupon
     {
         $this->used_on = null;
@@ -81,7 +91,7 @@ class Coupon extends Entity
     }
     public function expire(?Day $day = null): ?Coupon
     {
-        $this->expired_at = date('Y-m-d', $day->timestamp) . 'T' . $day->time;
+        $this->expired_at = date('Y-m-d', $day->timestamp ?? $_SERVER['REQUEST_TIME']) . 'T' . $day->time ?? date('H:i:s',$_SERVER['REQUEST_TIME']);
         return $this;
     }
     public function save()

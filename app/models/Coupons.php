@@ -107,6 +107,33 @@ class Coupons extends Model
     {
         return gmp_strval(gmp_init("0x$hex"), 10);
     }
+    /**
+     * @param $coupon - array from Coupons or id of coupon
+     */
+    public static function isExpired($coupon): bool
+    {
+        if (empty($coupon))
+            throw new Exception(__METHOD__. ' $coupon can’t be empty.');
+
+        if (is_object($coupon)) {
+            if ($coupon->expired_at){
+                $offset = TIMESTAMP_YEAR+TIMESTAMP_DAY;
+                return $coupon->expired_at > $offset && $_SERVER['REQUEST_TIME']+TIMESTAMP_DAY > $coupon->expired_at;
+            }
+            throw new Exception(__METHOD__. ' $coupon is invalid.');
+        }
+        if (is_array($coupon)) {
+            if (isset($coupon['expired_at'])){
+                $offset = TIMESTAMP_YEAR+TIMESTAMP_DAY;
+                return $coupon['expired_at'] > $offset && $_SERVER['REQUEST_TIME']+TIMESTAMP_DAY > $coupon['expired_at'];
+            }
+            throw new Exception(__METHOD__. ' $coupon is invalid.');
+        }
+        $coupon = static::findBy('id', $coupon, 1);
+
+        return $_SERVER['REQUEST_TIME']+TIMESTAMP_DAY < $coupon['expired_at'];
+
+    }
     public static function getAll(array $coupons = [], string $andOr = 'AND '): array
     {
         if (empty($coupons) || empty($copons['id'])) return parent::getAll($coupons, $andOr);
@@ -125,11 +152,12 @@ class Coupons extends Model
 
         $coupon = static::$coupons[$couponId];
 
+        $expired = $coupon['expired'] ?? TIMESTAMP_YEAR;
         $_coupon = [
             'owner' => $userId,
             'type' => $coupon['type'],
             'options' => json_encode($coupon['options']),
-            'expired_at' => date('Y-m-d H:i:s', $coupon['expired'] ?? TIMESTAMP_YEAR),
+            'expired_at' => date('Y-m-d', $expired) .'T'. date('H:i:s', $expired),
         ];
 
         $hex = (hash('xxh3', json_encode($_coupon) . $_SERVER['REQUEST_TIME']));
@@ -154,6 +182,7 @@ class Coupons extends Model
     public static function decodeJson(array $coupon)
     {
         $coupon['id'] = static::encodeId($coupon['id']);
+        $coupon['expired_at'] = strtotime($coupon['expired_at']);
         return parent::decodeJson($coupon);
     }
     public static function init()
