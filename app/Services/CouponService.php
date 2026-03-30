@@ -36,9 +36,9 @@ class CouponService
 
         $coupon = null;
         foreach ($coupons as $c) {
-            if (empty($c['used_on'])){
+            if (empty($c['used_on'])) {
                 if (Coupons::isExpired($c)) continue;
-                
+
                 if (empty($coupon)) {
                     $coupon = Coupon::create($c['id']);
                 }
@@ -56,13 +56,13 @@ class CouponService
     public static function getDayCoupons(?Day $day = null): void
     {
         if (empty($day) || empty($day->coupons)) return;
-        
+
         if (empty($ids)) return;
-        
+
         $coupons = Coupons::getAll(['id' => $day->coupons]);
         $_coupons = [];
         foreach ($coupons as $c) {
-            $_coupons[$c['owner']] = $c;
+            $_coupons[$c['owner']] = Coupon::fromArray($c);
         }
         $day->coupons = $_coupons;
     }

@@ -141,7 +141,7 @@ class DayFormatter
                     $userName .= $participant['emoji'];
                 }
                 if (isset($day->coupons[$participant['id']]) && TelegramBotService::getMessageId() === Settings::getAdminChatTelegramId()){
-                    $userName .=  "💲- <i><u>{$day->coupons[$participant['id']]['options']['discount']}{$day->coupons[$participant['id']]['options']['discount_type']}</u></i>";
+                    $userName .=  "🎫- <i><u>{$day->coupons[$participant['id']]['options']['discount']}{$day->coupons[$participant['id']]['options']['discount_type']}</u></i>";
                 }
             }
 
