@@ -24,6 +24,7 @@ class Coupon extends Entity
         'used_on' => null,
         'options' => [],
         'expired_at' => null,
+        'created_at' => null,
     ];
     public function init($id): bool
     {

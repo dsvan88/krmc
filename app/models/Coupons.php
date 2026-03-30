@@ -183,6 +183,7 @@ class Coupons extends Model
     {
         $coupon['id'] = static::encodeId($coupon['id']);
         $coupon['expired_at'] = strtotime($coupon['expired_at']);
+        $coupon['created_at'] = strtotime($coupon['created_at']);
         return parent::decodeJson($coupon);
     }
     public static function init()
