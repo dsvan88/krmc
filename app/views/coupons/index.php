@@ -7,8 +7,8 @@
                 <div class="coupon__status"><?=$coupon->status === 'ready' ? '' : "<div>{$coupon->status}</div>"?></div>
                 <div class="coupon__owner"><?=$coupon->owner->name?></div>
                 <div class="coupon__dates">
-                    <div class="coupon__used"><?=empty($coupon->used_on) ? '-' : "<a href='/week/{$coupon->used_on['weekId']}/day/{$coupon->used_on['dayId']}/' target='_blank'>Day: {$coupon->used_on['dayId']} Week: {$coupon->used_on['weekId']}</a>"?></div>
                     <div class="coupon__created"><?= date('d.m.Y', $coupon->created_at) ?></div>
+                    <div class="coupon__used"><?=empty($coupon->used_on) ? '-' : "<a href='/week/{$coupon->used_on['weekId']}/day/{$coupon->used_on['dayId']}/' target='_blank'>Day: {$coupon->used_on['dayId']} Week: {$coupon->used_on['weekId']}</a>"?></div>
                     <div class="coupon__expired"><?=  $coupon->expired_at > TIMESTAMP_YEAR+TIMESTAMP_DAY ? date('d.m.Y',$coupon->expired_at) : '-' ?></div>
                 </div>
                 <div class="coupon__dashboard">
