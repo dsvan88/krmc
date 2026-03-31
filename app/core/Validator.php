@@ -2,6 +2,8 @@
 
 namespace app\core;
 
+use app\core\Entities\Coupon;
+use app\models\Coupons;
 use app\models\Pages;
 use app\models\Settings;
 use app\models\Users;
@@ -143,5 +145,25 @@ class Validator
         return in_array($string, ['mafia', 'poker'], true)
             ? $string
             : null;
+    }
+    private static function couponStatus(string $string): ?string
+    {
+        $string = strtolower(trim($string));
+        
+        if (empty($string)) return null;
+        
+        return in_array($string, Coupons::$statuses, true)
+            ? $string
+            : null;
+    }
+    private static function couponId(string $id): ?string
+    {
+        $id = strtolower(trim($id));
+        
+        if (empty($id)) return null;
+        
+        $coupon = Coupon::create($id);
+
+        return $coupon->id ?? null;
     }
 }

@@ -1,7 +1,7 @@
 class CouponStatusesPad extends Prompt {
     statuses = [
         'ready',
-        'applied',
+        // 'applied',
         'expired',
     ];
 
@@ -33,19 +33,19 @@ class CouponStatusesPad extends Prompt {
         for (let x = 0; x < len; x++) {
             const item = document.createElement('li');
             item.classList.add('statuses__item');
-
-            const label = document.createElement('label');
-
             const radio = document.createElement('input');
             radio.type = 'radio';
             radio.name = 'status';
             radio.value = this.statuses[x];
             radio.checked = this.input.value === this.statuses[x];
+            radio.id = 'popup__status-'+this.statuses[x];
 
-            const title = document.createElement('span');
-            title.innerText = this.statuses[x];
-            label.append(radio);
-            label.append(title);
+            const label = document.createElement('label');
+            label.classList.add('statuses__label');
+            label.htmlFor = radio.id;        
+            label.innerText = this.statuses[x];
+            label.classList.add(this.statuses[x]);
+            item.append(radio);
             item.append(label);
             statusesPad.append(item);
         }
@@ -68,6 +68,10 @@ async function couponsStatusesPad(options = {}) {
 }
 
 actionHandler.couponChangeStatus = async function (target) {
-    const result = await couponsStatusesPad({value: 'applied'});
-    console.log(result);
+    const result = await couponsStatusesPad({value: target.dataset.couponStatus});
+    const fd = new FormData();
+    fd.append('couponId', target.dataset.couponId);
+    fd.append('status', result);
+    const answer = await this.request({url: target.dataset.actionClick, data: fd});
+    console.log(answer);
 }

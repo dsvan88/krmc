@@ -336,4 +336,15 @@ return  [
         'action' => 'validateName',
         'access' => ['category' => 'manager']
     ],
+
+    'api/coupon/change/status' => [
+        'controller' => 'coupons',
+        'action' => 'setStatus',
+        'access' => ['category' => 'manager']
+    ],
+    'api/coupon/delete' => [
+        'controller' => 'coupons',
+        'action' => 'delete',
+        'access' => ['category' => 'manager']
+    ],
 ];

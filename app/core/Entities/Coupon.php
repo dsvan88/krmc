@@ -4,6 +4,7 @@ namespace  app\core\Entities;
 
 use app\core\Tech;
 use app\models\Coupons;
+use Exception;
 
 class Coupon extends Entity
 {
@@ -11,7 +12,7 @@ class Coupon extends Entity
     public string $type = 'once';
     public ?array $used_on = null;
     public array $options = [];
-    public string $class = 'ready';
+    public string $status = 'ready';
     public ?string $expired_at = null;
     public ?string $created_at = null;
     public ?string $updated_at = null;
@@ -21,6 +22,7 @@ class Coupon extends Entity
     public static $defaults = [
         'owner' => null,
         'type' => 'once',
+        'status' => 'ready',
         'used_on' => null,
         'options' => [],
         'expired_at' => null,
@@ -34,10 +36,8 @@ class Coupon extends Entity
             if (empty(static::$cache[$k]) || $k === 'owner') continue;
             $this->$k = static::$cache[$k];
         }
-        if (!empty($this->used_on))
-            $this->class = 'applied';
-        else if ($this->isExpired())
-            $this->class = 'expired';
+        if ($this->isExpired())
+            $this->status = 'expired';
 
         $this->owner = User::create(static::$cache['owner']);
 
@@ -68,18 +68,15 @@ class Coupon extends Entity
     {
         return $this->$name ?? null;
     }
-    public function useOn(?Day $day = null): ?Coupon
-    {
-        if (empty($day)) return $this;
-        $this->used_on = ['dayId' => $day->dayId, 'weekId' => $day->weekId];
-        return $this;
-    }
     public function isExpired(): bool
     {
         return Coupons::isExpired(['expired_at' => $this->expired_at]);
     }
     public function recall(?Day $day = null): ?Coupon
     {
+        if (empty($day))
+            throw new Exception(__METHOD__ . ' $day can’t be empty.');
+        
         $this->used_on = null;
         $i = array_search($this->id, $day->coupons, true);
         
@@ -90,14 +87,26 @@ class Coupon extends Entity
 
         return $this;
     }
+    public function apply(?Day $day = null): ?Coupon
+    {
+        if (empty($day))
+            throw new Exception(__METHOD__ . ' $day can’t be empty.');
+
+        $this->status = 'applied';
+        $this->used_on = ['dayId' => $day->dayId, 'weekId' => $day->weekId];
+        $day->coupons[] = $this->id;
+        return $this;
+    }
     public function expire(?Day $day = null): ?Coupon
     {
-        $this->expired_at = date('Y-m-d', $day->timestamp ?? $_SERVER['REQUEST_TIME']) . 'T' . $day->time ?? date('H:i:s',$_SERVER['REQUEST_TIME']);
+        $expired = date('Y-m-d', $day->timestamp ?? $_SERVER['REQUEST_TIME']) . 'T' . $day->time ?? date('H:i:s',$_SERVER['REQUEST_TIME']);
+        $this->expired_at = strtotime($expired);
         return $this;
     }
     public function save()
     {
         $coupon = [];
+        $dates = ['expired_at', 'created_at'];
         foreach (static::$defaults as $k => $v) {
             if (in_array($k, Coupons::$jsonFields, true)){
                 $coupon[$k] = isset($this->$k) ? json_encode($this->$k) : $v;
@@ -105,6 +114,12 @@ class Coupon extends Entity
             }
             if ($k === 'owner'){
                 $coupon['owner'] = $this->owner->id;
+                continue;
+            }
+            if (in_array($k, $dates, true)){
+                $coupon[$k] = date('Y-m-d', $this->$k) . 'T' . date('H:i:s',$this->$k);
+                Tech::dump($k);
+                Tech::dump($coupon[$k]);
                 continue;
             }
             $coupon[$k] = $this->$k ?? $v;

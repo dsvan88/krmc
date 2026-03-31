@@ -15,6 +15,12 @@ class Coupons extends Model
         'han', // here and now (for sales on evenings)
     ];
 
+    public static $statuses = [
+        'ready',
+        'applied',
+        'expired',
+    ];
+
     public static $coupons = [
         [
             'active' => true,
@@ -115,23 +121,23 @@ class Coupons extends Model
         if (empty($coupon))
             throw new Exception(__METHOD__. ' $coupon can’t be empty.');
 
+        $offset = TIMESTAMP_YEAR+TIMESTAMP_DAY;
+        $expire = $_SERVER['REQUEST_TIME']+TIMESTAMP_DAY;
         if (is_object($coupon)) {
             if ($coupon->expired_at){
-                $offset = TIMESTAMP_YEAR+TIMESTAMP_DAY;
-                return $coupon->expired_at > $offset && $_SERVER['REQUEST_TIME']+TIMESTAMP_DAY > $coupon->expired_at;
+                return $coupon->expired_at > $offset && $expire > $coupon->expired_at;
             }
             throw new Exception(__METHOD__. ' $coupon is invalid.');
         }
         if (is_array($coupon)) {
             if (isset($coupon['expired_at'])){
-                $offset = TIMESTAMP_YEAR+TIMESTAMP_DAY;
-                return $coupon['expired_at'] > $offset && $_SERVER['REQUEST_TIME']+TIMESTAMP_DAY > $coupon['expired_at'];
+                return $coupon['expired_at'] > $offset && $expire > $coupon['expired_at'];
             }
             throw new Exception(__METHOD__. ' $coupon is invalid.');
         }
         $coupon = static::findBy('id', $coupon, 1);
 
-        return $_SERVER['REQUEST_TIME']+TIMESTAMP_DAY < $coupon['expired_at'];
+        return $expire < $coupon['expired_at'];
 
     }
     public static function getAll(array $coupons = [], string $andOr = 'AND '): array
@@ -179,6 +185,10 @@ class Coupons extends Model
         if (empty($id) || empty($data)) return;
         static::update($data, ['id' => static::decodeId($id)]);
     }
+    public static function delete(mixed $id, string $table = '')
+    {
+        parent::delete(static::decodeId($id));
+    }
     public static function decodeJson(array $coupon)
     {
         $coupon['id'] = static::encodeId($coupon['id']);
@@ -193,6 +203,7 @@ class Coupons extends Model
             "CREATE TABLE IF NOT EXISTS $table (
                 id BIGINT UNSIGNED NOT NULL PRIMARY KEY,
                 type CHARACTER VARYING(25) NOT NULL DEFAULT 'once',
+                status CHARACTER VARYING(25) NOT NULL DEFAULT 'ready',
                 owner INT NOT NULL DEFAULT '0',
                 used_on JSON DEFAULT NULL,
                 options JSON DEFAULT NULL,

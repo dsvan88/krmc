@@ -93,3 +93,32 @@ $expiredColor: $bg-color-gray;
         }
     }
 }
+
+.popup{
+    .statuses{
+        &__list{
+            list-style: none;
+        }
+        &__label{
+            display: inline-block;
+            width: 100%;
+            box-sizing: border-box;
+            border: 1px solid $bg-color-light-blue-blur;
+            margin-bottom: .5em;
+            padding: .2em 1em;
+            transition: border-color $animation-fast;
+            cursor: pointer;
+            &:hover{
+                border-color: $readyColor;
+            }
+        }
+        input[type=radio]{
+            display: none;
+            &:checked{
+                & ~ label{
+                    border-color: $appliedColor;
+                }
+            }
+        }
+    }
+}

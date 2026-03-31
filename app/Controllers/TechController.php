@@ -260,6 +260,7 @@ class TechController extends Controller
         $coupon = Coupon::create($id);
         Tech::dump($coupon->expired_at);
         Tech::dump(strtotime($coupon->expired_at));
-        $coupon->useOn($day)->save();
+        $coupon->apply($day)->save();
+        $day->save();
     }
 }

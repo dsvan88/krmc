@@ -239,7 +239,6 @@ class Db
             $places = '';
             for ($i = 0; $i < $count; $i++) {
                 $places .= '?,';
-                $params[] = $id;
             }
             $places = substr($places, 0, -1);
             $query = "DELETE FROM $table WHERE id IN ($places)";

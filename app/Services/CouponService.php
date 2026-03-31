@@ -36,7 +36,7 @@ class CouponService
 
         $coupon = null;
         foreach ($coupons as $c) {
-            if (empty($c['used_on'])) {
+            if ($c['status'] === 'ready') {
                 if (Coupons::isExpired($c)) continue;
 
                 if (empty($coupon)) {
@@ -51,13 +51,12 @@ class CouponService
         if (empty($coupon)) return;
 
         $day->coupons[] = $coupon->id;
-        $coupon->use($day)->save();
+        $coupon->apply($day)->save();
+        $day->save();
     }
     public static function getDayCoupons(?Day $day = null): void
     {
         if (empty($day) || empty($day->coupons)) return;
-
-        if (empty($ids)) return;
 
         $coupons = Coupons::getAll(['id' => $day->coupons]);
         $_coupons = [];
@@ -75,6 +74,7 @@ class CouponService
         foreach ($coupons as $c) {
             $result[] = Coupon::fromArray($c);
         }
+        usort($result, fn($a, $b) => $a->created_at > $b->created_at ? +1 : -1);
         return $result;
     }
 }
