@@ -96,7 +96,7 @@ class BookingAnswer extends ChatAnswer
             'prim' => static::$arguments['p'] ?? '',
         ];
         static::$day->addParticipant($participant);
-        static::$text = static::locale(['string' => 'You’re successfully opted-in on a game %s at %s.', 'vars' => [static::$day->gameName, static::$day->date]]);
+        static::$text = static::locale(['string' => 'You’re successfully opted-in on a game %s at %s.', 'vars' => [static::$day->gameName, str_replace(['<b>', '</b>'], ['(', ')'], static::$day->date)]]);
         static::$report = static::locale(['string' => 'User <b>%s</b> is <u>opted-in</u> on a game <b>%s</b> at <b>%s</b>.', 'vars' => [static::$arguments['userName'], static::$day->game, static::$day->date]]);
     }
     private static function changePrim(int $index = 0): void
@@ -114,7 +114,7 @@ class BookingAnswer extends ChatAnswer
             throw new Exception(__METHOD__ . ': $index can’t be empty!');
         }
         static::$day->removeParticipant($index);
-        static::$text = static::locale(['string' => 'You’re successfully opted-out from a game %s at %s.', 'vars' => [static::$day->gameName, static::$day->date]]);
+        static::$text = static::locale(['string' => 'You’re successfully opted-out from a game %s at %s.', 'vars' => [static::$day->gameName, str_replace(['<b>', '</b>'], ['(', ')'], static::$day->date)]]);
         static::$report = static::locale(['string' => 'User <b>%s</b> is <u>opted-out</u> from a game <b>%s</b> at <b>%s</b>.', 'vars' => [static::$arguments['userName'], static::$day->gameName, static::$day->date]]);
     }
 }
