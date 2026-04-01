@@ -96,8 +96,8 @@ class BookingAnswer extends ChatAnswer
             'prim' => static::$arguments['p'] ?? '',
         ];
         static::$day->addParticipant($participant);
-        static::$text = static::locale(['string' => 'You’re successfully opted-in on a game %s at %s.', 'vars' => [static::$day->gameName, date('d.m.Y', static::$day->date)]]);
-        static::$report = static::locale(['string' => 'User <b>%s</b> is <u>opted-in</u> on a game <b>%s</b> at <b>%s</b>.', 'vars' => [static::$arguments['userName'], static::$day->game, date('d.m.Y', static::$day->date)]]);
+        static::$text = static::locale(['string' => 'You’re successfully opted-in on a game %s at %s.', 'vars' => [static::$day->gameName, static::$day->date]]);
+        static::$report = static::locale(['string' => 'User <b>%s</b> is <u>opted-in</u> on a game <b>%s</b> at <b>%s</b>.', 'vars' => [static::$arguments['userName'], static::$day->game, static::$day->date]]);
     }
     private static function changePrim(int $index = 0): void
     {
@@ -106,7 +106,7 @@ class BookingAnswer extends ChatAnswer
         }
         static::$day->participants[$index]['prim'] = static::$arguments['p'] ?? '';
         static::$text = static::locale('Success');
-        static::$report = static::locale(['string' => 'User <b>%s</b> is <u>changed prim</u> on <b>%s</b>.', 'vars' => [static::$arguments['userName'], date('d.m.Y', static::$day->timestamp)]]);
+        static::$report = static::locale(['string' => 'User <b>%s</b> is <u>changed prim</u> on <b>%s</b>.', 'vars' => [static::$arguments['userName'], static::$day->timestamp]]);
     }
     private static function removeParticipant(int $index = 0): void
     {
