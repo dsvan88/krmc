@@ -27,17 +27,7 @@ class Coupons extends Model
             'active' => true,
             'icon' => '🎫',
             'type' => 'once',
-            'price' => 150,
-            'options' => [
-                'discount' => 20,
-                'discount_type' => '%',
-            ],
-        ],
-        [
-            'active' => true,
-            'icon' => '🎫',
-            'type' => 'once',
-            'price' => 300,
+            'price' => 200,
             'options' => [
                 'discount' => 50,
                 'discount_type' => '%',
@@ -47,52 +37,22 @@ class Coupons extends Model
             'active' => true,
             'icon' => '🎫',
             'type' => 'once',
-            'price' => 450,
+            'price' => 300,
             'options' => [
                 'discount' => 100,
                 'discount_type' => '%',
             ],
         ],
-        [
-            'active' => true,
-            'icon' => '🎟',
-            'type' => 'once',
-            'price' => 150,
-            'options' => [
-                'discount' => 20,
-                'discount_type' => 'hrn',
-            ],
-        ],
-        [
-            'active' => true,
-            'icon' => '🎟',
-            'type' => 'once',
-            'price' => 200,
-            'options' => [
-                'discount' => 30,
-                'discount_type' => 'hrn',
-            ],
-        ],
-        [
-            'active' => true,
-            'icon' => '🎟',
-            'type' => 'once',
-            'price' => 300,
-            'options' => [
-                'discount' => 50,
-                'discount_type' => 'hrn',
-            ],
-        ],
-        [
-            'active' => true,
-            'icon' => '🎟',
-            'type' => 'once',
-            'price' => 400,
-            'options' => [
-                'discount' => 80,
-                'discount_type' => 'hrn',
-            ],
-        ],
+        // [
+        //     'active' => true,
+        //     'icon' => '🎟',
+        //     'type' => 'once',
+        //     'price' => 400,
+        //     'options' => [
+        //         'discount' => 80,
+        //         'discount_type' => 'hrn',
+        //     ],
+        // ],
     ];
 
     public static function prepeareIds(array &$coupons): void
