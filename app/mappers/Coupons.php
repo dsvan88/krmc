@@ -109,7 +109,7 @@ class Coupons extends Model
 
         return parent::getAll($coupons, $andOr);
     }
-    public static function create(int $userId = 0, int $couponId = 0)
+    public static function create(int $userId = 0, int $couponId = 0, string $status = 'ready')
     {
         if (empty($userId) || !Users::isExists(['id' => $userId]))
             throw new Exception(__METHOD__ . ': invalid owner.');
@@ -123,6 +123,7 @@ class Coupons extends Model
         $_coupon = [
             'owner' => $userId,
             'type' => $coupon['type'],
+            'status' => $status,
             'options' => json_encode($coupon['options']),
             'expired_at' => date('Y-m-d', $expired) .'T'. date('H:i:s', $expired),
         ];

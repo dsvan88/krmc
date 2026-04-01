@@ -218,7 +218,7 @@ class TechService
     public static function refillTable($table, $path)
     {
 
-        if (!in_array($table, [SQL_TBL_GAMES, SQL_TBL_USERS, SQL_TBL_WEEKS, SQL_TBL_SETTINGS, SQL_TBL_PAGES, SQL_TBL_CONTACTS, SQL_TBL_TG_CHATS]))
+        if (!in_array($table, [SQL_TBL_GAMES, SQL_TBL_USERS, SQL_TBL_WEEKS, SQL_TBL_SETTINGS, SQL_TBL_PAGES, SQL_TBL_CONTACTS, SQL_TBL_TG_CHATS, SQL_TBL_COUPONS]))
             return false;
 
         $content = str_replace('1970-01-01 00:00:00', '1970-01-02 00:00:00', trim(file_get_contents($path)));
