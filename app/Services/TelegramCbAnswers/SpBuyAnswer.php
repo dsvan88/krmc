@@ -4,12 +4,11 @@ namespace app\Services\TelegramCbAnswers;
 
 use app\core\Telegram\ChatAnswer;
 use app\mappers\Coupons;
-use app\mappers\Days;
 use app\mappers\SocialPoints;
 use app\Services\TelegramBotService;
 use Exception;
 
-class UnregAnswer extends ChatAnswer
+class SpBuyAnswer extends ChatAnswer
 {
     public static $accessLevel = 'manager';
 
