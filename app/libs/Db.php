@@ -142,7 +142,7 @@ class Db
                 return $stmt->fetchAll(PDO::FETCH_ASSOC);
             }
         } elseif (strpos(trim($query), 'INSERT') === 0) {
-            return self::connect()->lastInsertId();
+            return $params['id'] ?? self::connect()->lastInsertId();
         }
         return true;
     }
