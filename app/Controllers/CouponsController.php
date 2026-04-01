@@ -37,8 +37,12 @@ class CouponsController extends Controller
         $coupon = Coupon::create($couponId);
         $coupon->status = $status;
 
-        if ($status === 'ready' && $coupon->isExpired())
-            $coupon->expired_at = $_SERVER['REQUEST_TIME'] + TIMESTAMP_WEEK;
+        if ($status === 'ready'){
+            $coupon->used_on = Coupon::$defaults['used_on'];
+            if ($coupon->isExpired()){
+                $coupon->expired_at = $_SERVER['REQUEST_TIME'] + TIMESTAMP_WEEK;
+            }
+        }
 
         if ($status === 'expired')
             $coupon->expired_at = $_SERVER['REQUEST_TIME'];

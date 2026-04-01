@@ -103,7 +103,7 @@ class Coupons extends Model
     }
     public static function getAll(array $coupons = [], string $andOr = 'AND '): array
     {
-        if (empty($coupons) || empty($copons['id'])) return parent::getAll($coupons, $andOr);
+        if (empty($coupons) || empty($coupons['id'])) return parent::getAll($coupons, $andOr);
 
         static::prepeareIds($coupons);
 

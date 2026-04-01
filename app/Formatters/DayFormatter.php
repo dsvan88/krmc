@@ -5,6 +5,7 @@ namespace app\Formatters;
 use app\core\Entities\Day;
 use app\core\Locale;
 use app\core\Tech;
+use app\core\Telegram\ChatAction;
 use app\mappers\Settings;
 use app\mappers\TelegramChats;
 use app\mappers\Users;
@@ -145,8 +146,8 @@ class DayFormatter
             if (!empty($participant['arrive']) && $participant['arrive'] !== $day->time) {
                 $modsParts[] = static::getTimeEmoji($participant['arrive']) . ' ' . $participant['arrive'];
             }
-            if (isset($day->coupons[$participant['id']]) && TelegramBotService::getMessageId() === Settings::getAdminChatTelegramId()){
-                $modsParts[] =  "🎫- <i><u>{$day->coupons[$participant['id']]['options']['discount']}{$day->coupons[$participant['id']]['options']['discount_type']}</u></i>";
+            if (isset($day->coupons[$participant['id']]) && (APP_LOC === 'local' || !empty(ChatAction::$message) && TelegramBotService::getChatId() == Settings::getAdminChatTelegramId())){
+                $modsParts[] =  "🎫- <i><u>{$day->coupons[$participant['id']]->options['discount']}{$day->coupons[$participant['id']]->options['discount_type']}</u></i>";
             }
             if ($userName[0] === '_') {
                 $tgChat = TelegramChats::find(substr($userName, 1));

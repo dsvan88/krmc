@@ -5,6 +5,10 @@ namespace app\Services;
 use app\core\Entities\Day;
 use app\core\Entities\Week;
 use app\core\Locale;
+use app\core\Tech;
+use app\core\Validator;
+use app\mappers\TelegramChats;
+use app\mappers\Users;
 use app\mappers\Weeks;
 
 class DayService
@@ -33,6 +37,57 @@ class DayService
         'tomorrow' => ['tom', 'tm', 'зав'],
     ];
 
+    public static function edit(int $weekId, int $dayId, array $data){
+        $day = Day::create($dayId, $weekId);
+        $day->game = trim($data['game']);
+        $day->mods = $data['mods'] ?? [];
+        $day->time = trim($data['day_time']);
+        $day->status = 'set';
+        $day->participants = [];
+        $day->day_prim = str_replace('  ', "\n", trim($data['day_prim']));
+        $day->cost = trim($data['day_cost']);
+
+        foreach ($data['participant'] as $i=>$participant) {
+            if (empty($participant)) continue;
+            if ($participant === '+1') {
+                $id = null;
+            } elseif ($participant[0] === '@') {
+                $tgName = substr($participant, 1);
+                $chatData = TelegramChats::findByUserName($tgName);
+
+                if (empty($chatData)) continue;
+
+                $id = '_' . $chatData['id'];
+            } elseif ($participant[0] === '_') {
+                $tgChatId = substr($participant, 1);
+                $chatData = TelegramChats::find($tgChatId);
+
+                if (empty($chatData)) continue;
+
+                $id = '_' . $chatData['id'];
+            } else {
+                $id = Users::getId($participant);
+                if ($id < 2) {
+                    $name = Validator::validate('name', $participant);
+
+                    if (empty($name)) continue;
+
+                    $id = Users::getId($name);
+                    if ($id < 2) {
+                        $id = Users::add($name);
+                    }
+                }
+            }
+
+            $participant = [
+                'userId' => $id,
+                'arrive' => trim($data['arrive'][$i]),
+                'prim' => trim($data['prim'][$i]),
+            ];
+            $day->addParticipant($participant);
+        }
+        return $day->save();
+    }
     public static function renamePlayer(int $userId, string $name): void
     {
         $weeks = Weeks::getAll();

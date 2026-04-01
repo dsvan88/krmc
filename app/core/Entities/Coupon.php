@@ -122,6 +122,7 @@ class Coupon extends Entity
             }
             $coupon[$k] = $this->$k ?? $v;
         }
+
         return Coupons::edit($this->id, $coupon);
     }
 }

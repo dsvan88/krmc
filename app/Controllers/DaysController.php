@@ -25,7 +25,7 @@ class DaysController extends Controller
         extract(self::$route['vars']);
         if (Users::checkAccess('manager')) {
             if (!empty($_POST)) {
-                $weekId = Days::edit($weekId, $dayId, $_POST);
+                $weekId = DayService::edit($weekId, $dayId, $_POST);
                 if (!empty($_POST['send'])) {
                     $day = Day::create($dayId, $weekId);
                     Sender::message(Settings::getMainTelegramId(), DayFormatter::forMessengers($day));
