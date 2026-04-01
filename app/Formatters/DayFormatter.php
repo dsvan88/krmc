@@ -140,13 +140,13 @@ class DayFormatter
                 if (!empty($participant['emoji'])) {
                     $userName .= $participant['emoji'];
                 }
-                if (isset($day->coupons[$participant['id']]) && TelegramBotService::getMessageId() === Settings::getAdminChatTelegramId()){
-                    $userName .=  "🎫- <i><u>{$day->coupons[$participant['id']]['options']['discount']}{$day->coupons[$participant['id']]['options']['discount_type']}</u></i>";
-                }
             }
 
             if (!empty($participant['arrive']) && $participant['arrive'] !== $day->time) {
                 $modsParts[] = static::getTimeEmoji($participant['arrive']) . ' ' . $participant['arrive'];
+            }
+            if (isset($day->coupons[$participant['id']]) && TelegramBotService::getMessageId() === Settings::getAdminChatTelegramId()){
+                $modsParts[] =  "🎫- <i><u>{$day->coupons[$participant['id']]['options']['discount']}{$day->coupons[$participant['id']]['options']['discount_type']}</u></i>";
             }
             if ($userName[0] === '_') {
                 $tgChat = TelegramChats::find(substr($userName, 1));
