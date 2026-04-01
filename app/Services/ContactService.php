@@ -3,7 +3,7 @@
 namespace app\Services;
 
 use app\core\Tech;
-use app\models\Contacts;
+use app\mappers\Contacts;
 
 class ContactService
 {

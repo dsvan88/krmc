@@ -3,7 +3,7 @@
 
 namespace app\Controllers;
 
-use app\models\Settings;
+use app\mappers\Settings;
 use app\core\Controller;
 use app\core\TelegramBot;
 use app\core\TelegramInfoBot;

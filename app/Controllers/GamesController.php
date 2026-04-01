@@ -8,11 +8,11 @@ use app\core\Locale;
 use app\core\Paginator;
 use app\core\Tech;
 use app\core\View;
-use app\models\Days;
-use app\models\Games;
-use app\models\Settings;
-use app\models\Users;
-use app\models\Weeks;
+use app\mappers\Days;
+use app\mappers\Games;
+use app\mappers\Settings;
+use app\mappers\Users;
+use app\mappers\Weeks;
 
 class GamesController extends Controller
 {

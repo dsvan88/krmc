@@ -3,7 +3,7 @@
 namespace app\Services\TelegramCommands;
 
 use app\core\Telegram\ChatCommand;
-use app\models\Users;
+use app\mappers\Users;
 
 class UsersCommand extends ChatCommand
 {

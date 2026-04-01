@@ -5,7 +5,7 @@ namespace app\Services\TelegramCommands;
 use app\core\Telegram\ChatCommand;
 use app\core\Locale;
 use app\core\Validator;
-use app\models\Users;
+use app\mappers\Users;
 use app\Services\TelegramBotService;
 use app\Services\TelegramChatsService;
 

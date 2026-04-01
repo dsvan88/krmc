@@ -4,13 +4,11 @@ namespace app\Services;
 
 use app\core\Entities\Day;
 use app\core\Locale;
-use app\core\Tech;
 use app\core\Validator;
-use app\models\Contacts;
-use app\models\Days;
-use app\models\TelegramChats;
-use app\models\Users;
-use app\models\Weeks;
+use app\mappers\Contacts;
+use app\mappers\TelegramChats;
+use app\mappers\Users;
+use app\mappers\Weeks;
 
 class AccountService
 {

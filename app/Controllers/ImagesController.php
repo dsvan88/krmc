@@ -11,7 +11,7 @@ use app\core\Noticer;
 use app\core\Tech;
 use app\core\Validator;
 use app\core\View;
-use app\models\Settings;
+use app\mappers\Settings;
 use app\Services\ImageService;
 
 class ImagesController extends Controller

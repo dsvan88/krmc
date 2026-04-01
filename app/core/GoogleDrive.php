@@ -2,7 +2,7 @@
 
 namespace  app\core;
 
-use app\models\Settings;
+use app\mappers\Settings;
 use Google\Client as Google_Client;
 use Google\Service\Drive  as Google_Drive;
 use Google\Service\Drive\DriveFile as Google_Drive_File;

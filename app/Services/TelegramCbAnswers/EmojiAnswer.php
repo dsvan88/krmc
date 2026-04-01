@@ -3,8 +3,8 @@
 namespace app\Services\TelegramCbAnswers;
 
 use app\core\Telegram\ChatAnswer;
-use app\models\SocialPoints;
-use app\models\TelegramEmojis;
+use app\mappers\SocialPoints;
+use app\mappers\TelegramEmojis;
 use Exception;
 
 class EmojiAnswer extends ChatAnswer

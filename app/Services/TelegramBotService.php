@@ -10,12 +10,12 @@ use app\core\Tech;
 use app\core\Telegram\ChatAction;
 use app\core\TelegramBot;
 use app\core\Validator;
-use app\models\Coupons;
-use app\models\Days;
-use app\models\GameTypes;
-use app\models\Users;
-use app\models\Settings;
-use app\models\Weeks;
+use app\mappers\Coupons;
+use app\mappers\Days;
+use app\mappers\GameTypes;
+use app\mappers\Users;
+use app\mappers\Settings;
+use app\mappers\Weeks;
 use Exception;
 
 class TelegramBotService
@@ -125,7 +125,6 @@ class TelegramBotService
             } elseif (preg_match('/^(\+|-)\d{1,2}/', $value, $match) === 1) {
                 ChatAction::$arguments['nonames'] = (int) substr($match[0], 1);
             } elseif (empty(ChatAction::$arguments['userId']) || ChatAction::$arguments['userId'] < 2) {
-                // $value = str_ireplace(['m', 'c', 'o', 'p', 'x', 'a'], ['м', 'с', 'о', 'р', 'х', 'а'], $value);
                 $value = Validator::validate('name', $value);
                 if (empty($value)) continue;
 

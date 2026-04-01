@@ -1,6 +1,6 @@
 <?php
 
-namespace app\models;
+namespace app\mappers;
 
 use app\core\Model;
 

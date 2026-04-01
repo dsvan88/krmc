@@ -6,6 +6,7 @@
         <li class="settings__category<?= $section === 'telegram' ? ' active' : '' ?>" data-action-click="/settings/section/index/telegram" data-mode='location'>Телеграм</li>
         <li class="settings__category<?= $section === 'backup' ? ' active' : '' ?>" data-action-click="/settings/section/index/backup" data-mode='location'>Резервування</li>
         <li class="settings__category<?= $section === 'gdrive' ? ' active' : '' ?>" data-action-click="/settings/section/index/gdrive" data-mode='location'>Google Drive</li>
+        <!-- <li class="settings__category<?= $section === 'coupons' ? ' active' : '' ?>" data-action-click="/settings/section/index/coupons" data-mode='location'>Coupons</li> -->
     </menu>
     <div class="settings__content">
         <table class="settings__table">

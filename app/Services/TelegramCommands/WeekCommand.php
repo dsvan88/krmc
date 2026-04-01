@@ -5,9 +5,9 @@ namespace app\Services\TelegramCommands;
 use app\core\Entities\Week;
 use app\core\Telegram\ChatCommand;
 use app\Formatters\DayFormatter;
-use app\models\Days;
-use app\models\News;
-use app\models\Weeks;
+use app\mappers\Days;
+use app\mappers\News;
+use app\mappers\Weeks;
 
 class WeekCommand extends ChatCommand
 {

@@ -5,7 +5,7 @@ namespace app\Services;
 use app\core\Entities\Day;
 use app\core\Entities\Week;
 use app\core\Locale;
-use app\models\Weeks;
+use app\mappers\Weeks;
 
 class DayService
 {

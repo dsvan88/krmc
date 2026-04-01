@@ -2,7 +2,7 @@
 
 namespace  app\core\Entities;
 
-use app\models\TelegramChats;
+use app\mappers\TelegramChats;
 use app\Services\TelegramChatsService;
 
 class Chat extends Entity

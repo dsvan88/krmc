@@ -27,7 +27,7 @@ class Controller
     }
     public static function loadModel($name)
     {
-        $path = 'app/models/' . ucfirst($name);
+        $path = 'app/mappers/' . ucfirst($name);
         if (class_exists($path)) {
             return new $path;
         }

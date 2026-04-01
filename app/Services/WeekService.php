@@ -6,10 +6,10 @@ use app\core\Entities\Week;
 use app\core\Locale;
 use app\core\Paginator;
 use app\core\Tech;
-use app\models\Days;
-use app\models\GameTypes;
-use app\models\Users;
-use app\models\Weeks;
+use app\mappers\Days;
+use app\mappers\GameTypes;
+use app\mappers\Users;
+use app\mappers\Weeks;
 
 class WeekService
 {

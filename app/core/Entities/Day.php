@@ -3,10 +3,10 @@
 namespace  app\core\Entities;
 
 use app\core\Tech;
-use app\models\Coupons;
-use app\models\Days;
-use app\models\GameTypes;
-use app\models\Weeks;
+use app\mappers\Coupons;
+use app\mappers\Days;
+use app\mappers\GameTypes;
+use app\mappers\Weeks;
 use app\Services\AccountService;
 use app\Services\CouponService;
 use Exception;

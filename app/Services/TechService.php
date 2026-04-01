@@ -6,7 +6,7 @@ use app\core\Locale;
 use app\core\Mailer;
 use app\core\Tech;
 use app\libs\Db;
-use app\models\Settings;
+use app\mappers\Settings;
 
 class TechService
 {

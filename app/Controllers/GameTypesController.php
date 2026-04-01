@@ -6,8 +6,8 @@ use app\core\Controller;
 use app\core\GoogleDrive;
 use app\core\Locale;
 use app\core\View;
-use app\models\GameTypes;
-use app\models\Users;
+use app\mappers\GameTypes;
+use app\mappers\Users;
 use app\Services\PageService;
 
 class GameTypesController extends Controller

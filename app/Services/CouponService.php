@@ -5,7 +5,7 @@ namespace app\Services;
 use app\core\Entities\Coupon;
 use app\core\Entities\Day;
 use app\core\Tech;
-use app\models\Coupons;
+use app\mappers\Coupons;
 
 class CouponService
 {

@@ -5,8 +5,8 @@ namespace app\Services\TelegramCbAnswers;
 use app\core\Entities\Chat;
 use app\core\Entities\User;
 use app\core\Telegram\ChatAnswer;
-use app\models\Contacts;
-use app\models\Settings;
+use app\mappers\Contacts;
+use app\mappers\Settings;
 use app\Services\TelegramChatsService;
 use Exception;
 

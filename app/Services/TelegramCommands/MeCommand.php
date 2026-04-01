@@ -3,7 +3,7 @@
 namespace app\Services\TelegramCommands;
 
 use app\core\Telegram\ChatCommand;
-use app\models\SocialPoints;
+use app\mappers\SocialPoints;
 use app\Services\TelegramBotService;
 
 class MeCommand extends ChatCommand

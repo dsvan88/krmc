@@ -2,7 +2,7 @@
 
 namespace app\core;
 
-use app\models\Settings;
+use app\mappers\Settings;
 
 class TelegramInfoBot extends TelegramBot
 {

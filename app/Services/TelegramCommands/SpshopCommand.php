@@ -3,7 +3,7 @@
 namespace app\Services\TelegramCommands;
 
 use app\core\Telegram\ChatCommand;
-use app\models\Weeks;
+use app\mappers\Weeks;
 use app\Services\TelegramBotService;
 
 class SpshopCommand extends ChatCommand

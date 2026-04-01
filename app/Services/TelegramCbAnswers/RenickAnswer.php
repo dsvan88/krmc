@@ -3,8 +3,8 @@
 namespace app\Services\TelegramCbAnswers;
 
 use app\core\Telegram\ChatAnswer;
-use app\models\SocialPoints;
-use app\models\Users;
+use app\mappers\SocialPoints;
+use app\mappers\Users;
 use app\Services\TelegramCommands\RenickCommand;
 use Exception;
 

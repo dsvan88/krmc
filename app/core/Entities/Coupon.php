@@ -3,7 +3,7 @@
 namespace  app\core\Entities;
 
 use app\core\Tech;
-use app\models\Coupons;
+use app\mappers\Coupons;
 use Exception;
 
 class Coupon extends Entity
@@ -118,8 +118,6 @@ class Coupon extends Entity
             }
             if (in_array($k, $dates, true)){
                 $coupon[$k] = date('Y-m-d', $this->$k) . 'T' . date('H:i:s',$this->$k);
-                Tech::dump($k);
-                Tech::dump($coupon[$k]);
                 continue;
             }
             $coupon[$k] = $this->$k ?? $v;

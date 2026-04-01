@@ -7,8 +7,8 @@ use app\core\GoogleDrive;
 use app\core\Locale;
 use app\core\Validator;
 use app\core\View;
-use app\models\Pages;
-use app\models\Users;
+use app\mappers\Pages;
+use app\mappers\Users;
 use app\Services\PageService;
 
 class PagesController extends Controller

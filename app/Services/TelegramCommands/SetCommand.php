@@ -6,8 +6,8 @@ use app\core\Entities\Day;
 use app\core\Telegram\ChatCommand;
 use app\Formatters\DayFormatter;
 use app\Formatters\TelegramBotFormatter;
-use app\models\GameTypes;
-use app\models\Weeks;
+use app\mappers\GameTypes;
+use app\mappers\Weeks;
 use app\Services\DayService;
 use app\Services\TelegramBotService;
 

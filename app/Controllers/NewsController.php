@@ -7,9 +7,9 @@ use app\core\Controller;
 use app\core\Locale;
 use app\core\Paginator;
 use app\core\View;
-use app\models\News;
-use app\models\Settings;
-use app\models\Users;
+use app\mappers\News;
+use app\mappers\Settings;
+use app\mappers\Users;
 use app\Services\PageService;
 
 class NewsController extends Controller

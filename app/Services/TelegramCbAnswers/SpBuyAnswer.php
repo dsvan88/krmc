@@ -3,9 +3,9 @@
 namespace app\Services\TelegramCbAnswers;
 
 use app\core\Telegram\ChatAnswer;
-use app\models\Coupons;
-use app\models\Days;
-use app\models\SocialPoints;
+use app\mappers\Coupons;
+use app\mappers\Days;
+use app\mappers\SocialPoints;
 use app\Services\TelegramBotService;
 use Exception;
 

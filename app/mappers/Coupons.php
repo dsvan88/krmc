@@ -1,6 +1,6 @@
 <?php
 
-namespace app\models;
+namespace app\mappers;
 
 use app\core\Model;
 use app\core\Tech;
@@ -16,6 +16,7 @@ class Coupons extends Model
     ];
 
     public static $statuses = [
+        'idle',
         'ready',
         'applied',
         'expired',
@@ -203,7 +204,7 @@ class Coupons extends Model
             "CREATE TABLE IF NOT EXISTS $table (
                 id BIGINT UNSIGNED NOT NULL PRIMARY KEY,
                 type CHARACTER VARYING(25) NOT NULL DEFAULT 'once',
-                status CHARACTER VARYING(25) NOT NULL DEFAULT 'ready',
+                status CHARACTER VARYING(25) NOT NULL DEFAULT 'idle',
                 owner INT NOT NULL DEFAULT '0',
                 used_on JSON DEFAULT NULL,
                 options JSON DEFAULT NULL,

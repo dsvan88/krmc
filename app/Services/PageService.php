@@ -4,7 +4,7 @@ namespace app\Services;
 
 use app\core\GoogleDrive;
 use app\core\Tech;
-use app\models\Pages;
+use app\mappers\Pages;
 
 class PageService
 {

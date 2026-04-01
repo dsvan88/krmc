@@ -5,7 +5,7 @@ namespace app\Services\TelegramCommands;
 use app\core\Entities\Day;
 use app\core\Telegram\ChatCommand;
 use app\Formatters\DayFormatter;
-use app\models\Weeks;
+use app\mappers\Weeks;
 use app\Services\TelegramBotService;
 use Exception;
 

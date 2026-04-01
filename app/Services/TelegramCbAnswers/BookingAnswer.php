@@ -6,10 +6,10 @@ use app\core\Entities\Day;
 use app\core\Telegram\ChatAnswer;
 use app\Formatters\DayFormatter;
 use app\Formatters\TelegramBotFormatter;
-use app\models\Days;
-use app\models\Settings;
-use app\models\TelegramChats;
-use app\models\Weeks;
+use app\mappers\Days;
+use app\mappers\Settings;
+use app\mappers\TelegramChats;
+use app\mappers\Weeks;
 use app\Services\TelegramBotService;
 use Exception;
 

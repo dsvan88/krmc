@@ -4,7 +4,7 @@ namespace app\Services\TelegramCbAnswers;
 
 use app\core\Entities\User;
 use app\core\Telegram\ChatAnswer;
-use app\models\Users;
+use app\mappers\Users;
 use Exception;
 
 class NewuserAnswer extends ChatAnswer

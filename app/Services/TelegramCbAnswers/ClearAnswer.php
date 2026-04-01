@@ -4,7 +4,7 @@ namespace app\Services\TelegramCbAnswers;
 
 use app\core\Entities\Day;
 use app\core\Telegram\ChatAnswer;
-use app\models\Days;
+use app\mappers\Days;
 use app\Services\TelegramBotService;
 use Exception;
 

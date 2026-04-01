@@ -3,7 +3,7 @@
 namespace app\Services\TelegramCommands;
 
 use app\core\Telegram\ChatCommand;
-use app\models\News;
+use app\mappers\News;
 
 class PromoCommand extends ChatCommand
 {

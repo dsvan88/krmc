@@ -5,8 +5,8 @@ namespace app\Controllers;
 use app\core\Controller;
 use app\core\Locale;
 use app\core\View;
-use app\models\TelegramChats;
-use app\models\Users;
+use app\mappers\TelegramChats;
+use app\mappers\Users;
 
 class AutocompleteController extends Controller
 {

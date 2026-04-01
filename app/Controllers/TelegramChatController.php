@@ -6,8 +6,8 @@ use app\core\Controller;
 use app\core\Sender;
 use app\core\Tech;
 use app\core\View;
-use app\models\Settings;
-use app\models\TelegramChats;
+use app\mappers\Settings;
+use app\mappers\TelegramChats;
 use app\Services\TelegramChatsService;
 
 class telegramChatController extends Controller

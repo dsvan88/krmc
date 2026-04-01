@@ -69,6 +69,9 @@ async function couponsStatusesPad(options = {}) {
 
 actionHandler.couponChangeStatus = async function (target) {
     const result = await couponsStatusesPad({value: target.dataset.couponStatus});
+    
+    if (!result || result === target.dataset.couponStatus) return false;
+
     const fd = new FormData();
     fd.append('couponId', target.dataset.couponId);
     fd.append('status', result);

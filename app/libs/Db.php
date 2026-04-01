@@ -2,7 +2,7 @@
 
 namespace app\libs;
 
-use app\models\Users;
+use app\mappers\Users;
 use PDO;
 
 class Db
@@ -305,14 +305,14 @@ class Db
     }
     public static function dbFillDefaults()
     {
-        $path = 'app/models';
-        $modelsDir = "{$_SERVER['DOCUMENT_ROOT']}/{$path}";
-        $modelsFiles = scandir(realpath($modelsDir));
+        $path = 'app/mappers';
+        $mappersDir = "{$_SERVER['DOCUMENT_ROOT']}/{$path}";
+        $mappersFiles = scandir(realpath($mappersDir));
 
         Users::init();
         $done = [Users::$table];
 
-        foreach ($modelsFiles as $model) {
+        foreach ($mappersFiles as $model) {
             if ($model === '.' || $model === '..' || is_dir($model))
                 continue;
 

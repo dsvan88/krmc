@@ -5,8 +5,8 @@ namespace app\Formatters;
 use app\core\Entities\Day;
 use app\core\Entities\Week;
 use app\core\Locale;
-use app\models\Days;
-use app\models\Weeks;
+use app\mappers\Days;
+use app\mappers\Weeks;
 use app\Services\TelegramBotService;
 
 class TelegramBotFormatter

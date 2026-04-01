@@ -10,11 +10,11 @@ use app\core\Sender;
 use app\core\View;
 use app\Formatters\DayFormatter;
 use app\Formatters\WeekFormatter;
-use app\models\Days;
-use app\models\GameTypes;
-use app\models\Settings;
-use app\models\Users;
-use app\models\Weeks;
+use app\mappers\Days;
+use app\mappers\GameTypes;
+use app\mappers\Settings;
+use app\mappers\Users;
+use app\mappers\Weeks;
 use app\Services\DayService;
 
 class DaysController extends Controller

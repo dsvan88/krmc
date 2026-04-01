@@ -3,7 +3,7 @@
 namespace app\Services;
 
 use app\core\Locale;
-use app\models\Games;
+use app\mappers\Games;
 
 class GameService
 {

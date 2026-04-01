@@ -6,11 +6,11 @@ use app\core\GoogleDrive;
 use app\core\ImageProcessing;
 use app\core\Sender;
 use app\core\Telegram\ChatAction;
-use app\models\Settings;
-use app\models\TelegramChats;
-use app\models\Users;
+use app\mappers\Settings;
+use app\mappers\TelegramChats;
+use app\mappers\Users;
 use app\core\TelegramBot;
-use app\models\Contacts;
+use app\mappers\Contacts;
 use Exception;
 
 class TelegramChatsService

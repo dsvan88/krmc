@@ -6,8 +6,8 @@ namespace app\Controllers;
 use app\core\Controller;
 use app\core\GoogleDrive;
 use app\core\View;
-use app\models\Settings;
-use app\models\Users;
+use app\mappers\Settings;
+use app\mappers\Users;
 use app\Services\ImageService;
 
 class MainController extends Controller

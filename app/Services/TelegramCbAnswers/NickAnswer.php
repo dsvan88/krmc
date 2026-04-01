@@ -3,7 +3,7 @@
 namespace app\Services\TelegramCbAnswers;
 
 use app\core\Telegram\ChatAnswer;
-use app\models\Users;
+use app\mappers\Users;
 use app\Services\DayService;
 use app\Services\TelegramBotService;
 use app\Services\WeekService;

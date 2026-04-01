@@ -3,10 +3,10 @@
 namespace app\core;
 
 use app\core\Entities\Coupon;
-use app\models\Coupons;
-use app\models\Pages;
-use app\models\Settings;
-use app\models\Users;
+use app\mappers\Coupons;
+use app\mappers\Pages;
+use app\mappers\Settings;
+use app\mappers\Users;
 
 class Validator
 {

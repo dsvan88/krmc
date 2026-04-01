@@ -4,9 +4,9 @@ namespace app\Services;
 
 use app\core\Locale;
 use app\core\Mailer;
-use app\models\Contacts;
-use app\models\Settings;
-use app\models\Users;
+use app\mappers\Contacts;
+use app\mappers\Settings;
+use app\mappers\Users;
 
 class VerificationService
 {

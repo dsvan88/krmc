@@ -4,9 +4,9 @@ namespace app\Services;
 
 use app\core\Entities\Day;
 use app\core\Entities\Week;
-use app\models\SocialPoints;
-use app\models\Weeks;
-use app\models\Days;
+use app\mappers\SocialPoints;
+use app\mappers\Weeks;
+use app\mappers\Days;
 
 class SocialPointsService
 {

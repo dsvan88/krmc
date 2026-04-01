@@ -2,7 +2,7 @@
 
 namespace  app\core\Entities;
 
-use app\models\Users;
+use app\mappers\Users;
 
 class User extends Entity
 {

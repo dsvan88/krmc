@@ -3,7 +3,7 @@
 namespace  app\core\Entities;
 
 use app\core\Tech;
-use app\models\Weeks;
+use app\mappers\Weeks;
 use Exception;
 
 class Week

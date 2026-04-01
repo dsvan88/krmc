@@ -6,7 +6,7 @@ use app\core\Controller;
 use app\core\Entities\Coupon;
 use app\core\Validator;
 use app\core\View;
-use app\models\Coupons;
+use app\mappers\Coupons;
 use app\Services\CouponService;
 
 class CouponsController extends Controller
@@ -39,6 +39,9 @@ class CouponsController extends Controller
 
         if ($status === 'ready' && $coupon->isExpired())
             $coupon->expired_at = $_SERVER['REQUEST_TIME'] + TIMESTAMP_WEEK;
+
+        if ($status === 'expired')
+            $coupon->expired_at = $_SERVER['REQUEST_TIME'];
 
         $coupon->save();
 

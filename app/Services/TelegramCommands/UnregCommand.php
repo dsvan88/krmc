@@ -5,7 +5,7 @@ namespace app\Services\TelegramCommands;
 use app\core\Tech;
 use app\core\Telegram\ChatCommand;
 use app\Formatters\TelegramBotFormatter;
-use app\models\Weeks;
+use app\mappers\Weeks;
 use app\Services\TelegramBotService;
 
 class UnregCommand extends ChatCommand

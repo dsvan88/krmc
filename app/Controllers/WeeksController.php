@@ -4,7 +4,7 @@ namespace app\Controllers;
 
 use app\core\Controller;
 use app\core\View;
-use app\models\Weeks;
+use app\mappers\Weeks;
 use app\Services\WeekService;
 
 class WeeksController extends Controller

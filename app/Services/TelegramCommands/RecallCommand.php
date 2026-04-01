@@ -4,8 +4,8 @@ namespace app\Services\TelegramCommands;
 
 use app\core\Entities\Day;
 use app\core\Telegram\ChatCommand;
-use app\models\Days;
-use app\models\Weeks;
+use app\mappers\Days;
+use app\mappers\Weeks;
 use app\Services\DayService;
 use app\Services\TelegramBotService;
 

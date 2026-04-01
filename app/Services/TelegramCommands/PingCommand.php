@@ -6,9 +6,9 @@ use app\core\Entities\Week;
 use app\core\Telegram\ChatCommand;
 use app\core\Locale;
 use app\core\Tech;
-use app\models\Contacts;
-use app\models\GameTypes;
-use app\models\Weeks;
+use app\mappers\Contacts;
+use app\mappers\GameTypes;
+use app\mappers\Weeks;
 use app\Services\TelegramBotService;
 
 class PingCommand extends ChatCommand

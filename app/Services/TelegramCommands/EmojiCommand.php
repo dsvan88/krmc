@@ -3,8 +3,8 @@
 namespace app\Services\TelegramCommands;
 
 use app\core\Telegram\ChatCommand;
-use app\models\SocialPoints;
-use app\models\TelegramEmojis;
+use app\mappers\SocialPoints;
+use app\mappers\TelegramEmojis;
 use app\Services\TelegramBotService;
 use app\Services\TelegramChatsService;
 

@@ -3,7 +3,7 @@
 namespace app\Formatters;
 
 use app\core\Entities\Day;
-use app\models\Weeks;
+use app\mappers\Weeks;
 
 class WeekFormatter
 {

@@ -3,7 +3,7 @@
 namespace app\core;
 
 use app\core\PHPMailer\PHPMailer;
-use app\models\Settings;
+use app\mappers\Settings;
 
 class Mailer
 {

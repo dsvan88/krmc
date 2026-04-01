@@ -6,10 +6,10 @@ use app\core\GoogleDrive;
 use app\core\ImageProcessing;
 use app\core\Locale;
 use app\core\View;
-use app\models\GameTypes;
-use app\models\News;
-use app\models\Settings;
-use app\models\Users;
+use app\mappers\GameTypes;
+use app\mappers\News;
+use app\mappers\Settings;
+use app\mappers\Users;
 
 class ViewService
 {

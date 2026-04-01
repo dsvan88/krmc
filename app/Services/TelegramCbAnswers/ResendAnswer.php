@@ -6,7 +6,7 @@ use app\core\Entities\Day;
 use app\core\Telegram\ChatAnswer;
 use app\Formatters\DayFormatter;
 use app\Formatters\TelegramBotFormatter;
-use app\models\Settings;
+use app\mappers\Settings;
 use Exception;
 
 class ResendAnswer extends ChatAnswer
