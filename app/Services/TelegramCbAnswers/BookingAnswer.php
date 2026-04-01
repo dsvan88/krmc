@@ -89,11 +89,8 @@ class BookingAnswer extends ChatAnswer
         }
         return array_merge(static::result(static::$text, true, true), ['update' => [$update]]);
     }
-    private static function addParticipant(array &$day = []): void
+    private static function addParticipant(): void
     {
-        if (empty($day)) {
-            throw new Exception(__METHOD__ . ': $day, cant be empty!');
-        }
         $participant = [
             'userId' => static::$arguments['userId'],
             'prim' => static::$arguments['p'] ?? '',
@@ -105,7 +102,7 @@ class BookingAnswer extends ChatAnswer
     private static function changePrim(int $index = 0): void
     {
         if ($index < 0) {
-            throw new Exception(__METHOD__ . ': $index or $participants, cant be empty!');
+            throw new Exception(__METHOD__ . ': $index can’t be empty!');
         }
         static::$day->participants[$index]['prim'] = static::$arguments['p'] ?? '';
         static::$text = static::locale('Success');
@@ -113,8 +110,8 @@ class BookingAnswer extends ChatAnswer
     }
     private static function removeParticipant(int $index = 0): void
     {
-        if ($index < 0 || empty($participants)) {
-            throw new Exception(__METHOD__ . ': $index or $participants, cant be empty!');
+        if ($index < 0) {
+            throw new Exception(__METHOD__ . ': $index can’t be empty!');
         }
         static::$day->removeParticipant($index);
         static::$text = static::locale(['string' => 'You’re successfully opted-out from a game %s at %s.', 'vars' => [static::$day->gameName, static::$day->date]]);
