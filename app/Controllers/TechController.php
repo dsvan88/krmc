@@ -217,7 +217,7 @@ class TechController extends Controller
                 ],
                 'date' => 1652025484,
                 // 'text' => '+ на 18',
-                'text' => '/day',
+                'text' => '/renick Kapibara',
                 // 'text' => '/dice',
                 // 'text' => '/chat',
                 // 'text' => '/spshop',

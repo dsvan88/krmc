@@ -25,31 +25,10 @@ class RenickCommand extends ChatCommand
             return static::result(['string' => 'I’m deeply sorry, but you can’t do this command yet. Social Points isn’t enough. Need <b>%s</b>.', 'vars' => [static::$costs]]);
         }
 
-        $_username = implode(' ', static::$arguments);
+        $_username = trim(implode(' ', static::$arguments));
 
-        if (empty(trim($_username))) {
-
-            TelegramChatsService::setPendingState('renick');
-
-            $message = self::locale('Okay, Im ready to get your beautiful nickname!') . PHP_EOL;
-            $message .= self::locale('Your next message - will be your nickname!');
-            $replyMarkup = [
-                'inline_keyboard' => [
-                    [
-                        ['text' => '❌' . self::locale('Cancel'), 'callback_data' => ['c' => 'pending', 'p' => 'renick', 'ci' => TelegramBotService::getChatId()]],
-                    ],
-                ],
-            ];
-            return [
-                'result' => true,
-                'reaction' => '👌',
-                'send' => [
-                    [
-                        'message' => $message,
-                        'replyMarkup' => $replyMarkup,
-                    ]
-                ]
-            ];
+        if (empty($_username)) {
+            return static::pendingNick();
         }
 
         TelegramChatsService::setPendingState();
@@ -109,6 +88,29 @@ class RenickCommand extends ChatCommand
             'send' => [
                 [
                     'message' => $message,
+                ]
+            ]
+        ];
+    }
+    public static function pendingNick(){
+        TelegramChatsService::setPendingState('renick');
+
+        $message = self::locale('Okay, I’m ready to get your beautiful nickname!') . PHP_EOL;
+        $message .= self::locale('Your next message - will be your nickname!');
+        $replyMarkup = [
+            'inline_keyboard' => [
+                [
+                    ['text' => '❌' . self::locale('Cancel'), 'callback_data' => ['c' => 'pending', 'p' => 'renick', 'ci' => TelegramBotService::getChatId()]],
+                ],
+            ],
+        ];
+        return [
+            'result' => true,
+            'reaction' => '👌',
+            'send' => [
+                [
+                    'message' => $message,
+                    'replyMarkup' => $replyMarkup,
                 ]
             ]
         ];

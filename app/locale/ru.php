@@ -213,7 +213,7 @@ return [
     'Opt-out' => 'Я -.',
     'This day is over🤷‍♂️' => 'Этот день - уже прошёл🤷‍♂️',
     'You’re successfully opted-in on a game %s at %s.' => 'Вы успешно записались на игру %s, что состоится %s.',
-    'User <b>%s</b> is <u>changed prim</u> on <b>%s</b>.' => 'Пользователь <b>%s</b> изменил своё примечание на игры, что состоятся <b>%s</b>.',
+    'User <b>%s</b> is <u>changed prim</u> on <b>%s</b>.' => 'Пользователь <b>%s</b> <u>изменил своё примечание</u> на игры, что состоятся <b>%s</b>.',
     'User <b>%s</b> is <u>opted-in</u> on a game <b>%s</b> at <b>%s</b>.' => 'Пользователь <b>%s</b> <u>записался</u> на игры <b>%s</b>, что состоятся <b>%s</b>.',
     'User <b>%s</b> is <u>opted-out</u> from a game <b>%s</b> at <b>%s</b>' => 'Пользователь <b>%s</b> <u>отписался</u> с игр <b>%s</b>, что состоятся <b>%s</b>.',
     'You’re successfully opted-out from a game %s at %s.' => 'Вы успешно отписались от игры %s, что состоится %s.',
