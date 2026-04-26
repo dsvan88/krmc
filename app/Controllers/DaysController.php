@@ -7,6 +7,7 @@ use app\core\Entities\Day;
 use app\core\Locale;
 use app\core\Noticer;
 use app\core\Sender;
+use app\core\Tech;
 use app\core\View;
 use app\Formatters\DayFormatter;
 use app\Formatters\WeekFormatter;

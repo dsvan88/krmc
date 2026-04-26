@@ -33,12 +33,6 @@ class NickAnswer extends ChatAnswer
                 'message' => static::locale(['string' => "Okay! Let’s try again!\nUse the next command to register your nickname:\n/nick <b>%s</b>\n\nTry to avoid characters of different languages.", 'vars' => [static::$requester->profile->name]])
             ];
         } else {
-            if (empty($user)){
-                $update = [
-                    'message' => static::locale('Can’t find a user with such criteria in our system.'),
-                ];
-                return array_merge(static::result('Fail', true), ['update' => [$update]]);
-            }
             $update = [
                 'message' =>
                 static::locale(['string' => "<b>%s</b>, nice to meet you!\nYou successfully registered in our system!", 'vars' => [static::$requester->profile->name]]) .
