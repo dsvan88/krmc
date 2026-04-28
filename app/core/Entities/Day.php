@@ -2,6 +2,7 @@
 
 namespace  app\core\Entities;
 
+use app\core\Locale;
 use app\core\Tech;
 use app\mappers\Coupons;
 use app\mappers\Days;
@@ -23,7 +24,8 @@ class Day
     public array $mods = [];
     public string $time = '';
     public string $day_prim = '';
-    public string $cost = '';
+    public array $cost = [];
+    public string $costText = '';
 
     public bool $current = false;
     public int $timestamp = 0;
@@ -50,7 +52,12 @@ class Day
         'starter' => null,
         'participants' => [],
         'day_prim' => '',
-        'cost' => ''
+        'cost' => [
+            'amount' => 100,
+            'currency' => '₴',
+            'type' => 'day',
+        ],
+        'costText' => '',
     ];
 
     private function __construct(int $dayId = 0, int $weekId = 0)
@@ -81,7 +88,7 @@ class Day
             $this->type = 'expire';
         }
 
-        foreach (static::$defaults as $field=>$v) {
+        foreach (static::$defaults as $field => $v) {
             if ($field === 'participants') {
                 AccountService::addNames(static::$week['data'][$dayId]['participants']);
                 $this->participantsCount = count(static::$week['data'][$dayId]['participants']);
@@ -94,6 +101,9 @@ class Day
         $this->gameName = static::$games[$this->game];
         $this->datetime = date('d.m.Y', $this->timestamp) . " {$this->time}";
         $this->date = date('d.m.Y', $this->timestamp) . " (<b>{$this->dayName}</b>) {$this->time}";
+
+        $_type = $this->cost['type'] === 'day' ? Locale::phrase('evening') : Locale::phrase('game');
+        $this->costText = "{$this->cost['amount']} {$this->cost['currency']} for $_type";
 
         return true;
     }
@@ -115,7 +125,7 @@ class Day
                 new static($x, $weekId);
         else
             new static($dayId, $weekId);
-            
+
         return static::$instances[get_called_class() . "_$dayId.$weekId"];
     }
     public static function fromWeekArray(array $week = [], int $dayId = 0): ?Day
@@ -151,13 +161,14 @@ class Day
     {
         if ($dayId === -1)
             $dayId = static::current();
-        
+
         if (0 > $dayId || $dayId > 6)
             return null;
 
         return [$dayId, empty($weekId) ? Weeks::currentId() : $weekId];
     }
-    public static function current(){
+    public static function current()
+    {
         if (!is_null(static::$currentDay)) {
             return static::$currentDay;
         }
@@ -201,7 +212,7 @@ class Day
 
         AccountService::addNames($this->participants[$slot]);
 
-        if (is_numeric($participant['userId'])){
+        if (is_numeric($participant['userId'])) {
             return $this->applyCoupons($participant['userId']);
         }
         return $this;
@@ -209,9 +220,9 @@ class Day
     public function applyCoupons(int $userId = 0): Day
     {
         if (empty($userId)) return $this;
-        
+
         CouponService::apply($this, $userId);
-        
+
         return $this;
     }
     public function removeParticipant(int $index): Day

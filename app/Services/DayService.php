@@ -5,8 +5,10 @@ namespace app\Services;
 use app\core\Entities\Day;
 use app\core\Entities\Week;
 use app\core\Locale;
+use app\core\Mailer;
 use app\core\Tech;
 use app\core\Validator;
+use app\mappers\Settings;
 use app\mappers\TelegramChats;
 use app\mappers\Users;
 use app\mappers\Weeks;
@@ -37,7 +39,8 @@ class DayService
         'tomorrow' => ['tom', 'tm', 'зав'],
     ];
 
-    public static function edit(int $weekId, int $dayId, array $data){
+    public static function edit(int $weekId, int $dayId, array $data)
+    {
         $day = Day::create($dayId, $weekId);
         $day->game = trim($data['game']);
         $day->mods = $data['mods'] ?? [];
@@ -45,9 +48,13 @@ class DayService
         $day->status = 'set';
         $day->participants = [];
         $day->day_prim = str_replace('  ', "\n", trim($data['day_prim']));
-        $day->cost = trim($data['day_cost']);
+        $day->cost = [
+            'amount' => trim($data['cost_amount']),
+            'currency' => trim($data['cost_currency']),
+            'type' => trim($data['cost_type']),
+        ];
 
-        foreach ($data['participant'] as $i=>$participant) {
+        foreach ($data['participant'] as $i => $participant) {
             if (empty($participant)) continue;
             if ($participant === '+1') {
                 $id = null;
@@ -133,27 +140,6 @@ class DayService
         }
         return implode('|', $days);
     }
-    public static function getModsTexts(array $mods = []): string
-    {
-        if (empty($mods)) return '';
-
-        $result = '';
-        if (in_array('funs', $mods, true))
-            $result .= Locale::phrase("*<b>Fun game</b>!\nFewer rules, more emotions, additional roles and moves!\nHave a good time and have fun!\n");
-        if (in_array('beginners', $mods, true))
-            $result .= Locale::phrase("*<b>Begginers</b>!\nLess strict, more explanatory, friendly atmosphere!\nIt’s time to try something new in safest way!😉\n");
-        if (in_array('night', $mods, true))
-            $result .= Locale::phrase("*<b>Nights</b>!\nAll night long! Don’t stop!😉\n");
-        if (in_array('theme', $mods, true))
-            $result .= Locale::phrase("*<b>Themes</b>!\nPrepeare yourself and your image!\nIt’s time to dive into a different world!😁\n");
-        if (in_array('close', $mods, true))
-            $result .= Locale::phrase("*<b>Close</b>!\nOn invitation only!\n");
-        if (in_array('sales', $mods, true))
-            $result .= Locale::phrase("*<b>Sales</b>!\nThrow a dice!\nWin a dicount on evening's costs!\n");
-        if (in_array('tournament', $mods, true))
-            $result .= Locale::phrase("<b>Tournament</b>!\nBecome a champion in a glorious and fair competition!\n");
-        return $result;
-    }
     public static function findLastGameOfPlayer($userId = 0)
     {
         if (empty($userId)) return 0;
@@ -227,5 +213,15 @@ class DayService
             CouponService::burn($day);
         }
         $week->save();
+
+        if ($_SESSION['report']) {
+            $settings = Settings::load('backup');
+            $mailer = new Mailer();
+            $mailer->prepMessage([
+                'title' => Locale::phrase(['string' => '<no-reply> %s - updates for %s.', 'vars' => [CLUB_NAME, date('d.m.Y')]]),
+                'body' => "<p>Database changes.</p><p>Here is some changes in DB related to a finish of day actions:</p><p>" . implode("</p><p>", $_SESSION['report']) . "</p>",
+            ]);
+            $mailer->send($settings['email']['value']);
+        }
     }
 }

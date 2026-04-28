@@ -38,6 +38,7 @@ class SocialPointsService
         }
 
         $starter = $day->starter ?? 0;
+        $_SESSION['report'][] = "Applying social points for day {$day->dayId} of week {$day->weekId}. Participants count: {$day->participantsCount}";
 
         foreach ($day->participants as $participant) {
 
@@ -48,6 +49,7 @@ class SocialPointsService
             if ($participant['id'] == $starter) $points += SocialPoints::$points['dayStarter'];
 
             try {
+                $_SESSION['report'][] = "Adding $points points to user {$participant['name']} (id: {$participant['id']})";
                 SocialPoints::add($participant['id'], $points);
             } catch (\Throwable $e) {
                 $_SESSION['debug'][] = $participant['id'] . ' error -> ' . $e->getMessage();

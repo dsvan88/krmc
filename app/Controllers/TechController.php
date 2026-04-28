@@ -174,18 +174,38 @@ class TechController extends Controller
     }
     public static function dbrebuildAction()
     {
-        return View::redirect('/');
+        // return View::redirect('/');
         set_time_limit(720);
         // $users = Users::getAll();
         // foreach ($users as $user) {
         //     SocialPoints::set(0, $user['id']);
         // }
         $weeks = Weeks::getAll();
-        $time = strtotime('01.01.2025');
+        $defCost = [
+            'amount' => 100,
+            'currency' => '₴',
+            'type' => 'day',
+        ];
         foreach ($weeks as $week) {
-            if ($week['finish'] > $time) {
-                SocialPointsService::applyBookingPoints($week['id']);
+            for ($i = 0; $i < 7; $i++) {
+                if (empty($week['data'][$i])) continue;
+
+                if (empty($week['data'][$i]['cost'])) {
+                    $week['data'][$i]['cost'] = $defCost;
+                    continue;
+                }
+
+                if (is_array($week['data'][$i]['cost'])) continue;
+
+                preg_match('/(\d+)/', $week['data'][$i]['cost'], $matches);
+                $week['data'][$i]['cost'] = [
+                    'amount' => $matches[1] ?? 100,
+                    'currency' => '₴',
+                    'type' => 'day',
+                ];
             }
+            Tech::dump($week['id']);
+            Weeks::update(['data' => json_encode($week['data'], JSON_UNESCAPED_UNICODE)], ['id' => $week['id']]);
         }
         echo 'Weeks rebuilded.<br>';
 
@@ -252,15 +272,6 @@ class TechController extends Controller
     }
     public static function testAction()
     {
-        error_reporting(E_ALL);
-        // $id = '9fbea223facb5808';
-        $id = Coupons::create(15,1);
-        Tech::dump($id);
-        $day = Day::create();
-        $coupon = Coupon::create($id);
-        Tech::dump($coupon->expired_at);
-        Tech::dump(strtotime($coupon->expired_at));
-        $coupon->apply($day)->save();
-        $day->save();
+        DayService::finishExpiredDays();
     }
 }

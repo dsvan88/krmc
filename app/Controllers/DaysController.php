@@ -4,8 +4,6 @@ namespace app\Controllers;
 
 use app\core\Controller;
 use app\core\Entities\Day;
-use app\core\Locale;
-use app\core\Noticer;
 use app\core\Sender;
 use app\core\View;
 use app\Formatters\DayFormatter;
@@ -14,7 +12,6 @@ use app\mappers\Days;
 use app\mappers\GameTypes;
 use app\mappers\Settings;
 use app\mappers\Users;
-use app\mappers\Weeks;
 use app\Services\DayService;
 
 class DaysController extends Controller
@@ -68,7 +65,7 @@ class DaysController extends Controller
 
         $modsTexts = empty($day->mods) ?
             '' :
-            '<p>' . str_replace("\n", '</p><p>', DayService::getModsTexts($day->mods)) . '</p>';
+            '<p>' . str_replace("\n", '</p><p>', DayFormatter::getModsTexts($day->mods)) . '</p>';
 
         $mods = [];
         foreach (DayService::$dayDefaultModsArray as $mod => $value)

@@ -107,9 +107,11 @@
                             <?= $footerAdress ?>
                         </div>
                     </div>
-                    <div class="footer__block footer__gmap">
-                        <iframe src="<?= $footerGmapWidget ?>" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-                    </div>
+                    <?php if (APP_LOC != 'local') : ?>
+                        <div class="footer__block footer__gmap">
+                            <iframe src="<?= $footerGmapWidget ?>" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                        </div>
+                    <?php endif ?>
                     <div class="footer__block contacts">
                         <div class="footer__contacts">
                             <h4 class="footer__contacts-label">Контакти:</h4>

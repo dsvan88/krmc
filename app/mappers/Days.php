@@ -67,7 +67,11 @@ class Days extends Model
             'status' => 'set',
             'participants' => [],
             'day_prim' => str_replace('  ', "\n", trim($data['day_prim'])),
-            'cost' => trim($data['day_cost']),
+            'cost' => [
+                'amount' => trim($data['cost_amount']),
+                'currency' => trim($data['cost_currency']),
+                'type' => trim($data['cost_type']),
+            ],
         ];
         $count = count($data['participant']);
         for ($i = 0; $i < $count; $i++) {

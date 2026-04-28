@@ -102,42 +102,38 @@
                         ]);
                         ?>
                     </div>
+                    <?php /*
                     <div class="booking__row">
                         <label for="day-game" class="booking__label"><?= $texts['dayCosts'] ?>:</label>
                         <div class="booking__value">
                             <input type="text" name="day_cost" value="<?= $day->cost ?>" placeholder="<?= $texts['dayCosts'] ?>" id="day-time" />
                         </div>
-                    </div>
+                    </div> */ ?>
                     <div class="booking__row">
                         <label for="day-game" class="booking__label"><?= $texts['dayCosts'] ?>:</label>
-                        <div class="booking__value">
-                            <input type="text" name="cost_amount" value="<?/*= $day->cost_amount */ ?>" placeholder="<?= $texts['dayCosts'] ?>" id="day-time" />
+                        <div class="booking__value flex">
+                            <input type="text" name="cost_amount" value="<?= $day->cost['amount'] ?>" placeholder="<?= $texts['dayCosts'] ?>" id="day-time" />
                             <select name="cost_currency" id="">
-                                <option value="₴" <?= /* $day->cost_currency === '₴' ? 'selected' : */ '' ?>>₴</option>
-                                <option value="$" <?= /* $day->cost_currency === '$' ? 'selected' : */ '' ?>>$</option>
-                                <option value="€" <?= /* $day->cost_currency === '€' ? 'selected' : */ '' ?>>€</option>
+                                <option value="₴" <?= $day->cost['currency'] === '₴' ? 'selected' : '' ?>>₴</option>
+                                <option value="$" <?= $day->cost['currency'] === '$' ? 'selected' : '' ?>>$</option>
+                                <option value="€" <?= $day->cost['currency'] === '€' ? 'selected' : '' ?>>€</option>
                             </select>
                             <select name="cost_type" id="">
-                                <option value="day" <?= /* $day->cost_type === 'day' ? 'selected' : */ '' ?>>day</option>
-                                <option value="game" <?= /* $day->cost_type === 'game' ? 'selected' : */ '' ?>>game</option>
+                                <option value="day" <?= $day->cost['type'] === 'day' ? 'selected' : '' ?>>day</option>
+                                <option value="game" <?= $day->cost['type'] === 'game' ? 'selected' : '' ?>>game</option>
                             </select>
                         </div>
                     </div>
+                    <?php /*
                     <div class="booking__row" id="sales_options">
                         <div class="booking__row">
-                            <label for="day-game" class="booking__label"><?= /* $texts['salesWinners']  */ '' ?>:</label>
+                            <label for="day-game" class="booking__label"><?= /* $texts['salesWinners']  * / '' ?>:</label>
                             <div class="booking__value">
-                                <input type="text" name="sales_winners" value="<?/*= $day['sales'] */ ?>" placeholder="<?/*=$texts['salesWinners'] */ ?>" id="day-time" />
+                                <input type="text" name="sales_winners" value="<?/*= $day['sales'] * / ?>" placeholder="<?/*=$texts['salesWinners'] * / ?>" id="day-time" />
                             </div>
                         </div>
                     </div>
-                    <div class="booking__row">
-                        <div class="booking__value">
-                            <textarea
-                                name="day_prim"
-                                placeholder="<?= $texts['RemarkPlaceHolder'] ?>"><?= $day->day_prim ?></textarea>
-                        </div>
-                    </div>
+                    */ ?>
                     <div class="booking__row">
                         <div class="booking__value">
                             <textarea

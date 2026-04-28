@@ -93,7 +93,6 @@ class Week
         for ($x = 0; $x < 7; $x++) {
             $data[] = $this->days[$x]->save(1);
         }
-        Tech::dump($data);
         return (bool) Weeks::update(['data' => json_encode($data, JSON_UNESCAPED_UNICODE)], ['id' => $this->id]);
     }
 }

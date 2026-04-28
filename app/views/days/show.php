@@ -23,7 +23,7 @@
                     <label class="day__label"><?= $texts['dayStartTime'] ?>:</label> <span><u><?= $day->time ?></u></span>
                 </div>
                 <div class="day__row">
-                    <label class="day__label"><?= $texts['dayCosts'] ?>:</label> <span><u><?= $day->cost ?></u></span>
+                    <label class="day__label"><?= $texts['dayCosts'] ?>:</label> <span><u><?= $day->costText ?></u></span>
                 </div>
             </div>
             <div class="day__participants">

@@ -14,17 +14,20 @@ class CouponService
         if (empty($day) || empty($day->coupons)) return;
         $coupons = [];
         foreach ($day->coupons as $c) {
-            $coupons[] = Coupon::create();
+            $coupons[] = Coupon::create($c);
         }
 
         $method = 'recall';
         if ($day->status === 'finished')
             $method = 'expire';
 
+        $_SESSION['report'][] = "<b><u>$method</u></b> coupons for day {$day->dayId} of week {$day->weekId}.";
+
         foreach ($coupons as $coupon) {
             $coupon->$method($day);
+            $_SESSION['report'][] = "Coupon {$coupon->id} for user {$coupon->owner->name} (id: {$coupon->owner->id}).";
+            $coupon->save();
         }
-        $coupon->save();
     }
     public static function apply(?Day $day = null, int $userId = 0): void
     {
@@ -32,7 +35,7 @@ class CouponService
 
         $coupons = Coupons::findBy('owner', $userId);
         if (empty($coupons)) return;
-        
+
         usort($coupons, fn($a, $b) => strtotime($a['created_at']) > strtotime($b['created_at']) ? +1 : -1);
 
         $coupon = null;

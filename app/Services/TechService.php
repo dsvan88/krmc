@@ -149,7 +149,7 @@ class TechService
     {
         $settings = Settings::get('finish');
 
-        if (($settings['last']['value'] ?? 0) > $_SERVER['REQUEST_TIME'] - (TIMESTAMP_DAY / 3)) exit();
+        if (($settings['last']['value'] ?? 0) > $_SERVER['REQUEST_TIME'] - (TIMESTAMP_DAY / 3)) return;
 
         $url = Tech::getRequestProtocol() . "://{$_SERVER['SERVER_NAME']}/tech/schedule/finish";
         $options = [

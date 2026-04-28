@@ -67,6 +67,27 @@ class DayFormatter
         ];
         return isset($clocks[$hour . $mins]) ? $clocks[$hour . $mins] : '';
     }
+    public static function getModsTexts(array $mods = []): string
+    {
+        if (empty($mods)) return '';
+
+        $result = '';
+        if (in_array('funs', $mods, true))
+            $result .= Locale::phrase("*<b>Fun game</b>!\nFewer rules, more emotions, additional roles and moves!\nHave a good time and have fun!\n");
+        if (in_array('beginners', $mods, true))
+            $result .= Locale::phrase("*<b>Begginers</b>!\nLess strict, more explanatory, friendly atmosphere!\nIt’s time to try something new in safest way!😉\n");
+        if (in_array('night', $mods, true))
+            $result .= Locale::phrase("*<b>Nights</b>!\nAll night long! Don’t stop!😉\n");
+        if (in_array('theme', $mods, true))
+            $result .= Locale::phrase("*<b>Themes</b>!\nPrepeare yourself and your image!\nIt’s time to dive into a different world!😁\n");
+        if (in_array('close', $mods, true))
+            $result .= Locale::phrase("*<b>Close</b>!\nOn invitation only!\n");
+        if (in_array('sales', $mods, true))
+            $result .= Locale::phrase("*<b>Sales</b>!\nThrow a dice!\nWin a dicount on evening's costs!\n");
+        if (in_array('tournament', $mods, true))
+            $result .= Locale::phrase("<b>Tournament</b>!\nBecome a champion in a glorious and fair competition!\n");
+        return $result;
+    }
     public static function forMessengers(?Day $day = null): string
     {
         if (empty($day)) return '';
@@ -95,10 +116,11 @@ class DayFormatter
         $proto = Tech::getRequestProtocol();
         $result .= "🎮 - <a href='$proto://{$_SERVER['SERVER_NAME']}/game/{$day->game}/?lang=$lang'>{$gameName}</a>\n";
 
-        $result .= DayService::getModsTexts($day->mods);
+        $result .= DayFormatter::getModsTexts($day->mods);
 
-        if (!empty($day->cost))
-            $result .= "💲 - <u>{$day->cost}</u>\n";
+        if (!empty($day->costText)) {
+            $result .= "💲 - <u>{$day->costText}</u>\n";
+        }
         if (!empty($day->day_prim))
             $result .= "🗒 - <u>{$day->day_prim}</u>\n";
 
@@ -108,7 +130,7 @@ class DayFormatter
         $result .= "📍 - <a href='{$contacts['gmap_link']['value']}'>$place</a>\n";
         $result .= "\n";
 
-        if (isset($day->coupons[0])){
+        if (isset($day->coupons[0])) {
             CouponService::getDayCoupons($day);
         }
 
@@ -146,7 +168,7 @@ class DayFormatter
             if (!empty($participant['arrive']) && $participant['arrive'] !== $day->time) {
                 $modsParts[] = static::getTimeEmoji($participant['arrive']) . ' ' . $participant['arrive'];
             }
-            if (isset($day->coupons[$participant['id']]) && (APP_LOC === 'local' || !empty(ChatAction::$message) && TelegramBotService::getChatId() == Settings::getAdminChatTelegramId())){
+            if (isset($day->coupons[$participant['id']]) && (APP_LOC === 'local' || !empty(ChatAction::$message) && TelegramBotService::getChatId() == Settings::getAdminChatTelegramId())) {
                 $modsParts[] =  "🎫- <i><u>{$day->coupons[$participant['id']]->options['discount']}{$day->coupons[$participant['id']]->options['discount_type']}</u></i>";
             }
             if ($userName[0] === '_') {
