@@ -53,6 +53,8 @@ class DayService
             'currency' => trim($data['cost_currency']),
             'type' => trim($data['cost_type']),
         ];
+        $_type = $day->cost['type'] === 'day' ? Locale::phrase('evening') : Locale::phrase('game');
+        $day->costText = "{$day->cost['amount']} {$day->cost['currency']} for $_type";
 
         foreach ($data['participant'] as $i => $participant) {
             if (empty($participant)) continue;
@@ -93,7 +95,9 @@ class DayService
             ];
             $day->addParticipant($participant);
         }
-        return $day->save();
+        $day->save();
+
+        return $day;
     }
     public static function renamePlayer(int $userId, string $name): void
     {

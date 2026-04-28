@@ -23,9 +23,8 @@ class DaysController extends Controller
         extract(self::$route['vars']);
         if (Users::checkAccess('manager')) {
             if (!empty($_POST)) {
-                $weekId = DayService::edit($weekId, $dayId, $_POST);
+                $day = DayService::edit($weekId, $dayId, $_POST);
                 if (!empty($_POST['send'])) {
-                    $day = Day::create($dayId, $weekId);
                     Sender::message(Settings::getMainTelegramId(), DayFormatter::forMessengers($day));
                 }
                 return View::notice(['message' => 'Changes saved successfully!', 'location' => 'reload', 'time' => 1500]);
@@ -58,7 +57,9 @@ class DaysController extends Controller
             ],
         ];
 
-        $day = Day::create($dayId, $weekId);
+        if (empty($day)) {
+            $day = Day::create($dayId, $weekId);
+        }
 
         $yesterday = WeekFormatter::yesterday($day);
         $tomorrow = WeekFormatter::tomorrow($day);
