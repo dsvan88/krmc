@@ -4,6 +4,7 @@ namespace app\Services;
 
 use app\core\Entities\Day;
 use app\core\Locale;
+use app\core\Tech;
 use app\core\Validator;
 use app\mappers\Contacts;
 use app\mappers\TelegramChats;
@@ -66,7 +67,14 @@ class AccountService
     }
     public static function addNames(array &$source): array
     {
-        if (!empty($source['id'])) {
+        if (isset($source['prim'])) {
+            if (is_null($source['id'])){
+                $source['name'] = '+1';
+                $source['status'] = 'all';
+                $source['gender'] = '';
+                $source['emoji'] = '';
+                return $source;
+            }
             if (!is_numeric($source['id']) && $source['id'][0] === '_') {
                 $chatData = TelegramChats::find(substr($source['id'], 1));
                 $source['name'] = empty($chatData['personal']['username']) ? $source['id'] : '@' . $chatData['personal']['username'];
@@ -78,7 +86,7 @@ class AccountService
             try {
                 $userData = Users::find($source['id']);
             } catch (\Throwable $error) {
-                error_log($source['id']);
+                error_log(__METHOD__ . 'User #'.$source['id'].' is deleted.');
             }
             $source['name'] = empty($userData) ? '&lt; Deleted &gt;' : $userData['name'];
 
@@ -91,7 +99,6 @@ class AccountService
 
         $count = count($source);
         for ($x = 0; $x < $count; $x++) {
-            if (is_null($source[$x]['id'])) continue;
             static::addNames($source[$x]);
         }
         return $source;
