@@ -4,8 +4,11 @@ namespace app\Services;
 
 use app\core\Entities\Coupon;
 use app\core\Entities\Day;
+use app\core\Locale;
 use app\core\Tech;
+use app\core\Validator;
 use app\mappers\Coupons;
+use app\mappers\Settings;
 
 class CouponService
 {
@@ -79,5 +82,35 @@ class CouponService
         }
         usort($result, fn($a, $b) => $a->created_at > $b->created_at ? +1 : -1);
         return $result;
+    }
+    public static function getTypes(): array
+    {
+        $setting = Settings::findBy('type', 'coupons', 1);
+
+        return empty($setting[0]['setting']) ? [] : $setting[0]['setting'];
+    }
+    public static function newType(array $post = []): array
+    {
+        if (empty($post))
+            throw new \Exception(__METHOD__ . ': $post can’t be empty.');
+
+        $coupon = Coupons::$blueprint;
+
+        $cyrillics = Locale::$cyrillicPattern;
+        $coupon['name'] = preg_replace(['/\s+/', "/[^a-z{$cyrillics}0-9 _!#@$%&*():+-]/ui"], [' ', ''], trim($post['name']));
+        $coupon['price'] = Validator::validate('int', $post['price']) ?? $coupon['price'];
+        $coupon['options']['discount'] = Validator::validate('int', $post['discount']) ?? $coupon['options']['discount'];
+        $coupon['options']['discount_type'] = Validator::validate('discountType', $post['discount_type']) ?? $coupon['options']['discount_type'];
+
+        if ($coupon['options']['discount_type'] !== '%')
+            $coupon['icon'] = '🎟';
+
+        $setting = Settings::findBy('type', 'coupons', 1);
+        $coupons = empty($setting[0]['setting']) ? [] : $setting[0]['setting'];
+        $coupons[] = $coupon;
+
+        Settings::update(['setting' => json_encode($coupons, JSON_UNESCAPED_UNICODE)], ['type' => 'coupons']);
+
+        return empty($coupons) ? [] : $coupons;
     }
 }

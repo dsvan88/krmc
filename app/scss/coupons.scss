@@ -5,13 +5,63 @@ $readyColor: $bg-color-light-blue;
 $appliedColor: $bg-color-light-green;
 $expiredColor: $bg-color-gray;
 
-.coupons{
+.coupons {
     background-color: $bg-color-light;
-    .coupon{
+
+    .types {
+        display: flex;
+        justify-content: space-evenly;
+        gap: 1em;
+        padding-bottom: 1em;
+        margin-bottom: 1em;
+        border-bottom: 1px solid $bg-color-light-blue-blur;
+
+        &__item {
+            list-style: none;
+            font-size: 2em;
+            width: 5em;
+            padding: .2em 1em;
+            text-align: center;
+            border: 1px solid $bg-color-light-blue-blur;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: border-color $animation-fast;
+
+            &:hover {
+                border-color: $readyColor;
+            }
+
+            &.active {
+                border-color: $bg-color-dark-green-blur;
+            }
+        }
+    }
+
+    &__header {
+        padding: .5em 1em;
+    }
+
+    &__add {
+        float: right;
+        color: $bg-color-light-blue;
+        cursor: pointer;
+        transition: color $animation-fast;
+
+        &.fa {
+            font-size: 2.5em;
+        }
+
+        &:hover {
+            color: $bg-color-blue-blur;
+        }
+    }
+
+    .coupon {
         color: $color-text-black;
         margin-bottom: 1em;
         padding: .2em .5em;
-        &__title{
+
+        &__title {
             font-size: .8em;
             border-radius: 5px 5px 0 0;
             background-color: $readyColor;
@@ -19,7 +69,8 @@ $expiredColor: $bg-color-gray;
             max-width: max-content;
             padding: .4em 1em 0 .8em;
         }
-        &__content{
+
+        &__content {
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -29,22 +80,27 @@ $expiredColor: $bg-color-gray;
             box-shadow: 0 0 3px 0 $readyColor;
             padding: 1em;
         }
-        &__id{
+
+        &__id {
             text-transform: uppercase;
         }
-        &__status{
+
+        &__status {
             max-width: 8em;
-            div{
+
+            div {
                 border: 2px solid $readyColor;
                 transform: rotate(-0.05turn);
                 padding: .2em .5em;
             }
         }
-        &__dashboard{
+
+        &__dashboard {
             display: flex;
             flex-direction: column;
-            gap:.2em;
-            i{
+            gap: .2em;
+
+            i {
                 font-size: 2em;
                 border: 1px solid $bg-color-light-blue-blur;
                 border-radius: 2px;
@@ -52,54 +108,106 @@ $expiredColor: $bg-color-gray;
                 display: flex;
                 justify-content: center;
                 align-items: center;
-                &:hover{
+
+                &:hover {
                     border-color: $bg-color-light-blue
                 }
             }
         }
-        &.applied{
-            .coupon__title{
+
+        &.applied {
+            .coupon__title {
                 background-color: $appliedColor;
                 border-color: $appliedColor;
                 box-shadow: 0 0 3px 0 $appliedColor;
             }
-            .coupon__content{
+
+            .coupon__content {
                 border-color: $appliedColor;
                 box-shadow: 0 0 3px 0 $appliedColor;
             }
-            .coupon__status{
-                div{
+
+            .coupon__status {
+                div {
                     border-color: $appliedColor;
                 }
             }
         }
-        &.expired{
-            .coupon__title{
+
+        &.expired {
+            .coupon__title {
                 background-color: $expiredColor;
                 border-color: $expiredColor;
                 box-shadow: 0 0 3px 0 $expiredColor;
             }
-            .coupon__content{
+
+            .coupon__content {
                 border-color: $expiredColor;
                 box-shadow: 0 0 3px 0 $expiredColor;
                 color: $expiredColor;
             }
-            .coupon__status{
-                div{
+
+            .coupon__status {
+                div {
                     border-color: $bg-color-light-red;
                     color: $bg-color-light-red;
                 }
             }
         }
     }
+
+    .types {
+        &__list {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 0.5em;
+
+            .type {
+                width: 80vw;
+                color: $color-text-black;
+                margin-bottom: 1em;
+                padding: .2em .5em;
+
+                &__dashboard {
+                    float: right;
+                }
+
+                &__title {
+                    font-size: .8em;
+                    border-radius: 5px 5px 0 0;
+                    background-color: $readyColor;
+                    box-shadow: 0 0 3px 0 $readyColor;
+                    max-width: max-content;
+                    padding: .4em 1em 0 .8em;
+                }
+
+                &__content {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    gap: .5em;
+                    border: 5px solid $readyColor;
+                    border-radius: 0 5px 5px 5px;
+                    box-shadow: 0 0 3px 0 $readyColor;
+                    padding: 1em;
+                }
+
+                @include md {
+                    width: 30%;
+                }
+            }
+        }
+    }
 }
 
-.popup{
-    .statuses{
-        &__list{
+.popup {
+    .statuses {
+        &__list {
             list-style: none;
         }
-        &__label{
+
+        &__label {
             display: inline-block;
             width: 100%;
             box-sizing: border-box;
@@ -108,14 +216,17 @@ $expiredColor: $bg-color-gray;
             padding: .2em 1em;
             transition: border-color $animation-fast;
             cursor: pointer;
-            &:hover{
+
+            &:hover {
                 border-color: $readyColor;
             }
         }
-        input[type=radio]{
+
+        input[type=radio] {
             display: none;
-            &:checked{
-                & ~ label{
+
+            &:checked {
+                &~label {
                     border-color: $appliedColor;
                 }
             }

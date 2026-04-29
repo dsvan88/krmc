@@ -3,7 +3,6 @@
 namespace app\mappers;
 
 use app\core\Model;
-use app\core\Tech;
 use Exception;
 
 class Coupons extends Model
@@ -20,6 +19,24 @@ class Coupons extends Model
         'ready',
         'applied',
         'expired',
+    ];
+    public static $discount_types = [
+        '%',
+        '₴',
+        '$',
+        '€',
+    ];
+
+    public static $blueprint = [
+        'active' => true,
+        'name' => 'Blueprint',
+        'icon' => '🎫',
+        'type' => 'once',
+        'price' => 200,
+        'options' => [
+            'discount' => 50,
+            'discount_type' => '%',
+        ],
     ];
 
     public static $coupons = [
@@ -80,26 +97,25 @@ class Coupons extends Model
     public static function isExpired($coupon): bool
     {
         if (empty($coupon))
-            throw new Exception(__METHOD__. ' $coupon can’t be empty.');
+            throw new Exception(__METHOD__ . ' $coupon can’t be empty.');
 
-        $offset = TIMESTAMP_YEAR+TIMESTAMP_DAY;
-        $expire = $_SERVER['REQUEST_TIME']+TIMESTAMP_DAY;
+        $offset = TIMESTAMP_YEAR + TIMESTAMP_DAY;
+        $expire = $_SERVER['REQUEST_TIME'] + TIMESTAMP_DAY;
         if (is_object($coupon)) {
-            if ($coupon->expired_at){
+            if ($coupon->expired_at) {
                 return $coupon->expired_at > $offset && $expire > $coupon->expired_at;
             }
-            throw new Exception(__METHOD__. ' $coupon is invalid.');
+            throw new Exception(__METHOD__ . ' $coupon is invalid.');
         }
         if (is_array($coupon)) {
-            if (isset($coupon['expired_at'])){
+            if (isset($coupon['expired_at'])) {
                 return $coupon['expired_at'] > $offset && $expire > $coupon['expired_at'];
             }
-            throw new Exception(__METHOD__. ' $coupon is invalid.');
+            throw new Exception(__METHOD__ . ' $coupon is invalid.');
         }
         $coupon = static::findBy('id', $coupon, 1);
 
         return $expire < $coupon['expired_at'];
-
     }
     public static function getAll(array $coupons = [], string $andOr = 'AND '): array
     {
@@ -125,7 +141,7 @@ class Coupons extends Model
             'type' => $coupon['type'],
             'status' => $status,
             'options' => json_encode($coupon['options']),
-            'expired_at' => date('Y-m-d', $expired) .'T'. date('H:i:s', $expired),
+            'expired_at' => date('Y-m-d', $expired) . 'T' . date('H:i:s', $expired),
         ];
 
         $hex = (hash('xxh3', json_encode($_coupon) . $_SERVER['REQUEST_TIME']));

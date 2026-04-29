@@ -197,9 +197,15 @@ class ModalWindow {
 			if (this.currentOverlay === event.target && !confirm(__('Are you want to close this window?')))
 				return;
 		}
-		if (this.modalIndex === 1) {
+
+		ModalWindow.index--;
+
+		if (ModalWindow.index < 1) {
+			ModalWindow.index = 0;
 			this.commonOverlay.style.opacity = 0;
-			setTimeout(() => this.commonOverlay.remove(), 300);
+			setTimeout(() => {
+				this.commonOverlay.remove();
+			}, 300);
 		}
 
 		this.modal.style.opacity = 0;
@@ -209,8 +215,8 @@ class ModalWindow {
 		document.removeEventListener('touchmove', this.onMouseMove);
 
 		setTimeout(() => {
-			this.modal.remove()
-			this.currentOverlay.remove()
+			this.modal.remove();
+			this.currentOverlay.remove();
 		}, 300);
 	}
 	async submit(event) {
@@ -288,8 +294,8 @@ class ModalWindow {
 	}
 }
 
-if (typeof __ !== 'function'){
-	function __(text){
+if (typeof __ !== 'function') {
+	function __(text) {
 		return text;
 	}
 }

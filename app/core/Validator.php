@@ -18,6 +18,18 @@ class Validator
     {
         return !empty($_POST[CSRF_NAME]) && self::validate('csrf', $_POST[CSRF_NAME]);
     }
+    private static function int(string $string): ?int
+    {
+        $string = strtolower(trim($string));
+
+        return is_numeric($string) ? (int) $string : null;
+    }
+    private static function float(string $string): ?float
+    {
+        $string = strtolower(trim($string));
+
+        return is_numeric($string) ? (float) $string : null;
+    }
     private static function rootpass(string $value): string
     {
         $value = trim($value);
@@ -32,7 +44,8 @@ class Validator
         return hash_equals($_SESSION['csrf'], $value);
         // return $value === $_SESSION['csrf'] && $value === sha1($_SERVER['HTTP_USER_AGENT'] . session_id());
     }
-    private static function blocks(string $value){
+    private static function blocks(string $value)
+    {
         $value = trim($value);
         if (empty($value)) return false;
         return in_array($value, Pages::$blocks, true) ? $value : false;
@@ -106,7 +119,7 @@ class Validator
         ksort($array);
 
         $check_string = '';
-        foreach($array as $k=>$v)
+        foreach ($array as $k => $v)
             $check_string .= "$k=$v\n";
         $check_string = rtrim($check_string, "\n");
 
@@ -139,19 +152,39 @@ class Validator
     private static function localeModule(string $string): ?string
     {
         $string = trim($string);
-        
+
         if (empty($string)) return null;
-        
+
         return in_array($string, ['mafia', 'poker'], true)
+            ? $string
+            : null;
+    }
+    private static function couponType(string $string): ?string
+    {
+        $string = strtolower(trim($string));
+
+        if (empty($string) || $string === 'han') return null;
+
+        return in_array($string, Coupons::$types, true)
+            ? $string
+            : null;
+    }
+    private static function discountType(string $string): ?string
+    {
+        $string = strtolower(trim($string));
+
+        if (empty($string)) return null;
+
+        return in_array($string, Coupons::$discount_types, true)
             ? $string
             : null;
     }
     private static function couponStatus(string $string): ?string
     {
         $string = strtolower(trim($string));
-        
+
         if (empty($string)) return null;
-        
+
         return in_array($string, Coupons::$statuses, true)
             ? $string
             : null;
@@ -159,9 +192,9 @@ class Validator
     private static function couponId(string $id): ?string
     {
         $id = strtolower(trim($id));
-        
+
         if (empty($id)) return null;
-        
+
         $coupon = Coupon::create($id);
 
         return $coupon->id ?? null;

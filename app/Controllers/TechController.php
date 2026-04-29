@@ -180,6 +180,8 @@ class TechController extends Controller
         // foreach ($users as $user) {
         //     SocialPoints::set(0, $user['id']);
         // }
+        Settings::insert(['type' => 'coupons']);
+        
         $weeks = Weeks::getAll();
         $defCost = [
             'amount' => 100,

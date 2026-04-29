@@ -13,16 +13,26 @@ class CouponsController extends Controller
 {
     public static function indexAction()
     {
+
         $vars = [
             'title' => 'Coupons List',
+            'subtitle' => 'List of all coupons',
             'coupons' => CouponService::getAllCoupons(),
-            'scripts' =>[
+            'scripts' => [
                 'coupons.js',
             ],
-            'styles' =>[
+            'tab' => $_GET['tab'] ?? 'index',
+            'styles' => [
                 'coupons',
             ]
         ];
+
+        if ($_GET['tab'] === 'types') {
+            $vars['title'] =  'Coupon’s types';
+            $vars['subtitle'] =  'List of all coupon’s types';
+            $vars['coupons'] =  CouponService::getTypes();
+        }
+
         View::$route['vars'] = array_merge(View::$route['vars'], $vars);
         return View::render();
     }
@@ -37,9 +47,9 @@ class CouponsController extends Controller
         $coupon = Coupon::create($couponId);
         $coupon->status = $status;
 
-        if ($status === 'ready'){
+        if ($status === 'ready') {
             $coupon->used_on = Coupon::$defaults['used_on'];
-            if ($coupon->isExpired()){
+            if ($coupon->isExpired()) {
                 $coupon->expired_at = $_SERVER['REQUEST_TIME'] + TIMESTAMP_WEEK;
             }
         }
@@ -63,5 +73,52 @@ class CouponsController extends Controller
         Coupons::delete($couponId);
 
         return View::notice(['message' => 'Success', 'time' => 1500, 'location' => 'reload']);
+    }
+    public static function addAction()
+    {
+        if (!Validator::csrfCheck()) {
+            return View::notice(['error' => 403, 'message' => 'Try again later:)', 'time' => 2000]);
+        }
+    }
+    public static function addTypeFormAction()
+    {
+        $vars = [
+            'title' => 'Add a coupon’s type',
+            'subtitle' => 'Set coupon’s type details',
+            'texts' => [
+                'SubmitLabel' => 'Add',
+            ],
+        ];
+        View::$route['vars'] = array_merge(View::$route['vars'], $vars);
+        return View::modal();
+    }
+    public static function addTypeAction()
+    {
+        try {
+            CouponService::newType($_POST);
+        } catch (\Throwable $th) {
+            return View::notice(['message' => $th->getMessage(), 'type' => 'error']);
+        }
+        return View::notice(['message' => 'Success', 'time' => 1500, 'location' => 'reload']);
+    }
+    public static function addFormAction()
+    {
+        $vars = [
+            'title' => 'Add a coupon',
+            'subtitle' => 'Set coupon details',
+            'texts' => [
+                'SubmitLabel' => 'Add',
+            ],
+            // 'coupons' => CouponService::getAllCoupons(),
+            // 'scripts' => [
+            //     'coupons.js',
+            // ],
+            // 'tab' => $_POST['type'] ?? 'index',
+            //     'styles' => [
+            //         'coupons',
+            //     ]
+        ];
+        View::$route['vars'] = array_merge(View::$route['vars'], $vars);
+        return View::modal();
     }
 }

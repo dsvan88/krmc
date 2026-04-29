@@ -66,6 +66,18 @@ abstract class Entity
         static::$cache = $data;
         return true;
     }
+    public static function fromArray(array $array = []): ?static
+    {
+        if (empty($array) || empty($array['id'])) return null;
+
+        $classId = get_called_class() . '_' . $array['id'];
+        if (!empty(static::$instances[$classId]))
+            return static::$instances[$classId];
+
+        static::$cache = $array;
+
+        return new static($array['id']);
+    }
     public function __isset($name): bool
     {
         return $this->$name ?? false;

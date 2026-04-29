@@ -214,7 +214,6 @@ return  [
         'access' => ['category' => 'admin']
     ],
 
-
     'api/verification/email' =>
     [
         'controller' => 'verification',
@@ -337,6 +336,21 @@ return  [
         'access' => ['category' => 'manager']
     ],
 
+    'api/coupons/addType/form' => [
+        'controller' => 'coupons',
+        'action' => 'addTypeForm',
+        'access' => ['category' => 'manager']
+    ],
+    'api/coupons/addType' => [
+        'controller' => 'coupons',
+        'action' => 'addType',
+        'access' => ['category' => 'manager']
+    ],
+    'api/coupons/add/form' => [
+        'controller' => 'coupons',
+        'action' => 'addForm',
+        'access' => ['category' => 'manager']
+    ],
     'api/coupon/change/status' => [
         'controller' => 'coupons',
         'action' => 'setStatus',

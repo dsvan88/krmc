@@ -58,12 +58,6 @@ class Coupon extends Entity
         static::$cache = $data;
         return true;
     }
-    public static function fromArray(array $data = []): ?Coupon
-    {
-        if (empty($data)) return null;
-        static::$cache = $data;
-        return new static($data['id']);
-    }
     public function __get($name)
     {
         return $this->$name ?? null;
@@ -76,10 +70,10 @@ class Coupon extends Entity
     {
         if (empty($day))
             throw new Exception(__METHOD__ . ' $day can’t be empty.');
-        
+
         $this->used_on = null;
         $i = array_search($this->id, $day->coupons, true);
-        
+
         if (empty($i)) return $this;
 
         unset($day->coupons[$i]);
@@ -99,7 +93,7 @@ class Coupon extends Entity
     }
     public function expire(?Day $day = null): ?Coupon
     {
-        $expired = date('Y-m-d', $day->timestamp ?? $_SERVER['REQUEST_TIME']) . 'T' . $day->time ?? date('H:i:s',$_SERVER['REQUEST_TIME']);
+        $expired = date('Y-m-d', $day->timestamp ?? $_SERVER['REQUEST_TIME']) . 'T' . $day->time ?? date('H:i:s', $_SERVER['REQUEST_TIME']);
         $this->expired_at = strtotime($expired);
         return $this;
     }
@@ -108,16 +102,16 @@ class Coupon extends Entity
         $coupon = [];
         $dates = ['expired_at', 'created_at'];
         foreach (static::$defaults as $k => $v) {
-            if (in_array($k, Coupons::$jsonFields, true)){
+            if (in_array($k, Coupons::$jsonFields, true)) {
                 $coupon[$k] = isset($this->$k) ? json_encode($this->$k) : $v;
                 continue;
             }
-            if ($k === 'owner'){
+            if ($k === 'owner') {
                 $coupon['owner'] = $this->owner->id;
                 continue;
             }
-            if (in_array($k, $dates, true)){
-                $coupon[$k] = date('Y-m-d', $this->$k) . 'T' . date('H:i:s',$this->$k);
+            if (in_array($k, $dates, true)) {
+                $coupon[$k] = date('Y-m-d', $this->$k) . 'T' . date('H:i:s', $this->$k);
                 continue;
             }
             $coupon[$k] = $this->$k ?? $v;
