@@ -117,6 +117,12 @@ class Coupons extends Model
 
         return $expire < $coupon['expired_at'];
     }
+    public static function getTypes(): array
+    {
+        $setting = Settings::findBy('type', 'coupons', 1);
+
+        return empty($setting[0]['setting']) ? [] : $setting[0]['setting'];
+    }
     public static function getAll(array $coupons = [], string $andOr = 'AND '): array
     {
         if (empty($coupons) || empty($coupons['id'])) return parent::getAll($coupons, $andOr);
@@ -130,10 +136,10 @@ class Coupons extends Model
         if (empty($userId) || !Users::isExists(['id' => $userId]))
             throw new Exception(__METHOD__ . ': invalid owner.');
 
-        if (empty(static::$coupons[$couponId]))
-            throw new Exception(__METHOD__ . ': unknown coupon’s data.');
+        $coupon = static::getTypes()[$couponId] ?? null;
 
-        $coupon = static::$coupons[$couponId];
+        if (is_null($coupon))
+            throw new Exception(__METHOD__ . ': unknown coupon’s data.');
 
         $expired = $coupon['expired'] ?? TIMESTAMP_YEAR;
         $_coupon = [

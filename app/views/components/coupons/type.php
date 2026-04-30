@@ -1,6 +1,6 @@
 <div class="type <?= $coupon['active'] ? 'active' : '' ?>">
-    <div class="type__dashboard"><i class="fa fa-trash"></i></div>
-    <h4 class="type__title"><?= $coupon['name'] ?> <?= $coupon['icon'] ?> </h4>
+    <div class="type__dashboard"><i class="fa fa-trash" data-action-click="/coupons/type/delete/<?= $num ?>" data-verification="verification/root"></i></div>
+    <h4 class=" type__title"><?= $coupon['name'] ?> <?= $coupon['icon'] ?> </h4>
     <div class="type__content">
         <div class="type__row">
             <div class="type__label">Type</div>

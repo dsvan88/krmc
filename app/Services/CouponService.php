@@ -4,6 +4,7 @@ namespace app\Services;
 
 use app\core\Entities\Coupon;
 use app\core\Entities\Day;
+use app\core\Entities\User;
 use app\core\Locale;
 use app\core\Tech;
 use app\core\Validator;
@@ -83,11 +84,20 @@ class CouponService
         usort($result, fn($a, $b) => $a->created_at > $b->created_at ? +1 : -1);
         return $result;
     }
-    public static function getTypes(): array
+    public static function deleteType(?int $num = null): bool
     {
-        $setting = Settings::findBy('type', 'coupons', 1);
+        if (is_null($num)) return false;
 
-        return empty($setting[0]['setting']) ? [] : $setting[0]['setting'];
+        $coupons = Coupons::getTypes();
+
+        if (empty($coupons) || !isset($coupons[$num])) return false;
+
+        unset($coupons[$num]);
+        $coupons = array_values($coupons);
+
+        Settings::update(['setting' => json_encode($coupons, JSON_UNESCAPED_UNICODE)], ['type' => 'coupons']);
+
+        return true;
     }
     public static function newType(array $post = []): array
     {
@@ -105,12 +115,27 @@ class CouponService
         if ($coupon['options']['discount_type'] !== '%')
             $coupon['icon'] = '🎟';
 
-        $setting = Settings::findBy('type', 'coupons', 1);
-        $coupons = empty($setting[0]['setting']) ? [] : $setting[0]['setting'];
+        $coupons = Coupons::getTypes();
+
         $coupons[] = $coupon;
 
         Settings::update(['setting' => json_encode($coupons, JSON_UNESCAPED_UNICODE)], ['type' => 'coupons']);
 
         return empty($coupons) ? [] : $coupons;
+    }
+    public static function createCoupon(User $user, int $type = 0): array
+    {
+        $types = Coupons::getTypes();
+
+        if (empty($types) || !isset($types[$type]))
+            throw new \Exception(__METHOD__ . ': Invalid coupon type.');
+
+        $coupon = $types[$type];
+        $coupon['owner'] = $user->id;
+        $coupon['type'] = $type;
+
+        Coupons::create($coupon);
+
+        return $coupon;
     }
 }

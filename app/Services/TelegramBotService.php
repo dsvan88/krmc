@@ -193,8 +193,7 @@ class TelegramBotService
 
         $pattern = '/([\x{1F300}-\x{1FAFF}\x{1F1E6}-\x{1F1FF}\x{2600}-\x{26FF}\x{2700}-\x{27BF}\x{FE0F}\x{200D}\x{1F3FB}-\x{1F3FF}\x{E0061}-\x{E007A}]+)/u';
         $result = preg_match($pattern, $text, $matches, 0, strpos($text, ' ') + 1);
-        Tech::dump($result);
-        Tech::dump($matches);
+   
         return $result === 1 ? $matches[0] : null;
     }
     public static function getMessageId(array $message = []): int
@@ -241,19 +240,6 @@ class TelegramBotService
     }
 
 
-    public static function getCouponsListMarkup(bool $avail = false): array
-    {
-        $coupons = Coupons::$coupons;
-
-        $userId = ChatAction::$requester->profile->id;
-        $points = ChatAction::$requester->profile->points;
-        $inline_keyboard = [];
-        foreach ($coupons as $index => $coupon) {
-            if (!$coupon['active'] || $avail && $points < $coupon['price']) continue;
-            $inline_keyboard[] = [['text' => "{$coupon['icon']} - {$coupon['options']['discount']}{$coupon['options']['discount_type']} ({$coupon['price']}SP)", 'callback_data' => ['c' => 'spBuy', 'g' => 'coupon', 'i' => $index, 'u' => $userId]]];
-        }
-        return compact('inline_keyboard');
-    }
     public static function encodeInlineKeyboard(array &$data): void
     {
         foreach ($data as $i => $row) {

@@ -5,11 +5,9 @@ namespace app\Services\TelegramCbAnswers;
 use app\core\Telegram\ChatAnswer;
 use app\Formatters\TelegramBotFormatter;
 use app\mappers\Coupons;
-use app\mappers\SocialPoints;
-use app\Services\TelegramBotService;
 use Exception;
 
-class SpBuyAnswer extends ChatAnswer
+class CouponGiftAnswer extends ChatAnswer
 {
     public static $accessLevel = 'manager';
 
@@ -21,8 +19,9 @@ class SpBuyAnswer extends ChatAnswer
         $goods = trim(static::$arguments['g']);
         $cId = (int) trim(static::$arguments['i']);
         $userId = (int) trim(static::$arguments['u']);
+        $requesterId = (int) trim(static::$arguments['r']);
 
-        if (static::$requester->profile->id != $userId)
+        if (static::$requester->profile->id != $requesterId)
             return static::result('You don’t have enough rights to change information about other users!');
 
         if ($goods === 'coupon')
@@ -32,17 +31,23 @@ class SpBuyAnswer extends ChatAnswer
     }
     public static function coupons(int $userId, int $cId)
     {
-        // $price = Coupons::$coupons[$cId]['price'];
-        $discount = Coupons::$coupons[$cId]['options']['discount'] . Coupons::$coupons[$cId]['options']['discount_type'];
+        $coupons = Coupons::getTypes();
+
+        if (empty($coupons[$cId])) {
+            return static::result('This coupon is not found');
+        }
+        // $price = $coupons[$cId]['price'];
+        $discount = $coupons[$cId]['options']['discount'] . $coupons[$cId]['options']['discount_type'];
 
         // if ($price > SocialPoints::get($userId))
         //     return array_merge(static::result('You’re don’t have enough Social Points', false, true));
 
         $code = Coupons::create($userId, $cId, 'ready');
+        
 
         // if ($code) SocialPoints::minus($userId, $price);
 
-        static::$report = self::locale(['string' => 'User <b>%s</b> is successfully bought a coupon #%s (discount - %s) from the shop.', 'vars' => [static::$requester->profile->name, $code, $discount]]);
+        static::$report = self::locale(['string' => 'You’re successfully present as gift a coupon #%s (discount - %s) to the user %s.', 'vars' => [$code, $discount]]);
 
         return static::couponsMenu();
     }

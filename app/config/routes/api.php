@@ -351,6 +351,16 @@ return  [
         'action' => 'addForm',
         'access' => ['category' => 'manager']
     ],
+    'api/coupons/add' => [
+        'controller' => 'coupons',
+        'action' => 'add',
+        'access' => ['category' => 'manager']
+    ],
+    'api/coupons/type/delete/{typeNum}' => [
+        'controller' => 'coupons',
+        'action' => 'deleteType',
+        'access' => ['category' => 'manager']
+    ],
     'api/coupon/change/status' => [
         'controller' => 'coupons',
         'action' => 'setStatus',

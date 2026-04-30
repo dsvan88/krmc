@@ -5,6 +5,8 @@ namespace app\Formatters;
 use app\core\Entities\Day;
 use app\core\Entities\Week;
 use app\core\Locale;
+use app\core\Telegram\ChatAction;
+use app\mappers\Coupons;
 use app\mappers\Days;
 use app\mappers\Weeks;
 use app\Services\TelegramBotService;
@@ -78,5 +80,35 @@ class TelegramBotFormatter
         }
 
         return $result;
+    }
+    public static function getCouponsListBuyMarkup(bool $avail = false): array
+    {
+        $coupons = Coupons::getTypes();
+
+        if (empty($coupons)) return ['inline_keyboard' => []];
+
+        $userId = ChatAction::$requester->profile->id;
+        $points = ChatAction::$requester->profile->points;
+        $inline_keyboard = [];
+        foreach ($coupons as $index => $coupon) {
+            if ($avail && $points < $coupon['price']) continue;
+            $inline_keyboard[] = [['text' => "{$coupon['icon']} - {$coupon['name']} ({$coupon['options']['discount']}{$coupon['options']['discount_type']}, {$coupon['price']}SP)", 'callback_data' => ['c' => 'spBuy', 'g' => 'coupon', 'i' => $index, 'u' => $userId]]];
+        }
+        return compact('inline_keyboard');
+    }
+    public static function getCouponsListGiftMarkup(int $userId, bool $free = true): array
+    {
+        $coupons = Coupons::getTypes();
+
+        if (empty($coupons)) return ['inline_keyboard' => []];
+
+        $requesterId = ChatAction::$requester->profile->id;
+        $points = ChatAction::$requester->profile->points;
+        $inline_keyboard = [];
+        foreach ($coupons as $index => $coupon) {
+            if ($free && $points < $coupon['price']) continue;
+            $inline_keyboard[] = [['text' => "{$coupon['icon']} - {$coupon['name']} ({$coupon['options']['discount']}{$coupon['options']['discount_type']}, {$coupon['price']}SP)", 'callback_data' => ['c' => 'couponGift', 'g' => 'coupon', 'i' => $index, 'r' => $requesterId, 'u' => $userId]]];
+        }
+        return compact('inline_keyboard');
     }
 }

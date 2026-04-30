@@ -4,6 +4,9 @@
 $readyColor: $bg-color-light-blue;
 $appliedColor: $bg-color-light-green;
 $expiredColor: $bg-color-gray;
+$readyBGColor: $bg-color-light-blue-blur;
+$appliedBGColor: $bg-color-light-green-blur;
+$expiredBGColor: $bg-color-gray-blur;
 
 .coupons {
     background-color: $bg-color-light;
@@ -26,6 +29,7 @@ $expiredColor: $bg-color-gray;
             border-radius: 5px;
             cursor: pointer;
             transition: border-color $animation-fast;
+            background-color: $readyBGColor;
 
             &:hover {
                 border-color: $readyColor;
@@ -33,6 +37,7 @@ $expiredColor: $bg-color-gray;
 
             &.active {
                 border-color: $bg-color-dark-green-blur;
+                background-color: $appliedBGColor;
             }
         }
     }
@@ -125,6 +130,7 @@ $expiredColor: $bg-color-gray;
             .coupon__content {
                 border-color: $appliedColor;
                 box-shadow: 0 0 3px 0 $appliedColor;
+                background-color: $appliedBGColor;
             }
 
             .coupon__status {
@@ -145,6 +151,7 @@ $expiredColor: $bg-color-gray;
                 border-color: $expiredColor;
                 box-shadow: 0 0 3px 0 $expiredColor;
                 color: $expiredColor;
+                background-color: $expiredBGColor;
             }
 
             .coupon__status {
@@ -176,7 +183,7 @@ $expiredColor: $bg-color-gray;
                 &__title {
                     font-size: .8em;
                     border-radius: 5px 5px 0 0;
-                    background-color: $readyColor;
+                    background-color: $readyBGColor;
                     box-shadow: 0 0 3px 0 $readyColor;
                     max-width: max-content;
                     padding: .4em 1em 0 .8em;

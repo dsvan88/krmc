@@ -3,6 +3,7 @@
 namespace app\Services\TelegramCommands;
 
 use app\core\Telegram\ChatCommand;
+use app\Formatters\TelegramBotFormatter;
 use app\mappers\Weeks;
 use app\Services\TelegramBotService;
 
@@ -36,7 +37,7 @@ class SpshopCommand extends ChatCommand
     {
         $message = static::locale(['string' => 'Your amount of Social Points is: <b>%s</b>SP', 'vars' => [static::$requester->profile->points]]) . PHP_EOL;
         $message .= static::locale('Choose a coupons:');
-        $replyMarkup = TelegramBotService::getCouponsListMarkup(false);
+        $replyMarkup = TelegramBotFormatter::getCouponsListBuyMarkup();
         $replyMarkup['inline_keyboard'][] = [['text' => self::locale('Done'), 'callback_data' => ['c' => 'close', 'u' => static::$requester->profile->id]]];
         return [
             'result' => true,
@@ -53,7 +54,7 @@ class SpshopCommand extends ChatCommand
     {
         $message = static::locale(['string' => 'Your amount of Social Points is: <b>%s</b>SP', 'vars' => [static::$requester->profile->points]]) . PHP_EOL;
         $message .= static::locale('Choose a coupons:');
-        $replyMarkup = TelegramBotService::getCouponsListMarkup(false);
+        $replyMarkup = TelegramBotFormatter::getCouponsListBuyMarkup();
         $replyMarkup['inline_keyboard'][] = [['text' => self::locale('Done'), 'callback_data' => ['c' => 'close', 'u' => static::$requester->profile->id]]];
         return [
             'result' => true,

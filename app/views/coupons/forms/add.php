@@ -3,9 +3,9 @@
         <legend class="modal__subtitle"><?= $subtitle ?></legend>
         <div class="modal__row">
             <select class="modal__select" name="type">
-                <option value="0">discount: 50%</option>
-                <option value="1">discount: 100%</option>
-                <option value="2">discount: 100</option>
+                <?php foreach ($types as $key => $type): ?>
+                    <option value="<?= $key ?>"><?= "{$type['name']} ({$type['options']['discount']}{$type['options']['discount_type']})" ?></option>
+                <?php endforeach; ?>
             </select>
         </div>
         <div class="modal__row">

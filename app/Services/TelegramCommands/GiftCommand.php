@@ -4,20 +4,13 @@ namespace app\Services\TelegramCommands;
 
 use app\core\Entities\User;
 use app\core\Telegram\ChatCommand;
-use app\core\Locale;
-use app\core\Telegram\ChatAction;
 use app\core\Validator;
-use app\mappers\Contacts;
-use app\mappers\Coupons;
+use app\Formatters\TelegramBotFormatter;
 use app\mappers\Users;
-use app\Services\AccountService;
-use app\Services\ContactService;
-use app\Services\TelegramBotService;
-use app\Services\TelegramChatsService;
 
 class NickCommand extends ChatCommand
 {
-    public static $accessLevel = 'admin';
+    public static $accessLevel = 'manager';
     public static ?User $target = null;
     public static string $text = 'User isn’t found';
 
@@ -36,49 +29,44 @@ class NickCommand extends ChatCommand
         } else {
             static::findByName();
         }
+
         if (empty(static::$target)) {
             return static::result(static::$text);
         }
+        $message = static::locale(['string' => 'Your amount of Social Points is: <b>%s</b>SP', 'vars' => [static::$requester->profile->points]]) . PHP_EOL;
+        $message .= static::locale('Choose a coupons:');
+        $replyMarkup = TelegramBotFormatter::getCouponsListGiftMarkup(static::$target->id);
+        $replyMarkup['inline_keyboard'][] = [['text' => self::locale('Done'), 'callback_data' => ['c' => 'close', 'u' => static::$requester->profile->id]]];
 
-        Coupons::create();
-
-
-
-
-
-
-
-        // return [
-        //     'result' => true,
-        //     'reaction' => '🤔',
-        //     'send' => [
-        //         [
-        //             'message' => $message,
-        //             'replyMarkup' => $replyMarkup,
-        //         ]
-        //     ]
-        // ];
+        $update = [
+            'message' => $message,
+            'replyMarkup' => $replyMarkup,
+        ];
+        return array_merge(static::result('Success', true, true), ['update' => [$update]]);
     }
-    public static function findById($id): void
+    public static function findById(int $id = 0): void
     {
-        $user = Users::find($id, true);
-        if ($user) {
-            self::$target = User::create($user);
-        }
-        static::$text = static::locale(['string' => 'User #%s is not found', 'vars' => [$id]]);
-    }
-    public static function findByName():void
-    {
-        $_username = implode(' ', static::$arguments);
-        $username = Validator::validate('name', $_username);
+        if (empty($id))
+            static::$text = static::locale(['string' => 'User #%s is not found', 'vars' => [$id]]);
 
-        if (!$username){
+        self::$target = User::create($id);
+
+        if (empty(static::$target))
+            static::$text = static::locale(['string' => 'User #%s is not found', 'vars' => [$id]]);
+    }
+    public static function findByName(): void
+    {
+        $username = implode(' ', static::$arguments);
+        $username = Validator::validate('name', $username);
+
+        if (!$username) {
             static::$text = static::locale('User’s nickname can’t be empty');
             return;
         }
-        static::$target = User::fromArray(Users::getDataByName($username)); 
+
+        static::$target = User::fromArray(Users::getDataByName($username));
+
+        if (empty(static::$target))
+            static::$text = static::locale(['string' => 'User "%s" is not found', 'vars' => [$username]]);
     }
-
-
-                
 }

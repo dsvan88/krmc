@@ -129,7 +129,7 @@ class Validator
     private static function name(string $name = '')
     {
         $name = trim($name);
-        if (empty($name)) return false;
+        if (empty($name)) return null;
 
         $symbols = 'a-z';
         $lun = preg_replace(['/\s+/', "/[^$symbols.0-9 ]+/ui"], [' ', ''], $name);
@@ -138,7 +138,7 @@ class Validator
 
         $name = strlen($lun) > strlen($cun) ? $lun : $cun;
 
-        if (empty($name)) return false;
+        if (empty($name)) return null;
 
         $nickname = '';
         $_name = explode(' ', $name);
