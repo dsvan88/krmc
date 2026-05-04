@@ -10,14 +10,16 @@ use Exception;
 class SetAnswer extends ChatAnswer
 {
     public static $accessLevel = 'manager';
+    public static $dayId = -1;
+    public static $weekId = 0;
 
     public static function execute(): array
     {
         if (empty(static::$arguments))
             throw new Exception(__METHOD__ . ': Arguments is empty.');
 
-        $weekId = (int) trim(static::$arguments['w']);
-        $dayId = (int) trim(static::$arguments['d']);
+        static::$weekId = (int) trim(static::$arguments['w']);
+        static::$dayId = (int) trim(static::$arguments['d']);
         $requesterId = (int) trim(static::$arguments['r']);
 
         if (static::$requester->profile->id != $requesterId)
@@ -27,7 +29,7 @@ class SetAnswer extends ChatAnswer
         $pValue = trim(static::$arguments['v'] ?? '');
 
         if (!empty($pName) && !empty($pValue)) {
-            $day = Day::create($dayId, $weekId);
+            $day = Day::create(static::$dayId, static::$weekId);
 
             if (empty($day))
                 throw new Exception(__METHOD__ . ' $day can’t be empty.');
@@ -40,21 +42,21 @@ class SetAnswer extends ChatAnswer
 
         if (empty($pValue)) {
             $menu = $pName . 'Menu';
-            return static::$menu($weekId, $dayId, $requesterId);
+            return static::$menu(static::$weekId, static::$dayId, static::$requester->profile->id);
         }
 
         return static::result('Success', true);
     }
-    public static function gameMenu(int $weekId, int $dayId)
+    public static function gameMenu()
     {
-        // $message = 'Choose a participant to UnReg:';
-        // $replyMarkup = TelegramBotFormatter::getPaticipantsListMarkup('unreg', $weekId, $dayId);
-        // $replyMarkup['inline_keyboard'][] = [['text' => self::locale('Done'), 'callback_data' => ['c' => 'close', 'u' => static::$requester->profile->id]]];
-        // $update = [
-        //     'message' => $message,
-        //     'replyMarkup' => $replyMarkup,
-        // ];
-        // return array_merge(static::result('Success', true), ['update' => [$update]]);
+        $message = 'Choose a game for a day:';
+        $replyMarkup = TelegramBotFormatter::getGamesListMarkup(static::$weekId, static::$dayId);
+        $replyMarkup['inline_keyboard'][] = [['text' => self::locale('Done'), 'callback_data' => ['c' => 'close', 'u' => static::$requester->profile->id]]];
+        $update = [
+            'message' => $message,
+            'replyMarkup' => $replyMarkup,
+        ];
+        return array_merge(static::result('Success', true), ['update' => [$update]]);
     }
     public static function modsMenu(int $weekId, int $dayId)
     {

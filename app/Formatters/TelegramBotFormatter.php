@@ -8,6 +8,7 @@ use app\core\Locale;
 use app\core\Telegram\ChatAction;
 use app\mappers\Coupons;
 use app\mappers\Days;
+use app\mappers\GameTypes;
 use app\mappers\Weeks;
 use app\Services\TelegramBotService;
 
@@ -40,6 +41,21 @@ class TelegramBotFormatter
         }
         return compact('inline_keyboard');
     }
+    public static function getGamesListMarkup(int $weekId = 0, int $dayId = 0): array
+    {
+        $games = GameTypes::menu();
+        if (empty($games)) {
+            return [];
+        }
+
+        $requesterId = ChatAction::$requester->profile->id;
+
+        $inline_keyboard = [];
+        foreach ($games as $game) {
+            $inline_keyboard[] = [['text' => $game['name'], 'callback_data' => ['c' => 'set', 'w' => $weekId, 'd' => $dayId, 'p' => 'game', 'v' => $game['slug'], 'r' => $requesterId]]];
+        }
+        return compact('inline_keyboard');
+    }
     public static function getPaticipantsListMarkup(string $callback = 'unreg', int $weekId = 0, int $dayId = 0): array
     {
         $day = Day::create($dayId, $weekId);
@@ -48,7 +64,7 @@ class TelegramBotFormatter
         }
 
         $requesterId = ChatAction::$requester->profile->id;
-        
+
         $inline_keyboard = [];
         foreach ($day->participants as $participant) {
             if (empty($participant['name'])) continue;
