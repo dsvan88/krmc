@@ -5,6 +5,7 @@ namespace app\Services\TelegramCbAnswers;
 use app\core\Telegram\ChatAnswer;
 use app\Formatters\TelegramBotFormatter;
 use app\mappers\Coupons;
+use app\mappers\Users;
 use Exception;
 
 class CouponGiftAnswer extends ChatAnswer
@@ -23,6 +24,9 @@ class CouponGiftAnswer extends ChatAnswer
 
         if (static::$requester->profile->id != $requesterId)
             return static::result('You don’t have enough rights to change information about other users!');
+
+        if (Users::isExists(['id' => $userId]) === false)
+            return static::result('User not found');
 
         if ($goods === 'coupon')
             return static::coupons($userId, $cId);
@@ -43,19 +47,18 @@ class CouponGiftAnswer extends ChatAnswer
         //     return array_merge(static::result('You’re don’t have enough Social Points', false, true));
 
         $code = Coupons::create($userId, $cId, 'ready');
-        
 
         // if ($code) SocialPoints::minus($userId, $price);
 
-        static::$report = self::locale(['string' => 'You’re successfully present as gift a coupon #%s (discount - %s) to the user %s.', 'vars' => [$code, $discount]]);
+        static::$report = self::locale(['string' => 'You’re successfully presented the coupon #%s (discount - %s), as a gift to the user %s.', 'vars' => [$code, $discount]]);
 
-        return static::couponsMenu();
+        return static::couponsMenu($userId);
     }
-    public static function couponsMenu()
+    public static function couponsMenu(int $userId)
     {
         $message = static::locale(['string' => 'Your amount of Social Points is: <b>%s</b>SP', 'vars' => [static::$requester->profile->points]]) . PHP_EOL;
         $message .= static::locale('Choose a coupons:');
-        $replyMarkup = TelegramBotFormatter::getCouponsListBuyMarkup();
+        $replyMarkup = TelegramBotFormatter::getCouponsListGiftMarkup($userId);
         $replyMarkup['inline_keyboard'][] = [['text' => self::locale('Done'), 'callback_data' => ['c' => 'close', 'u' => static::$requester->profile->id]]];
 
         $update = [

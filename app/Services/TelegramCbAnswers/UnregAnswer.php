@@ -18,10 +18,14 @@ class UnregAnswer extends ChatAnswer
 
         $weekId = (int) trim(static::$arguments['w']);
         $dayId = (int) trim(static::$arguments['d']);
+        $requesterId = (int) trim(static::$arguments['r']);
 
         $userId = 0;
         if (static::$arguments['u'])
             $userId = (int) trim(static::$arguments['u']);
+
+        if (static::$requester->profile->id != $requesterId)
+            return static::result('You can’t to use commands of others!');
 
         if (empty($userId))
             return static::participantsMenu($weekId, $dayId);
@@ -29,10 +33,10 @@ class UnregAnswer extends ChatAnswer
         $day = Day::create($dayId, $weekId);
 
         if (empty($day))
-            throw new Exception(__METHOD__.' $day can’t be empty.');
+            throw new Exception(__METHOD__ . ' $day can’t be empty.');
 
         $index = -1;
-        foreach($day->participants as $i=>$p){
+        foreach ($day->participants as $i => $p) {
             if ($p['id'] != $userId) continue;
             $index = $i;
             break;

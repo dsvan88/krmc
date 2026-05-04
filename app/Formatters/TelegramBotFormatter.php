@@ -26,6 +26,8 @@ class TelegramBotFormatter
         $weekId = Weeks::currentId();
         $week = Week::create($weekId);
 
+        $requesterId = ChatAction::$requester->profile->id;
+
         $inline_keyboard = [];
         foreach ($days as $dayNum) {
             if ($dayNum < $curr) {
@@ -34,7 +36,7 @@ class TelegramBotFormatter
                 if (empty($week)) break;
             }
             if (!$all && $week->days[$dayNum]->status !== 'set') continue;
-            $inline_keyboard[] = [['text' => $week->days[$dayNum]->dayName . ' - ' . $week->days[$dayNum]->gameName, 'callback_data' => ['c' => $callback, 'w' => $weekId, 'd' => $dayNum]]];
+            $inline_keyboard[] = [['text' => $week->days[$dayNum]->dayName . ' - ' . $week->days[$dayNum]->gameName, 'callback_data' => ['c' => $callback, 'w' => $weekId, 'd' => $dayNum, 'r' => $requesterId]]];
         }
         return compact('inline_keyboard');
     }
@@ -45,10 +47,12 @@ class TelegramBotFormatter
             return [];
         }
 
+        $requesterId = ChatAction::$requester->profile->id;
+        
         $inline_keyboard = [];
         foreach ($day->participants as $participant) {
             if (empty($participant['name'])) continue;
-            $inline_keyboard[] = [['text' => $participant['name'], 'callback_data' => ['c' => $callback, 'w' => $weekId, 'd' => $dayId, 'u' => $participant['id']]]];
+            $inline_keyboard[] = [['text' => $participant['name'], 'callback_data' => ['c' => $callback, 'w' => $weekId, 'd' => $dayId, 'u' => $participant['id'], 'r' => $requesterId]]];
         }
         return compact('inline_keyboard');
     }
@@ -96,7 +100,7 @@ class TelegramBotFormatter
         }
         return compact('inline_keyboard');
     }
-    public static function getCouponsListGiftMarkup(int $userId, bool $free = true): array
+    public static function getCouponsListGiftMarkup(int $userId, bool $avail = false): array
     {
         $coupons = Coupons::getTypes();
 
@@ -106,7 +110,7 @@ class TelegramBotFormatter
         $points = ChatAction::$requester->profile->points;
         $inline_keyboard = [];
         foreach ($coupons as $index => $coupon) {
-            if ($free && $points < $coupon['price']) continue;
+            if ($avail && $points < $coupon['price']) continue;
             $inline_keyboard[] = [['text' => "{$coupon['icon']} - {$coupon['name']} ({$coupon['options']['discount']}{$coupon['options']['discount_type']}, {$coupon['price']}SP)", 'callback_data' => ['c' => 'couponGift', 'g' => 'coupon', 'i' => $index, 'r' => $requesterId, 'u' => $userId]]];
         }
         return compact('inline_keyboard');

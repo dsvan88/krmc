@@ -13,6 +13,7 @@ use app\mappers\Days;
 use app\mappers\GameTypes;
 use app\mappers\Settings;
 use app\mappers\Users;
+use app\mappers\Weeks;
 use app\Services\DayService;
 
 class DaysController extends Controller
@@ -104,8 +105,14 @@ class DaysController extends Controller
     }
     public function nearAction()
     {
-        [$weekId, $dayId] = Days::near();
-        return View::redirect(empty($dayId) ? "/weeks/$weekId/" : "/week/$weekId/day/$dayId/");
+        Day::$all = true;
+        $day = Day::create();
+
+        if ($day->status !== 'set') {
+            $day = DayService::findNearSetDay($day->weekId, $day->dayId);
+        }
+
+        return View::redirect(empty($day) ? '/weeks/' . Weeks::currentId() . '/' : "/week/{$day->weekId}/day/{$day->dayId}/");
     }
     public function selfBookingAction()
     {

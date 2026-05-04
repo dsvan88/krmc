@@ -118,20 +118,20 @@ class DayService
         $result = $day['date'] . ' - ' .  $day['gameName'] . "\n" . Locale::phrase('Already registered players') . ': ' . count($day['participants']) . PHP_EOL;
         return preg_replace('/<.*?>/', '', $result);
     }
-    public static function findNearSetDay(int $weekId, int $dayId)
+    public static function findNearSetDay(int $weekId, int $dayId): ?Day
     {
         Day::$all = true;
         do {
             ++$dayId;
             if ($dayId > 6) {
-                if (!Weeks::checkNextWeek($weekId, true)) return [$weekId, false];
+                if (!Weeks::checkNextWeek($weekId, true)) return null;
                 $dayId = 0;
                 ++$weekId;
             }
             $day = Day::create($dayId, $weekId);
         } while ($day->status !== 'set');
 
-        return [$weekId, $dayId];
+        return $day;
     }
     public static function getDayNamesForCommand(): string
     {

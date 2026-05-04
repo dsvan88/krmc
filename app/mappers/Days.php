@@ -5,6 +5,7 @@ namespace app\mappers;
 use app\core\Entities\Day;
 use app\core\Model;
 use app\core\Locale;
+use app\core\Tech;
 use app\core\Validator;
 use app\Services\AccountService;
 use app\Services\DayService;
@@ -43,16 +44,6 @@ class Days extends Model
         if (empty(static::$daysLocaled))
             static::$daysLocaled = Locale::apply(static::$days);
         return static::$daysLocaled;
-    }
-    public static function near()
-    {
-        $weekId = Weeks::currentId();
-        $dayId = self::current();
-        $dayData = self::weekDayData($weekId, $dayId);
-
-        if ($dayData['status'] === 'set') return [$weekId, $dayId];
-
-        return DayService::findNearSetDay($weekId, $dayId);
     }
     public static function isExpired(int $timestamp): bool
     {
