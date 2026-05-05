@@ -60,7 +60,7 @@ class SetAnswer extends ChatAnswer
 
         return static::result('Fail', true);
     }
-    public static function dayParamsMenu()
+    private static function dayParamsMenu()
     {
         $message = 'Choose a parameter for a day to set:';
         $replyMarkup = TelegramBotFormatter::getDayParamsMarkup(static::$weekId, static::$dayId);
@@ -72,7 +72,7 @@ class SetAnswer extends ChatAnswer
         ];
         return array_merge(static::result('Success', true), ['update' => [$update]]);
     }
-    public static function gameMenu()
+    private static function gameMenu()
     {
         $message = 'Choose a game for a day:';
         $replyMarkup = TelegramBotFormatter::getGamesListMarkup(static::$weekId, static::$dayId);
@@ -84,7 +84,7 @@ class SetAnswer extends ChatAnswer
         ];
         return array_merge(static::result('Success', true), ['update' => [$update]]);
     }
-    public static function modsMenu()
+    private static function modsMenu()
     {
         $message = 'Choose a mods for a game:';
         $replyMarkup = TelegramBotFormatter::getModsListMarkup(static::$weekId, static::$dayId);
@@ -96,7 +96,7 @@ class SetAnswer extends ChatAnswer
         ];
         return array_merge(static::result('Success', true), ['update' => [$update]]);
     }
-    public static function timeMenu()
+    private static function timeMenu()
     {
         $message = 'Choose a time for a day’s start:';
         $replyMarkup = TelegramBotFormatter::getDayTimesListMarkup(static::$weekId, static::$dayId);
@@ -108,4 +108,20 @@ class SetAnswer extends ChatAnswer
         ];
         return array_merge(static::result('Success', true), ['update' => [$update]]);
     }
+    /* private static function daysMenu()
+    {
+        $message = 'Choose a day:';
+        $replyMarkup = TelegramBotFormatter::getForwardDaysListMarkup('set', true);
+        $replyMarkup['inline_keyboard'][] = [['text' => self::locale('Done'), 'callback_data' => ['c' => 'close', 'u' => static::$requester->profile->id]]];
+        return [
+            'result' => true,
+            'reaction' => '👌',
+            'send' => [
+                [
+                    'message' => $message,
+                    'replyMarkup' => $replyMarkup,
+                ]
+            ]
+        ];
+    } */
 }
