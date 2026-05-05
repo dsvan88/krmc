@@ -9,7 +9,6 @@ use app\core\Telegram\ChatAction;
 use app\mappers\Coupons;
 use app\mappers\Days;
 use app\mappers\GameTypes;
-use app\mappers\Weeks;
 use app\Services\TelegramBotService;
 
 class TelegramBotFormatter
@@ -24,20 +23,18 @@ class TelegramBotFormatter
             $days[] = $day++;
         }
         $dayNames = Locale::apply(Days::$days);
-        $weekId = Weeks::currentId();
-        $week = Week::create($weekId);
+        $week = Week::create();
 
         $requesterId = ChatAction::$requester->profile->id;
 
         $inline_keyboard = [];
         foreach ($days as $dayNum) {
             if ($dayNum < $curr) {
-                $weekId++;
-                $week = Weeks::create($weekId);
+                $week = Week::create($week->id+1);
                 if (empty($week)) break;
             }
             if (!$all && $week->days[$dayNum]->status !== 'set') continue;
-            $inline_keyboard[] = [['text' => $week->days[$dayNum]->dayName . ' - ' . $week->days[$dayNum]->gameName, 'callback_data' => ['c' => $callback, 'w' => $weekId, 'd' => $dayNum, 'r' => $requesterId]]];
+            $inline_keyboard[] = [['text' => $week->days[$dayNum]->dayName . ' - ' . $week->days[$dayNum]->gameName, 'callback_data' => ['c' => $callback, 'w' => $week->id, 'd' => $dayNum, 'r' => $requesterId]]];
         }
         return compact('inline_keyboard');
     }

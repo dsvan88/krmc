@@ -17,13 +17,18 @@ class SetAnswer extends ChatAnswer
     {
         if (empty(static::$arguments))
             throw new Exception(__METHOD__ . ': Arguments is empty.');
-
-        static::$weekId = (int) trim(static::$arguments['w']);
-        static::$dayId = (int) trim(static::$arguments['d']);
+        
         $requesterId = (int) trim(static::$arguments['r']);
 
         if (static::$requester->profile->id != $requesterId)
             return static::result('You can’t to use commands of others!');
+
+        if (empty(static::$arguments['w'])){
+            return static::daysMenu();
+        }
+
+        static::$weekId = (int) trim(static::$arguments['w']);
+        static::$dayId = (int) trim(static::$arguments['d']);
 
         $pName = trim(static::$arguments['p'] ?? '');
         $pValue = trim(static::$arguments['v'] ?? '');
@@ -65,7 +70,7 @@ class SetAnswer extends ChatAnswer
         $message = 'Choose a parameter for a day to set:';
         $replyMarkup = TelegramBotFormatter::getDayParamsMarkup(static::$weekId, static::$dayId);
         $replyMarkup['inline_keyboard'][] = [['text' => self::locale('Done'), 'callback_data' => ['c' => 'close', 'u' => static::$requester->profile->id]]];
-        $replyMarkup['inline_keyboard'][] = [['text' => self::locale('<< Back'), 'callback_data' => ['c' => 'set', 'w' => static::$weekId, 'd' => static::$dayId, 'r' => static::$requester->profile->id]]];
+        $replyMarkup['inline_keyboard'][] = [['text' => self::locale('<< Back'), 'callback_data' => ['c' => 'set', 'r' => static::$requester->profile->id]]];
         $update = [
             'message' => $message,
             'replyMarkup' => $replyMarkup,
@@ -108,20 +113,15 @@ class SetAnswer extends ChatAnswer
         ];
         return array_merge(static::result('Success', true), ['update' => [$update]]);
     }
-    /* private static function daysMenu()
+    private static function daysMenu()
     {
         $message = 'Choose a day:';
         $replyMarkup = TelegramBotFormatter::getForwardDaysListMarkup('set', true);
         $replyMarkup['inline_keyboard'][] = [['text' => self::locale('Done'), 'callback_data' => ['c' => 'close', 'u' => static::$requester->profile->id]]];
-        return [
-            'result' => true,
-            'reaction' => '👌',
-            'send' => [
-                [
-                    'message' => $message,
-                    'replyMarkup' => $replyMarkup,
-                ]
-            ]
+        $update = [
+            'message' => $message,
+            'replyMarkup' => $replyMarkup,
         ];
-    } */
+        return array_merge(static::result('Success', true), ['update' => [$update]]);
+    }
 }

@@ -16,7 +16,7 @@ class NickCommand extends ChatCommand
 
     public static function description()
     {
-        return self::locale('<u>/gift User’s nickname</u> <i>// Present a gift to a user</i>');
+        return self::locale('<u>/gift nickname</u> <i>// Present a gift to a user</i>');
     }
     public static function execute()
     {
@@ -33,6 +33,7 @@ class NickCommand extends ChatCommand
         if (empty(static::$target)) {
             return static::result(static::$text);
         }
+
         $message = static::locale(['string' => 'Your amount of Social Points is: <b>%s</b>SP', 'vars' => [static::$requester->profile->points]]) . PHP_EOL;
         $message .= static::locale('Choose a coupons:');
         $replyMarkup = TelegramBotFormatter::getCouponsListGiftMarkup(static::$target->id);
