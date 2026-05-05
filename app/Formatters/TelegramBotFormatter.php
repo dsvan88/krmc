@@ -56,6 +56,51 @@ class TelegramBotFormatter
         }
         return compact('inline_keyboard');
     }
+    public static function getModsListMarkup(int $weekId = 0, int $dayId = 0): array
+    {
+        $day = Day::create($dayId, $weekId);
+
+        $mods = ['funs', 'beginners', 'night', 'theme', 'close', 'sales', 'tournament'];
+
+        $requesterId = ChatAction::$requester->profile->id;
+        $inline_keyboard = [];
+        foreach ($mods as $mod) {
+            $label = (in_array($mod, $day->mods, true) ? '✅ ' : '❌') . Locale::phrase(ucfirst($mod));
+            $inline_keyboard[] = [['text' => $label, 'callback_data' => ['c' => 'set', 'w' => $weekId, 'd' => $dayId, 'p' => 'mods', 'v' => $mod, 'r' => $requesterId]]];
+        }
+
+        return compact('inline_keyboard');
+    }
+    public static function getDayParamsMarkup(int $weekId = 0, int $dayId = 0): array
+    {
+        $requesterId = ChatAction::$requester->profile->id;
+        $params = [
+            'time' => 'Time',
+            'game' => 'Game',
+            'mods' => 'Mods',
+        ];
+        $params = Locale::apply($params);
+
+        $inline_keyboard = [];
+        foreach ($params as $param => $label) {
+            $inline_keyboard[] = [['text' => $label, 'callback_data' => ['c' => 'set', 'w' => $weekId, 'd' => $dayId, 'p' => $param, 'r' => $requesterId]]];
+        }
+        return compact('inline_keyboard');
+    }
+    public static function getDayTimesListMarkup(int $weekId = 0, int $dayId = 0): array
+    {
+        $requesterId = ChatAction::$requester->profile->id;
+        $hour = 14;
+        $inline_keyboard = [];
+        while ($hour < 22) {
+            $inline_keyboard[] = [
+                ['text' => "{$hour}:00", 'callback_data' => ['c' => 'set', 'w' => $weekId, 'd' => $dayId, 'p' => 'time', 'v' => "{$hour}:00", 'r' => $requesterId]],
+                ['text' => "{$hour}:30", 'callback_data' => ['c' => 'set', 'w' => $weekId, 'd' => $dayId, 'p' => 'time', 'v' => "{$hour}:30", 'r' => $requesterId]],
+            ];
+            $hour++;
+        }
+        return compact('inline_keyboard');
+    }
     public static function getPaticipantsListMarkup(string $callback = 'unreg', int $weekId = 0, int $dayId = 0): array
     {
         $day = Day::create($dayId, $weekId);

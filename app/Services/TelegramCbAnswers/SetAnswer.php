@@ -34,50 +34,78 @@ class SetAnswer extends ChatAnswer
             if (empty($day))
                 throw new Exception(__METHOD__ . ' $day can’t be empty.');
 
-            $day->$pName = $pValue;
+            if (!property_exists($day, $pName))
+                throw new Exception(__METHOD__ . " property $pName doesn't exist in Day class.");
+
+            if ($pName === 'mods') {
+                $day->toggleMod($pValue);
+            } else {
+                $day->$pName = $pValue;
+            }
+
             $day->save();
 
-            return static::result('Success', true);
+            $menu = $pName . 'Menu';
+            return static::$menu();
+        }
+
+        if (empty($pName)) {
+            return static::dayParamsMenu();
         }
 
         if (empty($pValue)) {
             $menu = $pName . 'Menu';
-            return static::$menu(static::$weekId, static::$dayId, static::$requester->profile->id);
+            return static::$menu();
         }
 
-        return static::result('Success', true);
+        return static::result('Fail', true);
     }
-    public static function gameMenu()
+    public static function dayParamsMenu()
     {
-        $message = 'Choose a game for a day:';
-        $replyMarkup = TelegramBotFormatter::getGamesListMarkup(static::$weekId, static::$dayId);
+        $message = 'Choose a parameter for a day to set:';
+        $replyMarkup = TelegramBotFormatter::getDayParamsMarkup(static::$weekId, static::$dayId);
         $replyMarkup['inline_keyboard'][] = [['text' => self::locale('Done'), 'callback_data' => ['c' => 'close', 'u' => static::$requester->profile->id]]];
+        $replyMarkup['inline_keyboard'][] = [['text' => self::locale('<< Back'), 'callback_data' => ['c' => 'set', 'w' => static::$weekId, 'd' => static::$dayId, 'r' => static::$requester->profile->id]]];
         $update = [
             'message' => $message,
             'replyMarkup' => $replyMarkup,
         ];
         return array_merge(static::result('Success', true), ['update' => [$update]]);
     }
-    public static function modsMenu(int $weekId, int $dayId)
+    public static function gameMenu()
     {
-        // $message = 'Choose a participant to UnReg:';
-        // $replyMarkup = TelegramBotFormatter::getPaticipantsListMarkup('unreg', $weekId, $dayId);
-        // $replyMarkup['inline_keyboard'][] = [['text' => self::locale('Done'), 'callback_data' => ['c' => 'close', 'u' => static::$requester->profile->id]]];
-        // $update = [
-        //     'message' => $message,
-        //     'replyMarkup' => $replyMarkup,
-        // ];
-        // return array_merge(static::result('Success', true), ['update' => [$update]]);
+        $message = 'Choose a game for a day:';
+        $replyMarkup = TelegramBotFormatter::getGamesListMarkup(static::$weekId, static::$dayId);
+        $replyMarkup['inline_keyboard'][] = [['text' => self::locale('Done'), 'callback_data' => ['c' => 'close', 'u' => static::$requester->profile->id]]];
+        $replyMarkup['inline_keyboard'][] = [['text' => self::locale('<< Back'), 'callback_data' => ['c' => 'set', 'w' => static::$weekId, 'd' => static::$dayId, 'r' => static::$requester->profile->id]]];
+        $update = [
+            'message' => $message,
+            'replyMarkup' => $replyMarkup,
+        ];
+        return array_merge(static::result('Success', true), ['update' => [$update]]);
     }
-    public static function timeMenu(int $weekId, int $dayId)
+    public static function modsMenu()
     {
-        // $message = 'Choose a participant to UnReg:';
-        // $replyMarkup = TelegramBotFormatter::getPaticipantsListMarkup('unreg', $weekId, $dayId);
-        // $replyMarkup['inline_keyboard'][] = [['text' => self::locale('Done'), 'callback_data' => ['c' => 'close', 'u' => static::$requester->profile->id]]];
-        // $update = [
-        //     'message' => $message,
-        //     'replyMarkup' => $replyMarkup,
-        // ];
-        // return array_merge(static::result('Success', true), ['update' => [$update]]);
+        $message = 'Choose a mods for a game:';
+        $replyMarkup = TelegramBotFormatter::getModsListMarkup(static::$weekId, static::$dayId);
+        $replyMarkup['inline_keyboard'][] = [['text' => self::locale('Done'), 'callback_data' => ['c' => 'close', 'u' => static::$requester->profile->id]]];
+        $replyMarkup['inline_keyboard'][] = [['text' => self::locale('<< Back'), 'callback_data' => ['c' => 'set', 'w' => static::$weekId, 'd' => static::$dayId, 'r' => static::$requester->profile->id]]];
+        $update = [
+            'message' => $message,
+            'replyMarkup' => $replyMarkup,
+        ];
+        return array_merge(static::result('Success', true), ['update' => [$update]]);
+    }
+    public static function timeMenu()
+    {
+        $message = 'Choose a time for a day’s start:';
+        $replyMarkup = TelegramBotFormatter::getDayTimesListMarkup(static::$weekId, static::$dayId);
+        $replyMarkup['inline_keyboard'][] = [['text' => self::locale('Done'), 'callback_data' => ['c' => 'close', 'u' => static::$requester->profile->id]]];
+        $replyMarkup['inline_keyboard'][] = [['text' => self::locale('<< Back'), 'callback_data' => ['c' => 'set', 'w' => static::$weekId, 'd' => static::$dayId, 'r' => static::$requester->profile->id]]];
+        $update = [
+            'message' => $message,
+            'replyMarkup' => $replyMarkup,
+        ];
+        return array_merge(static::result('Success', true), ['update' => [$update]]);
     }
 }

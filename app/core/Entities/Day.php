@@ -256,9 +256,18 @@ class Day
         $this->participants = $_participants;
         return $this;
     }
+    public function toggleMod(string $mod = ''): Day
+    {
+        if (empty($mod)) return $this;
+
+        if (in_array($mod, $this->mods, true))
+            return $this->removeMod($mod);
+
+        return $this->addMod($mod);
+    }
     public function addMod(string $mod = ''): Day
     {
-        if (empty($mod))  return $this;
+        if (empty($mod)) return $this;
 
         if (empty($this->mods) || !in_array($mod, $this->mods)) {
             $this->mods[] = $mod;
