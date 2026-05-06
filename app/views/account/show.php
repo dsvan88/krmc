@@ -20,7 +20,7 @@
                 <div class="profile__avatar avatar">
                     <?php if ($emptyAvatar): ?>
                         <div class="avatar__wrapper empty">
-                            <?php if ($isAdmin):?>
+                            <?php if ($isAdmin): ?>
                                 <span class="avatar__image" data-action-dblclick="account/avatar/tg/get" data-uid="<?= $userId ?>">
                                     <?= $data['avatar'] ?>
                                 </span>
@@ -36,9 +36,9 @@
                         </div>
                     <?php else : ?>
                         <div class="avatar__wrapper">
-                            <?php if ($isSelf):?>
+                            <?php if ($isSelf): ?>
                                 <i class="avatar__edit fa fa-pencil-square-o" data-action-click="account/avatar/edit/form" data-uid="<?= $userId ?>"></i>
-                            <?endif?>
+                            <? endif ?>
                             <span class="avatar__image" data-action-click="account/avatar/show">
                                 <?= $data['avatar'] ?>
                             </span>

@@ -33,37 +33,33 @@ class SetAnswer extends ChatAnswer
         $pName = trim(static::$arguments['p'] ?? '');
         $pValue = trim(static::$arguments['v'] ?? '');
 
-        if (!empty($pName) && !empty($pValue)) {
-            $day = Day::create(static::$dayId, static::$weekId);
-
-            if (empty($day))
-                throw new Exception(__METHOD__ . ' $day can’t be empty.');
-
-            if (!property_exists($day, $pName))
-                throw new Exception(__METHOD__ . " property $pName doesn't exist in Day class.");
-
-            if ($pName === 'mods') {
-                $day->toggleMod($pValue);
-            } else {
-                $day->$pName = $pValue;
-            }
-
-            $day->save();
-
-            $menu = $pName . 'Menu';
-            return static::$menu();
-        }
-
         if (empty($pName)) {
             return static::dayParamsMenu();
         }
+
+        $day = Day::create(static::$dayId, static::$weekId);
+
+        if (empty($day))
+            throw new Exception(__METHOD__ . ' $day can’t be empty.');
+
+        if (!property_exists($day, $pName))
+            throw new Exception(__METHOD__ . " property $pName doesn't exist in Day class.");
 
         if (empty($pValue)) {
             $menu = $pName . 'Menu';
             return static::$menu();
         }
 
-        return static::result('Fail', true);
+        if ($pName === 'mods') {
+            $day->toggleMod($pValue);
+        } else {
+            $day->$pName = $pValue;
+        }
+
+        $day->save();
+
+        $menu = $pName . 'Menu';
+        return static::$menu();
     }
     private static function dayParamsMenu()
     {
