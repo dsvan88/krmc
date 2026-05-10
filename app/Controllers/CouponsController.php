@@ -92,6 +92,7 @@ class CouponsController extends Controller
     public static function addAction()
     {
         if (!Validator::csrfCheck()) {
+            error_log($_POST[CSRF_NAME]. ' '.  $_SESSION['csrf']);
             return View::notice(['error' => 403, 'message' => 'Try again later:)', 'time' => 2000]);
         }
 
