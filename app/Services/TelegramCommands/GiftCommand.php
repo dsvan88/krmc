@@ -8,7 +8,7 @@ use app\core\Validator;
 use app\Formatters\TelegramBotFormatter;
 use app\mappers\Users;
 
-class NickCommand extends ChatCommand
+class GiftCommand extends ChatCommand
 {
     public static $accessLevel = 'manager';
     public static ?User $target = null;

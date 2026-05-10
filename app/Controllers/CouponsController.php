@@ -15,7 +15,7 @@ class CouponsController extends Controller
 {
     public static function indexAction()
     {
-
+        $tab = $_GET['tab'] ?? 'index';
         $vars = [
             'title' => 'Coupons List',
             'subtitle' => 'List of all coupons',
@@ -23,13 +23,13 @@ class CouponsController extends Controller
             'scripts' => [
                 'coupons.js',
             ],
-            'tab' => $_GET['tab'] ?? 'index',
+            'tab' => $tab,
             'styles' => [
                 'coupons',
             ]
         ];
 
-        if ($_GET['tab'] === 'types') {
+        if ($tab === 'types') {
             $vars['title'] =  'Coupon’s types';
             $vars['subtitle'] =  'List of all coupon’s types';
             $vars['coupons'] =  Coupons::getTypes();
