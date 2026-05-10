@@ -11,10 +11,12 @@ if (!session_id()) {
         'samesite' => 'Strict'
     ]);
     session_start();
-    session_regenerate_id(true);
-    if (empty($_SESSION['csrf'])){
-        $_SESSION['csrf'] = bin2hex(random_bytes(32));
-        error_log('CSRF is regenerated.');
+    if (strpos($_SERVER['REQUEST_URI'], 'api/autocomplete/') === false){
+        session_regenerate_id(true);
+        if (empty($_SESSION['csrf'])){
+            $_SESSION['csrf'] = bin2hex(random_bytes(32));
+            error_log('CSRF regenerated');
+        }
     }
 }
 
