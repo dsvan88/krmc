@@ -33,11 +33,11 @@ class CouponGiftAnswer extends ChatAnswer
             return static::result('User not found');
 
         if ($goods === 'coupon')
-            return static::coupons($userId, $cId);
+            return static::coupons($cId);
 
         return static::result('Success', false);
     }
-    public static function coupons(int $userId, int $cId)
+    public static function coupons(int $cId)
     {
         $coupons = Coupons::getTypes();
 
@@ -47,22 +47,22 @@ class CouponGiftAnswer extends ChatAnswer
         // $price = $coupons[$cId]['price'];
         $discount = $coupons[$cId]['options']['discount'] . $coupons[$cId]['options']['discount_type'];
 
-        // if ($price > SocialPoints::get($userId))
+        // if ($price > SocialPoints::get(static::$target->id))
         //     return array_merge(static::result('You’re don’t have enough Social Points', false, true));
 
-        $code = Coupons::create($userId, $cId, 'ready');
+        $code = Coupons::create(static::$target->id, $cId, 'ready');
 
-        // if ($code) SocialPoints::minus($userId, $price);
+        // if ($code) SocialPoints::minus(static::$target->id, $price);
 
         static::$report = self::locale(['string' => 'You’re successfully presented the coupon #%s (discount - %s), as a gift to the user %s.', 'vars' => [$code, $discount, static::$target->name]]);
 
-        return static::couponsMenu($userId);
+        return static::couponsMenu();
     }
-    public static function couponsMenu(int $userId)
+    public static function couponsMenu()
     {
         $message = static::locale(['string' => 'Your amount of Social Points is: <b>%s</b>SP', 'vars' => [static::$requester->profile->points]]) . PHP_EOL;
         $message .= static::locale('Choose a coupons:');
-        $replyMarkup = TelegramBotFormatter::getCouponsListGiftMarkup($userId);
+        $replyMarkup = TelegramBotFormatter::getCouponsListGiftMarkup(static::$target->id);
         $replyMarkup['inline_keyboard'][] = [['text' => self::locale('Done'), 'callback_data' => ['c' => 'close', 'u' => static::$requester->profile->id]]];
 
         $update = [
