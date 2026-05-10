@@ -12,8 +12,10 @@ if (!session_id()) {
     ]);
     session_start();
     session_regenerate_id(true);
-    if (empty($_SESSION['csrf']))
+    if (empty($_SESSION['csrf'])){
         $_SESSION['csrf'] = bin2hex(random_bytes(32));
+        error_log('CSRF is regenerated.');
+    }
 }
 
 if (!defined('SQL_HOST')) {
