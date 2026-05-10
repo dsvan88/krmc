@@ -20,6 +20,7 @@ async function request({ url, data, method = 'POST', responseType = 'json', succ
 
 	let options = {
 		method: method.toUpperCase(),
+		credentials: 'same-origin',
 		headers: {
 			"X-Requested-With": "XMLHttpRequest"
 		},
