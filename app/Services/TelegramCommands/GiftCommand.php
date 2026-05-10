@@ -39,11 +39,16 @@ class GiftCommand extends ChatCommand
         $replyMarkup = TelegramBotFormatter::getCouponsListGiftMarkup(static::$target->id);
         $replyMarkup['inline_keyboard'][] = [['text' => self::locale('Done'), 'callback_data' => ['c' => 'close', 'u' => static::$requester->profile->id]]];
 
-        $update = [
-            'message' => $message,
-            'replyMarkup' => $replyMarkup,
+        return [
+            'result' => true,
+            'reaction' => '👌',
+            'send' => [
+                [
+                    'message' => $message,
+                    'replyMarkup' => $replyMarkup,
+                ]
+            ]
         ];
-        return array_merge(static::result('Success', true, true), ['update' => [$update]]);
     }
     public static function findById(int $id = 0): void
     {
