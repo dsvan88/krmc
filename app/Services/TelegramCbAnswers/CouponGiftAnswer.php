@@ -2,6 +2,7 @@
 
 namespace app\Services\TelegramCbAnswers;
 
+use app\core\Entities\User;
 use app\core\Telegram\ChatAnswer;
 use app\Formatters\TelegramBotFormatter;
 use app\mappers\Coupons;
@@ -11,6 +12,7 @@ use Exception;
 class CouponGiftAnswer extends ChatAnswer
 {
     public static $accessLevel = 'manager';
+    public static ?User $target = null;
 
     public static function execute(): array
     {
@@ -25,7 +27,9 @@ class CouponGiftAnswer extends ChatAnswer
         if (static::$requester->profile->id != $requesterId)
             return static::result('You don’t have enough rights to change information about other users!');
 
-        if (Users::isExists(['id' => $userId]) === false)
+        static::$target = User::create($userId);
+
+        if (empty(static::$target))
             return static::result('User not found');
 
         if ($goods === 'coupon')
@@ -50,7 +54,7 @@ class CouponGiftAnswer extends ChatAnswer
 
         // if ($code) SocialPoints::minus($userId, $price);
 
-        static::$report = self::locale(['string' => 'You’re successfully presented the coupon #%s (discount - %s), as a gift to the user %s.', 'vars' => [$code, $discount]]);
+        static::$report = self::locale(['string' => 'You’re successfully presented the coupon #%s (discount - %s), as a gift to the user %s.', 'vars' => [$code, $discount, static::$target->name]]);
 
         return static::couponsMenu($userId);
     }
