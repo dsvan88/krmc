@@ -41,7 +41,7 @@ class CouponsController extends Controller
     public static function setStatusAction()
     {
         $status = Validator::validate('couponStatus', $_POST['status'] ?? '');
-        $couponId = Validator::validate('couponId', $_POST['couponId'] ?? '');
+        $couponId = Validator::validate('int', $_POST['couponId'] ?? 0);
 
         if (empty($status) || empty($couponId))
             return View::notice(['message' => 'Something went wrong.', 'type' => 'error']);
@@ -68,7 +68,7 @@ class CouponsController extends Controller
         if (!Validator::validate('rootpass', $_POST['verification']))
             return View::notice(['message' => 'Root password is not correct.', 'type' => 'error']);
 
-        $couponId = Validator::validate('couponId', $_POST['couponId'] ?? '');
+        $couponId = Validator::validate('int', $_POST['couponId'] ?? 0);
         if (empty($couponId))
             return View::notice(['message' => 'Something went wrong.', 'type' => 'error']);
 

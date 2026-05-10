@@ -1,5 +1,5 @@
 <div class="coupon <?= $coupon->status ?>">
-    <h4 class="coupon__title">Coupon #<span class="coupon__id"><?= $coupon->id ?></span></h4>
+    <h4 class="coupon__title">Coupon #<span class="coupon__id"><?= $coupon->code ?></span></h4>
     <div class="coupon__content">
         <div class="coupon__num"><?= ($num + 1) ?>.</div>
         <div class="coupon__status"><?= $coupon->status === 'ready' ? '' : "<div>{$coupon->status}</div>" ?></div>

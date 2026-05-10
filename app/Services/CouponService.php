@@ -40,7 +40,7 @@ class CouponService
         $coupons = Coupons::findBy('owner', $userId);
         if (empty($coupons)) return;
 
-        usort($coupons, fn($a, $b) => strtotime($a['created_at']) > strtotime($b['created_at']) ? +1 : -1);
+        // usort($coupons, fn($a, $b) => strtotime($a['created_at']) > strtotime($b['created_at']) ? +1 : -1);
 
         $coupon = null;
         foreach ($coupons as $c) {
@@ -58,14 +58,13 @@ class CouponService
 
         if (empty($coupon)) return;
 
-        $day->coupons[] = $coupon->id;
         $coupon->apply($day)->save();
     }
     public static function getDayCoupons(?Day $day = null): void
     {
         if (empty($day) || empty($day->coupons)) return;
 
-        $coupons = Coupons::getAll(['id' => $day->coupons]);
+        $coupons = Coupons::getAll(['code' => $day->coupons]);
         $_coupons = [];
         foreach ($coupons as $c) {
             $_coupons[$c['owner']] = Coupon::fromArray($c);
@@ -122,20 +121,5 @@ class CouponService
         Settings::update(['setting' => json_encode($coupons, JSON_UNESCAPED_UNICODE)], ['type' => 'coupons']);
 
         return empty($coupons) ? [] : $coupons;
-    }
-    public static function createCoupon(User $user, int $type = 0): array
-    {
-        $types = Coupons::getTypes();
-
-        if (empty($types) || !isset($types[$type]))
-            throw new \Exception(__METHOD__ . ': Invalid coupon type.');
-
-        $coupon = $types[$type];
-        $coupon['owner'] = $user->id;
-        $coupon['type'] = $type;
-
-        Coupons::create($coupon);
-
-        return $coupon;
     }
 }

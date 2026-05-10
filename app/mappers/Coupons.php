@@ -39,58 +39,6 @@ class Coupons extends Model
         ],
     ];
 
-    public static $coupons = [
-        [
-            'active' => true,
-            'icon' => '🎫',
-            'type' => 'once',
-            'price' => 200,
-            'options' => [
-                'discount' => 50,
-                'discount_type' => '%',
-            ],
-        ],
-        [
-            'active' => true,
-            'icon' => '🎫',
-            'type' => 'once',
-            'price' => 300,
-            'options' => [
-                'discount' => 100,
-                'discount_type' => '%',
-            ],
-        ],
-        // [
-        //     'active' => true,
-        //     'icon' => '🎟',
-        //     'type' => 'once',
-        //     'price' => 400,
-        //     'options' => [
-        //         'discount' => 80,
-        //         'discount_type' => 'hrn',
-        //     ],
-        // ],
-    ];
-
-    public static function prepeareIds(array &$coupons): void
-    {
-        if (is_array($coupons['id'])) {
-            $ids = [];
-            foreach ($coupons['id'] as $id)
-                $ids[] = static::decodeId($id);
-        } else {
-            $ids = static::decodeId($coupons['id']);
-        }
-        $coupons['id'] = $ids;
-    }
-    public static function encodeId(string $int): string
-    {
-        return gmp_strval(gmp_init($int), 16);
-    }
-    public static function decodeId(string $hex): string
-    {
-        return gmp_strval(gmp_init("0x$hex"), 10);
-    }
     /**
      * @param $coupon - array from Coupons or id of coupon
      */
@@ -123,14 +71,6 @@ class Coupons extends Model
 
         return empty($setting[0]['setting']) ? [] : $setting[0]['setting'];
     }
-    public static function getAll(array $coupons = [], string $andOr = 'AND '): array
-    {
-        if (empty($coupons) || empty($coupons['id'])) return parent::getAll($coupons, $andOr);
-
-        static::prepeareIds($coupons);
-
-        return parent::getAll($coupons, $andOr);
-    }
     public static function create(int $userId = 0, int $couponId = 0, string $status = 'ready')
     {
         if (empty($userId) || !Users::isExists(['id' => $userId]))
@@ -150,32 +90,14 @@ class Coupons extends Model
             'expired_at' => date('Y-m-d', $expired) . 'T' . date('H:i:s', $expired),
         ];
 
-        $hex = (hash('xxh3', json_encode($_coupon) . $_SERVER['REQUEST_TIME']));
-        $_coupon['id'] = static::decodeId($hex);
+        $_coupon['code'] =  (hash('xxh3', json_encode($_coupon) . $_SERVER['REQUEST_TIME']));
 
         static::insert($_coupon);
 
-        return $hex;
-    }
-    public static function findBy(string $column, string $data, int $limit = 0): array
-    {
-        if (empty($column) || $column !== 'id') return parent::findBy($column, $data, $limit);
-
-        $result = parent::findBy($column, static::decodeId($data), $limit)[0];
-        return $result;
-    }
-    public static function edit(string $id, array $data = []): void
-    {
-        if (empty($id) || empty($data)) return;
-        static::update($data, ['id' => static::decodeId($id)]);
-    }
-    public static function delete(mixed $id, string $table = '')
-    {
-        parent::delete(static::decodeId($id));
+        return $_coupon['code'];
     }
     public static function decodeJson(array $coupon)
     {
-        $coupon['id'] = static::encodeId($coupon['id']);
         $coupon['expired_at'] = strtotime($coupon['expired_at']);
         $coupon['created_at'] = strtotime($coupon['created_at']);
         return parent::decodeJson($coupon);
@@ -185,7 +107,8 @@ class Coupons extends Model
         $table = self::$table;
         self::query(
             "CREATE TABLE IF NOT EXISTS $table (
-                id BIGINT UNSIGNED NOT NULL PRIMARY KEY,
+                id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+                code CHARACTER VARYING(64) DEFAULT NULL,
                 type CHARACTER VARYING(25) NOT NULL DEFAULT 'once',
                 status CHARACTER VARYING(25) NOT NULL DEFAULT 'idle',
                 owner INT NOT NULL DEFAULT '0',

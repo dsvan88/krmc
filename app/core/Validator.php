@@ -42,7 +42,6 @@ class Validator
         $value = trim($value);
         if (empty($value)) return false;
         return hash_equals($_SESSION['csrf'], $value);
-        // return $value === $_SESSION['csrf'] && $value === sha1($_SERVER['HTTP_USER_AGENT'] . session_id());
     }
     private static function blocks(string $value)
     {

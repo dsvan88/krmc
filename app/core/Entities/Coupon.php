@@ -2,13 +2,13 @@
 
 namespace  app\core\Entities;
 
-use app\core\Tech;
 use app\mappers\Coupons;
 use Exception;
 
 class Coupon extends Entity
 {
     public ?User $owner = null;
+    public ?string $code = null;
     public string $type = 'once';
     public ?array $used_on = null;
     public array $options = [];
@@ -20,6 +20,7 @@ class Coupon extends Entity
     public static $model = Coupons::class;
 
     public static $defaults = [
+        'code' => null,
         'owner' => null,
         'type' => 'once',
         'status' => 'ready',
@@ -43,21 +44,6 @@ class Coupon extends Entity
 
         return true;
     }
-    public static function validate($id): ?string
-    {
-        $id = (string) $id;
-
-        return empty($id) ? null : $id;
-    }
-    public static function find($id): bool
-    {
-        $data = static::$model::findBy('id', $id, 1);
-
-        if (empty($data)) return false;
-
-        static::$cache = $data;
-        return true;
-    }
     public function __get($name)
     {
         return $this->$name ?? null;
@@ -72,7 +58,7 @@ class Coupon extends Entity
             throw new Exception(__METHOD__ . ' $day can’t be empty.');
 
         $this->used_on = null;
-        $i = array_search($this->id, $day->coupons, true);
+        $i = array_search($this->code, $day->coupons, true);
 
         if (empty($i)) return $this;
 
@@ -88,7 +74,7 @@ class Coupon extends Entity
 
         $this->status = 'applied';
         $this->used_on = ['dayId' => $day->dayId, 'weekId' => $day->weekId];
-        $day->coupons[] = $this->id;
+        $day->coupons[] = $this->code;
         return $this;
     }
     public function expire(?Day $day = null): ?Coupon
@@ -117,6 +103,6 @@ class Coupon extends Entity
             $coupon[$k] = $this->$k ?? $v;
         }
 
-        return Coupons::edit($this->id, $coupon);
+        return Coupons::update($coupon, ['id' => $this->id]);
     }
 }
