@@ -58,7 +58,7 @@ class CouponGiftAnswer extends ChatAnswer
 
         $result = static::couponsMenu();
 
-        $result['message'] = $message;
+        $result['answer'] = $message;
         
         return $result;
     }
