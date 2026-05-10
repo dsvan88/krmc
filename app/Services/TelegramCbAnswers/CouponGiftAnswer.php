@@ -54,9 +54,13 @@ class CouponGiftAnswer extends ChatAnswer
 
         // if ($code) SocialPoints::minus(static::$target->id, $price);
 
-        static::$report = self::locale(['string' => 'You’re successfully presented the coupon #%s (discount - %s), as a gift to the user %s.', 'vars' => [$code, $discount, static::$target->name]]);
+        $message = self::locale(['string' => 'You’re successfully presented the coupon #%s (discount - %s), as a gift to the user %s.', 'vars' => [$code, $discount, static::$target->name]]);
 
-        return static::couponsMenu();
+        $result = static::couponsMenu();
+
+        $result['message'] = $message;
+        
+        return $result;
     }
     public static function couponsMenu()
     {
