@@ -68,7 +68,7 @@ class AccountService
     public static function addNames(array &$source): array
     {
         if (isset($source['prim'])) {
-            if (is_null($source['id'])){
+            if (is_null($source['id'])) {
                 $source['name'] = '+1';
                 $source['status'] = 'all';
                 $source['gender'] = '';
@@ -86,7 +86,7 @@ class AccountService
             try {
                 $userData = Users::find($source['id']);
             } catch (\Throwable $error) {
-                error_log(__METHOD__ . 'User #'.$source['id'].' is deleted.');
+                error_log(__METHOD__ . 'User #' . $source['id'] . ' is deleted.');
             }
             $source['name'] = empty($userData) ? '&lt; Deleted &gt;' : $userData['name'];
 
@@ -175,7 +175,7 @@ class AccountService
         Users::edit($userData, ['id' => $userId]);
         TelegramChats::edit($chatData, $chatId);
 
-        $contacts = ['telegramid' => $chatData['id']];
+        $contacts = ['telegramid' => $chatId];
         if (!empty($telegram)) {
             $contacts['telegram'] = $telegram;
         }

@@ -33,7 +33,8 @@ class SpBuyAnswer extends ChatAnswer
     public static function coupons(int $userId, int $cId)
     {
         // $price = Coupons::$coupons[$cId]['price'];
-        $discount = Coupons::$coupons[$cId]['options']['discount'] . Coupons::$coupons[$cId]['options']['discount_type'];
+        $coupons = Coupons::getTypes();
+        $discount = $coupons[$cId]['options']['discount'] . $coupons[$cId]['options']['discount_type'];
 
         // if ($price > SocialPoints::get($userId))
         //     return array_merge(static::result('You’re don’t have enough Social Points', false, true));

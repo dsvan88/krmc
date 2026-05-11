@@ -181,7 +181,7 @@ class TechController extends Controller
         //     SocialPoints::set(0, $user['id']);
         // }
         Settings::insert(['type' => 'coupons']);
-        
+
         $weeks = Weeks::getAll();
         $defCost = [
             'amount' => 100,
@@ -220,26 +220,29 @@ class TechController extends Controller
             'message' => [
                 'message_id' => 189,
                 'from' => [
-                    'id' => 900669168,
+                    'id' => 1547961708,
+                    // 'id' => 900669168,
                     // 'id' => 412223734,
                     // 'is_bot' => false,
-                    'first_name' => 'Dmytro',
-                    'last_name' => 'Vankevych',
+                    'first_name' => 'Ксюша',
+                    // 'last_name' => 'Vankevych',
                     // 'username' => 'dsvan88',
                     'language_code' => 'uk',
                 ],
                 'chat' => [
-                    'id' => 900669168,
+                    'id' => -1001394776496,
+                    // 'id' => 900669168,
                     // 'id' => -1001871083872,
-                    'first_name' => 'Dmytro',
-                    'last_name' => 'Vankevych',
+                    'title' => 'Mafia Club Kryvyi Rih',
+                    // 'first_name' => 'Dmytro',
+                    // 'last_name' => 'Vankevych',
                     // 'username' => 'dsvan88',
-                    'type' => 'private',
-                    // 'type' => 'group',
+                    // 'type' => 'private',
+                    'type' => 'group',
                 ],
-                'date' => 1652025484,
+                'date' => $_SERVER['REQUEST_TIME'],
                 // 'text' => '+ на 18',
-                'text' => '/renick Kapibara',
+                'text' => '+пн',
                 // 'text' => '/dice',
                 // 'text' => '/chat',
                 // 'text' => '/spshop',

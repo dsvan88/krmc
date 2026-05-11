@@ -75,7 +75,7 @@ class BookingAnswer extends ChatAnswer
 
         static::$day->save();
 
-        $booked = in_array(static::$requester->profile->id, array_column(static::$day->participants, 'id'));
+        $booked = in_array(static::$requester->profile->id ?? 0, array_column(static::$day->participants, 'id'));
         $replyMarkup = TelegramBotFormatter::getBookingMarkup($weekId, $dayNum, $booked);
 
         $update = [
