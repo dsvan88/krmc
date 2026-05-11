@@ -21,7 +21,7 @@ class BookingCommand extends ChatCommand
         TelegramBotService::parseDayNum(static::$arguments['dayName']);
         $dayNum = static::$arguments['dayNum'];
 
-        error_log(__METHOD__ . ' arguments: ' . print_r(static::$requester, true));
+        // error_log(__METHOD__ . ' arguments: ' . print_r(static::$requester, true));
 
         if (empty(static::$requester->profile)) {
             if (empty(static::$requester->chat))
