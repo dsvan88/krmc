@@ -20,15 +20,15 @@ class UnregAnswer extends ChatAnswer
         $dayId = (int) trim(static::$arguments['d']);
         $requesterId = (int) trim(static::$arguments['r']);
 
-        $userId = 0;
-        if (static::$arguments['u'])
-            $userId = (int) trim(static::$arguments['u']);
-
         if (static::$requester->profile->id != $requesterId)
             return static::result('You can’t to use commands of others!');
 
         if (empty($userId))
             return static::participantsMenu($weekId, $dayId);
+
+        $userId = 0;
+        if (isset(static::$arguments['u']))
+            $userId = (int) trim(static::$arguments['u']);
 
         $day = Day::create($dayId, $weekId);
 

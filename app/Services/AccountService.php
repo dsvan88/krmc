@@ -124,11 +124,12 @@ class AccountService
     public static function unlinkTelegram(int $chatId)
     {
         $chatData =  TelegramChats::find($chatId);
-        $chatId = (int) $chatData['id'];
-        unset($chatData['id']);
 
         if (empty($chatData['user_id']))
             return false;
+
+        $chatId = (int) $chatData['id'];
+        unset($chatData['id']);
 
         $userData = Users::find($chatData['user_id']);
 

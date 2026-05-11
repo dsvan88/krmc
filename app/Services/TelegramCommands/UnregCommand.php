@@ -14,7 +14,7 @@ class UnregCommand extends ChatCommand
     public static function description()
     {
         return self::locale('<u>/unreg</u> <i>// Unbooking players for a specific day. Examples:</i>
-    /unreg mon
+    /unreg
     /unreg mon
 ');
     }

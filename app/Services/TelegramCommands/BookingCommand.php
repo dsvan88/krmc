@@ -21,6 +21,8 @@ class BookingCommand extends ChatCommand
         TelegramBotService::parseDayNum(static::$arguments['dayName']);
         $dayNum = static::$arguments['dayNum'];
 
+        error_log(__METHOD__ . ' arguments: ' . print_r(static::$requester, true));
+
         if (empty(static::$requester->profile)) {
             if (empty(static::$requester->chat))
                 return static::result('{{ Tg_Unknown_Requester }}', '🤷‍♂');
@@ -41,7 +43,7 @@ class BookingCommand extends ChatCommand
         $day = Day::create($dayNum, $weekId);
 
         if (empty($day))
-            throw new Exception(__METHOD__.' $day can’t be empty.');
+            throw new Exception(__METHOD__ . ' $day can’t be empty.');
 
         $participantId = $slot = -1;
         if ($day->status !== 'set') {
@@ -79,13 +81,13 @@ class BookingCommand extends ChatCommand
                 return static::result('{{ Tg_Command_Requester_Already_Booked }}', '🤷‍♂');
             }
             $day->addParticipant(static::$arguments, $slot);
-            $reactions = [ '👍','🤩','🔥','❤','🔥','🥰','🎉','👏','⚡','🤝','👌',];
+            $reactions = ['👍', '🤩', '🔥', '❤', '🔥', '🥰', '🎉', '👏', '⚡', '🤝', '👌',];
         } else {
             if ($participantId === -1) {
                 return static::result('{{ Tg_Command_Requester_Not_Booked }}', '🤷‍♂');
             }
             $day->removeParticipant($participantId);
-            $reactions = ['👎','🤔','😢','💔','😱','🤯','🤬','🤷‍♂',];
+            $reactions = ['👎', '🤔', '😢', '💔', '😱', '🤯', '🤬', '🤷‍♂',];
         }
 
         $day->save();
