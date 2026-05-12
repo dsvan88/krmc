@@ -18,7 +18,9 @@ class CouponService
         if (empty($day) || empty($day->coupons)) return;
         $coupons = [];
         foreach ($day->coupons as $c) {
-            $coupons[] = Coupon::create($c);
+            $coupon = Coupon::create($c);
+            if (empty($coupon)) continue;
+            $coupons[] = $coupon;
         }
 
         $method = 'recall';
