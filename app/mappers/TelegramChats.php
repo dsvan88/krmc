@@ -71,7 +71,7 @@ class TelegramChats extends Model
     public static function getGroupChatsList()
     {
         $table = self::$table;
-        $result = self::query("SELECT * FROM $table WHERE id LIKE '-%' ORDER BY id", [], 'Assoc');
+        $result = self::query("SELECT * FROM $table WHERE id < 0 ORDER BY id", [], 'Assoc');
         if (empty($result)) {
             return [];
         }
