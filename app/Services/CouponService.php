@@ -17,9 +17,14 @@ class CouponService
     {
         if (empty($day) || empty($day->coupons)) return;
         $coupons = [];
+        $recall = [];
+        $participantIds = array_column($day->participants, 'id');
         foreach ($day->coupons as $c) {
             $coupon = Coupon::create($c);
             if (empty($coupon)) continue;
+            if (!in_array($coupon->owner, $participantIds)){
+                $recall[] = $coupon->code;
+            }
             $coupons[] = $coupon;
         }
 
@@ -32,7 +37,8 @@ class CouponService
         $_SESSION['report'][] = "<b><u>$method</u></b> coupons for day {$day->dayId} of week {$day->weekId}.";
 
         foreach ($coupons as $coupon) {
-            $coupon->$method($day);
+            $_method = in_array($coupon->code, $recall) ? 'recall' : $method;
+            $coupon->$_method($day);
             $_SESSION['report'][] = "Coupon {$coupon->id} for user {$coupon->owner->name} (id: {$coupon->owner->id}).";
             $coupon->save();
         }
