@@ -77,10 +77,18 @@ class Coupon extends Entity
         $day->coupons[] = $this->code;
         return $this;
     }
+    public function burn(?Day $day = null): ?Coupon
+    {
+        $expired = date('Y-m-d', $day->timestamp ?? $_SERVER['REQUEST_TIME']) . 'T' . $day->time ?? date('H:i:s', $_SERVER['REQUEST_TIME']);
+        $this->expired_at = strtotime($expired);
+        $this->status = 'burned';
+        return $this;
+    }
     public function expire(?Day $day = null): ?Coupon
     {
         $expired = date('Y-m-d', $day->timestamp ?? $_SERVER['REQUEST_TIME']) . 'T' . $day->time ?? date('H:i:s', $_SERVER['REQUEST_TIME']);
         $this->expired_at = strtotime($expired);
+        $this->status = 'expired';
         return $this;
     }
     public function save()

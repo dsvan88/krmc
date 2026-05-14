@@ -19,6 +19,7 @@ class Coupons extends Model
         'ready',
         'applied',
         'expired',
+        'burned',
     ];
     public static $discount_types = [
         '%',
