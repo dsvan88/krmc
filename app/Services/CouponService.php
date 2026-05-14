@@ -37,9 +37,13 @@ class CouponService
         $_SESSION['report'][] = "<b><u>$method</u></b> coupons for day {$day->dayId} of week {$day->weekId}.";
 
         foreach ($coupons as $coupon) {
-            $_method = in_array($coupon->code, $recall) ? 'recall' : $method;
-            $coupon->$_method($day);
-            $_SESSION['report'][] = "Coupon {$coupon->id} for user {$coupon->owner->name} (id: {$coupon->owner->id}).";
+            if (in_array($coupon->code, $recall)){
+                $coupon->recall($day);
+                $_SESSION['report'][] = "Coupon {$coupon->id} for user {$coupon->owner->name} (id: {$coupon->owner->id}) is recalled due isn’t present on that day.";
+                continue;
+            }
+            $coupon->$method($day);
+            $_SESSION['report'][] = "Coupon {$coupon->id} for user {$coupon->owner->name} (id: {$coupon->owner->id}) is burned. All is OK.";
             $coupon->save();
         }
     }
