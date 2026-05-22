@@ -3,6 +3,7 @@ if (empty($_ENV['ROOT_PASS_DEFAULT'])) {
     throw new RuntimeException('ROOT_PASS_DEFAULT not set');
 }
 define('APP_LOC', $_ENV['APP_LOC'] ?? 'product');
+define('CSRF_NAME', '_token');
 
 if (!session_id()) {
     session_set_cookie_params([
@@ -11,12 +12,10 @@ if (!session_id()) {
         'samesite' => 'Strict'
     ]);
     session_start();
-    if (strpos($_SERVER['REQUEST_URI'], 'api/autocomplete/') === false){
-        session_regenerate_id(true);
-        if (empty($_SESSION['csrf'])){
-            $_SESSION['csrf'] = bin2hex(random_bytes(32));
-        }
+    if (empty($_SESSION['csrf'])) {
+        $_SESSION['csrf'] = bin2hex(random_bytes(32));
     }
+    session_regenerate_id(true);
 }
 
 if (!defined('SQL_HOST')) {
@@ -73,8 +72,6 @@ if (!defined('SQL_HOST')) {
     define('SCRIPTS_PUBLIC', '/public/scripts/');
     define('STYLES_STORAGE', '/public/css/');
     define('CFG_AUTHOR', 'DSVan');
-    define('CSRF_NAME', '_token');
-
 
     define('CFG_MAINTENCE', $_ENV['CFG_MAINTENCE'] ?? 0);
 }

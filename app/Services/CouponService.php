@@ -4,12 +4,12 @@ namespace app\Services;
 
 use app\core\Entities\Coupon;
 use app\core\Entities\Day;
-use app\core\Entities\User;
+use app\core\Entities\Week;
 use app\core\Locale;
-use app\core\Tech;
 use app\core\Validator;
 use app\mappers\Coupons;
 use app\mappers\Settings;
+use app\mappers\Weeks;
 
 class CouponService
 {
@@ -22,7 +22,7 @@ class CouponService
         foreach ($day->coupons as $c) {
             $coupon = Coupon::create($c);
             if (empty($coupon)) continue;
-            if (!in_array($coupon->owner, $participantIds)){
+            if (!in_array($coupon->owner, $participantIds)) {
                 $recall[] = $coupon->code;
             }
             $coupons[] = $coupon;
@@ -37,7 +37,7 @@ class CouponService
         $_SESSION['report'][] = "<b><u>$method</u></b> coupons for day {$day->dayId} of week {$day->weekId}.";
 
         foreach ($coupons as $coupon) {
-            if (in_array($coupon->code, $recall)){
+            if (in_array($coupon->code, $recall)) {
                 $coupon->recall($day);
                 $_SESSION['report'][] = "Coupon {$coupon->id} for user {$coupon->owner->name} (id: {$coupon->owner->id}) is recalled due isn’t present on that day.";
                 continue;
@@ -45,6 +45,27 @@ class CouponService
             $coupon->$method($day);
             $_SESSION['report'][] = "Coupon {$coupon->id} for user {$coupon->owner->name} (id: {$coupon->owner->id}) is burned. All is OK.";
             $coupon->save();
+        }
+    }
+    public static function applyOnNearEvent(int $userId, string $code): void
+    {
+        if (empty($userId) || empty($code)) return;
+
+        $weeks = Weeks::nearWeeksDataByTime();
+
+        if (empty($weeks)) return;
+
+        foreach ($weeks as $weekData) {
+            $week = Week::fromArray($weekData);
+            foreach ($week->days as $day) {
+                if ($day->status !== 'set') continue;
+
+                if (empty($day->participants) || !in_array($userId, array_column($day->participants, 'id'))) continue;
+
+                $coupon = Coupon::fromCode($code);
+                $coupon->apply($day)->save();
+                return;
+            }
         }
     }
     public static function apply(?Day $day = null, int $userId = 0): void

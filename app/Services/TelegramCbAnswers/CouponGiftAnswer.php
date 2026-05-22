@@ -6,7 +6,9 @@ use app\core\Entities\User;
 use app\core\Telegram\ChatAnswer;
 use app\Formatters\TelegramBotFormatter;
 use app\mappers\Coupons;
+use app\mappers\Days;
 use app\mappers\Users;
+use app\Services\CouponService;
 use Exception;
 
 class CouponGiftAnswer extends ChatAnswer
@@ -52,6 +54,8 @@ class CouponGiftAnswer extends ChatAnswer
 
         $code = Coupons::create(static::$target->id, $cId, 'ready');
 
+        CouponService::applyOnNearEvent(static::$target->id, $code);
+   
         // if ($code) SocialPoints::minus(static::$target->id, $price);
 
         $message = self::locale(['string' => 'You’re successfully presented the coupon #%s (discount - %s), as a gift to the user %s.', 'vars' => [$code, $discount, static::$target->name]]);

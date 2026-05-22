@@ -74,18 +74,19 @@ class Weeks extends Model
         return false;
     }
     // Получить настройки будущих зарегистрированных недель
-    public static function nearWeeksDataByTime()
+    public static function nearWeeksDataByTime(?int $time = null)
     {
         $table = self::$table;
-        $time = $_SERVER['REQUEST_TIME'];
+        $time = $time ?? $_SERVER['REQUEST_TIME'];
         $result = self::query("SELECT id,data,start,finish FROM $table WHERE finish > ? ORDER BY id ASC", [$time], 'Assoc');
-        if (!empty($result)) {
-            for ($i = 0; $i < count($result); $i++) {
-                $result[$i] = self::decodeJson($result[$i]);
-            }
-            return $result;
+
+        if (empty($result))  return false;
+
+        foreach ($result as $i => $row) {
+            $result[$i] = self::decodeJson($row);
         }
-        return false;
+        
+        return $result;
     }
     public static function defaultWeekData(int $sunday = 0)
     {
@@ -146,9 +147,9 @@ class Weeks extends Model
     {
         if (empty($weekId) || empty($weekData))
             throw new Exception(__METHOD__ . ' WeekID or WeekData can’t be empty.');
-        
+
         unset($weekData['id']);
-        
+
         if (is_array($weekData['data'])) {
             $weekData['data'] = json_encode($weekData['data'], JSON_UNESCAPED_UNICODE);
         }

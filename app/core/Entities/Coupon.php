@@ -44,6 +44,16 @@ class Coupon extends Entity
 
         return true;
     }
+    public static function fromCode(string $code): ?Coupon
+    {
+        if (empty($code)) return null;
+
+        $couponData = Coupons::findBy('code', $code);
+
+        if (empty($couponData)) return null;
+
+        return static::fromArray($couponData);
+    }
     public function __get($name)
     {
         return $this->$name ?? null;

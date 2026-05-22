@@ -192,6 +192,35 @@ class DayService
 
         return $result;
     }
+    public static function findNearBookedDay($userId = 0): array
+    {
+        if (empty($userId)) return [];
+
+        $currentWeekId = Weeks::currentId();
+
+        $weeks = Weeks::getAll();
+        $weeks = array_reverse($weeks);
+        $statuses = ['set', 'finished'];
+        $result = [];
+        foreach ($weeks as $week) {
+            if (!empty($limitWeeks) && $week['id'] < $currentWeekId - $limitWeeks) break;
+            foreach ($week['data'] as $num => $day) {
+                if (!in_array($day['status'],  $statuses, true)) continue;
+                foreach ($day['participants'] as $index => $player) {
+                    if ($player['id'] == $userId) {
+                        $result[] = [
+                            'week' => $week['id'],
+                            'day' => $num,
+                            'index' => $index,
+                        ];
+                        break;
+                    }
+                }
+            }
+        }
+
+        return $result;
+    }
     public static function changeParticipantId(array $data = [], int $userId = 0): void
     {
         if (empty($data) || empty($userId)) return;
