@@ -63,6 +63,9 @@ class CouponService
                 if (empty($day->participants) || !in_array($userId, array_column($day->participants, 'id'))) continue;
 
                 $coupon = Coupon::fromCode($code);
+
+                error_log(__METHOD__. ' '. print_r($coupon, true));
+                
                 $coupon->apply($day)->save();
                 return;
             }

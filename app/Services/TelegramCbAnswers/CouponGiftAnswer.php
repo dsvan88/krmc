@@ -54,6 +54,8 @@ class CouponGiftAnswer extends ChatAnswer
 
         $code = Coupons::create(static::$target->id, $cId, 'ready');
 
+        error_log(__METHOD__. ' '. $code);
+
         CouponService::applyOnNearEvent(static::$target->id, $code);
    
         // if ($code) SocialPoints::minus(static::$target->id, $price);
