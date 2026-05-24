@@ -65,9 +65,9 @@ class CouponService
                 $coupon = Coupon::fromCode($code);
                 
                 $coupon->apply($day)->save();
+                $day->save();
                 return;
             }
-            $week->save();
         }
     }
     public static function apply(?Day $day = null, int $userId = 0): void
