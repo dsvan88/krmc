@@ -62,7 +62,6 @@ class Day
 
     private function __construct(int $dayId = 0, int $weekId = 0)
     {
-
         if ($this->init($dayId, $weekId)) {
             $classId = get_class($this) . "_$dayId.$weekId";
             static::$instances[$classId] = $this;
@@ -213,16 +212,9 @@ class Day
         AccountService::addNames($this->participants[$slot]);
 
         if (is_numeric($participant['userId'])) {
-            return $this->applyCoupons($participant['userId']);
+            CouponService::apply($this, $participant['userId']);
+            return $this;
         }
-        return $this;
-    }
-    public function applyCoupons(int $userId = 0): Day
-    {
-        if (empty($userId)) return $this;
-
-        CouponService::apply($this, $userId);
-
         return $this;
     }
     public function removeParticipant(int $index): Day
