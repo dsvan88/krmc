@@ -23,7 +23,7 @@ class BookingCommand extends ChatCommand
 
 
         if (empty(static::$requester->profile)) {
-            static::$report = 'Profile doesn’t exist:' . print_r(static::$requester, true);
+            // static::$report = 'Profile doesn’t exist:' . print_r(static::$requester, true);
             if (empty(static::$requester->chat))
                 return static::result('{{ Tg_Unknown_Requester }}', '🤷‍♂');
 
