@@ -28,7 +28,7 @@ class SocialPointsService
         }
         $week->save();
     }
-    public static function applyOnDay(?Day $day): void
+    public static function applyOnDay(?Day &$day): void
     {
         if ($day->status !== 'set') return;
 
