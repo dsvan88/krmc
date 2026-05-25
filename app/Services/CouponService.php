@@ -47,6 +47,14 @@ class CouponService
             $coupon->save();
         }
     }
+    public static function checkOwnersOfAppliedCoupons(int $userId, array $codes): bool
+    {
+        if (empty($userId) || empty($codes)) return false;
+
+        $coupons = Coupons::getAll(['code' => $codes]);
+
+        return in_array($userId, array_column($coupons, 'owner'));
+    }
     public static function applyOnNearEvent(int $userId, string $code): void
     {
         if (empty($userId) || empty($code)) return;
@@ -62,8 +70,12 @@ class CouponService
 
                 if (empty($day->participants) || !in_array($userId, array_column($day->participants, 'id'))) continue;
 
+                if (static::checkOwnersOfAppliedCoupons($userId, $day->coupons)) return;
+
                 $coupon = Coupon::fromCode($code);
+                
                 $coupon->apply($day)->save();
+                $day->save();
                 return;
             }
         }
