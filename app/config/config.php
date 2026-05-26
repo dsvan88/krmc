@@ -15,7 +15,7 @@ if (!session_id()) {
     if (empty($_SESSION['csrf'])) {
         $_SESSION['csrf'] = bin2hex(random_bytes(32));
     }
-    session_regenerate_id(true);
+    session_regenerate_id(strpos($_SERVER['REQUEST_URI'], '/autocomplete/') === false);
 }
 
 if (!defined('SQL_HOST')) {
