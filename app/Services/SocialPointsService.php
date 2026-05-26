@@ -28,7 +28,7 @@ class SocialPointsService
         }
         $week->save();
     }
-    public static function applyOnDay(?Day &$day): void
+    public static function applyOnDay(?Day $day): void
     {
         if ($day->status !== 'set') return;
 
@@ -42,7 +42,7 @@ class SocialPointsService
 
         foreach ($day->participants as $participant) {
 
-            if (!is_numeric($participant['id'])) return;
+            if (!is_numeric($participant['id'])) continue;
 
             $points = empty($participant['prim']) || strpos($participant['prim'], '?') === false ? SocialPoints::$points['booking'] : SocialPoints::$points['unsureBooking'];
 
