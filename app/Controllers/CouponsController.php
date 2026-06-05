@@ -110,7 +110,8 @@ class CouponsController extends Controller
         }
 
         try {
-            Coupons::create($userData['id'], $num);
+            $code = Coupons::create($userData['id'], $num);
+            CouponService::applyOnNearEvent($userData['id'], $code);
         } catch (\Throwable $th) {
             return View::notice(['message' => $th->getMessage(), 'type' => 'error']);
         }
