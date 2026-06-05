@@ -6,8 +6,7 @@ use app\core\Entities\User;
 use app\core\Telegram\ChatAnswer;
 use app\Formatters\TelegramBotFormatter;
 use app\mappers\Coupons;
-use app\mappers\Days;
-use app\mappers\Users;
+
 use app\Services\CouponService;
 use Exception;
 
