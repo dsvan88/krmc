@@ -247,14 +247,23 @@ class DayService
         }
         $week->save();
 
-        if ($_SESSION['report']) {
-            $settings = Settings::load('backup');
-            $mailer = new Mailer();
-            $mailer->prepMessage([
-                'title' => Locale::phrase(['string' => '<no-reply> %s - updates for %s.', 'vars' => [CLUB_NAME, date('d.m.Y')]]),
-                'body' => "<p>Database changes.</p><p>Here is some changes in DB related to a finish of day actions:</p><p>" . implode("</p><p>", $_SESSION['report']) . "</p>",
-            ]);
-            $mailer->send($settings['email']['value']);
+        if (empty($_SESSION['report'])) return;
+
+        $report = $_SESSION['report'];
+        $_SESSION['report'] = [];
+
+        if (APP_LOC === 'local'){
+            error_log(print_r($report, true));
+            return;
         }
+
+        $settings = Settings::load('backup');
+        $mailer = new Mailer();
+        $mailer->prepMessage([
+            'title' => Locale::phrase(['string' => '<no-reply> %s - updates for %s.', 'vars' => [CLUB_NAME, date('d.m.Y')]]),
+            'body' => "<p>Database changes.</p><p>Here is some changes in DB related to a finish of day actions:</p><p>" . implode("</p><p>", $report) . "</p>",
+        ]);
+        $mailer->send($settings['email']['value']);
+        
     }
 }

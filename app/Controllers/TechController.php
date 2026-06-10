@@ -180,7 +180,7 @@ class TechController extends Controller
         // foreach ($users as $user) {
         //     SocialPoints::set(0, $user['id']);
         // }
-        Settings::insert(['type' => 'coupons']);
+        // Settings::insert(['type' => 'coupons']);
 
         $weeks = Weeks::getAll();
         $defCost = [
@@ -191,25 +191,15 @@ class TechController extends Controller
         foreach ($weeks as $week) {
             for ($i = 0; $i < 7; $i++) {
                 if (empty($week['data'][$i])) continue;
-
-                if (empty($week['data'][$i]['cost'])) {
-                    $week['data'][$i]['cost'] = $defCost;
-                    continue;
-                }
-
-                if (is_array($week['data'][$i]['cost'])) continue;
-
-                preg_match('/(\d+)/', $week['data'][$i]['cost'], $matches);
-                $week['data'][$i]['cost'] = [
-                    'amount' => $matches[1] ?? 100,
-                    'currency' => '₴',
-                    'type' => 'day',
-                ];
+                $week['data'][$i]['coupons'] = [];
             }
-            Tech::dump($week['id']);
             Weeks::update(['data' => json_encode($week['data'], JSON_UNESCAPED_UNICODE)], ['id' => $week['id']]);
         }
         echo 'Weeks rebuilded.<br>';
+
+        Coupons::tableTruncate();
+
+        echo 'Coupons truncated.<br>';
 
         echo 'Done!';
     }
@@ -277,6 +267,20 @@ class TechController extends Controller
     }
     public static function testAction()
     {
-        DayService::finishExpiredDays();
+        $today = Day::current();
+        $weekId = Weeks::currentId();
+        if ($today < 2) {
+            --$weekId;
+        }
+        $week = Week::create($weekId);
+        foreach ($week->days as $i => $day) {
+            if ($weekId === Weeks::currentId() && $i >= $today) break;
+            SocialPointsService::applyOnDay($day);
+            CouponService::burn($day);
+        }
+        $week->save();
+
+        Tech::dump($_SESSION['report']);
+        $_SESSION['report'] = [];
     }
 }

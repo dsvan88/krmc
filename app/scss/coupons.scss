@@ -4,6 +4,7 @@
 $readyColor: $bg-color-light-blue;
 $appliedColor: $bg-color-light-green;
 $expiredColor: $bg-color-gray;
+$burnedColor: $color-text-dark;
 $readyBGColor: $bg-color-light-blue-blur;
 $appliedBGColor: $bg-color-light-green-blur;
 $expiredBGColor: $bg-color-gray-blur;
@@ -90,6 +91,12 @@ $expiredBGColor: $bg-color-gray-blur;
             text-transform: uppercase;
         }
 
+        &__discount{
+            font-size: 2.5em;
+            color:$bg-color-light-red;
+            width: 4em;
+        }
+
         &__status {
             max-width: 8em;
 
@@ -140,6 +147,32 @@ $expiredBGColor: $bg-color-gray-blur;
             }
         }
 
+        &.burned {
+            transition: filter $animation-fast;
+            filter: brightness(60%) blur(1px);
+            .coupon__title {
+                background-color: $burnedColor;
+                border-color: $burnedColor;
+                box-shadow: 0 0 3px 0 $burnedColor;
+            }
+
+            .coupon__content {
+                border-color: $burnedColor;
+                box-shadow: 0 0 3px 0 $burnedColor;
+                color: $burnedColor;
+                background-color: $expiredBGColor;
+            }
+
+            .coupon__status {
+                div {
+                    border-color: $burnedColor;
+                    color: $burnedColor;
+                }
+            }
+            &:hover{
+                filter: none;
+            }
+        }
         &.expired {
             .coupon__title {
                 background-color: $expiredColor;

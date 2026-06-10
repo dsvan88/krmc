@@ -4,7 +4,6 @@ namespace app\Controllers;
 
 use app\core\Controller;
 use app\core\Entities\Coupon;
-use app\core\Entities\User;
 use app\core\Validator;
 use app\core\View;
 use app\mappers\Coupons;
@@ -28,7 +27,6 @@ class CouponsController extends Controller
                 'coupons',
             ]
         ];
-
         if ($tab === 'types') {
             $vars['title'] =  'Coupon’s types';
             $vars['subtitle'] =  'List of all coupon’s types';

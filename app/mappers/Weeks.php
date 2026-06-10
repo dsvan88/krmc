@@ -116,6 +116,7 @@ class Weeks extends Model
         }
         for ($i = 0; $i < 7; $i++) {
             $weekData['data'][$i]['participants'] = [];
+            $weekData['data'][$i]['coupons'] = [];
             $weekData['data'][$i]['status'] = '';
         }
 

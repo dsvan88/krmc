@@ -6,6 +6,7 @@ use app\core\Entities\Coupon;
 use app\core\Entities\Day;
 use app\core\Entities\Week;
 use app\core\Locale;
+use app\core\Tech;
 use app\core\Validator;
 use app\mappers\Coupons;
 use app\mappers\Settings;
@@ -15,21 +16,22 @@ class CouponService
 {
     public static function burn(?Day $day = null): void
     {
-        if (empty($day) || empty($day->coupons)) return;
+        if (is_null($day) || empty($day->coupons)) return;
         $coupons = [];
         $recall = [];
         $participantIds = array_column($day->participants, 'id');
         foreach ($day->coupons as $c) {
-            $coupon = Coupon::create($c);
+            $coupon = Coupon::fromCode($c);
             if (empty($coupon)) continue;
-            if (!in_array($coupon->owner, $participantIds)) {
+            if (!in_array($coupon->owner->id, $participantIds, true)) {
                 $recall[] = $coupon->code;
             }
             $coupons[] = $coupon;
         }
 
+        
         if (empty($coupons)) return;
-
+                
         $method = 'recall';
         if ($day->status === 'finished')
             $method = 'burn';
@@ -38,13 +40,12 @@ class CouponService
 
         foreach ($coupons as $coupon) {
             if (in_array($coupon->code, $recall)) {
-                $coupon->recall($day);
-                $_SESSION['report'][] = "Coupon {$coupon->id} for user {$coupon->owner->name} (id: {$coupon->owner->id}) is recalled due isn’t present on that day.";
+                $coupon->recall($day)->save();
+                $_SESSION['report'][] = "Coupon #{$coupon->code} for user {$coupon->owner->name} (id: {$coupon->owner->id}) is recalled due isn’t present on that day.";
                 continue;
             }
-            $coupon->$method($day);
-            $_SESSION['report'][] = "Coupon {$coupon->id} for user {$coupon->owner->name} (id: {$coupon->owner->id}) is burned. All is OK.";
-            $coupon->save();
+            $coupon->$method($day)->save();
+            $_SESSION['report'][] = "Coupon #{$coupon->code} for user {$coupon->owner->name} (id: {$coupon->owner->id}) is burned. All is OK.";
         }
     }
     public static function checkOwnersOfAppliedCoupons(int $userId, array $codes): bool
@@ -52,7 +53,7 @@ class CouponService
         if (empty($userId) || empty($codes)) return false;
 
         $coupons = Coupons::getAll(['code' => $codes]);
-
+        
         return in_array($userId, array_column($coupons, 'owner'));
     }
     public static function applyOnNearEvent(int $userId, string $code): void
@@ -66,12 +67,12 @@ class CouponService
         foreach ($weeks as $weekData) {
             $week = Week::fromArray($weekData);
             foreach ($week->days as $day) {
-                if ($day->status !== 'set') continue;
+                if ($day->status !== 'set' || $day->isExpired()) continue;
 
                 if (empty($day->participants) || !in_array($userId, array_column($day->participants, 'id'))) continue;
-
+                
                 if (static::checkOwnersOfAppliedCoupons($userId, $day->coupons)) return;
-
+                
                 $coupon = Coupon::fromCode($code);
                 
                 $coupon->apply($day)->save();

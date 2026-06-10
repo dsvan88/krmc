@@ -18,7 +18,7 @@ class VerificationController extends Controller
 {
     public static function rootAction()
     {
-        $message = Locale::phrase("This action requires root right!\nApprove your rights with the root password:");
+        $message = Locale::phrase("This action requires root rights!\nApprove your rights with the root password:");
         return View::message($message);
     }
     public function emailVerifyHashAction()

@@ -37,7 +37,7 @@ class Coupon extends Entity
             if (empty(static::$cache[$k]) || $k === 'owner') continue;
             $this->$k = static::$cache[$k];
         }
-        if ($this->isExpired())
+        if ($this->isExpired() && $this->status !== 'burned')
             $this->status = 'expired';
 
         $this->owner = User::create(static::$cache['owner']);
@@ -68,6 +68,8 @@ class Coupon extends Entity
             throw new Exception(__METHOD__ . ' $day can’t be empty.');
 
         $this->used_on = null;
+        $this->status = 'ready';
+
         $i = array_search($this->code, $day->coupons, true);
 
         if (empty($i)) return $this;
