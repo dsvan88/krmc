@@ -96,7 +96,7 @@ class BookingCommand extends ChatCommand
             $result['reaction'] = $reactions[mt_rand(0, count($reactions) - 1)];
         }
 
-        $booked = in_array(static::$requester->profile->id ?? 0, array_column($day->participants, 'id'));
+        $booked = empty(static::$requester->profile->id) ? false : in_array(static::$requester->profile->id, array_column($day->participants, 'id'));
         $replyMarkup = TelegramBotFormatter::getBookingMarkup($weekId, $dayNum, $booked);
 
         $result['send'][] = [
