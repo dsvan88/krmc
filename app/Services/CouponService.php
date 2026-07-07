@@ -17,21 +17,29 @@ class CouponService
     public static function burn(?Day $day = null): void
     {
         if (is_null($day) || empty($day->coupons)) return;
-        $coupons = [];
-        $recall = [];
+        $coupons = $remove = $recall = [];
         $participantIds = array_column($day->participants, 'id');
         foreach ($day->coupons as $c) {
             $coupon = Coupon::fromCode($c);
+
+            if ($coupon->status !== 'applied') {
+                if ($coupon->status !== 'burned') continue;
+                $remove[] = $c;
+                continue;
+            }
+
             if (empty($coupon)) continue;
             if (!in_array($coupon->owner->id, $participantIds, true)) {
-                $recall[] = $coupon->code;
+                $recall[] = $c;
             }
             $coupons[] = $coupon;
         }
 
-        
+        if (!empty($remove))
+            $day->coupons = array_values(array_diff($day->coupons, $remove));
+
         if (empty($coupons)) return;
-                
+
         $method = 'recall';
         if ($day->status === 'finished')
             $method = 'burn';
@@ -53,7 +61,7 @@ class CouponService
         if (empty($userId) || empty($codes)) return false;
 
         $coupons = Coupons::getAll(['code' => $codes]);
-        
+
         return in_array($userId, array_column($coupons, 'owner'));
     }
     public static function applyOnNearEvent(int $userId, string $code): void
@@ -70,11 +78,11 @@ class CouponService
                 if ($day->status !== 'set' || $day->isExpired()) continue;
 
                 if (empty($day->participants) || !in_array($userId, array_column($day->participants, 'id'))) continue;
-                
+
                 if (static::checkOwnersOfAppliedCoupons($userId, $day->coupons)) return;
-                
+
                 $coupon = Coupon::fromCode($code);
-                
+
                 $coupon->apply($day)->save();
                 $day->save();
                 return;
