@@ -80,7 +80,8 @@
                             'value' => 'sales',
                             'icon' => 'fa-star-half-o',
                             'checked' => $mods['sales'],
-                            'title' => 'Акціна'
+                            'title' => 'Акціна',
+                            'toggle' => 'sales'
                         ]);
                         self::component('forms/checkbox-icon', [
                             'prefix' => 'game',
@@ -102,13 +103,6 @@
                         ]);
                         ?>
                     </div>
-                    <?php /*
-                    <div class="booking__row">
-                        <label for="day-game" class="booking__label"><?= $texts['dayCosts'] ?>:</label>
-                        <div class="booking__value">
-                            <input type="text" name="day_cost" value="<?= $day->cost ?>" placeholder="<?= $texts['dayCosts'] ?>" id="day-time" />
-                        </div>
-                    </div> */ ?>
                     <div class="booking__row">
                         <label for="day-game" class="booking__label"><?= $texts['dayCosts'] ?>:</label>
                         <div class="booking__value flex">
@@ -124,16 +118,14 @@
                             </select>
                         </div>
                     </div>
-                    <?php /*
-                    <div class="booking__row" id="sales_options">
+                    <? /*<div class="booking__row <?= $mods['sales'] ? '' : 'hidden' ?>" id="sales_options">
                         <div class="booking__row">
-                            <label for="day-game" class="booking__label"><?= /* $texts['salesWinners']  * / '' ?>:</label>
+                            <label for="day-game" class="booking__label"><?= $texts['salesWinners']?>:</label>
                             <div class="booking__value">
-                                <input type="text" name="sales_winners" value="<?/*= $day['sales'] * / ?>" placeholder="<?/*=$texts['salesWinners'] * / ?>" id="day-time" />
+                                <input type="number" step="1" pattern="\d*" name="sales_winners" value="<?= $day['sales_winners'] ?>" placeholder="<?=$texts['salesWinners'] ?>" />
                             </div>
                         </div>
-                    </div>
-                    */ ?>
+                    </div>*/?>
                     <div class="booking__row">
                         <div class="booking__value">
                             <textarea
