@@ -13,6 +13,21 @@ class Weeks extends Model
     public static $table = SQL_TBL_WEEKS;
     public static $jsonFields = ['data'];
 
+    // Получить настройки недели по ID
+    public static function find(int $weekId = 0): ?array
+    {
+        if ($weekId < 0) return false;
+        
+        $weekData = parent::find($weekId);
+        if (!empty($weekData)) return $weekData;
+
+        $maxWeeks = static::currentId() + MAX_WEEKS_AHEAD;
+        if ($weekId > $maxWeeks) return null;
+
+        while(static::create() != $weekId){}
+
+        return parent::find($weekId);
+    }
     // Получить настройки недели по времени
     public static function weekDataByTime($time = 0)
     {
@@ -122,7 +137,7 @@ class Weeks extends Model
 
         return $weekData;
     }
-    public static function create()
+    public static function create(): int
     {
         $weekData = self::lastWeekData();
 

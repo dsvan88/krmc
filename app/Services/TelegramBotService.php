@@ -89,12 +89,17 @@ class TelegramBotService
             ChatAction::$arguments = $arguments;
             return $command;
         }
-        static::getCommonArguments(mb_substr($text, $commandLen + 1, NULL, 'UTF-8'));
+
+        if ($spacePos === false)
+            return $command;
+
+        static::getCommonArguments(mb_substr($text, $spacePos, NULL, 'UTF-8'));
         return $command;
     }
-    public static function getCommonArguments(string $text = '')
+    public static function getCommonArguments(string $text = ''): void
     {
         $text = trim($text);
+        if (empty($text)) return;
         $symbols = Locale::$cyrillicPattern;
         preg_match_all("/([a-z$symbols.0-9#-]+)/ui", $text, $matches);
 

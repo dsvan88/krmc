@@ -3,6 +3,7 @@
 namespace  app\core\Entities;
 
 use app\core\Locale;
+use app\core\Tech;
 use app\mappers\Days;
 use app\mappers\GameTypes;
 use app\mappers\Weeks;

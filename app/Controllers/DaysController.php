@@ -4,6 +4,7 @@ namespace app\Controllers;
 
 use app\core\Controller;
 use app\core\Entities\Day;
+use app\core\Entities\Week;
 use app\core\Sender;
 use app\core\Tech;
 use app\core\View;
@@ -57,14 +58,13 @@ class DaysController extends Controller
                 'TimeArrivePlaceholder' => 'Arrive Time',
             ],
         ];
-
+        
         if (empty($day)) {
             $day = Day::create($dayId, $weekId);
         }
 
         $yesterday = WeekFormatter::yesterday($day);
         $tomorrow = WeekFormatter::tomorrow($day);
-
 
         $modsTexts = empty($day->mods) ?
             '' :
