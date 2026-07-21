@@ -2,6 +2,7 @@
 
 namespace app\Services;
 
+use app\Controllers\TelegramBotController;
 use app\core\GoogleDrive;
 use app\core\ImageProcessing;
 use app\core\Sender;
@@ -118,9 +119,10 @@ class TelegramChatsService
     {
         $chatId = TelegramBotService::getUserTelegramId();
         $message = ChatAction::$message;
+        $msgType = empty($message['callback_query']) ? 'message' : 'callback_query';
         $contacts = [
             'telegramid' => $chatId,
-            'telegram' => empty($message['message']['from']['username']) ? null : $message['message']['from']['username'],
+            'telegram' => empty($message[$msgType]['from']['username']) ? null : $message[$msgType]['from']['username'],
         ];
 
         $chat = TelegramChats::find($chatId);
@@ -129,13 +131,13 @@ class TelegramChatsService
             $newChatData = [
                 'id' => $chatId,
                 'personal' => json_encode([
-                    'first_name' => empty($message['message']['from']['first_name']) ? '' : $message['message']['from']['first_name'],
-                    'last_name' => empty($message['message']['from']['last_name']) ? '' : $message['message']['from']['last_name'],
-                    'username' => empty($message['message']['from']['username']) ? '' : $message['message']['from']['username'],
+                    'first_name' => empty($message[$msgType]['from']['first_name']) ? '' : $message[$msgType]['from']['first_name'],
+                    'last_name' => empty($message[$msgType]['from']['last_name']) ? '' : $message[$msgType]['from']['last_name'],
+                    'username' => empty($message[$msgType]['from']['username']) ? '' : $message[$msgType]['from']['username'],
                 ], JSON_UNESCAPED_UNICODE),
                 'data' => json_encode([
-                    'last_seems' => $message['message']['date'],
-                    'direct' => ($message['message']['chat']['type'] === 'private'),
+                    'last_seems' => $message[$msgType]['date'],
+                    'direct' => ($message[$msgType]['chat']['type'] === 'private'),
                 ], JSON_UNESCAPED_UNICODE),
             ];
 
@@ -145,7 +147,7 @@ class TelegramChatsService
             } else {
                 $newChatData['user_id'] = $userId;
                 if (TelegramBotService::getChatId() === Settings::getMainTelegramId()) {
-                    SocialPointsService::evaluateMessage($userId, $message['message']['text']);
+                    SocialPointsService::evaluateMessage($userId, $message[$msgType]['text']);
                 }
                 ContactService::updateUserContacts($userId, $contacts);
             }
@@ -153,10 +155,10 @@ class TelegramChatsService
         }
 
         $newChatData = $chat;
-        $newChatData['personal']['first_name'] = empty($message['message']['from']['first_name']) ? '' : $message['message']['from']['first_name'];
-        $newChatData['personal']['last_name'] = empty($message['message']['from']['last_name']) ? '' : $message['message']['from']['last_name'];
-        $newChatData['personal']['username'] = empty($message['message']['from']['username']) ? '' : $message['message']['from']['username'];
-        $newChatData['data']['direct'] = ($message['message']['chat']['type'] === 'private');
+        $newChatData['personal']['first_name'] = empty($message[$msgType]['from']['first_name']) ? '' : $message[$msgType]['from']['first_name'];
+        $newChatData['personal']['last_name'] = empty($message[$msgType]['from']['last_name']) ? '' : $message[$msgType]['from']['last_name'];
+        $newChatData['personal']['username'] = empty($message[$msgType]['from']['username']) ? '' : $message[$msgType]['from']['username'];
+        $newChatData['data']['direct'] = ($message[$msgType]['chat']['type'] === 'private');
 
         TelegramChatsService::$pending = empty($chat['personal']['pending']) ? '' : $chat['personal']['pending'];
 
@@ -166,12 +168,12 @@ class TelegramChatsService
         } else {
             $newChatData['user_id'] = $userId;
             if (TelegramBotService::getChatId() === Settings::getMainTelegramId()) {
-                SocialPointsService::evaluateMessage($userId, $message['message']['text']);
+                SocialPointsService::evaluateMessage($userId, $message[$msgType]['text']);
             }
             ContactService::updateUserContacts($userId, $contacts);
         }
 
-        $newChatData['data']['last_seems'] = $message['message']['date'];
+        $newChatData['data']['last_seems'] = $message[$msgType]['date'];
 
         $newChatData['personal'] = json_encode($newChatData['personal'], JSON_UNESCAPED_UNICODE);
         $newChatData['data'] = json_encode($newChatData['data'], JSON_UNESCAPED_UNICODE);
