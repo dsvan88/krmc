@@ -65,7 +65,7 @@ class TelegramBotController extends Controller
         }
 
         ChatAction::$message = $message;
-        if (static::$type === 'message' && empty($message[static::$type]['from']['is_bot'])) {
+        if (empty($message[static::$type]['from']['is_bot'])) {
             TelegramChatsService::save($message);
         }
 
