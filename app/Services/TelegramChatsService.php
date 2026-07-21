@@ -136,8 +136,8 @@ class TelegramChatsService
                     'username' => empty($message[$msgType]['from']['username']) ? '' : $message[$msgType]['from']['username'],
                 ], JSON_UNESCAPED_UNICODE),
                 'data' => json_encode([
-                    'last_seems' => $message[$msgType]['date'],
-                    'direct' => ($message[$msgType]['chat']['type'] === 'private'),
+                    'last_seems' => $_SERVER['REQUEST_TIME'],
+                    'direct' => TelegramBotService::isDirect(),
                 ], JSON_UNESCAPED_UNICODE),
             ];
 
@@ -158,7 +158,7 @@ class TelegramChatsService
         $newChatData['personal']['first_name'] = empty($message[$msgType]['from']['first_name']) ? '' : $message[$msgType]['from']['first_name'];
         $newChatData['personal']['last_name'] = empty($message[$msgType]['from']['last_name']) ? '' : $message[$msgType]['from']['last_name'];
         $newChatData['personal']['username'] = empty($message[$msgType]['from']['username']) ? '' : $message[$msgType]['from']['username'];
-        $newChatData['data']['direct'] = ($message[$msgType]['chat']['type'] === 'private');
+        $newChatData['data']['direct'] = TelegramBotService::isDirect();
 
         TelegramChatsService::$pending = empty($chat['personal']['pending']) ? '' : $chat['personal']['pending'];
 
@@ -167,13 +167,13 @@ class TelegramChatsService
             $newChatData['user_id'] = null;
         } else {
             $newChatData['user_id'] = $userId;
-            if (TelegramBotService::getChatId() === Settings::getMainTelegramId()) {
+            if ($msgType === 'message' && TelegramBotService::getChatId() === Settings::getMainTelegramId()) {
                 SocialPointsService::evaluateMessage($userId, $message[$msgType]['text']);
             }
             ContactService::updateUserContacts($userId, $contacts);
         }
 
-        $newChatData['data']['last_seems'] = $message[$msgType]['date'];
+        $newChatData['data']['last_seems'] = $_SERVER['REQUEST_TIME'];
 
         $newChatData['personal'] = json_encode($newChatData['personal'], JSON_UNESCAPED_UNICODE);
         $newChatData['data'] = json_encode($newChatData['data'], JSON_UNESCAPED_UNICODE);
