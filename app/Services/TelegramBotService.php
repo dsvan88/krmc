@@ -65,6 +65,7 @@ class TelegramBotService
         $command = mb_substr($text, 1, NULL, 'UTF-8');
 
         $spacePos = mb_strpos($command, ' ', 0, 'UTF-8');
+
         if ($spacePos !== false) {
             $command = mb_substr($command, 0, $spacePos, 'UTF-8');
         }
@@ -93,15 +94,18 @@ class TelegramBotService
         if ($spacePos === false)
             return $command;
 
-        static::getCommonArguments(mb_substr($text, $spacePos, NULL, 'UTF-8'));
+        static::getCommonArguments(mb_substr($text, $spacePos + 1, NULL, 'UTF-8'));
+        
         return $command;
     }
     public static function getCommonArguments(string $text = ''): void
     {
         $text = trim($text);
+        var_dump($text);
         if (empty($text)) return;
         $symbols = Locale::$cyrillicPattern;
         preg_match_all("/([a-z$symbols.0-9#-]+)/ui", $text, $matches);
+        var_dump($matches[0]);
 
         ChatAction::$arguments = $matches[0];
     }
