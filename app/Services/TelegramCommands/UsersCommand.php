@@ -3,6 +3,7 @@
 namespace app\Services\TelegramCommands;
 
 use app\core\Telegram\ChatCommand;
+use app\core\Validator;
 use app\mappers\Users;
 
 class UsersCommand extends ChatCommand
@@ -53,8 +54,8 @@ class UsersCommand extends ChatCommand
             return empty($users) ? [] : [$users];
         }
 
-        if (preg_match('/([а-я0-9]+)/ui', $options, $match) === 1) {
-            $pattern = $match[1];
+        if (preg_match('/([а-яa-z0-9]+)/ui', $options, $match) === 1) {
+            $pattern = Validator::validate('name', $match[1]);
             return Users::ilike('name', $pattern);
         }
 

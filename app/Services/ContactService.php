@@ -9,7 +9,7 @@ class ContactService
 {
     public static function updateUserContacts(int $userId = 0, array $newContacts = []): void
     {
-        if (empty($userId) || empty($contacts)) return;
+        if (empty($userId) || empty($newContacts)) return;
 
         $contacts = Contacts::getByUserId($userId);
         $types = array_column($contacts, 'type');
