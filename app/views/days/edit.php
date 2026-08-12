@@ -1,3 +1,14 @@
+<?php
+/** 
+ * @var \app\core\Entities\Day  $day 
+ * @var array $yesterday
+ * @var array $tomorrow
+ * @var array $texts
+ * @var array $gameTypes
+ * @var array $mods
+ */
+?>
+
 <section class="section">
     <div class="booking">
         <form class="booking__form" action="/week/<?= $day->weekId ?>/day/<?= $day->dayId ?>/" method="POST">
@@ -118,14 +129,14 @@
                             </select>
                         </div>
                     </div>
-                    <? /*<div class="booking__row <?= $mods['sales'] ? '' : 'hidden' ?>" id="sales_options">
-                        <div class="booking__row">
+                    <div class="booking__sales <?= $mods['sales'] ? '' : 'hidden' ?>">
+                        <div class="booking__row" id="sales_options">
                             <label for="day-game" class="booking__label"><?= $texts['salesWinners']?>:</label>
                             <div class="booking__value">
-                                <input type="number" step="1" pattern="\d*" name="sales_winners" value="<?= $day['sales_winners'] ?>" placeholder="<?=$texts['salesWinners'] ?>" />
+                                <input type="number" step="1" pattern="\d*" name="sales_winners" value="<?= $day->sales['winners'] ?? 0 ?>" placeholder="<?=$texts['salesWinnerCount'] ?>" />
                             </div>
                         </div>
-                    </div>*/?>
+                    </div>
                     <div class="booking__row">
                         <div class="booking__value">
                             <textarea

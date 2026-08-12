@@ -114,7 +114,7 @@ class BookingAnswer extends ChatAnswer
             throw new Exception(__METHOD__ . ': $index can’t be empty!');
         }
         static::$day->removeParticipant($index);
-        static::$text = static::locale(['string' => 'You’re successfully opted-out from a game %s at %s.', 'vars' => [static::$day->gameName, str_replace(['<b>', '</b>'], ['(', ')'], static::$day->date)]]);
+        static::$text = static::locale(['string' => 'You’re successfully opted-out from a game %s at %s.', 'vars' => [static::$day->gameName, str_replace(['<b>', '</b>'], '', static::$day->date)]]);
         static::$report = static::locale(['string' => 'User <b>%s</b> is <u>opted-out</u> from a game <b>%s</b> at <b>%s</b>.', 'vars' => [static::$arguments['userName'], static::$day->gameName, static::$day->date]]);
     }
 }

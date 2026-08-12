@@ -56,6 +56,8 @@ class DaysController extends Controller
                 'addFieldLabel' => 'Add field',
                 'setDayApprovedLabel' => 'Save',
                 'TimeArrivePlaceholder' => 'Arrive Time',
+                'salesWinners' => 'Max winners',
+                'salesWinnerCount' => '0-10',
             ],
         ];
         

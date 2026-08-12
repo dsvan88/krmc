@@ -2,6 +2,7 @@
 
 namespace app\mappers;
 
+use app\core\Entities\Coupon;
 use app\core\Model;
 use Exception;
 
@@ -51,7 +52,8 @@ class Coupons extends Model
         $offset = TIMESTAMP_YEAR + TIMESTAMP_DAY;
         $expire = $_SERVER['REQUEST_TIME'] + TIMESTAMP_DAY;
         if (is_object($coupon)) {
-            if ($coupon->expired_at) {
+            var_dump($coupon->expired_at);
+            if (is_numeric($coupon->expired_at)) {
                 return $coupon->expired_at > $offset && $expire > $coupon->expired_at;
             }
             throw new Exception(__METHOD__ . ' $coupon is invalid.');
@@ -99,8 +101,8 @@ class Coupons extends Model
     }
     public static function decodeJson(array $coupon)
     {
-        $coupon['expired_at'] = strtotime($coupon['expired_at']);
-        $coupon['created_at'] = strtotime($coupon['created_at']);
+        $coupon['expired_at'] = empty($coupon['expired_at']) ? 0 : strtotime($coupon['expired_at']);
+        $coupon['created_at'] = empty($coupon['created_at']) ? 0 : strtotime($coupon['created_at']);
         return parent::decodeJson($coupon);
     }
     public static function init()
