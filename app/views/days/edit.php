@@ -92,7 +92,7 @@
                             'icon' => 'fa-star-half-o',
                             'checked' => $mods['sales'],
                             'title' => 'Акціна',
-                            'toggle' => 'sales'
+                            'change' => 'sales'
                         ]);
                         self::component('forms/checkbox-icon', [
                             'prefix' => 'game',
@@ -129,14 +129,15 @@
                             </select>
                         </div>
                     </div>
-                    <div class="booking__sales <?= $mods['sales'] ? '' : 'hidden' ?>">
+                    <fieldset class="booking__sales <?= $mods['sales'] ? '' : 'hidden' ?>">
+                        <legend>Sales:</legend>
                         <div class="booking__row" id="sales_options">
                             <label for="day-game" class="booking__label"><?= $texts['salesWinners']?>:</label>
                             <div class="booking__value">
-                                <input type="number" step="1" pattern="\d*" name="sales_winners" value="<?= $day->sales['winners'] ?? 0 ?>" placeholder="<?=$texts['salesWinnerCount'] ?>" />
+                                <input type="number" step="1" pattern="\d*" name="sales[winners]" value="<?= $day->sales['winners'] ?? 0 ?>" placeholder="<?=$texts['salesWinnerCount'] ?>" />
                             </div>
                         </div>
-                    </div>
+                    </fieldset>
                     <div class="booking__row">
                         <div class="booking__value">
                             <textarea

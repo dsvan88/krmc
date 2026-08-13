@@ -53,6 +53,11 @@ class DayService
             'currency' => trim($data['cost_currency']),
             'type' => trim($data['cost_type']),
         ];
+        $day->sales = [];
+        if (in_array('sales', $day->mods, true) && !empty($data['sales'])){
+            $day->sales['winners'] = $data['sales']['winners'];
+        }
+
         $_type = $day->cost['type'] === 'day' ? Locale::phrase('evening') : Locale::phrase('game');
         $day->costText = "{$day->cost['amount']} {$day->cost['currency']} for $_type";
 
