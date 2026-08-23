@@ -114,14 +114,14 @@ class TelegramBotFormatter
         }
         return compact('inline_keyboard');
     }
-    public static function getBookingMarkup(int $weekId, int $dayNum, bool $booked = false, bool $full = false): array
+    public static function getBookingMarkup(Day $day, bool $booked = false, bool $full = false): array
     {
         if (TelegramBotService::isDirect() && $booked) {
             return [
                 'inline_keyboard' => [
                     [
-                        ['text' => '❌' . Locale::phrase('Opt-out'), 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => $dayNum, 'r' => 1]],
-                        ['text' => '♻️', 'callback_data' => ['c' => 'refresh', 'w' => $weekId, 'd' => $dayNum]]
+                        ['text' => '❌' . Locale::phrase('Opt-out'), 'callback_data' => ['c' => 'booking', 'w' => $day->weekId, 'd' => $day->dayId, 'r' => 1]],
+                        ['text' => '♻️', 'callback_data' => ['c' => 'refresh', 'w' => $day->weekId, 'd' => $day->dayId]]
                     ]
                 ]
             ];
@@ -130,15 +130,19 @@ class TelegramBotFormatter
         $result = [
             'inline_keyboard' => [
                 [
-                    ['text' => '🙋' . Locale::phrase('I will!'), 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => $dayNum]],
-                    ['text' => Locale::phrase('I want!') . '🥹', 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => $dayNum, 'p' => '?']],
-                    ['text' => '♻️', 'callback_data' => ['c' => 'refresh', 'w' => $weekId, 'd' => $dayNum]],
+                    ['text' => '🙋' . Locale::phrase('I will!'), 'callback_data' => ['c' => 'booking', 'w' => $day->weekId, 'd' => $day->dayId]],
+                    ['text' => Locale::phrase('I want!') . '🥹', 'callback_data' => ['c' => 'booking', 'w' => $day->weekId, 'd' => $day->dayId, 'p' => '?']],
+                    ['text' => '♻️', 'callback_data' => ['c' => 'refresh', 'w' => $day->weekId, 'd' => $day->dayId]],
                 ],
             ],
         ];
 
         if ($full || !TelegramBotService::isDirect()) {
-            $result['inline_keyboard'][0][] = ['text' => '❌' . Locale::phrase('Opt-out'), 'callback_data' => ['c' => 'booking', 'w' => $weekId, 'd' => $dayNum, 'r' => 1]];
+            $result['inline_keyboard'][0][] = ['text' => '❌' . Locale::phrase('Opt-out'), 'callback_data' => ['c' => 'booking', 'w' => $day->weekId, 'd' => $day->dayId, 'r' => 1]];
+        }
+
+        if (in_array('sales', $day->mods, true)){
+            $result['inline_keyboard'][] = [['text' => 'Send dice', 'callback_data' => ['c' =>'throwDice', 'w' => $day->weekId, 'd' => $day->dayId]]];
         }
 
         return $result;

@@ -34,7 +34,7 @@ class DayCommand extends ChatCommand
         }
 
         $booked = in_array(static::$requester->profile->id, array_column($day->participants, 'id'));
-        $replyMarkup = TelegramBotFormatter::getBookingMarkup($weekId, $dayNum, $booked);
+        $replyMarkup = TelegramBotFormatter::getBookingMarkup($day, $booked);
 
         $result = [
             'result' => true,

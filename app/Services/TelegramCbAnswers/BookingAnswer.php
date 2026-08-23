@@ -42,7 +42,7 @@ class BookingAnswer extends ChatAnswer
         static::$day = Day::create($dayNum, $weekId);
 
         if (static::$day->isExpired() || in_array(static::$day->status, ['', 'recalled'])) {
-            return static::result('This day is over🤷‍♂️');
+            return static::result('This day is over🤷‍♂️', false);
         }
 
         if (static::$day->status !== 'set') {
@@ -76,7 +76,7 @@ class BookingAnswer extends ChatAnswer
         static::$day->save();
 
         $booked = in_array(static::$requester->profile->id ?? 0, array_column(static::$day->participants, 'id'));
-        $replyMarkup = TelegramBotFormatter::getBookingMarkup($weekId, $dayNum, $booked);
+        $replyMarkup = TelegramBotFormatter::getBookingMarkup(static::$day, $booked);
 
         $update = [
             'message' => DayFormatter::forMessengers(static::$day),

@@ -16,13 +16,13 @@ class TelegramBot
     public static $close = true;
     public static $webhookLink = 'api/telegram/webhook';
 
-    public function __construct(string $token = '')
+    public function __construct(?string $token = null)
     {
         static::set($token);
     }
     public static function set(?string $token = null)
     {
-        static::$botToken = empty($token) ? static::getAuthData() : $token;
+        static::$botToken = $token ?? static::getAuthData();
         if (empty(static::$options)) {
             static::$options = [
                 CURLOPT_RETURNTRANSFER => true,
@@ -360,10 +360,11 @@ class TelegramBot
             $options[CURLOPT_POSTFIELDS] = $params;
         }
         $options[CURLOPT_URL] = "https://api.telegram.org/bot$botToken/$method";
-
+        
         if (empty(static::$curl)) {
             static::$curl = curl_init();
         }
+        Tech::dump($options);
         curl_setopt_array(static::$curl, $options);
         static::$result = json_decode(curl_exec(static::$curl), true);
         // error_log(json_encode(static::$result,JSON_UNESCAPED_UNICODE));

@@ -21,9 +21,11 @@ class ResendAnswer extends ChatAnswer
         $weekId = (int) trim(static::$arguments['w']);
         $dayNum = (int) trim(static::$arguments['d']);
 
-        $message = DayFormatter::forMessengers(Day::create($dayNum, $weekId));
+        $day = Day::create($dayNum, $weekId);
 
-        $replyMarkup = TelegramBotFormatter::getBookingMarkup($weekId, $dayNum, false, true);
+        $message = DayFormatter::forMessengers($day);
+
+        $replyMarkup = TelegramBotFormatter::getBookingMarkup($day, false, true);
 
         $send = [
             'chatId' => Settings::getMainTelegramId(),

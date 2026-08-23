@@ -3,12 +3,6 @@
 namespace app\Services\TelegramCommands;
 
 use app\core\Telegram\ChatCommand;
-use app\mappers\Contacts;
-use app\mappers\TelegramChats;
-use app\mappers\Users;
-use app\Services\AccountService;
-use app\Services\ContactService;
-use app\Services\TelegramChatsService;
 
 class TestCommand extends ChatCommand
 {
