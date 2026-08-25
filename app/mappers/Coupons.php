@@ -3,6 +3,7 @@
 namespace app\mappers;
 
 use app\core\Entities\Coupon;
+use app\core\Entities\Day;
 use app\core\Model;
 use Exception;
 
@@ -52,7 +53,6 @@ class Coupons extends Model
         $offset = TIMESTAMP_YEAR + TIMESTAMP_DAY;
         $expire = $_SERVER['REQUEST_TIME'] + TIMESTAMP_DAY;
         if (is_object($coupon)) {
-            var_dump($coupon->expired_at);
             if (is_numeric($coupon->expired_at)) {
                 return $coupon->expired_at > $offset && $expire > $coupon->expired_at;
             }
@@ -96,6 +96,33 @@ class Coupons extends Model
         $_coupon['code'] =  (hash('xxh3', json_encode($_coupon) . $_SERVER['REQUEST_TIME']));
 
         static::insert($_coupon);
+
+        return $_coupon['code'];
+    }
+    public static function createHan(int $userId = 0, ?Day $day = null)
+    {
+        if (empty($userId) || !Users::isExists(['id' => $userId]))
+            throw new Exception(__METHOD__ . ': invalid owner.');
+
+        $expired = TIMESTAMP_WEEK * 2;
+        $_coupon = [
+            'owner' => $userId,
+            'type' => 'han',
+            'status' => 'applied',
+            'options' => [
+                'discount' => 100,
+                'discount_type' => '%',
+            ],
+            'expired_at' => date('Y-m-d', $expired) . 'T' . date('H:i:s', $expired),
+        ];
+
+        $_coupon['code'] =  (hash('xxh3', json_encode($_coupon) . $_SERVER['REQUEST_TIME']));
+
+        $couponId = static::insert($_coupon);
+
+        $coupon = Coupon::create($couponId);
+        $coupon->apply($day)->save();
+        $day->save();
 
         return $_coupon['code'];
     }

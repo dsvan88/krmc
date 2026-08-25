@@ -46,8 +46,9 @@ class SendDiceAnswer extends ChatAnswer
         $day->sales['results'][static::$requester->userId] = $value;
 
         if (in_array($value, static::$winNumbers, false)){
-            Coupons::create
+            Coupons::createHan(static::$requester->userId, $day);
         }
+        
         return array_merge(static::result('Success', true), []);
     }
     private static function getWinnersCount(?Day $day = null){

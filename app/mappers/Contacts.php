@@ -17,13 +17,13 @@ class Contacts extends Model
     public static function getUserContact(int $userId, string $contactType): ?array
     {
         $table = self::$table;
-        $contact = Contacts::query("SELECT * FROM $table WHERE user_id = ? AND type = ? LIMIT 1", [$userId, $contactType], 'Assoc');
+        $contact = static::query("SELECT * FROM $table WHERE user_id = ? AND type = ? LIMIT 1", [$userId, $contactType], 'Assoc');
         return empty($contact) ? null : $contact[0];
     }
     public static function getUserIdByContact(string $contactType, string $value): ?int
     {
         $table = self::$table;
-        $userId = Contacts::query("SELECT user_id FROM $table WHERE type = ? AND contact = ? LIMIT 1", [$contactType, $value], 'Column');
+        $userId = static::query("SELECT user_id FROM $table WHERE type = ? AND contact = ? LIMIT 1", [$contactType, $value], 'Column');
         return empty($userId) ? null : $userId;
     }
     public static function isContactExists($contact)
@@ -34,7 +34,7 @@ class Contacts extends Model
     {
         foreach ($data as $column => $value) {
             if (empty($value)) continue;
-            Contacts::add([
+            static::add([
                 'user_id' => $userId,
                 'type' => $column,
                 'contact' => $value,
