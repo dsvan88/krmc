@@ -1,6 +1,6 @@
 <?php
 error_reporting(E_ALL);
-var_dump($_SERVER);
+
 require_once $_SERVER['DOCUMENT_ROOT'] . '/app/config/bootstrap.php';
 
 use app\core\Locale;
@@ -12,5 +12,5 @@ if (!isset($_SESSION['id']) && isset($_COOKIE[CFG_TOKEN_NAME])) {
 }
 
 Locale::setLocale();
-
+var_dump($_SERVER);
 Router::run();
