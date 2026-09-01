@@ -12,5 +12,5 @@ if (!isset($_SESSION['id']) && isset($_COOKIE[CFG_TOKEN_NAME])) {
 }
 
 Locale::setLocale();
-var_dump($_SERVER);
+
 Router::run();
