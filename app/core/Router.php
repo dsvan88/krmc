@@ -81,18 +81,18 @@ class Router
                         }
                     } catch (\Throwable $error) {
                         $message = $error->__toString();
-                        if (APP_LOC === 'local') {
-                            error_log($message);
-                            return false;
-                        }
+                        // if (APP_LOC === 'local') {
+                        error_log($message);
+                        return false;
+                        // }
                     }
                     TechService::scheduleBackup();
                     if (!empty($_SESSION['debug'])) {
                         $message .= PHP_EOL . 'DEBUG:' . PHP_EOL;
                         $message .= PHP_EOL . implode(PHP_EOL, $_SESSION['debug']);
 
-                        if (APP_LOC === 'local')
-                            Tech::dump($message);
+                        // if (APP_LOC === 'local')
+                        Tech::dump($message);
 
                         unset($_SESSION['debug']);
                     }
