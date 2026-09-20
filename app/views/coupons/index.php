@@ -11,13 +11,13 @@
     <?php if ($tab === 'index'): ?>
         <div class="coupons__list">
             <?php foreach ($coupons as $num => $coupon): ?>
-                <? static::component('coupons/coupon', compact('coupon', 'num')) ?>
+                <?php static::component('coupons/coupon', compact('coupon', 'num')) ?>
             <?php endforeach ?>
         </div>
     <?php else: ?>
         <div class="types__list">
             <?php foreach ($coupons as $num => $coupon): ?>
-                <? static::component('coupons/type', compact('coupon', 'num')) ?>
+                <?php static::component('coupons/type', compact('coupon', 'num')) ?>
             <?php endforeach ?>
         </div>
     <?php endif; ?>

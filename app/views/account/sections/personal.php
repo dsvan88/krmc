@@ -58,7 +58,7 @@
                     <?php endif ?>
                     <?php if ($isSelf && !empty($data['email__value']) && empty($data['approved']['email'])): ?>
                         <span class="text-accent small" data-action-click="verification/email"><?= $texts['approveLabel'] ?></span>
-                    <? endif ?>
+                    <?php endif ?>
                 </div>
             <?php else: ?>
                 <div class="profile__card-value">
@@ -70,7 +70,7 @@
                         <?php endif ?>
                     <?php endif ?>
                 </div>
-            <? endif ?>
+            <?php endif ?>
         </div>
         <div class="profile__card-row">
             <h5 class="profile__card-label">

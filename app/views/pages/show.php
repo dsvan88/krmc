@@ -13,8 +13,8 @@
             <?php foreach ($page['blocks'] as $block): ?>
                 <?php self::component('blocks/' . $block['type'], compact('block')) ?>
             <?php endforeach ?>
-        <? else : ?>
+        <?php else : ?>
             <?= $page['html'] ?>
-        <? endif ?>
+        <?php endif ?>
     </div>
 </section>
