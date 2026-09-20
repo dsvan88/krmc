@@ -39,7 +39,7 @@ class SpBuyAnswer extends ChatAnswer
         // if ($price > SocialPoints::get($userId))
         //     return array_merge(static::result('You’re don’t have enough Social Points', false, true));
 
-        $code = Coupons::create($userId, $cId, 'ready');
+        $code = Coupons::create($userId, $cId);
 
         // if ($code) SocialPoints::minus($userId, $price);
 

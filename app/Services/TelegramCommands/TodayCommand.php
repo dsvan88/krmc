@@ -25,7 +25,7 @@ class TodayCommand extends ChatCommand
         }
 
         $booked = in_array(static::$requester->profile->id, array_column($day->participants, 'id'));
-        $replyMarkup = TelegramBotFormatter::getBookingMarkup($day->weekId, $day->dayId, $booked);
+        $replyMarkup = TelegramBotFormatter::getBookingMarkup($day, $booked);
 
         $result = [
             'reaction' => '👌',

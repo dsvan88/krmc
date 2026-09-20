@@ -2,7 +2,6 @@
 
 namespace  app\core\Entities;
 
-use app\core\Tech;
 use app\mappers\Weeks;
 use Exception;
 
@@ -15,6 +14,7 @@ class Week
     public bool $current = false;
 
     public static array $instances = [];
+    public static $mapper = Weeks::class;
 
     private function __construct(int $weekId = 0)
     {
@@ -31,7 +31,7 @@ class Week
 
         unset($props['id'], $props['days'], $props['current']);
         $props = array_keys($props);
-        $current = Weeks::currentId();
+        $current = static::$mapper::currentId();
         if (empty($weekId) || $weekId === $current) {
             $weekId = $current;
             $this->current = true;
@@ -77,9 +77,9 @@ class Week
     }
     public static function validate(int $weekId = 0): ?int
     {
-        if (!empty($weekId) && !Weeks::isExists(['id' => $weekId]))
+        if (!empty($weekId) && !static::$mapper::isExists(['id' => $weekId]))
             return null;
-        return empty($weekId) ? Weeks::currentId() : $weekId;
+        return empty($weekId) ? static::$mapper::currentId() : $weekId;
     }
     public function __toString()
     {
@@ -93,6 +93,6 @@ class Week
         for ($x = 0; $x < 7; $x++) {
             $data[] = $this->days[$x]->save(1);
         }
-        return (bool) Weeks::update(['data' => json_encode($data, JSON_UNESCAPED_UNICODE)], ['id' => $this->id]);
+        return (bool) static::$mapper::update(['data' => json_encode($data, JSON_UNESCAPED_UNICODE)], ['id' => $this->id]);
     }
 }

@@ -8,7 +8,7 @@ use app\Services\TelegramChatsService;
 class Chat extends Entity
 {
     public array $chat = [];
-    public static $model = TelegramChats::class;
+    public static $mapper = TelegramChats::class;
 
     public static function validate($id)
     {
@@ -16,7 +16,7 @@ class Chat extends Entity
 
         if (empty($_SESSION['id'])) return false;
 
-        $chat = static::$model::findByUserId($_SESSION['id']);
+        $chat = static::$mapper::findByUserId($_SESSION['id']);
 
         return $chat['id'] ?? false;
     }

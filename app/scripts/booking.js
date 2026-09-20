@@ -15,6 +15,14 @@ actionHandler.participantFieldGet = function (target) {
         },
     });
 }
+actionHandler.cbCheckedSales = function (event) {
+    const target = event.target;
+    const parent = target.closest('div.booking__body');
+    const block = parent.querySelector('fieldset.booking__sales');
+
+    if (target.checked) block.classList.remove('hidden');
+    else block.classList.add('hidden');
+}
 actionHandler.participantFieldClear = function (target) {
     const parent = target.closest('div');
     const nameInput = parent.querySelector('input[name="participant[]"]');

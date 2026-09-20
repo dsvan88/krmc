@@ -7,13 +7,14 @@ use app\core\Mailer;
 use app\core\Tech;
 use app\libs\Db;
 use app\mappers\Settings;
+use Exception;
 
 class TechService
 {
     public static function download(string $url = '')
     {
         if (empty($url)) {
-            throw 'URL can’t be empty';
+            throw new Exception('URL can’t be empty');
         }
 
         $curl = curl_init();
@@ -215,7 +216,7 @@ class TechService
         }
         return true;
     }
-    public static function refillTable($table, $path)
+    public static function refillTable(string $table, string $path)
     {
 
         if (!in_array($table, [SQL_TBL_GAMES, SQL_TBL_USERS, SQL_TBL_WEEKS, SQL_TBL_SETTINGS, SQL_TBL_PAGES, SQL_TBL_CONTACTS, SQL_TBL_TG_CHATS, SQL_TBL_COUPONS]))

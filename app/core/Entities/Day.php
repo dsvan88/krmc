@@ -3,7 +3,6 @@
 namespace  app\core\Entities;
 
 use app\core\Locale;
-use app\core\Tech;
 use app\mappers\Days;
 use app\mappers\GameTypes;
 use app\mappers\Weeks;
@@ -25,6 +24,7 @@ class Day
     public string $day_prim = '';
     public array $cost = [];
     public string $costText = '';
+    public array $sales = [];
 
     public bool $current = false;
     public int $timestamp = 0;
@@ -57,6 +57,7 @@ class Day
             'type' => 'day',
         ],
         'costText' => '',
+        'sales' => [],
     ];
 
     private function __construct(int $dayId = 0, int $weekId = 0)

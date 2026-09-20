@@ -9,7 +9,7 @@ abstract class Entity
     public $id = 0;
     public static array $cache = [];
     public static array $instances = [];
-    public static $model = null;
+    public static $mapper = null;
 
     protected function __construct($id)
     {
@@ -59,7 +59,7 @@ abstract class Entity
     }
     public static function find(int $id): bool
     {
-        $data =  static::$model::find($id);
+        $data =  static::$mapper::find($id);
 
         if (empty($data)) return false;
 

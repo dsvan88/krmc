@@ -17,7 +17,7 @@ class Coupon extends Entity
     public ?string $created_at = null;
     public ?string $updated_at = null;
 
-    public static $model = Coupons::class;
+    public static $mapper = Coupons::class;
 
     public static $defaults = [
         'code' => null,

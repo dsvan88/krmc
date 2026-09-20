@@ -7,7 +7,7 @@ use app\mappers\Users;
 class User extends Entity
 {
     public array $profile = [];
-    public static $model = Users::class;
+    public static $mapper = Users::class;
 
     public static function validate($id)
     {

@@ -168,7 +168,7 @@ class DayFormatter
             if (!empty($participant['arrive']) && $participant['arrive'] !== $day->time) {
                 $modsParts[] = static::getTimeEmoji($participant['arrive']) . ' ' . $participant['arrive'];
             }
-            if (isset($day->coupons[$participant['id']]) && (APP_LOC === 'local' || !empty(ChatAction::$message) && TelegramBotService::getChatId() == Settings::getAdminChatTelegramId())) {
+            if (isset($day->coupons[$participant['id'] ?? '']) && (APP_LOC === 'local' || !empty(ChatAction::$message) && TelegramBotService::getChatId() == Settings::getAdminChatTelegramId())) {
                 $modsParts[] =  "🎫- <i><u>{$day->coupons[$participant['id']]->options['discount']}{$day->coupons[$participant['id']]->options['discount_type']}</u></i>";
             }
             if ($userName[0] === '_') {
