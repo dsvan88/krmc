@@ -26,7 +26,7 @@ class ContactService
                 Contacts::remove($contacts[$k]['id']);
                 continue;
             }
-            Contacts::update([$t => $c], ['id' => $contacts[$k]['id']]);
+            Contacts::update(['contact' => $c], ['id' => $contacts[$k]['id']]);
         }
     }
     public static function getFields(int $userId, $default = ''): array
