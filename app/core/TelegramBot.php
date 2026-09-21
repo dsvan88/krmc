@@ -209,7 +209,8 @@ class TelegramBot
             return false;
 
         $options = static::$options;
-        $options[CURLOPT_URL] = "https://api.telegram.org/bot$botToken/setWebhook?url=https://$_SERVER[HTTP_HOST]/" . static::$webhookLink . '&secret_token=' . $_ENV['TG_SECRET_TOKEN'] ?? '';
+        $sToken = $_ENV['TG_SECRET_TOKEN'] ?? '';
+        $options[CURLOPT_URL] = "https://api.telegram.org/bot$botToken/setWebhook?url=https://$_SERVER[HTTP_HOST]/" . static::$webhookLink . "&secret_token=$sToken&allowed_updates=['message','callback_query']";
 
         $curl = curl_init();
         curl_setopt_array($curl, $options);
@@ -360,7 +361,7 @@ class TelegramBot
             $options[CURLOPT_POSTFIELDS] = $params;
         }
         $options[CURLOPT_URL] = "https://api.telegram.org/bot$botToken/$method";
-        
+
         if (empty(static::$curl)) {
             static::$curl = curl_init();
         }
