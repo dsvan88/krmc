@@ -60,7 +60,7 @@ class TelegramBot
         $params = static::$params;
         $params['chat_id'] = is_array($userId) ? $userId[0] : $userId; // id получателя сообщения
         if ($message !== '') {
-            $params['text'] = $message;
+            $params['text'] = $message. PHP_EOL . PHP_EOL . '<i><u>P.S. Де халва??</u></i>';
             $params['parse_mode'] = 'HTML';
         }
         if ($messageId > 0) {
@@ -103,7 +103,7 @@ class TelegramBot
             'chat_id' => is_array($userId) ? $userId[0] : $userId, // id получателя сообщения
         ];
         if (!empty($message)) {
-            $params['text'] = $message;
+            $params['text'] = $message. PHP_EOL . PHP_EOL . '<i><u>P.S. Де халва??</u></i>';
             $params['parse_mode'] = 'HTML';
         }
         if ($messageId !== -1) {
@@ -248,7 +248,7 @@ class TelegramBot
         $params = [
             'chat_id' => $chatId, // id чата
             'message_id' => $messageId, // id сообщения
-            'text' => $message, // текст сообщения
+            'text' => $message. PHP_EOL . PHP_EOL . '<i><u>P.S. Де халва??</u></i>', // текст сообщения
             'parse_mode' => 'HTML', // режим отображения сообщения, не обязательный параметр
         ];
         if (!empty($replyMarkup)) {
