@@ -6,6 +6,8 @@ use app\core\Entities\Day;
 use app\core\Tech;
 use app\core\Telegram\ChatAnswer;
 use app\core\TelegramBot;
+use app\Formatters\DayFormatter;
+use app\Formatters\TelegramBotFormatter;
 use app\mappers\Coupons;
 use app\Services\TelegramBotService;
 
@@ -31,9 +33,13 @@ class SendDiceAnswer extends ChatAnswer
             return static::result('There is no free slots for new winners.', false);
         }
 
+        if (!in_array(static::$requester->userId, array_column($day->participants, 'id'))){
+            return static::result('You need to opt in to the event to use this option.', false);
+        }
+        
         if (!empty($day->sales['results'][static::$requester->userId])){
             return static::result([
-                    'string' => "You're used your chance.\nYour result is <i>%s</i>",
+                    'string' => "You used your attempt.\nYour result is <i>%s</i>",
                     'vars' => [$day->sales['results'][static::$requester->userId]]
                 ], false);
         }
@@ -45,11 +51,23 @@ class SendDiceAnswer extends ChatAnswer
 
         $day->sales['results'][static::$requester->userId] = $value;
 
+        $result = ['string' => 'Your result is <b>%s</b>.', 'vars' => [$value]];
+        $update = [];
+
         if (in_array($value, static::$winNumbers, false)){
             Coupons::createHan(static::$requester->userId, $day);
+            $result['string'] = "Your result is <b>%s</b>!\n\nCongratulations! You won!";
+            $update = ['update' => [
+                    'message' => DayFormatter::forMessengers($day),
+                    'replyMarkup' => TelegramBotFormatter::getBookingMarkup($day, true),
+                ]
+            ];
+            static::$report = static::locale(['string' => 'User <b>%s</b> <u>won</u> a <u>coupon</u> for the game <b>%s</b> at <b>%s</b>.', 'vars' => [static::$arguments['userName'], $day->gameName, $day->date]]);
         }
         
-        return array_merge(static::result('Success', true), []);
+        sleep(2);
+
+        return array_merge(static::result($result, true), $update);
     }
     private static function getWinnersCount(?Day $day = null){
         $r = 0;

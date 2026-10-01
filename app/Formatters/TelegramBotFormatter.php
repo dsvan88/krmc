@@ -142,7 +142,7 @@ class TelegramBotFormatter
         }
 
         if (in_array('sales', $day->mods, true)){
-            $result['inline_keyboard'][] = [['text' => 'Send dice', 'callback_data' => ['c' =>'throwDice', 'w' => $day->weekId, 'd' => $day->dayId]]];
+            $result['inline_keyboard'][] = [['text' => 'Send dice', 'callback_data' => ['c' =>'sendDice', 'w' => $day->weekId, 'd' => $day->dayId]]];
         }
 
         return $result;

@@ -2,19 +2,9 @@
 
 namespace app\Controllers;
 
-use app\core\Controller;
-use app\core\Locale;
 use app\core\Sender;
 use app\core\Telegram\ChatAction;
-use app\core\TelegramBot;
-use app\core\Validator;
-use app\mappers\Contacts;
-use app\mappers\Settings;
 use app\mappers\TelegramChats;
-use app\mappers\Users;
-use app\Services\TelegramBotService;
-use app\Services\TelegramChatsService;
-use Exception;
 
 class TelegramMainBotController extends TelegramBotController
 {

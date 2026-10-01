@@ -60,7 +60,7 @@ class TelegramBot
         $params = static::$params;
         $params['chat_id'] = is_array($userId) ? $userId[0] : $userId; // id получателя сообщения
         if ($message !== '') {
-            $params['text'] = $message. PHP_EOL . PHP_EOL . '<i><u>P.S. Де халва??</u></i>';
+            $params['text'] = $message;
             $params['parse_mode'] = 'HTML';
         }
         if ($messageId > 0) {

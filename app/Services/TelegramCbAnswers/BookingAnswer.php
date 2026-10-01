@@ -97,7 +97,7 @@ class BookingAnswer extends ChatAnswer
         ];
         static::$day->addParticipant($participant);
         static::$text = static::locale(['string' => 'You’re successfully opted-in on a game %s at %s.', 'vars' => [static::$day->gameName, str_replace(['<b>', '</b>'], '', static::$day->date)]]);
-        static::$report = static::locale(['string' => 'User <b>%s</b> is <u>opted-in</u> on a game <b>%s</b> at <b>%s</b>.', 'vars' => [static::$arguments['userName'], static::$day->gameName, static::$day->date]]);
+        static::$report = static::locale(['string' => 'User <b>%s</b> is <u>opted in</u> on a game <b>%s</b> at <b>%s</b>.', 'vars' => [static::$arguments['userName'], static::$day->gameName, static::$day->date]]);
     }
     private static function changePrim(int $index = 0): void
     {
