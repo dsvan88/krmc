@@ -52,7 +52,7 @@ class GamesController extends Controller
 
         if ($day->participantsCount < $needed) {
             $participants = [];
-            $_participants = array_merge($day->participants, Users::random($needed - $count));
+            $_participants = array_merge($day->participants, Users::random($needed - $day->participantsCount));
             $day->participants = [];
             foreach ($_participants as $participant) {
                 if (empty($manager) && $participant['id'] === $_SESSION['id']) {

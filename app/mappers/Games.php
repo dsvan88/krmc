@@ -55,13 +55,15 @@ class Games extends Model
     }
     public static function load(int $gameId)
     {
-        $gameData = Games::find($gameId);
+        $data = Games::find($gameId);
 
-        // $gameData['players'] = AccountService::addNames($gameData['players']);
-        AccountService::addNames($gameData['players']);
+        foreach($data['players'] as $i=>$p){
+            $user = Users::find($p['id']);
+            $data['players'][$i]['name'] = $user['name'];
+        }
 
-        $gameData['players'] = json_encode($gameData['players'], JSON_UNESCAPED_UNICODE);
-        return $gameData;
+        $data['players'] = json_encode($data['players'], JSON_UNESCAPED_UNICODE);
+        return $data;
     }
     public static function init()
     {

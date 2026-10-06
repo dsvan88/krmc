@@ -140,16 +140,16 @@
             </div>
         </form>
         <div class="pool">
-            <?php for ($i = 0; $i < $playersCount; $i++) :
+            <?php for ($i = 0; $i < $day->participantsCount; $i++) :
                 $class = [];
-                if ($day['participants'][$i]['name'] === $manager)
+                if ($day->participants[$i]['name'] === $manager)
                     $class[] = 'manager';
-                else if (!in_array($day['participants'][$i]['name'], $shuffled)) {
-                    $class[] = $day['participants'][$i]['name'] === '+1' ? 'dummy-player' : 'selected';
+                else if (!in_array($day->participants[$i]['name'], $shuffled)) {
+                    $class[] = $day->participants[$i]['name'] === '+1' ? 'dummy-player' : 'selected';
                 }
             ?>
                 <span class="pool__unit">
-                    <span class="pool__name <?= implode(' ', $class) ?>" data-action-click="toggle-player"><?= $day['participants'][$i]['name'] ?></span>
+                    <span class="pool__name <?= implode(' ', $class) ?>" data-action-click="toggle-player"><?= $day->participants[$i]['name'] ?></span>
                     <span class="pool__remove fa fa-times" data-action-click="remove-participant"></span>
                 </span>
             <?php endfor ?>
