@@ -6,7 +6,7 @@ use app\core\Entities\User;
 use app\core\Telegram\ChatAnswer;
 use app\Formatters\TelegramBotFormatter;
 use app\mappers\Coupons;
-
+use app\mappers\SocialPoints;
 use app\Services\CouponService;
 use Exception;
 
@@ -45,11 +45,11 @@ class CouponGiftAnswer extends ChatAnswer
         if (empty($coupons[$cId])) {
             return static::result('This coupon is not found');
         }
-        // $price = $coupons[$cId]['price'];
+        $price = $coupons[$cId]['price'];
         $discount = $coupons[$cId]['options']['discount'] . $coupons[$cId]['options']['discount_type'];
 
-        // if ($price > SocialPoints::get(static::$target->id))
-        //     return array_merge(static::result('You’re don’t have enough Social Points', false, true));
+        if ($price > SocialPoints::get(static::$target->id))
+            return array_merge(static::result('You’re don’t have enough Social Points', false, true));
 
         $code = Coupons::create(static::$target->id, $cId);
 
@@ -57,7 +57,7 @@ class CouponGiftAnswer extends ChatAnswer
    
         // if ($code) SocialPoints::minus(static::$target->id, $price);
 
-        $message = self::locale(['string' => 'You’re successfully presented the coupon #%s (discount - %s), as a gift to the user %s.', 'vars' => [$code, $discount, static::$target->name]]);
+        $message = self::locale(['string' => 'You’re successfully presented the coupon with discount %s, as a gift to the user %s.', 'vars' => [$code, $discount, static::$target->name]]);
 
         $result = static::couponsMenu();
 

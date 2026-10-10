@@ -123,8 +123,8 @@ class TelegramBotService
                 static::parseDayNum($dayName);
             } elseif (preg_match('/^\d{2}:\d{2}$/', $value) === 1 && empty(ChatAction::$arguments['arrive'])) {
                 ChatAction::$arguments['arrive'] = $value;
-            } elseif (preg_match('/\#(\d)*$/', $value, $match) === 1) {
-                $userData = Users::find($match[0]);
+            } elseif (preg_match('/\#(\d+)*$/', $value, $match) === 1) {
+                $userData = Users::find($match[1]);
                 if ($userData) {
                     ChatAction::$arguments['userId'] = $userData['id'];
                     ChatAction::$arguments['userName'] = $userData['name'];
