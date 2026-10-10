@@ -51,19 +51,22 @@ class SendDiceAnswer extends ChatAnswer
         $value = $tgBot::$result['result']['dice']['value'];
 
         $day->sales['results'][static::$requester->userId] = $value;
-
-        $result = ['string' => 'Your result is <b>%s</b>.', 'vars' => [$value]];
+        
+        $result = ['string' => 'Your result is %s.', 'vars' => [$value]];
         $update = [];
 
         if (in_array($value, static::$winNumbers, false)){
             Coupons::createHan(static::$requester->userId, $day);
-            $result['string'] = "Your result is <b>%s</b>!\n\nCongratulations! You won!";
+            $result['string'] = "Your result is %s!\n\nCongratulations! You won!";
             $update = ['update' => [
                     'message' => DayFormatter::forMessengers($day),
                     'replyMarkup' => TelegramBotFormatter::getBookingMarkup($day, true),
                 ]
             ];
             static::$report = static::locale(['string' => 'User <b>%s</b> <u>won</u> a <u>coupon</u> for the game <b>%s</b> at <b>%s</b>.', 'vars' => [static::$arguments['userName'], $day->gameName, $day->date]]);
+        }
+        else {
+            $day->save();
         }
         
         sleep(2);
