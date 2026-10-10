@@ -6,6 +6,7 @@ use app\core\Telegram\ChatAnswer;
 use app\Formatters\TelegramBotFormatter;
 use app\mappers\Coupons;
 use app\mappers\SocialPoints;
+use app\Services\CouponService;
 use app\Services\TelegramBotService;
 use Exception;
 
@@ -40,6 +41,7 @@ class SpBuyAnswer extends ChatAnswer
             return array_merge(static::result('You’re don’t have enough Social Points', false, true));
 
         $code = Coupons::create($userId, $cId);
+        CouponService::applyOnNearEvent($userId, $code);
 
         // if ($code) SocialPoints::minus($userId, $price);
 

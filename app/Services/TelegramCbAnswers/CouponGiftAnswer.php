@@ -52,7 +52,6 @@ class CouponGiftAnswer extends ChatAnswer
             return array_merge(static::result('You’re don’t have enough Social Points', false, true));
 
         $code = Coupons::create(static::$target->id, $cId);
-
         CouponService::applyOnNearEvent(static::$target->id, $code);
    
         // if ($code) SocialPoints::minus(static::$target->id, $price);

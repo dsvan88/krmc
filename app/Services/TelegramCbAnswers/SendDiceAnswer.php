@@ -40,7 +40,7 @@ class SendDiceAnswer extends ChatAnswer
         
         if (!empty($day->sales['results'][static::$requester->userId])){
             return static::result([
-                    'string' => "You used your attempt.\nYour result is <i>%s</i>",
+                    'string' => "You used your attempt.\nYour result is %s",
                     'vars' => [$day->sales['results'][static::$requester->userId]]
                 ], false);
         }
