@@ -29,6 +29,9 @@ class SendDiceAnswer extends ChatAnswer
         
         $winners = static::getWinnersCount($day);
         
+        error_log($day->sales['winners']);
+        error_log($winners);
+        
         if ($day->sales['winners'] >= $winners) {
             return static::result('There is no free slots for new winners.', false);
         }
