@@ -27,6 +27,7 @@ class SendDiceAnswer extends ChatAnswer
             return static::result('This day is over🤷‍♂️', false);
         }
         
+        error_log(print_r($day->sales, true));
         $winners = static::getWinnersCount($day);
 
         if ($day->sales['winners'] <= $winners) {
