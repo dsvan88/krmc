@@ -28,11 +28,8 @@ class SendDiceAnswer extends ChatAnswer
         }
         
         $winners = static::getWinnersCount($day);
-        
-        error_log($day->sales['winners']);
-        error_log($winners);
-        
-        if ($day->sales['winners'] >= $winners) {
+
+        if ($day->sales['winners'] <= $winners) {
             return static::result('There is no free slots for new winners.', false);
         }
 
@@ -73,6 +70,9 @@ class SendDiceAnswer extends ChatAnswer
         return array_merge(static::result($result, true), $update);
     }
     private static function getWinnersCount(?Day $day = null){
+
+        if (empty($day->sales['results'])) return 0;
+
         $r = 0;
         foreach($day->sales['results'] as $v){
             if (!in_array($v, static::$winNumbers, false)) continue;
