@@ -274,6 +274,15 @@
 				animation: activeSpeaker 1.5s ease-out infinite;
 			}
 
+			.player__fouls{
+				display: flex;
+				height: .3em;
+				*{
+					width: 25%;
+					height: 100%;
+				}
+			}
+
 			.fail {
 				&[data-foul="1"] {
 					background-color: #6cbf6ccc;

@@ -13,7 +13,10 @@ actionHandler.gamePutHim = function (target) {
     let playerRow = target.closest('tr');
     Mafia.putPlayer(parseInt(playerRow.dataset.playerId))
 }
-actionHandler.gameFouls = function (target) {
-    let playerRow = target.closest('tr');
-    Mafia.playerFouls(parseInt(playerRow.dataset.playerId), target.dataset.foul)
+actionHandler.gameFoulsMenu = function (target) {
+    console.log('Foul!', target.dataset.playerId);
 }
+// actionHandler.gameFouls = function (target) {
+//     let playerRow = target.closest('tr');
+//     Mafia.playerFouls(parseInt(playerRow.dataset.playerId), target.dataset.foul)
+// }

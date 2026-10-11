@@ -59,27 +59,47 @@ class Player {
         num.dataset.actionDblclick = 'game-put-him';
         this.row.append(num);
 
-        let nick = document.createElement('td');
-        nick.innerText = this.name;
+        let nickPlace = document.createElement('td');
+        nickPlace.dataset.actionDblclick = 'game-put-him';
+        
+        let nick = document.createElement('div');
         nick.classList.add('player__name');
-        nick.dataset.actionDblclick = 'game-put-him';
+        nick.innerText = this.name;
 
+        nickPlace.append(nick);
+
+        let fouls = document.createElement('div');
+        fouls.classList.add('player__fouls');
+        for (let f = 1; f < 5; f++) {
+            let foul = document.createElement('div');
+            // foul.dataset.actionDblclick = 'game-fouls';
+            foul.dataset.foul = f;
+            foul.classList.add('fail');
+            fouls.append(foul);
+        }
+        nickPlace.append(fouls);
+        
         this.#primField = document.createElement('div');
         this.#primField.classList.add('player__prim');
         this.#primField.innerText = this.prim;
-        nick.append(this.#primField);
+        nickPlace.append(this.#primField);
 
-        this.row.append(nick);
+        this.row.append(nickPlace);
 
         this.#putedCell = document.createElement('td');
         this.row.append(this.#putedCell);
 
-        for (let foul = 1; foul < 5; foul++) {
-            let cell = document.createElement('td');
-            cell.dataset.actionDblclick = 'game-fouls';
-            cell.dataset.foul = foul;
-            this.row.append(cell);
-        }
+        let dashboard = document.createElement('td');
+
+        let foulButton = document.createElement('i');
+        foulButton.classList.add('fa', 'fa-exclamation-triangle');
+        foulButton.dataset.actionClick = 'game-fouls-menu';
+        foulButton.dataset.playerId = index;
+
+        dashboard.append(foulButton);
+
+        this.row.append(dashboard);
+
         this.putedCell.addEventListener('mouseenter', (event) => this.showPointsLog.call(this, event));
         this.putedCell.addEventListener('mouseleave', (event) => this.hidePointsLog.call(this, event));
         return this.row;

@@ -23,16 +23,10 @@
 				<table class="game__table">
 					<thead>
 						<tr>
-							<th rowspan="2">#</th>
-							<th rowspan="2">Гравець</th>
-							<th rowspan="2">Вист.</th>
-							<th colspan="4">Фоли</th>
-						</tr>
-						<tr>
-							<th>1</th>
-							<th>2</th>
-							<th>3</th>
-							<th>4</th>
+							<th>#</th>
+							<th>Гравець</th>
+							<th>Вист.</th>
+							<th></th>
 						</tr>
 					</thead>
 					<tbody class="game__table-body"></tbody>
