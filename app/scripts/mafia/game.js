@@ -1,7 +1,7 @@
-let Mafia = new MafiaEngine({
+const Mafia = new MafiaEngine({
     gameTable: ".game__table .game__table-body",
 });
-let Timer = null;
+const Timer = null;
 Mafia.gameTable.addEventListener('ready', (event) => {
     Timer = new GameTimer({
         gameEngine: Mafia,
@@ -10,11 +10,12 @@ Mafia.gameTable.addEventListener('ready', (event) => {
 
 
 actionHandler.gamePutHim = function (target) {
-    let playerRow = target.closest('tr');
+    const playerRow = target.closest('tr');
     Mafia.putPlayer(parseInt(playerRow.dataset.playerId))
 }
 actionHandler.gameFoulsMenu = function (target) {
-    console.log('Foul!', target.dataset.playerId);
+    const playerRow = target.closest('tr');
+    Mafia.applyPlayerFoul(parseInt(playerRow.dataset.playerId))
 }
 // actionHandler.gameFouls = function (target) {
 //     let playerRow = target.closest('tr');

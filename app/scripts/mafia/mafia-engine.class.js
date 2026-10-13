@@ -158,6 +158,25 @@ class MafiaEngine extends GameEngine {
         return true;
     }
 
+    get foulsPrompt() {
+        return this.#prompt;
+    }
+    set foulsPrompt(data) {
+        if (!data) {
+            if (!this.#prompt)
+                return null;
+
+            this.#prompt.close();
+            this.#prompt = null;
+
+            return null;
+        }
+        console.log(data);
+        // data.roles = Array.from(new Set(this.roles));
+        this.#prompt = new MafiaFoulsPad(data);
+        return true;
+    }
+
     get rolePrompt() {
         return this.#prompt;
     }
@@ -550,6 +569,20 @@ class MafiaEngine extends GameEngine {
 
         this.resetView();
     };
+    applyPlayerFoul(playerId){
+        const self = this;
+        this.foulsPrompt = {
+            title: `Обeріть фол`,
+            text: `Гравця №${self.players[playerId].num} (${self.players[playerId].name}), отримав`,
+            pause: false,
+            action: foul => {
+                // self.players[playerId].role = role ? role : self.players[playerId].role;
+                // self.resetView();
+                // this.noticer.add({ message: `Гравцю №${self.players[playerId].num}, назначена роль ${self.players[playerId].role}.`, time: 5000 });
+                // this.rolePrompt = null;
+            },
+        };
+    }
     playerFouls(id, foulNum) {
         let player = this.players[id];
 

@@ -155,6 +155,7 @@
 	justify-content: center;
 	align-items: center;
 	white-space: nowrap;
+	background-color: $bg-color-light-yellow-blur;
 
 	@include md {
 		padding: 10px;
@@ -237,6 +238,10 @@
 		}
 
 		.player {
+			background-color: $bg-color-light-yellow-blur;
+			&:nth-child(odd) {
+				background-color: $bg-color-light;
+			}
 			&:nth-child(odd) {
 				background-color: $bg-color-light;
 			}
@@ -308,6 +313,7 @@
 
 			&__info {
 				cursor: pointer;
+				padding: 0;
 			}
 
 			&__name {

@@ -61,6 +61,7 @@ class Player {
 
         let nickPlace = document.createElement('td');
         nickPlace.dataset.actionDblclick = 'game-put-him';
+        nickPlace.classList.add('player__info');
         
         let nick = document.createElement('div');
         nick.classList.add('player__name');

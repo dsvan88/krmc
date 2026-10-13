@@ -146,6 +146,7 @@ class GamesController extends Controller
                 'mafia/mafia-engine.class.js',
                 'mafia/timer.class.js',
                 'mafia/game.js',
+                'mafia/mafia-fouls-pad.js',
                 'mafia/mafia-vote-numpad.js',
                 'mafia/mafia-roles-pad.js',
             ],
