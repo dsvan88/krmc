@@ -172,6 +172,9 @@ class TelegramBotController extends Controller
 
         if (!class_exists($class)) {
             error_log($class . ' doesnt exists!');
+            $_SESSION['debug'][] = $class . ' doesnt exists!';
+            $_SESSION['debug'][] = 'Requestor: ' . ChatAction::$requester->id . ' (' . ChatAction::$requester->profile->name ?? 'Unknown' . ')';
+            $_SESSION['debug'][] = date('d.m.Y H: i:s', $_SERVER['REQUEST_TIME']);
             return [];
         }
 
@@ -231,7 +234,7 @@ class TelegramBotController extends Controller
             }
         }
         if (!empty(ChatAction::$report)) {
-            Sender::message(Settings::getAdminChatTelegramId(), Locale::phrase(ChatAction::$report).PHP_EOL.PHP_EOL.'<u><i>Так де халва??</i></u>');
+            Sender::message(Settings::getAdminChatTelegramId(), Locale::phrase(ChatAction::$report) . PHP_EOL . PHP_EOL . '<u><i>Так де халва??</i></u>');
         }
 
         return empty($botResult[0]['result']['message_id']) ? 0 : $botResult[0]['result']['message_id'];
