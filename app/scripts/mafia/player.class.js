@@ -4,6 +4,7 @@ class Player {
     name = 'Player';
     role = 0;
     fouls = 0;
+    tFouls = 0;
     _prim = ''
 
     points = 0.0;
@@ -116,20 +117,19 @@ class Player {
             this.pointsLog.push({'Manager Adds': points});
         }
     }
-    addFouls(foulNum) {
-        if (foulNum === '1' && this.fouls > 0) {
-            this.fouls--;
-        }
-        else if (foulNum === '4') {
-            this.fouls = confirm(`Гравець №${this.num} (${this.name}) отримав дискваліфікуючий фол?`) ? 5 : this.fouls + 1;
-        }
-        else {
-            this.fouls++;
-        }
+    addFouls(foul) {
+        if (foul < 4)
+            this.fouls += foul;
+        else 
+            this.fouls = foul;
+
         if (this.fouls === 3) {
             this.mute();
         }
         return this.fouls;
+    }
+    addTechFouls(foul) {
+        return this.tFouls += foul;
     }
     mute() {
         this.muted = true;

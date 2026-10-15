@@ -36,7 +36,7 @@ class MafiaEngine extends GameEngine {
         'sherif': 'Шериф',
     };
 
-    reasons = ['', 'Вбитий', 'Засуджений', '4 Фола', 'Дісквал.'];
+    reasons = ['', 'Вбитий', 'Засуджений', '4 Фола', 'Дісквал.', '2 Тех. фола'];
 
     prevSpeaker = null;
     activeSpeaker = null;
@@ -172,7 +172,6 @@ class MafiaEngine extends GameEngine {
             return null;
         }
         console.log(data);
-        // data.roles = Array.from(new Set(this.roles));
         this.#prompt = new MafiaFoulsPad(data);
         return true;
     }
@@ -570,27 +569,56 @@ class MafiaEngine extends GameEngine {
         this.resetView();
     };
     applyPlayerFoul(playerId){
-        const self = this;
-        this.foulsPrompt = {
-            title: `Обeріть фол`,
-            text: `Гравця №${self.players[playerId].num} (${self.players[playerId].name}), отримав`,
-            pause: false,
-            action: foul => {
-                // self.players[playerId].role = role ? role : self.players[playerId].role;
-                // self.resetView();
-                // this.noticer.add({ message: `Гравцю №${self.players[playerId].num}, назначена роль ${self.players[playerId].role}.`, time: 5000 });
-                // this.rolePrompt = null;
-            },
-        };
-    }
-    playerFouls(id, foulNum) {
         let player = this.players[id];
 
         if (player.out > 0) return false;
+        
+        const self = this;
 
-        if (player.addFouls(foulNum) >= 4) {
-            this.outPlayer(id, player.fouls - 1);
-            this.leaveThisRound.push(id);
+        this.foulsPrompt = {
+            title: `Обeріть фол`,
+            text: `Гравця №${player.num} (${player.name}), отримав`,
+            pause: false,
+            action: foul => {
+                const fouls = {
+                    '+Foul' : 1,
+                    '-Foul' : -1,
+                    'All four': 4,
+                    'Disqual': 5
+                };
+                if (fouls[foul]){
+                    self.playerFouls(player, fouls[foul]);
+                    self.noticer.add({ message: `Гравцю №${player.num}, виписан '${foul}' фол.`, time: 5000 });
+                }
+                else {
+                    const tFouls = {
+                        '+TechFoul': 1,
+                        '-TechFoul': -1
+                    };
+                    self.playerTechFouls(player, fouls[foul]);
+                    self.noticer.add({ message: `Гравцю №${player.num}, виписан '${foul}' технічний фол.`, time: 5000 });
+                }
+                self.foulsPrompt = null;
+            },
+        };
+    }
+    playerFouls(player, foul) {
+
+        if (player.out > 0) return false;
+
+        if (player.addFouls(foul) >= 4) {
+            this.outPlayer(player.id, player.fouls - 1);
+            this.leaveThisRound.push(player.id);
+        }
+        this.resetView();
+    }
+    playerTechFouls(player, foul) {
+
+        if (player.out > 0) return false;
+
+        if (player.addTechFouls(foul) >= 2) {
+            this.outPlayer(player.id, 5);
+            this.leaveThisRound.push(player.id);
         }
         this.resetView();
     }

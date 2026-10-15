@@ -3,7 +3,7 @@ class MafiaFoulsPad extends Prompt {
     values = [];
     allButton = null;
     pause = false;
-    fouls = ['+Foul', '-Foul', 'All four', 'disqual'];
+    fouls = ['+Foul', '-Foul', 'All four', 'Disqual'];
     tFouls = ['+TechFoul', '-TechFoul'];
     constructor({ title = "Mafia Fouls Numpad", text = "Choose player’s foul:", value = '', action = null, cancel = null, pause = false } = {}) {
         value = '';
