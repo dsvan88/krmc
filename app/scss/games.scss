@@ -279,12 +279,21 @@
 				animation: activeSpeaker 1.5s ease-out infinite;
 			}
 
-			.player__fouls{
+			&__fouls{
 				display: flex;
-				height: .3em;
+				height: .4em;
 				*{
 					width: 25%;
 					height: 100%;
+				}
+			}
+			&__tech-fouls{
+				display: flex;
+				flex-direction: column;
+				height: 1.2em;
+				*{
+					width: 1em;
+					height: 50%;
 				}
 			}
 
@@ -300,9 +309,18 @@
 				&[data-foul="3"] {
 					background-color: #f97f7f;
 					text-align: center;
+					font-size: .3em;
 				}
 
 				&[data-foul="4"] {
+					background-color: #393939;
+				}
+
+				&[data-tech-foul="1"] {
+					background-color: #f97f7f;
+				}
+
+				&[data-tech-foul="2"] {
 					background-color: #393939;
 				}
 			}
@@ -321,6 +339,10 @@
 				padding: 5px 10px;
 				white-space: nowrap;
 				user-select: none;
+				flex-grow: 1;
+				&-place{
+					display: flex;
+				}
 			}
 
 			&__prim {

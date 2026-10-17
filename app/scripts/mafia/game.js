@@ -1,12 +1,14 @@
 const Mafia = new MafiaEngine({
     gameTable: ".game__table .game__table-body",
 });
-const Timer = null;
-Mafia.gameTable.addEventListener('ready', (event) => {
-    Timer = new GameTimer({
+const Timer = new GameTimer({
         gameEngine: Mafia,
-    });
 });
+// Mafia.gameTable.addEventListener('ready', (event) => {
+//     Timer = new GameTimer({
+//         gameEngine: Mafia,
+//     });
+// });
 
 
 actionHandler.gamePutHim = function (target) {

@@ -40,6 +40,7 @@ class MafiaRolesPad extends Prompt {
     modifyEventsRolepad() {
         const self = this;
         for(let index in self.radios){
+            self.radios[index].label.addEventListener('dblclick', self.submit.bind(self), { once: true });
             self.radios[index].addEventListener('change', () => { self.updateInput.call(self, self.radios[index]) });
         }
     }
@@ -78,6 +79,7 @@ class MafiaRolesPad extends Prompt {
         label.classList.add('popup__radio-label');
         label.innerText = `${this.roles.indexOf(role)} - ${role}`;
         label.htmlFor = this.radios[role].id;
+        this.radios[role].label = label;
 
         radioWrapper.append(label);
         return radioWrapper;

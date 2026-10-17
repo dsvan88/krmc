@@ -45,6 +45,7 @@ class MafiaFoulsPad extends Prompt {
         const self = this;
         for(let index in self.radios){
             self.radios[index].addEventListener('change', () => { self.updateInput.call(self, self.radios[index]) });
+            self.radios[index].label.addEventListener('dblclick', self.submit.bind(self), { once: true });
         }
     }
     keyUpHandler(event) {
@@ -83,7 +84,8 @@ class MafiaFoulsPad extends Prompt {
         label.classList.add('popup__radio-label');
         label.innerText = foul;
         label.htmlFor = this.radios[foul].id;
-        
+        this.radios[foul].label = label;
+
         radioWrapper.append(label);
         return radioWrapper;
     }

@@ -200,7 +200,7 @@ class MafiaEngine extends GameEngine {
     set stageDescr(descr) {
         this._stageDescr = descr;
         let descrBlock = this.gameTable.closest('.game').querySelector('.game__stage');
-        descrBlock.innerHTML = descr.replace(/\n/g, '<br>');
+        descrBlock.innerHTML = descr ? descr.replace(/\n/g, '<br>') : `${this.stage}->${this.subStage}: Here is no description.`;
     }
     get stageDescr() {
         return this._stageDescr;
@@ -444,6 +444,11 @@ class MafiaEngine extends GameEngine {
                 if (foul === 3)
                     foulCell.innerText = '';
             }
+            for (let foul = 1; foul <= 2; foul++) {
+                let foulCell = player.row.querySelector(`[data-tech-foul="${foul}"]`);
+                if (foulCell)
+                    foulCell.classList.remove('fail');
+            }
         });
         this.closeCourtroom();
     };
@@ -479,6 +484,13 @@ class MafiaEngine extends GameEngine {
                     if (foul === 3 && player.muted) {
                         foulCell.innerText = '🤐';
                     }
+                }
+            }
+            if (player.tFouls > 0) {
+                for (let foul = 1; foul <= player.tFouls; foul++) {
+                    let foulCell = player.row.querySelector(`[data-tech-foul="${foul}"]`);
+                    if (foulCell)
+                        foulCell.classList.add('fail');
                 }
             }
             if (player.points || player.adds) {
@@ -569,7 +581,7 @@ class MafiaEngine extends GameEngine {
         this.resetView();
     };
     applyPlayerFoul(playerId){
-        let player = this.players[id];
+        let player = this.players[playerId];
 
         if (player.out > 0) return false;
         
@@ -595,7 +607,7 @@ class MafiaEngine extends GameEngine {
                         '+TechFoul': 1,
                         '-TechFoul': -1
                     };
-                    self.playerTechFouls(player, fouls[foul]);
+                    self.playerTechFouls(player, tFouls[foul]);
                     self.noticer.add({ message: `Гравцю №${player.num}, виписан '${foul}' технічний фол.`, time: 5000 });
                 }
                 self.foulsPrompt = null;
@@ -1061,8 +1073,7 @@ class MafiaEngine extends GameEngine {
     };
     ComfortSit() {
         this.timer.left = this.config.wakeUpRoles;
-        this.stageDescr =
-            this.stage === 'Оголошується час зручної посадки.\nУ гравців є до 20 секунд на те, аби прийняти зручну позу сидіння.';
+        this.stageDescr = 'Оголошується час зручної посадки.\nУ гравців є до 20 секунд на те, аби прийняти зручну позу сидіння.';
         return true;
     };
     Speaker() {

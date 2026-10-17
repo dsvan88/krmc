@@ -55,45 +55,58 @@ class Player {
         this.row.dataset.playerId = index;
 
         this.num = index + 1;
-        let num = document.createElement('td');
+        const num = document.createElement('td');
         num.innerText = this.num;
         num.dataset.actionDblclick = 'game-put-him';
         this.row.append(num);
 
-        let nickPlace = document.createElement('td');
-        nickPlace.dataset.actionDblclick = 'game-put-him';
-        nickPlace.classList.add('player__info');
+        const playerInfo = document.createElement('td');
+        playerInfo.dataset.actionDblclick = 'game-put-him';
+        playerInfo.classList.add('player__info');
         
-        let nick = document.createElement('div');
+        const nickPlace = document.createElement('div');
+        nickPlace.classList.add('player__name-place');
+
+        const nick = document.createElement('div');
         nick.classList.add('player__name');
         nick.innerText = this.name;
-
+        
         nickPlace.append(nick);
 
-        let fouls = document.createElement('div');
+        const tFouls = document.createElement('div');
+        tFouls.classList.add('player__tech-fouls');
+        for (let f = 1; f < 3; f++) {
+            const foul = document.createElement('p');
+            foul.dataset.techFoul = f;
+            tFouls.append(foul);
+        }
+
+        nickPlace.append(tFouls);
+
+        playerInfo.append(nickPlace);
+
+        const fouls = document.createElement('div');
         fouls.classList.add('player__fouls');
         for (let f = 1; f < 5; f++) {
-            let foul = document.createElement('div');
-            // foul.dataset.actionDblclick = 'game-fouls';
+            const foul = document.createElement('p');
             foul.dataset.foul = f;
-            foul.classList.add('fail');
             fouls.append(foul);
         }
-        nickPlace.append(fouls);
+        playerInfo.append(fouls);
         
         this.#primField = document.createElement('div');
         this.#primField.classList.add('player__prim');
         this.#primField.innerText = this.prim;
-        nickPlace.append(this.#primField);
+        playerInfo.append(this.#primField);
 
-        this.row.append(nickPlace);
+        this.row.append(playerInfo);
 
         this.#putedCell = document.createElement('td');
         this.row.append(this.#putedCell);
 
-        let dashboard = document.createElement('td');
+        const dashboard = document.createElement('td');
 
-        let foulButton = document.createElement('i');
+        const foulButton = document.createElement('i');
         foulButton.classList.add('fa', 'fa-exclamation-triangle');
         foulButton.dataset.actionClick = 'game-fouls-menu';
         foulButton.dataset.playerId = index;
@@ -126,10 +139,20 @@ class Player {
         if (this.fouls === 3) {
             this.mute();
         }
+
+        if (this.fouls < 0)
+            this.fouls = 0;
+        
         return this.fouls;
     }
     addTechFouls(foul) {
-        return this.tFouls += foul;
+        
+        this.tFouls += foul
+        
+        if (this.tFouls < 0)
+            this.tFouls = 0;
+        
+        return this.tFouls;
     }
     mute() {
         this.muted = true;

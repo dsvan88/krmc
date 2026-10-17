@@ -24,13 +24,12 @@
     <?php if (!empty($scripts)) : ?>
         <?php if (is_string($scripts)) : ?>
             <script defer="" src="<?= static::$scriptsPath . $scripts ?>"></script>
-            <?php else :
-            for ($x = 0; $x < count($scripts); $x++) : ?>
+        <?php else : ?>
+            <?php for ($x = 0; $x < count($scripts); $x++) : ?>
                 <script defer="" src="<?= static::$scriptsPath . $scripts[$x] ?>"></script>
             <?php endfor ?>
         <?php endif ?>
     <?php endif ?>
-    <?/*<script defer="" src="<?= static::$scriptsPath . $scripts ?>"></script>*/ ?>
     <link rel="icon" type="image/x-icon" href="/public/images/mafia-vintage-logo-short.svg">
     <?= $locales ?>
     <title><?= (isset($pageTitle) ? $pageTitle  : $title) . ' | ' . CLUB_SNAME . ' v' . APP_VERSION ?></title>
