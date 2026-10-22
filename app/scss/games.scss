@@ -157,10 +157,28 @@
 	white-space: nowrap;
 	background-color: $bg-color-light-yellow-blur;
 
+	&__stage {
+		text-align: center;
+		max-width: 100vw;
+		white-space: normal;
+		font-size: 2em;
+		min-height: 4em;
+		padding-top: .5em;
+	}
+
 	@include md {
 		padding: 10px;
 		margin: 10px;
 
+		&__stage {
+			text-align: center;
+			max-width: 100vw;
+			white-space: normal;
+			font-size: 1.5em;
+			min-height: 5em;
+			padding-top: .5em;
+		}
+		
 		&__wrapper.play {
 			display: flex;
 			flex-direction: row-reverse;
@@ -169,17 +187,9 @@
 
 		&__description {
 			display: flex;
-			flex-direction: column-reverse;
-			justify-content: flex-end;
+			flex-direction: column;
 			width: 40vw;
-			padding-top: 3em;
 		}
-	}
-
-	&__stage {
-		text-align: center;
-		max-width: 100vw;
-		white-space: normal;
 	}
 
 	&__vote {
@@ -275,7 +285,7 @@
 			}
 
 			&.speaker {
-				background-color: $bg-color-green;
+				background-color: $bg-color-light-green;
 				animation: activeSpeaker 1.5s ease-out infinite;
 			}
 
@@ -285,6 +295,14 @@
 				*{
 					width: 25%;
 					height: 100%;
+				}
+				&-menu{
+					cursor: pointer;
+					transition: color $animation-fast;
+					color: $bg-color-light-blue;
+					&:hover{
+						color: $bg-color-light-red;
+					}
 				}
 			}
 			&__tech-fouls{
@@ -467,11 +485,11 @@
 
 @keyframes activeSpeaker {
 	50% {
-		background-color: $bg-color-green-blur;
+		background-color: $bg-color-light-green-blur;
 	}
 
 	100% {
-		background-color: $bg-color-green;
+		background-color: $bg-color-light-green;
 	}
 }
 

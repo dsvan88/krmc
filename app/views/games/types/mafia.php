@@ -2,15 +2,13 @@
         <div class="game">
 			<div class="game__wrapper play">
 				<div class="game__description">
-					<header class="title">
-						<div class="game__stage"></div>
-					</header>
+					<div class="game__stage"></div>
 					<div class="timer">
 						<div class="timer__caption">
-						<button class="fa fa-low-vision" data-action-game="display-roles"></button>
-						<span class="stopwatch">01:00:00</span>
-						<button class="fa fa-gavel" data-action-game="stop-game"></button>
-					</div>
+							<button class="fa fa-low-vision" data-action-game="display-roles"></button>
+							<span class="stopwatch">01:00:00</span>
+							<button class="fa fa-gavel" data-action-game="stop-game"></button>
+						</div>
 						<div class="timer__dashboard">
 							<span class="timer__dashboard-item fa fa-history" title="Повернутись" data-timer="undo"></span>
 							<span class="timer__dashboard-item fa fa-play" title="Старт" data-timer="start"></span>
@@ -23,10 +21,7 @@
 				<table class="game__table">
 					<thead>
 						<tr>
-							<th>#</th>
-							<th>Гравець</th>
-							<th>Вист.</th>
-							<th></th>
+							<th>#</th><th>Гравець</th><th>Вист.</th><th></th>
 						</tr>
 					</thead>
 					<tbody class="game__table-body"></tbody>
@@ -35,5 +30,5 @@
 			<div class="courtroom"></div>
 			<details class="game__log">
 				<summary>Log</summary>
-			</details>
+			</details> 
 		</div>

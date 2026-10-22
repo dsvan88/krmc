@@ -107,7 +107,7 @@ class Player {
         const dashboard = document.createElement('td');
 
         const foulButton = document.createElement('i');
-        foulButton.classList.add('fa', 'fa-exclamation-triangle');
+        foulButton.classList.add('fa', 'fa-exclamation-triangle', 'player__fouls-menu');
         foulButton.dataset.actionClick = 'game-fouls-menu';
         foulButton.dataset.playerId = index;
 

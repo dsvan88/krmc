@@ -592,6 +592,9 @@ class MafiaEngine extends GameEngine {
             text: `Гравця №${player.num} (${player.name}), отримав`,
             pause: false,
             action: foul => {
+
+                if (!foul ) return false;
+
                 const fouls = {
                     '+Foul' : 1,
                     '-Foul' : -1,
@@ -600,7 +603,7 @@ class MafiaEngine extends GameEngine {
                 };
                 if (fouls[foul]){
                     self.playerFouls(player, fouls[foul]);
-                    self.noticer.add({ message: `Гравцю №${player.num}, виписан '${foul}' фол.`, time: 5000 });
+                    self.noticer.add({ message: `Гравцю №${player.num}, виписан ${foul.replace('Foul', '1')} фол.`, time: 5000 });
                 }
                 else {
                     const tFouls = {
@@ -608,7 +611,7 @@ class MafiaEngine extends GameEngine {
                         '-TechFoul': -1
                     };
                     self.playerTechFouls(player, tFouls[foul]);
-                    self.noticer.add({ message: `Гравцю №${player.num}, виписан '${foul}' технічний фол.`, time: 5000 });
+                    self.noticer.add({ message: `Гравцю №${player.num}, виписан ${foul.replace('TechFoul', '1')} технічний фол.`, time: 5000 });
                 }
                 self.foulsPrompt = null;
             },

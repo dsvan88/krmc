@@ -1,6 +1,6 @@
 .timer {
 	&__caption{
-		font-size: 2em;
+		font-size: 1.8em;
 		padding: 10px;
 		display: flex;
 		justify-content: center;
@@ -14,11 +14,43 @@
 		width: 100%;
 		background-color: $bg-color-dark;
 		display: flex;
-		&-item{
+		&-item.fa{
 			flex-grow: 1;
 			font-size: 5em;
 			text-align: center;
 			border: 1px solid $bg-color-light;
+			cursor: pointer;
+			transition: all $animation-very-fast ease-in;
+			&.disabled {
+				pointer-events: none;
+			}
+			&.hidden {
+				display: none;
+			}
+			&[data-timer="undo"] {
+				color: #f7a0ff;
+				&:hover {
+					color: #ee54fc;
+				}
+			}
+			&[data-timer="reset"] {
+				color: #b09dff;
+				&:hover {
+					color: #724bff;
+				}
+			}
+			&[data-timer="start"] {
+				color: #a2fdc8;
+				&:hover {
+					color: #0ec55b;
+				}
+			}
+			&[data-timer="next"] {
+				color: #c8e1f5;
+				&:hover {
+					color: #087ddd;
+				}
+			}
 		}
 	}
 	button{
@@ -27,42 +59,14 @@
 	.stopwatch{
 		font-size: 1.8em;
 	}
-	&__control {
-		font-size: 5em;
-		display: flex;
-		justify-content: space-evenly;
-		&-button {
-			padding: 10px 20px;
-			cursor: pointer;
-			transition: all $animation-fast ease-in;
-			&.disabled {
-				pointer-events: none;
-			}
-			&.hidden {
-				display: none;
-			}
-			&[data-timer-action="undo"] {
-				color: #f7a0ff;
-				&:hover {
-					color: #ee54fc;
-				}
-			}
-			&[data-timer-action="reset"] {
-				color: #b09dff;
-				&:hover {
-					color: #724bff;
-				}
-			}
-			&[data-timer-action="start"] {
-				color: #a2fdc8;
-				&:hover {
-					color: #0ec55b;
-				}
-			}
-			&[data-timer-action="next"] {
-				color: #c8e1f5;
-				&:hover {
-					color: #087ddd;
+	@include md {
+		&__dashboard{
+			position: static;
+			background-color: $bg-color-dark-blur;
+			&-item.fa{
+				font-size: 4em;
+				&:hover{
+					background-color: $bg-color-dark;
 				}
 			}
 		}
