@@ -2,7 +2,10 @@
         <div class="game">
 			<div class="game__wrapper play">
 				<div class="game__description">
-					<div class="game__stage"></div>
+					<details class="game__stage" open>
+						<summary class="game__stage-title">Етап гри.</summary>
+						<h4 class="game__stage-content"></h4>
+					</details>
 					<div class="timer">
 						<div class="timer__caption">
 							<button class="fa fa-low-vision" data-action-game="display-roles"></button>

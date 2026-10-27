@@ -199,8 +199,14 @@ class MafiaEngine extends GameEngine {
      */
     set stageDescr(descr) {
         this._stageDescr = descr;
-        let descrBlock = this.gameTable.closest('.game').querySelector('.game__stage');
-        descrBlock.innerHTML = descr ? descr.replace(/\n/g, '<br>') : `${this.stage}->${this.subStage}: Here is no description.`;
+        const [title, ...rest] = descr ? descr.split('\n') : [null, null];
+        const content = rest.join('</br>');
+        
+        const descrBlock = this.gameTable.closest('.game').querySelector('.game__stage');
+        const titleBlock = descrBlock.querySelector('.game__stage-title');
+        const contentBlock = descrBlock.querySelector('.game__stage-content');
+        titleBlock.innerHTML = title || `${this.stage}->${this.subStage}: Here is no description.`;
+        contentBlock.innerHTML = content || `${this.stage}->${this.subStage}: Here is no description.`;        
     }
     get stageDescr() {
         return this._stageDescr;

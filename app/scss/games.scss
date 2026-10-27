@@ -161,9 +161,13 @@
 		text-align: center;
 		max-width: 100vw;
 		white-space: normal;
-		font-size: 2em;
+		font-size: 1em;
 		min-height: 4em;
+		&{
+			
+		}
 		padding-top: .5em;
+
 	}
 
 	@include md {
