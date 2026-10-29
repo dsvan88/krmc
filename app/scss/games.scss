@@ -156,18 +156,13 @@
 	align-items: center;
 	white-space: nowrap;
 	background-color: $bg-color-light-yellow-blur;
-
+	
 	&__stage {
 		text-align: center;
 		max-width: 100vw;
 		white-space: normal;
 		font-size: 1em;
-		min-height: 4em;
-		&{
-			
-		}
 		padding-top: .5em;
-
 	}
 
 	@include md {

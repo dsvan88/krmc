@@ -2,13 +2,14 @@ class GameEngine {
 
     #gameTable = null;
     #logBlock = null;
+    #gameName = 'Game';
 
     gameId = 0;
     players = [];
     maxPlayers = 10;
 
     prevStates = [];
-    maxStatesSave = 30;
+    maxStatesSave = 50;
 
     _log = {};
 
@@ -56,10 +57,17 @@ class GameEngine {
     }
     async init() {
         this.gameId = parseInt(window.location.pathname.replace(/[^0-9]+/g, ''));
-        const promise = new Promise((resolve) => {
-            request({url: 'game/' + this.gameId, success: resolve})
-        })
-        const result = await promise.then()
+        let result = {};
+        try{
+            const promise = new Promise((resolve) => {
+                request({url: 'game/' + this.gameId, success: resolve})
+            })
+            result = await promise.then()
+        }
+        catch(e){
+            console.error(e);
+            result = localStorage.getItem(`${this.gameId}_${this.#gameName}`);
+        }
         this.pending  = false;
 
         let players = JSON.parse(result.players);
@@ -75,16 +83,18 @@ class GameEngine {
         }
         if (result.state) {
             this.load(result.state);
-            if (result.prevstates)
-                this.prevStates = JSON.parse(result.prevstates);
+            if (result.prevstates){
+                this.prevStates =typeof result.prevstates === 'string' ? JSON.parse(result.prevstates) : result.prevstates;
+            }
         }
         this.gameTable.dispatchEvent(new Event('ready'));
         return true;        
     }
     save() {
         let state = {};
+        const skipProps = ['prevStates', 'timer'];
         for (let property in this) {
-            if (['prevStates', 'timer'].includes(property)) continue;
+            if (skipProps.includes(property)) continue;
             state[property] = this[property];
         }
         state = JSON.stringify(state);
@@ -95,7 +105,7 @@ class GameEngine {
         return true;
     }
     load(state) {
-        state = JSON.parse(state);
+        state = typeof state === 'string' ? JSON.parse(state) : state;
         for (let property in state) {
             if (property === 'players') {
                 this.loadPlayersStates(state[property]);
@@ -122,13 +132,28 @@ class GameEngine {
         return this.players.forEach((player, index) => player.load(state[index]));
     }
     async send(state) {
-        const data = new FormData;
+        const data = new FormData();
         data.append('state', state);
         data.append('prevstates', JSON.stringify(this.prevStates));
-        await request({
-            url: 'game/save/' + this.gameId,
-            data: data,
-            success: (result) => debug && console.log(result),
-        })
+        try{
+            await request({
+                url: 'game/save/' + this.gameId,
+                data: data,
+                success: (result) => debug && console.log(result),
+            })
+        }
+        catch(e) {
+            const storage = {
+                state: state, 
+                prevStates: JSON.stringify(this.prevStates), 
+                players: JSON.stringify(this.players)
+            };
+            try {
+                // Просто сохраняем JSON-строку
+                localStorage.setItem(`${this.gameId}_${this.#gameName}`, JSON.stringify(storage));
+                } catch (storageError) {
+                    console.error("Не удалось сохранить в localStorage (возможно, превышен лимит 5МБ):", storageError);
+                }
+        }
     }
 }

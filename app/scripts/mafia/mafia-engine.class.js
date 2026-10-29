@@ -72,6 +72,7 @@ class MafiaEngine extends GameEngine {
     #alert = null;
     #prompt = null;
     #noticer = null;
+    #gameName = 'Mafia';
 
     constructor(data) {
         super(data);
@@ -288,8 +289,9 @@ class MafiaEngine extends GameEngine {
     }
     async send() {
         let state = {};
+        const skipProps = ['prevStates', 'timer'];
         for (let property in this) {
-            if (['prevStates', 'timer'].includes(property)) continue;
+            if (skipProps.includes(property)) continue;
             state[property] = this[property];
         }
         state = JSON.stringify(state);
