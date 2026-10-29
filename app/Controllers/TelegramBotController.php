@@ -234,7 +234,7 @@ class TelegramBotController extends Controller
             }
         }
         if (!empty(ChatAction::$report)) {
-            Sender::message(Settings::getAdminChatTelegramId(), Locale::phrase(ChatAction::$report) . PHP_EOL . PHP_EOL . '<u><i>Так де халва??</i></u>');
+            Sender::message(Settings::getAdminChatTelegramId(), Locale::phrase(ChatAction::$report) . PHP_EOL . PHP_EOL . '<u><i>P.S. Так де халва??</i></u>');
         }
 
         return empty($botResult[0]['result']['message_id']) ? 0 : $botResult[0]['result']['message_id'];
