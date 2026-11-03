@@ -90,46 +90,31 @@ class ImagesController extends Controller
     }
     public function addAction()
     {
+
         $folder = '';
         if (!empty($_POST['type']))
             $folder = preg_replace('/[^a-z0-9_+ -]/ui', '', trim($_POST['type']));
 
-        if ($folder === 'gallery')
-            ImageProcessing::$maxWidth = 1080;
-
         $gDrive = new GoogleDrive();
-        $count = count($_POST['filename']);
-
-        $path = $_SERVER['DOCUMENT_ROOT'] . View::$viewsFolder . "/components/list/image/item.php";
         $files = [];
-        $symbols = Locale::$cyrillicPattern;
-        for ($x = 0; $x < $count; $x++) {
-            $filename = preg_replace("/([^a-z$symbols.,;0-9_-]+)/ui", '', trim($_POST['filename'][$x]));
+        if (is_array($_POST['filename'])) {
+            foreach ($_POST['filename'] as $i => $fn) {
+                $file = ImageService::addBase64Image($gDrive, $folder, $fn, $_POST['image'][$i]);
+                if (is_null($file)) continue;
+                $files[] = $file;
+            }
+        } else {
+            $files[] = ImageService::addBase64Image($gDrive, $folder, $_POST['filename'], $_POST['image']);
+        }
+        $html = '';
 
-            if (ImageProcessing::saveBase64Image($_POST['image'][$x], $filename) === false)
-                continue;
-
-            $filePath = $_SERVER['DOCUMENT_ROOT'] . FILE_MAINGALL . $filename;
-
-            $fileId = $gDrive->create($filePath, $folder);
-            $size = filesize($filePath);
-            unlink($filePath);
-
-            $file = [
-                'id' => $fileId,
-                'realLink' => $gDrive->getLink($fileId),
-                'thumbnailLink' => $gDrive->getLink($fileId),
-                'name' => $filename,
-                'size' => $size,
-            ];
-
-            $files[] = $file;
-
-            if (!empty($_POST['prompt'])) continue;
-
-            ob_start();
-            require $path;
-            $html .= ob_get_clean();
+        if (empty($_POST['prompt'])) {
+            $path = $_SERVER['DOCUMENT_ROOT'] . View::$viewsFolder . "/components/list/image/item.php";
+            foreach ($files as $file) {
+                ob_start();
+                require $path;
+                $html .= ob_get_clean();
+            }
         }
 
         return View::response(empty($_POST['prompt']) ? ['html' => $html] : $files);
