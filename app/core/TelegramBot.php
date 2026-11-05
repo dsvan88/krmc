@@ -206,7 +206,7 @@ class TelegramBot
     }
     public static function webhookSet(string $botToken)
     {
-        if (strtolower($_SERVER['HTTP_X_FORWARDED_PROTO']) !== 'https')
+        if (Tech::getRequestProtocol() !== 'https')
             return false;
 
         $options = static::$options;

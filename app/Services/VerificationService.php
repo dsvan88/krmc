@@ -4,6 +4,7 @@ namespace app\Services;
 
 use app\core\Locale;
 use app\core\Mailer;
+use app\core\Tech;
 use app\mappers\Contacts;
 use app\mappers\Settings;
 use app\mappers\Users;
@@ -30,7 +31,7 @@ class VerificationService
             $message = '';
 
             if (empty($contact['data']['approved'])) {
-                $path = strtolower($_SERVER['HTTP_X_FORWARDED_PROTO']) . "://{$_SERVER['HTTP_HOST']}/account/verification/email/{$contact['data']['approve']['hash']}";
+                $path = Tech::getRequestProtocol() . "://{$_SERVER['HTTP_HOST']}/account/verification/email/{$contact['data']['approve']['hash']}";
                 $message .= Locale::phrase(['string' => '<p>Please follow this link to verify your email:</p><p>%s</p><p>or</p>', 'vars' => [$path]]);
             }
 

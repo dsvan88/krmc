@@ -68,45 +68,45 @@ class Router
         if (empty($_SESION['id']) && strpos($_SERVER['REQUEST_URI'], 'api/') === false) {
             self::savePath();
         }
-        if (self::isMatch()) {
-            $path = 'app\Controllers\\' . ucfirst(self::$params['controller']) . 'Controller';
-            if (class_exists($path)) {
-                $action = self::$params['action'] . 'Action';
-                $message = '';
-                if (method_exists($path, $action)) {
-                    try {
-                        $controller = new $path(self::$params);
-                        if ($controller::$ready) {
-                            $controller->$action();
-                        }
-                    } catch (\Throwable $error) {
-                        $message = $error->__toString();
-                        // if (APP_LOC === 'local') {
-                        error_log($message);
-                        return false;
-                        // }
-                    }
-                    TechService::scheduleBackup();
-                    if (!empty($_SESSION['debug'])) {
-                        $message .= PHP_EOL . 'DEBUG:' . PHP_EOL;
-                        $message .= PHP_EOL . implode(PHP_EOL, $_SESSION['debug']);
 
-                        // if (APP_LOC === 'local')
-                        Tech::dump($message);
-
-                        unset($_SESSION['debug']);
-                    }
-                    if (!empty($message)) {
-                        return Sender::message(Settings::getTechTelegramId(), $message);
-                    }
-                } else {
-                    return View::errorCode(404, ['message' => "Action $action isn’t found in Controller $path!"]);
-                }
-            } else {
-                return View::errorCode(404, ['message' => 'Controller $path isn’t found!']);
-            }
-        } else {
+        if (!self::isMatch()) {
             return View::errorCode(404, ['message' => 'Route isn’t found!']);
+        }
+
+        $path = 'app\Controllers\\' . ucfirst(self::$params['controller']) . 'Controller';
+
+        if (!class_exists($path))
+            return View::errorCode(404, ['message' => "Controller $path isn’t found!"]);
+
+        $action = self::$params['action'] . 'Action';
+        $message = '';
+        if (!method_exists($path, $action))
+            return View::errorCode(404, ['message' => "Action $action isn’t found in Controller $path!"]);
+
+        try {
+            $controller = new $path(self::$params);
+            if ($controller::$ready) {
+                $controller->$action();
+            }
+        } catch (\Throwable $error) {
+            $message = $error->__toString();
+            if (APP_LOC === 'local') {
+                error_log($message);
+                return false;
+            }
+        }
+        TechService::scheduleBackup();
+        if (!empty($_SESSION['debug'])) {
+            $message .= PHP_EOL . 'DEBUG:' . PHP_EOL;
+            $message .= PHP_EOL . implode(PHP_EOL, $_SESSION['debug']);
+
+            if (APP_LOC === 'local')
+                Tech::dump($message);
+
+            unset($_SESSION['debug']);
+        }
+        if (!empty($message)) {
+            return Sender::message(Settings::getTechTelegramId(), $message);
         }
     }
     public static function checkAccessLevel($params)
