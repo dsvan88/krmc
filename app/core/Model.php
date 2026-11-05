@@ -119,7 +119,7 @@ class Model extends Db
     {
         if (empty(static::$encryptedFields))    return;
 
-        foreach (static::$jsonFields as $field) {
+        foreach (static::$encryptedFields as $field) {
             if (empty($array[$field])) continue;
             $array[$field] = Tech::decrypt($array[$field], true);
         }
