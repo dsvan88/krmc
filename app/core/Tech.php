@@ -51,12 +51,6 @@ class Tech
         }
         $a = $r;
     }
-    public static function json_validate(string $string): bool
-    {
-        json_decode($string);
-
-        return json_last_error() === JSON_ERROR_NONE;
-    }
     public static function encrypt(string $s): string
     {
         if (empty($s)) return '';
