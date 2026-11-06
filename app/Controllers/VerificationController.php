@@ -16,12 +16,12 @@ use app\Services\VerificationService;
 
 class VerificationController extends Controller
 {
-    public static function rootAction()
+    public static function rootView()
     {
         $message = Locale::phrase("This action requires root rights!\nApprove your rights with the root password:");
         return View::message($message);
     }
-    public function emailVerifyHashAction()
+    public function emailVerifyHashView()
     {
         if (!isset($_SESSION['id'])) {
             return View::errorCode(404, ['message' => '<p>Your aren’t authorized yet!</p><p>Please - use browser, where you made your request!</p>']);
@@ -38,7 +38,7 @@ class VerificationController extends Controller
         }
         return View::redirect('/account/profile/' . $_SESSION['id']);
     }
-    public function emailVerificationAction()
+    public function emailVerificationView()
     {
         if (!isset($_SESSION['id'])) {
             return View::errorCode(404, ['message' => '<p>Your aren’t authorized yet!</p><p>Please - use browser, where you made your request!</p>']);
@@ -60,7 +60,7 @@ class VerificationController extends Controller
 
         return View::message("To confirm your action, we have sent an email to your email adress.\nPlease, paste the code from it here:\n");
     }
-    public function registerNameAction()
+    public function registerNameView()
     {
         $userData = Users::getDataByName(trim($_POST['name']));
         if (empty($userData)) {
@@ -105,7 +105,7 @@ class VerificationController extends Controller
 
         return View::message($message);
     }
-    public function registerAction()
+    public function registerView()
     {
         if (!empty($_POST)) {
             $result = Users::register($_POST);
@@ -131,7 +131,7 @@ class VerificationController extends Controller
         View::$route['vars'] = array_merge(View::$route['vars'], $vars);
         return View::modal();
     }
-    public function deleteAction()
+    public function deleteView()
     {
         extract(self::$route['vars']);
         if ($userId < 2 || $_SESSION['id'] == $userId) {
@@ -143,7 +143,7 @@ class VerificationController extends Controller
         }
         return View::redirect('/users/list');
     }
-    public function hmacAction()
+    public function hmacView()
     {
         $_SESSION['TelegramApp'] = 1;
         if (!Validator::validate('telegramHMAC', $_POST['data'])) {

@@ -10,20 +10,14 @@ use app\core\View;
 use app\core\Locale;
 use app\core\Sender;
 use app\core\Tech;
-use app\core\TelegramBot;
 use app\core\Validator;
-use app\mappers\Weeks;
 use app\mappers\Contacts;
-use app\mappers\Days;
 use app\mappers\TelegramChats;
 use app\mappers\Settings;
 use app\mappers\Users;
 use app\Services\AccountService;
 use app\Services\ContactService;
-use app\Services\TechService;
 use app\Services\TelegramChatsService;
-use Exception;
-use PDO;
 
 class AccountController extends Controller
 {
@@ -31,12 +25,12 @@ class AccountController extends Controller
     {
         return true;
     }
-    public function logoutAction()
+    public function logoutView()
     {
         Users::logout();
         return View::redirect('/');
     }
-    public function login($data)
+    public function login(array $data = [])
     {
         if (!Validator::csrfCheck() || Users::trottling()) {
             return View::notice(['error' => 403, 'message' => 'Try again later:)', 'time' => 2000]);
@@ -52,7 +46,7 @@ class AccountController extends Controller
 
         return View::notice(['message' => 'Success', 'location' => isset($_SESSION['path']) ? $_SESSION['path'] : '/', 'time' => 700]);
     }
-    public function loginFormAction()
+    public function loginModal()
     {
         if (!empty($_POST)) {
             return $this->login($_POST);
@@ -71,7 +65,7 @@ class AccountController extends Controller
         View::$route['vars'] = array_merge(View::$route['vars'], $vars);
         return View::modal();
     }
-    public function listAction()
+    public function listView()
     {
         $usersData = Users::getList();
         $usersData = Users::contacts($usersData);
@@ -91,7 +85,7 @@ class AccountController extends Controller
 
         return View::render();
     }
-    public function showAction()
+    public function showView()
     {
         extract(self::$route['vars']);
 
@@ -155,7 +149,7 @@ class AccountController extends Controller
 
         return View::render();
     }
-    public function profileSectionAction()
+    public function profileSectionView()
     {
         $userId = (int) trim($_POST['uid']);
         $section = trim($_POST['section']);
@@ -219,7 +213,7 @@ class AccountController extends Controller
         View::$route['vars']['path'] = 'account/sections/' . $section;
         return View::html();
     }
-    public function profileSectionEditAction()
+    public function profileSectionEditView()
     {
         extract(self::$route['vars']);
 
@@ -261,7 +255,7 @@ class AccountController extends Controller
         }
         return View::notice(['message' => 'Success', 'location' => '/account/profile/' . $userId]);
     }
-    public function personalEditAction()
+    public function personalEditView()
     {
         $userId = (int) $_POST['userId'];
 
@@ -312,7 +306,7 @@ class AccountController extends Controller
         }
         return View::notice(['message' => 'Success', 'time' => 1500, 'location' => 'reload']);
     }
-    public function profileSectionEditFormAction()
+    public function profileSectionEditModal()
     {
         $userId = (int) trim($_POST['uid']);
         $section = trim($_POST['section']);
@@ -349,7 +343,7 @@ class AccountController extends Controller
         View::$route['vars']['path'] = 'account/sections/forms/' . $section;
         return View::html();
     }
-    public function setNicknameAction()
+    public function setNicknameView()
     {
         if (empty($_POST)) {
             return View::message(['error' => 1, 'message' => 'Fail!']);
@@ -369,7 +363,7 @@ class AccountController extends Controller
         AccountService::linkTelegram($chatId, $name);
         return View::notice(['message' => 'Success', 'time' =>  1500, 'location' => 'reload']);
     }
-    public function setNicknameFormAction()
+    public function setNicknameModal()
     {
         if (!Users::checkAccess('manager')) {
             return View::errorCode(403, ['message' => 'Something went wrong! How did you get here?']);
@@ -408,7 +402,7 @@ class AccountController extends Controller
         View::$route['vars'] = array_merge(View::$route['vars'], $vars);
         return View::modal();
     }
-    public function addParticipantAction()
+    public function addParticipantView()
     {
         if (!Users::checkAccess('manager')) {
             return View::errorCode(403, ['message' => 'Something went wrong! How did you get here?']);
@@ -421,7 +415,7 @@ class AccountController extends Controller
         }
         return View::response(['name' => $result['name']]);
     }
-    public function removeParticipantAction()
+    public function removeParticipantView()
     {
         if (!Users::checkAccess('manager')) {
             return View::errorCode(403, ['message' => 'Something went wrong! How did you get here?']);
@@ -438,7 +432,7 @@ class AccountController extends Controller
         $day->save();
         return View::notice('Done');
     }
-    public function dummyRenameFormAction()
+    public function dummyRenameModal()
     {
         if (!Users::checkAccess('manager')) {
             return View::message(['error' => 403, 'message' => 'Something went wrong! How did you get here?']);
@@ -467,7 +461,7 @@ class AccountController extends Controller
         View::$route['vars'] = array_merge(View::$route['vars'], $vars);
         return View::modal();
     }
-    public function addParticipantFormAction()
+    public function addParticipantModal()
     {
         if (!Users::checkAccess('manager')) {
             return View::errorCode(403, ['message' => 'Something went wrong! How did you get here?']);
@@ -483,7 +477,7 @@ class AccountController extends Controller
         View::$route['vars'] = array_merge(View::$route['vars'], $vars);
         return View::modal();
     }
-    public function avatarTgGetAction()
+    public function avatarTgGetView()
     {
         if (!Users::checkAccess('manager'))
             return View::notice(['message' => 'You don’t have enought rights to do this action!', 'type' => 'error', 'time' => 1500]);
@@ -504,7 +498,7 @@ class AccountController extends Controller
         }
         return View::notice(['message' => $message, 'type' => $type, 'time' => 1500, 'location' => 'reload']);
     }
-    public function avatarEditFormAction()
+    public function avatarEditModal()
     {
         $uid = (int) $_POST['uid'];
 
@@ -534,7 +528,7 @@ class AccountController extends Controller
         View::$route['vars'] = array_merge(View::$route['vars'], $vars);
         return View::modal();
     }
-    public function avatarNewAction()
+    public function avatarNewView()
     {
         $uid = (int) $_POST['uid'];
         if (!$uid) {
@@ -601,7 +595,7 @@ class AccountController extends Controller
         Users::passwordChange($_SESSION['id'], $post['new_password']);
         return View::message(['message' => 'Success', 'url' => '/']);
     }
-    public function passwordChangeFormAction()
+    public function passwordChangeModal()
     {
         $userData = Users::find($_SESSION['id']);
         if (!$userData) {
@@ -623,7 +617,7 @@ class AccountController extends Controller
         View::$route['vars'] = array_merge(View::$route['vars'], $vars);
         return View::modal();
     }
-    public function passwordResetAction()
+    public function passwordResetView()
     {
         extract(self::$route['vars']);
         $userData = Users::getForget($hash);
@@ -653,7 +647,7 @@ class AccountController extends Controller
 
         return View::render();
     }
-    public function forgetFormAction()
+    public function forgetModal()
     {
         if (!empty($_POST)) {
             $userData = Users::checkForget(trim($_POST['auth']));
@@ -691,7 +685,7 @@ class AccountController extends Controller
         View::$route['vars'] = array_merge(View::$route['vars'], $vars);
         return View::modal();
     }
-    public function banAction()
+    public function banView()
     {
         extract(self::$route['vars']);
         $_POST['ban']['expired'] = strtotime($_POST['ban']['expired']);
@@ -715,7 +709,7 @@ class AccountController extends Controller
             return View::notice(Locale::phrase(['string' => 'User «<b>%s</b>» successfuly banned to %s!', 'vars' => [$user['name'], date('d.m.y H:i:s', $ban['expired'])]]));
         return View::notice(['error' => 1, 'message' => 'Something went wrong']);
     }
-    public function banFormAction()
+    public function banModal()
     {
 
         $userId = (int) $_POST['userId'];
@@ -748,7 +742,7 @@ class AccountController extends Controller
         }
         return View::message('Success');
     }
-    public function validateNameAction()
+    public function validateNameView()
     {
         if ($_POST['name'][0] === '@') {
             $tgChat = TelegramChats::findByUserName(substr($_POST['name'], 1));
@@ -799,7 +793,7 @@ class AccountController extends Controller
 
         return View::response(['result' => true]);
     }
-    public function registerFormAction()
+    public function registerModal()
     {
         if (!empty($_POST)) {
             if (!Validator::csrfCheck()) {
@@ -825,7 +819,7 @@ class AccountController extends Controller
         View::$route['vars'] = array_merge(View::$route['vars'], $vars);
         return View::modal();
     }
-    public function deleteAction()
+    public function deleteView()
     {
         if (!Validator::validate('rootpass', trim($_POST['verification']))) {
             return View::notice(['error' => 1, 'message' => 'Something went wrong']);
@@ -859,7 +853,7 @@ class AccountController extends Controller
 
         return View::message(['error' => 404, 'message' => 'Not found!']);
     }
-    public function doublesFormAction()
+    public function doublesModal()
     {
         if (!Users::checkAccess('admin')) {
             return View::message(['error' => 403, 'message' => 'Something went wrong! How did you get here?']);

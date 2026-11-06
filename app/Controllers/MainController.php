@@ -17,7 +17,7 @@ class MainController extends Controller
         View::$route['vars']['styles'][] = 'pages';
         return true;
     }
-    public function galleryAction()
+    public function galleryView()
     {
         $gDrive = new GoogleDrive;
         $gDrive::$maxPerPage = 40;
@@ -55,7 +55,7 @@ class MainController extends Controller
 
         return View::render();
     }
-    public function galleryEditAction()
+    public function galleryEditView()
     {
         $pageToken = '';
         extract(self::$route['vars']);
@@ -87,7 +87,7 @@ class MainController extends Controller
 
         return View::render();
     }
-    public function contactsAction()
+    public function contactsView()
     {
 
         $contacts = Settings::load('contacts');

@@ -19,7 +19,7 @@ use app\Services\DayService;
 
 class DaysController extends Controller
 {
-    public function showAction()
+    public function showView()
     {
         // Extract $weekId & $dayId from array self::$route['vars']
         extract(self::$route['vars']);
@@ -105,7 +105,7 @@ class DaysController extends Controller
 
         return View::render();
     }
-    public function nearAction()
+    public function nearView()
     {
         Day::$all = true;
         $day = Day::create();
@@ -116,7 +116,7 @@ class DaysController extends Controller
 
         return View::redirect(empty($day) ? '/weeks/' . Weeks::currentId() . '/' : "/week/{$day->weekId}/day/{$day->dayId}/");
     }
-    public function selfBookingAction()
+    public function selfBookingView()
     {
         extract(self::$route['vars']);
 
@@ -128,7 +128,7 @@ class DaysController extends Controller
 
         return View::notice(['message' => 'Success', 'time' => 1500, 'location' => 'reload']);
     }
-    public function addAction()
+    public function addView()
     {
         $vars = [
             'title' => 'Event',

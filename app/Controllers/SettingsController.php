@@ -16,7 +16,7 @@ class SettingsController extends Controller
         View::$route['vars']['styles'][] = 'settings';
         return true;
     }
-    public function indexAction()
+    public function indexView()
     {
         extract(self::$route['vars']);
 
@@ -41,7 +41,7 @@ class SettingsController extends Controller
 
         return View::render();
     }
-    public function editAction()
+    public function editView()
     {
         $type = trim($_POST['type']);
         $slug = trim($_POST['slug']);
@@ -72,7 +72,7 @@ class SettingsController extends Controller
             View::notice(['message' => 'Success', 'location' => '/settings/section/index/' . $type]) :
             View::notice(['type' => 'error', 'message' => 'Fail!']);
     }
-    public function deleteAction()
+    public function deleteView()
     {
         extract(self::$route['vars']);
         if (isset($settingId)) {

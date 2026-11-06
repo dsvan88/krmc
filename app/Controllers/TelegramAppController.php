@@ -12,7 +12,7 @@ class TelegramAppController extends Controller
         View::$layout = 'telegram';
         return true;
     }
-    public static function authAction()
+    public static function authView()
     {
         View::$layout = 'empty';
         $vars = [

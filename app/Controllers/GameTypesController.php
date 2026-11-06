@@ -17,7 +17,7 @@ class GameTypesController extends Controller
         View::$route['vars']['styles'][] = 'pages';
         return true;
     }
-    public function indexAction()
+    public function indexView()
     {
         // Extract $weekId & $dayId from array self::$route['vars']
         $dashboard = '';
@@ -52,7 +52,7 @@ class GameTypesController extends Controller
 
         return View::render();
     }
-    public function showAction()
+    public function showView()
     {
         extract(self::$route['vars']);
 

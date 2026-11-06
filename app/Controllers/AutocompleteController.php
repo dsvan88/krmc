@@ -10,14 +10,14 @@ use app\mappers\Users;
 
 class AutocompleteController extends Controller
 {
-    public function usersAction()
+    public function usersView()
     {
         $result = $_POST['term'][0] === '@' 
             ? TelegramChats::getListUserNames(substr($_POST['term'], 1))
             : Users::getListNames($_POST['term']);
         return View::message(['error' => 0, 'result' => $result]);
     }
-    public function participantFieldAction()
+    public function participantFieldView()
     {
         $texts = [
             'NamePlaceholder' => '',

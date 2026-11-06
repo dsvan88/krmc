@@ -9,7 +9,7 @@ use app\Services\WeekService;
 
 class WeeksController extends Controller
 {
-    public function showAction()
+    public function showView()
     {
         $weekId = 0;
         extract(self::$route['vars']);
@@ -27,7 +27,7 @@ class WeeksController extends Controller
 
         return View::render();
     }
-    public function addAction()
+    public function addView()
     {
         return View::redirect('/weeks/' . Weeks::create());
     }

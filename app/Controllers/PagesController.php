@@ -18,12 +18,12 @@ class PagesController extends Controller
         View::$route['vars']['styles'][] = 'pages';
         return true;
     }
-    public function homeAction()
+    public function homeView()
     {
         self::$route['vars'] = ['slug' => 'home'];
-        return $this->showAction();
+        return $this->showView();
     }
-    public function showAction()
+    public function showView()
     {
         extract(self::$route['vars']);
         $page = PageService::getPage($slug);
@@ -54,7 +54,7 @@ class PagesController extends Controller
         return View::render();
         exit();
     }
-    public function editAction()
+    public function editView()
     {
         extract(self::$route['vars']);
         if (!empty($_POST)) {
@@ -109,7 +109,7 @@ class PagesController extends Controller
 
         return View::render();
     }
-    public function deleteAction()
+    public function deleteView()
     {
         extract(self::$route['vars']);
 
@@ -119,13 +119,13 @@ class PagesController extends Controller
         Pages::remove($pageId);
         return View::redirect('/');
     }
-    public function addBlockAction()
+    public function addBlockView()
     {
         View::$route['vars']['block'] = [];
         View::$route['vars']['path'] = 'components/blocks/forms/text';
         return View::html();
     }
-    public function setBlockTypeAction()
+    public function setBlockTypeView()
     {
         $blockType = Validator::validate('blocks', $_POST['blockType'] ?? '');
 
@@ -149,7 +149,7 @@ class PagesController extends Controller
         View::$route['vars']['path'] = 'components/blocks/forms/' . $blockType;
         return View::html();
     }
-    public function addAction()
+    public function addView()
     {
         if (!empty($_POST)) {
             $array = $_POST;

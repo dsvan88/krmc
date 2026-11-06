@@ -134,7 +134,7 @@ class TelegramBotController extends Controller
         }
         return true;
     }
-    public static function webhookAction()
+    public static function webhookView()
     {
         // exit(json_encode(['message' => TelegramBotService::$message], JSON_UNESCAPED_UNICODE));
         try {

@@ -12,7 +12,7 @@ use app\Services\CouponService;
 
 class CouponsController extends Controller
 {
-    public static function indexAction()
+    public static function indexView()
     {
         $tab = $_GET['tab'] ?? 'index';
         $vars = [
@@ -36,7 +36,7 @@ class CouponsController extends Controller
         View::$route['vars'] = array_merge(View::$route['vars'], $vars);
         return View::render();
     }
-    public static function setStatusAction()
+    public static function setStatusView()
     {
         $status = Validator::validate('couponStatus', $_POST['status'] ?? '');
         $couponId = Validator::validate('int', $_POST['couponId'] ?? 0);
@@ -61,7 +61,7 @@ class CouponsController extends Controller
 
         return View::notice(['message' => 'Success', 'time' => 1500, 'location' => 'reload']);
     }
-    public static function deleteAction()
+    public static function deleteView()
     {
         if (!Validator::validate('rootpass', $_POST['verification']))
             return View::notice(['message' => 'Root password is not correct.', 'type' => 'error']);
@@ -74,7 +74,7 @@ class CouponsController extends Controller
 
         return View::notice(['message' => 'Success', 'time' => 1500, 'location' => 'reload']);
     }
-    public static function deleteTypeAction()
+    public static function deleteTypeView()
     {
         if (!Validator::validate('rootpass', $_POST['verification']))
             return View::notice(['message' => 'Root password is not correct.', 'type' => 'error']);
@@ -87,7 +87,7 @@ class CouponsController extends Controller
 
         return View::notice(['message' => 'Success', 'time' => 1500, 'location' => 'reload']);
     }
-    public static function addAction()
+    public static function addView()
     {
         if (!Validator::csrfCheck()) {
             return View::notice(['error' => 403, 'message' => 'Try again later:)', 'time' => 2000]);
@@ -115,7 +115,7 @@ class CouponsController extends Controller
         }
         return View::notice(['message' => 'Success', 'time' => 1500, 'location' => 'reload']);
     }
-    public static function addTypeFormAction()
+    public static function addTypeModal()
     {
         $vars = [
             'title' => 'Add a coupon’s type',
@@ -127,7 +127,7 @@ class CouponsController extends Controller
         View::$route['vars'] = array_merge(View::$route['vars'], $vars);
         return View::modal();
     }
-    public static function addTypeAction()
+    public static function addTypeView()
     {
         try {
             CouponService::newType($_POST);
@@ -136,7 +136,7 @@ class CouponsController extends Controller
         }
         return View::notice(['message' => 'Success', 'time' => 1500, 'location' => 'reload']);
     }
-    public static function addFormAction()
+    public static function addModal()
     {
         $vars = [
             'title' => 'Add a coupon',

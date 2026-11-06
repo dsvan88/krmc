@@ -22,7 +22,7 @@ class ImagesController extends Controller
         View::$route['vars']['styles'][] = 'images';
         return true;
     }
-    public function getMoreAction()
+    public function getMoreView()
     {
         $pageToken = '';
         extract(self::$route['vars']);
@@ -50,7 +50,7 @@ class ImagesController extends Controller
         }
         return View::response(compact('html', 'nextPageToken'));
     }
-    public function indexAction()
+    public function indexView()
     {
         $pageToken = '';
         $folderName = 'root';
@@ -72,7 +72,7 @@ class ImagesController extends Controller
 
         return View::render();
     }
-    public function listAction()
+    public function listView()
     {
         $pageToken = '';
         $folderName = 'root';
@@ -88,7 +88,7 @@ class ImagesController extends Controller
 
         return View::response(compact('files', 'nextPageToken'));
     }
-    public function addAction()
+    public function addView()
     {
 
         $folder = '';
@@ -119,7 +119,7 @@ class ImagesController extends Controller
 
         return View::response(empty($_POST['prompt']) ? ['html' => $html] : $files);
     }
-    public function deleteAction()
+    public function deleteView()
     {
         $imageId = $_POST['imageId'];
 
@@ -137,7 +137,7 @@ class ImagesController extends Controller
             View::notice(['message' => 'Success', 'location' => 'reload']) :
             View::notice(['type' => 'error', 'message' => 'Fail!']);
     }
-    public function backgroundSetAction()
+    public function backgroundSetView()
     {
         $imageId = trim($_POST['imageId']);
 
@@ -160,7 +160,7 @@ class ImagesController extends Controller
             View::notice(['message' => 'Success']) :
             View::notice(['type' => 'error', 'message' => 'Fail!']);
     }
-    public function backgroundRemoveAction()
+    public function backgroundRemoveView()
     {
         $imageId = trim($_POST['imageId']);
 
@@ -185,7 +185,7 @@ class ImagesController extends Controller
             View::notice(['message' => 'Success']) :
             View::notice(['type' => 'error', 'message' => 'Fail!']);
     }
-    public function backgroundGroupAction()
+    public function backgroundGroupView()
     {
         $imageIds = trim($_POST['file_ids']);
 
@@ -209,7 +209,7 @@ class ImagesController extends Controller
             View::notice(['message' => 'Success']) :
             View::notice(['type' => 'error', 'message' => 'Fail!']);
     }
-    public function deleteGroupAction()
+    public function deleteGroupView()
     {
         $imageIds = trim($_POST['file_ids']);
 

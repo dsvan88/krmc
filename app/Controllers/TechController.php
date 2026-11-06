@@ -26,7 +26,7 @@ use app\Services\TelegramBotService;
 
 class TechController extends Controller
 {
-    public static function localeGetAction()
+    public static function localeGetView()
     {
         $lang = 'uk';
         extract(self::$route['vars']);
@@ -42,7 +42,7 @@ class TechController extends Controller
 
         return View::response(['dict' => $dict]);
     }
-    public static function sqlAction()
+    public static function sqlView()
     {
         if (!empty($_POST)) {
             if (isset($_POST['sql_query'])) {
@@ -65,7 +65,7 @@ class TechController extends Controller
 
         return View::render();
     }
-    public static function backupAction()
+    public static function backupView()
     {
         if (!empty($_POST)) {
             if (empty($_POST['table']))
@@ -96,7 +96,7 @@ class TechController extends Controller
 
         return View::render();
     }
-    public static function backupSaveAction()
+    public static function backupSaveView()
     {
         ignore_user_abort(true);
         error_reporting(0);
@@ -128,7 +128,7 @@ class TechController extends Controller
 
         exit();
     }
-    public static function scheduleFinishAction()
+    public static function scheduleFinishView()
     {
         ignore_user_abort(true);
         error_reporting(0);
@@ -148,7 +148,7 @@ class TechController extends Controller
 
         exit();
     }
-    public static function restoreAction()
+    public static function restoreView()
     {
         // View::redirect('/');
         ini_set('max_execution_time', 300);
@@ -172,7 +172,7 @@ class TechController extends Controller
 
         return View::render();
     }
-    public static function dbrebuildAction()
+    public static function dbrebuildView()
     {
         // return View::redirect('/');
         set_time_limit(720);
@@ -203,7 +203,7 @@ class TechController extends Controller
 
         echo 'Done!';
     }
-    public static function selfTestTelegramAction()
+    public static function selfTestTelegramView()
     {
         // View::redirect('/');
         $params = [
@@ -265,7 +265,7 @@ class TechController extends Controller
         var_dump($result);
         return $result;
     }
-    public static function testAction()
+    public static function testView()
     {
         $today = Day::current();
         $weekId = Weeks::currentId();

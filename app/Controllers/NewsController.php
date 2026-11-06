@@ -14,7 +14,7 @@ use app\Services\PageService;
 
 class NewsController extends Controller
 {
-    public function indexAction()
+    public function indexView()
     {
         if (isset(self::$route['vars']))
             extract(self::$route['vars']);
@@ -39,7 +39,7 @@ class NewsController extends Controller
         View::$route['vars'] = array_merge(View::$route['vars'], compact('title', 'texts', 'newsAll', 'newsCount', 'page', 'setDashBoard', 'paginator', 'defaultImage'));
         return View::render();
     }
-    public function showAction()
+    public function showView()
     {
         extract(self::$route['vars']);
         $page = News::find($newsId);
@@ -58,7 +58,7 @@ class NewsController extends Controller
 
         return View::render();
     }
-    public function editAction()
+    public function editView()
     {
         extract(self::$route['vars']);
         if (!empty($_POST)) {
@@ -110,7 +110,7 @@ class NewsController extends Controller
 
         return View::render();
     }
-    public function editPromoAction()
+    public function editPromoView()
     {
         if (!empty($_POST)) {
             News::edit($_POST, 'promo');
@@ -137,7 +137,7 @@ class NewsController extends Controller
 
         return View::render();
     }
-    public function addAction()
+    public function addView()
     {
         if (!empty($_POST)) {
             $array = $_POST;
@@ -172,7 +172,7 @@ class NewsController extends Controller
 
         return View::render();
     }
-    public function deleteAction()
+    public function deleteView()
     {
         extract(self::$route['vars']);
         News::remove($newsId);

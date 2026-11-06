@@ -12,7 +12,7 @@ use app\Services\TelegramChatsService;
 
 class telegramChatController extends Controller
 {
-    public static function indexAction()
+    public static function indexView()
     {
         $chatsData = TelegramChats::getChatsList();
         $chatsData = TelegramChats::nicknames($chatsData);
@@ -27,7 +27,7 @@ class telegramChatController extends Controller
 
         return View::render();
     }
-    public static function listAction()
+    public static function listView()
     {
         $chatsData = TelegramChats::getChatsList(10);
         $chatsData = TelegramChats::avatars($chatsData);
@@ -43,7 +43,7 @@ class telegramChatController extends Controller
 
         return View::render();
     }
-    public static function sendAction()
+    public static function sendView()
     {
         if (!empty($_POST)) {
             $result = TelegramChatsService::sendPhoto($_POST);

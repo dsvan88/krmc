@@ -21,7 +21,7 @@ class GamesController extends Controller
         View::$route['vars']['styles'][] = 'games';
         return true;
     }
-    public function prepeareAction()
+    public function prepeareView()
     {
         extract(self::$route['vars']);
         if (!empty($_POST)) {
@@ -124,7 +124,7 @@ class GamesController extends Controller
 
         return View::render();
     }
-    public function playAction()
+    public function playView()
     {
         extract(self::$route['vars']);
         View::$route['vars']['styles'][] = 'game-timer';
@@ -155,7 +155,7 @@ class GamesController extends Controller
 
         return View::render();
     }
-    public function saveAction()
+    public function saveView()
     {
         extract(self::$route['vars']);
         $game = Games::find($gameId);
@@ -165,13 +165,13 @@ class GamesController extends Controller
         Games::save($_POST, $gameId);
         return View::response(json_encode($game, JSON_UNESCAPED_UNICODE));
     }
-    public function loadAction()
+    public function loadView()
     {
         extract(self::$route['vars']);
         $game = Games::load($gameId);
         return View::response(json_encode($game, JSON_UNESCAPED_UNICODE));
     }
-    public function historyAction()
+    public function historyView()
     {
 
         extract(self::$route['vars']);
@@ -232,7 +232,7 @@ class GamesController extends Controller
         View::$route['vars'] = array_merge(View::$route['vars'], $vars);
         return View::render();
     }
-    public function historyItemAction()
+    public function historyItemView()
     {
         extract(self::$route['vars']);
         $game = Games::find($gameId);
@@ -244,7 +244,7 @@ class GamesController extends Controller
         View::$route['vars']['path'] = 'components/game-card';
         return View::html();
     }
-    public function showAction()
+    public function showView()
     {
         extract(self::$route['vars']);
         $game = Games::find($gameId);
@@ -256,12 +256,12 @@ class GamesController extends Controller
         View::$route['vars']['players'] = $game['players'];
         return View::render();
     }
-    public function peekAction()
+    public function peekView()
     {
         $game = Games::last();
         return View::redirect('/game/show/mafia/' . $game['id']);
     }
-    public function ratingAction()
+    public function ratingView()
     {
         extract(self::$route['vars']);
 
@@ -362,7 +362,7 @@ class GamesController extends Controller
         View::$route['vars'] = array_merge(View::$route['vars'], $vars);
         return View::render();
     }
-    public function lastAction()
+    public function lastView()
     {
         $game = Games::last();
 
