@@ -33,14 +33,14 @@ class View
         if (!empty($_SESSION['TelegramApp'])) self::$layout = 'telegram';
 
         self::$route = $route;
-        if (strpos($route['action'], 'Form') === false) {
+        if (strpos($route['action'], 'Modal') === false) {
             self::$path = $route['controller'] . '/' . $route['action'];
             return true;
         }
         $decamelized = Locale::decamelize($route['action']);
         $viewPath = str_replace(' ', '-', mb_substr($decamelized, 0, mb_strrpos($decamelized, ' ', 0, 'UTF-8'), 'UTF-8'));
         $viewPath = Locale::camelize($viewPath);
-        self::$path = "{$route['controller']}/forms/$viewPath";
+        self::$path = "{$route['controller']}/modals/$viewPath";
     }
     public static function render()
     {
@@ -149,7 +149,7 @@ class View
 
         echo json_encode($message);
     }
-    public static function errorCode($code, $data = [])
+    public static function errorCode(int $code = 404, array $data = [])
     {
         extract($data);
         $path = $_SERVER['DOCUMENT_ROOT'] . self::$viewsFolder . "/errors/$code.php";
