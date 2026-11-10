@@ -5,6 +5,7 @@ namespace app\mappers;
 use app\core\Entities\Coupon;
 use app\core\Entities\Day;
 use app\core\Model;
+use app\core\Tech;
 use Exception;
 
 class Coupons extends Model

@@ -23,7 +23,7 @@ class Router
             self::add($key, $val);
         }
     }
-    public static function add($route, $params)
+    public static function add(string $route = '', array $params = [])
     {
         preg_match_all('/{([^\/]+)}/', $route, $matchAll);
         $route = preg_replace(['/\//', '/{([^\/]+)}/'], ['\\/', '([^\/]+)'], $route);
@@ -65,7 +65,7 @@ class Router
     public static function run()
     {
         self::before();
-        if (empty($_SESION['id']) && strpos($_SERVER['REQUEST_URI'], 'api/') === false) {
+        if (empty($_SESION['id'])) {
             self::savePath();
         }
 
@@ -78,10 +78,12 @@ class Router
         if (!class_exists($path))
             return View::errorCode(404, ['message' => "Controller $path isn’t found!"]);
 
-        $action = self::$params['action'] . 'Action';
+        $postfix = preg_match('/Action|Modal/', self::$params['action']) === 1 ? '' : 'View';
+
+        $action = self::$params['action'] . $postfix;
         $message = '';
         if (!method_exists($path, $action))
-            return View::errorCode(404, ['message' => "Action $action isn’t found in Controller $path!"]);
+            return View::errorCode(404, ['message' => "$postfix $action isn’t found in Controller $path!"]);
 
         try {
             $controller = new $path(self::$params);
@@ -109,19 +111,18 @@ class Router
             return Sender::message(Settings::getTechTelegramId(), $message);
         }
     }
-    public static function checkAccessLevel($params)
+    public static function checkAccessLevel(array $params = [])
     {
         if (empty($_SESSION['privilege'])) return false;
 
         $levels = array_flip(self::$accessLevels);
 
-        if ($levels[$params['access']['category']] > $levels[$_SESSION['privilege']['status']]) {
-            return false;
-        }
-        return true;
+        return $levels[$params['access']['category']] <= $levels[$_SESSION['privilege']['status']];
     }
     public static function savePath(): void
     {
+        if ( strpos($_SERVER['REQUEST_URI'], 'api/') === false || strpos($_SERVER['REQUEST_URI'], '.') === false ) return;
+
         $url = trim($_SERVER['REQUEST_URI'], '/');
         if (empty($url)) return;
 

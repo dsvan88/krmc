@@ -19,13 +19,13 @@ return  [
     'api/account/login' =>
     [
         'controller' => 'account',
-        'action' => 'loginForm',
+        'action' => 'loginModal',
         'access' => ['category' => 'all']
     ],
     'api/account/login/form' =>
     [
         'controller' => 'account',
-        'action' => 'loginForm',
+        'action' => 'loginModal',
         'access' => ['category' => 'all']
     ],
     'api/account/password/change' =>
@@ -235,14 +235,14 @@ return  [
     'api/verification/telegram/hmac' =>
     [
         'controller' => 'verification',
-        'action' => 'hmac',
+        'action' => 'hmacAction',
         'access' => ['category' => 'all']
     ],
 
     'api/telegram/webhook' =>
     [
         'controller' => 'telegramMainBot',
-        'action' => 'webhook',
+        'action' => 'webhookAction',
         'access' => ['category' => 'all']
     ],
     'api/telegram/info-webhook' =>

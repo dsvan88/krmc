@@ -143,7 +143,7 @@ class VerificationController extends Controller
         }
         return View::redirect('/users/list');
     }
-    public function hmacView()
+    public function hmacAction()
     {
         $_SESSION['TelegramApp'] = 1;
         if (!Validator::validate('telegramHMAC', $_POST['data'])) {
