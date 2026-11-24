@@ -34,7 +34,7 @@ class TelegramBotController extends Controller
     {
         $contentType = isset($_SERVER['CONTENT_TYPE']) ? strtolower(trim($_SERVER['CONTENT_TYPE'])) : '';
         if (strpos($contentType, 'application/json') ===  false) return false;
-
+        
         if (APP_LOC !== 'local') {
 
             if (!Validator::validate('telegramToken', $_SERVER['HTTP_X_TELEGRAM_BOT_API_SECRET_TOKEN'] ?? '')) {
@@ -134,7 +134,7 @@ class TelegramBotController extends Controller
         }
         return true;
     }
-    public static function webhookView()
+    public static function webhookAction()
     {
         // exit(json_encode(['message' => TelegramBotService::$message], JSON_UNESCAPED_UNICODE));
         try {

@@ -236,7 +236,7 @@ class TechController extends Controller
                 // 'text' => '/dice',
                 // 'text' => '/chat',
                 // 'text' => '/spshop',
-                'text' => '/test',
+                'text' => '/dice',
                 // 'text' => '/chat main',
                 // 'text' => 'Checker',
                 // 'text' => '/unreg',

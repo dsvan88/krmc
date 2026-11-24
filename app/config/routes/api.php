@@ -248,7 +248,7 @@ return  [
     'api/telegram/info-webhook' =>
     [
         'controller' => 'telegramInfoBot',
-        'action' => 'webhook',
+        'action' => 'webhookAction',
         'access' => ['category' => 'all']
     ],
 
