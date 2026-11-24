@@ -149,6 +149,8 @@ class TelegramBotController extends Controller
 
             static::resolveResult($result);
         } catch (\Throwable $th) {
+            $_SESSION['debug'][] = 'Command: ' . static::$command . PHP_EOL;
+            $_SESSION['debug'][] = 'Result: ' . (empty($result) ? 'empty' : json_encode($result, JSON_UNESCAPED_UNICODE)) . PHP_EOL;
             $_SESSION['debug'][] = 'commonError: ' . $th->__toString();
             $_SESSION['debug'][] = 'messageData: ' . json_encode(ChatAction::$message, JSON_UNESCAPED_UNICODE);
             Sender::message(static::$chatId, Locale::phrase("Something went wrong😱!\nWe are deeply sorry for that😢\nI’ve informed our administrators about your situation, and they are fixing it right now!\nThank you for understanding!"));
