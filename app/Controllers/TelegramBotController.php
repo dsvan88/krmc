@@ -148,16 +148,17 @@ class TelegramBotController extends Controller
             if (empty($result)) return false;
 
             static::resolveResult($result);
-        } catch (\Throwable $th) {
+        } catch (\ErrorException $th) {
             $_SESSION['debug'][] = 'Command: ' . static::$command . PHP_EOL;
             $_SESSION['debug'][] = 'Result: ' . (empty($result) ? 'empty' : json_encode($result, JSON_UNESCAPED_UNICODE)) . PHP_EOL;
-            $_SESSION['debug'][] = 'commonError: ' . $th->__toString();
+            $_SESSION['debug'][] = 'commonError: ' . $th->__toString(). PHP_EOL;
             $_SESSION['debug'][] = 'messageData: ' . json_encode(ChatAction::$message, JSON_UNESCAPED_UNICODE);
             Sender::message(static::$chatId, Locale::phrase("Something went wrong😱!\nWe are deeply sorry for that😢\nI’ve informed our administrators about your situation, and they are fixing it right now!\nThank you for understanding!"));
         } finally {
             if (empty($_SESSION['debug'])) return true;
 
             $debugMessage = 'DEBUG:' . PHP_EOL . implode(PHP_EOL, $_SESSION['debug']);
+            // error_log(print_r($_SESSION['debug'], true));
             unset($_SESSION['debug']);
             Sender::message(Settings::getTechTelegramId(), $debugMessage);
         }

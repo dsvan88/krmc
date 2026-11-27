@@ -13,6 +13,13 @@ spl_autoload_register(function ($class) {
     }
 });
 
+set_error_handler(function (int $severity, string $message, string $file, int $line): bool {
+    if (!(error_reporting() & $severity)) {
+        return false;
+    }
+    throw new \ErrorException($message, 0, $severity, $file, $line);
+});
+
 Env::init();
 
 require_once 'config.php';
